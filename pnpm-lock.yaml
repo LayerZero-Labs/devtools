@@ -2839,7 +2839,7 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ../devtools-extensible-cli
+        specifier: ^0.0.4
         version: link:../devtools-extensible-cli
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.75
@@ -3377,10 +3377,10 @@ importers:
         specifier: ^1.33.1
         version: 1.33.2
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ../devtools-extensible-cli
+        specifier: ^0.0.4
         version: link:../devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ../devtools-move
+        specifier: ^1.0.0
         version: link:../devtools-move
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.75
