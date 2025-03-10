@@ -2,7 +2,27 @@
   "name": "@layerzerolabs/oft-move",
   "version": "1.0.0",
   "license": "MIT",
-  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "./dist/index.*",
+    "./cli/**/*",
+    "./types/**/*",
+    "./tasks/**/*"
+  ],
   "scripts": {
     "prebuild": "tsc -noEmit",
     "build": "$npm_execpath tsup --clean",
@@ -13,8 +33,8 @@
   },
   "devDependencies": {
     "@aptos-labs/ts-sdk": "^1.33.1",
-    "@layerzerolabs/devtools-extensible-cli": "../devtools-extensible-cli",
-    "@layerzerolabs/devtools-move": "../devtools-move",
+    "@layerzerolabs/devtools-extensible-cli": "^0.0.4",
+    "@layerzerolabs/devtools-move": "^1.0.0",
     "@layerzerolabs/lz-definitions": "^3.0.75",
     "@layerzerolabs/lz-v2-utilities": "^3.0.75",
     "@layerzerolabs/prettier-config-next": "^2.3.39",

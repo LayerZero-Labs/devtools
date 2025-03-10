@@ -2,7 +2,7 @@ import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 import path from 'path'
 
 import { initOFTAdapterFA } from '../../tasks/initOFTAdapterFA'
-import { initializeTaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
+import { initializeTaskContext } from '@layerzerolabs/devtools-move'
 
 class InitOFTFAAdapter implements INewOperation {
     vm = 'move'

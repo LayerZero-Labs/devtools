@@ -1,8 +1,6 @@
 import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
-import { OFTType } from '@layerzerolabs/devtools-move/sdk/IOFT'
-import { createSetRateLimitTx } from '@layerzerolabs/devtools-move/tasks/move/utils/moveVMOftConfigOps'
-import { sendAllTxs } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
-import { TaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
+
+import { createSetRateLimitTx, sendAllTxs, TaskContext, OFTType } from '@layerzerolabs/devtools-move'
 
 async function setRateLimit(
     taskContext: TaskContext,
