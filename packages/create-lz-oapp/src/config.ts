@@ -127,17 +127,17 @@ export const getExamples = (): Example[] => {
         ...(process.env.LZ_ENABLE_EXPERIMENTAL_MOVE_VM_EXAMPLES
             ? [
                   {
-                      id: 'oft-move',
+                      id: 'oft-aptos-move',
                       label: 'OFT (Move)',
                       repository,
-                      directory: 'examples/oft-move',
+                      directory: 'examples/oft-aptos-move',
                       ref,
                   },
                   {
-                      id: 'oft-adapter-move',
+                      id: 'oft-adapter-aptos-move',
                       label: 'OFT Adapter (Move)',
                       repository,
-                      directory: 'examples/oft-adapter-move',
+                      directory: 'examples/oft-adapter-aptos-move',
                       ref,
                   },
                   {
