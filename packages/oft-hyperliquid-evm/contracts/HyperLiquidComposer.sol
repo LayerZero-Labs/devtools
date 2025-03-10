@@ -4,13 +4,12 @@ pragma solidity ^0.8.20;
 
 import { IOFT } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 
-import { HyperLiquidOFTComposeMsgCodec } from "./library/HyperLiquidOFTComposeMsgCodec.sol";
+import { HyperLiquidComposerCodec } from "./library/HyperLiquidComposerCodec.sol";
 
 import { IHyperLiquidComposer } from "./interfaces/IHyperLiquidComposer.sol";
 import { IERC20HyperliquidHopTransferable } from "./interfaces/IERC20HyperliquidHopTransferable.sol";
 
 contract HyperLiquidComposer is IHyperLiquidComposer {
-    address public constant HL_NATIVE_TRANSFER_PREFIX = 0x2000000000000000000000000000000000000000;
     address public immutable HL_NATIVE_TRANSFER;
     uint256 public immutable HL_NATIVE_TRANSFER_CORE_INDEX_ID;
 
@@ -43,10 +42,7 @@ contract HyperLiquidComposer is IHyperLiquidComposer {
         /// @dev This is the address that the OFT contract will transfer the tokens to when we want to send tokens to HyperLiquid L1
         /// @dev https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers#system-addresses
         /// @dev It is formed by 0x2000...0000 + the core index id
-        uint256 hlNativeTransferPrefix = uint256(uint160(HL_NATIVE_TRANSFER_PREFIX));
-        uint256 hlNativeTransfer = hlNativeTransferPrefix + _coreIndexId;
-
-        HL_NATIVE_TRANSFER = address(uint160(hlNativeTransfer));
+        HL_NATIVE_TRANSFER = HyperLiquidComposerCodec.into_assetBridgeAddress(_coreIndexId);
         HL_NATIVE_TRANSFER_CORE_INDEX_ID = _coreIndexId;
     }
 
@@ -77,7 +73,7 @@ contract HyperLiquidComposer is IHyperLiquidComposer {
         // The message is expected to be of type: (address receiver)
         // The bytes object should be encoded as an abi.encodePacked() of the receiver address
         // This is found as SendParam.composeMsg that the OFTCore contract populates on the send() call
-        (address _receiver, uint256 _amountLD) = HyperLiquidOFTComposeMsgCodec.validateAndDecodeMessage(_message);
+        (address _receiver, uint256 _amountLD) = HyperLiquidComposerCodec.validateAndDecodeMessage(_message);
 
         // Transfer the tokens to the HyperLiquid L1 contract
         // This creates the Transfer event that HyperLiquid L1 listens for
