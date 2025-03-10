@@ -1,17 +1,5 @@
-import { getChain, getConnection } from '@layerzerolabs/devtools-move/sdk/moveVMConnectionBuilder'
-import { OFT } from '@layerzerolabs/devtools-move/sdk/oft'
-
-import {
-    getEidFromMoveNetwork,
-    getLzNetworkStage,
-    parseYaml,
-} from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
-import { getLzConfig } from '@layerzerolabs/devtools-move/tasks/move/utils/config'
-import {
-    getContractNameFromLzConfig,
-    getMoveVMOAppAddress,
-    sendInitTransaction,
-} from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
+import { sendInitTransaction } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
+import { TaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
 
 async function initOFTFA(
     token_name: string,
@@ -20,20 +8,10 @@ async function initOFTFA(
     project_uri: string,
     shared_decimals: number,
     local_decimals: number,
-    configPath: string
+    taskContext: TaskContext
 ) {
-    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
-    console.log(`Using aptos network ${network}`)
-
-    const lzNetworkStage = getLzNetworkStage(network)
-    const chain = getChain(fullnode)
-    const lzConfig = await getLzConfig(configPath)
-    const eid = getEidFromMoveNetwork(chain, network)
-    const contractName = getContractNameFromLzConfig(eid, lzConfig)
-    const aptosOftAddress = getMoveVMOAppAddress(contractName, chain, lzNetworkStage)
-
-    console.log(`\n⚡ Initializing ${chain}-${lzNetworkStage} OFT`)
-    console.log(`   Address: ${aptosOftAddress}\n`)
+    console.log(`\n⚡ Initializing ${taskContext.chain}-${taskContext.stage} OFT`)
+    console.log(`   Address: ${taskContext.oAppAddress}\n`)
 
     console.log(`Setting the following parameters:`)
     console.log(`\tToken Name: ${token_name}`)
@@ -43,10 +21,7 @@ async function initOFTFA(
     console.log(`\tShared Decimals: ${shared_decimals}`)
     console.log(`\tLocal Decimals: ${local_decimals}`)
 
-    const moveVMConnection = getConnection(chain, network, fullnode, faucet)
-    const oft = new OFT(moveVMConnection, aptosOftAddress, account_address, private_key, eid)
-
-    const initializePayload = oft.initializeOFTFAPayload(
+    const initializePayload = taskContext.oft.initializeOFTFAPayload(
         token_name,
         token_symbol,
         icon_uri,
@@ -55,9 +30,9 @@ async function initOFTFA(
         local_decimals
     )
 
-    const payloads = [{ payload: initializePayload, description: 'Initialize Aptos OFT', eid }]
+    const payloads = [{ payload: initializePayload, description: 'Initialize Aptos OFT', eid: taskContext.srcEid }]
 
-    sendInitTransaction(moveVMConnection, oft, account_address, payloads)
+    sendInitTransaction(taskContext.moveVMConnection, taskContext.oft, taskContext.accountAddress, payloads)
 }
 
 export { initOFTFA }

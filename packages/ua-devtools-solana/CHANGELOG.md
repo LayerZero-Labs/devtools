@@ -1,5 +1,17 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 4.1.2
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+- Updated dependencies [8b6c422]
+  - @layerzerolabs/protocol-devtools-solana@4.0.9
+  - @layerzerolabs/protocol-devtools@1.1.6
+  - @layerzerolabs/devtools-solana@1.0.8
+  - @layerzerolabs/ua-devtools@3.0.6
+  - @layerzerolabs/devtools@0.4.8
+
 ## 4.1.1
 
 ### Patch Changes
