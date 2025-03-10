@@ -1298,10 +1298,10 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ../../packages/devtools-extensible-cli
+        specifier: ^0.0.4
         version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ../../packages/devtools-move
+        specifier: ^1.0.0
         version: link:../../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -1343,7 +1343,7 @@ importers:
         specifier: ^3.1.3
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-move':
-        specifier: ../../packages/oft-move
+        specifier: ^1.0.0
         version: link:../../packages/oft-move
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
