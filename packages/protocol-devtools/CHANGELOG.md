@@ -1,5 +1,13 @@
 # @layerzerolabs/protocol-devtools
 
+## 1.1.6
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+- Updated dependencies [8b6c422]
+  - @layerzerolabs/devtools@0.4.8
+
 ## 1.1.5
 
 ### Patch Changes

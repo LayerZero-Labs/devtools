@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-extensible-cli
 
+## 0.0.4
+
+### Patch Changes
+
+- 24311f8: Minor bug fixes
+
 ## 0.0.3
 
 ### Patch Changes
