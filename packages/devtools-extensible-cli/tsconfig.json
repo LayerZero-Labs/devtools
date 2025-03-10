@@ -1,5 +1,5 @@
 {
-  "exclude": ["node_modules"],
+  "exclude": ["dist", "node_modules"],
   "include": ["cli", "types"],
   "compilerOptions": {
     "target": "es2020",
