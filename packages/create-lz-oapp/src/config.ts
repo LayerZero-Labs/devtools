@@ -123,6 +123,32 @@ export const getExamples = (): Example[] => {
                   },
               ]
             : []),
+        // Move OFT examples are feature flagged for the time being
+        ...(process.env.LZ_ENABLE_EXPERIMENTAL_MOVE_VM_EXAMPLES
+            ? [
+                  {
+                      id: 'oft-move',
+                      label: 'OFT (Move)',
+                      repository,
+                      directory: 'examples/oft-move',
+                      ref,
+                  },
+                  {
+                      id: 'oft-adapter-move',
+                      label: 'OFT Adapter (Move)',
+                      repository,
+                      directory: 'examples/oft-adapter-move',
+                      ref,
+                  },
+                  {
+                      id: 'oapp-aptos-move',
+                      label: 'OApp (Aptos Move)',
+                      repository,
+                      directory: 'examples/oapp-aptos-move',
+                      ref,
+                  },
+              ]
+            : []),
     ]
 }
 
