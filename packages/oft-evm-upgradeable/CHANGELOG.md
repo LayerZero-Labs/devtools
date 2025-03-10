@@ -1,5 +1,13 @@
 # @layerzerolabs/oft-evm-upgradeable
 
+## 3.0.2
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+- Updated dependencies [8b6c422]
+  - @layerzerolabs/oapp-evm@0.3.2
+
 ## 3.0.1
 
 ### Patch Changes

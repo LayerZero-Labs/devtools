@@ -18,8 +18,14 @@ export interface NativeSpot {
     deployerTradingFeeShare: string
 }
 
-export interface NativeSpots {
-    [key: string]: NativeSpot
+export interface NativeSpotDeployment {
+    nativeSpot: NativeSpot
+    txData: {
+        txHash: string
+        nonce: number
+        from: string
+        connected: boolean
+    }
 }
 
 /** Base structure for exchange requests. */
@@ -43,24 +49,31 @@ export interface BaseExchangeRequest {
  * @see https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/evm/dual-block-architecture
  */
 export interface EvmUserModifyRequest extends BaseExchangeRequest {
-    /** Action to be performed. */
     action: {
-        /** Type of action. */
         type: 'evmUserModify'
-        /** `true` for large blocks, `false` for small blocks. */
         usingBigBlocks: boolean
     }
 }
 
-export interface EvmSpotDeployRequest extends BaseExchangeRequest {
-    /** Action to be performed. */
+export interface EvmSpotDeploy extends BaseExchangeRequest {
     action: {
         type: 'spotDeploy'
-        requestEVMContract: {
-            type: 'requestEvmContract'
+        requestEvmContract: {
             token: number
             address: string
             evmExtraWeiDecimals: number
+        }
+    }
+}
+
+export interface FinalizeEvmContract extends BaseExchangeRequest {
+    action: {
+        type: 'finalizeEvmContract'
+        token: number
+        input: {
+            create: {
+                nonce: number
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 
 import { sendFromMoveVm } from '../../tasks/sendFromMoveVm'
+import { initializeTaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
 
 class SendFromMoveOFT implements INewOperation {
     vm = 'move'
@@ -55,14 +56,15 @@ class SendFromMoveOFT implements INewOperation {
     ]
 
     async impl(args: any): Promise<void> {
+        const taskContext = await initializeTaskContext(args.oapp_config)
         await sendFromMoveVm(
+            taskContext,
             BigInt(args.amount_ld),
             BigInt(args.min_amount_ld),
             args.to_address,
             BigInt(args.gas_limit),
             args.dst_eid,
-            args.src_address,
-            args.oapp_config
+            args.src_address
         )
     }
 }

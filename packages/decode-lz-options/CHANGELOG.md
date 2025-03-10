@@ -1,5 +1,11 @@
 # decode-lz-options
 
+## 0.1.2
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+
 ## 0.1.1
 
 ### Patch Changes

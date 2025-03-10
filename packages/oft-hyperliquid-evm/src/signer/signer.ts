@@ -1,13 +1,14 @@
 import { encode } from '@msgpack/msgpack'
-import { Hex } from '@layerzerolabs/lz-utilities'
-
-import { loadEnv } from '@/io'
 import { Wallet } from 'ethers'
+import { keccak256 } from 'ethers/lib/utils'
 import { Wallet as ethersV6Wallet } from 'ethers-v6'
 
-import type { ValueType } from '@/types'
+import { loadEnv } from '@/io'
+import { Hex } from '@layerzerolabs/lz-utilities'
+
 import { isAbstractEthersV5Signer } from './utils'
-import { keccak256 } from 'ethers/lib/utils'
+
+import type { ValueType } from '@/types'
 
 /**
  * Converts a hex string address to a Buffer.
@@ -32,7 +33,7 @@ function addressToBytes(address: string): Buffer {
  * @param nonce - A numeric nonce.
  * @returns The keccak hash as a hex string.
  */
-export function computeL1ActionHash(action: any, nonce: number, vaultAddress: string | null): string {
+export function computeL1ActionHash(action: ValueType, nonce: number, vaultAddress: string | null): string {
     /*
         with nonce 0 and msg.sender = 0xa3824BFfc05178b1eD611117e5b900adCb189b94
         v1 decoded to 0x0863c99fb68fcfbcb1761ba7638e70b0adc64940

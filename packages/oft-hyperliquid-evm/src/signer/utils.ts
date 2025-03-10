@@ -1,5 +1,6 @@
-import type { ValueType } from '@/types'
 import { Wallet } from 'ethers'
+
+import type { ValueType } from '@/types'
 
 export function encodeHex(data: Uint8Array): string {
     return Buffer.from(data).toString('hex')

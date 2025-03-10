@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-test
 
+## 0.3.6
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+
 ## 0.3.5
 
 ### Patch Changes

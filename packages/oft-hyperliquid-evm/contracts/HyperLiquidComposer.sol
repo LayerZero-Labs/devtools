@@ -4,12 +4,15 @@ pragma solidity ^0.8.20;
 
 import { IOFT } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 
-import { HyperLiquidOFTComposeMsgCodec } from "./library/HyperLiquidOFTComposeMsgCodec.sol";
+import { HyperLiquidComposerCodec } from "./library/HyperLiquidComposerCodec.sol";
 
 import { IHyperLiquidComposer } from "./interfaces/IHyperLiquidComposer.sol";
 import { IERC20HyperliquidHopTransferable } from "./interfaces/IERC20HyperliquidHopTransferable.sol";
 
 contract HyperLiquidComposer is IHyperLiquidComposer {
+    address public immutable HL_NATIVE_TRANSFER;
+    uint256 public immutable HL_NATIVE_TRANSFER_CORE_INDEX_ID;
+
     address public immutable endpoint;
     address public immutable oft;
     IERC20HyperliquidHopTransferable public immutable hyperliquidHopTransferableToken;
@@ -21,7 +24,7 @@ contract HyperLiquidComposer is IHyperLiquidComposer {
     ///
     /// @param _endpoint The LayerZero endpoint address
     /// @param _oft The OFT contract address associated with this composer
-    constructor(address _endpoint, address _oft) {
+    constructor(address _endpoint, address _oft, uint256 _coreIndexId) {
         // Validate that the OFT contract implements the `IHyperLiquidERC20Extended` interface
         // This is to ensure that the OFT contract has the `transferToHyperLiquidL1` function
         hyperliquidHopTransferableToken = IERC20HyperliquidHopTransferable(IOFT(_oft).token());
@@ -34,6 +37,13 @@ contract HyperLiquidComposer is IHyperLiquidComposer {
 
         endpoint = _endpoint;
         oft = _oft;
+
+        /// @dev Hyperliquid L1 contract address is the prefix + the core index id
+        /// @dev This is the address that the OFT contract will transfer the tokens to when we want to send tokens to HyperLiquid L1
+        /// @dev https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers#system-addresses
+        /// @dev It is formed by 0x2000...0000 + the core index id
+        HL_NATIVE_TRANSFER = HyperLiquidComposerCodec.into_assetBridgeAddress(_coreIndexId);
+        HL_NATIVE_TRANSFER_CORE_INDEX_ID = _coreIndexId;
     }
 
     /// @notice Composes a message to be sent to the HyperLiquidLZComposer
@@ -63,11 +73,11 @@ contract HyperLiquidComposer is IHyperLiquidComposer {
         // The message is expected to be of type: (address receiver)
         // The bytes object should be encoded as an abi.encodePacked() of the receiver address
         // This is found as SendParam.composeMsg that the OFTCore contract populates on the send() call
-        (address _receiver, uint256 _amountLD) = HyperLiquidOFTComposeMsgCodec.validateAndDecodeMessage(_message);
+        (address _receiver, uint256 _amountLD) = HyperLiquidComposerCodec.validateAndDecodeMessage(_message);
 
         // Transfer the tokens to the HyperLiquid L1 contract
         // This creates the Transfer event that HyperLiquid L1 listens for
         // IERC20.Transfer(_receiver, 0x2222222222222222222222222222222222222222, _amountLD)
-        hyperliquidHopTransferableToken.hopTransferToHyperLiquidL1(_receiver, _amountLD);
+        hyperliquidHopTransferableToken.hopTransferToHyperLiquidL1(_receiver, HL_NATIVE_TRANSFER, _amountLD);
     }
 }

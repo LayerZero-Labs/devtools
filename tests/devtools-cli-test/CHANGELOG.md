@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-cli-test
 
+## 0.4.8
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+
 ## 0.4.7
 
 ### Patch Changes

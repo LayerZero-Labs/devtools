@@ -1,5 +1,16 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 2.0.8
+
+### Patch Changes
+
+- 24311f8: Minor bug fixes
+- 8b6c422: Bump monorepo dependencies to latest patch version
+- Updated dependencies [24311f8]
+- Updated dependencies [8b6c422]
+  - @layerzerolabs/devtools-evm@1.0.6
+  - @layerzerolabs/devtools@0.4.8
+
 ## 2.0.7
 
 ### Patch Changes
