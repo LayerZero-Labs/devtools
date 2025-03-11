@@ -2841,6 +2841,9 @@ importers:
       '@layerzerolabs/devtools-extensible-cli':
         specifier: ^0.0.4
         version: link:../devtools-extensible-cli
+      '@layerzerolabs/io-devtools':
+        specifier: ^0.1.16
+        version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.75
         version: 3.0.75
@@ -3382,6 +3385,9 @@ importers:
       '@layerzerolabs/devtools-move':
         specifier: ^1.0.0
         version: link:../devtools-move
+      '@layerzerolabs/io-devtools':
+        specifier: ^0.1.16
+        version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.75
         version: 3.0.75
