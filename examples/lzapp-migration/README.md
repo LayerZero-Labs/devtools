@@ -162,7 +162,7 @@ const solanaContract: OmniPointHardhat = {
 #### Run the wire command
 
 ```bash
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY> --solana-program-id <PROGRAM_ID>
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-eid <SOLANA_ENDPOINT_ID>
 ```
 
 #### Call `setDstMinGas`
