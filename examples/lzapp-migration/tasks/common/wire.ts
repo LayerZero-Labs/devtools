@@ -2,7 +2,11 @@ import { PublicKey } from '@solana/web3.js'
 import { subtask, task } from 'hardhat/config'
 
 import { createSignAndSendFlow, firstFactory } from '@layerzerolabs/devtools'
-import { SUBTASK_LZ_SIGN_AND_SEND, createSignerFactory, types } from '@layerzerolabs/devtools-evm-hardhat'
+import {
+    SUBTASK_LZ_SIGN_AND_SEND,
+    createSignerFactory,
+    types as devtoolsTypes,
+} from '@layerzerolabs/devtools-evm-hardhat'
 import { setTransactionSizeBuffer } from '@layerzerolabs/devtools-solana'
 import { type LogLevel, createLogger } from '@layerzerolabs/io-devtools'
 import { EndpointId, endpointIdToVersion } from '@layerzerolabs/lz-definitions'
@@ -78,8 +82,8 @@ task(TASK_LZ_OAPP_WIRE)
     //
     // By default, this argument will be left empty and the default OApp configurator will be used.
     // The tasks that are using custom configurators will override this argument with the configurator of their choice
-    .addParam('internalConfigurator', 'FOR INTERNAL USE ONLY', undefined, types.fn, true)
-    .addParam('isSolanaInitConfig', 'FOR INTERNAL USE ONLY', undefined, types.boolean, true)
+    .addParam('internalConfigurator', 'FOR INTERNAL USE ONLY', undefined, devtoolsTypes.fn, true)
+    .addParam('isSolanaInitConfig', 'FOR INTERNAL USE ONLY', undefined, devtoolsTypes.boolean, true)
     .setAction(async (args: Args, hre, runSuper) => {
         const logger = createLogger(args.logLevel)
         logger.info('Starting LayerZero OApp wiring task...')
