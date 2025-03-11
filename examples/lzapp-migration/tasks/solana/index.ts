@@ -75,6 +75,15 @@ export const deriveConnection = async (eid: EndpointId, readOnly = false) => {
     }
 }
 
+export const useWeb3Js = () => {
+    const privateKey = getSolanaPrivateKeyFromEnv()
+    const secretKeyBytes = bs58.decode(privateKey)
+    const keypair = Keypair.fromSecretKey(secretKeyBytes)
+    return {
+        web3JsKeypair: keypair,
+    }
+}
+
 /**
  * Derive the keys needed for the OFT program.
  * @param programIdStr {string}
