@@ -1,4 +1,5 @@
 export * from '../cli'
+export * from '../types'
 
 // OFT Initialization Tasks
 export { initOFTFA } from './initOFTFA'
