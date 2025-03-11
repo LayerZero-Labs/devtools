@@ -44,6 +44,8 @@ abstract contract OFTAltCore is IOFT, OAppAlt, OAppPreCrimeSimulator, OAppOption
     address public msgInspector;
     event MsgInspectorSet(address inspector);
 
+    error OFTAltCore__msg_value_not_zero(uint256 _msg_value);
+
     /**
      * @dev Constructor.
      * @param _localDecimals The decimals of the token on the local chain (this chain).
@@ -174,6 +176,7 @@ abstract contract OFTAltCore is IOFT, OAppAlt, OAppPreCrimeSimulator, OAppOption
         MessagingFee calldata _fee,
         address _refundAddress
     ) external payable virtual returns (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) {
+        if (msg.value > 0) revert OFTAltCore__msg_value_not_zero(msg.value);
         return _send(_sendParam, _fee, _refundAddress);
     }
 

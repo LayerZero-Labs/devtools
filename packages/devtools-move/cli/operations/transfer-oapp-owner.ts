@@ -1,5 +1,6 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 import { transferOAppOwner } from '../../tasks/move/transferOwnerOapp'
+import { initializeTaskContext } from '../../sdk/baseTaskHelper'
 
 class MoveTransferOwnerOperation implements INewOperation {
     vm = 'move'
@@ -18,7 +19,8 @@ class MoveTransferOwnerOperation implements INewOperation {
     ]
 
     async impl(args: any): Promise<void> {
-        await transferOAppOwner(args.new_owner, args.oapp_config)
+        const taskContext = await initializeTaskContext(args.oapp_config)
+        await transferOAppOwner(taskContext, args.new_owner)
     }
 }
 

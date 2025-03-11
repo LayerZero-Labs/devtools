@@ -31,7 +31,6 @@ executor_fee_lib_0 = "_"
 dvn_fee_lib_0 = "_"
 dvn = "_"
 native_token_metadata_address = "0xa"
-# For Initia: "0x8e4733bdabcf7d4afc3d14f0dd46c9bf52fb0fce9e4b996c939e195b8bc891d9"
 
 [dev-addresses]
 oft = "0x302814823"
@@ -61,15 +60,22 @@ executor_fee_lib_0 = "0x100008"
 dvn_fee_lib_0 = "0x100003"
 dvn = "0x100002"
 
+# Note for Aptos CLI version >= 6.1.0 (the version supported by Aptos), use the following dependencies
+#[dependencies.AptosFramework]
+#git = "https://github.com/aptos-labs/aptos-framework.git"
+#rev = "mainnet"
+#subdir = "aptos-framework"
+
+# Note: For using Aptos CLI version <= 3.5.0 (the version supported by Movement), use the following dependencies:
 [dependencies.AptosFramework]
-git = "https://github.com/aptos-labs/aptos-framework.git"
-rev = "mainnet"
-subdir = "aptos-framework"
+git = "https://github.com/movementlabsxyz/aptos-core.git"
+rev = "movement-cli-v3.5.0"
+subdir = "aptos-move/framework/aptos-framework"
 
 [dependencies]
-endpoint_v2_common = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2-jan-6", subdir = "packages/layerzero-v2/aptos/contracts/endpoint_v2_common" }
-endpoint_v2 = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2-jan-6", subdir = "packages/layerzero-v2/aptos/contracts/endpoint_v2" }
-oft_common = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2-jan-6", subdir = "packages/layerzero-v2/aptos/contracts/oapps/oft_common" }
+endpoint_v2_common = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "main", subdir = "packages/layerzero-v2/aptos/contracts/endpoint_v2_common" }
+endpoint_v2 = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "main", subdir = "packages/layerzero-v2/aptos/contracts/endpoint_v2" }
+oft_common = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "main", subdir = "packages/layerzero-v2/aptos/contracts/oapps/oft_common" }
 
 [dev-dependencies]
-simple_msglib = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2-jan-6", subdir = "packages/layerzero-v2/aptos/contracts/msglib/libs/simple_msglib" }
+simple_msglib = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "main", subdir = "packages/layerzero-v2/aptos/contracts/msglib/libs/simple_msglib" }

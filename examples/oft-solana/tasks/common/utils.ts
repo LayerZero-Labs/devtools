@@ -18,6 +18,7 @@ import {
     createRpcUrlFactory,
 } from '@layerzerolabs/devtools-solana'
 import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
+import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { IOApp } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { createOFTFactory } from '@layerzerolabs/ua-devtools-solana'
@@ -83,5 +84,28 @@ export const createSolanaSignerFactory = (
         return multisigKey
             ? new OmniSignerSolanaSquads(eid, await connectionFactory(eid), multisigKey, wallet)
             : new OmniSignerSolana(eid, await connectionFactory(eid), wallet)
+    }
+}
+
+export function uint8ArrayToHex(uint8Array: Uint8Array, prefix = false): string {
+    const hexString = Buffer.from(uint8Array).toString('hex')
+    return prefix ? `0x${hexString}` : hexString
+}
+
+function formatBigIntForDisplay(n: bigint) {
+    return n.toLocaleString().replace(/,/g, '_')
+}
+
+export function decodeLzReceiveOptions(hex: string): string {
+    try {
+        // Handle empty/undefined values first
+        if (!hex || hex === '0x') return 'No options set'
+        const options = Options.fromOptions(hex)
+        const lzReceiveOpt = options.decodeExecutorLzReceiveOption()
+        return lzReceiveOpt
+            ? `gas: ${formatBigIntForDisplay(lzReceiveOpt.gas)} , value: ${formatBigIntForDisplay(lzReceiveOpt.value)} wei`
+            : 'No executor options'
+    } catch (e) {
+        return `Invalid options (${hex.slice(0, 12)}...)`
     }
 }

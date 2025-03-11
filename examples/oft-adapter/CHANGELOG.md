@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-adapter-example
 
+## 0.3.8
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+
 ## 0.3.7
 
 ### Patch Changes
