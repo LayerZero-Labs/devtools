@@ -2,7 +2,7 @@ import { Keypair, PublicKey } from '@solana/web3.js'
 import { subtask, task } from 'hardhat/config'
 
 import { createSignAndSendFlow, firstFactory } from '@layerzerolabs/devtools'
-import { SUBTASK_LZ_SIGN_AND_SEND, createSignerFactory, inheritTask, types } from '@layerzerolabs/devtools-evm-hardhat'
+import { SUBTASK_LZ_SIGN_AND_SEND, createSignerFactory, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { setTransactionSizeBuffer } from '@layerzerolabs/devtools-solana'
 import { type LogLevel, createLogger } from '@layerzerolabs/io-devtools'
 import { endpointIdToVersion } from '@layerzerolabs/lz-definitions'
@@ -12,7 +12,6 @@ import {
     SubtaskConfigureTaskArgs,
     TASK_LZ_OAPP_WIRE,
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
-import { initOFTAccounts } from '@layerzerolabs/ua-devtools-solana'
 
 import { configureLzAppGraph } from './taskHelper'
 import { keyPair, publicKey } from './types'
@@ -222,13 +221,3 @@ task(TASK_LZ_OAPP_WIRE)
 
         return runSuper(args)
     })
-
-// We'll create clones of the wire task and only override the configurator argument
-const wireLikeTask = inheritTask(TASK_LZ_OAPP_WIRE)
-
-// This task will use the `initOFTAccounts` configurator that initializes the Solana accounts
-wireLikeTask('lz:oapp:init:solana')
-    .setDescription('Initialize OFT accounts for Solana')
-    .setAction(async (args: Args, hre) =>
-        hre.run(TASK_LZ_OAPP_WIRE, { ...args, isSolanaInitConfig: true, internalConfigurator: initOFTAccounts })
-    )
