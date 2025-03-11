@@ -76,6 +76,7 @@ interface Args {
  * Extend the default wiring task to add functionality for filtering EndpointV1 and EndpointV2.
  */
 task(TASK_LZ_OAPP_WIRE)
+    .addParam('solanaEid', 'Solana mainnet (30168) or testnet (40168)', undefined, devtoolsTypes.eid, true)
     .addParam('multisigKey', 'The MultiSig key', undefined, publicKey, true)
     // We use this argument to get around the fact that we want to both override the task action for the wiring task
     // and wrap this task with custom configurators
