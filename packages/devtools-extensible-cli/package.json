@@ -2,7 +2,26 @@
   "name": "@layerzerolabs/devtools-extensible-cli",
   "version": "0.0.4",
   "license": "MIT",
-  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "./dist/index.*",
+    "./cli/**/*",
+    "./types/**/*"
+  ],
   "scripts": {
     "prebuild": "tsc -noEmit",
     "build": "$npm_execpath tsup --clean",

@@ -77,8 +77,16 @@ export async function executeTransactions(
              *
              * The mapping helps keep track of the different chains and their respective providers
              * We also create a signer object using the private key and provider
+             *
+             * ------------------------------------------------------------------------------------------------
+             * Same workaround as in wire-evm.ts
+             * https://github.com/ethers-io/ethers.js/issues/3536
+             * ------------------------------------------------------------------------------------------------
              */
-            const newProvider = new providers.JsonRpcProvider(rpcUrlsMap[eid])
+            const newProvider = new providers.JsonRpcProvider({
+                url: rpcUrlsMap[eid],
+                skipFetchSetup: true,
+            })
             const signer = new ethers.Wallet(privateKey, newProvider)
 
             accountEidMap[eid] = {
@@ -113,7 +121,16 @@ export async function executeTransactions(
                     console.log(
                         `   ${progress} Submitting transaction on chain ${network.chainName}-${network.env} (${txType})...`
                     )
-                    const provider: providers.JsonRpcProvider = new providers.JsonRpcProvider(rpcUrlsMap[fromEid])
+                    /*
+                     * ------------------------------------------------------------------------------------------------
+                     * Same workaround as in wire-evm.ts
+                     * https://github.com/ethers-io/ethers.js/issues/3536
+                     * ------------------------------------------------------------------------------------------------
+                     */
+                    const provider: providers.JsonRpcProvider = new providers.JsonRpcProvider({
+                        url: rpcUrlsMap[fromEid],
+                        skipFetchSetup: true,
+                    })
                     const signer = accountEidMap[fromEid].signer
 
                     // Try to estimate gas limit, if it fails, use a default value

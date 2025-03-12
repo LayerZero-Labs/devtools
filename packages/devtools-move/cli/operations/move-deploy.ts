@@ -41,7 +41,7 @@ class MoveDeployOperation implements INewOperation {
 
         const forceDeploy = args.force_deploy ? true : false
         const moveTomlAdminName = getMoveTomlAdminName(args.oapp_type)
-        const namedAddresses = getNamedAddresses(
+        const namedAddresses = await getNamedAddresses(
             deployTaskContext.chain,
             deployTaskContext.stage,
             moveTomlAdminName,

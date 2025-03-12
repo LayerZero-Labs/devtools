@@ -1,6 +1,8 @@
-import { sendAllTxs } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
-import { createPermanentlyDisableFungibleStoreFreezingPayload } from '@layerzerolabs/devtools-move/tasks/move/utils/moveVMOftConfigOps'
-import { TaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
+import {
+    createPermanentlyDisableFungibleStoreFreezingPayload,
+    sendAllTxs,
+    TaskContext,
+} from '@layerzerolabs/devtools-move'
 
 async function permanentlyDisableFreezing(taskContext: TaskContext) {
     console.log(`\n🔧 Permanently Disabling Freezing for ${taskContext.chain}-${taskContext.stage} OFT`)

@@ -1,10 +1,10 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 
 import { unsetRateLimit } from '../../tasks/unSetRateLimit'
-import { OFTType } from '@layerzerolabs/devtools-move/sdk/IOFT'
-import { initializeTaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
 
-class SetFee implements INewOperation {
+import { OFTType, initializeTaskContext } from '@layerzerolabs/devtools-move'
+
+class UnsetRateLimit implements INewOperation {
     vm = 'move'
     operation = 'unset-rate-limit'
     description = 'Unset the rate limit configuration for a given endpoint ID'
@@ -16,5 +16,5 @@ class SetFee implements INewOperation {
     }
 }
 
-const NewOperation = new SetFee()
+const NewOperation = new UnsetRateLimit()
 export { NewOperation }
