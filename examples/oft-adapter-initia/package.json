@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-adapter-initia-example",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -49,7 +49,7 @@
     "@jest/globals": "^29.7.0",
     "@layerzerolabs/devtools-evm-hardhat": "^2.0.8",
     "@layerzerolabs/devtools-extensible-cli": "^0.0.4",
-    "@layerzerolabs/devtools-move": "^1.0.0",
+    "@layerzerolabs/devtools-move": "^1.0.2",
     "@layerzerolabs/eslint-config-next": "~2.3.39",
     "@layerzerolabs/lz-config-types": "^3.0.15",
     "@layerzerolabs/lz-definitions": "^3.0.75",

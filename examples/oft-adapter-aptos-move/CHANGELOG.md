@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-adapter-aptos-move-example
 
+## 1.0.2
+
+### Patch Changes
+
+- minor cleanup
+
 ## 1.0.1
 
 ### Patch Changes

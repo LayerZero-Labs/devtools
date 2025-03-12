@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-move
 
+## 1.0.2
+
+### Patch Changes
+
+- adding support for initia chain and cleanup
+
 ## 1.0.1
 
 ### Patch Changes
