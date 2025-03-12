@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.7.1
+
+### Patch Changes
+
+- c31fec8: experiemental tag on move-vm examples"
+
 ## 0.7.0
 
 ### Minor Changes

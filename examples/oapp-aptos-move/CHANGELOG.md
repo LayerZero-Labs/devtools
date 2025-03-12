@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-aptos-example
 
+## 1.0.1
+
+### Patch Changes
+
+- c31fec8: using EVM_MNEUMONIC instead of MNEUMONIC
+
 ## 1.0.0
 
 ### Major Changes

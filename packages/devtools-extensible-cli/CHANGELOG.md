@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-extensible-cli
 
+## 0.0.5
+
+### Patch Changes
+
+- c31fec8: exporting typescript packages
+
 ## 0.0.4
 
 ### Patch Changes
