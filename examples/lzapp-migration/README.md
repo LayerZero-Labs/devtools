@@ -327,14 +327,14 @@ Below is an expanded README section that describes not only the overall configur
 
 ## Overview
 
-This example demonstrates how to establish cross-chain communication between a LayerZero V1 contract (running on **SEPOLIA_TESTNET**) and a LayerZero V2 contract (running on **ARBSEP_V2_TESTNET**). The configuration allows the endpoints to exchange messages even though they run on different protocol versions by ensuring that the app-level messaging codec and underlying endpoint codecs are aligned.
+This example demonstrates how to establish cross-chain communication between a LayerZero V1 contract (running on **SEPOLIA_TESTNET**) and a LayerZero V2 contract (running on **SOLANA_V2_TESTNET**). The configuration allows the endpoints to exchange messages even though they run on different protocol versions by ensuring that the app-level messaging codec and underlying endpoint codecs are aligned.
 
 ## Key Configuration Details
 
 - **Endpoints:**
 
   - **SEPOLIA_TESTNET (V1):** Represented by the contract `MyLzApp`.
-  - **ARBSEP_V2_TESTNET (V2):** Represented by the contract `MyOApp`.
+  - **SOLANA_V2_TESTNET (V2):** Represented by the program `OFT202`.
 
 - **Connection Parameters:**  
   For each connection, the configuration specifies:
@@ -343,7 +343,7 @@ This example demonstrates how to establish cross-chain communication between a L
 - **Wiring Process:**  
   The wiring tasks filter connections by endpoint version:
   - **V1 Endpoint Logic:** Custom configuration logic is applied for **SEPOLIA_TESTNET** to handle the specific requirements of a V1 LzApp.
-  - **V2 Endpoint Logic:** The default logic is used for **ARBSEP_V2_TESTNET**, ensuring that the V2 OApp receives the configuration it expects.
+  - **V2 Endpoint Logic:** The default logic is used for **SOLANA_V2_TESTNET**, ensuring that the V2 OApp receives the configuration it expects.
 
 ## Overridden Tasks and Their Purpose
 
@@ -386,7 +386,7 @@ The repository includes several custom tasks that extend or override the default
 3. **Deployment & Execution:**  
    When you run the provided deployment and wiring commands, the tasks work together to:
    - Automatically fetch the configuration settings.
-   - Adjust the deployed contracts so that a V1 LzApp (**SEPOLIA_TESTNET**) can communicate with a V2 OApp (**ARBSEP_V2_TESTNET**).
+   - Adjust the deployed contracts so that a V1 LzApp (**SEPOLIA_TESTNET**) can communicate with a V2 OApp (**SOLANA_V2_TESTNET**).
 
 By overriding these tasks, the example streamlines the complex process of ensuring compatibility between different LayerZero versions, allowing developers to focus on building omnichain solutions without being bogged down by the underlying cross-chain configuration details.
 
