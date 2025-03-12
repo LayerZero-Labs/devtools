@@ -162,7 +162,7 @@ export async function getNamedAddresses(
     if (chain === 'movement' || chain === 'aptos') {
         named_addresses = `${moveTomlAdminName.replace('_admin', '')}=${oAppOwner},${moveTomlAdminName}=${oAppOwner}`
     } else if (chain === 'initia') {
-        named_addresses = `${moveTomlAdminName}=${oAppOwner}`
+        named_addresses = `${moveTomlAdminName.replace('_admin', '')}=${oAppOwner},${moveTomlAdminName}=${oAppOwner}`
     }
     const deploymentAddresses = await getDeploymentAddresses(chain, networkType)
     const allAddresses = named_addresses + ',' + deploymentAddresses

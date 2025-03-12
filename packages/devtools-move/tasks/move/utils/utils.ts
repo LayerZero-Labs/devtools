@@ -145,33 +145,32 @@ async function sendAllInitiaTxs(
         console.log('\n📦 Transaction Summary:')
         console.log(`   • Total transactions: ${cleanedPayloads.length}`)
 
-        const maxRetries = 3
         for (let i = 0; i < cleanedPayloads.length; i++) {
             console.log(
                 `🔄 [${i + 1}/${cleanedPayloads.length}] Processing transaction: ${cleanedPayloads[i].description}...`
             )
+            try {
+                const result = await oft.signSubmitAndWaitForTx(cleanedPayloads[i].payload as MsgExecute)
+                console.log(`\t📎 Transaction hash: ${result.txhash}`)
+                printExplorerLink(oft.eid, result.txhash, getNetworkForChainId(oft.eid))
+            } catch (error: any) {
+                console.error('❌ Transaction failed.')
+                const rl = readline.createInterface({
+                    input: process.stdin,
+                    output: process.stdout,
+                })
 
-            let retryCount = 0
-            while (retryCount < maxRetries) {
-                try {
-                    const result = await oft.signSubmitAndWaitForTx(cleanedPayloads[i].payload as MsgExecute)
-                    console.log(`\t📎 Transaction hash: ${result.txhash}`)
-                    printExplorerLink(oft.eid, result.txhash, getNetworkForChainId(oft.eid))
-                    break // Success, exit retry loop
-                } catch (error: any) {
-                    retryCount++
-                    if (retryCount === maxRetries) {
-                        throw error // Throw if retries failed
-                    }
+                const answer = await new Promise<string>((resolve) => {
+                    rl.question('Would you like to see the detailed error? (y/n): ', resolve)
+                })
 
-                    // If sequence number error, wait and retry
-                    if (error?.data?.error_code === 'sequence_number_too_old') {
-                        console.log('Retrying with updated sequence number...')
-                        await new Promise((resolve) => setTimeout(resolve, 1000))
-                        continue
-                    }
+                rl.close()
 
+                if (answer.toLowerCase().trim() === 'y') {
                     throw error
+                } else {
+                    console.error('🛑 Halting execution.')
+                    process.exit(0)
                 }
             }
         }
