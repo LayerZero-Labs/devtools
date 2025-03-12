@@ -62,11 +62,6 @@ const config: HardhatUserConfig = {
             url: process.env.RPC_URL_SEPOLIA || 'https://sepolia.infura.io/v3/',
             accounts,
         },
-        'solana-devnet': {
-            eid: EndpointId.SOLANA_V2_TESTNET,
-            url: process.env.RPC_URL_SOLANA_TESTNET || 'https://api.devnet.solana.com',
-            accounts,
-        },
         hardhat: {
             // Need this for testing because TestHelperOz5.sol is exceeding the compiled contract size limit
             allowUnlimitedContractSize: true,
