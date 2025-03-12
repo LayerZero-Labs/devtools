@@ -100,7 +100,7 @@ pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-nam
 
 ```bash
 npx hardhat lz:deploy
-``` 
+```
 
 Select only the EVM networks you wish to deploy to (do not select Aptos, Movement, Solana, or Initia).
 
@@ -117,8 +117,8 @@ const oftMetadata = {
   sharedDecimals: 6,
   localDecimals: 6,
 };
-
 ```
+
 Then run the following command to set the delegate:
 
 ```bash
