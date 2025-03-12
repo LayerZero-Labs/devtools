@@ -14,6 +14,70 @@
 
 :warning: The backward compatible Solana OFT (OFT202) will only work with Endpoint V1 OFT V2s. In other words, it will only work if the EVM OFT extended [OFTCoreV2](https://github.com/LayerZero-Labs/endpoint-v1-solidity-examples/blob/main/contracts/token/oft/v2/OFTCoreV2.sol) and will not work if the EVM OFT extended [OFTCore](https://github.com/LayerZero-Labs/endpoint-v1-solidity-examples/blob/main/contracts/token/oft/v1/OFTCore.sol).
 
+## Requirements
+
+- Rust `v1.75.0`
+- Anchor `v0.29`
+- Solana CLI `v1.17.31`
+- Docker
+- Node.js
+
+
+## Setup
+
+We recommend using `pnpm` as a package manager (but you can of course use a package manager of your choice).
+
+[Docker](https://docs.docker.com/get-started/get-docker/) is required to build using anchor. We highly recommend that you use the most up-to-date Docker version to avoid any issues with anchor
+builds.
+
+:warning: You need anchor version `0.29` and solana version `1.17.31` specifically to compile the build artifacts. Using higher Anchor and Solana versions can introduce unexpected issues during compilation. See the following issues in Anchor's repo: [1](https://github.com/coral-xyz/anchor/issues/3089), [2](https://github.com/coral-xyz/anchor/issues/2835). After compiling the correct build artifacts, you can change the Solana version to higher versions.
+
+### Install Rust
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+```
+
+### Install Solana
+
+```bash
+sh -c "$(curl -sSfL https://release.solana.com/v1.17.31/install)"
+```
+
+### Install Anchor
+
+Install and use the correct version
+
+```bash
+cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 anchor-cli --locked
+```
+
+
+### Get the code
+
+```bash
+LZ_ENABLE_MIGRATION_EXAMPLE=1 npx create-lz-oapp@latest
+```
+
+### Get Devnet SOL
+
+```bash
+solana airdrop 5 -u devnet
+```
+
+We recommend that you request 5 devnet SOL, which should be sufficient for this walkthrough. For the example here, we will be using Solana Devnet. If you hit rate limits, you can also use the [official Solana faucet](https://faucet.solana.com/).
+
+### Prepare `.env`
+
+```bash
+cp .env.example .env
+```
+
+In the `.env` just created, set `SOLANA_PRIVATE_KEY` to your private key value in base58 format. Since the locally stored keypair is in an integer array format, we'd need to encode it into base58 first.
+
+You can run the `npx hardhat lz:solana:base-58` to output your private key in base58 format. Optionally, pass in a value for the `--keypair-file` flag if you want to use the keypair other than the default at `~/.config/solana/id.json`
+
+Also set the `RPC_URL_SOLANA_TESTNET` value. Note that while the naming used here is `TESTNET`, it refers to the [Solana Devnet](https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#solana-testnet). We use `TESTNET` to keep it consistent with the existing EVM testnets.
 
 ## Example Overview
 
@@ -129,25 +193,82 @@ npx hardhat lz:deploy --help
 
 ### Solana (OFT202)
 
-Deploy the Solana OFT202 Program
+#### Deploy the Solana OFT
+
+While for building, we must use Solana `v1.17.31`, for deploying, we will be using `v1.18.26` as it provides an improved program deployment experience (i.e. ability to attach priority fees and also exact-sized on-chain program length which prevents needing to provide 2x the rent as in `v1.17.31`).
+
+##### Temporarily switch to Solana `v1.18.26`
+
+First, we switch to Solana `v1.18.26` (remember to switch back to `v1.17.31` later)
 
 ```bash
-solana program deploy --program-id target/deploy/oft-keypair.json target/verifiable/oft.so -u devnet --max-len $(wc -c < target/verifiable/oft.so)
+sh -c "$(curl -sSfL https://release.solana.com/v1.18.26/install)"
 ```
 
-Create the Solana OFT202 acounts
+##### (Recommended) Deploying with a priority fee
+
+This section applies if you are unable to land your deployment transaction due to network congestion.
+
+:information_source: [Priority Fees](https://solana.com/developers/guides/advanced/how-to-use-priority-fees) are Solana's mechanism to allow transactions to be prioritized during periods of network congestion. When the network is busy, transactions without priority fees might never be processed. It is then necessary to include priority fees, or wait until the network is less congested. Priority fees are calculated as follows: `priorityFee = compute budget * compute unit price`. We can make use of priority fees by attaching the `--with-compute-unit-price` flag to our `solana program deploy` command. Note that the flag takes in a value in micro lamports, where 1 micro lamport = 0.000001 lamport.
+
+You can run refer QuickNode's [Solana Priority Fee Tracker](https://www.quicknode.com/gas-tracker/solana) to know what value you'd need to pass into the `--with-compute-unit-price` flag.
+
+##### Run the deploy command
+
+```bash
+solana program deploy --program-id target/deploy/oft-keypair.json target/verifiable/oft.so -u devnet --with-compute-unit-price <COMPUTE_UNIT_PRICE_IN_MICRO_LAMPORTS>
+```
+
+:information_source: the `-u` flag specifies the RPC URL that should be used. The options are `mainnet-beta, devnet, testnet, localhost`, which also have their respective shorthands: `-um, -ud, -ut, -ul`
+
+:warning: If the deployment is slow, it could be that the network is congested and you might need to increase the priority fee.
+
+##### Switch back to Solana `1.17.31`
+
+:warning: After deploying, make sure to switch back to v1.17.31 after deploying. If you need to rebuild artifacts, you must use Solana CLI version `1.17.31` and Anchor version `0.29.0`
+
+```bash
+sh -c "$(curl -sSfL https://release.solana.com/v1.17.31/install)"
+```
+
+#### Create the Solana OFT202 acounts
+
+
+:information_source: For **OFT** and **OFT Mint-and-Burn Adapter**, the SPL token's Mint Authority is set to the **Mint Authority Multisig**, which always has the **OFT Store** as a signer. The multisig is fixed to needing 1 of N signatures.
+
+:information_source: For **OFT** and **OFT Mint-And-Burn Adapter**, you have the option to specify additional signers through the `--additional-minters` flag. If you choose not to, you must pass in `--only-oft-store true`, which means only the **OFT Store** will be a signer for the \_Mint Authority Multisig\*.
+
+:warning: If you choose to go with `--only-oft-store`, you will not be able to add in other signers/minters or update the Mint Authority, and the Freeze Authority will be immediately renounced. The token Mint Authority will be fixed Mint Authority Multisig address while the Freeze Authority will be set to None.
+
+#### For OFT:
 
 ```bash
 pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID>
 ```
 
-Initialize the Solana OFT Config
+:warning: Use `--additional-minters` flag to add a CSV of additional minter addresses to the Mint Authority Multisig. If you do not want to, you must specify `--only-oft-store true`.
 
-:warning: Do this only when initializing the OFT for the first time. The only exception is if a new pathway is added later. If so, run this again to properly initialize the pathway.
+:information_source: You can also specify `--amount <AMOUNT>` to have the OFT minted to your deployer address upon token creation.
+
+#### For OFTAdapter:
 
 ```bash
-npx hardhat lz:oft:solana:init-config --oapp-config layerzero.config.ts --solana-eid <SOLANA_ENDPOINT_ID>
+pnpm hardhat lz:oft-adapter:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <TOKEN_MINT> --token-program <TOKEN_PROGRAM_ID>
 ```
+
+:information_source: You can use OFT Adapter if you want to use an existing token on Solana. For OFT Adapter, tokens will be locked when sending to other chains and unlocked when receiving from other chains.
+
+#### For OFT Mint-And-Burn Adapter (MABA):
+
+```bash
+pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <TOKEN_MINT> --token-program <TOKEN_PROGRAM_ID>
+```
+
+:information_source: You can use OFT Mint-And-Burn Adapter if you want to use an existing token on Solana. For OFT Mint-And-Burn Adapter, tokens will be burned when sending to other chains and minted when receiving from other chains.
+
+:warning: You cannot use this option if your token's Mint Authority has been renounced.
+
+:warning: Note that for MABA mode, before attempting any cross-chain transfers, **you must transfer the Mint Authority** for `lz_receive` to work, as that is not handled in the script (since you are using an existing token). If you opted for `--additional-minters`, then you must transfer the Mint Authority to the newly created multisig (this is the `mintAuthority` value in the `/deployments/solana-<mainnet/testnet>/OFT.json`). If not, then it should be set to the OFT Store address, which is `oftStore` in the same file.
 
 ### Configuration
 
@@ -161,6 +282,15 @@ const solanaContract: OmniPointHardhat = {
   address: "", // <---TODO update this with the OFTStore address.
 };
 ```
+
+#### Initialize the Solana OFT PeerConfig Account(s)
+
+:warning: Do this only when initializing the OFT for the first time. The only exception is if a new pathway is added later. If so, run this again to properly initialize the pathway.
+
+```bash
+npx hardhat lz:oft:solana:init-config --oapp-config layerzero.config.ts --solana-eid <SOLANA_ENDPOINT_ID>
+```
+
 
 #### Run the wire command
 
