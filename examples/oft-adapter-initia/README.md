@@ -26,7 +26,7 @@ https://docs.initia.xyz/build-on-initia/initiad
 After installation, add your private key to the keyring:
 
 ```bash
-initiad keys import-hex <your-key-name> <your-private-key-in-hex> --keyring-backend test
+initiad keys import-hex <your-key-name> <your-key-hex> --key-type secp256k1 --coin-type 118 --keyring-backend test
 ```
 
 To verify your keys are properly imported:
@@ -100,7 +100,7 @@ pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-nam
 
 ```bash
 npx hardhat lz:deploy
-``` 
+```
 
 Select only the EVM networks you wish to deploy to (do not select Aptos, Movement, Solana, or Initia).
 
