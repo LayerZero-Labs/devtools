@@ -56,12 +56,12 @@ const config: OAppOmniGraphHardhat = {
                 ],
                 sendLibrary: '0x3e1b182c40965a986133798e1da76302ef327de2c32c58110361587560285e88',
                 receiveLibraryConfig: {
-                    // Required Receive Library Address on Aptos
+                    // Required Receive Library Address on Initia
                     receiveLibrary: '0x3e1b182c40965a986133798e1da76302ef327de2c32c58110361587560285e88',
-                    // Optional Grace Period for Switching Receive Library Address on Aptos
+                    // Optional Grace Period for Switching Receive Library Address on Initia
                     gracePeriod: BigInt(0),
                 },
-                // Optional Receive Library Timeout for when the Old Receive Library Address will no longer be valid on Aptos
+                // Optional Receive Library Timeout for when the Old Receive Library Address will no longer be valid on Initia
                 // receiveLibraryTimeoutConfig: {
                 //     lib: '0x3e1b182c40965a986133798e1da76302ef327de2c32c58110361587560285e88',
                 //     expiry: BigInt(1000000000),
@@ -69,11 +69,11 @@ const config: OAppOmniGraphHardhat = {
                 sendConfig: {
                     executorConfig: {
                         maxMessageSize: 10_000,
-                        // The configured Executor address on Aptos
+                        // The configured Executor address on Initia
                         executor: '0x798c194c8740dde76a0e3f46f444f7ee974765abb2a9db98be03a0ee89ce050c',
                     },
                     ulnConfig: {
-                        // The number of block confirmations to wait on Aptos before emitting the message from the source chain.
+                        // The number of block confirmations to wait on Initia before emitting the message from the source chain.
                         confirmations: BigInt(10),
                         // The address of the DVNs you will pay to verify a sent message on the source chain.
                         // The destination tx will wait until ALL `requiredDVNs` verify the message.
