@@ -16,7 +16,7 @@ async function wireMove(taskContext: TaskContext) {
     console.log(`\n🔌 Wiring ${taskContext.chain}-${taskContext.stage} OApp`)
     console.log(`\tAddress: ${taskContext.oAppAddress}\n`)
 
-    const deploymentAddresses = getDeploymentAddresses(taskContext.chain, taskContext.stage)
+    const deploymentAddresses = await getDeploymentAddresses(taskContext.chain, taskContext.stage)
     const endpointAddress = getEndpointAddressFromNamedAddresses(deploymentAddresses)
 
     const moveVMEndpoint = EndpointFactory.create(taskContext.moveVMConnection as Aptos, endpointAddress)

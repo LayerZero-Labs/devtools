@@ -1,8 +1,7 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 
 import { irrevocablyDisableBlocklist } from '../../tasks/irrevocablyDisableBlocklist'
-import { OFTType } from '@layerzerolabs/devtools-move/sdk/IOFT'
-import { initializeTaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
+import { OFTType, initializeTaskContext } from '@layerzerolabs/devtools-move'
 
 class AdapterIrrevocablyDisableBlocklist implements INewOperation {
     vm = 'move'

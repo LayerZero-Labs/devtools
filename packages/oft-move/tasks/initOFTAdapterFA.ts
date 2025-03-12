@@ -1,5 +1,4 @@
-import { TaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
-import { sendInitTransaction } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
+import { sendInitTransaction, TaskContext } from '@layerzerolabs/devtools-move'
 
 async function initOFTAdapterFA(taskContext: TaskContext, move_vm_fa_address: string, shared_decimals: number) {
     console.log(`\n⚡ Initializing OFT Adapter`)

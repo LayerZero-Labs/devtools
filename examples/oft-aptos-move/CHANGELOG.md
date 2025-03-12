@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-aptos-move-example
 
+## 1.0.1
+
+### Patch Changes
+
+- c31fec8: remove local imports
+
 ## 1.0.0
 
 ### Major Changes

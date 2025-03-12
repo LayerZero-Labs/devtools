@@ -1,7 +1,7 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 
 import mintToMoveVM from '../../tasks/mintToMoveVM'
-import { initializeTaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
+import { initializeTaskContext } from '@layerzerolabs/devtools-move'
 
 class MintToMoveOFT implements INewOperation {
     vm = 'move'

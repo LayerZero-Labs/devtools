@@ -1,5 +1,6 @@
 import * as readline from 'readline'
 
+import { importDefault } from '@layerzerolabs/io-devtools'
 import type {
     OAppEdgeConfig,
     OAppNodeConfig,
@@ -9,20 +10,20 @@ import type {
 import { ChainType, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
 import path from 'path'
 import 'hardhat/register'
+import { HardhatConfig } from 'hardhat/types'
 
 /*
  * Parses hardhat.config.ts and returns a mapping of EID to network name or URL.
  */
 export async function createEidToNetworkMapping(_value = 'networkName'): Promise<Record<string, string>> {
     const hardhatConfigPath = path.resolve(`${process.cwd()}/hardhat.config.ts`)
-    const hardhatConfigFile = await import(hardhatConfigPath)
-    const hardhatConfig = hardhatConfigFile.default
+    const hardhatConfigFile = (await importDefault(hardhatConfigPath)) as HardhatConfig
 
-    if (!hardhatConfig.networks) {
+    if (!hardhatConfigFile.networks) {
         throw new Error('No networks found in hardhat config')
     }
 
-    const networks = hardhatConfig.networks
+    const networks = hardhatConfigFile.networks
     const eidNetworkNameMapping: Record<string, string> = {}
     for (const [networkName, networkConfig] of Object.entries(networks)) {
         if (networkName === 'hardhat') {
@@ -49,13 +50,12 @@ export async function getConfigConnectionsFromChainType(
     chainType: ChainType,
     configPath: string
 ): Promise<OAppOmniGraphHardhat['connections']> {
-    const configFile = await import(configPath)
-    const config = configFile.default
-    if (!config.connections) {
+    const configFile = (await importDefault(configPath)) as OAppOmniGraphHardhat
+    if (!configFile.connections) {
         throw new Error('No connections found in config')
     }
 
-    const conns = config.connections
+    const conns = configFile.connections
     const connections: OAppOmniGraphHardhat['connections'] = []
 
     for (const conn of conns) {
@@ -74,13 +74,12 @@ export async function getConfigConnections(
     _eid: number,
     _configPath: string
 ): Promise<OAppOmniGraphHardhat['connections']> {
-    const configFile = await import(_configPath)
-    const config = configFile.default
-    if (!config.connections) {
+    const configFile = (await importDefault(_configPath)) as OAppOmniGraphHardhat
+    if (!configFile.connections) {
         throw new Error('No connections found in config')
     }
 
-    const conns = config.connections
+    const conns = configFile.connections
     const connections: OAppOmniGraphHardhat['connections'] = []
 
     for (const conn of conns) {
@@ -112,13 +111,12 @@ export function getConfigConnectionsFromConfigConnections(
 
 export async function getHHAccountConfig(_configPath: string): Promise<Record<number, OAppNodeConfig>> {
     const configPath = path.resolve(_configPath)
-    const configFile = await import(configPath)
-    const config = configFile.default
-    if (!config.contracts) {
+    const configFile = (await importDefault(configPath)) as OAppOmniGraphHardhat
+    if (!configFile.contracts) {
         throw new Error('No contracts found in config')
     }
 
-    const conns = config.contracts
+    const conns = configFile.contracts
 
     const configs: Record<number, OAppNodeConfig> = {}
 
