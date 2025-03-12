@@ -285,7 +285,7 @@ pnpm run lz:sdk:move:mint-to-move-oft --oapp-config move.layerzero.config.ts --a
 
 ## Send from Move VM
 
-> **Important:** The source and destination addresses must be in hex format (0x...), not the bech32 format
+> **Important:** The source and destination addresses must be in hex format (0x...), not the bech32 format.
 
 ```bash
 pnpm run lz:sdk:move:send-from-move-oft \
@@ -299,7 +299,7 @@ pnpm run lz:sdk:move:send-from-move-oft \
 
 ## Send from EVM
 
-> **Important:** The destination address must be in hex format (0x...), not the bech32 format
+> **Important:** The destination address must be in hex format (0x...), not the bech32 format.
 
 ```bash
 pnpm run lz:sdk:evm:send-evm \
