@@ -14,6 +14,7 @@
 
 :warning: The backward compatible Solana OFT (OFT202) will only work with Endpoint V1 OFT V2s. In other words, it will only work if the EVM OFT extended [OFTCoreV2](https://github.com/LayerZero-Labs/endpoint-v1-solidity-examples/blob/main/contracts/token/oft/v2/OFTCoreV2.sol) and will not work if the EVM OFT extended [OFTCore](https://github.com/LayerZero-Labs/endpoint-v1-solidity-examples/blob/main/contracts/token/oft/v1/OFTCore.sol).
 
+
 ## Example Overview
 
 For this example, we will deploy the EndpointV1 OFT on Ethereum Sepolia and also OFT202 on Solana Devnet.
@@ -72,19 +73,21 @@ solana-keygen new -o target/deploy/endpoint-keypair.json --force
 solana-keygen new -o target/deploy/oft-keypair.json --force
 
 anchor keys sync
+```
+
+:warning: `--force` flag overwrites the existing keys with the ones you generate.
+
+Run
+
+```
 anchor keys list
 ```
 
-Copy the OFT's programId and go into [programs/oft202/lib.rs](./programs/oft202/src/lib.rs). Note the following snippet:
+to view the generated programIds (public keys). The output should look something like this:
 
-```rust
-declare_id!(Pubkey::new_from_array(program_id_from_env!(
-    "OFT_ID",
-    "3ThC8DDzimnnrt4mvJSKFpWQA3UvnbzKM3mT6SHoNQKu"
-)));
 ```
-
-Replace `3ThC8DDzimnnrt4mvJSKFpWQA3UvnbzKM3mT6SHoNQKu` with the programId that you have copied.
+oft: <OFT_PROGRAM_ID>
+```
 
 ### Building and Deploying the Solana OFT Program
 
@@ -93,7 +96,7 @@ Ensure you have Docker running before running the build command.
 #### Build the Solana OFT program
 
 ```bash
-anchor build -v # verification flag enabled
+anchor build -v -e OFT_ID=<OFT_PROGRAM_ID>
 ```
 
 ## Deploying Contracts
