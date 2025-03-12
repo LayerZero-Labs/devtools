@@ -147,6 +147,20 @@ export const getExamples = (): Example[] => {
                       directory: 'examples/oapp-aptos-move',
                       ref,
                   },
+                  {
+                      id: 'oft-initia',
+                      label: 'OFT (Initia)',
+                      repository,
+                      directory: 'examples/oft-initia',
+                      ref,
+                  },
+                  {
+                      id: 'oft-adapter-initia',
+                      label: 'OFT Adapter (Initia)',
+                      repository,
+                      directory: 'examples/oft-adapter-initia',
+                      ref,
+                  },
               ]
             : []),
     ]
