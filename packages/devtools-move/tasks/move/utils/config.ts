@@ -4,8 +4,11 @@ import { spawn } from 'child_process'
 
 import { Account, Ed25519PrivateKey } from '@aptos-labs/ts-sdk'
 import YAML from 'yaml'
+import { importDefault } from '@layerzerolabs/io-devtools'
 import { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 import { EndpointId, getNetworkForChainId, Stage } from '@layerzerolabs/lz-definitions'
+
+import { deploymentAddresses } from './deploymentAddresses'
 
 import inquirer from 'inquirer'
 
@@ -87,8 +90,8 @@ export function getMoveVMAccountAddress(chain: string): string {
 
 export async function getLzConfig(configPath: string): Promise<OAppOmniGraphHardhat> {
     const lzConfigPath = path.resolve(path.join(process.cwd(), configPath))
-    const lzConfigFile = await import(lzConfigPath)
-    const lzConfig = lzConfigFile.default
+    const lzConfigFile = await importDefault(lzConfigPath)
+    const lzConfig = lzConfigFile as OAppOmniGraphHardhat
     return lzConfig
 }
 
@@ -148,12 +151,12 @@ export function createAccountFromPrivateKey(privateKey: string, account_address:
     })
 }
 
-export function getNamedAddresses(
+export async function getNamedAddresses(
     chain: string,
     networkType: string,
     moveTomlAdminName: string,
     selectedContract: OAppOmniGraphHardhat['contracts'][number]
-): string {
+): Promise<string> {
     const oAppOwner = getOAppOwner(selectedContract)
     let named_addresses = ''
     if (chain === 'movement' || chain === 'aptos') {
@@ -161,15 +164,14 @@ export function getNamedAddresses(
     } else if (chain === 'initia') {
         named_addresses = `${moveTomlAdminName}=${oAppOwner}`
     }
-    const deploymentAddresses = getDeploymentAddresses(chain, networkType)
+    const deploymentAddresses = await getDeploymentAddresses(chain, networkType)
     const allAddresses = named_addresses + ',' + deploymentAddresses
 
     return allAddresses
 }
 
-export function getDeploymentAddresses(chain: string, networkType: string): string {
-    const addressesPath = path.join(__dirname, './deploymentAddresses.json')
-    const addresses = JSON.parse(fs.readFileSync(addressesPath, 'utf8'))
+export async function getDeploymentAddresses(chain: string, networkType: string): Promise<string> {
+    const addresses = deploymentAddresses as Record<string, Record<string, string>>
     const networkAddresses = addresses[`${chain}-${networkType}-addresses`]
 
     if (!networkAddresses) {

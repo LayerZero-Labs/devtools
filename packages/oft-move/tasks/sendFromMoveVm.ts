@@ -2,10 +2,8 @@ import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import * as readline from 'readline'
 
-import { hexAddrToAptosBytesAddr } from '@layerzerolabs/devtools-move/sdk/utils'
-import { sendAllTxs } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
-import { evmAddressToAptos } from '@layerzerolabs/devtools-move/tasks/move/utils/moveVMOftConfigOps'
-import { TaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
+import { hexAddrToAptosBytesAddr, sendAllTxs, evmAddressToAptos, TaskContext } from '@layerzerolabs/devtools-move'
+
 async function sendFromMoveVm(
     taskContext: TaskContext,
     amountLd: bigint,

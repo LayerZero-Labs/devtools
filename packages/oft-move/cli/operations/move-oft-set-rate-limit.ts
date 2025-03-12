@@ -1,10 +1,9 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 
 import { setRateLimit } from '../../tasks/setRateLimit'
-import { OFTType } from '@layerzerolabs/devtools-move/sdk/IOFT'
-import { initializeTaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
+import { OFTType, initializeTaskContext } from '@layerzerolabs/devtools-move'
 
-class SetFee implements INewOperation {
+class SetRateLimit implements INewOperation {
     vm = 'move'
     operation = 'set-rate-limit'
     description = `
@@ -47,5 +46,5 @@ In order to reset the in-flight volume, the rate limit must be unset and then se
     }
 }
 
-const NewOperation = new SetFee()
+const NewOperation = new SetRateLimit()
 export { NewOperation }
