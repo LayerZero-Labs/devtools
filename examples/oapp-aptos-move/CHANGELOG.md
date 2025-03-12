@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-aptos-example
 
+## 1.0.2
+
+### Patch Changes
+
+- 55dfa04: scripts/cli uses the changed imports
+
 ## 1.0.1
 
 ### Patch Changes
