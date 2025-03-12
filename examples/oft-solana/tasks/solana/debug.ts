@@ -83,7 +83,7 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
     )
     .setAction(async (taskArgs: DebugTaskArgs) => {
         const { eid, oftStore, endpoint, dstEids, action } = taskArgs
-        const { umi, connection } = await deriveConnection(eid)
+        const { umi, connection } = await deriveConnection(eid, true)
         const store = getOftStore(eid, oftStore)
         const oftStoreInfo = await oft.accounts.fetchOFTStore(umi, store)
         const mintAccount = await fetchMint(umi, publicKey(oftStoreInfo.tokenMint))
