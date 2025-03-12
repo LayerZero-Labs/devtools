@@ -1130,8 +1130,8 @@ importers:
         specifier: ^2.0.8
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.4
-        version: 0.0.4
+        specifier: ^0.0.5
+        version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
         specifier: ^1.0.2
         version: link:../../packages/devtools-move
@@ -1301,8 +1301,8 @@ importers:
         specifier: ^2.0.8
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.4
-        version: 0.0.4
+        specifier: ^0.0.5
+        version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
         specifier: ^1.0.2
         version: link:../../packages/devtools-move
@@ -1650,8 +1650,8 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.4
-        version: 0.0.4
+        specifier: ^0.0.5
+        version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
         specifier: ^1.0.2
         version: link:../../packages/devtools-move
@@ -8020,11 +8020,6 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
-
-  /@layerzerolabs/devtools-extensible-cli@0.0.4:
-    resolution: {integrity: sha512-GKPpbns1hLwrlF8k5JdarZqrlq677eNCOlnp09SYeuRIfsvg2TaMU39ROSrUPK8tX5uLqJnsxilkA/qtoJsczg==}
-    engines: {node: '>=18.16.0'}
-    dev: true
 
   /@layerzerolabs/eslint-config-next@2.3.44(typescript@5.5.3):
     resolution: {integrity: sha512-WlBSy47LGPILdrNgzPiRtQf/hAY62IN37ncUsQwcr8T7cyX1HZREx2qljuXpvduLDAKn5otsm0XIqHuCRUHEFg==}
