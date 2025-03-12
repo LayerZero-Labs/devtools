@@ -1,10 +1,12 @@
-const oftMetadata = {
-    token_name: 'MyMoveVMOFT',
-    token_symbol: 'MMVMOFT',
+import { OFTFaInitParams } from '@layerzerolabs/oft-move'
+
+const oftMetadata: OFTFaInitParams = {
+    token_name: 'MyOFT',
+    token_symbol: 'MOFT',
     icon_uri: '',
     project_uri: '',
     sharedDecimals: 6,
     localDecimals: 6,
 }
 
-export { oftMetadata }
+export default oftMetadata

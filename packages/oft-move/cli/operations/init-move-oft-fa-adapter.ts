@@ -1,8 +1,10 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
+import { importDefault } from '@layerzerolabs/io-devtools'
 import path from 'path'
 
 import { initOFTAdapterFA } from '../../tasks/initOFTAdapterFA'
-import { initializeTaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
+import { initializeTaskContext } from '@layerzerolabs/devtools-move'
+import { OFTAdapterFaInitParams } from '../../types'
 
 class InitOFTFAAdapter implements INewOperation {
     vm = 'move'
@@ -12,9 +14,8 @@ class InitOFTFAAdapter implements INewOperation {
 
     async impl(args: any): Promise<void> {
         const fullPathOFTConfig = path.resolve(path.join(args.rootDir, args.move_deploy_script))
-        const oftConfig = await import(fullPathOFTConfig)
+        const oftMetadata = (await importDefault(fullPathOFTConfig)) as OFTAdapterFaInitParams
 
-        const oftMetadata = oftConfig.oftMetadata
         if (!oftMetadata) {
             throw new Error(`${fullPathOFTConfig} does not contain an oftMetadata object`)
         }

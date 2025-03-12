@@ -1,6 +1,4 @@
-import { TransactionPayload } from '@layerzerolabs/devtools-move/tasks/move/utils/moveVMOftConfigOps'
-import { sendAllTxs } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
-import { TaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
+import { TransactionPayload, sendAllTxs, TaskContext } from '@layerzerolabs/devtools-move'
 
 async function mintToMoveVM(taskContext: TaskContext, amountLd: number, toAddress: string) {
     console.log(`\n🪙  Minting ${taskContext.chain}-${taskContext.stage} OFT ✨`)

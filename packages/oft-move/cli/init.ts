@@ -1,19 +1,35 @@
-import { AptosEVMCLI } from '@layerzerolabs/devtools-extensible-cli/cli/AptosEVMCli'
-import path from 'path'
+import { AptosEVMCLI } from '@layerzerolabs/devtools-extensible-cli'
+
+import {
+    InitMoveOFTFA,
+    InitMoveOFTFAAdapter,
+    MoveOFTAdapterDisableBlocklist,
+    MoveOFTAdapterSetFee,
+    MoveOFTAdapterSetRateLimit,
+    MoveOFTAdapterUnsetRateLimit,
+    MoveOFTDisableBlocklist,
+    MoveOFTDisableFreezing,
+    MoveOFTSetFee,
+    MoveOFTSetRateLimit,
+    MoveOFTRateLimit,
+    MintToMoveOFT,
+    QuoteSendMoveOFT,
+    SendFromMoveOFT,
+} from './operations'
 
 export async function attach_oft_move(sdk: AptosEVMCLI) {
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/init-move-oft-fa'))
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/quote-send-move-oft'))
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/init-move-oft-fa-adapter'))
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/move-oft-set-fee'))
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/move-oft-set-rate-limit'))
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/move-oft-unset-rate-limit'))
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/move-oft-disable-blocklist'))
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/move-oft-disable-freezing'))
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/send-from-move-oft'))
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/mint-to-move-oft'))
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/move-oft-adapter-disable-blocklist'))
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/move-oft-adapter-set-fee'))
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/move-oft-adapter-set-rate-limit'))
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/move-oft-adapter-unset-rate-limit'))
+    await sdk.extendOperation(InitMoveOFTFA)
+    await sdk.extendOperation(InitMoveOFTFAAdapter)
+    await sdk.extendOperation(MoveOFTAdapterDisableBlocklist)
+    await sdk.extendOperation(MoveOFTAdapterSetFee)
+    await sdk.extendOperation(MoveOFTAdapterSetRateLimit)
+    await sdk.extendOperation(MoveOFTAdapterUnsetRateLimit)
+    await sdk.extendOperation(MoveOFTDisableBlocklist)
+    await sdk.extendOperation(MoveOFTDisableFreezing)
+    await sdk.extendOperation(MoveOFTSetFee)
+    await sdk.extendOperation(MoveOFTSetRateLimit)
+    await sdk.extendOperation(MoveOFTRateLimit)
+    await sdk.extendOperation(MintToMoveOFT)
+    await sdk.extendOperation(QuoteSendMoveOFT)
+    await sdk.extendOperation(SendFromMoveOFT)
 }

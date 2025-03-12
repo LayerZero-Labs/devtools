@@ -2,7 +2,7 @@ import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 import { createEvmOmniContracts, readPrivateKey } from '../../tasks/evm/wire-evm'
 import { ethers } from 'ethers'
 
-class EVMQuoteSendOperation implements INewOperation {
+class EVMSendOperation implements INewOperation {
     vm = 'evm'
     operation = 'send'
     description = 'Sends an OFT message'
@@ -57,7 +57,7 @@ class EVMQuoteSendOperation implements INewOperation {
     }
 }
 
-const NewOperation = new EVMQuoteSendOperation()
+const NewOperation = new EVMSendOperation()
 export { NewOperation }
 
 async function sendOFT(args: any): Promise<MessagingFee> {
