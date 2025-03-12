@@ -30,8 +30,8 @@ const config: OAppOmniGraphHardhat = {
         {
             contract: initiaContract,
             config: {
-                delegate: '',
-                owner: '',
+                delegate: '0x2e2de55e5162d58c41de389ccf6d7ca8de3940a6',
+                owner: '0x2e2de55e5162d58c41de389ccf6d7ca8de3940a6',
             },
         },
     ],
@@ -74,7 +74,7 @@ const config: OAppOmniGraphHardhat = {
                     },
                     ulnConfig: {
                         // The number of block confirmations to wait on Aptos before emitting the message from the source chain.
-                        confirmations: BigInt(10),
+                        confirmations: BigInt(1_000_000),
                         // The address of the DVNs you will pay to verify a sent message on the source chain.
                         // The destination tx will wait until ALL `requiredDVNs` verify the message.
                         requiredDVNs: ['0x3f12330ba9e26a604e2149b4b67c0710d32fcbc3de0bea76dd43dbb6b747bc8c'],
@@ -111,13 +111,13 @@ const config: OAppOmniGraphHardhat = {
                     {
                         msgType: MsgType.SEND,
                         optionType: ExecutorOptionType.LZ_RECEIVE,
-                        gas: 5_000, // gas limit in wei for EndpointV2.lzReceive
+                        gas: 300_000, // gas limit in wei for EndpointV2.lzReceive
                         value: 0, // msg.value in wei for EndpointV2.lzReceive
                     },
                     {
                         msgType: MsgType.SEND_AND_CALL,
                         optionType: ExecutorOptionType.LZ_RECEIVE,
-                        gas: 5_000, // gas limit in wei for EndpointV2.lzCompose
+                        gas: 300_000, // gas limit in wei for EndpointV2.lzCompose
                         value: 0, // msg.value in wei for EndpointV2.lzCompose
                     },
                 ],
@@ -132,7 +132,7 @@ const config: OAppOmniGraphHardhat = {
                 // },
                 sendConfig: {
                     executorConfig: {
-                        maxMessageSize: 10_000,
+                        maxMessageSize: 100_000,
                         executor: '0x31894b190a8bAbd9A067Ce59fde0BfCFD2B18470',
                     },
                     ulnConfig: {
@@ -143,7 +143,7 @@ const config: OAppOmniGraphHardhat = {
                 },
                 receiveConfig: {
                     ulnConfig: {
-                        confirmations: BigInt(10),
+                        confirmations: BigInt(1_000_000),
                         requiredDVNs: ['0x0eE552262f7B562eFcED6DD4A7e2878AB897d405'],
                         optionalDVNThreshold: 0,
                     },
