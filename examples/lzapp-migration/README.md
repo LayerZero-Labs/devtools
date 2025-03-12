@@ -132,6 +132,10 @@ pnpm compile
 
 ##### Solana (OFT202)
 
+### Prepare the OFT Program ID
+
+Create `programId` keypair files by running:
+
 ```bash
 solana-keygen new -o target/deploy/endpoint-keypair.json --force
 solana-keygen new -o target/deploy/oft-keypair.json --force
@@ -169,8 +173,7 @@ anchor build -v -e OFT_ID=<OFT_PROGRAM_ID>
 
 Set up deployer wallet/account:
 
-- Rename `.env.example` -> `.env`
-- Choose your preferred means of setting up your deployer wallet/account:
+- in `.env`, choose your preferred means of setting up your deployer wallet/account:
 
 ```
 MNEMONIC="test test test test test test test test test test test junk"
@@ -178,7 +181,7 @@ or...
 PRIVATE_KEY="0xabc...def"
 ```
 
-To deploy your contracts to your desired blockchains, run the following command in your project's folder:
+To deploy your contracts to your desired EVM chains, run the following command in your project's folder:
 
 ```bash
 npx hardhat lz:deploy
@@ -398,5 +401,8 @@ By overriding these tasks, the example streamlines the complex process of ensuri
 </p>
 
 ### Troubleshooting
+
+For the Solana-related steps, you may also refer to the default [Solana OFT example README](https://github.com/LayerZero-Labs/devtools/tree/main/examples/oft-solana) which might have more elaboration on the Solana side.
+
 
 Refer to the [Solana Troubleshooting page on the LayerZero Docs](https://docs.layerzero.network/v2/developers/solana/troubleshooting/common-errors) to see how to solve common error when deploying Solana OFTs.
