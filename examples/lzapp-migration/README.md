@@ -22,7 +22,6 @@
 - Docker
 - Node.js
 
-
 ## Setup
 
 We recommend using `pnpm` as a package manager (but you can of course use a package manager of your choice).
@@ -51,7 +50,6 @@ Install and use the correct version
 ```bash
 cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 anchor-cli --locked
 ```
-
 
 ### Get the code
 
@@ -236,7 +234,6 @@ sh -c "$(curl -sSfL https://release.solana.com/v1.17.31/install)"
 
 #### Create the Solana OFT202 acounts
 
-
 :information_source: For **OFT** and **OFT Mint-and-Burn Adapter**, the SPL token's Mint Authority is set to the **Mint Authority Multisig**, which always has the **OFT Store** as a signer. The multisig is fixed to needing 1 of N signatures.
 
 :information_source: For **OFT** and **OFT Mint-And-Burn Adapter**, you have the option to specify additional signers through the `--additional-minters` flag. If you choose not to, you must pass in `--only-oft-store true`, which means only the **OFT Store** will be a signer for the \_Mint Authority Multisig\*.
@@ -293,7 +290,6 @@ const solanaContract: OmniPointHardhat = {
 ```bash
 npx hardhat lz:oft:solana:init-config --oapp-config layerzero.config.ts --solana-eid <SOLANA_ENDPOINT_ID>
 ```
-
 
 #### Run the wire command
 
@@ -403,6 +399,5 @@ By overriding these tasks, the example streamlines the complex process of ensuri
 ### Troubleshooting
 
 For the Solana-related steps, you may also refer to the default [Solana OFT example README](https://github.com/LayerZero-Labs/devtools/tree/main/examples/oft-solana) which might have more elaboration on the Solana side.
-
 
 Refer to the [Solana Troubleshooting page on the LayerZero Docs](https://docs.layerzero.network/v2/developers/solana/troubleshooting/common-errors) to see how to solve common error when deploying Solana OFTs.
