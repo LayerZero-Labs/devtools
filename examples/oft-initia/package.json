@@ -5,10 +5,10 @@
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf artifacts cache out build",
-    "compile": "$npm_execpath run compile:forge && $npm_execpath run compile:hardhat && $npm_execpath run compile:aptos",
-    "compile:aptos": "aptos move compile --dev --skip-attribute-checks --included-artifacts=none --skip-fetch-latest-git-deps",
+    "compile": "$npm_execpath run compile:forge && $npm_execpath run compile:hardhat",
     "compile:forge": "forge build",
     "compile:hardhat": "hardhat compile",
+    "compile:initia": "initiad move build --dev",
     "lint": "$npm_execpath run lint:js && $npm_execpath run lint:sol",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}' && prettier --write . && solhint 'contracts/**/*.sol' --fix --noPrompt",
     "lint:js": "eslint '**/*.{js,ts,json}' && prettier --check .",
@@ -34,10 +34,10 @@
     "lz:sdk:move:transfer-object-owner": "ts-node scripts/cli.ts --vm move --op transfer-object-owner",
     "lz:sdk:move:unset-rate-limit": "ts-node scripts/cli.ts --vm move --op unset-rate-limit",
     "lz:sdk:move:wire": "ts-node scripts/cli.ts --vm move --op wire",
-    "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat && $npm_execpath run test:aptos",
-    "test:aptos": "aptos move test --dev --skip-fetch-latest-git-deps",
+    "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat",
     "test:forge": "forge test",
-    "test:hardhat": "hardhat test"
+    "test:hardhat": "hardhat test",
+    "test:initia": "initiad move test --dev --skip-fetch-latest-git-deps"
   },
   "resolutions": {
     "ethers": "^5.7.2",
