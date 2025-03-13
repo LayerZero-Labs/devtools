@@ -54,6 +54,10 @@ interface TaskArgs {
      * Output filename for the generated transactions.
      */
     outputFilename?: string
+    /**
+     * Exclude connections that originate from the specified EndpointIds.
+     */
+    skipConnectionsFromEids?: string[]
 }
 
 const action: ActionType<TaskArgs> = async (
@@ -69,6 +73,7 @@ const action: ActionType<TaskArgs> = async (
         configureSubtask = SUBTASK_LZ_OAPP_WIRE_CONFIGURE,
         signAndSendSubtask = SUBTASK_LZ_SIGN_AND_SEND,
         outputFilename,
+        skipConnectionsFromEids,
     },
     hre
 ): Promise<SignAndSendResult> => {
@@ -121,6 +126,7 @@ const action: ActionType<TaskArgs> = async (
         graph,
         assert,
         dryRun,
+        skipConnectionsFromEids,
     })
 }
 
@@ -157,3 +163,9 @@ task(TASK_LZ_OAPP_WIRE, 'Wire LayerZero OApp', action)
     .addFlag('safe', 'Use gnosis safe to sign transactions')
     .addParam('signer', 'Index or address of signer', undefined, types.signer, true)
     .addParam('outputFilename', 'Output filename for the generated transactions', undefined, types.string, true)
+    .addOptionalParam(
+        'skipConnectionsFromEids',
+        'Skip wiring connections that originate from the specified EndpointIds',
+        undefined,
+        types.csv
+    )
