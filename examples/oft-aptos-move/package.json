@@ -47,7 +47,7 @@
     "@aptos-labs/ts-sdk": "^1.33.1",
     "@babel/core": "^7.23.9",
     "@jest/globals": "^29.7.0",
-    "@layerzerolabs/devtools-extensible-cli": "^0.0.5",
+    "@layerzerolabs/devtools-extensible-cli": "^0.0.6",
     "@layerzerolabs/devtools-move": "^1.0.1",
     "@layerzerolabs/eslint-config-next": "~2.3.39",
     "@layerzerolabs/lz-config-types": "^3.0.15",
