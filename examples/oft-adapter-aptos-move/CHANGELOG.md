@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- minor cleanup
+- d7d2c43: updating readme to reflect new install process
 
 ## 1.0.1
 
