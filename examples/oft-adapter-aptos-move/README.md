@@ -2,14 +2,6 @@
 
 ## Setup and Installation
 
-First, clone the repository and navigate to the example directory:
-
-```bash
-git clone --recurse-submodules https://github.com/LayerZero-Labs/devtools.git --depth 1
-cd devtools
-cd examples/oft-adapter-aptos-move
-```
-
 Install the Aptos CLI (required for deployment):
 
 Aptos does not have native version management capabilities. To simplify the installation process, LayerZero has developed an Aptos CLI Version Manager.
@@ -35,7 +27,6 @@ Install dependencies and build the project:
 
 ```bash
 pnpm install
-pnpm turbo build --force
 ```
 
 ## Move-VM OFT Adapter Setup and Deployment
