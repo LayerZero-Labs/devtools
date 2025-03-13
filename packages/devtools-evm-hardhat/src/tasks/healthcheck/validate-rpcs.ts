@@ -109,29 +109,21 @@ const action: ActionType<TaskArguments> = async (taskArgs, hre) => {
           : hre.config.networks
 
     const eidByNetworkName = getEidsByNetworkName()
-    // If a stage argument is passed, we'll filter out the networks for that stage
-    const filteredEidsByNetworks =
-        taskArgs.stage == null
-            ? eidByNetworkName
-            : Object.fromEntries(
-                  Object.entries(eidByNetworkName).filter(
-                      ([, eid]) => eid != null && endpointIdToStage(eid) === taskArgs.stage
-                  )
-              )
 
     logger.info(
-        `========== Validating RPC URLs for networks: ${taskArgs.networks?.join(', ') || Object.keys(filteredEidsByNetworks).join(', ')}`
+        `========== Validating RPC URLs for networks: ${taskArgs.networks?.join(', ') || Object.keys(networks).join(', ')}`
     )
 
     const networksWithInvalidRPCs: RPCFailure[] = []
 
     await Promise.all(
-        Object.entries(filteredEidsByNetworks).map(async ([networkName, eid]) => {
+        Object.entries(networks).map(async ([networkName, networkConfig]) => {
+            const eid = eidByNetworkName[networkName]
             if (!eid) {
                 logger.info(`No eid found for network ${networkName}, skipping`)
                 return
             }
-            const rpcUrl = networks[networkName]?.[RPC_URL_KEY]
+            const rpcUrl = networkConfig?.[RPC_URL_KEY]
             if (!rpcUrl) {
                 logger.error(`No RPC URL found for network ${networkName}, skipping`)
                 networksWithInvalidRPCs.push({ networkName, errorMessage: 'No RPC URL found' })
@@ -166,9 +158,9 @@ const action: ActionType<TaskArguments> = async (taskArgs, hre) => {
         )
 
         if (taskArgs.continue) {
-            logger.warn('Continuing execution despite invalid RPC URLs due to "continue" flag')
+            logger.warn('Continuing execution despite invalid RPC URLs due to --continue flag')
         } else {
-            logger.error('Invalid RPCs: you can set "continue" flag to continue anyway')
+            logger.error('Invalid RPCs: you can set --continue flag to continue anyway')
             process.exit(1)
         }
     } else {
