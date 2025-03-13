@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-aptos-example
 
+## 1.0.3
+
+### Patch Changes
+
+- d7d2c43: updating readme to reflect new install process
+
 ## 1.0.2
 
 ### Patch Changes
