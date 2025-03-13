@@ -32,6 +32,6 @@ match_max 100000
 
 spawn npx hardhat --config hardhat.config.with-valid-and-invalid-rpcs.ts lz:healthcheck:validate:rpcs --stage testnet --networks arbSepolia
 
-expect "--stage testnet cannot be used in conjunction with --networks arbSepolia"
+expect "stage testnet cannot be used in conjunction with --networks arbSepolia"
 
 expect eof
