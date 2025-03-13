@@ -51,7 +51,7 @@
     "@layerzerolabs/toolbox-hardhat": "~0.6.8",
     "@layerzerolabs/ua-devtools": "~3.0.6",
     "@layerzerolabs/ua-devtools-evm": "~5.0.7",
-    "@layerzerolabs/ua-devtools-evm-hardhat": "~6.0.10",
+    "@layerzerolabs/ua-devtools-evm-hardhat": "~6.0.11",
     "@layerzerolabs/ua-devtools-solana": "~4.1.2",
     "@metaplex-foundation/mpl-token-metadata": "^3.2.1",
     "@metaplex-foundation/mpl-toolbox": "^0.9.4",
