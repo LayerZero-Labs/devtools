@@ -112,7 +112,7 @@ importers:
         specifier: ^5.0.7
         version: link:../../packages/ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ^6.0.10
+        specifier: ^6.0.11
         version: link:../../packages/ua-devtools-evm-hardhat
       '@layerzerolabs/ua-devtools-solana':
         specifier: ^4.1.2
@@ -1544,7 +1544,7 @@ importers:
         specifier: ~5.0.7
         version: link:../../packages/ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~6.0.10
+        specifier: ~6.0.11
         version: link:../../packages/ua-devtools-evm-hardhat
       '@layerzerolabs/ua-devtools-solana':
         specifier: ~4.1.2
@@ -4049,7 +4049,7 @@ importers:
         specifier: ~5.0.7
         version: link:../ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~6.0.10
+        specifier: ~6.0.11
         version: link:../ua-devtools-evm-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.2
@@ -4575,7 +4575,7 @@ importers:
         specifier: ~5.0.7
         version: link:../../packages/ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~6.0.10
+        specifier: ~6.0.11
         version: link:../../packages/ua-devtools-evm-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -5043,7 +5043,7 @@ importers:
         specifier: ~5.0.7
         version: link:../../packages/ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~6.0.10
+        specifier: ~6.0.11
         version: link:../../packages/ua-devtools-evm-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -5187,7 +5187,7 @@ importers:
         specifier: ~5.0.7
         version: link:../../packages/ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~6.0.10
+        specifier: ~6.0.11
         version: link:../../packages/ua-devtools-evm-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
