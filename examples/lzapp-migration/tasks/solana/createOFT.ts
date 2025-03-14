@@ -33,7 +33,7 @@ import {
     deriveConnection,
     deriveKeys,
     getExplorerTxLink,
-    output,
+    saveSolanaDeployment,
 } from './index'
 
 const DEFAULT_LOCAL_DECIMALS = 9
@@ -327,6 +327,13 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                     `Please note that for MABA mode, you must carry out the change of Mint Authority before making any cross-chain transfers. For more details: https://github.com/LayerZero-Labs/devtools/tree/main/examples/oft-solana#for-oft-mint-and-burn-adapter-maba`
                 )
             }
-            output(eid, programIdStr, mint.publicKey, mintAuthorityPublicKey.toBase58(), escrowPK, oftStorePda)
+            saveSolanaDeployment(
+                eid,
+                programIdStr,
+                mint.publicKey,
+                mintAuthorityPublicKey.toBase58(),
+                escrowPK,
+                oftStorePda
+            )
         }
     )

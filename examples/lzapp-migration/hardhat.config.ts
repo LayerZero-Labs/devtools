@@ -59,11 +59,6 @@ const config: HardhatUserConfig = {
             url: process.env.RPC_URL_SEPOLIA || 'https://sepolia.gateway.tenderly.co',
             accounts,
         },
-        'arbsep-testnet': {
-            eid: EndpointId.ARBSEP_V2_TESTNET,
-            url: process.env.RPC_URL_ARBSEP || 'https://sepolia-rollup.arbitrum.io/rpc',
-            accounts,
-        },
         hardhat: {
             // Need this for testing because TestHelperOz5.sol is exceeding the compiled contract size limit
             allowUnlimitedContractSize: true,

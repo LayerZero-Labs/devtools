@@ -1,5 +1,6 @@
 import assert from 'assert'
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import path from 'node:path'
 
 import {
     fetchAddressLookupTable,
@@ -23,7 +24,7 @@ import {
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { createWeb3JsEddsa } from '@metaplex-foundation/umi-eddsa-web3js'
 import { toWeb3JsInstruction, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
-import { AddressLookupTableAccount, Connection } from '@solana/web3.js'
+import { AddressLookupTableAccount, Connection, Keypair } from '@solana/web3.js'
 import { getSimulationComputeUnits } from '@solana-developers/helpers'
 import bs58 from 'bs58'
 import { backOff } from 'exponential-backoff'
@@ -58,8 +59,8 @@ const getSolanaPrivateKeyFromEnv = () => getFromEnv('SOLANA_PRIVATE_KEY')
  * Derive common connection and UMI objects for a given endpoint ID.
  * @param eid {EndpointId}
  */
-export const deriveConnection = async (eid: EndpointId) => {
-    const privateKey = getSolanaPrivateKeyFromEnv()
+export const deriveConnection = async (eid: EndpointId, readOnly = false) => {
+    const privateKey = readOnly ? bs58.encode(Keypair.generate().secretKey) : getSolanaPrivateKeyFromEnv()
     const connectionFactory = createSolanaConnectionFactory()
     const connection = await connectionFactory(eid)
     const umi = createUmi(connection.rpcEndpoint).use(mplToolbox())
@@ -71,6 +72,15 @@ export const deriveConnection = async (eid: EndpointId) => {
         umi,
         umiWalletKeyPair,
         umiWalletSigner,
+    }
+}
+
+export const useWeb3Js = () => {
+    const privateKey = getSolanaPrivateKeyFromEnv()
+    const secretKeyBytes = bs58.decode(privateKey)
+    const keypair = Keypair.fromSecretKey(secretKeyBytes)
+    return {
+        web3JsKeypair: keypair,
     }
 }
 
@@ -103,7 +113,7 @@ export const deriveKeys = (programIdStr: string) => {
  * @param escrow {string}
  * @param oftStore {string}
  */
-export const output = (
+export const saveSolanaDeployment = (
     eid: EndpointId,
     programId: string,
     mint: string,
@@ -130,6 +140,31 @@ export const output = (
         )
     )
     console.log(`Accounts have been saved to ${outputDir}/OFT.json`)
+}
+
+/**
+ * Reads the OFT deployment info from disk for the given endpoint ID.
+ * @param eid {EndpointId}
+ * @returns The contents of the OFT.json file as a JSON object.
+ */
+export const getSolanaDeployment = (
+    eid: EndpointId
+): {
+    programId: string
+    mint: string
+    mintAuthority: string
+    escrow: string
+    oftStore: string
+} => {
+    const outputDir = path.join('deployments', endpointIdToNetwork(eid))
+    const filePath = path.join(outputDir, 'OFT.json') // Note: if you have multiple deployments, change this filename to refer to the desired deployment file
+
+    if (!existsSync(filePath)) {
+        throw new Error(`Could not find Solana deployment file for eid ${eid} at: ${filePath}`)
+    }
+
+    const fileContents = readFileSync(filePath, 'utf-8')
+    return JSON.parse(fileContents)
 }
 
 export const getLayerZeroScanLink = (hash: string, isTestnet = false) =>

@@ -5,7 +5,7 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
 
-import { types } from '@layerzerolabs/devtools-evm-hardhat'
+import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
@@ -16,6 +16,7 @@ import {
     deriveConnection,
     getExplorerTxLink,
     getLayerZeroScanLink,
+    getSolanaDeployment,
 } from './index'
 
 interface Args {
@@ -23,24 +24,19 @@ interface Args {
     to: string
     fromEid: EndpointId
     toEid: EndpointId
-    programId: string
     mint: string
-    escrow: string
     tokenProgram: string
     computeUnitPriceScaleFactor: number
 }
 
 // Define a Hardhat task for sending OFT from Solana
 task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
-    .addParam('amount', 'The amount of tokens to send', undefined, types.bigint)
-    .addParam('fromEid', 'The source endpoint ID', undefined, types.eid)
+    .addParam('amount', 'The amount of tokens to send', undefined, devtoolsTypes.bigint)
+    .addParam('fromEid', 'The source endpoint ID', undefined, devtoolsTypes.eid)
     .addParam('to', 'The recipient address on the destination chain')
-    .addParam('toEid', 'The destination endpoint ID', undefined, types.eid)
-    .addParam('mint', 'The OFT token mint public key', undefined, types.string)
-    .addParam('programId', 'The OFT program ID', undefined, types.string)
-    .addParam('escrow', 'The OFT escrow public key', undefined, types.string)
-    .addParam('tokenProgram', 'The Token Program public key', TOKEN_PROGRAM_ID.toBase58(), types.string, true)
-    .addParam('computeUnitPriceScaleFactor', 'The compute unit price scale factor', 4, types.float, true)
+    .addParam('toEid', 'The destination endpoint ID', undefined, devtoolsTypes.eid)
+    .addParam('tokenProgram', 'The Token Program public key', TOKEN_PROGRAM_ID.toBase58(), devtoolsTypes.string, true)
+    .addParam('computeUnitPriceScaleFactor', 'The compute unit price scale factor', 4, devtoolsTypes.float, true)
     .setAction(
         async ({
             amount,
@@ -48,16 +44,16 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
             to,
             toEid,
             mint: mintStr,
-            programId: programIdStr,
-            escrow: escrowStr,
             tokenProgram: tokenProgramStr,
             computeUnitPriceScaleFactor,
         }: Args) => {
             const { connection, umi, umiWalletSigner } = await deriveConnection(fromEid)
 
-            const oftProgramId = publicKey(programIdStr)
-            const mint = publicKey(mintStr)
-            const umiEscrowPublicKey = publicKey(escrowStr)
+            const solanaDeployment = getSolanaDeployment(fromEid)
+
+            const oftProgramId = publicKey(solanaDeployment.programId)
+            const mint = publicKey(solanaDeployment.mint)
+            const umiEscrowPublicKey = publicKey(solanaDeployment.escrow)
             const tokenProgramId = tokenProgramStr ? publicKey(tokenProgramStr) : fromWeb3JsPublicKey(TOKEN_PROGRAM_ID)
 
             const tokenAccount = findAssociatedTokenPda(umi, {
