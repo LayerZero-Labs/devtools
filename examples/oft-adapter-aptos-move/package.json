@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-adapter-aptos-move-example",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -47,7 +47,7 @@
     "@jest/globals": "^29.7.0",
     "@layerzerolabs/devtools-evm-hardhat": "^2.0.8",
     "@layerzerolabs/devtools-extensible-cli": "^0.0.6",
-    "@layerzerolabs/devtools-move": "^1.0.2",
+    "@layerzerolabs/devtools-move": "^1.0.3",
     "@layerzerolabs/eslint-config-next": "~2.3.39",
     "@layerzerolabs/lz-config-types": "^3.0.15",
     "@layerzerolabs/lz-definitions": "^3.0.75",
