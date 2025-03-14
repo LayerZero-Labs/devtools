@@ -51,6 +51,13 @@ export const getExamples = (): Example[] => {
             directory: 'examples/onft721',
             ref,
         },
+        {
+            id: 'oapp-solana-counter',
+            label: 'Solana OmniCounter',
+            repository,
+            directory: 'examples/oapp-solana-counter',
+            ref,
+        },
         // Migration example is feature flagged for the time being
         ...(process.env.LZ_ENABLE_MIGRATION_EXAMPLE
             ? [
