@@ -162,7 +162,7 @@ export const getExamples = (): Example[] => {
               ]
             : []),
     ]
-    return result.filter((example) => example != undefined)
+    return result.filter((example) => example !== undefined)
 }
 
 const PACKAGE_MANAGERS: PackageManager[] = [
