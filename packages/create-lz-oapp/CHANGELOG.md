@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.7.2
+
+### Patch Changes
+
+- adding support for initia chain and cleanup
+
 ## 0.7.1
 
 ### Patch Changes
