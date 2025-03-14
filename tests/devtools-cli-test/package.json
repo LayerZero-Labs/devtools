@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-cli-test",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "private": true,
   "description": "Integration tests for devtools-cli for V2",
   "repository": {
@@ -44,7 +44,7 @@
     "@layerzerolabs/protocol-devtools-evm": "~3.0.7",
     "@layerzerolabs/test-devtools-evm-hardhat": "~0.5.2",
     "@layerzerolabs/test-setup-devtools-evm-hardhat": "~6.0.6",
-    "@layerzerolabs/toolbox-hardhat": "~0.6.8",
+    "@layerzerolabs/toolbox-hardhat": "~0.6.9",
     "@layerzerolabs/ua-devtools": "~3.0.6",
     "@layerzerolabs/ua-devtools-evm": "~5.0.7",
     "@layerzerolabs/ua-devtools-evm-hardhat": "~6.0.11",
