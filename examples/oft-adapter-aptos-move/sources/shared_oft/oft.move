@@ -75,11 +75,10 @@ module oft::oft {
         native_fee: u64,
         zro_fee: u64,
     ) {
-        // ***** Specific to Native Token implementation *****
         let send_value = if (token() == @native_token_metadata_address) {
-            // Withdraw the amount and fees from the account
+            // native_token::balance() and native_token::withdraw() will work regardless of whether the native token is
+            // held as fungible_token or Coin
             assert!(native_token::balance(address_of(account)) >= amount_ld, EINSUFFICIENT_BALANCE);
-            // native_token::withdraw will work regardless of whether the native token is held as a fungible_token or a Coin
             native_token::withdraw(account, amount_ld)
         } else {
             assert!(
@@ -88,7 +87,6 @@ module oft::oft {
             );
             primary_fungible_store::withdraw(account, metadata(), amount_ld)
         };
-        // ****************************************************
 
         let (native_fee_fa, zro_fee_fa) = withdraw_lz_fees(account, native_fee, zro_fee);
         let sender = address_of(move account);
