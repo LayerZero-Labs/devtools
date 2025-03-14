@@ -1,8 +1,8 @@
 import type { Example, PackageManager } from '@/types'
 import { isPackageManagerAvailable } from './utilities/installation'
 
-function flaggedExample(envVar: string, example: Example): Example | undefined {
-    return process.env[envVar] ? example : undefined
+function flaggedExample(flag: boolean, example: Example): Example | undefined {
+    return flag ? example : undefined
 }
 
 export const getExamples = (): Example[] => {
@@ -128,7 +128,7 @@ export const getExamples = (): Example[] => {
                   },
               ]
             : []),
-        flaggedExample('LZ_ENABLE_SOLANA_COUNTER_EXAMPLE', {
+        flaggedExample(!!process.env.LZ_ENABLE_SOLANA_COUNTER_EXAMPLE, {
             id: 'oapp-solana-counter',
             label: 'Solana OmniCounter',
             repository,
