@@ -2,6 +2,7 @@ import type { Example, PackageManager } from '@/types'
 import { isPackageManagerAvailable } from './utilities/installation'
 
 function flaggedExample(envVar: string, example: Example): Example | undefined {
+    console.log({ envVar }, process.env[envVar])
     return process.env[envVar] ? example : undefined
 }
 
