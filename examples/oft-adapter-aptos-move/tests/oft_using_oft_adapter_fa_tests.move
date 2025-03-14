@@ -1,8 +1,9 @@
 #[test_only]
 module oft::oft_using_oft_adapter_fa_tests {
     use std::account::{create_account_for_test, create_signer_for_test};
-    use std::fungible_asset;
-    use std::fungible_asset::MintRef;
+    use std::aptos_coin::{Self, AptosCoin};
+    use std::coin::{Self, destroy_burn_cap, destroy_mint_cap};
+    use std::fungible_asset::{Self, MintRef};
     use std::option;
     use std::primary_fungible_store::{Self, balance};
     use std::signer::address_of;
@@ -13,6 +14,7 @@ module oft::oft_using_oft_adapter_fa_tests {
     use endpoint_v2_common::bytes32::{Self, from_address, from_bytes32};
     use endpoint_v2_common::contract_identity::make_dynamic_call_ref_for_test;
     use endpoint_v2_common::guid;
+    use endpoint_v2_common::native_token;
     use endpoint_v2_common::native_token_test_helpers::{burn_token_for_test, mint_native_token_for_test};
     use endpoint_v2_common::packet_raw;
     use endpoint_v2_common::packet_v1_codec::{Self, compute_payload};
@@ -215,6 +217,48 @@ module oft::oft_using_oft_adapter_fa_tests {
 
         send_withdraw(alice, DST_EID, bob, amount, amount, vector[], vector[], vector[], 0, 0);
         assert!(balance(address_of(alice), oft::oft::metadata()) == 0, 1); // after send balance
+    }
+
+    #[test]
+    fun test_send_using_aptos_coin() {
+        // setup
+        let oft_admin = &create_signer_for_test(@oft_admin);
+        setup_layerzero_for_test(@simple_msglib, SRC_EID, DST_EID);
+        oft::oapp_test_helper::init_oapp();
+
+        oft::oft_impl_config::init_module_for_test();
+        oft_store::init_module_for_test();
+        oft::oft_adapter_fa::init_module_for_test();
+
+        // Use Native Aptos FA
+        let (burn_cap, mint_cap) = aptos_coin::initialize_for_test(&create_signer_for_test(@std));
+        let fa = @0xa;
+        oft_adapter_fa::initialize(oft_admin, fa, 6);
+
+        let remote_oapp = from_address(@2000);
+        set_peer(oft_admin, DST_EID, from_bytes32(remote_oapp));
+
+        // test
+        let amount = 100u64 * 100_000_000;  // 100 TOKEN
+        let alice = &create_account_for_test(@1234);
+
+
+        // mint 1 APT to alice
+        coin::register<AptosCoin>(alice);
+        coin::deposit(
+            address_of(alice),
+            coin::mint<AptosCoin>(amount, &mint_cap),
+        );
+
+        let bob = from_bytes32(from_address(@5678));
+        assert!(native_token::balance(address_of(alice)) == amount, 0); // before send balance
+
+        send_withdraw(alice, DST_EID, bob, amount, amount, vector[], vector[], vector[], 0, 0);
+        assert!(native_token::balance(address_of(alice)) == 0, 1); // after send balance
+
+        // cleanup
+        destroy_mint_cap(mint_cap);
+        destroy_burn_cap(burn_cap);
     }
 
     #[test]

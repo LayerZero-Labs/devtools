@@ -4,11 +4,10 @@
 module oft::oft_adapter_fa_tests {
     use std::account::{create_account_for_test, create_signer_for_test};
     use std::event::was_event_emitted;
-    use std::fungible_asset::{Self, Metadata};
-    use std::fungible_asset::{mint, MintRef};
+    use std::fungible_asset::{Self, FungibleStore, Metadata, mint, MintRef};
     use std::object::address_to_object;
     use std::option;
-    use std::primary_fungible_store;
+    use std::primary_fungible_store::{Self, ensure_primary_store_exists};
     use std::timestamp;
     use std::vector;
 
@@ -136,6 +135,47 @@ module oft::oft_adapter_fa_tests {
         // escrow balance should be back to 0
         let balance = primary_fungible_store::balance(escrow_address(), oft_adapter_fa::metadata());
         assert!(balance == 0, 0);
+    }
+
+    #[test]
+    #[expected_failure(abort_code = 0x50008 /*ENOT_STORE_OWNER*/, location = std::fungible_asset)]
+    fun test_transfer_escrow_fails() {
+        let mint_ref = setup();
+
+        let dst_eid = 2u32;
+        // This configuration function (debit) is not resposible for handling dust, therefore the tested amount excludes
+        // the dust amount (last two digits)
+        let amount_ld = 123456700;
+        let min_amount_ld = 0u64;
+
+        let fa = mint(&mint_ref, amount_ld);
+        let (sent, received) = oft_adapter_fa::debit_fungible_asset(
+            @444,
+            &mut fa,
+            min_amount_ld,
+            dst_eid,
+        );
+
+        // amount sent and received should reflect the amount debited
+        assert!(sent == 123456700, 0);
+        assert!(received == 123456700, 0);
+
+        // no remaining balance in debited account
+        let remaining_balance = fungible_asset::amount(&fa);
+        assert!(remaining_balance == 00, 0);
+        burn_token_for_test(fa);
+
+        // escrow balance should increase to match
+        let balance = primary_fungible_store::balance(escrow_address(), oft_adapter_fa::metadata());
+        assert!(balance == 123456700, 0);
+
+        // transfer from escrow should fail
+        fungible_asset::transfer<FungibleStore>(
+            &create_signer_for_test(@oft),
+            ensure_primary_store_exists<Metadata>(escrow_address(), oft_adapter_fa::metadata()),
+            ensure_primary_store_exists<Metadata>(@555, oft_adapter_fa::metadata()),
+            1000,
+        );
     }
 
     #[test]
