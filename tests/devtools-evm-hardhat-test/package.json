@@ -42,7 +42,7 @@
     "@layerzerolabs/test-devtools": "~0.4.6",
     "@layerzerolabs/test-devtools-evm-hardhat": "~0.5.2",
     "@layerzerolabs/test-setup-devtools-evm-hardhat": "~6.0.6",
-    "@layerzerolabs/toolbox-hardhat": "~0.6.8",
+    "@layerzerolabs/toolbox-hardhat": "~0.6.9",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@openzeppelin/contracts": "^4.9.5",

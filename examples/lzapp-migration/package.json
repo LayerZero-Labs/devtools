@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/lzapp-migration-example",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -33,7 +33,7 @@
     "@layerzerolabs/solidity-examples": "^1.1.0",
     "@layerzerolabs/ua-devtools": "^3.0.6",
     "@layerzerolabs/ua-devtools-evm": "^5.0.7",
-    "@layerzerolabs/ua-devtools-evm-hardhat": "^6.0.10",
+    "@layerzerolabs/ua-devtools-evm-hardhat": "^6.0.11",
     "@layerzerolabs/ua-devtools-solana": "^4.1.2",
     "@metaplex-foundation/mpl-token-metadata": "^3.2.1",
     "@metaplex-foundation/mpl-toolbox": "^0.9.4",
@@ -60,7 +60,7 @@
     "@layerzerolabs/solhint-config": "^3.0.12",
     "@layerzerolabs/test-devtools-evm-foundry": "~6.0.3",
     "@layerzerolabs/toolbox-foundry": "~0.1.12",
-    "@layerzerolabs/toolbox-hardhat": "~0.6.8",
+    "@layerzerolabs/toolbox-hardhat": "~0.6.9",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@openzeppelin/contracts": "^4.8.2",
