@@ -3,12 +3,14 @@ module oft::oft_using_oft_adapter_fa_tests {
     use std::account::{create_account_for_test, create_signer_for_test};
     use std::aptos_coin::{Self, AptosCoin};
     use std::coin::{Self, destroy_burn_cap, destroy_mint_cap};
+    use std::event::was_event_emitted;
     use std::fungible_asset::{Self, MintRef};
     use std::option;
     use std::primary_fungible_store::{Self, balance};
     use std::signer::address_of;
     use std::vector;
 
+    use endpoint_v2::channels::packet_sent_event;
     use endpoint_v2::endpoint;
     use endpoint_v2::test_helpers::setup_layerzero_for_test;
     use endpoint_v2_common::bytes32::{Self, from_address, from_bytes32};
@@ -242,7 +244,6 @@ module oft::oft_using_oft_adapter_fa_tests {
         let amount = 100u64 * 100_000_000;  // 100 TOKEN
         let alice = &create_account_for_test(@1234);
 
-
         // mint 1 APT to alice
         coin::register<AptosCoin>(alice);
         coin::deposit(
@@ -259,6 +260,33 @@ module oft::oft_using_oft_adapter_fa_tests {
         // cleanup
         destroy_mint_cap(mint_cap);
         destroy_burn_cap(burn_cap);
+
+        let expected_packet = packet_v1_codec::new_packet_v1(
+            SRC_EID,
+            from_address(@oft),
+            DST_EID,
+            remote_oapp,
+            1,
+            guid::compute_guid(
+                1,
+                SRC_EID,
+                from_address(@oft),
+                DST_EID,
+                remote_oapp,
+            ),
+            oft_msg_codec::encode(
+                from_address(@5678), // bob
+                100 * 1_000_000, // 100 tokens
+                from_address(address_of(alice)),
+                b"",
+            ),
+        );
+        assert!(was_event_emitted(&packet_sent_event(
+            expected_packet,
+            b"",
+            @simple_msglib,
+        )), 0);
+
     }
 
     #[test]
