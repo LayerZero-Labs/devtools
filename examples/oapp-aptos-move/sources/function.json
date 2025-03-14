@@ -1,0 +1,16 @@
+{
+  "function_id": "0x3cb59de13b3d8fd85f4e55047e20816b41b4c13dbed25a23345aed2157a80eb7::rewards::add_rewards",
+  "type_args": [],
+  "args": [
+    {
+      "type": "address",
+      "value": [
+        "0xc399601f4dfb57f699d38a13216cc43f0f1366132d2581e6889ff900e3b5225b"
+      ]
+    },
+    {
+      "type": "u64",
+      "value": [1000000]
+    }
+  ]
+}
