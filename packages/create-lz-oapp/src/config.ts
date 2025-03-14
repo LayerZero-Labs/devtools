@@ -1,6 +1,10 @@
 import type { Example, PackageManager } from '@/types'
 import { isPackageManagerAvailable } from './utilities/installation'
 
+function flaggedExample(envVar: string, example: Example): Example | undefined {
+    return process.env[envVar] ? example : undefined
+}
+
 export const getExamples = (): Example[] => {
     /**
      * To enable example development in a custom repository
@@ -17,7 +21,8 @@ export const getExamples = (): Example[] => {
      */
     const ref = process.env.LAYERZERO_EXAMPLES_REPOSITORY_REF || ''
 
-    return [
+    // TODO: apply flaggedExample to all conditional examples
+    const result = [
         {
             id: 'oapp',
             label: 'OApp',
@@ -46,7 +51,7 @@ export const getExamples = (): Example[] => {
             directory: 'examples/onft721',
             ref,
         },
-        // ZK-Solc examples are feature flagged for the time being
+        // Migration example is feature flagged for the time being
         ...(process.env.LZ_ENABLE_MIGRATION_EXAMPLE
             ? [
                   {
@@ -123,6 +128,13 @@ export const getExamples = (): Example[] => {
                   },
               ]
             : []),
+        flaggedExample('LZ_ENABLE_SOLANA_COUNTER_EXAMPLE', {
+            id: 'oapp-solana-counter',
+            label: 'Solana OmniCounter',
+            repository,
+            directory: 'examples/oapp-solana-counter',
+            ref,
+        }),
         // Move OFT examples are feature flagged for the time being
         ...(process.env.LZ_ENABLE_EXPERIMENTAL_MOVE_VM_EXAMPLES
             ? [
@@ -150,6 +162,7 @@ export const getExamples = (): Example[] => {
               ]
             : []),
     ]
+    return result.filter((example) => example != undefined)
 }
 
 const PACKAGE_MANAGERS: PackageManager[] = [

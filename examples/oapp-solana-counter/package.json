@@ -1,0 +1,39 @@
+{
+  "name": "@layerzerolabs/counter-v2-solana",
+  "private": true,
+  "license": "BUSL-1.1",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "$npm_execpath clean-prebuild && anchor build",
+    "clean": "$npm_execpath clean-prebuild",
+    "clean-prebuild": "rimraf target",
+    "test": "cargo-test-sbf"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.5"
+  },
+  "ensureVersions": {
+    "envFiles": [
+      "$PROJECT_CWD/.versions"
+    ],
+    "executables": {
+      "solana": [
+        "echo env:SOLANA_VERSION",
+        "solana --version | awk '{print $2}'"
+      ],
+      "anchor": [
+        "echo env:ANCHOR_VERSION",
+        "anchor --version | awk '{print $2}'"
+      ]
+    }
+  }
+}
