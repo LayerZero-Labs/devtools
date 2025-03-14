@@ -24,17 +24,15 @@ export enum KnownErrors {
 
 // TODO: move this to tasks/common since it's not Solana-specific
 interface ErrorFixInfo {
-    suggestion: string
-    elaboration?: string
+    tip: string
+    info?: string
 }
 
 // TODO: move this to tasks/common since it's not Solana-specific
 const ERRORS_FIXES_MAP: Record<KnownErrors, ErrorFixInfo> = {
     [KnownErrors.ULN_INIT_CONFIG_SKIPPED]: {
-        suggestion:
-            'Did you run `npx hardhat lz:oft:solana:init-config --oapp-config <LZ_CONFIG_FILE_NAME> --solana-eid <SOLANA_EID>` ?',
-        elaboration:
-            'You must run lz:oft:solana:init-config once before you run lz:oapp:wire. If you have added new pathways, you must also run lz:oft:solana:init-config again.',
+        tip: 'Did you run `npx hardhat lz:oft:solana:init-config --oapp-config <LZ_CONFIG_FILE_NAME> --solana-eid <SOLANA_EID>` ?',
+        info: 'You must run lz:oft:solana:init-config once before you run lz:oapp:wire. If you have added new pathways, you must also run lz:oft:solana:init-config again.',
     },
 }
 
@@ -80,12 +78,12 @@ export class DebugLogger {
         // Print the error type in red
         console.log(`\x1b[31mError:\x1b[0m ${errorOutput}`)
 
-        // Print the suggestion in blue
-        console.log(`\x1b[34mFix suggestion:\x1b[0m ${fixInfo.suggestion}`)
+        // Print the tip in green
+        console.log(`\x1b[32mFix suggestion:\x1b[0m ${fixInfo.tip}`)
 
-        // Print the elaboration in green
-        if (fixInfo.elaboration) {
-            console.log(`\x1b[32mElaboration:\x1b[0m ${fixInfo.elaboration}`)
+        // Print the info in blue
+        if (fixInfo.info) {
+            console.log(`\x1b[34mElaboration:\x1b[0m ${fixInfo.info}`)
         }
 
         // log empty line to separate error messages
