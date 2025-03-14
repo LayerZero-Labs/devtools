@@ -9,7 +9,7 @@
 module oft::oft_adapter_fa {
     use std::coin::Coin;
     use std::fungible_asset::{Self, FungibleAsset, Metadata};
-    use std::object::{Self, address_to_object, ExtendRef, Object, object_exists};
+    use std::object::{Self, address_to_object, ExtendRef, Object, object_exists, ObjectCore};
     use std::option::{Self, Option};
     use std::primary_fungible_store;
     use std::signer::address_of;
@@ -298,8 +298,8 @@ module oft::oft_adapter_fa {
         let constructor_ref = &object::create_named_object(account, b"fa_escrow");
         let escrow_extend_ref = object::generate_extend_ref(constructor_ref);
 
-        // Disable the transfer of the escrow object
-        object::disable_ungated_transfer(&object::generate_transfer_ref(constructor_ref));
+        // Disown the escrow object to prevent withdrawal by transient owner
+        object::transfer(account, object::object_from_constructor_ref<ObjectCore>(constructor_ref), @0x0);
 
         // Initialize the storage and save the ExtendRef for future signer generation
         move_to(move account, OftImpl {

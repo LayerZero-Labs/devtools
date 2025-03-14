@@ -14,6 +14,7 @@ module oft::oft {
     use endpoint_v2::messaging_receipt::MessagingReceipt;
     use endpoint_v2_common::bytes32::{Bytes32, to_bytes32};
     use endpoint_v2_common::contract_identity::{DynamicCallRef, get_dynamic_call_ref_caller};
+    use endpoint_v2_common::native_token;
     use oft::oapp_core::{Self, lz_quote, lz_send, lz_send_compose, refund_fees, withdraw_lz_fees};
     use oft::oapp_store::OAPP_ADDRESS;
     use oft::oft_adapter_fa::{
@@ -74,12 +75,19 @@ module oft::oft {
         native_fee: u64,
         zro_fee: u64,
     ) {
-        // Withdraw the amount and fees from the account
-        assert!(
-            primary_fungible_store::balance(address_of(account), metadata()) >= amount_ld,
-            EINSUFFICIENT_BALANCE,
-        );
-        let send_value = primary_fungible_store::withdraw(account, metadata(), amount_ld);
+        let send_value = if (token() == @native_token_metadata_address) {
+            // native_token::balance() and native_token::withdraw() will work regardless of whether the native token is
+            // held as fungible_token or Coin
+            assert!(native_token::balance(address_of(account)) >= amount_ld, EINSUFFICIENT_BALANCE);
+            native_token::withdraw(account, amount_ld)
+        } else {
+            assert!(
+                primary_fungible_store::balance(address_of(account), metadata()) >= amount_ld,
+                EINSUFFICIENT_BALANCE,
+            );
+            primary_fungible_store::withdraw(account, metadata(), amount_ld)
+        };
+
         let (native_fee_fa, zro_fee_fa) = withdraw_lz_fees(account, native_fee, zro_fee);
         let sender = address_of(move account);
 
