@@ -1,9 +1,9 @@
 import type { Example, PackageManager } from '@/types'
 import { isPackageManagerAvailable } from './utilities/installation'
 
-// function flaggedExample(flag: boolean, example: Example): Example | undefined {
-//     return flag ? example : undefined
-// }
+function flaggedExample(envVar: string, example: Example): Example | undefined {
+    return process.env[envVar] ? example : undefined
+}
 
 export const getExamples = (): Example[] => {
     /**
@@ -128,17 +128,13 @@ export const getExamples = (): Example[] => {
                   },
               ]
             : []),
-        ...(process.env.LZ_ENABLE_SOLANA_COUNTER_EXAMPLE
-            ? [
-                  {
-                      id: 'oapp-solana-counter',
-                      label: 'Solana OmniCounter',
-                      repository,
-                      directory: 'examples/oapp-solana-counter',
-                      ref,
-                  },
-              ]
-            : []),
+        flaggedExample('LZ_ENABLE_SOLANA_COUNTER_EXAMPLE', {
+            id: 'oapp-solana-counter',
+            label: 'Solana OmniCounter',
+            repository,
+            directory: 'examples/oapp-solana-counter',
+            ref,
+        }),
         // Move OFT examples are feature flagged for the time being
         ...(process.env.LZ_ENABLE_EXPERIMENTAL_MOVE_VM_EXAMPLES
             ? [
@@ -166,7 +162,7 @@ export const getExamples = (): Example[] => {
               ]
             : []),
     ]
-    return result
+    return result.filter((example) => example !== undefined)
 }
 
 const PACKAGE_MANAGERS: PackageManager[] = [
