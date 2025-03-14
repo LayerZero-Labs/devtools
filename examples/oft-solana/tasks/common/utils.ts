@@ -1,6 +1,6 @@
 import assert from 'assert'
 
-import { Keypair, PublicKey } from '@solana/web3.js'
+import { Connection, Keypair, PublicKey } from '@solana/web3.js'
 
 import {
     OmniPoint,
@@ -18,6 +18,7 @@ import {
     createRpcUrlFactory,
 } from '@layerzerolabs/devtools-solana'
 import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
+import { UlnProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { IOApp } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
@@ -108,4 +109,18 @@ export function decodeLzReceiveOptions(hex: string): string {
     } catch (e) {
         return `Invalid options (${hex.slice(0, 12)}...)`
     }
+}
+
+export async function getSolanaUlnConfigPDAs(
+    remote: EndpointId,
+    connection: Connection,
+    ulnAddress: PublicKey,
+    oftStore: PublicKey
+) {
+    const uln = new UlnProgram.Uln(new PublicKey(ulnAddress))
+    const sendConfig = uln.getSendConfigState(connection, new PublicKey(oftStore), remote)
+
+    const receiveConfig = uln.getReceiveConfigState(connection, new PublicKey(oftStore), remote)
+
+    return await Promise.all([sendConfig, receiveConfig])
 }
