@@ -1,5 +1,5 @@
 {
-  "name": "@layerzerolabs/counter-v2-solana",
+  "name": "@layerzerolabs/oapp-counter-solana-example",
   "private": true,
   "license": "BUSL-1.1",
   "exports": {
