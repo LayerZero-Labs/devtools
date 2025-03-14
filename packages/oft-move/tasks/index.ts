@@ -4,6 +4,7 @@ export * from '../types'
 // OFT Initialization Tasks
 export { initOFTFA } from './initOFTFA'
 export { initOFTAdapterFA } from './initOFTAdapterFA'
+export { initOFTAdapterCoin } from './initOFTAdapterCoin'
 
 // OFT Configuration Tasks
 export { setFee } from './setFee'

@@ -547,6 +547,10 @@ export class InitiaOFT implements IOFT {
         return Object.assign(msg, { types: ['address', 'u8'] })
     }
 
+    initializeAdapterCoinPayload(): TypedInputGenerateTransactionPayloadData {
+        throw new Error('Unimplemented')
+    }
+
     async getEnforcedOptions(eid: number, msgType: number): Promise<string> {
         const result = await this.rest.move.viewFunction<string>(
             this.oft_address,

@@ -1,5 +1,6 @@
 export { NewOperation as InitMoveOFTFA } from './init-move-oft-fa'
 export { NewOperation as InitMoveOFTFAAdapter } from './init-move-oft-fa-adapter'
+export { NewOperation as InitMoveOFTCoinAdapter } from './init-move-oft-coin-adapter'
 export { NewOperation as MoveOFTAdapterDisableBlocklist } from './move-oft-adapter-disable-blocklist'
 export { NewOperation as MoveOFTAdapterSetFee } from './move-oft-adapter-set-fee'
 export { NewOperation as MoveOFTAdapterSetRateLimit } from './move-oft-adapter-set-rate-limit'

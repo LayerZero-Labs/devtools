@@ -3,6 +3,7 @@ import { AptosEVMCLI } from '@layerzerolabs/devtools-extensible-cli'
 import {
     InitMoveOFTFA,
     InitMoveOFTFAAdapter,
+    InitMoveOFTCoinAdapter,
     MoveOFTAdapterDisableBlocklist,
     MoveOFTAdapterSetFee,
     MoveOFTAdapterSetRateLimit,
@@ -20,6 +21,7 @@ import {
 export async function attach_oft_move(sdk: AptosEVMCLI) {
     await sdk.extendOperation(InitMoveOFTFA)
     await sdk.extendOperation(InitMoveOFTFAAdapter)
+    await sdk.extendOperation(InitMoveOFTCoinAdapter)
     await sdk.extendOperation(MoveOFTAdapterDisableBlocklist)
     await sdk.extendOperation(MoveOFTAdapterSetFee)
     await sdk.extendOperation(MoveOFTAdapterSetRateLimit)
