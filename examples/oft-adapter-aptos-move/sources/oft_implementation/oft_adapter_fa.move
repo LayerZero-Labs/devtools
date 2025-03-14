@@ -283,8 +283,11 @@ module oft::oft_adapter_fa {
         // Only the admin can initialize the OFT
         assert_admin(address_of(account));
 
-        // Ensure the metadata address provided is valid and store it
-        assert!(object_exists<Metadata>(token_metadata_address), EINVALID_METADATA_ADDRESS);
+        // This Adapter OFT is designed to only work with the native token metadata
+        assert!(
+            token_metadata_address == @native_token_metadata_address && object_exists<Metadata>(token_metadata_address),
+            EINVALID_METADATA_ADDRESS
+        );
         let metadata = address_to_object<Metadata>(token_metadata_address);
         store_mut().metadata = option::some(metadata);
 
