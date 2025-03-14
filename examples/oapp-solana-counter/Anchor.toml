@@ -1,0 +1,16 @@
+[features]
+seeds = false
+skip-lint = false
+
+[programs.localnet]
+omnicounter = 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay'
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "yarn run ts-mocha -b -p ./tsconfig.json -t 10000000 sdk/tests/**/*.test.ts"

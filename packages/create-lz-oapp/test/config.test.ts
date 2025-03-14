@@ -52,6 +52,18 @@ describe('config', () => {
             expect(getExamples()).toContainEqual(expect.objectContaining({ id: 'oft-solana' }))
         })
 
+        it('should not include Solana Counter example if LZ_ENABLE_SOLANA_COUNTER_EXAMPLE is empty', () => {
+            process.env.LZ_ENABLE_SOLANA_COUNTER_EXAMPLE = ''
+
+            expect(getExamples()).not.toContainEqual(expect.objectContaining({ id: 'oapp-solana-counter' }))
+        })
+
+        it('should include Solana Counter example if LZ_ENABLE_SOLANA_COUNTER_EXAMPLE is defined', () => {
+            process.env.LZ_ENABLE_SOLANA_COUNTER_EXAMPLE = 'yes'
+
+            expect(getExamples()).toContainEqual(expect.objectContaining({ id: 'oapp-solana-counter' }))
+        })
+
         it('should not include OApp Read example if LZ_ENABLE_READ_EXAMPLE is empty', () => {
             process.env.LZ_ENABLE_READ_EXAMPLE = ''
 

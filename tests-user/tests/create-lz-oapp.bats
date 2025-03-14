@@ -189,6 +189,15 @@ teardown() {
     pnpm test
 }
 
+@test "should work with pnpm & oft solana omnicounter example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft-solana"
+
+    LZ_ENABLE_SOLANA_COUNTER_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
+    cd "$DESTINATION"
+    pnpm compile
+    pnpm test
+}
+
 @test "should work with pnpm & oapp read example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp-read"
 
