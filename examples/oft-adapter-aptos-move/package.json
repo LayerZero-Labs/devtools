@@ -25,9 +25,6 @@
     "lz:sdk:move:deploy": "ts-node scripts/cli.ts --vm move --op deploy",
     "lz:sdk:move:init-fa": "ts-node scripts/cli.ts --vm move --op init-fa",
     "lz:sdk:move:init-fa-adapter": "ts-node scripts/cli.ts --vm move --op init-fa-adapter",
-    "lz:sdk:move:mint-to-move-oft": "ts-node scripts/cli.ts --vm move --op mint-to-move-oft",
-    "lz:sdk:move:permanently-disable-blocklist": "ts-node scripts/cli.ts --vm move --op permanently-disable-blocklist",
-    "lz:sdk:move:permanently-disable-freezing": "ts-node scripts/cli.ts --vm move --op permanently-disable-freezing",
     "lz:sdk:move:quote-send-evm": "ts-node scripts/cli.ts --vm evm --op quote-send",
     "lz:sdk:move:quote-send-move-oft": "ts-node scripts/cli.ts --vm move --op quote-send-move-oft",
     "lz:sdk:move:send-from-move-oft": "ts-node scripts/cli.ts --vm move --op send-from-move-oft",
@@ -50,7 +47,7 @@
     "@jest/globals": "^29.7.0",
     "@layerzerolabs/devtools-evm-hardhat": "^2.0.8",
     "@layerzerolabs/devtools-extensible-cli": "^0.0.6",
-    "@layerzerolabs/devtools-move": "^1.0.1",
+    "@layerzerolabs/devtools-move": "^1.0.2",
     "@layerzerolabs/eslint-config-next": "~2.3.39",
     "@layerzerolabs/lz-config-types": "^3.0.15",
     "@layerzerolabs/lz-definitions": "^3.0.75",
@@ -110,9 +107,5 @@
       "ethers": "^5.7.2",
       "hardhat-deploy": "^0.12.1"
     }
-  },
-  "overrides": {
-    "ethers": "^5.7.2",
-    "hardhat-deploy": "^0.12.1"
   }
 }

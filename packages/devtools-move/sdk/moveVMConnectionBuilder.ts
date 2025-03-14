@@ -24,13 +24,10 @@ export function getConnection(chain: string, stage: string): Aptos | RESTClient 
         const aptosNetwork = getAptosNetworkFromStage(stage)
         return new Aptos(new AptosConfig({ network: aptosNetwork }))
     } else if (chain === CHAIN_INITIA) {
-        if (!process.env.INITIA_REST_URL) {
-            throw new Error('INITIA_REST_URL must be set in the environment variables.')
-        }
-        const initiaRestURL = process.env.INITIA_REST_URL
+        const initiaRestURL = getInitiaRestURL()
 
         const restClient = new RESTClient(initiaRestURL, {
-            chainId: 'initiation-2',
+            chainId: getInitiaChainId(),
             gasPrices: '0.015uinit',
             gasAdjustment: '1.75',
         })
@@ -70,4 +67,18 @@ function getMovementFullnodeUrl(): string {
         throw new Error('MOVEMENT_FULLNODE_URL must be set in the environment variables.')
     }
     return process.env.MOVEMENT_FULLNODE_URL
+}
+
+function getInitiaChainId(): string {
+    if (!process.env.INITIA_CHAIN_ID) {
+        throw new Error('INITIA_CHAIN_ID must be set in the environment variables.')
+    }
+    return process.env.INITIA_CHAIN_ID
+}
+
+function getInitiaRestURL(): string {
+    if (!process.env.INITIA_REST_URL) {
+        throw new Error('INITIA_REST_URL must be set in the environment variables.')
+    }
+    return process.env.INITIA_REST_URL
 }
