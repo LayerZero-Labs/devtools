@@ -33,6 +33,6 @@ match_max 100000
 spawn npx hardhat --config hardhat.config.with-invalid-rpc.ts lz:healthcheck:validate:rpcs
 
 expect "Error fetching provider for network: arbitrum"
-expect "========== RPC URL validation failed for network(s): arbitrum"
+expect "========== RPC URL validation failed for 1 network(s):"
 
 expect eof
