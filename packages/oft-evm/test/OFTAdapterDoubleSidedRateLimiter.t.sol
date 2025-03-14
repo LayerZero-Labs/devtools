@@ -3,8 +3,10 @@ pragma solidity ^0.8.20;
 
 // Mock imports
 import { ERC20Mock } from "./mocks/ERC20Mock.sol";
+import { MintBurnERC20Mock } from "./mocks/MintBurnERC20Mock.sol";
 import { OFTComposerMock } from "./mocks/OFTComposerMock.sol";
 import { OFTAdapterDoubleSidedRateLimiterMock } from "./mocks/OFTAdapterDoubleSidedRateLimiterMock.sol";
+import { MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiterMock } from "./mocks/MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiterMock.sol";
 
 // OApp imports
 import { IOAppOptionsType3, EnforcedOptionParam } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
@@ -12,6 +14,7 @@ import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/Opti
 
 // OFT imports
 import { OFTAdapterDoubleSidedRateLimiter } from "../contracts/OFTAdapterDoubleSidedRateLimiter.sol";
+import { MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiter } from "../contracts/MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiter.sol";
 import { DoubleSidedRateLimiter } from "@layerzerolabs/oapp-evm/contracts/oapp/utils/DoubleSidedRateLimiter.sol";
 import { IOFT, SendParam, OFTReceipt } from "../contracts/interfaces/IOFT.sol";
 import { MessagingFee, MessagingReceipt, Origin } from "../contracts/OFTCore.sol";
@@ -38,12 +41,12 @@ contract OFTAdapterDoubleSidedRateLimiterTest is TestHelperOz5WithRevertAssertio
     uint32 cEid = 3;
 
     ERC20Mock aToken;
-    ERC20Mock bToken;
-    ERC20Mock cToken;
+    MintBurnERC20Mock bToken;
+    MintBurnERC20Mock cToken;
 
     OFTAdapterDoubleSidedRateLimiter aOFT;
-    OFTAdapterDoubleSidedRateLimiter bOFT;
-    OFTAdapterDoubleSidedRateLimiter cOFT;
+    MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiter bOFT;
+    MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiter cOFT;
 
     address public userA = address(0x1);
     address public userB = address(0x2);
@@ -84,8 +87,8 @@ contract OFTAdapterDoubleSidedRateLimiterTest is TestHelperOz5WithRevertAssertio
         setUpEndpoints(3, LibraryType.UltraLightNode);
 
         aToken = new ERC20Mock("aToken", "aToken");
-        bToken = new ERC20Mock("bToken", "bToken");
-        cToken = new ERC20Mock("cToken", "cToken");
+        bToken = new MintBurnERC20Mock("bToken", "bToken");
+        cToken = new MintBurnERC20Mock("cToken", "cToken");
 
         aOFT = OFTAdapterDoubleSidedRateLimiter(
             _deployOApp(type(OFTAdapterDoubleSidedRateLimiterMock).creationCode, abi.encode(address(aToken), address(endpoints[aEid]), address(this)))
@@ -93,14 +96,14 @@ contract OFTAdapterDoubleSidedRateLimiterTest is TestHelperOz5WithRevertAssertio
         aOFT.setRateLimits(aOutboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Outbound);
         aOFT.setRateLimits(aInboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Inbound);
 
-        bOFT = OFTAdapterDoubleSidedRateLimiter(
-            _deployOApp(type(OFTAdapterDoubleSidedRateLimiterMock).creationCode, abi.encode(address(bToken), address(endpoints[bEid]), address(this)))
+        bOFT = MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiter(
+            _deployOApp(type(MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiterMock).creationCode, abi.encode(address(bToken), address(endpoints[bEid]), address(this)))
         );
         bOFT.setRateLimits(bOutboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Outbound);
         bOFT.setRateLimits(bInboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Inbound);
 
-        cOFT = OFTAdapterDoubleSidedRateLimiter(
-            _deployOApp(type(OFTAdapterDoubleSidedRateLimiterMock).creationCode, abi.encode(address(cToken), address(endpoints[cEid]), address(this)))
+        cOFT = MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiter(
+            _deployOApp(type(MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiterMock).creationCode, abi.encode(address(cToken), address(endpoints[cEid]), address(this)))
         );
         cOFT.setRateLimits(cOutboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Outbound);
         cOFT.setRateLimits(cInboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Inbound);
@@ -116,12 +119,6 @@ contract OFTAdapterDoubleSidedRateLimiterTest is TestHelperOz5WithRevertAssertio
         aToken.mint(userA, initialBalance);
         bToken.mint(userB, initialBalance);
         cToken.mint(userC, initialBalance);
-
-        // mint tokens to adapters
-        // this is just for testing purposes and not required in production
-        aToken.mint(address(aOFT), initialBalance);
-        bToken.mint(address(bOFT), initialBalance);
-        cToken.mint(address(cOFT), initialBalance);
     }
 
     function test_constructor() public view {
