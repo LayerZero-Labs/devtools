@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-aptos-example
 
+## 1.0.4
+
+### Patch Changes
+
+- ed9aed9: Percolate --skip-connections-from-eids by upgrading toolbox-hardhat across the project
+
 ## 1.0.3
 
 ### Patch Changes
