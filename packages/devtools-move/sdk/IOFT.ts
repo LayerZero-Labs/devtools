@@ -38,6 +38,8 @@ export interface IOFT {
         sharedDecimals: number
     ): TypedInputGenerateTransactionPayloadData
 
+    initializeAdapterCoinPayload(): TypedInputGenerateTransactionPayloadData
+
     createSetRateLimitTx(
         eid: EndpointId,
         limit: number | bigint,

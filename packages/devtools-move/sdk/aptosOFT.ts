@@ -76,6 +76,14 @@ export class aptosOFT implements IOFT {
         }
     }
 
+    initializeAdapterCoinPayload(): TypedInputGenerateTransactionPayloadData {
+        return {
+            function: `${this.oft_address}::oft_adapter_coin::init_module`,
+            functionArguments: [],
+            types: [],
+        }
+    }
+
     createSetRateLimitTx(
         eid: EndpointId,
         limit: number | bigint,
