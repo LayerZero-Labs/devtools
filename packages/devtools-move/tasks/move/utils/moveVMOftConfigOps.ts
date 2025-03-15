@@ -118,13 +118,17 @@ export async function createSetPeerTx(
 ): Promise<TransactionPayload | null> {
     const eidToNetworkMapping = await createEidToNetworkMapping()
 
-    if (!connection.to.contractName) {
+    const isSolana = endpointIdToChainType(connection.to.eid) === ChainType.SOLANA
+    // Solana deployment is always saved as "OFT.json".  By convention it also does not use `contractName`.
+    // As such, allow solana Peer without the user explicitly adding "contractName" as "OFT".
+    const toContractName = isSolana ? 'OFT' : connection.to.contractName
+    if (!toContractName) {
         printNotSet('peer', connection)
         return null
     }
     const networkName = eidToNetworkMapping[connection.to.eid]
     validateNetwork(networkName, connection)
-    const contractAddress = getContractAddress(networkName, connection.to.contractName)
+    const contractAddress = getContractAddress(networkName, isSolana, toContractName)
     const newPeer = evmAddressToAptos(contractAddress, connection.to.eid.toString())
     const currentPeerHex = await getCurrentPeer(oft, connection.to.eid as EndpointId)
 
@@ -595,12 +599,12 @@ async function getCurrentPeer(oft: IOFT, eid: EndpointId): Promise<string> {
     return hasPeer ? await oft.getPeer(eid) : ''
 }
 
-function getContractAddress(networkName: string, contractName: string | null | undefined) {
+function getContractAddress(networkName: string, isSolana: boolean, contractName: string | null | undefined) {
     const deploymentPath = path.join(process.cwd(), `/deployments/${networkName}/${contractName}.json`)
 
     try {
         const deployment = JSON.parse(fs.readFileSync(deploymentPath, 'utf8'))
-        return deployment.address
+        return isSolana ? deployment.oftStore : deployment.address
     } catch (error) {
         throw new Error(`Failed to read deployment file for network ${networkName}: ${error}\n`)
     }
