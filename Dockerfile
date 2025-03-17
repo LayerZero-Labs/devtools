@@ -515,10 +515,10 @@ RUN \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM machine AS node-aptos-local-testnet
 
-ENV PATH="/root/.aptos/bin:$PATH"
+ENV PATH="/root/.aptosup:$PATH"
 
 # Get aptos CLI
-COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
+COPY --from=aptos /root/.aptosup /root/.aptosup
 
 # We'll provide a default healthcheck by asking for the chain information
 HEALTHCHECK --interval=2s --retries=20 CMD curl -f http://0.0.0.0:8080/v1 || exit 1
