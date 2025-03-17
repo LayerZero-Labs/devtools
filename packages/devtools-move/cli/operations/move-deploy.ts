@@ -49,6 +49,11 @@ class MoveDeployOperation implements INewOperation {
         )
         await deploy(deployTaskContext, args.address_name, forceDeploy, namedAddresses)
 
+        if (deployTaskContext.chain == 'initia') {
+            // rest for 2 seconds to allow for the initia chain to update before setting the delegate
+            await new Promise((resolve) => setTimeout(resolve, 2000))
+        }
+
         const taskContext = await initializeTaskContext(args.oapp_config)
         await setDelegate(taskContext)
     }

@@ -44,41 +44,66 @@ export const Setup: React.FC<Props> = ({ config }) => {
   );
 };
 
-const NextSteps: React.FC<{ config: Config }> = ({ config }) => (
-  <Box flexDirection="column">
-    <Text>
-      <Text color="green">✔</Text> All done!
-    </Text>
+const NextSteps: React.FC<{ config: Config }> = ({ config }) => {
+  // Check if the example is a Move VM example (Aptos or Initia)
+  const isMoveVMExample = [
+    "oft-aptos-move",
+    "oft-adapter-aptos-move",
+    "oapp-aptos-move",
+    "oft-initia",
+    "oft-adapter-initia",
+  ].includes(config.example.id);
 
-    <Box
-      margin={1}
-      borderStyle="round"
-      borderColor="gray"
-      flexDirection="column"
-    >
-      <Text># Navigate to your project</Text>
-      <Text color="cyan">cd {config.destination}</Text>
-      <Newline />
+  console.log(`the example is ${config.example.id}`);
 
-      <Text>#</Text>
-      <Text># Follow the steps in hardhat.config.ts:</Text>
-      <Text>#</Text>
-      <Text># - Create an .env file based on the provided template</Text>
-      <Text># - Adjust the contracts to your liking</Text>
-      <Text>#</Text>
-      <Newline />
-
-      <Text># Deploy your contracts</Text>
-      <Text color="cyan">npx hardhat lz:deploy</Text>
-      <Newline />
-
-      <Text bold>
-        Visit our docs page at{" "}
-        <Text underline color="cyan">
-          https://docs.layerzero.network/
-        </Text>{" "}
-        for more info
+  return (
+    <Box flexDirection="column">
+      <Text>
+        <Text color="green">✔</Text> All done!
       </Text>
+      <Box
+        margin={1}
+        borderStyle="round"
+        borderColor="gray"
+        flexDirection="column"
+      >
+        <Text># Navigate to your project</Text>
+        <Text color="cyan">cd {config.destination}</Text>
+        <Newline />
+
+        {isMoveVMExample ? (
+          // Custom instructions for Move VM examples
+          <>
+            <Text>#</Text>
+            <Text># - Follow the steps in the README.md file</Text>
+            <Text>#</Text>
+            <Newline />
+          </>
+        ) : (
+          // Standard instructions for other examples
+          <>
+            <Text>#</Text>
+            <Text># Follow the steps in hardhat.config.ts:</Text>
+            <Text>#</Text>
+            <Text># - Create an .env file based on the provided template</Text>
+            <Text># - Adjust the contracts to your liking</Text>
+            <Text>#</Text>
+            <Newline />
+
+            <Text># Deploy your contracts</Text>
+            <Text color="cyan">npx hardhat lz:deploy</Text>
+          </>
+        )}
+        <Newline />
+
+        <Text bold>
+          Visit our docs page at{" "}
+          <Text underline color="cyan">
+            https://docs.layerzero.network/
+          </Text>{" "}
+          for more info
+        </Text>
+      </Box>
     </Box>
-  </Box>
-);
+  );
+};

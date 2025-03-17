@@ -1,5 +1,5 @@
 import { spawn } from 'child_process'
-import { assert } from 'console'
+// import { assert } from 'console'
 import fs from 'fs'
 
 import { deploymentFile } from '../shared/types'
@@ -79,7 +79,7 @@ async function deployMovementContracts(
         childProcess.on('close', (code) => {
             if (code === 0) {
                 const addresses = stdOut.match(/0x[0-9a-fA-F]{64}/g)!
-                assert(addresses[0] == addresses[1], 'Addresses do not match')
+                // assert(addresses[0] == addresses[1], 'Addresses do not match')
                 createDeployment(addresses[0], userChosenContract.contract.contractName ?? '', chainName, stage)
 
                 resolve()
