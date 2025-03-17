@@ -246,7 +246,7 @@ pnpm hardhat lz:deploy # follow the prompts
 
 Note: If you are on testnet, consider using `MyOFTMock` to allow test token minting. If you do use `MyOFTMock`, make sure to update the `sepoliaContract.contractName` in [layerzero.config.ts](./layerzero.config.ts) to `MyOFTMock`.
 
-### Initialize the Solana OFT Config
+### Initialize the Solana OFT Config PeerConfig Account(s)
 
 :warning: Do this only when initializing the OFT for the first time. The only exception is if a new pathway is added later. If so, run this again to properly initialize the pathway.
 
