@@ -244,7 +244,7 @@ module oft::oft_using_oft_adapter_fa_tests {
         let amount = 100u64 * 100_000_000;  // 100 TOKEN
         let alice = &create_account_for_test(@1234);
 
-        // mint 1 APT to alice
+        // mint 100 APT to alice
         coin::register<AptosCoin>(alice);
         coin::deposit(
             address_of(alice),
