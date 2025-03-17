@@ -286,7 +286,6 @@ module oft::oft_using_oft_adapter_fa_tests {
             b"",
             @simple_msglib,
         )), 0);
-
     }
 
     #[test]
