@@ -742,4 +742,199 @@ contract OFTAdapterDoubleSidedRateLimiterTest is TestHelperOz5WithRevertAssertio
         (, amountCanBeSent) = bOFT.getAmountCanBeSent(aEid);
         assertEq(amountCanBeSent, 0);
     }
+
+    function test_reset_rate_limits_and_apply_new_limits() public {
+        // Initial setup - send tokens to hit the rate limit
+        uint256 tokensToSend = 10 ether;
+        bytes memory options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
+        SendParam memory sendParam = SendParam(
+            bEid,
+            addressToBytes32(userB),
+            tokensToSend,
+            tokensToSend,
+            options,
+            "",
+            ""
+        );
+        MessagingFee memory fee = aOFT.quoteSend(sendParam, false);
+
+        // Send tokens to hit the rate limit
+        vm.startPrank(userA);
+        aToken.approve(address(aOFT), tokensToSend);
+        aOFT.send{ value: fee.nativeFee }(sendParam, fee, payable(address(this)));
+        vm.stopPrank();
+
+        // Verify we've hit the rate limit
+        (uint256 amountInFlight, uint256 amountCanBeSent) = aOFT.getAmountCanBeSent(bEid);
+        assertEq(amountInFlight, tokensToSend);
+        assertEq(amountCanBeSent, 0);
+
+        // Reset the rate limits
+        uint32[] memory eids = new uint32[](1);
+        eids[0] = bEid;
+        aOFT.resetRateLimits(eids, DoubleSidedRateLimiter.RateLimitDirection.Outbound);
+
+        (amountInFlight, amountCanBeSent) = aOFT.getAmountCanBeSent(bEid);
+        assertEq(amountInFlight, 0 ether);
+        assertEq(amountCanBeSent, 10 ether);
+
+        // Verify the rate limits are reset
+        DoubleSidedRateLimiter.RateLimitConfig[] memory newOutboundConfigs = new DoubleSidedRateLimiter.RateLimitConfig[](1);
+        newOutboundConfigs[0] = DoubleSidedRateLimiter.RateLimitConfig({
+            eid: bEid,
+            limit: 20 ether,  // Double the previous limit
+            window: 30 seconds // Half the previous window
+        });
+        aOFT.setRateLimits(newOutboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Outbound);
+
+        // Verify the new limits are in effect
+        (amountInFlight, amountCanBeSent) = aOFT.getAmountCanBeSent(bEid);
+        assertEq(amountInFlight, 0 ether);
+        assertEq(amountCanBeSent, 20 ether);
+
+        // Test we can send with the new higher limit
+        uint256 newTokensToSend = 15 ether;
+        SendParam memory newSendParam = SendParam(
+            bEid,
+            addressToBytes32(userB),
+            newTokensToSend,
+            newTokensToSend,
+            options,
+            "",
+            ""
+        );
+        fee = aOFT.quoteSend(newSendParam, false);
+
+        vm.startPrank(userA);
+        aToken.approve(address(aOFT), newTokensToSend);
+        aOFT.send{ value: fee.nativeFee }(newSendParam, fee, payable(address(this)));
+        vm.stopPrank();
+
+        // Verify the new amount that can be sent
+        (, amountCanBeSent) = aOFT.getAmountCanBeSent(bEid);
+        assertEq(amountCanBeSent, 5 ether); // 20 ether limit - 15 ether sent = 5 ether remaining
+
+        // Test the shorter window
+        skip(31 seconds); // Just over the new 30 second window
+        (, amountCanBeSent) = aOFT.getAmountCanBeSent(bEid);
+        assertEq(amountCanBeSent, 20 ether); // Should be fully reset after the window
+    }
+
+    function test_reset_rate_limits_and_change_to_gross_accounting() public {
+        // override B rate limits
+        DoubleSidedRateLimiter.RateLimitConfig[] memory newBOutboundConfigs = new DoubleSidedRateLimiter.RateLimitConfig[](1);
+        newBOutboundConfigs[0] = DoubleSidedRateLimiter.RateLimitConfig({
+            eid: aEid,
+            limit: 30 ether,
+            window: 60 seconds
+        });
+        bOFT.setRateLimits(newBOutboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Outbound);
+
+        DoubleSidedRateLimiter.RateLimitConfig[] memory newBInboundConfigs = new DoubleSidedRateLimiter.RateLimitConfig[](1);
+        newBInboundConfigs[0] = DoubleSidedRateLimiter.RateLimitConfig({
+            eid: aEid,
+            limit: 60 ether,
+            window: 60 seconds
+        });
+        bOFT.setRateLimits(newBInboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Inbound);
+
+        // Initial setup - send tokens to hit the rate limit
+        uint256 tokensToSend = 10 ether;
+        bytes memory options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
+        SendParam memory sendParam = SendParam(
+            bEid,
+            addressToBytes32(userB),
+            tokensToSend,
+            tokensToSend,
+            options,
+            "",
+            ""
+        );
+        MessagingFee memory fee = aOFT.quoteSend(sendParam, false);
+
+        // Send tokens to hit the rate limit
+        vm.startPrank(userA);
+        aToken.approve(address(aOFT), tokensToSend);
+        aOFT.send{ value: fee.nativeFee }(sendParam, fee, payable(address(this)));
+        vm.stopPrank();
+
+        // Verify we've hit the rate limit
+        (uint256 amountInFlight, uint256 amountCanBeSent) = aOFT.getAmountCanBeSent(bEid);
+        assertEq(amountInFlight, tokensToSend);
+        assertEq(amountCanBeSent, 0);
+
+        // Change accounting type
+        aOFT.setRateLimitAccountingType(DoubleSidedRateLimiter.RateLimitAccountingType.Gross);
+
+        // Reset the rate limits
+        uint32[] memory eids = new uint32[](1);
+        eids[0] = bEid;
+        aOFT.resetRateLimits(eids, DoubleSidedRateLimiter.RateLimitDirection.Outbound);
+
+        // Set new rate limits with Gross accounting
+        DoubleSidedRateLimiter.RateLimitConfig[] memory newOutboundConfigs = new DoubleSidedRateLimiter.RateLimitConfig[](1);
+        newOutboundConfigs[0] = DoubleSidedRateLimiter.RateLimitConfig({
+            eid: bEid,
+            limit: 20 ether,  // Double the previous limit
+            window: 30 seconds // Half the previous window
+        });
+        aOFT.setRateLimits(newOutboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Outbound);
+
+        // Send tokens in one direction
+        uint256 firstSend = 15 ether;
+        SendParam memory firstSendParam = SendParam(
+            bEid,
+            addressToBytes32(userB),
+            firstSend,
+            firstSend,
+            options,
+            "",
+            ""
+        );
+        fee = aOFT.quoteSend(firstSendParam, false);
+
+        vm.startPrank(userA);
+        aToken.approve(address(aOFT), firstSend);
+        aOFT.send{ value: fee.nativeFee }(firstSendParam, fee, payable(address(this)));
+        vm.stopPrank();
+
+        // Verify first send amount
+        (, amountCanBeSent) = aOFT.getAmountCanBeSent(bEid);
+        assertEq(amountCanBeSent, 5 ether); // 20 ether limit - 15 ether sent = 5 ether remaining
+
+        // Execute the packet
+        verifyAndExecutePackets(bEid, addressToBytes32(address(bOFT)));
+
+        // Get amount can be received from bEid to aEid
+        (, uint256 amountCanBeReceived) = aOFT.getAmountCanBeReceived(bEid);
+        assertEq(amountCanBeReceived, 10 ether);
+
+        // Now send tokens back from B to A - with Gross accounting, this should not affect the rate limit
+        vm.startPrank(userB);
+        bToken.approve(address(bOFT), firstSend);
+        SendParam memory returnSendParam = SendParam(
+            aEid,
+            addressToBytes32(userA),
+            5 ether,
+            5 ether,
+            options,
+            "",
+            ""
+        );
+        fee = bOFT.quoteSend(returnSendParam, false);
+        bOFT.send{ value: fee.nativeFee }(returnSendParam, fee, payable(address(this)));
+        vm.stopPrank();
+
+        // Execute the return packet
+        verifyAndExecutePackets(aEid, addressToBytes32(address(aOFT)));
+
+        // Verify that sending tokens back did not affect the outbound rate limit
+        (, amountCanBeSent) = aOFT.getAmountCanBeSent(bEid);
+        assertEq(amountCanBeSent, 5 ether); // Should still be 5 ether, unchanged by the return transfer
+
+        // Wait for window to expire and verify reset
+        skip(31 seconds);
+        (, amountCanBeSent) = aOFT.getAmountCanBeSent(bEid);
+        assertEq(amountCanBeSent, 20 ether); // Should be fully reset after the window
+    }
 }
