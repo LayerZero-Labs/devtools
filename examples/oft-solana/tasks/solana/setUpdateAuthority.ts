@@ -21,7 +21,6 @@ interface Args {
 task('lz:oft:solana:set-update-authority', 'Updates the metaplex update authority of the SPL Token')
     .addParam('eid', 'Solana mainnet (30168) or testnet (40168)', undefined, devtoolsTypes.eid)
     .addParam('mint', 'The Token mint public key', undefined, devtoolsTypes.string)
-    .addOptionalParam('name', 'Token Name', undefined, devtoolsTypes.string)
     .addOptionalParam('newUpdateAuthority', 'The new update authority', undefined, devtoolsTypes.string)
     .addOptionalParam('renounceUpdateAuthority', 'Renounce update authority', false, devtoolsTypes.boolean)
     .setAction(
@@ -43,7 +42,7 @@ task('lz:oft:solana:set-update-authority', 'Updates the metaplex update authorit
              * The Metaplex Token Metadata program defines the update_authority strictly as a Pubkey:
              * https://github.com/metaplex-foundation/mpl-token-metadata/blob/23aee718e723578ee5df411f045184e0ac9a9e63/programs/token-metadata/program/src/state/metadata.rs#L73
              * Hence, the value must always be a Pubkey
-             * The Metaplex official way to renounce the update authority is to set its value to SystemProgram ID ("11111111111111111111111111111111")
+             * To renounce the update authority, we can to set its value to SystemProgram ID ("11111111111111111111111111111111")
              * This is done on top of setting `isMutable` to false
              */
 
@@ -68,6 +67,7 @@ task('lz:oft:solana:set-update-authority', 'Updates the metaplex update authorit
 
             console.log(`\nMint Address: ${mintStr}\n`)
             console.log(`\nCurrent update authority: ${initialMetadata.updateAuthority}\n`)
+            console.log(`\nNew update authority: ${updateAuthority.toString()}\n`)
 
             if (renounceUpdateAuthority) {
                 const doContinue = await promptToContinue(
@@ -78,11 +78,18 @@ task('lz:oft:solana:set-update-authority', 'Updates the metaplex update authorit
                 }
             }
 
+            const isMutable = renounceUpdateAuthority ? false : initialMetadata.isMutable
+
+            // Verify that isMutable is true when not renouncing, can't be too safe.
+            if (!renounceUpdateAuthority && !isMutable) {
+                throw new Error('When not renouncing, `isMutable` must be true')
+            }
+
             const txn = await updateV1(umi, {
                 mint,
                 newUpdateAuthority: updateAuthority,
                 authority: umiWalletSigner,
-                isMutable: false,
+                isMutable: renounceUpdateAuthority ? false : isMutable,
             }).sendAndConfirm(umi)
 
             const isTestnet = eid == EndpointId.SOLANA_V2_TESTNET
