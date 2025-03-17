@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-move",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "license": "MIT",
   "exports": {
     ".": {
@@ -43,13 +43,13 @@
     "@aptos-labs/ts-sdk": "^1.33.1",
     "@initia/initia.js": "^0.2.28",
     "@jest/globals": "^29.7.0",
-    "@layerzerolabs/devtools-extensible-cli": "^0.0.5",
+    "@layerzerolabs/devtools-extensible-cli": "^0.0.6",
     "@layerzerolabs/io-devtools": "^0.1.16",
     "@layerzerolabs/lz-definitions": "^3.0.75",
     "@layerzerolabs/lz-evm-sdk-v2": "^3.0.75",
     "@layerzerolabs/lz-serdes": "^3.0.19",
     "@layerzerolabs/lz-v2-utilities": "^3.0.75",
-    "@layerzerolabs/toolbox-hardhat": "~0.6.8",
+    "@layerzerolabs/toolbox-hardhat": "~0.6.9",
     "@types/argparse": "^2.0.17",
     "@types/jest": "^29.5.12",
     "@types/node": "~18.18.14",

@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-aptos-move-example",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -47,8 +47,8 @@
     "@aptos-labs/ts-sdk": "^1.33.1",
     "@babel/core": "^7.23.9",
     "@jest/globals": "^29.7.0",
-    "@layerzerolabs/devtools-extensible-cli": "^0.0.5",
-    "@layerzerolabs/devtools-move": "^1.0.1",
+    "@layerzerolabs/devtools-extensible-cli": "^0.0.6",
+    "@layerzerolabs/devtools-move": "^1.0.3",
     "@layerzerolabs/eslint-config-next": "~2.3.39",
     "@layerzerolabs/lz-config-types": "^3.0.15",
     "@layerzerolabs/lz-definitions": "^3.0.75",
@@ -67,7 +67,7 @@
     "@layerzerolabs/solhint-config": "^3.0.12",
     "@layerzerolabs/test-devtools-evm-foundry": "~6.0.3",
     "@layerzerolabs/toolbox-foundry": "~0.1.12",
-    "@layerzerolabs/toolbox-hardhat": "~0.6.8",
+    "@layerzerolabs/toolbox-hardhat": "~0.6.9",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@openzeppelin/contracts": "^5.0.2",

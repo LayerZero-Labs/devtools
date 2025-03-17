@@ -123,6 +123,24 @@ export const getExamples = (): Example[] => {
                   },
               ]
             : []),
+        ...(process.env.LZ_ENABLE_EXPERIMENTAL_INITIA_EXAMPLES
+            ? [
+                  {
+                      id: 'oft-initia',
+                      label: 'OFT (Initia)',
+                      repository,
+                      directory: 'examples/oft-initia',
+                      ref,
+                  },
+                  {
+                      id: 'oft-adapter-initia',
+                      label: 'OFT Adapter (Initia)',
+                      repository,
+                      directory: 'examples/oft-adapter-initia',
+                      ref,
+                  },
+              ]
+            : []),
         // Move OFT examples are feature flagged for the time being
         ...(process.env.LZ_ENABLE_EXPERIMENTAL_MOVE_VM_EXAMPLES
             ? [

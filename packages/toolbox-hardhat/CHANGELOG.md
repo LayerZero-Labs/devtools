@@ -1,5 +1,11 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.6.9
+
+### Patch Changes
+
+- 8817095: Add the ability to filter out connections from specified EndpointIds
+
 ## 0.6.8
 
 ### Patch Changes

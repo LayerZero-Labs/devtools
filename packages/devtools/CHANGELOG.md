@@ -1,5 +1,17 @@
 # @layerzerolabs/devtools
 
+## 0.4.10
+
+### Patch Changes
+
+- c93f7f5: Clarify missing contract error message
+
+## 0.4.9
+
+### Patch Changes
+
+- dc86373: Add the ability to filter out connections from specified EndpointIds
+
 ## 0.4.8
 
 ### Patch Changes
