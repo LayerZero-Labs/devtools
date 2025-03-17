@@ -82,7 +82,7 @@ module oft::oft_adapter_fa_tests {
 
         // no remaining balance in debited account
         let remaining_balance = fungible_asset::amount(&fa);
-        assert!(remaining_balance == 00, 0);
+        assert!(remaining_balance == 0, 0);
         burn_token_for_test(fa);
 
         // escrow balance should increase to match
