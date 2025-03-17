@@ -2,9 +2,10 @@
 pragma solidity ^0.8.22;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { OFTAdapterDoubleSidedRateLimiter } from "../../contracts/OFTAdapterDoubleSidedRateLimiter.sol";
 
-contract OFTAdapterDoubleSidedRateLimiterMock is OFTAdapterDoubleSidedRateLimiter {
+import { OFTAdapterDoubleSidedRateLimiter } from "../OFTAdapterDoubleSidedRateLimiter.sol";
+
+contract OFTAdapterDoubleSidedRateLimiterExample is OFTAdapterDoubleSidedRateLimiter {
     constructor(
         address _token,
         address _lzEndpoint,

@@ -5,8 +5,9 @@ pragma solidity ^0.8.20;
 import { ERC20Mock } from "./mocks/ERC20Mock.sol";
 import { MintBurnERC20Mock } from "./mocks/MintBurnERC20Mock.sol";
 import { OFTComposerMock } from "./mocks/OFTComposerMock.sol";
-import { OFTAdapterDoubleSidedRateLimiterMock } from "./mocks/OFTAdapterDoubleSidedRateLimiterMock.sol";
-import { MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiterMock } from "./mocks/MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiterMock.sol";
+import { OFTAdapterDoubleSidedRateLimiterExample } from "../contracts/examples/OFTAdapterDoubleSidedRateLimiterExample.sol";
+import { MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiterExample } from "../contracts/examples/MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiterExample.sol";
+import { OFTDoubleSidedRateLimiterExample } from "../contracts/examples/OFTDoubleSidedRateLimiterExample.sol";
 
 // OApp imports
 import { IOAppOptionsType3, EnforcedOptionParam } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
@@ -15,6 +16,7 @@ import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/Opti
 // OFT imports
 import { OFTAdapterDoubleSidedRateLimiter } from "../contracts/OFTAdapterDoubleSidedRateLimiter.sol";
 import { MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiter } from "../contracts/MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiter.sol";
+import { OFTDoubleSidedRateLimiter } from "../contracts/OFTDoubleSidedRateLimiter.sol";
 import { DoubleSidedRateLimiter } from "@layerzerolabs/oapp-evm/contracts/oapp/utils/DoubleSidedRateLimiter.sol";
 import { IOFT, SendParam, OFTReceipt } from "../contracts/interfaces/IOFT.sol";
 import { MessagingFee, MessagingReceipt, Origin } from "../contracts/OFTCore.sol";
@@ -42,11 +44,10 @@ contract OFTAdapterDoubleSidedRateLimiterTest is TestHelperOz5WithRevertAssertio
 
     ERC20Mock aToken;
     MintBurnERC20Mock bToken;
-    MintBurnERC20Mock cToken;
 
     OFTAdapterDoubleSidedRateLimiter aOFT;
     MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiter bOFT;
-    MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiter cOFT;
+    OFTDoubleSidedRateLimiter cOFT;
 
     address public userA = address(0x1);
     address public userB = address(0x2);
@@ -57,7 +58,6 @@ contract OFTAdapterDoubleSidedRateLimiterTest is TestHelperOz5WithRevertAssertio
         vm.deal(userA, 1000 ether);
         vm.deal(userB, 1000 ether);
         vm.deal(userC, 1000 ether);
-
         
         // The outbound (send) rate limits for OFT A.
         DoubleSidedRateLimiter.RateLimitConfig[] memory aOutboundConfigs = new DoubleSidedRateLimiter.RateLimitConfig[](1);
@@ -88,22 +88,21 @@ contract OFTAdapterDoubleSidedRateLimiterTest is TestHelperOz5WithRevertAssertio
 
         aToken = new ERC20Mock("aToken", "aToken");
         bToken = new MintBurnERC20Mock("bToken", "bToken");
-        cToken = new MintBurnERC20Mock("cToken", "cToken");
 
         aOFT = OFTAdapterDoubleSidedRateLimiter(
-            _deployOApp(type(OFTAdapterDoubleSidedRateLimiterMock).creationCode, abi.encode(address(aToken), address(endpoints[aEid]), address(this)))
+            _deployOApp(type(OFTAdapterDoubleSidedRateLimiterExample).creationCode, abi.encode(address(aToken), address(endpoints[aEid]), address(this)))
         );
         aOFT.setRateLimits(aOutboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Outbound);
         aOFT.setRateLimits(aInboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Inbound);
 
         bOFT = MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiter(
-            _deployOApp(type(MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiterMock).creationCode, abi.encode(address(bToken), address(endpoints[bEid]), address(this)))
+            _deployOApp(type(MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiterExample).creationCode, abi.encode(address(bToken), address(endpoints[bEid]), address(this)))
         );
         bOFT.setRateLimits(bOutboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Outbound);
         bOFT.setRateLimits(bInboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Inbound);
 
-        cOFT = MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiter(
-            _deployOApp(type(MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiterMock).creationCode, abi.encode(address(cToken), address(endpoints[cEid]), address(this)))
+        cOFT = OFTDoubleSidedRateLimiter(
+            _deployOApp(type(OFTDoubleSidedRateLimiterExample).creationCode, abi.encode("cToken", "cToken", address(endpoints[cEid]), address(this)))
         );
         cOFT.setRateLimits(cOutboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Outbound);
         cOFT.setRateLimits(cInboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Inbound);
@@ -118,7 +117,7 @@ contract OFTAdapterDoubleSidedRateLimiterTest is TestHelperOz5WithRevertAssertio
         // mint tokens
         aToken.mint(userA, initialBalance);
         bToken.mint(userB, initialBalance);
-        cToken.mint(userC, initialBalance);
+        deal(address(cOFT), userC, initialBalance);
     }
 
     function test_constructor() public view {
@@ -128,11 +127,11 @@ contract OFTAdapterDoubleSidedRateLimiterTest is TestHelperOz5WithRevertAssertio
 
         assertEq(aToken.balanceOf(userA), initialBalance);
         assertEq(bToken.balanceOf(userB), initialBalance);
-        assertEq(cToken.balanceOf(userC), initialBalance);
+        assertEq(cOFT.balanceOf(userC), initialBalance);
 
         assertEq(aOFT.token(), address(aToken));
         assertEq(bOFT.token(), address(bToken));
-        assertEq(cOFT.token(), address(cToken));
+        assertEq(cOFT.token(), address(cOFT));
     }
 
     function test_set_rates() public {
@@ -165,7 +164,7 @@ contract OFTAdapterDoubleSidedRateLimiterTest is TestHelperOz5WithRevertAssertio
 
     function test_set_rates_only_apply_per_direction() public {
         assertEq(aToken.balanceOf(userA), initialBalance);
-        assertEq(cToken.balanceOf(userC), initialBalance);
+        assertEq(cOFT.balanceOf(userC), initialBalance);
         
         // The outbound (send) rate limits for OFT A only allows to send 2.5 tokens every 60 seconds.
         DoubleSidedRateLimiter.RateLimitConfig[] memory aNewOutboundConfigs = new DoubleSidedRateLimiter.RateLimitConfig[](1);
@@ -209,7 +208,7 @@ contract OFTAdapterDoubleSidedRateLimiterTest is TestHelperOz5WithRevertAssertio
 
     function test_set_rates_only_apply_per_pathway() public {
         assertEq(aToken.balanceOf(userA), initialBalance);
-        assertEq(cToken.balanceOf(userC), initialBalance);
+        assertEq(cOFT.balanceOf(userC), initialBalance);
 
         // The outbound (send) rate limits for OFT A.
         DoubleSidedRateLimiter.RateLimitConfig[] memory aNewOutboundConfigs = new DoubleSidedRateLimiter.RateLimitConfig[](2);
