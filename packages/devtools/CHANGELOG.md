@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.4.10
+
+### Patch Changes
+
+- c93f7f5: Clarify missing contract error message
+
 ## 0.4.9
 
 ### Patch Changes

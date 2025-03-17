@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-evm-hardhat-test",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "private": true,
   "description": "Integration tests for devtools-evm-hardhat for V2",
   "repository": {
@@ -42,7 +42,7 @@
     "@layerzerolabs/test-devtools": "~0.4.6",
     "@layerzerolabs/test-devtools-evm-hardhat": "~0.5.2",
     "@layerzerolabs/test-setup-devtools-evm-hardhat": "~6.0.6",
-    "@layerzerolabs/toolbox-hardhat": "~0.6.8",
+    "@layerzerolabs/toolbox-hardhat": "~0.6.9",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@openzeppelin/contracts": "^4.9.5",

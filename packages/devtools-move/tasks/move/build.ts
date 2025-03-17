@@ -54,7 +54,7 @@ async function buildMovementContracts(namedAddresses: string, chain: string, sta
 }
 
 async function build(taskContext: DeployTaskContext, forceBuild: boolean, namedAddresses: string) {
-    const aptosCommand = await getAptosCLICommand(taskContext.chain, taskContext.stage)
+    const aptosCommand = await getCLICmd(taskContext.chain, taskContext.stage)
 
     const buildPath = path.join(process.cwd(), 'build', taskContext.selectedContract.contract.contractName ?? '')
 
@@ -63,6 +63,16 @@ async function build(taskContext: DeployTaskContext, forceBuild: boolean, namedA
         await buildMovementContracts(namedAddresses, taskContext.chain, taskContext.stage, aptosCommand)
     } else {
         console.log('Skipping build - built modules already exist at: ', buildPath)
+    }
+}
+
+async function getCLICmd(chain: string, stage: string) {
+    if (chain === 'aptos' || chain === 'movement') {
+        return await getAptosCLICommand(chain, stage)
+    } else if (chain === 'initia') {
+        return 'initiad'
+    } else {
+        throw new Error(`Chain ${chain}-${stage} not supported for build.`)
     }
 }
 
