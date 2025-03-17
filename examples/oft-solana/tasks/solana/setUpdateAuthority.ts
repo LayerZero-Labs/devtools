@@ -94,6 +94,6 @@ task('lz:oft:solana:set-update-authority', 'Updates the metaplex update authorit
 
             const isTestnet = eid == EndpointId.SOLANA_V2_TESTNET
 
-            console.log(`createTokenTx: ${getExplorerTxLink(bs58.encode(txn.signature), isTestnet)}`)
+            console.log(`Txn link: ${getExplorerTxLink(bs58.encode(txn.signature), isTestnet)}`)
         }
     )
