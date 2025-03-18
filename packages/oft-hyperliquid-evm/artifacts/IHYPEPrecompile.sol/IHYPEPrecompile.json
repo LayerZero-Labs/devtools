@@ -1,0 +1,84 @@
+{
+  "abi": [
+    {
+      "type": "event",
+      "name": "Received",
+      "inputs": [
+        {
+          "name": "user",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    }
+  ],
+  "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "methodIdentifiers": {},
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"Received\",\"type\":\"event\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interfaces/IHYPEPrecompile.sol\":\"IHYPEPrecompile\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/interfaces/IHYPEPrecompile.sol\":{\"keccak256\":\"0xa00c09fdbe78b82a68843ff08157edff124443ad929acac1e0aad8eb4e6c7235\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://379beb105c8914e43cd275344456d5a830d251b2c31f7ae03b73686ee8a1c7eb\",\"dweb:/ipfs/QmZssW3BnRj8TFZGrRtqhrXS4aDNACYYANoDniccpuJ51U\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.22+commit.4fc1097e" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "user",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "Received",
+          "anonymous": false
+        }
+      ],
+      "devdoc": { "kind": "dev", "methods": {}, "version": 1 },
+      "userdoc": { "kind": "user", "methods": {}, "version": 1 }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/=node_modules/@layerzerolabs/",
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/",
+        "solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 20000 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "contracts/interfaces/IHYPEPrecompile.sol": "IHYPEPrecompile"
+      },
+      "evmVersion": "shanghai",
+      "libraries": {}
+    },
+    "sources": {
+      "contracts/interfaces/IHYPEPrecompile.sol": {
+        "keccak256": "0xa00c09fdbe78b82a68843ff08157edff124443ad929acac1e0aad8eb4e6c7235",
+        "urls": [
+          "bzz-raw://379beb105c8914e43cd275344456d5a830d251b2c31f7ae03b73686ee8a1c7eb",
+          "dweb:/ipfs/QmZssW3BnRj8TFZGrRtqhrXS4aDNACYYANoDniccpuJ51U"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 1
+}
