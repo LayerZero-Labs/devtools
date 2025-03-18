@@ -617,6 +617,8 @@ function addOptions(enforcedOption: any, options: Options) {
         options.addExecutorOrderedExecutionOption()
     } else if (enforcedOption.optionType === ExecutorOptionType.LZ_READ) {
         options.addExecutorLzReadOption(enforcedOption.gas, enforcedOption.value)
+    } else {
+        throw new Error(`Unknown option type: ${enforcedOption.optionType}`)
     }
 }
 
