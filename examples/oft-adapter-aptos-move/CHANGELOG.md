@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-adapter-aptos-move-example
 
+## 1.0.4
+
+### Patch Changes
+
+- 42cb034: Fix hardhat.config.ts networks
+
 ## 1.0.3
 
 ### Patch Changes
