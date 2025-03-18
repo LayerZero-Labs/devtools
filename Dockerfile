@@ -23,7 +23,7 @@ ARG NODE_VERSION=20.10.0
 # and the base image is built locally
 # 
 # The CI environment will use base images from https://github.com/LayerZero-Labs/devtools/pkgs/container/devtools-dev-base
-# e.g. ghcr.io/layerzero-labs/devtools-dev-base:main
+# e.g. ghcr.io/layerzero-labs/devtools-dev-base:adel-movement-ci-updates
 ARG BASE_IMAGE=base
 
 # We will provide a way for consumers to override the default Aptos node image
@@ -115,6 +115,20 @@ ENV GOPATH=/root/go
 ENV PATH=$PATH:$GOPATH/bin
 RUN go version
 
+# Install Aptos CLI Version Manager
+RUN git clone https://github.com/LayerZero-Labs/aptosup
+# RUN chmod +x ./aptosup/install
+# RUN ./aptosup/install
+RUN mkdir -p /root/.aptosup
+RUN cp -R ./aptosup/aptosup /root/.aptosup/
+RUN chmod +x /root/.aptosup/aptosup
+RUN rm -rf ./aptosup
+ENV PATH="/root/.aptosup:$PATH"
+
+# RUN sed -i '/# Check if running with sudo/,+5d' /root/.aptosup/aptosup
+
+RUN aptosup -l
+
 # Install docker
 RUN curl -sSL https://get.docker.com/ | sh
 
@@ -129,37 +143,26 @@ RUN curl -sSL https://get.docker.com/ | sh
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM machine AS aptos
 
-WORKDIR /app/aptos
-
 ARG APTOS_VERSION=6.0.1
-ENV RUST_TOOLCHAIN_VERSION_APTOS=1.83.0
-RUN rustup default ${RUST_TOOLCHAIN_VERSION_APTOS}
-
-# We download the source code and extract the archive
-RUN curl -s -L https://github.com/aptos-labs/aptos-core/archive/refs/tags/aptos-cli-v${APTOS_VERSION}.tar.gz | tar -xz
-# Then rename the directory just for convenience
-RUN mv ./aptos-core-aptos-cli-v${APTOS_VERSION} ./aptos-v${APTOS_VERSION}
-
-# Switch to the project
-WORKDIR /app/aptos/aptos-v${APTOS_VERSION}
-
-# Configure cargo. We want to provide a way of limiting cargo resources
-# on the github runner since it is not large enough to support multiple cargo builds
-ARG CARGO_BUILD_JOBS=default
-ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
-
-# Installing Aptos CLI
-RUN ./scripts/dev_setup.sh -b -k
-RUN . ~/.cargo/env
-RUN cargo build --package aptos --profile cli
-
-# Move the binary to the aptos bin directory and clean up
-RUN mkdir -p /root/.aptos/bin/ && cp -R ./target/cli/aptos /root/.aptos/bin/
-RUN rm -rf /app/aptos/aptos-core
-ENV PATH="/root/.aptos/bin:$PATH"
-
+# Installing Aptos CLI for Aptos
+RUN echo 'y' | aptosup -d ${APTOS_VERSION}
 RUN aptos --version
 
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#          Image that builds Movement developer tooling
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM machine AS movement
+
+ARG APTOS_VERSION=3.5.0
+# Installing Aptos CLI for Movement
+RUN echo 'y' | aptosup -d ${APTOS_VERSION}
+RUN aptos --version
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
@@ -414,7 +417,15 @@ ENV PATH="/root/.aptos/bin:/root/.avm/bin:/root/.foundry/bin:/root/.solana/bin:$
 
 ### Get movement network clis
 # 1. Get aptos CLI
-COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
+COPY --from=aptos /root/.aptosup /root/.aptosup-aptos
+# Get aptos CLI for movement
+COPY --from=movement /root/.aptosup /root/.aptosup-movement
+# Merge the directories
+RUN mkdir -p /root/.aptosup && \
+    cp -R /root/.aptosup-aptos/* /root/.aptosup/ && \
+    cp -R /root/.aptosup-movement/* /root/.aptosup/ && \
+    rm -rf /root/.aptosup-aptos /root/.aptosup-movement
+
 # 2. Get initia CLI
 COPY --from=initia /root/.initia/bin /root/.initia/bin
 COPY --from=initia /root/.initia/lib /root/.initia/lib
@@ -504,10 +515,10 @@ RUN \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM machine AS node-aptos-local-testnet
 
-ENV PATH="/root/.aptos/bin:$PATH"
+ENV PATH="/root/.aptosup:$PATH"
 
 # Get aptos CLI
-COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
+COPY --from=aptos /root/.aptosup /root/.aptosup
 
 # We'll provide a default healthcheck by asking for the chain information
 HEALTHCHECK --interval=2s --retries=20 CMD curl -f http://0.0.0.0:8080/v1 || exit 1
