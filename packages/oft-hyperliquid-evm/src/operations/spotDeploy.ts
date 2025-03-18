@@ -1,6 +1,7 @@
-import { HyperliquidClient } from '@/signer'
-import { EvmSpotDeploy, FinalizeEvmContract } from '@/types'
 import { Wallet } from 'ethers'
+
+import { HyperliquidClient } from '../signer'
+import { EvmSpotDeploy, FinalizeEvmContract } from '../types'
 
 export async function requestEvmContract(
     wallet: Wallet,
