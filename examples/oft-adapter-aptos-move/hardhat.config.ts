@@ -57,12 +57,7 @@ const config: HardhatUserConfig = {
             url: process.env.RPC_URL_BSC || 'https://bsc-testnet.public.blastapi.io',
             accounts,
         },
-        'eth-testnet': {
-            eid: EndpointId.ETHEREUM_V2_TESTNET,
-            url: process.env.RPC_URL_ETHEREUM_TESTNET || 'https://sepolia.infura.io/v3/',
-            accounts,
-        },
-        'solana-devnet': {
+        'solana-testnet': {
             eid: EndpointId.SOLANA_V2_TESTNET,
             url: process.env.RPC_URL_SOLANA_TESTNET || 'https://api.devnet.solana.com',
             accounts,

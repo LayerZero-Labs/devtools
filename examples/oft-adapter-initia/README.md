@@ -4,14 +4,6 @@ The following is a guide for deploying OFT's and wiring them to Initia.
 
 ## Setup and Installation
 
-First, clone the repository and navigate to the example directory:
-
-```bash
-git clone --recurse-submodules https://github.com/LayerZero-Labs/devtools.git --depth 1
-cd devtools
-cd examples/oft-initia
-```
-
 Set pnpm to the required version:
 
 ```bash
