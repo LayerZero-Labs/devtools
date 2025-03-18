@@ -1,9 +1,10 @@
-import { getTimestampMs, signL1Action } from '@/signer'
-import { HYPERLIQUID_URLS, ValueType } from '@/types'
 import axios, { AxiosInstance } from 'axios'
 import { Wallet } from 'ethers'
 
 import { Logger, createLogger } from '@layerzerolabs/io-devtools'
+
+import { getTimestampMs, signL1Action } from '../signer'
+import { HYPERLIQUID_URLS, ValueType } from '../types'
 
 export class HyperliquidClient {
     private readonly client: AxiosInstance
