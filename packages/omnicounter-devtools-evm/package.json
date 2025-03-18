@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/omnicounter-devtools-evm",
-  "version": "5.0.5",
+  "version": "5.0.6",
   "description": "Utilities for working with LayerZero OmniCounter contract",
   "repository": {
     "type": "git",
@@ -33,14 +33,14 @@
     "p-memoize": "~4.0.4"
   },
   "devDependencies": {
-    "@layerzerolabs/devtools": "~0.4.6",
-    "@layerzerolabs/devtools-evm": "~1.0.5",
-    "@layerzerolabs/lz-definitions": "^3.0.59",
-    "@layerzerolabs/omnicounter-devtools": "~3.0.5",
-    "@layerzerolabs/protocol-devtools": "~1.1.5",
-    "@layerzerolabs/protocol-devtools-evm": "~3.0.6",
-    "@layerzerolabs/ua-devtools": "~3.0.5",
-    "@layerzerolabs/ua-devtools-evm": "~5.0.6",
+    "@layerzerolabs/devtools": "~0.4.8",
+    "@layerzerolabs/devtools-evm": "~1.0.6",
+    "@layerzerolabs/lz-definitions": "^3.0.75",
+    "@layerzerolabs/omnicounter-devtools": "~3.0.6",
+    "@layerzerolabs/protocol-devtools": "~1.1.6",
+    "@layerzerolabs/protocol-devtools-evm": "~3.0.7",
+    "@layerzerolabs/ua-devtools": "~3.0.6",
+    "@layerzerolabs/ua-devtools-evm": "~5.0.7",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.12",
@@ -52,14 +52,14 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "@layerzerolabs/devtools": "~0.4.6",
-    "@layerzerolabs/devtools-evm": "~1.0.5",
-    "@layerzerolabs/lz-definitions": "^3.0.59",
-    "@layerzerolabs/omnicounter-devtools": "~3.0.5",
-    "@layerzerolabs/protocol-devtools": "~1.1.5",
-    "@layerzerolabs/protocol-devtools-evm": "~3.0.6",
-    "@layerzerolabs/ua-devtools": "~3.0.5",
-    "@layerzerolabs/ua-devtools-evm": "~5.0.6",
+    "@layerzerolabs/devtools": "~0.4.8",
+    "@layerzerolabs/devtools-evm": "~1.0.6",
+    "@layerzerolabs/lz-definitions": "^3.0.75",
+    "@layerzerolabs/omnicounter-devtools": "~3.0.6",
+    "@layerzerolabs/protocol-devtools": "~1.1.6",
+    "@layerzerolabs/protocol-devtools-evm": "~3.0.7",
+    "@layerzerolabs/ua-devtools": "~3.0.6",
+    "@layerzerolabs/ua-devtools-evm": "~5.0.7",
     "zod": "^3.22.4"
   },
   "publishConfig": {

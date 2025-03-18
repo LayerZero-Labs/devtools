@@ -17,7 +17,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 //
 // If you prefer using a mnemonic, set a MNEMONIC environment variable
 // to a valid mnemonic
-const MNEMONIC = process.env.MNEMONIC
+const MNEMONIC = process.env.EVM_MNEMONIC
 
 // If you prefer to be authenticated using a private key, set a PRIVATE_KEY environment variable
 const PRIVATE_KEY = process.env.EVM_PRIVATE_KEY

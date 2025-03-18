@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
-    entry: ['cli/index.ts'],
+    entry: ['index.ts'],
     outDir: './dist',
     clean: true,
     dts: true,

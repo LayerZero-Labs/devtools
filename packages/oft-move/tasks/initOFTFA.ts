@@ -1,5 +1,4 @@
-import { sendInitTransaction } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
-import { TaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
+import { sendInitTransaction, TaskContext } from '@layerzerolabs/devtools-move'
 
 async function initOFTFA(
     token_name: string,

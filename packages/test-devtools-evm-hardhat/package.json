@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/test-devtools-evm-hardhat",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Helpers for testing LayerZero EVM contracts using hardhat",
   "repository": {
     "type": "git",
@@ -34,11 +34,11 @@
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
   },
   "devDependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
-    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
-    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
-    "@layerzerolabs/oapp-evm": "^0.3.1",
-    "@layerzerolabs/oft-evm": "^3.1.2",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.75",
+    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.75",
+    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.75",
+    "@layerzerolabs/oapp-evm": "^0.3.2",
+    "@layerzerolabs/oft-evm": "^3.1.3",
     "@openzeppelin/contracts": "^4.9.5",
     "@openzeppelin/contracts-upgradeable": "^4.9.5",
     "hardhat": "^2.22.10",

@@ -1,8 +1,7 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 
 import { setRateLimit } from '../../tasks/setRateLimit'
-import { OFTType } from '@layerzerolabs/devtools-move/sdk/IOFT'
-import { initializeTaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
+import { OFTType, initializeTaskContext } from '@layerzerolabs/devtools-move'
 
 class AdapterSetRateLimit implements INewOperation {
     vm = 'move'

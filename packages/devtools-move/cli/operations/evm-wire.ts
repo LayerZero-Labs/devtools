@@ -12,7 +12,7 @@ class EVMWireOperation implements INewOperation {
             arg: {
                 help: 'Whether to simulate the transaction',
                 required: false,
-                default: 'true',
+                default: 'false',
             },
         },
         {

@@ -1,5 +1,27 @@
 # create-lz-oapp
 
+## 0.7.2
+
+### Patch Changes
+
+- adding support for initia chain and cleanup
+
+## 0.7.1
+
+### Patch Changes
+
+- c31fec8: experiemental tag on move-vm examples"
+
+## 0.7.0
+
+### Minor Changes
+
+- 24311f8: adding initia and move example
+
+### Patch Changes
+
+- 24311f8: Minor bug fixes
+
 ## 0.6.0
 
 ### Minor Changes

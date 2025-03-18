@@ -1,8 +1,6 @@
 import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
-import { sendAllTxs } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
-import { createSetFeeBpsTx } from '@layerzerolabs/devtools-move/tasks/move/utils/moveVMOftConfigOps'
-import { OFTType } from '@layerzerolabs/devtools-move/sdk/IOFT'
-import { TaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
+
+import { sendAllTxs, createSetFeeBpsTx, OFTType, TaskContext } from '@layerzerolabs/devtools-move'
 
 async function setFee(feeBps: bigint, toEid: EndpointId, oftType: OFTType, taskContext: TaskContext) {
     console.log(`\n🔧 Setting ${taskContext.chain}-${taskContext.stage} OFT Fee BPS`)

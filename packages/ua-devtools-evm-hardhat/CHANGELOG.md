@@ -1,5 +1,28 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 6.0.11
+
+### Patch Changes
+
+- dc86373: Add the ability to filter out connections from specified EndpointIds
+- Updated dependencies [dc86373]
+  - @layerzerolabs/devtools@0.4.9
+
+## 6.0.10
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+- Updated dependencies [24311f8]
+- Updated dependencies [8b6c422]
+  - @layerzerolabs/devtools-evm-hardhat@2.0.8
+  - @layerzerolabs/devtools-evm@1.0.6
+  - @layerzerolabs/protocol-devtools-evm@3.0.7
+  - @layerzerolabs/protocol-devtools@1.1.6
+  - @layerzerolabs/ua-devtools-evm@5.0.7
+  - @layerzerolabs/ua-devtools@3.0.6
+  - @layerzerolabs/devtools@0.4.8
+
 ## 6.0.9
 
 ### Patch Changes
