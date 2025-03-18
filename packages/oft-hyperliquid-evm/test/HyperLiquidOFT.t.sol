@@ -36,7 +36,7 @@ contract HyperLiquidOFTTest is TestHelperOz5 {
     address public userA = makeAddr("userA");
     address public userB = makeAddr("userB");
 
-    uint256 public hlIndexId = 9999;
+    uint64 public hlIndexId = 9999;
 
     uint256 public initialBalance = 100 ether;
     uint256 public initialNativeBalance = 1000 ether;
@@ -139,12 +139,13 @@ contract HyperLiquidOFTTest is TestHelperOz5 {
 
         // Expect the Transfer event to be emitted
         vm.expectEmit(address(dstOFT));
-        emit IERC20.Transfer(address(userB), dstComposer.HL_NATIVE_TRANSFER(), oftReceipt.amountReceivedLD);
+        emit IERC20.Transfer(address(userB), dstComposer.OFT_TOKEN_ASSET_BRIDGE_ADDRESS(), oftReceipt.amountReceivedLD);
+        vm.prank(address(endpoints[DST_EID]));
         this.lzCompose(dstEid_, from_, options_, guid_, to_, composerMsg_);
 
         // Assert the post state
         assertEq(dstOFT.balanceOf(address(userB)), 0);
-        assertEq(dstOFT.balanceOf(dstComposer.HL_NATIVE_TRANSFER()), oftReceipt.amountReceivedLD);
+        assertEq(dstOFT.balanceOf(dstComposer.OFT_TOKEN_ASSET_BRIDGE_ADDRESS()), oftReceipt.amountReceivedLD);
     }
 
     function send_oft_AB(

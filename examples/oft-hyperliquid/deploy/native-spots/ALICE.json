@@ -1,0 +1,20 @@
+{
+  "nativeSpot": {
+    "name": "ALICE",
+    "szDecimals": 0,
+    "weiDecimals": 6,
+    "index": 1231,
+    "tokenId": "0x503e1e612424896ec6e7a02c7350c963",
+    "isCanonical": false,
+    "evmContract": "0xAd543c6aF375b1001E3b08202b1Eb3e6e608A42F",
+    "fullName": "MyHyperLiquidOFT",
+    "deployerTradingFeeShare": "0.25"
+  },
+  "txData": {
+    "txHash": "0x2c11c8709308532cb1579d56d5860caa4769dc2f4e0d680293d28c1e8aa42172",
+    "nonce": 2,
+    "from": "0xa3824BFfc05178b1eD611117e5b900adCb189b94",
+    "connected": true,
+    "weiDiff": 12
+  }
+}

@@ -7,6 +7,6 @@ contract MyHyperLiquidComposer is HyperLiquidComposer {
     constructor(
         address _lzEndpoint,
         address _oft,
-        uint256 _hlIndexId
+        uint64 _hlIndexId
     ) HyperLiquidComposer(_lzEndpoint, _oft, _hlIndexId) {}
 }

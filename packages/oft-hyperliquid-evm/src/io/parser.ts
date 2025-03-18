@@ -23,7 +23,8 @@ export function writeUpdatedNativeSpots(
     txHash: string,
     nonce: number,
     from: string,
-    connected: boolean
+    connected: boolean,
+    weiDiff?: number
 ) {
     const spot = getNativeSpot(key)
     spot.nativeSpot.evmContract = tokenAddress
@@ -32,14 +33,16 @@ export function writeUpdatedNativeSpots(
     spot.txData.nonce = nonce
     spot.txData.from = from
     spot.txData.connected = connected
+    spot.txData.weiDiff = weiDiff
 
     fs.writeFileSync(path.join(process.cwd(), DEPLOY_DIR, `${key}.json`), JSON.stringify(spot, null, 2))
     console.log(`Updated native spot ${key}`)
 }
 
-export function writeNativeSpotConnected(key: string, connected: boolean) {
+export function writeNativeSpotConnected(key: string, connected: boolean, weiDiff: number) {
     const spot = getNativeSpot(key)
     spot.txData.connected = connected
+    spot.txData.weiDiff = weiDiff
 
     fs.writeFileSync(path.join(process.cwd(), DEPLOY_DIR, `${key}.json`), JSON.stringify(spot, null, 2))
     console.log(`Updated native spot ${key}`)

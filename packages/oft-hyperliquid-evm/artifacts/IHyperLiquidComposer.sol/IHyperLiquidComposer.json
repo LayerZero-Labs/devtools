@@ -2,16 +2,16 @@
   "abi": [
     {
       "type": "function",
-      "name": "HL_NATIVE_TRANSFER",
+      "name": "OFT_TOKEN_ASSET_BRIDGE_ADDRESS",
       "inputs": [],
       "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
       "stateMutability": "view"
     },
     {
       "type": "function",
-      "name": "HL_NATIVE_TRANSFER_CORE_INDEX_ID",
+      "name": "OFT_TOKEN_CORE_INDEX_ID",
       "inputs": [],
-      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "outputs": [{ "name": "", "type": "uint64", "internalType": "uint64" }],
       "stateMutability": "view"
     },
     {
@@ -66,11 +66,11 @@
   "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
   "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
   "methodIdentifiers": {
-    "HL_NATIVE_TRANSFER()": "56d5e2e5",
-    "HL_NATIVE_TRANSFER_CORE_INDEX_ID()": "a73736ba",
+    "OFT_TOKEN_ASSET_BRIDGE_ADDRESS()": "84123305",
+    "OFT_TOKEN_CORE_INDEX_ID()": "9a923b9a",
     "lzCompose(address,bytes32,bytes,address,bytes)": "d0a10260"
   },
-  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_notEndpointAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotEndpoint\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_internalOFTAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_receivedOFTAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotOFT\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oft\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_TokenDoesNotSupportExtension\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"HL_NATIVE_TRANSFER\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"HL_NATIVE_TRANSFER_CORE_INDEX_ID\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_from\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_guid\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"_executor\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_extraData\",\"type\":\"bytes\"}],\"name\":\"lzCompose\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"lzCompose(address,bytes32,bytes,address,bytes)\":{\"details\":\"To ensure non-reentrancy, implementers of this interface MUST assert msg.sender is the corresponding EndpointV2 contract (i.e., onlyEndpointV2).\",\"params\":{\"_executor\":\"The address of the executor for the composed message.\",\"_extraData\":\"Additional arbitrary data in bytes passed by the entity who executes the lzCompose.\",\"_from\":\"The address initiating the composition, typically the OApp where the lzReceive was called.\",\"_guid\":\"The unique identifier for the corresponding LayerZero src/dst tx.\",\"_message\":\"The composed message payload in bytes. NOT necessarily the same payload passed via lzReceive.\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"lzCompose(address,bytes32,bytes,address,bytes)\":{\"notice\":\"Composes a LayerZero message from an OApp.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interfaces/IHyperLiquidComposer.sol\":\"IHyperLiquidComposer\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/interfaces/IHyperLiquidComposer.sol\":{\"keccak256\":\"0x0d4f8d06c6d796952fedfbafb7b83f0b323edcc4587f4bded54e6b64f57e210b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://339cc15b6817c29d056e6d3a5908f111b4528184d97963ee6289f39572efd6cc\",\"dweb:/ipfs/QmZx9r3iddArZT7oqhvct7etzBkQXjP8V5ZfoX3ct4K8QT\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol\":{\"keccak256\":\"0xfaca7205d4211ee9208a7e59171e2301731f3d2a20c49b4a839821871f5fdd49\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f254bc60ac26687b5320a43a556e30777b0745abf7cd64d5f4720d9b1d1f7fdf\",\"dweb:/ipfs/QmRSJEZVgxaC3L2DdE6s8P5qkYfM3V5JMeseeFJJqGR4xz\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol\":{\"keccak256\":\"0xe5014c411acb2b59dd74ae74a1bab02cf32d94a41a548a5ab553d64aeeb55dae\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://29dfb7bc121002fc7e7931c34eb17af0ae0f0127dcc3199511c83a58a917160d\",\"dweb:/ipfs/QmPdq1wcRRBdUP169LHCLoLuPRunN9eR71TQN42FjGpowx\"]}},\"version\":1}",
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_notEndpointAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotEndpoint\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_internalOFTAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_receivedOFTAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotOFT\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oft\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_TokenDoesNotSupportExtension\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OFT_TOKEN_ASSET_BRIDGE_ADDRESS\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"OFT_TOKEN_CORE_INDEX_ID\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_from\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_guid\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"_executor\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_extraData\",\"type\":\"bytes\"}],\"name\":\"lzCompose\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"lzCompose(address,bytes32,bytes,address,bytes)\":{\"details\":\"To ensure non-reentrancy, implementers of this interface MUST assert msg.sender is the corresponding EndpointV2 contract (i.e., onlyEndpointV2).\",\"params\":{\"_executor\":\"The address of the executor for the composed message.\",\"_extraData\":\"Additional arbitrary data in bytes passed by the entity who executes the lzCompose.\",\"_from\":\"The address initiating the composition, typically the OApp where the lzReceive was called.\",\"_guid\":\"The unique identifier for the corresponding LayerZero src/dst tx.\",\"_message\":\"The composed message payload in bytes. NOT necessarily the same payload passed via lzReceive.\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"lzCompose(address,bytes32,bytes,address,bytes)\":{\"notice\":\"Composes a LayerZero message from an OApp.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interfaces/IHyperLiquidComposer.sol\":\"IHyperLiquidComposer\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/interfaces/IHyperLiquidComposer.sol\":{\"keccak256\":\"0x05e81b73564bcb006142ae9bb1f0d56fcdb46f87b23cb54cee5cc7561fb4aff4\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1cf8e7d88497fb75b4c05544c1d27b7d58ceced547af2892ec95662032e5fc78\",\"dweb:/ipfs/QmQwhqu8PM1FkfB65aLEhiyfL9NcQ6uKBwuMoGxQDXNWha\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol\":{\"keccak256\":\"0xfaca7205d4211ee9208a7e59171e2301731f3d2a20c49b4a839821871f5fdd49\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f254bc60ac26687b5320a43a556e30777b0745abf7cd64d5f4720d9b1d1f7fdf\",\"dweb:/ipfs/QmRSJEZVgxaC3L2DdE6s8P5qkYfM3V5JMeseeFJJqGR4xz\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol\":{\"keccak256\":\"0xe5014c411acb2b59dd74ae74a1bab02cf32d94a41a548a5ab553d64aeeb55dae\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://29dfb7bc121002fc7e7931c34eb17af0ae0f0127dcc3199511c83a58a917160d\",\"dweb:/ipfs/QmPdq1wcRRBdUP169LHCLoLuPRunN9eR71TQN42FjGpowx\"]}},\"version\":1}",
   "metadata": {
     "compiler": { "version": "0.8.22+commit.4fc1097e" },
     "language": "Solidity",
@@ -115,7 +115,7 @@
           "inputs": [],
           "stateMutability": "view",
           "type": "function",
-          "name": "HL_NATIVE_TRANSFER",
+          "name": "OFT_TOKEN_ASSET_BRIDGE_ADDRESS",
           "outputs": [
             { "internalType": "address", "name": "", "type": "address" }
           ]
@@ -124,9 +124,9 @@
           "inputs": [],
           "stateMutability": "view",
           "type": "function",
-          "name": "HL_NATIVE_TRANSFER_CORE_INDEX_ID",
+          "name": "OFT_TOKEN_CORE_INDEX_ID",
           "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            { "internalType": "uint64", "name": "", "type": "uint64" }
           ]
         },
         {
@@ -190,10 +190,10 @@
     },
     "sources": {
       "contracts/interfaces/IHyperLiquidComposer.sol": {
-        "keccak256": "0x0d4f8d06c6d796952fedfbafb7b83f0b323edcc4587f4bded54e6b64f57e210b",
+        "keccak256": "0x05e81b73564bcb006142ae9bb1f0d56fcdb46f87b23cb54cee5cc7561fb4aff4",
         "urls": [
-          "bzz-raw://339cc15b6817c29d056e6d3a5908f111b4528184d97963ee6289f39572efd6cc",
-          "dweb:/ipfs/QmZx9r3iddArZT7oqhvct7etzBkQXjP8V5ZfoX3ct4K8QT"
+          "bzz-raw://1cf8e7d88497fb75b4c05544c1d27b7d58ceced547af2892ec95662032e5fc78",
+          "dweb:/ipfs/QmQwhqu8PM1FkfB65aLEhiyfL9NcQ6uKBwuMoGxQDXNWha"
         ],
         "license": "MIT"
       },
@@ -216,5 +216,5 @@
     },
     "version": 1
   },
-  "id": 4
+  "id": 5
 }

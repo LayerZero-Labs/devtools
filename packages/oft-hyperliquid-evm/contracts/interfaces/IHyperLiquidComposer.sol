@@ -8,6 +8,6 @@ interface IHyperLiquidComposer is IOAppComposer {
     error HyperLiquidComposer_InvalidCall_NotOFT(address _internalOFTAddress, address _receivedOFTAddress);
     error HyperLiquidComposer_InvalidCall_TokenDoesNotSupportExtension(address _oft, address _token);
 
-    function HL_NATIVE_TRANSFER_CORE_INDEX_ID() external view returns (uint256);
-    function HL_NATIVE_TRANSFER() external view returns (address);
+    function OFT_TOKEN_ASSET_BRIDGE_ADDRESS() external view returns (address);
+    function OFT_TOKEN_CORE_INDEX_ID() external view returns (uint64);
 }

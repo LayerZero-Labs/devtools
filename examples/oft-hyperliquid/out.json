@@ -1,0 +1,27 @@
+{
+  "name": "ALICE",
+  "maxSupply": "20000000000.0",
+  "totalSupply": "20000000000.0",
+  "circulatingSupply": "19999999900.0",
+  "szDecimals": 0,
+  "weiDecimals": 6,
+  "midPx": null,
+  "markPx": "0.00003",
+  "prevDayPx": "0.0",
+  "genesis": {
+    "userBalances": [
+      ["0xa3824bffc05178b1ed611117e5b900adcb189b94", "10000000000.0"],
+      ["0xffffffffffffffffffffffffffffffffffffffff", "10000000000.0"]
+    ],
+    "existingTokenBalances": [],
+    "blacklistUsers": []
+  },
+  "deployer": "0xa3824bffc05178b1ed611117e5b900adcb189b94",
+  "deployGas": "0.0",
+  "deployTime": "2025-02-25T11:31:53.726529147",
+  "seededUsdc": "0.0",
+  "nonCirculatingUserBalances": [
+    ["0x0000000000000000000000000000000000000000", "100.0"]
+  ],
+  "futureEmissions": "0.0"
+}

@@ -1474,6 +1474,9 @@ importers:
       '@layerzerolabs/lz-evm-protocol-v2':
         specifier: ^3.0.12
         version: 3.0.75(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-sdk-v2':
+        specifier: ^3.0.75
+        version: 3.0.75
       '@layerzerolabs/lz-evm-v1-0.7':
         specifier: ^3.0.12
         version: 3.0.75(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
@@ -8183,6 +8186,7 @@ packages:
       '@openzeppelin/contracts-upgradeable': 5.1.0(@openzeppelin/contracts@5.1.0)
       hardhat-deploy: 0.12.4
       solidity-bytes-utils: 0.8.2
+    dev: true
 
   /@layerzerolabs/lz-evm-oapp-v1@3.0.12(@layerzerolabs/lz-evm-v1-0.7@3.0.75)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2):
     resolution: {integrity: sha512-+c6IfSZAlQliCgkaqISYFEca4j55MWkO3wPGgLPnaNLm7zR6qPobU7nE/q8pSYQtyLPlhBpV+tNyVfM8dqUCrw==}
@@ -8314,6 +8318,7 @@ packages:
       '@openzeppelin/contracts-upgradeable': 5.1.0(@openzeppelin/contracts@5.1.0)
       hardhat-deploy: 0.12.4
       solidity-bytes-utils: 0.8.2
+    dev: true
 
   /@layerzerolabs/lz-evm-sdk-v1-0.7@1.5.16:
     resolution: {integrity: sha512-YYuEU1SsedZkjLxf9Ur2Pmqtud/EBoWemEJaNxT4VMnGMZ1s8g2ehxraGk4ucRBsHDlVFHm5GHjxcWpxdg5xBw==}
@@ -8447,6 +8452,7 @@ packages:
       '@openzeppelin/contracts': 5.1.0
       '@openzeppelin/contracts-upgradeable': 5.1.0(@openzeppelin/contracts@5.1.0)
       hardhat-deploy: 0.12.4
+    dev: true
 
   /@layerzerolabs/lz-foundation@3.0.38(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3):
     resolution: {integrity: sha512-0WDrlJ+DZ3GGxKPgcConoxQdTB7icpoOYjeTcwmBtJcUnXIE7G3vxzKUAKsUccGegFdgHMEj1K4D+3NPZbNQ2A==}

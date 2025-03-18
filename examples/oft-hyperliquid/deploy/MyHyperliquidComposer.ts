@@ -39,6 +39,10 @@ const deploy: DeployFunction = async (hre) => {
     console.log(`Network: ${hre.network.name}`)
     console.log(`Deployer: ${deployer}`)
 
+    const evmExtraWeiDecimals = evmDecimals - hip1Token.nativeSpot.weiDecimals
+    console.log(`EVM extra wei decimals: ${evmExtraWeiDecimals}`)
+    console.log(`Native spot index: ${hip1Token.nativeSpot.index}`)
+
     // This is an external deployment pulled in from @layerzerolabs/lz-evm-sdk-v2
     //
     // @layerzerolabs/toolbox-hardhat takes care of plugging in the external deployments
@@ -77,6 +81,7 @@ const deploy: DeployFunction = async (hre) => {
             endpointV2Deployment.address, // LayerZero's EndpointV2 address
             address_oft, // OFT address
             hip1Token.nativeSpot.index, // Core index id
+            evmExtraWeiDecimals,
         ],
         log: true,
         skipIfAlreadyDeployed: true,
@@ -92,10 +97,6 @@ const deploy: DeployFunction = async (hre) => {
         const res = await useSmallBlock(wallet, isTestnet, loglevel)
         console.log(JSON.stringify(res, null, 2))
     }
-
-    const evmExtraWeiDecimals = evmDecimals - hip1Token.nativeSpot.weiDecimals
-    console.log(`EVM extra wei decimals: ${evmExtraWeiDecimals}`)
-    console.log(`Native spot index: ${hip1Token.nativeSpot.index}`)
 
     // Request EVM contract - sends a request to HyperCore to connect the HyperCore HIP1 token to HyperEVM ERC20 token
     {
@@ -122,7 +123,8 @@ const deploy: DeployFunction = async (hre) => {
         console.log(JSON.stringify(res, null, 2))
     }
 
-    writeNativeSpotConnected(nativeSpotName, true)
+    writeNativeSpotConnected(nativeSpotName, true, evmExtraWeiDecimals)
+    console.log('GIVE THIS ADDRESS SOME NATIVE TOKENS TO ACTIVATE ON HYPERCORE')
 }
 
 deploy.tags = [contractName_composer]

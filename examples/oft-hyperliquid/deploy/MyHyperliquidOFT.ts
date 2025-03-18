@@ -26,8 +26,14 @@ const deploy: DeployFunction = async (hre) => {
     const wallet = new Wallet(privateKey)
     const isTestnet = hre.network.name === 'hyperliquid-testnet'
 
-    console.log(`Network: ${hre.network.name}`)
+    const networkName = hre.network.name
+    console.log(`Network: ${networkName}`)
     console.log(`Deployer: ${deployer}`)
+
+    assert(
+        networkName === 'hyperliquid-testnet' || networkName === 'hyperliquid-mainnet',
+        'This deploys to hyperliquid networks'
+    )
 
     // This is an external deployment pulled in from @layerzerolabs/lz-evm-sdk-v2
     //
@@ -88,6 +94,7 @@ const deploy: DeployFunction = async (hre) => {
     }
 }
 
-deploy.tags = [contractName_oft]
+// MyHyperLiquidOFT-hyperliquid
+deploy.tags = [`${contractName_oft}-hyperliquid`]
 
 export default deploy

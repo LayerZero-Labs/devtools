@@ -23,6 +23,7 @@ export interface NativeSpotDeployment {
     txData: {
         txHash: string
         nonce: number
+        weiDiff: number | undefined
         from: string
         connected: boolean
     }

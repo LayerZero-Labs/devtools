@@ -1,0 +1,20 @@
+{
+  "nativeSpot": {
+    "name": "ALICE",
+    "szDecimals": 0,
+    "weiDecimals": 6,
+    "index": 1231,
+    "tokenId": "0x503e1e612424896ec6e7a02c7350c963",
+    "isCanonical": false,
+    "evmContract": null,
+    "fullName": null,
+    "deployerTradingFeeShare": "1.0"
+  },
+  "txData": {
+    "txHash": "0x",
+    "nonce": 0,
+    "from": "0x",
+    "connected": false,
+    "weiDiff": 0
+  }
+}
