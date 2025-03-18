@@ -612,11 +612,13 @@ function addOptions(enforcedOption: any, options: Options) {
     } else if (enforcedOption.optionType === ExecutorOptionType.NATIVE_DROP) {
         options.addExecutorNativeDropOption(enforcedOption.amount, enforcedOption.receiver)
     } else if (enforcedOption.optionType === ExecutorOptionType.COMPOSE) {
-        options.addExecutorComposeOption(enforcedOption.gas, enforcedOption.value)
+        options.addExecutorComposeOption(enforcedOption.index, enforcedOption.gas, enforcedOption.value)
     } else if (enforcedOption.optionType === ExecutorOptionType.ORDERED) {
         options.addExecutorOrderedExecutionOption()
     } else if (enforcedOption.optionType === ExecutorOptionType.LZ_READ) {
         options.addExecutorLzReadOption(enforcedOption.gas, enforcedOption.value)
+    } else {
+        throw new Error(`Unknown option type: ${enforcedOption.optionType}`)
     }
 }
 
