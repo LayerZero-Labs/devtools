@@ -21,6 +21,7 @@ interface IHyperLiquidComposer is IOAppComposer {
     error HyperLiquidComposer_FailedToSend_HYPE(uint256 _amount);
     error HyperLiquidComposer_FailedToReturn_HYPE_Dust(uint256 _amount);
 
+    function quoteHyperCoreAmount(uint256 _amount, bool _isOFT) external view returns (HyperAssetAmount memory);
     function getOFTAsset() external view returns (HyperAsset memory);
     function getHypeAsset() external view returns (HyperAsset memory);
 }
