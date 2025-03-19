@@ -22,13 +22,6 @@ describe('config-metadata', () => {
             'solana-testnet': solanaTestnetMetadata,
         }
 
-        beforeEach(() => {
-            // Mock `fetch` to return our local metadata
-            global.fetch = jest.fn().mockResolvedValue({
-                json: jest.fn().mockResolvedValue(metadata),
-            })
-        })
-
         it('should generate the connections config for a given set of pathways', async () => {
             const avalancheContract = {
                 eid: 40106,
@@ -45,8 +38,9 @@ describe('config-metadata', () => {
                 [avalancheContract, solanaContract, [['LayerZero Labs'], []], [1, 1], [undefined, undefined]],
             ]
 
-            const config = await generateConnectionsConfig(pathways)
+            const mockFetchMetadata = async () => metadata
 
+            const config = await generateConnectionsConfig(pathways, mockFetchMetadata)
             expect(config).toMatchSnapshot()
         })
     })
