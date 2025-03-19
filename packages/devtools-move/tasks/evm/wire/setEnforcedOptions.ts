@@ -125,7 +125,7 @@ function reduceOptionsByMsgType(baseOptions: Options, addOption: any): Options {
             baseOptions.addExecutorNativeDropOption(addOption.amount, addOption.receiver)
             break
         case ExecutorOptionType.COMPOSE:
-            baseOptions.addExecutorComposeOption(Number(addOption.gas), addOption.value)
+            baseOptions.addExecutorComposeOption(addOption.index, addOption.gas, addOption.value)
             break
         case ExecutorOptionType.ORDERED:
             baseOptions.addExecutorOrderedExecutionOption()

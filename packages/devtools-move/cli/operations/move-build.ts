@@ -24,7 +24,7 @@ class MoveBuildOperation implements INewOperation {
         const forceBuild = args.force_build ? true : false
 
         const moveTomlAdminName = getMoveTomlAdminName(args.oapp_type)
-        const named_addresses = getNamedAddresses(
+        const named_addresses = await getNamedAddresses(
             taskContext.chain,
             taskContext.stage,
             moveTomlAdminName,

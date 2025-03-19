@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/export-deployments-test",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "private": true,
   "description": "Integration tests for ua-devtools-evm-hardhat for V2",
   "repository": {
@@ -22,7 +22,7 @@
     "@layerzerolabs/export-deployments": "~0.0.16",
     "@layerzerolabs/io-devtools": "~0.1.16",
     "@layerzerolabs/test-setup-devtools-evm-hardhat": "~6.0.5",
-    "@layerzerolabs/toolbox-hardhat": "~0.6.7",
+    "@layerzerolabs/toolbox-hardhat": "~0.6.9",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@openzeppelin/contracts": "^5.0.2",

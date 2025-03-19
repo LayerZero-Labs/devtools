@@ -1,5 +1,11 @@
 # @layerzerolabs/lzapp-migration-example
 
+## 0.1.3
+
+### Patch Changes
+
+- 8817095: Add the ability to filter out connections from specified EndpointIds
+
 ## 0.1.2
 
 ### Patch Changes
