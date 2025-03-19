@@ -17,16 +17,16 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 //
 // If you prefer using a mnemonic, set a MNEMONIC environment variable
 // to a valid mnemonic
-// const MNEMONIC = process.env.MNEMONIC
+const MNEMONIC = process.env.MNEMONIC
 
 // If you prefer to be authenticated using a private key, set a PRIVATE_KEY environment variable
 const PRIVATE_KEY = process.env.PRIVATE_KEY
 
-if (PRIVATE_KEY == null) {
-    throw new Error('PRIVATE_KEY is not set in .env file')
-}
-
-const accounts: HttpNetworkAccountsUserConfig | undefined = [PRIVATE_KEY]
+const accounts: HttpNetworkAccountsUserConfig | undefined = MNEMONIC
+    ? { mnemonic: MNEMONIC }
+    : PRIVATE_KEY
+      ? [PRIVATE_KEY]
+      : undefined
 
 if (accounts == null) {
     console.warn(
