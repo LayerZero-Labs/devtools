@@ -1,5 +1,5 @@
-import { DVNsToAddresses, translatePathwayToConfig } from '@/config-metadata'
-import { IMetadata } from '@/types'
+import { DVNsToAddresses, generateConnectionsConfig, translatePathwayToConfig } from '@/config-metadata'
+import { IMetadata, TwoWayConfig } from '@/types'
 
 import fujiMetadata from './data/fuji.json'
 import polygonMainnetMetadata from './data/polygon-mainnet.json'
@@ -13,6 +13,43 @@ describe('config-metadata', () => {
         polygon: polygonMainnetMetadata,
         'solana-testnet': solanaTestnetMetadata,
     }
+
+    describe('generateConnectionsConfig', () => {
+        const metadata: IMetadata = {
+            fuji: fujiMetadata,
+            solana: solanaMainnetMetadata,
+            polygon: polygonMainnetMetadata,
+            'solana-testnet': solanaTestnetMetadata,
+        }
+
+        beforeEach(() => {
+            // Mock `fetch` to return our local metadata
+            global.fetch = jest.fn().mockResolvedValue({
+                json: jest.fn().mockResolvedValue(metadata),
+            })
+        })
+
+        it('should generate the connections config for a given set of pathways', async () => {
+            const avalancheContract = {
+                eid: 40106,
+                contractName: 'MyOFT',
+            }
+
+            const solanaContract = {
+                eid: 40168,
+                address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy',
+            }
+
+            // This array is your TwoWayConfig[]
+            const pathways: TwoWayConfig[] = [
+                [avalancheContract, solanaContract, [['LayerZero Labs'], []], [1, 1], [undefined, undefined]],
+            ]
+
+            const config = await generateConnectionsConfig(pathways)
+
+            expect(config).toMatchSnapshot()
+        })
+    })
 
     describe('translatePathwayToConfig', () => {
         it('should be able to translate a pathway to a config', async () => {
