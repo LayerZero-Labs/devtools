@@ -40,7 +40,7 @@ describe('config-metadata', () => {
 
             const mockFetchMetadata = async () => metadata
 
-            const config = await generateConnectionsConfig(pathways, mockFetchMetadata)
+            const config = await generateConnectionsConfig(pathways, { fetchMetadata: mockFetchMetadata })
             expect(config).toMatchSnapshot()
         })
         it('should allow for custom DVNs in the metadata', async () => {
@@ -94,8 +94,7 @@ describe('config-metadata', () => {
             ]
 
             // Generate config using our custom fetchMetadata
-            const config = await generateConnectionsConfig(pathways, customFetchMetadata)
-            console.log(config)
+            const config = await generateConnectionsConfig(pathways, { fetchMetadata: customFetchMetadata })
             expect(config).toMatchSnapshot()
         })
     })

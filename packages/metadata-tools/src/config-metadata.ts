@@ -224,7 +224,7 @@ export async function defaultFetchMetadata(metadataUrl = METADATA_URL): Promise<
 // allow for a custom fetchMetadata
 export async function generateConnectionsConfig(
     pathways: TwoWayConfig[],
-    fetchMetadata: () => Promise<IMetadata> = defaultFetchMetadata
+    { fetchMetadata = defaultFetchMetadata }: { fetchMetadata?: () => Promise<IMetadata> }
 ) {
     const metadata = await fetchMetadata()
     const connections: OmniEdgeHardhat<OAppEdgeConfig | undefined>[] = []
