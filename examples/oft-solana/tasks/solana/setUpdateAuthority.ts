@@ -56,7 +56,7 @@ task('lz:oft:solana:set-update-authority', 'Updates the metaplex update authorit
             const mint = publicKey(mintStr)
             const initialMetadata = await fetchMetadataFromSeeds(umi, { mint })
 
-            if (initialMetadata.updateAuthority == SystemProgram.programId.toString()) {
+            if (initialMetadata.updateAuthority === SystemProgram.programId.toString()) {
                 console.log('\nThe update authority has already been renounced\n')
                 return
             }
