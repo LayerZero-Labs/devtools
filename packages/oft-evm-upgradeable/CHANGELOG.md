@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-evm-upgradeable
 
+## 3.1.0
+
+### Minor Changes
+
+- 57d6abd: add oft fee upgradeable
+
 ## 3.0.2
 
 ### Patch Changes
