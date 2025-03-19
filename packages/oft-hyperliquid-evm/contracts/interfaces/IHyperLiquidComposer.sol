@@ -16,10 +16,14 @@ struct HyperAssetAmount {
 }
 
 interface IHyperLiquidComposer is IOAppComposer {
-    error HyperLiquidComposer_InvalidCall_NotEndpoint(address _notEndpointAddress);
-    error HyperLiquidComposer_InvalidCall_NotOFT(address _internalOFTAddress, address _receivedOFTAddress);
-    error HyperLiquidComposer_FailedToSend_HYPE(uint256 _amount);
-    error HyperLiquidComposer_FailedToReturn_HYPE_Dust(uint256 _amount);
+    // 0xeee35e6f
+    error HyperLiquidComposer_InvalidCall_NotEndpoint(address notEndpointAddress);
+    // 0x86fee0c0
+    error HyperLiquidComposer_InvalidCall_NotOFT(address internalOFTAddress, address receivedOFTAddress);
+    // 0xb7e54a07
+    error HyperLiquidComposer_FailedToSend_HYPE(uint256 amount);
+    // 0x9a9d2b7a
+    error HyperLiquidComposer_FailedToReturn_HYPE_Dust(address to, uint256 amount);
 
     function quoteHyperCoreAmount(uint256 _amount, bool _isOFT) external view returns (HyperAssetAmount memory);
     function getOFTAsset() external view returns (HyperAsset memory);
