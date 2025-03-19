@@ -217,7 +217,7 @@ export async function translatePathwayToConfig(
 }
 
 // allow for a custom metadataUrl
-async function defaultFetchMetadata(metadataUrl = METADATA_URL): Promise<IMetadata> {
+export async function defaultFetchMetadata(metadataUrl = METADATA_URL): Promise<IMetadata> {
     return (await fetch(metadataUrl).then((res) => res.json())) as IMetadata
 }
 
