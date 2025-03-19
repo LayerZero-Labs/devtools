@@ -216,8 +216,12 @@ export async function translatePathwayToConfig(
     return configs
 }
 
+async function fetchMetadata(metadataUrl = METADATA_URL): Promise<IMetadata> {
+    return (await fetch(metadataUrl).then((res) => res.json())) as IMetadata
+}
+
 export async function generateConnectionsConfig(pathways: TwoWayConfig[]) {
-    const metadata = (await fetch(METADATA_URL).then((res) => res.json())) as IMetadata
+    const metadata = await fetchMetadata()
     const connections: OmniEdgeHardhat<OAppEdgeConfig | undefined>[] = []
 
     for (const pathway of pathways) {
