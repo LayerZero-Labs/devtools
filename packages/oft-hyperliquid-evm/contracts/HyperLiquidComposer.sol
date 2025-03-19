@@ -169,7 +169,7 @@ contract HyperLiquidComposer is IHyperLiquidComposer {
         if (amounts.dust > 0) {
             (bool sentDust, ) = payable(_receiver).call{ value: amounts.dust }("");
             if (!sentDust) {
-                revert HyperLiquidComposer_FailedToReturn_HYPE_Dust(amounts.dust);
+                revert HyperLiquidComposer_FailedToReturn_HYPE_Dust(_receiver, amounts.dust);
             }
         }
     }

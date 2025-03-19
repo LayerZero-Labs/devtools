@@ -7,8 +7,9 @@ import { HyperAsset, HyperAssetAmount } from "../interfaces/IHyperLiquidComposer
 library HyperLiquidComposerCodec {
     /// @dev The length of the message that is valid for the HyperLiquidComposer
     /// @dev This is 20 bytes because addresses are 20 bytes
-    /// @dev We are in encodePacked mode, if we are in encode mode, the length is 42 bytes
+    /// @dev We are in encodePacked mode, if we are in encode mode, the length is 32 bytes
     uint256 public constant VALID_COMPOSE_MESSAGE_LENGTH_PACKED = 20;
+    uint256 public constant VALID_COMPOSE_MESSAGE_LENGTH_ENCODE = 32;
 
     /// @dev The base asset bridge address is the address of the HyperLiquid L1 contract
     /// @dev This is the address that the OFT contract will transfer the tokens to when we want to send tokens to HyperLiquid L1
@@ -16,7 +17,9 @@ library HyperLiquidComposerCodec {
     address public constant BASE_ASSET_BRIDGE_ADDRESS = 0x2000000000000000000000000000000000000000;
     uint256 public constant BASE_ASSET_BRIDGE_ADDRESS_UINT256 = uint256(uint160(BASE_ASSET_BRIDGE_ADDRESS));
 
+    // 0x09b34731
     error HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength(bytes message, uint256 length);
+    // 0xf56317f0
     error HyperLiquidComposer_Exceed_TransferLimit(uint256 allowedAmount, uint256 amountSent);
 
     /// @notice Validates the compose message and decodes it into an address and amount
@@ -31,15 +34,22 @@ library HyperLiquidComposerCodec {
     ) internal pure returns (address _receiver, uint256 _amountLD) {
         bytes memory message = OFTComposeMsgCodec.composeMsg(_composeMessage);
 
-        // Addresses in EVM are 20 bytes
+        // Addresses in EVM are 20 bytes when packed or 32 bytes when encoded
         // So if the message's length is not 20 bytes, we can pre-emptively revert
-        if (message.length != VALID_COMPOSE_MESSAGE_LENGTH_PACKED) {
+        if (
+            message.length != VALID_COMPOSE_MESSAGE_LENGTH_PACKED &&
+            message.length != VALID_COMPOSE_MESSAGE_LENGTH_ENCODE
+        ) {
             revert HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength(message, message.length);
         }
 
-        // Since we are encodePacked, we can just decode the first 20 bytes as an address
-        _receiver = address(bytes20(message));
         _amountLD = OFTComposeMsgCodec.amountLD(_composeMessage);
+        // Since we are encodePacked, we can just decode the first 20 bytes as an address
+        if (message.length == VALID_COMPOSE_MESSAGE_LENGTH_PACKED) {
+            _receiver = address(bytes20(message));
+        } else {
+            _receiver = abi.decode(message, (address));
+        }
     }
 
     /// @notice Converts a core index id to an asset bridge address
