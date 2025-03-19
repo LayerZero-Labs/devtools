@@ -51,12 +51,12 @@ contract DoubleSidedRateLimiterTest is Test {
         
         // Set up outbound rate limits
         DoubleSidedRateLimiter.RateLimitConfig[] memory outboundConfigs = new DoubleSidedRateLimiter.RateLimitConfig[](1);
-        outboundConfigs[0] = DoubleSidedRateLimiter.RateLimitConfig(eidA, limit, window);
+        outboundConfigs[0] = DoubleSidedRateLimiter.RateLimitConfig({ eid: eidA, limit: limit, window: window });
         rateLimiter.setRateLimits(outboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Outbound);
 
         // Set up inbound rate limits
         DoubleSidedRateLimiter.RateLimitConfig[] memory inboundConfigs = new DoubleSidedRateLimiter.RateLimitConfig[](1);
-        inboundConfigs[0] = DoubleSidedRateLimiter.RateLimitConfig(eidA, limit, window);
+        inboundConfigs[0] = DoubleSidedRateLimiter.RateLimitConfig({ eid: eidA, limit: limit, window: window });
         rateLimiter.setRateLimits(inboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Inbound);
     }
 

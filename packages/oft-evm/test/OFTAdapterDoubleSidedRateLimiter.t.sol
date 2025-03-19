@@ -661,7 +661,8 @@ contract OFTAdapterDoubleSidedRateLimiterTest is TestHelperOz5WithRevertAssertio
         assertEq(amountCanBeReceived, 0);
 
         // 4. Assert bEid IRL from aEID is exhausted.
-        (uint256 amountInFlight, uint128 lastUpdated, uint256 limit, uint48 window) = bOFT.inboundRateLimits(aEid);
+        (uint128 lastUpdated, uint48 window, uint256 amountInFlight, uint256 limit) = bOFT.inboundRateLimits(aEid);
+
         assertEq(amountInFlight, tokensToSend);
         assertEq(lastUpdated, block.timestamp);
         assertEq(limit, 10 ether);
@@ -700,7 +701,7 @@ contract OFTAdapterDoubleSidedRateLimiterTest is TestHelperOz5WithRevertAssertio
         verifyAndExecutePackets(aEid, addressToBytes32(address(aOFT)), 1, address(0));
         (, amountCanBeReceived) = aOFT.getAmountCanBeReceived(bEid);
         assertEq(amountCanBeReceived, 10 ether);
-        (amountInFlight, lastUpdated, limit, window) = bOFT.inboundRateLimits(aEid);
+        (lastUpdated, window, amountInFlight, limit) = bOFT.inboundRateLimits(aEid);
         assertEq(amountInFlight, 0);
         assertEq(lastUpdated, block.timestamp);
         assertEq(limit, 10 ether);

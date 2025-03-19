@@ -47,20 +47,20 @@ abstract contract OFTAdapterDoubleSidedRateLimiter is OFTCore, DoubleSidedRateLi
      * 
      * @param _rateLimitConfigs An array of `RateLimitConfig` structs that specify the new rate limit settings.
      * Each struct includes an endpoint ID, the limit value, and the window duration.
-     * @param direction The direction (`Outbound` or `Inbound`) specifies whether the endpoint ID passed should be considered a dstEid or srcEid.
-     * This parameter determines which set of rate limits (outbound or inbound) will be updated for each endpoint.
+     * @param _direction The direction (inbound or outbound) specifies whether the endpoint ID passed should be considered a srcEid or dstEid.
+     * This parameter determines which set of rate limits (inbound or outbound) will be updated for each endpoint.
      */
-    function setRateLimits(RateLimitConfig[] calldata _rateLimitConfigs, RateLimitDirection direction) external onlyOwner {
-        _setRateLimits(_rateLimitConfigs, direction);
+    function setRateLimits(RateLimitConfig[] calldata _rateLimitConfigs, RateLimitDirection _direction) external onlyOwner {
+        _setRateLimits(_rateLimitConfigs, _direction);
     }
 
     /**
      * @notice Resets the rate limits for the given endpoint ids.
      * @param _eids The endpoint ids to reset the rate limits for.
-     * @param direction The direction of the rate limits to reset.
+     * @param _direction The direction of the rate limits to reset.
      */
-    function resetRateLimits(uint32[] calldata _eids, RateLimitDirection direction) external onlyOwner {
-        _resetRateLimits(_eids, direction);
+    function resetRateLimits(uint32[] calldata _eids, RateLimitDirection _direction) external onlyOwner {
+        _resetRateLimits(_eids, _direction);
     }
 
     /**

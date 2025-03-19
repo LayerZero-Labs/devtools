@@ -4,9 +4,9 @@ pragma solidity ^0.8.0;
 /**
  * @title DoubleSidedRateLimiter
  * @dev Abstract contract for implementing net and gross rate limiting functionality.
- * @dev You can toggle between net and gross accounting by calling `_setRateLimitAccountingType`.
+ * @dev The owner can toggle between net and gross accounting by calling `_setRateLimitAccountingType`.
  * ---------------------------------------------------------------------------------------------------------------------
- * Net accounting effectively allows two operations to offset each others net impact (e.g., inflow v.s. outflow of assets). 
+ * Net accounting effectively allows two operations to offset each other's net impact (e.g., inflow v.s. outflow of assets). 
  * A flexible rate limit that grows during congestive periods and shrinks during calm periods could give some
  * leeway when someone tries to forcefully congest the network, while still preventing huge amounts to be sent at once.
  * ---------------------------------------------------------------------------------------------------------------------
@@ -16,29 +16,29 @@ pragma solidity ^0.8.0;
 abstract contract DoubleSidedRateLimiter {
 
     /**
-     * @notice Rate Limit struct.
-     * @param amountInFlight Current amount within the rate limit window.
+     * @notice Rate Limit struct
      * @param lastUpdated Timestamp representing the last time the rate limit was checked or updated.
-     * @param limit This represents the maximum allowed amount within a given window.
      * @param window Defines the duration of the rate limiting window.
+     * @param amountInFlight Current amount within the rate limit window.
+     * @param limit This represents the maximum allowed amount within a given window.
      */
     struct RateLimit {
-        uint256 amountInFlight;
-        uint128 lastUpdated;
-        uint256 limit;
-        uint48 window;
+        uint128 lastUpdated;    // 16 bytes
+        uint48 window;          // 6 bytes
+        uint256 amountInFlight; // 32 bytes (new slot)
+        uint256 limit;          // 32 bytes (new slot)
     }
 
     /**
      * @notice Rate Limit Configuration struct.
-     * @param dstEid The destination endpoint id.
-     * @param limit This represents the maximum allowed amount within a given window.
+     * @param eid The endpoint id.
      * @param window Defines the duration of the rate limiting window.
+     * @param limit This represents the maximum allowed amount within a given window.
      */
     struct RateLimitConfig {
-        uint32 eid;
-        uint256 limit;
-        uint48 window;
+        uint32 eid;      // 4 bytes
+        uint48 window;   // 6 bytes
+        uint256 limit;   // 32 bytes (new slot)
     }
 
     // Define an enum to clearly distinguish between inbound and outbound rate limits.
@@ -56,17 +56,17 @@ abstract contract DoubleSidedRateLimiter {
      * @notice Emitted when _setRateLimits occurs.
      * @param rateLimitConfigs An array of `RateLimitConfig` structs representing the rate limit configurations set per endpoint id.
      * - `eid`: The source / destination endpoint id (depending on direction).
-     * - `limit`: This represents the maximum allowed amount within a given window.
      * - `window`: Defines the duration of the rate limiting window.
+     * - `limit`: This represents the maximum allowed amount within a given window.
      * @param direction Specifies whether the outbound or inbound rates were changed.
      */
     event RateLimitsChanged(RateLimitConfig[] rateLimitConfigs, RateLimitDirection direction);
 
-    event RateLimitAccountingTypeChanged(RateLimitAccountingType newRateLimitAccountingType);
+    event RateLimitAccountingTypeSet(RateLimitAccountingType newRateLimitAccountingType);
     event RateLimitsReset(uint32[] eids, RateLimitDirection direction);
 
     /**
-     * @notice Error that is thrown when an amount exceeds the rate_limit for a given direction.
+     * @notice Error that is thrown when an amount exceeds the rate limit for a given direction.
      */
     error RateLimitExceeded();
 
@@ -104,44 +104,44 @@ abstract contract DoubleSidedRateLimiter {
     }
 
     /**
-     * @notice Sets the Rate Limits.
+     * @notice Sets the rate limits.
      * @param _rateLimitConfigs A `RateLimitConfig[]` array representing the rate limit configurations for either outbound or inbound.
-     * @param direction Indicates whether the rate limits being set are for outbound or inbound.
+     * @param _direction Indicates whether the rate limits being set are for outbound or inbound.
      */
-    function _setRateLimits(RateLimitConfig[] memory _rateLimitConfigs, RateLimitDirection direction) internal virtual {
+    function _setRateLimits(RateLimitConfig[] memory _rateLimitConfigs, RateLimitDirection _direction) internal virtual {
         unchecked {
             for (uint256 i = 0; i < _rateLimitConfigs.length; i++) {
-                RateLimit storage rateLimit = direction == RateLimitDirection.Outbound
+                RateLimit storage rateLimit = _direction == RateLimitDirection.Outbound
                     ? outboundRateLimits[_rateLimitConfigs[i].eid]
                     : inboundRateLimits[_rateLimitConfigs[i].eid];
 
                 // Checkpoint the existing rate limit to not retroactively apply the new decay rate.
-                _checkAndUpdateRateLimit(_rateLimitConfigs[i].eid, 0, direction);
+                _checkAndUpdateRateLimit(_rateLimitConfigs[i].eid, 0, _direction);
 
                 // Does NOT reset the amountInFlight/lastUpdated of an existing rate limit.
                 rateLimit.limit = _rateLimitConfigs[i].limit;
                 rateLimit.window = _rateLimitConfigs[i].window;
             }
         }
-        emit RateLimitsChanged(_rateLimitConfigs, direction);
+        emit RateLimitsChanged(_rateLimitConfigs, _direction);
     }
 
     /**
      * @notice Resets the rate limits (sets amountInFlight to 0) for the given endpoint ids.
      * @dev This is useful when the rate limit accounting type is changed.
      * @param _eids The endpoint ids to reset the rate limits for.
-     * @param direction The direction of the rate limits to reset.
+     * @param _direction The direction of the rate limits to reset.
      */
-    function _resetRateLimits(uint32[] memory _eids, RateLimitDirection direction) internal virtual {
+    function _resetRateLimits(uint32[] memory _eids, RateLimitDirection _direction) internal virtual {
         for (uint32 i = 0; i < _eids.length; i++) {
-            RateLimit storage rateLimit = direction == RateLimitDirection.Outbound
+            RateLimit storage rateLimit = _direction == RateLimitDirection.Outbound
                 ? outboundRateLimits[_eids[i]]
                 : inboundRateLimits[_eids[i]];
 
             rateLimit.amountInFlight = 0;
             rateLimit.lastUpdated = uint128(block.timestamp);
         }
-        emit RateLimitsReset(_eids, direction);
+        emit RateLimitsReset(_eids, _direction);
     }
 
      /**
@@ -149,9 +149,9 @@ abstract contract DoubleSidedRateLimiter {
      * @dev You may want to call `_resetRateLimits` after changing the rate limit accounting type.
      * @param _rateLimitAccountingType The new rate limit accounting type.
      */
-    function _setRateLimitAccountingType(RateLimitAccountingType _rateLimitAccountingType) internal virtual {
+    function _setRateLimitAccountingType(RateLimitAccountingType _rateLimitAccountingType) internal {
         rateLimitAccountingType = _rateLimitAccountingType;
-        emit RateLimitAccountingTypeChanged(_rateLimitAccountingType);
+        emit RateLimitAccountingTypeSet(_rateLimitAccountingType);
     }
 
     /**
@@ -221,11 +221,11 @@ abstract contract DoubleSidedRateLimiter {
      * @notice Checks and updates the rate limit based on the endpoint ID and amount.
      * @param _eid The endpoint ID for which the rate limit needs to be checked and updated.
      * @param _amount The amount to add to the current amount in flight.
-     * @param direction The direction (Outbound or Inbound) of the rate limits being checked.
+     * @param _direction The direction (inbound or outbound) of the rate limits being checked.
      */
-    function _checkAndUpdateRateLimit(uint32 _eid, uint256 _amount, RateLimitDirection direction) internal {
+    function _checkAndUpdateRateLimit(uint32 _eid, uint256 _amount, RateLimitDirection _direction) internal {
         // Select the correct mapping based on the direction of the rate limit
-        RateLimit storage rl = direction == RateLimitDirection.Outbound
+        RateLimit storage rl = _direction == RateLimitDirection.Outbound
             ? outboundRateLimits[_eid]
             : inboundRateLimits[_eid];
 
@@ -245,7 +245,7 @@ abstract contract DoubleSidedRateLimiter {
         rl.lastUpdated = uint128(block.timestamp);
 
         if (rateLimitAccountingType == RateLimitAccountingType.Net) {
-            RateLimit storage oppositeRL = direction == RateLimitDirection.Outbound
+            RateLimit storage oppositeRL = _direction == RateLimitDirection.Outbound
                 ? inboundRateLimits[_eid]
                 : outboundRateLimits[_eid];
             (uint256 otherCurrentAmountInFlight,) = _calculateDecay(
