@@ -24,7 +24,7 @@ interface Args {
     withPriorityFee: number
 }
 
-task('lz:oft:solana:clear', 'Clear a stored payload on Solana')
+task('lz:oft:solana:retry-payload', 'Retry a stored payload on Solana')
     .addParam('srcEid', 'The source EndpointId', undefined, types.eid)
     .addParam('nonce', 'The nonce of the payload', undefined, types.bigint)
     .addParam('sender', 'The source OApp address (hex)', undefined, types.string)
