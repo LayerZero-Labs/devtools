@@ -2,8 +2,7 @@ import type { OmniEdgeHardhat } from '@layerzerolabs/devtools-evm-hardhat'
 import type { OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
 import { IMetadata } from './types'
 import { TwoWayConfig } from './types'
-
-const METADATA_URL = process.env.LZ_METADATA_URL || 'https://metadata.layerzero-api.com/v1/metadata'
+import { METADATA_URL } from './constants'
 
 function getEndpointIdDeployment(eid: number, metadata: IMetadata) {
     const srcEidString = eid.toString()
