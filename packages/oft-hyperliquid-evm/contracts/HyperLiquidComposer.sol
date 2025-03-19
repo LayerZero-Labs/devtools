@@ -95,6 +95,21 @@ contract HyperLiquidComposer is IHyperLiquidComposer {
         _sendAssetToHyperCore(_receiver, _amountLD);
     }
 
+    /// @notice Quotes the amount of tokens that will be sent to HyperCore
+    /// @notice This function is externally callable
+    ///
+    /// @param _amount The amount of tokens to send
+    /// @param _isOFT Whether the amount is an OFT amount or a HYPE amount
+    ///
+    /// @return _amounts The amount of tokens to send to HyperCore, dust, and the swap amount
+    function quoteHyperCoreAmount(uint256 _amount, bool _isOFT) external view returns (HyperAssetAmount memory) {
+        if (_isOFT) {
+            return HyperLiquidComposerCodec.into_core_amount_and_dust(_amount, oftAsset);
+        } else {
+            return HyperLiquidComposerCodec.into_core_amount_and_dust(_amount, hypeAsset);
+        }
+    }
+
     /// @notice Transfers the asset to the _receiver on HyperCore through the SpotSend precompile
     /// @notice Transfers any leftover dust to the _receiver
     /// @notice This function is called by the lzCompose function
