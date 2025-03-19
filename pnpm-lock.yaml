@@ -1133,7 +1133,7 @@ importers:
         specifier: ^0.0.6
         version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^1.0.3
+        specifier: ^1.0.4
         version: link:../../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -1304,7 +1304,7 @@ importers:
         specifier: ^0.0.6
         version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^1.0.2
+        specifier: ^1.0.4
         version: link:../../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -1776,7 +1776,7 @@ importers:
         specifier: ^0.0.6
         version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^1.0.2
+        specifier: ^1.0.4
         version: link:../../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
