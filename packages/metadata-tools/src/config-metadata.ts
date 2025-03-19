@@ -216,12 +216,12 @@ export async function translatePathwayToConfig(
     return configs
 }
 
-/// allow for a custom metadataUrl
+// allow for a custom metadataUrl
 async function defaultFetchMetadata(metadataUrl = METADATA_URL): Promise<IMetadata> {
     return (await fetch(metadataUrl).then((res) => res.json())) as IMetadata
 }
 
-/// allow for a custom metadataFetcher
+// allow for a custom fetchMetadata
 export async function generateConnectionsConfig(
     pathways: TwoWayConfig[],
     fetchMetadata: () => Promise<IMetadata> = defaultFetchMetadata
