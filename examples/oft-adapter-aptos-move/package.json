@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-adapter-aptos-move-example",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -32,8 +32,10 @@
     "lz:sdk:move:transfer-oapp-owner": "ts-node scripts/cli.ts --vm move --op transfer-oapp-owner",
     "lz:sdk:move:transfer-object-owner": "ts-node scripts/cli.ts --vm move --op transfer-object-owner",
     "lz:sdk:move:wire": "ts-node scripts/cli.ts --vm move --op wire",
-    "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat && $npm_execpath run test:aptos",
+    "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat && $npm_execpath run test:aptos:v3 && $npm_execpath run test:aptos:v6",
     "test:aptos": "aptos move test --dev --skip-fetch-latest-git-deps",
+    "test:aptos:v3": "aptosup -s 3.5.0 && aptos move test --dev --skip-fetch-latest-git-deps",
+    "test:aptos:v6": "aptosup -s 6.0.1 && aptos move test --dev --skip-fetch-latest-git-deps",
     "test:forge": "forge test",
     "test:hardhat": "hardhat test"
   },
@@ -47,7 +49,7 @@
     "@jest/globals": "^29.7.0",
     "@layerzerolabs/devtools-evm-hardhat": "^2.0.8",
     "@layerzerolabs/devtools-extensible-cli": "^0.0.6",
-    "@layerzerolabs/devtools-move": "^1.0.3",
+    "@layerzerolabs/devtools-move": "^1.0.4",
     "@layerzerolabs/eslint-config-next": "~2.3.39",
     "@layerzerolabs/lz-config-types": "^3.0.15",
     "@layerzerolabs/lz-definitions": "^3.0.75",

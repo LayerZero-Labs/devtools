@@ -1,5 +1,12 @@
 # @layerzerolabs/devtools-move
 
+## 1.0.4
+
+### Patch Changes
+
+- 3ab7ce7: fixing incorrect args for building compose option
+- ff0b018: adding initia mainnet addresses
+
 ## 1.0.3
 
 ### Patch Changes
