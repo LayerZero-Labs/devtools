@@ -6,7 +6,7 @@ import { ERC20Mock } from "./mocks/ERC20Mock.sol";
 import { MintBurnERC20Mock } from "./mocks/MintBurnERC20Mock.sol";
 import { OFTComposerMock } from "./mocks/OFTComposerMock.sol";
 import { OFTAdapterDoubleSidedRateLimiterExample } from "../contracts/examples/OFTAdapterDoubleSidedRateLimiterExample.sol";
-import { MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiterExample } from "../contracts/examples/MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiterExample.sol";
+import { MABA_RL_OFT_AllowanceBurnExample } from "../contracts/examples/MABA_RL_OFT_AllowanceBurnExample.sol";
 import { OFTDoubleSidedRateLimiterExample } from "../contracts/examples/OFTDoubleSidedRateLimiterExample.sol";
 
 // OApp imports
@@ -15,7 +15,7 @@ import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/Opti
 
 // OFT imports
 import { OFTAdapterDoubleSidedRateLimiter } from "../contracts/OFTAdapterDoubleSidedRateLimiter.sol";
-import { MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiter } from "../contracts/MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiter.sol";
+import { MABA_RL_OFT_AllowanceBurn } from "../contracts/MABA_RL_OFT_AllowanceBurn.sol";
 import { OFTDoubleSidedRateLimiter } from "../contracts/OFTDoubleSidedRateLimiter.sol";
 import { DoubleSidedRateLimiter } from "@layerzerolabs/oapp-evm/contracts/oapp/utils/DoubleSidedRateLimiter.sol";
 import { IOFT, SendParam, OFTReceipt } from "../contracts/interfaces/IOFT.sol";
@@ -46,7 +46,7 @@ contract OFTAdapterDoubleSidedRateLimiterTest is TestHelperOz5WithRevertAssertio
     MintBurnERC20Mock bToken;
 
     OFTAdapterDoubleSidedRateLimiter aOFT;
-    MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiter bOFT;
+    MABA_RL_OFT_AllowanceBurn bOFT;
     OFTDoubleSidedRateLimiter cOFT;
 
     address public userA = address(0x1);
@@ -95,8 +95,8 @@ contract OFTAdapterDoubleSidedRateLimiterTest is TestHelperOz5WithRevertAssertio
         aOFT.setRateLimits(aOutboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Outbound);
         aOFT.setRateLimits(aInboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Inbound);
 
-        bOFT = MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiter(
-            _deployOApp(type(MintAndAllowanceBurnOFTAdapterDoubleSidedRateLimiterExample).creationCode, abi.encode(address(bToken), address(endpoints[bEid]), address(this)))
+        bOFT = MABA_RL_OFT_AllowanceBurn(
+            _deployOApp(type(MABA_RL_OFT_AllowanceBurnExample).creationCode, abi.encode(address(bToken), address(endpoints[bEid]), address(this)))
         );
         bOFT.setRateLimits(bOutboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Outbound);
         bOFT.setRateLimits(bInboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Inbound);
