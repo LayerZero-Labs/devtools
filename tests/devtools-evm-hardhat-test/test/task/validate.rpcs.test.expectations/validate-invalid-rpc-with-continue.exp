@@ -30,8 +30,10 @@ set timeout 60
 
 match_max 100000
 
-spawn npx hardhat --config hardhat.config.with-unresponsive-https-rpc.ts lz:healthcheck:validate:rpcs
+spawn npx hardhat --config hardhat.config.with-incorrect-https-rpc.ts lz:healthcheck:validate:rpcs --continue
 
+expect "Network arbitrum failed health check after 5 attempts."
 expect "========== RPC URL validation failed for 1 network(s):"
+expect "Continuing execution despite invalid RPC URLs due to --continue flag"
 
 expect eof

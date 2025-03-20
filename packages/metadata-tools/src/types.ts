@@ -10,6 +10,16 @@ export type TwoWayConfig = [
     [OAppEnforcedOption[] | undefined, OAppEnforcedOption[] | undefined], // [enforcedOptionsSrcToDst, enforcedOptionsDstToSrc]
 ]
 
+export interface IMetadataDvns {
+    [address: string]: {
+        version: number
+        canonicalName: string
+        id: string
+        deprecated?: boolean
+        lzReadCompatible?: boolean
+    }
+}
+
 export interface IMetadata {
     [key: string]: {
         created: string
@@ -53,15 +63,7 @@ export interface IMetadata {
             mainnetChainName?: string
             name?: string
         }
-        dvns?: {
-            [address: string]: {
-                version: number
-                canonicalName: string
-                id: string
-                deprecated?: boolean
-                lzReadCompatible?: boolean
-            }
-        }
+        dvns?: IMetadataDvns
         rpcs?: { url: string; weight?: number }[]
         addressToOApp?: {
             [address: string]: {

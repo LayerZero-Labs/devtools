@@ -2,8 +2,7 @@ import type { OmniEdgeHardhat } from '@layerzerolabs/devtools-evm-hardhat'
 import type { OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
 import { IMetadata } from './types'
 import { TwoWayConfig } from './types'
-
-const METADATA_URL = process.env.LZ_METADATA_URL || 'https://metadata.layerzero-api.com/v1/metadata'
+import { METADATA_URL } from './constants'
 
 function getEndpointIdDeployment(eid: number, metadata: IMetadata) {
     const srcEidString = eid.toString()
@@ -217,8 +216,20 @@ export async function translatePathwayToConfig(
     return configs
 }
 
-export async function generateConnectionsConfig(pathways: TwoWayConfig[]) {
-    const metadata = (await fetch(METADATA_URL).then((res) => res.json())) as IMetadata
+// allow for a custom metadataUrl
+export async function defaultFetchMetadata(metadataUrl = METADATA_URL): Promise<IMetadata> {
+    return (await fetch(metadataUrl).then((res) => res.json())) as IMetadata
+}
+
+// allow for a custom fetchMetadata
+export async function generateConnectionsConfig(
+    pathways: TwoWayConfig[],
+    params?: {
+        fetchMetadata?: () => Promise<IMetadata>
+    }
+) {
+    const fetchMetadata = params?.fetchMetadata || defaultFetchMetadata
+    const metadata = await fetchMetadata()
     const connections: OmniEdgeHardhat<OAppEdgeConfig | undefined>[] = []
 
     for (const pathway of pathways) {

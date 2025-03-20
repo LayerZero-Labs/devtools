@@ -30,8 +30,9 @@ set timeout 60
 
 match_max 100000
 
-spawn npx hardhat --config hardhat.config.with-unresponsive-https-rpc.ts lz:healthcheck:validate:rpcs
+spawn npx hardhat --config hardhat.config.with-multiple-stage.ts lz:healthcheck:validate:rpcs --stage sandbox
 
+expect "========== Validating RPC URLs for networks: ethereum-sandbox-local"
 expect "========== RPC URL validation failed for 1 network(s):"
 
 expect eof

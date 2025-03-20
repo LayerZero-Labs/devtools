@@ -30,8 +30,9 @@ set timeout 60
 
 match_max 100000
 
-spawn npx hardhat --config hardhat.config.with-valid-and-invalid-rpcs.ts lz:healthcheck:validate:rpcs --stage testnet
+spawn npx hardhat --config hardhat.config.with-multiple-stage.ts lz:healthcheck:validate:rpcs --stage mainnet
 
+expect "========== Validating RPC URLs for networks: bsc"
 expect "========== All RPC URLs are valid!"
 
 expect eof
