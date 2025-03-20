@@ -1,5 +1,11 @@
 # @layerzerolabs/metadata-tools
 
+## 0.4.0
+
+### Minor Changes
+
+- 6e233e3: allow for custom fetchMetadata implementation
+
 ## 0.3.2
 
 ### Patch Changes
