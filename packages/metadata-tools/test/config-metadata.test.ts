@@ -22,6 +22,26 @@ describe('config-metadata', () => {
             'solana-testnet': solanaTestnetMetadata,
         }
 
+        it('should allow for call without custom params', async () => {
+            const avalancheContract = {
+                eid: 40106,
+                contractName: 'MyOFT',
+            }
+
+            const solanaContract = {
+                eid: 40168,
+                address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy',
+            }
+
+            // This array is your TwoWayConfig[]
+            const pathways: TwoWayConfig[] = [
+                [avalancheContract, solanaContract, [['LayerZero Labs'], []], [1, 1], [undefined, undefined]],
+            ]
+
+            const config = await generateConnectionsConfig(pathways)
+            expect(config).toMatchSnapshot()
+        })
+
         it('should generate the connections config for a given set of pathways', async () => {
             const avalancheContract = {
                 eid: 40106,
