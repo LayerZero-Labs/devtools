@@ -280,4 +280,142 @@ contract DoubleSidedRateLimiterTest is Test {
         vm.warp(block.timestamp + window + 1);
         rateLimiter.inflow(eidA, limit);
     }
+
+    function test_fuzz_outflow(uint256 amount1, uint256 amount2, uint256 timeSkip) public {
+        amount1 = bound(amount1, 0, limit);
+        amount2 = bound(amount2, 0, limit);
+        timeSkip = bound(timeSkip, 0, 2 * window);
+
+        rateLimiter.outflow(eidA, amount1);
+        
+        skip(timeSkip);
+
+        (uint256 actualAmountInFlight, uint256 actualAmountCanBeSent) = rateLimiter.getAmountCanBeSent(eidA);
+
+        if (timeSkip >= window) {
+            assertEq(actualAmountInFlight, 0);
+            assertEq(actualAmountCanBeSent, limit);
+        } else {
+            assertTrue(actualAmountInFlight <= amount1);
+            assertEq(actualAmountCanBeSent, limit - actualAmountInFlight);
+        }
+
+        if (amount2 <= actualAmountCanBeSent) {
+            rateLimiter.outflow(eidA, amount2);
+            (uint256 newAmountInFlight,) = rateLimiter.getAmountCanBeSent(eidA);
+            assertTrue(newAmountInFlight <= limit, "Total amount exceeds limit");
+        } else {
+            vm.expectRevert(abi.encodeWithSelector(DoubleSidedRateLimiter.RateLimitExceeded.selector));
+            rateLimiter.outflow(eidA, amount2);
+        }
+    }
+
+    function test_fuzz_inflow(uint256 amount1, uint256 amount2, uint256 timeSkip) public {
+        amount1 = bound(amount1, 0, limit);
+        amount2 = bound(amount2, 0, limit);
+        timeSkip = bound(timeSkip, 0, 2 * window);
+
+        rateLimiter.inflow(eidA, amount1);
+
+        skip(timeSkip);
+
+        (uint256 actualAmountInFlight, uint256 actualAmountCanBeReceived) = rateLimiter.getAmountCanBeReceived(eidA);
+
+        if (timeSkip >= window) {
+            assertEq(actualAmountInFlight, 0);
+            assertEq(actualAmountCanBeReceived, limit);
+        } else {
+            assertTrue(actualAmountInFlight <= amount1);
+            assertEq(actualAmountCanBeReceived, limit - actualAmountInFlight);
+        }
+
+        if (amount2 <= actualAmountCanBeReceived) {
+            rateLimiter.inflow(eidA, amount2);
+        } else {
+            vm.expectRevert(abi.encodeWithSelector(DoubleSidedRateLimiter.RateLimitExceeded.selector));
+            rateLimiter.inflow(eidA, amount2);
+        }
+    }
+
+    function test_fuzz_net_rate_limits(uint256 amount1, uint256 amount2, uint256 timeSkip) public {
+        amount1 = bound(amount1, 0, limit);
+        amount2 = bound(amount2, 0, limit);
+        timeSkip = bound(timeSkip, 0, 2 * window);
+
+        rateLimiter.setRateLimitAccountingType(DoubleSidedRateLimiter.RateLimitAccountingType.Net);
+
+        rateLimiter.outflow(eidA, amount1);
+        rateLimiter.inflow(eidA, amount2);
+
+        (uint256 actualOutboundAmountInFlight, uint256 actualOutboundAmountCanBeSent) = rateLimiter.getAmountCanBeSent(eidA);
+        (uint256 actualInboundAmountInFlight, uint256 actualInboundAmountCanBeReceived) = rateLimiter.getAmountCanBeReceived(eidA);
+
+        if (amount1 > amount2) {
+            assertEq(actualOutboundAmountInFlight, amount1 - amount2);
+            assertEq(actualOutboundAmountCanBeSent, limit - (amount1 - amount2));
+        } else {
+            assertEq(actualOutboundAmountInFlight, 0);
+            assertEq(actualOutboundAmountCanBeSent, limit);
+
+            assertEq(actualInboundAmountInFlight, amount2);
+            assertEq(actualInboundAmountCanBeReceived, limit - amount2);
+        }
+
+        skip(timeSkip);
+
+        (actualOutboundAmountInFlight, actualOutboundAmountCanBeSent) = rateLimiter.getAmountCanBeSent(eidA);
+        (actualInboundAmountInFlight, actualInboundAmountCanBeReceived) = rateLimiter.getAmountCanBeReceived(eidA);
+
+        if (amount1 > amount2) {
+            assertTrue(actualOutboundAmountInFlight <= amount1 - amount2);
+            assertTrue(actualOutboundAmountCanBeSent >= limit - actualOutboundAmountInFlight);
+
+            assertTrue(actualInboundAmountInFlight <= amount2);
+            assertEq(actualInboundAmountCanBeReceived, limit - actualInboundAmountInFlight);
+        } else {
+            assertEq(actualOutboundAmountInFlight, 0);
+            assertEq(actualOutboundAmountCanBeSent, limit);
+
+            assertTrue(actualInboundAmountInFlight <= amount2);
+            assertEq(actualInboundAmountCanBeReceived, limit - actualInboundAmountInFlight);
+        }
+    }
+
+    function test_fuzz_gross_rate_limits(uint256 amount1, uint256 amount2, uint256 timeSkip) public {
+        amount1 = bound(amount1, 0, limit);
+        amount2 = bound(amount2, 0, limit);
+        timeSkip = bound(timeSkip, 0, 2 * window);
+
+        rateLimiter.setRateLimitAccountingType(DoubleSidedRateLimiter.RateLimitAccountingType.Gross);
+
+        rateLimiter.outflow(eidA, amount1);
+        rateLimiter.inflow(eidA, amount2);
+
+        (uint256 actualOutboundAmountInFlight, uint256 actualOutboundAmountCanBeSent) = rateLimiter.getAmountCanBeSent(eidA);
+        (uint256 actualInboundAmountInFlight, uint256 actualInboundAmountCanBeReceived) = rateLimiter.getAmountCanBeReceived(eidA);
+
+        assertEq(actualOutboundAmountInFlight, amount1);
+        assertEq(actualOutboundAmountCanBeSent, limit - amount1);
+   
+        assertEq(actualInboundAmountInFlight, amount2);
+        assertEq(actualInboundAmountCanBeReceived, limit - amount2);
+
+        skip(timeSkip);
+
+        (actualOutboundAmountInFlight, actualOutboundAmountCanBeSent) = rateLimiter.getAmountCanBeSent(eidA);
+        (actualInboundAmountInFlight, actualInboundAmountCanBeReceived) = rateLimiter.getAmountCanBeReceived(eidA);
+
+        if (timeSkip >= window) {
+            assertEq(actualOutboundAmountInFlight, 0);
+            assertEq(actualOutboundAmountCanBeSent, limit);
+
+            assertEq(actualInboundAmountInFlight, 0);
+            assertEq(actualInboundAmountCanBeReceived, limit);
+        } else {
+            assertTrue(actualOutboundAmountInFlight <= amount1);
+            assertEq(actualOutboundAmountCanBeSent, limit - actualOutboundAmountInFlight);
+
+            assertTrue(actualInboundAmountInFlight <= amount2);
+        }
+    }
 } 

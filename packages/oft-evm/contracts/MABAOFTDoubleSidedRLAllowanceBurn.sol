@@ -10,7 +10,7 @@ import { IMintableBurnableVoidReturn } from "./interfaces/IMintableBurnableVoidR
 import { OFTCore } from "./OFTCore.sol";
 
 /**
- * @title MABA_RL_OFT_AllowanceBurn
+ * @title MABAOFTDoubleSidedRLAllowanceBurn
  * Full name: Mint And Burn OFT Adapter With Burn From Allowance And Double Sided Rate Limiter
  * @notice A variant of the standard OFT Adapter that uses an existing ERC20's mint and burn mechanisms for cross-chain transfers.
  * @dev This contract needs mint permissions on the token.
@@ -22,7 +22,7 @@ import { OFTCore } from "./OFTCore.sol";
  *
  * @dev Inherits from OFTCore and provides implementations for _debit and _credit functions using a mintable and burnable token.
  */
-abstract contract MABA_RL_OFT_AllowanceBurn is OFTCore, DoubleSidedRateLimiter {
+abstract contract MABAOFTDoubleSidedRLAllowanceBurn is OFTCore, DoubleSidedRateLimiter {
     /// @dev The underlying ERC20 token.
     IERC20 internal immutable innerToken;
 

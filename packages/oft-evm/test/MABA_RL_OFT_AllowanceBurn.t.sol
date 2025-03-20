@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 import { MintBurnERC20Mock } from "./mocks/MintBurnERC20Mock.sol";
 import { OFTComposerMock } from "./mocks/OFTComposerMock.sol";
 import { OFTAdapterDoubleSidedRateLimiterExample } from "../contracts/examples/OFTAdapterDoubleSidedRateLimiterExample.sol";
-import { MABA_RL_OFT_AllowanceBurnExample } from "../contracts/examples/MABA_RL_OFT_AllowanceBurnExample.sol";
+import { MABAOFTDoubleSidedRLAllowanceBurnExample } from "../contracts/examples/MABAOFTDoubleSidedRLAllowanceBurnExample.sol";
 import { OFTDoubleSidedRateLimiterExample } from "../contracts/examples/OFTDoubleSidedRateLimiterExample.sol";
 
 // OApp imports
@@ -13,7 +13,7 @@ import { IOAppOptionsType3, EnforcedOptionParam } from "@layerzerolabs/oapp-evm/
 import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
 
 // OFT imports
-import { MABA_RL_OFT_AllowanceBurn } from "../contracts/MABA_RL_OFT_AllowanceBurn.sol";
+import { MABAOFTDoubleSidedRLAllowanceBurn } from "../contracts/MABAOFTDoubleSidedRLAllowanceBurn.sol";
 import { OFTDoubleSidedRateLimiter } from "../contracts/OFTDoubleSidedRateLimiter.sol";
 import { DoubleSidedRateLimiter } from "@layerzerolabs/oapp-evm/contracts/oapp/utils/DoubleSidedRateLimiter.sol";
 import { IOFT, SendParam, OFTReceipt } from "../contracts/interfaces/IOFT.sol";
@@ -31,7 +31,7 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 // DevTools imports
 import { TestHelperOz5WithRevertAssertions } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5WithRevertAssertions.sol";
 
-contract MABA_RL_OFT_AllowanceBurnTest is TestHelperOz5WithRevertAssertions {
+contract MABAOFTDoubleSidedRLAllowanceBurnTest is TestHelperOz5WithRevertAssertions {
     using OptionsBuilder for bytes;
     using PacketV1Codec for bytes;
     using DoubleEndedQueue for DoubleEndedQueue.Bytes32Deque;
@@ -44,9 +44,9 @@ contract MABA_RL_OFT_AllowanceBurnTest is TestHelperOz5WithRevertAssertions {
     MintBurnERC20Mock bToken;
     MintBurnERC20Mock cToken;
 
-    MABA_RL_OFT_AllowanceBurn aOFT;
-    MABA_RL_OFT_AllowanceBurn bOFT;
-    MABA_RL_OFT_AllowanceBurn cOFT;
+    MABAOFTDoubleSidedRLAllowanceBurn aOFT;
+    MABAOFTDoubleSidedRLAllowanceBurn bOFT;
+    MABAOFTDoubleSidedRLAllowanceBurn cOFT;
 
     address public userA = address(0x1);
     address public userB = address(0x2);
@@ -89,20 +89,20 @@ contract MABA_RL_OFT_AllowanceBurnTest is TestHelperOz5WithRevertAssertions {
         bToken = new MintBurnERC20Mock("bToken", "bToken");
         cToken = new MintBurnERC20Mock("cToken", "cToken");
 
-        aOFT = MABA_RL_OFT_AllowanceBurn(
-            _deployOApp(type(MABA_RL_OFT_AllowanceBurnExample).creationCode, abi.encode(address(aToken), address(endpoints[aEid]), address(this)))
+        aOFT = MABAOFTDoubleSidedRLAllowanceBurn(
+            _deployOApp(type(MABAOFTDoubleSidedRLAllowanceBurnExample).creationCode, abi.encode(address(aToken), address(endpoints[aEid]), address(this)))
         );
         aOFT.setRateLimits(aOutboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Outbound);
         aOFT.setRateLimits(aInboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Inbound);
 
-        bOFT = MABA_RL_OFT_AllowanceBurn(
-            _deployOApp(type(MABA_RL_OFT_AllowanceBurnExample).creationCode, abi.encode(address(bToken), address(endpoints[bEid]), address(this)))
+        bOFT = MABAOFTDoubleSidedRLAllowanceBurn(
+            _deployOApp(type(MABAOFTDoubleSidedRLAllowanceBurnExample).creationCode, abi.encode(address(bToken), address(endpoints[bEid]), address(this)))
         );
         bOFT.setRateLimits(bOutboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Outbound);
         bOFT.setRateLimits(bInboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Inbound);
 
-        cOFT = MABA_RL_OFT_AllowanceBurn(
-            _deployOApp(type(MABA_RL_OFT_AllowanceBurnExample).creationCode, abi.encode(address(cToken), address(endpoints[cEid]), address(this)))
+        cOFT = MABAOFTDoubleSidedRLAllowanceBurn(
+            _deployOApp(type(MABAOFTDoubleSidedRLAllowanceBurnExample).creationCode, abi.encode(address(cToken), address(endpoints[cEid]), address(this)))
         );
         cOFT.setRateLimits(cOutboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Outbound);
         cOFT.setRateLimits(cInboundConfigs, DoubleSidedRateLimiter.RateLimitDirection.Inbound);
