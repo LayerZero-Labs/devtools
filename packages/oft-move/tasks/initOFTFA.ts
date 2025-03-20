@@ -5,7 +5,6 @@ async function initOFTFA(
     token_symbol: string,
     icon_uri: string,
     project_uri: string,
-    shared_decimals: number,
     local_decimals: number,
     taskContext: TaskContext
 ) {
@@ -17,7 +16,6 @@ async function initOFTFA(
     console.log(`\tToken Symbol: ${token_symbol}`)
     console.log(`\tIcon URI: ${icon_uri}`)
     console.log(`\tProject URI: ${project_uri}`)
-    console.log(`\tShared Decimals: ${shared_decimals}`)
     console.log(`\tLocal Decimals: ${local_decimals}`)
 
     const initializePayload = taskContext.oft.initializeOFTFAPayload(
@@ -25,11 +23,10 @@ async function initOFTFA(
         token_symbol,
         icon_uri,
         project_uri,
-        shared_decimals,
         local_decimals
     )
 
-    const payloads = [{ payload: initializePayload, description: 'Initialize Aptos OFT', eid: taskContext.srcEid }]
+    const payloads = [{ payload: initializePayload, description: 'Initialize OFT', eid: taskContext.srcEid }]
 
     sendInitTransaction(taskContext.moveVMConnection, taskContext.oft, taskContext.accountAddress, payloads)
 }

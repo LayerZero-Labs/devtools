@@ -47,7 +47,6 @@ export class aptosOFT implements IOFT {
         symbol: string,
         icon_uri: string,
         project_uri: string,
-        shared_decimals: number,
         local_decimals: number
     ): TypedInputGenerateTransactionPayloadData {
         const encoder = new TextEncoder()
@@ -58,21 +57,17 @@ export class aptosOFT implements IOFT {
                 encoder.encode(symbol),
                 encoder.encode(icon_uri),
                 encoder.encode(project_uri),
-                shared_decimals,
                 local_decimals,
             ],
-            types: ['u8', 'u8', 'u8', 'u8', 'u8', 'u8'],
+            types: ['u8', 'u8', 'u8', 'u8', 'u8'],
         }
     }
 
-    initializeAdapterFAPayload(
-        tokenMetadataAddress: string,
-        sharedDecimals: number
-    ): TypedInputGenerateTransactionPayloadData {
+    initializeAdapterFAPayload(tokenMetadataAddress: string): TypedInputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oft_adapter_fa::initialize`,
-            functionArguments: [tokenMetadataAddress, sharedDecimals],
-            types: ['address', 'u8'],
+            functionArguments: [tokenMetadataAddress],
+            types: ['address'],
         }
     }
 

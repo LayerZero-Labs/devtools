@@ -32,7 +32,6 @@ export class InitiaOFT implements IOFT {
         symbol: string,
         icon_uri: string,
         project_uri: string,
-        shared_decimals: number,
         local_decimals: number
     ): TypedInputGenerateTransactionPayloadData {
         const encoder = new TextEncoder()
@@ -59,50 +58,10 @@ export class InitiaOFT implements IOFT {
                     .vector(bcs.u8())
                     .serialize([...encoder.encode(project_uri)])
                     .toBase64(),
-                bcs.u8().serialize(shared_decimals).toBase64(),
                 bcs.u8().serialize(local_decimals).toBase64(),
             ]
         )
-        return Object.assign(msg, { types: ['u8', 'u8', 'u8', 'u8', 'u8', 'u8'] })
-    }
-
-    initializeOFTPayload(
-        token_name: string,
-        symbol: string,
-        icon_uri: string,
-        project_uri: string,
-        shared_decimals: number,
-        local_decimals: number
-    ): TypedInputGenerateTransactionPayloadData {
-        const encoder = new TextEncoder()
-        const msg = new MsgExecute(
-            this.accountAddress,
-            this.oft_address,
-            'oft',
-            'initialize',
-            [],
-            [
-                bcs
-                    .vector(bcs.u8())
-                    .serialize([...encoder.encode(token_name)])
-                    .toBase64(),
-                bcs
-                    .vector(bcs.u8())
-                    .serialize([...encoder.encode(symbol)])
-                    .toBase64(),
-                bcs
-                    .vector(bcs.u8())
-                    .serialize([...encoder.encode(icon_uri)])
-                    .toBase64(),
-                bcs
-                    .vector(bcs.u8())
-                    .serialize([...encoder.encode(project_uri)])
-                    .toBase64(),
-                bcs.u8().serialize(shared_decimals).toBase64(),
-                bcs.u8().serialize(local_decimals).toBase64(),
-            ]
-        )
-        return Object.assign(msg, { types: ['u8', 'u8', 'u8', 'u8', 'u8', 'u8'] })
+        return Object.assign(msg, { types: ['u8', 'u8', 'u8', 'u8', 'u8'] })
     }
 
     createSetRateLimitTx(
@@ -532,19 +491,16 @@ export class InitiaOFT implements IOFT {
         console.log('syncSequenceNumber')
     }
 
-    initializeAdapterFAPayload(
-        tokenMetadataAddress: string,
-        sharedDecimals: number
-    ): TypedInputGenerateTransactionPayloadData {
+    initializeAdapterFAPayload(tokenMetadataAddress: string): TypedInputGenerateTransactionPayloadData {
         const msg = new MsgExecute(
             this.accountAddress,
             this.oft_address,
             'oft_adapter_fa',
             'initialize',
             [],
-            [bcs.address().serialize(tokenMetadataAddress).toBase64(), bcs.u8().serialize(sharedDecimals).toBase64()]
+            [bcs.address().serialize(tokenMetadataAddress).toBase64()]
         )
-        return Object.assign(msg, { types: ['address', 'u8'] })
+        return Object.assign(msg, { types: ['address'] })
     }
 
     async getEnforcedOptions(eid: number, msgType: number): Promise<string> {

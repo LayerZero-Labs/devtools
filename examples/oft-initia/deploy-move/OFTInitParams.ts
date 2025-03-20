@@ -3,7 +3,6 @@ const oftMetadata = {
     token_symbol: 'MMVMOFT',
     icon_uri: '',
     project_uri: '',
-    sharedDecimals: 6,
     localDecimals: 8,
 }
 

@@ -278,7 +278,6 @@ module oft::oft_adapter_fa {
     public entry fun initialize(
         account: &signer,
         token_metadata_address: address,
-        shared_decimals: u8
     ) acquires OftImpl {
         // Only the admin can initialize the OFT
         assert_admin(address_of(account));
@@ -290,6 +289,8 @@ module oft::oft_adapter_fa {
 
         // Initialize the OFT Core
         let local_decimals = fungible_asset::decimals(metadata);
+        
+        let shared_decimals = 6; // This value must match all other OFTs that you are peering with. 6 is the default.
         oft_core::initialize(local_decimals, shared_decimals);
     }
 

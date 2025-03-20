@@ -322,7 +322,6 @@ module oft::oft_fa {
         symbol: vector<u8>,
         icon_uri: vector<u8>,
         project_uri: vector<u8>,
-        shared_decimals: u8,
         local_decimals: u8,
     ) acquires OftImpl {
         assert_admin(address_of(account));
@@ -334,7 +333,8 @@ module oft::oft_fa {
             option::some(utf8(icon_uri)),
             option::some(utf8(project_uri)),
         );
-
+        
+        let shared_decimals = 6; // This value must match all other OFTs that you are peering with. 6 is the default.
         oft_core::initialize(local_decimals, shared_decimals);
     }
 
