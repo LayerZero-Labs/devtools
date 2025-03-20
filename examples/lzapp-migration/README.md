@@ -283,7 +283,7 @@ const solanaContract: OmniPointHardhat = {
 };
 ```
 
-#### Initialize the Solana OFT PeerConfig Account(s)
+#### Initialize the OFT Program's SendConfig and ReceiveConfig Accounts
 
 :warning: Do this only when initializing the OFT for the first time. The only exception is if a new pathway is added later. If so, run this again to properly initialize the pathway.
 
