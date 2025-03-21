@@ -1,5 +1,15 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 2.0.9
+
+### Patch Changes
+
+- 13bdae7: In task lz:healthcheck:validate:rpcs:
+
+  - more descriptive logs
+  - flexible RPCs health check
+  - fix support of --stage param
+
 ## 2.0.8
 
 ### Patch Changes
