@@ -14,31 +14,8 @@ import { decodeLzReceiveOptions, uint8ArrayToHex } from '../common/utils'
 
 import { deriveConnection, getSolanaDeployment } from './index'
 
-// TODO: move this to tasks/common since it's not Solana-specific
-export enum KnownErrors {
-    // variable name format: <DOMAIN>_<REASON>
-    // e.g. If the user forgets to deploy the OFT Program, the variable name should be:
-    // FIX_SUGGESTION_OFT_PROGRAM_NOT_DEPLOYED
-    ULN_INIT_CONFIG_SKIPPED = 'ULN_INIT_CONFIG_SKIPPED',
-}
-
-// TODO: move this to tasks/common since it's not Solana-specific
-interface ErrorFixInfo {
-    tip: string
-    info?: string
-}
-
-// TODO: move this to tasks/common since it's not Solana-specific
-const ERRORS_FIXES_MAP: Record<KnownErrors, ErrorFixInfo> = {
-    [KnownErrors.ULN_INIT_CONFIG_SKIPPED]: {
-        tip: 'Did you run `npx hardhat lz:oft:solana:init-config --oapp-config <LZ_CONFIG_FILE_NAME> --solana-eid <SOLANA_EID>` ?',
-        info: 'You must run lz:oft:solana:init-config once before you run lz:oapp:wire. If you have added new pathways, you must also run lz:oft:solana:init-config again.',
-    },
-}
-
-// TODO: move this to tasks/common since it's not Solana-specific
-// Logger class for better loggin
-export class DebugLogger {
+// Logger class for better logging
+class Logger {
     static keyValue(key: string, value: any, indentLevel = 0) {
         const indent = ' '.repeat(indentLevel * 2)
         console.log(`${indent}\x1b[33m${key}:\x1b[0m ${value}`)
@@ -55,39 +32,6 @@ export class DebugLogger {
 
     static separator() {
         console.log('\x1b[90m----------------------------------------\x1b[0m')
-    }
-
-    /**
-     * Logs an error (in red) and corresponding fix suggestion (in blue).
-     * Uses the ERRORS_FIXES_MAP to retrieve text based on the known error type.
-     *
-     * @param type Required KnownErrors enum member
-     * @param errorMsg Optional string message to append to the error.
-     */
-    static printErrorAndFixSuggestion(type: KnownErrors, errorMsg?: string) {
-        const fixInfo = ERRORS_FIXES_MAP[type]
-        if (!fixInfo) {
-            // Fallback if the error type is not recognized
-            console.log(`\x1b[31mError:\x1b[0m Unknown error type "${type}"`)
-            return
-        }
-
-        // If errorMsg is specified, append it in parentheses
-        const errorOutput = errorMsg ? `${type}: (${errorMsg})` : type
-
-        // Print the error type in red
-        console.log(`\x1b[31mError:\x1b[0m ${errorOutput}`)
-
-        // Print the tip in green
-        console.log(`\x1b[32mFix suggestion:\x1b[0m ${fixInfo.tip}`)
-
-        // Print the info in blue
-        if (fixInfo.info) {
-            console.log(`\x1b[34mElaboration:\x1b[0m ${fixInfo.info}`)
-        }
-
-        // log empty line to separate error messages
-        console.log()
     }
 }
 
@@ -154,45 +98,45 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
         const oftDeriver = new OftPDA(oftStoreInfo.header.owner)
 
         const printOftStore = async () => {
-            DebugLogger.header('OFT Store Information')
-            DebugLogger.keyValue('Owner', oftStoreInfo.header.owner)
-            DebugLogger.keyValue('OFT Type', oft.types.OFTType[oftStoreInfo.oftType])
-            DebugLogger.keyValue('Admin', oftStoreInfo.admin)
-            DebugLogger.keyValue('Token Mint', oftStoreInfo.tokenMint)
-            DebugLogger.keyValue('Token Escrow', oftStoreInfo.tokenEscrow)
-            DebugLogger.keyValue('Endpoint Program', oftStoreInfo.endpointProgram)
-            DebugLogger.separator()
+            Logger.header('OFT Store Information')
+            Logger.keyValue('Owner', oftStoreInfo.header.owner)
+            Logger.keyValue('OFT Type', oft.types.OFTType[oftStoreInfo.oftType])
+            Logger.keyValue('Admin', oftStoreInfo.admin)
+            Logger.keyValue('Token Mint', oftStoreInfo.tokenMint)
+            Logger.keyValue('Token Escrow', oftStoreInfo.tokenEscrow)
+            Logger.keyValue('Endpoint Program', oftStoreInfo.endpointProgram)
+            Logger.separator()
         }
 
         const printAdmin = async () => {
             const admin = oftStoreInfo.admin
-            DebugLogger.keyValue('Admin', admin)
+            Logger.keyValue('Admin', admin)
         }
 
         const printDelegate = async () => {
             const delegate = oAppRegistryInfo?.delegate?.toBase58()
-            DebugLogger.header('OApp Registry Information')
-            DebugLogger.keyValue('Delegate', delegate)
-            DebugLogger.separator()
+            Logger.header('OApp Registry Information')
+            Logger.keyValue('Delegate', delegate)
+            Logger.separator()
         }
 
         const printToken = async () => {
-            DebugLogger.header('Token Information')
-            DebugLogger.keyValue('Mint Authority', unwrapOption(mintAccount.mintAuthority))
-            DebugLogger.keyValue(
+            Logger.header('Token Information')
+            Logger.keyValue('Mint Authority', unwrapOption(mintAccount.mintAuthority))
+            Logger.keyValue(
                 'Freeze Authority',
                 unwrapOption(mintAccount.freezeAuthority, () => 'None')
             )
-            DebugLogger.separator()
+            Logger.separator()
         }
 
         const printChecks = async () => {
             const delegate = oAppRegistryInfo?.delegate?.toBase58()
 
-            DebugLogger.header('Checks')
-            DebugLogger.keyValue('Admin (Owner) same as Delegate', oftStoreInfo.admin === delegate)
-            DebugLogger.keyValue('Token Mint Authority is OFT Store', unwrapOption(mintAccount.mintAuthority) === store)
-            DebugLogger.separator()
+            Logger.header('Checks')
+            Logger.keyValue('Admin (Owner) same as Delegate', oftStoreInfo.admin === delegate)
+            Logger.keyValue('Token Mint Authority is OFT Store', unwrapOption(mintAccount.mintAuthority) === store)
+            Logger.separator()
         }
 
         const printPeerConfigs = async () => {
@@ -201,22 +145,18 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
                 return publicKey(peerConfig)
             })
 
-            DebugLogger.header('Peer Configurations')
+            Logger.header('Peer Configurations')
             const peerConfigInfos = await oft.accounts.safeFetchAllPeerConfig(umi, peerConfigs)
             dstEids.forEach((dstEid, index) => {
                 const info = peerConfigInfos[index]
                 const network = getNetworkForChainId(dstEid)
-                DebugLogger.header(`${dstEid} (${network.chainName})`)
+                Logger.header(`${dstEid} (${network.chainName})`)
                 if (info) {
-                    DebugLogger.keyValue('PeerConfig Account', peerConfigs[index].toString())
-                    DebugLogger.keyValue('Peer Address', denormalizePeer(info.peerAddress, dstEid))
-                    DebugLogger.keyHeader('Enforced Options')
-                    DebugLogger.keyValue(
-                        'Send',
-                        decodeLzReceiveOptions(uint8ArrayToHex(info.enforcedOptions.send, true)),
-                        2
-                    )
-                    DebugLogger.keyValue(
+                    Logger.keyValue('PeerConfig Account', peerConfigs[index].toString())
+                    Logger.keyValue('Peer Address', denormalizePeer(info.peerAddress, dstEid))
+                    Logger.keyHeader('Enforced Options')
+                    Logger.keyValue('Send', decodeLzReceiveOptions(uint8ArrayToHex(info.enforcedOptions.send, true)), 2)
+                    Logger.keyValue(
                         'SendAndCall',
                         decodeLzReceiveOptions(uint8ArrayToHex(info.enforcedOptions.sendAndCall, true)),
                         2
@@ -224,7 +164,7 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
                 } else {
                     console.log(`No PeerConfig account found for ${dstEid} (${network.chainName}).`)
                 }
-                DebugLogger.separator()
+                Logger.separator()
             })
         }
 
