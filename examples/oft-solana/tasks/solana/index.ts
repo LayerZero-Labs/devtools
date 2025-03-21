@@ -25,12 +25,11 @@ import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { createWeb3JsEddsa } from '@metaplex-foundation/umi-eddsa-web3js'
 import { toWeb3JsInstruction, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { AddressLookupTableAccount, Connection, Keypair } from '@solana/web3.js'
-import { getSimulationComputeUnits } from '@solana-developers/helpers'
-import bs58 from 'bs58'
+import { getKeypairFromEnvironment, getKeypairFromFile, getSimulationComputeUnits } from '@solana-developers/helpers'
 import { backOff } from 'exponential-backoff'
 
 import { formatEid } from '@layerzerolabs/devtools'
-import { promptToContinue } from '@layerzerolabs/io-devtools'
+import { createLogger, promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { OftPDA } from '@layerzerolabs/oft-v2-solana-sdk'
 
@@ -42,29 +41,99 @@ const LOOKUP_TABLE_ADDRESS: Partial<Record<EndpointId, PublicKey>> = {
     [EndpointId.SOLANA_V2_TESTNET]: publicKey('9thqPdbR27A1yLWw2spwJLySemiGMXxPnEvfmXVk4KuK'),
 }
 
-const getFromEnv = (key: string): string => {
+/**
+ * Extracts the value of the given environment variable.
+ * @todo consider removing this since it's no longer used (replaced by using @solana-developers/helpers)
+ * @param key The name of the environment variable to extract.
+ * @param optional Whether the environment variable is optional or not.
+ * If it is, the function will return undefined if the variable is not defined.
+ * Otherwise, it will throw an error if the variable is not defined.
+ * @returns The value of the environment variable, or undefined if optional and not defined.
+ */
+const getFromEnv = (key: string, optional = false): string | undefined => {
     const value = process.env[key]
-    if (!value) {
+    if (!value && !optional) {
         throw new Error(`${key} is not defined in the environment variables.`)
     }
     return value
 }
 
-/**
- * Extracts the SOLANA_PRIVATE_KEY from the environment.  This is purposely not exported for encapsulation purposes.
- */
-const getSolanaPrivateKeyFromEnv = () => getFromEnv('SOLANA_PRIVATE_KEY')
+// TODO in another PR: considerg moving keypair related functions to tasks/solana/utils.ts
+async function getSolanaKeypair(readOnly = false): Promise<Keypair> {
+    const logger = createLogger()
+
+    // Early exit if read-only: ephemeral Keypair is enough.
+    if (readOnly) {
+        logger.info('Read-only mode: Using ephemeral (randomly generated) keypair.')
+        return Keypair.generate()
+    }
+
+    // Attempt to load from each source
+    const keypairEnvPrivate = process.env.SOLANA_PRIVATE_KEY
+        ? getKeypairFromEnvironment('SOLANA_PRIVATE_KEY')
+        : undefined // #1 SOLANA_PRIVATE_KEY
+    const keypairEnvPath = process.env.SOLANA_KEYPAIR_PATH
+        ? await getKeypairFromFile(process.env.SOLANA_KEYPAIR_PATH)
+        : undefined // #2 SOLANA_KEYPAIR_PATH
+    const keypairDefaultPath = await getKeypairFromFile() // #3 ~/.config/solana/id.json
+
+    // Fail if none is found
+    if (!keypairEnvPrivate && !keypairEnvPath && !keypairDefaultPath) {
+        throw new Error(
+            'No Solana keypair found. Provide SOLANA_PRIVATE_KEY, ' +
+                'SOLANA_KEYPAIR_PATH, or place a valid keypair at ~/.config/solana/id.json.'
+        )
+    }
+
+    // If both environment-based keys exist, ensure they match
+    if (keypairEnvPrivate && keypairEnvPath) {
+        if (keypairEnvPrivate.publicKey.equals(keypairEnvPath.publicKey)) {
+            logger.info('Both SOLANA_PRIVATE_KEY and SOLANA_KEYPAIR_PATH match. Using environment-based keypair.')
+            return keypairEnvPrivate
+        } else {
+            throw new Error(
+                `Conflict: SOLANA_PRIVATE_KEY and SOLANA_KEYPAIR_PATH are different keypairs.\n` +
+                    `Path: ${process.env.SOLANA_KEYPAIR_PATH} => ${keypairEnvPath.publicKey.toBase58()}\n` +
+                    `Env : ${keypairEnvPrivate.publicKey.toBase58()}`
+            )
+        }
+    }
+
+    // If exactly one environment-based keypair is found, use it immediately
+    if (keypairEnvPrivate) {
+        logger.info(`Using Solana keypair from SOLANA_PRIVATE_KEY => ${keypairEnvPrivate.publicKey.toBase58()}`)
+        return keypairEnvPrivate
+    }
+
+    if (keypairEnvPath) {
+        logger.info(
+            `Using Solana keypair from SOLANA_KEYPAIR_PATH (${process.env.SOLANA_KEYPAIR_PATH}) => ${keypairEnvPath.publicKey.toBase58()}`
+        )
+        return keypairEnvPath
+    }
+
+    // Otherwise, default path is the last fallback
+    logger.info(
+        `No environment-based keypair found. Found keypair at default path => ${keypairDefaultPath.publicKey.toBase58()}`
+    )
+    const doContinue = await promptToContinue(
+        `Defaulting to ~/.config/solana/id.json with address ${keypairDefaultPath.publicKey.toBase58()}. Use this keypair?`
+    )
+    if (!doContinue) process.exit(1)
+
+    return keypairDefaultPath
+}
 
 /**
  * Derive common connection and UMI objects for a given endpoint ID.
  * @param eid {EndpointId}
  */
 export const deriveConnection = async (eid: EndpointId, readOnly = false) => {
-    const privateKey = readOnly ? bs58.encode(Keypair.generate().secretKey) : getSolanaPrivateKeyFromEnv()
+    const keypair = await getSolanaKeypair(readOnly)
     const connectionFactory = createSolanaConnectionFactory()
     const connection = await connectionFactory(eid)
     const umi = createUmi(connection.rpcEndpoint).use(mplToolbox())
-    const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(privateKey))
+    const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(keypair.secretKey)
     const umiWalletSigner = createSignerFromKeypair(umi, umiWalletKeyPair)
     umi.use(signerIdentity(umiWalletSigner))
     return {
@@ -75,10 +144,9 @@ export const deriveConnection = async (eid: EndpointId, readOnly = false) => {
     }
 }
 
-export const useWeb3Js = () => {
-    const privateKey = getSolanaPrivateKeyFromEnv()
-    const secretKeyBytes = bs58.decode(privateKey)
-    const keypair = Keypair.fromSecretKey(secretKeyBytes)
+export const useWeb3Js = async () => {
+    // note: if we are okay with exporting getSolanaKeypair, then useWeb3js can be removed
+    const keypair = await getSolanaKeypair()
     return {
         web3JsKeypair: keypair,
     }
