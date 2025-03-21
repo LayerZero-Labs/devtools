@@ -89,7 +89,6 @@ If you wish to use a different keypair, then you can set either of the following
 
 2. `SOLANA_KEYPAIR_PATH` - the location to the keypair file that you want to use.
 
-
 #### Solana RPC
 
 Also set the `RPC_URL_SOLANA_TESTNET` value. Note that while the naming used here is `TESTNET`, it refers to the [Solana Devnet](https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#solana-testnet). We use `TESTNET` to keep it consistent with the existing EVM testnets.
