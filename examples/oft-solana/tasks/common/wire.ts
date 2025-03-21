@@ -15,10 +15,11 @@ import {
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
 
 import { getSolanaDeployment, useWeb3Js } from '../solana'
-import { DebugLogger, KnownErrors } from '../solana/debug'
 
 import { publicKey as publicKeyType } from './types'
 import {
+    DebugLogger,
+    KnownErrors,
     createSdkFactory,
     createSolanaConnectionFactory,
     createSolanaSignerFactory,
