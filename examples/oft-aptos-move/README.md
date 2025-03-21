@@ -147,8 +147,7 @@ const oftMetadata = {
   token_symbol: "MMOFT",
   icon_uri: "",
   project_uri: "",
-  sharedDecimals: 6,
-  localDecimals: 6,
+  localDecimals: 8,
 };
 ```
 

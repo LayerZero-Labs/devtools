@@ -69,14 +69,11 @@ export class OFT {
         }
     }
 
-    initializeAdapterFAPayload(
-        tokenMetadataAddress: string,
-        sharedDecimals: number
-    ): TypedInputGenerateTransactionPayloadData {
+    initializeAdapterFAPayload(tokenMetadataAddress: string): TypedInputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oft_adapter_fa::initialize`,
-            functionArguments: [tokenMetadataAddress, sharedDecimals],
-            types: ['address', 'u8'],
+            functionArguments: [tokenMetadataAddress],
+            types: ['address'],
         }
     }
 

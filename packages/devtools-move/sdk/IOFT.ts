@@ -29,14 +29,10 @@ export interface IOFT {
         symbol: string,
         icon_uri: string,
         project_uri: string,
-        shared_decimals: number,
         local_decimals: number
     ): TypedInputGenerateTransactionPayloadData
 
-    initializeAdapterFAPayload(
-        tokenMetadataAddress: string,
-        sharedDecimals: number
-    ): TypedInputGenerateTransactionPayloadData
+    initializeAdapterFAPayload(tokenMetadataAddress: string): TypedInputGenerateTransactionPayloadData
 
     createSetRateLimitTx(
         eid: EndpointId,
