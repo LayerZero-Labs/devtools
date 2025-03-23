@@ -29,5 +29,5 @@ const initConfigTask = wireLikeTask('lz:oft:solana:init-config') as Configurable
 initConfigTask
     .setDescription('Initialize OFT accounts for Solana')
     .setAction(async (args: Args, hre) =>
-        hre.run(TASK_LZ_OAPP_WIRE, { ...args, internalConfigurator: initOFTAccounts })
+        hre.run(TASK_LZ_OAPP_WIRE, { ...args, internalConfigurator: initOFTAccounts, isSolanaInitConfig: true })
     )

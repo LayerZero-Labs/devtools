@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.7.12
+
+### Patch Changes
+
+- 292803d: introduce fix suggestions, starting with when Solana init-config is skipped
+
 ## 0.7.11
 
 ### Patch Changes
