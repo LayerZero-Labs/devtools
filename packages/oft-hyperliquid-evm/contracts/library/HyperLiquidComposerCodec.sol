@@ -1,26 +1,24 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
+import { IHyperLiquidComposer } from "../interfaces/IHyperLiquidComposer.sol";
+import { IHyperLiquidComposerErrors, ErrorMessage } from "../interfaces/IHyperLiquidComposerErrors.sol";
+import { IHyperAsset, IHyperAssetAmount } from "../interfaces/IHyperLiquidComposerCore.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
-import { HyperAsset, HyperAssetAmount } from "../interfaces/IHyperLiquidComposer.sol";
-
 library HyperLiquidComposerCodec {
-    /// @dev The length of the message that is valid for the HyperLiquidComposer
-    /// @dev This is 20 bytes because addresses are 20 bytes
-    /// @dev We are in encodePacked mode, if we are in encode mode, the length is 32 bytes
-    uint256 public constant VALID_COMPOSE_MESSAGE_LENGTH_PACKED = 20;
-    uint256 public constant VALID_COMPOSE_MESSAGE_LENGTH_ENCODE = 32;
-
     /// @dev The base asset bridge address is the address of the HyperLiquid L1 contract
     /// @dev This is the address that the OFT contract will transfer the tokens to when we want to send tokens to HyperLiquid L1
     /// @dev https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers#system-addresses
     address public constant BASE_ASSET_BRIDGE_ADDRESS = 0x2000000000000000000000000000000000000000;
     uint256 public constant BASE_ASSET_BRIDGE_ADDRESS_UINT256 = uint256(uint160(BASE_ASSET_BRIDGE_ADDRESS));
 
-    // 0x09b34731
-    error HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength(bytes message, uint256 length);
-    // 0xf56317f0
-    error HyperLiquidComposer_Exceed_TransferLimit(uint256 allowedAmount, uint256 amountSent);
+    /// @dev The length of the message that is valid for the HyperLiquidComposer
+    /// @dev This is 20 bytes because addresses are 20 bytes
+    /// @dev We are in encodePacked mode, if we are in encode mode, the length is 32 bytes
+    uint256 public constant VALID_COMPOSE_MESSAGE_LENGTH_PACKED = 20;
+    uint256 public constant VALID_COMPOSE_MESSAGE_LENGTH_ENCODE = 32;
+
+    event OverflowDetected(uint64 amountCore, uint64 maxTransferableAmount);
 
     /// @notice Validates the compose message and decodes it into an address and amount
     /// @notice This function is called by the HyperLiquidComposer contract
@@ -31,8 +29,10 @@ library HyperLiquidComposerCodec {
     /// @return _amountLD The amount of tokens to send
     function validateAndDecodeMessage(
         bytes calldata _composeMessage
-    ) internal pure returns (address _receiver, uint256 _amountLD) {
+    ) public pure returns (address _receiver, uint256 _amountLD) {
         bytes memory message = OFTComposeMsgCodec.composeMsg(_composeMessage);
+
+        _amountLD = OFTComposeMsgCodec.amountLD(_composeMessage);
 
         // Addresses in EVM are 20 bytes when packed or 32 bytes when encoded
         // So if the message's length is not 20 bytes, we can pre-emptively revert
@@ -40,10 +40,21 @@ library HyperLiquidComposerCodec {
             message.length != VALID_COMPOSE_MESSAGE_LENGTH_PACKED &&
             message.length != VALID_COMPOSE_MESSAGE_LENGTH_ENCODE
         ) {
-            revert HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength(message, message.length);
+            bytes memory errMsg = abi.encodeWithSelector(
+                IHyperLiquidComposerErrors.HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength.selector,
+                message,
+                message.length
+            );
+            /// @dev Handling the case when the transaction is from 1 bytes-20 address and we can prevent the funds from being stuck in the composer
+            /// @dev We can optimisitcally assume that the bytes20 address is an evm-address
+            /// @dev If this is a non-evm address (i.e. a bytes32 on aptos move, or solana) then this abi.decode will revert and the following revert will not be thrown
+            address sender = abi.decode(bytes.concat(OFTComposeMsgCodec.composeFrom(_composeMessage)), (address));
+            /// @dev THrow the following error message ONLY if the sender is bytes20. It causes lzCompose to refund the sender and then emit the error message
+            revert IHyperLiquidComposerErrors.ErrorMsg(
+                HyperLiquidComposerCodec.createErrorMessage(sender, _amountLD, errMsg)
+            );
         }
 
-        _amountLD = OFTComposeMsgCodec.amountLD(_composeMessage);
         // Since we are encodePacked, we can just decode the first 20 bytes as an address
         if (message.length == VALID_COMPOSE_MESSAGE_LENGTH_PACKED) {
             _receiver = address(bytes20(message));
@@ -78,26 +89,36 @@ library HyperLiquidComposerCodec {
     /// @param _amount The amount to convert
     /// @param _asset The asset to convert
     ///
-    /// @return HyperAssetAmount memory - The evm amount, core amount, and dust
+    /// @return IHyperAssetAmount memory - The evm amount, core amount, and dust
     function into_core_amount_and_dust(
         uint256 _amount,
-        HyperAsset memory _asset
-    ) internal pure returns (HyperAssetAmount memory) {
+        uint64 _maxTransferableAmount,
+        IHyperAsset memory _asset
+    ) internal returns (IHyperAssetAmount memory) {
         uint256 scale = 10 ** _asset.decimalDiff;
-
-        /// @dev SpotSend takes in an amount of size uint64
-        /// @dev This amount is in the core asset's decimals
-        /// @dev Since the layerzero message can be in the size of uint256, we need to check if the amount is greater than the max size of uint64
-        if (_amount > (2 ** 64) * scale) {
-            revert HyperLiquidComposer_Exceed_TransferLimit((2 ** 64) * scale, _amount);
-        }
 
         uint256 dust = _amount % scale;
         uint256 amountEVM = _amount - dust;
 
-        // This is guaranteed to be smaller than 2 ** 64
+        // _amount / scale is guaranteed to be smaller than 2 ** 64
         uint64 amountCore = uint64(_amount / scale);
 
-        return HyperAssetAmount({ evm: amountEVM, dust: dust, core: amountCore });
+        if (amountCore > _maxTransferableAmount) {
+            emit OverflowDetected(amountCore, _maxTransferableAmount);
+            uint256 overflowEVM = (amountCore - _maxTransferableAmount) * scale;
+            amountCore = _maxTransferableAmount;
+            amountEVM = amountEVM - overflowEVM;
+            dust = dust + overflowEVM;
+        }
+
+        return IHyperAssetAmount({ evm: amountEVM, dust: dust, core: amountCore });
+    }
+
+    function createErrorMessage(
+        address _sender,
+        uint256 _amountLD,
+        bytes memory _errorMessage
+    ) internal pure returns (bytes memory) {
+        return abi.encode(ErrorMessage({ refundTo: _sender, refundAmount: _amountLD, errorMessage: _errorMessage }));
     }
 }

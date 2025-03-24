@@ -1,21 +1,17 @@
 import assert from 'assert'
 
-import { Wallet } from 'ethers'
+import { Wallet, providers } from 'ethers'
+import { HttpNetworkConfig } from 'hardhat/types'
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-import { getNativeSpot, useBigBlock, useSmallBlock } from '@layerzerolabs/oft-hyperliquid-evm'
+import { useBigBlock, useSmallBlock, writeUpdatedNativeSpots } from '@layerzerolabs/oft-hyperliquid-evm'
 
 const contractName_oft = 'MyHyperLiquidOFT'
-const contractName_composer = 'MyHyperLiquidComposer'
-
-const evmDecimals = 18
+const tokenSymbol = 'CHARLI'
 const nativeSpotName = 'CHARLI'
 
 const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
-
-    // Validates and returns the native spot
-    const hip1Token = getNativeSpot(nativeSpotName)
 
     const { deploy } = deployments
     const { deployer } = await getNamedAccounts()
@@ -25,15 +21,19 @@ const deploy: DeployFunction = async (hre) => {
     assert(privateKey, 'PRIVATE_KEY_HYPERLIQUID is not set in .env file')
 
     // Get logger from hardhat flag --log-level
-    const loglevel = hre.hardhatArguments.verbose ? 'debug' : 'error'
+    const loglevel = hre.hardhatArguments.verbose ? 'debug' : 'info'
 
     const wallet = new Wallet(privateKey)
     const isTestnet = hre.network.name === 'hyperliquid-testnet'
 
-    console.log(`Network: ${hre.network.name}`)
+    const networkName = hre.network.name
+    console.log(`Network: ${networkName}`)
     console.log(`Deployer: ${deployer}`)
 
-    const evmExtraWeiDecimals = evmDecimals - hip1Token.nativeSpot.weiDecimals
+    assert(
+        networkName === 'hyperliquid-testnet' || networkName === 'hyperliquid-mainnet',
+        'This deploys to hyperliquid networks'
+    )
 
     // This is an external deployment pulled in from @layerzerolabs/lz-evm-sdk-v2
     //
@@ -52,36 +52,39 @@ const deploy: DeployFunction = async (hre) => {
     //   }
     // }
     const endpointV2Deployment = await hre.deployments.get('EndpointV2')
-    const { address: address_oft } = await hre.deployments.get(contractName_oft).catch(() => {
-        throw new Error('Needs MyHyperLiquidOFT to be deployed before deploying MyHyperLiquidComposer')
-    })
 
     // Switch to hyperliquidbig block if the contract is not deployed
-    const isDeployed_composer = await hre.deployments.getOrNull(contractName_composer)
+    const isDeployed_oft = await hre.deployments.getOrNull(contractName_oft)
 
-    if (!isDeployed_composer) {
-        console.log(`Switching to hyperliquid big block for the address ${deployer} to deploy ${contractName_composer}`)
+    if (!isDeployed_oft) {
+        console.log(`Switching to hyperliquid big block for the address ${deployer} to deploy ${contractName_oft}`)
         const res = await useBigBlock(wallet, isTestnet, loglevel)
         console.log(res)
         console.log(`Deplying a contract uses big block which is mined at a transaction per minute.`)
     }
 
-    // Deploy the OFT composer
-    const { address: address_composer } = await deploy(contractName_composer, {
+    const ethersProvider = new providers.JsonRpcProvider(
+        (hre.config.networks[hre.network.name] as HttpNetworkConfig).url
+    )
+    const nonce = await ethersProvider.getTransactionCount(deployer)
+
+    // Deploy the OFT on HyperEVM
+    const { address: address_oft, transactionHash } = await deploy(contractName_oft, {
         from: deployer,
         args: [
+            contractName_oft, // name
+            tokenSymbol, // symbol
             endpointV2Deployment.address, // LayerZero's EndpointV2 address
-            address_oft, // OFT address
-            hip1Token.nativeSpot.index, // Core index id
-            evmExtraWeiDecimals,
+            deployer, // owner
         ],
         log: true,
-        skipIfAlreadyDeployed: false,
+        skipIfAlreadyDeployed: true,
     })
 
-    console.log(
-        `Deployed HyperliquidComposer contract: ${contractName_composer}, network: ${hre.network.name}, address: ${address_composer}`
-    )
+    console.log(`Deployed OFT contract: ${contractName_oft}, network: ${hre.network.name}, address: ${address_oft}`)
+    if (transactionHash) {
+        writeUpdatedNativeSpots(nativeSpotName, address_oft, contractName_oft, transactionHash, nonce, deployer, false)
+    }
 
     // Set small block eitherway as we do not have a method to check which hyperliquidblock we are on
     {
@@ -91,6 +94,7 @@ const deploy: DeployFunction = async (hre) => {
     }
 }
 
-deploy.tags = [contractName_composer]
+// MyHyperLiquidOFT
+deploy.tags = [`${contractName_oft}`]
 
 export default deploy

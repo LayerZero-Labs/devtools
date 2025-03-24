@@ -7,16 +7,20 @@ import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contract
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
+import { HyperLiquidComposer, IHyperAsset } from "@layerzerolabs/oft-hyperliquid-evm/contracts/HyperLiquidComposer.sol";
+import { IHyperLiquidWritePrecompile } from "@layerzerolabs/oft-hyperliquid-evm/contracts/interfaces/IHyperLiquidWritePrecompile.sol";
+
 import { HyperLiquidComposerCodec } from "@layerzerolabs/oft-hyperliquid-evm/contracts/library/HyperLiquidComposerCodec.sol";
-import { HyperLiquidComposer, HyperAsset } from "@layerzerolabs/oft-hyperliquid-evm/contracts/HyperLiquidComposer.sol";
+
+import { IHYPEPrecompile } from "@layerzerolabs/oft-hyperliquid-evm/contracts/interfaces/IHYPEPrecompile.sol";
+import { HypePrecompileMock } from "@layerzerolabs/oft-hyperliquid-evm/test/mocks/HypePrecompileMock.sol";
+import { SpotBalancePrecompileMock } from "@layerzerolabs/oft-hyperliquid-evm/test/mocks/SpotBalancePrecompileMock.sol";
 
 import { OFTMock } from "./mocks/OFTMock.sol";
 
-import { IHyperLiquidWritePrecompile } from "@layerzerolabs/oft-hyperliquid-evm/contracts/interfaces/IHyperLiquidWritePrecompile.sol";
-import { IHYPEPrecompile } from "@layerzerolabs/oft-hyperliquid-evm/contracts/interfaces/IHYPEPrecompile.sol";
-
 contract HyperLiquidComposerTest is Test {
-    HyperAsset public OFT;
+    IHyperAsset public OFT;
+    IHyperAsset public HYPE;
 
     address public constant HL_LZ_ENDPOINT_V2 = 0xf9e1815F151024bDE4B7C10BAC10e8Ba9F6b53E1;
 
@@ -27,20 +31,43 @@ contract HyperLiquidComposerTest is Test {
 
     OFTMock internal oft;
     HyperLiquidComposer internal hyperLiquidComposer;
+    SpotBalancePrecompileMock internal spotBalancePrecompileMock;
 
     address public userA = makeAddr("userA");
     address public userB = makeAddr("userB");
 
-    uint256 public constant amount = 1e18;
+    uint256 public constant amount = 1 ether;
     uint256 public constant amountToFund = 100 gwei;
 
+    address public constant HYPERLIQUID_PRECOMPILE = 0x2222222222222222222222222222222222222222;
+    address public constant SPOT_BALANCE_PRECOMPILE = 0x0000000000000000000000000000000000000801;
+
+    uint64 public aliceHlIndexId = 1231;
+    uint64 public hypeHlIndexId = 1105;
     function setUp() public {
         vm.createSelectFork("https://rpc.hyperliquid-testnet.xyz/evm");
-        OFT = HyperAsset({
+
+        HypePrecompileMock hypePrecompileMock = new HypePrecompileMock();
+        vm.etch(HYPERLIQUID_PRECOMPILE, address(hypePrecompileMock).code);
+
+        SpotBalancePrecompileMock temp_spotBalancePrecompileMock = new SpotBalancePrecompileMock();
+        vm.etch(SPOT_BALANCE_PRECOMPILE, address(temp_spotBalancePrecompileMock).code);
+        spotBalancePrecompileMock = SpotBalancePrecompileMock(SPOT_BALANCE_PRECOMPILE);
+
+        OFT = IHyperAsset({
             assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1231),
             coreIndexId: 1231,
             decimalDiff: 18 - 6
         });
+
+        HYPE = IHyperAsset({
+            assetBridgeAddress: 0x2222222222222222222222222222222222222222,
+            coreIndexId: 1105,
+            decimalDiff: 18 - 8
+        });
+
+        spotBalancePrecompileMock.setSpotBalance(OFT.assetBridgeAddress, OFT.coreIndexId, type(uint64).max);
+        spotBalancePrecompileMock.setSpotBalance(HYPE.assetBridgeAddress, HYPE.coreIndexId, type(uint64).max);
 
         oft = new OFTMock("test", "test", HL_LZ_ENDPOINT_V2, msg.sender);
         hyperLiquidComposer = new HyperLiquidComposer(
@@ -55,15 +82,18 @@ contract HyperLiquidComposerTest is Test {
     }
 
     function test_deployment() public view {
-        HyperAsset memory hypeAsset = hyperLiquidComposer.getHypeAsset();
-        assertEq(hypeAsset.assetBridgeAddress, 0x2222222222222222222222222222222222222222);
-        assertEq(hypeAsset.coreIndexId, 1105);
-        assertEq(hypeAsset.decimalDiff, 10);
+        IHyperAsset memory hypeAsset = hyperLiquidComposer.getHypeAsset();
+        assertEq(hypeAsset.assetBridgeAddress, HYPE.assetBridgeAddress);
+        assertEq(hypeAsset.coreIndexId, HYPE.coreIndexId);
+        assertEq(hypeAsset.decimalDiff, HYPE.decimalDiff);
 
-        HyperAsset memory oftAsset = hyperLiquidComposer.getOFTAsset();
+        IHyperAsset memory oftAsset = hyperLiquidComposer.getOFTAsset();
         assertEq(oftAsset.assetBridgeAddress, OFT.assetBridgeAddress);
         assertEq(oftAsset.coreIndexId, OFT.coreIndexId);
         assertEq(oftAsset.decimalDiff, OFT.decimalDiff);
+
+        assertEq(spotBalancePrecompileMock.balanceOf(OFT.assetBridgeAddress, OFT.coreIndexId), type(uint64).max);
+        assertEq(spotBalancePrecompileMock.balanceOf(HYPE.assetBridgeAddress, HYPE.coreIndexId), type(uint64).max);
     }
 
     function test_SendSpot_no_FundAddress() public {

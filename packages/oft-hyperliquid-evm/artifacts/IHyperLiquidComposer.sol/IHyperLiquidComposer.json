@@ -2,66 +2,6 @@
   "abi": [
     {
       "type": "function",
-      "name": "getHypeAsset",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "tuple",
-          "internalType": "struct HyperAsset",
-          "components": [
-            {
-              "name": "assetBridgeAddress",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "coreIndexId",
-              "type": "uint64",
-              "internalType": "uint64"
-            },
-            {
-              "name": "decimalDiff",
-              "type": "uint64",
-              "internalType": "uint64"
-            }
-          ]
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "getOFTAsset",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "tuple",
-          "internalType": "struct HyperAsset",
-          "components": [
-            {
-              "name": "assetBridgeAddress",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "coreIndexId",
-              "type": "uint64",
-              "internalType": "uint64"
-            },
-            {
-              "name": "decimalDiff",
-              "type": "uint64",
-              "internalType": "uint64"
-            }
-          ]
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
       "name": "lzCompose",
       "inputs": [
         { "name": "_from", "type": "address", "internalType": "address" },
@@ -74,78 +14,25 @@
       "stateMutability": "payable"
     },
     {
-      "type": "function",
-      "name": "quoteHyperCoreAmount",
+      "type": "event",
+      "name": "errorMessage",
       "inputs": [
-        { "name": "_amount", "type": "uint256", "internalType": "uint256" },
-        { "name": "_isOFT", "type": "bool", "internalType": "bool" }
-      ],
-      "outputs": [
         {
-          "name": "",
-          "type": "tuple",
-          "internalType": "struct HyperAssetAmount",
-          "components": [
-            { "name": "evm", "type": "uint256", "internalType": "uint256" },
-            { "name": "dust", "type": "uint256", "internalType": "uint256" },
-            { "name": "core", "type": "uint64", "internalType": "uint64" }
-          ]
+          "name": "reason",
+          "type": "bytes",
+          "indexed": false,
+          "internalType": "bytes"
         }
       ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "error",
-      "name": "HyperLiquidComposer_FailedToReturn_HYPE_Dust",
-      "inputs": [
-        { "name": "to", "type": "address", "internalType": "address" },
-        { "name": "amount", "type": "uint256", "internalType": "uint256" }
-      ]
-    },
-    {
-      "type": "error",
-      "name": "HyperLiquidComposer_FailedToSend_HYPE",
-      "inputs": [
-        { "name": "amount", "type": "uint256", "internalType": "uint256" }
-      ]
-    },
-    {
-      "type": "error",
-      "name": "HyperLiquidComposer_InvalidCall_NotEndpoint",
-      "inputs": [
-        {
-          "name": "notEndpointAddress",
-          "type": "address",
-          "internalType": "address"
-        }
-      ]
-    },
-    {
-      "type": "error",
-      "name": "HyperLiquidComposer_InvalidCall_NotOFT",
-      "inputs": [
-        {
-          "name": "internalOFTAddress",
-          "type": "address",
-          "internalType": "address"
-        },
-        {
-          "name": "receivedOFTAddress",
-          "type": "address",
-          "internalType": "address"
-        }
-      ]
+      "anonymous": false
     }
   ],
   "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
   "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
   "methodIdentifiers": {
-    "getHypeAsset()": "aae12e46",
-    "getOFTAsset()": "2d0e315c",
-    "lzCompose(address,bytes32,bytes,address,bytes)": "d0a10260",
-    "quoteHyperCoreAmount(uint256,bool)": "f9716faf"
+    "lzCompose(address,bytes32,bytes,address,bytes)": "d0a10260"
   },
-  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"HyperLiquidComposer_FailedToReturn_HYPE_Dust\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"HyperLiquidComposer_FailedToSend_HYPE\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"notEndpointAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotEndpoint\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"internalOFTAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"receivedOFTAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotOFT\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"getHypeAsset\",\"outputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"assetBridgeAddress\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"coreIndexId\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"decimalDiff\",\"type\":\"uint64\"}],\"internalType\":\"struct HyperAsset\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getOFTAsset\",\"outputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"assetBridgeAddress\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"coreIndexId\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"decimalDiff\",\"type\":\"uint64\"}],\"internalType\":\"struct HyperAsset\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_from\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_guid\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"_executor\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_extraData\",\"type\":\"bytes\"}],\"name\":\"lzCompose\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"_isOFT\",\"type\":\"bool\"}],\"name\":\"quoteHyperCoreAmount\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"evm\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"dust\",\"type\":\"uint256\"},{\"internalType\":\"uint64\",\"name\":\"core\",\"type\":\"uint64\"}],\"internalType\":\"struct HyperAssetAmount\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"lzCompose(address,bytes32,bytes,address,bytes)\":{\"details\":\"To ensure non-reentrancy, implementers of this interface MUST assert msg.sender is the corresponding EndpointV2 contract (i.e., onlyEndpointV2).\",\"params\":{\"_executor\":\"The address of the executor for the composed message.\",\"_extraData\":\"Additional arbitrary data in bytes passed by the entity who executes the lzCompose.\",\"_from\":\"The address initiating the composition, typically the OApp where the lzReceive was called.\",\"_guid\":\"The unique identifier for the corresponding LayerZero src/dst tx.\",\"_message\":\"The composed message payload in bytes. NOT necessarily the same payload passed via lzReceive.\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"lzCompose(address,bytes32,bytes,address,bytes)\":{\"notice\":\"Composes a LayerZero message from an OApp.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interfaces/IHyperLiquidComposer.sol\":\"IHyperLiquidComposer\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/interfaces/IHyperLiquidComposer.sol\":{\"keccak256\":\"0x3862603fed984301e5fe7b5f4eb9b2eae9abc1dda29d81f9ec1be6ecfd613b87\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://eaf12311a209131d180035de45b08104f3b517000a1f59e4b169359ce14e672f\",\"dweb:/ipfs/QmNuiP8cQS4ZgLo1f7R8EX4tiGE6JSHxqqgzzGYrEssycE\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol\":{\"keccak256\":\"0xfaca7205d4211ee9208a7e59171e2301731f3d2a20c49b4a839821871f5fdd49\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f254bc60ac26687b5320a43a556e30777b0745abf7cd64d5f4720d9b1d1f7fdf\",\"dweb:/ipfs/QmRSJEZVgxaC3L2DdE6s8P5qkYfM3V5JMeseeFJJqGR4xz\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol\":{\"keccak256\":\"0xe5014c411acb2b59dd74ae74a1bab02cf32d94a41a548a5ab553d64aeeb55dae\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://29dfb7bc121002fc7e7931c34eb17af0ae0f0127dcc3199511c83a58a917160d\",\"dweb:/ipfs/QmPdq1wcRRBdUP169LHCLoLuPRunN9eR71TQN42FjGpowx\"]}},\"version\":1}",
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"reason\",\"type\":\"bytes\"}],\"name\":\"errorMessage\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_from\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_guid\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"_executor\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_extraData\",\"type\":\"bytes\"}],\"name\":\"lzCompose\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"lzCompose(address,bytes32,bytes,address,bytes)\":{\"details\":\"To ensure non-reentrancy, implementers of this interface MUST assert msg.sender is the corresponding EndpointV2 contract (i.e., onlyEndpointV2).\",\"params\":{\"_executor\":\"The address of the executor for the composed message.\",\"_extraData\":\"Additional arbitrary data in bytes passed by the entity who executes the lzCompose.\",\"_from\":\"The address initiating the composition, typically the OApp where the lzReceive was called.\",\"_guid\":\"The unique identifier for the corresponding LayerZero src/dst tx.\",\"_message\":\"The composed message payload in bytes. NOT necessarily the same payload passed via lzReceive.\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"lzCompose(address,bytes32,bytes,address,bytes)\":{\"notice\":\"Composes a LayerZero message from an OApp.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interfaces/IHyperLiquidComposer.sol\":\"IHyperLiquidComposer\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/interfaces/IHyperLiquidComposer.sol\":{\"keccak256\":\"0x7ac40fccbeaaed8c6d3720ef69a7ff4dd2203b1c59e3dc846213deebd4ed0862\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://3df30f4894e16bb9c576b09507685a68575738ed766391d367f9c562976275f2\",\"dweb:/ipfs/QmeQAWvct8o7qLF2vV7pVfm7jZx77d7tbpYFCuUH2XDwDH\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol\":{\"keccak256\":\"0xfaca7205d4211ee9208a7e59171e2301731f3d2a20c49b4a839821871f5fdd49\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f254bc60ac26687b5320a43a556e30777b0745abf7cd64d5f4720d9b1d1f7fdf\",\"dweb:/ipfs/QmRSJEZVgxaC3L2DdE6s8P5qkYfM3V5JMeseeFJJqGR4xz\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol\":{\"keccak256\":\"0xe5014c411acb2b59dd74ae74a1bab02cf32d94a41a548a5ab553d64aeeb55dae\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://29dfb7bc121002fc7e7931c34eb17af0ae0f0127dcc3199511c83a58a917160d\",\"dweb:/ipfs/QmPdq1wcRRBdUP169LHCLoLuPRunN9eR71TQN42FjGpowx\"]}},\"version\":1}",
   "metadata": {
     "compiler": { "version": "0.8.22+commit.4fc1097e" },
     "language": "Solidity",
@@ -153,105 +40,16 @@
       "abi": [
         {
           "inputs": [
-            { "internalType": "address", "name": "to", "type": "address" },
-            { "internalType": "uint256", "name": "amount", "type": "uint256" }
-          ],
-          "type": "error",
-          "name": "HyperLiquidComposer_FailedToReturn_HYPE_Dust"
-        },
-        {
-          "inputs": [
-            { "internalType": "uint256", "name": "amount", "type": "uint256" }
-          ],
-          "type": "error",
-          "name": "HyperLiquidComposer_FailedToSend_HYPE"
-        },
-        {
-          "inputs": [
             {
-              "internalType": "address",
-              "name": "notEndpointAddress",
-              "type": "address"
+              "internalType": "bytes",
+              "name": "reason",
+              "type": "bytes",
+              "indexed": false
             }
           ],
-          "type": "error",
-          "name": "HyperLiquidComposer_InvalidCall_NotEndpoint"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "internalOFTAddress",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "receivedOFTAddress",
-              "type": "address"
-            }
-          ],
-          "type": "error",
-          "name": "HyperLiquidComposer_InvalidCall_NotOFT"
-        },
-        {
-          "inputs": [],
-          "stateMutability": "view",
-          "type": "function",
-          "name": "getHypeAsset",
-          "outputs": [
-            {
-              "internalType": "struct HyperAsset",
-              "name": "",
-              "type": "tuple",
-              "components": [
-                {
-                  "internalType": "address",
-                  "name": "assetBridgeAddress",
-                  "type": "address"
-                },
-                {
-                  "internalType": "uint64",
-                  "name": "coreIndexId",
-                  "type": "uint64"
-                },
-                {
-                  "internalType": "uint64",
-                  "name": "decimalDiff",
-                  "type": "uint64"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "inputs": [],
-          "stateMutability": "view",
-          "type": "function",
-          "name": "getOFTAsset",
-          "outputs": [
-            {
-              "internalType": "struct HyperAsset",
-              "name": "",
-              "type": "tuple",
-              "components": [
-                {
-                  "internalType": "address",
-                  "name": "assetBridgeAddress",
-                  "type": "address"
-                },
-                {
-                  "internalType": "uint64",
-                  "name": "coreIndexId",
-                  "type": "uint64"
-                },
-                {
-                  "internalType": "uint64",
-                  "name": "decimalDiff",
-                  "type": "uint64"
-                }
-              ]
-            }
-          ]
+          "type": "event",
+          "name": "errorMessage",
+          "anonymous": false
         },
         {
           "inputs": [
@@ -268,31 +66,6 @@
           "stateMutability": "payable",
           "type": "function",
           "name": "lzCompose"
-        },
-        {
-          "inputs": [
-            { "internalType": "uint256", "name": "_amount", "type": "uint256" },
-            { "internalType": "bool", "name": "_isOFT", "type": "bool" }
-          ],
-          "stateMutability": "view",
-          "type": "function",
-          "name": "quoteHyperCoreAmount",
-          "outputs": [
-            {
-              "internalType": "struct HyperAssetAmount",
-              "name": "",
-              "type": "tuple",
-              "components": [
-                { "internalType": "uint256", "name": "evm", "type": "uint256" },
-                {
-                  "internalType": "uint256",
-                  "name": "dust",
-                  "type": "uint256"
-                },
-                { "internalType": "uint64", "name": "core", "type": "uint64" }
-              ]
-            }
-          ]
         }
       ],
       "devdoc": {
@@ -339,10 +112,10 @@
     },
     "sources": {
       "contracts/interfaces/IHyperLiquidComposer.sol": {
-        "keccak256": "0x3862603fed984301e5fe7b5f4eb9b2eae9abc1dda29d81f9ec1be6ecfd613b87",
+        "keccak256": "0x7ac40fccbeaaed8c6d3720ef69a7ff4dd2203b1c59e3dc846213deebd4ed0862",
         "urls": [
-          "bzz-raw://eaf12311a209131d180035de45b08104f3b517000a1f59e4b169359ce14e672f",
-          "dweb:/ipfs/QmNuiP8cQS4ZgLo1f7R8EX4tiGE6JSHxqqgzzGYrEssycE"
+          "bzz-raw://3df30f4894e16bb9c576b09507685a68575738ed766391d367f9c562976275f2",
+          "dweb:/ipfs/QmeQAWvct8o7qLF2vV7pVfm7jZx77d7tbpYFCuUH2XDwDH"
         ],
         "license": "MIT"
       },
@@ -365,5 +138,5 @@
     },
     "version": 1
   },
-  "id": 2
+  "id": 3
 }

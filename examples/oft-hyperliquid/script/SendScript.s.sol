@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LZBL-1.2
-pragma solidity 0.8.22;
+pragma solidity ^0.8.0;
 
 import { AddressCast } from "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/AddressCast.sol";
 
@@ -77,7 +77,7 @@ contract SendScript is Script {
 
         if (_lzComposeGas > 0) {
             options = OptionsBuilder.newOptions().addExecutorLzComposeOption(0, _lzComposeGas, _lzComposeValue);
-            composeMsg = abi.encodePacked(_receiver);
+            composeMsg = abi.encode(_receiver);
             to = addressToBytes32(_composer);
         }
 
