@@ -7,18 +7,16 @@ import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contract
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import { IHyperAsset } from "../contracts/interfaces/IHyperLiquidComposerCore.sol";
-import { IHyperLiquidWritePrecompile } from "../contracts/interfaces/IHyperLiquidWritePrecompile.sol";
-import { IHYPEPrecompile } from "../contracts/interfaces/IHYPEPrecompile.sol";
+import { IHyperLiquidComposerErrors } from "../contracts/interfaces/IHyperLiquidComposerErrors.sol";
+import { IHyperAsset, IHyperLiquidComposerCore } from "../contracts/interfaces/IHyperLiquidComposerCore.sol";
 
 import { HyperLiquidComposerCodec } from "../contracts/library/HyperLiquidComposerCodec.sol";
-
 import { HyperLiquidComposer, IHyperLiquidComposer } from "../contracts/HyperLiquidComposer.sol";
 
 import { OFTMock } from "./mocks/OFTMock.sol";
 import { SpotBalancePrecompileMock } from "./mocks/SpotBalancePrecompileMock.sol";
 
-contract HyperLiquidComposerTest is Test {
+contract HyperLiquidComposerRefundsTest is Test {
     IHyperAsset public ALICE;
     IHyperAsset public HYPE;
     address public constant HL_LZ_ENDPOINT_V2 = 0xf9e1815F151024bDE4B7C10BAC10e8Ba9F6b53E1;
@@ -81,23 +79,9 @@ contract HyperLiquidComposerTest is Test {
         // Mocks the lzReceive call which mints the tokens to the hyperLiquidComposer
         deal(address(oft), address(hyperLiquidComposer), amount);
     }
+    function test_refund_sender_malformed_receiver() public {
+        bytes memory composeMsg = abi.encodePacked(userB, "error");
 
-    function test_deployment() public view {
-        IHyperAsset memory hypeAsset = hyperLiquidComposer.getHypeAsset();
-        assertEq(hypeAsset.assetBridgeAddress, 0x2222222222222222222222222222222222222222);
-        assertEq(hypeAsset.coreIndexId, 1105);
-        assertEq(hypeAsset.decimalDiff, 10);
-
-        IHyperAsset memory oftAsset = hyperLiquidComposer.getOFTAsset();
-        assertEq(oftAsset.assetBridgeAddress, ALICE.assetBridgeAddress);
-        assertEq(oftAsset.coreIndexId, ALICE.coreIndexId);
-        assertEq(oftAsset.decimalDiff, ALICE.decimalDiff);
-    }
-
-    function test_SendSpot_no_FundAddress() public {
-        bytes memory composeMsg = abi.encodePacked(userB);
-
-        // Build composerMsg similar to the outcome of OFTCore.send()
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
             0,
             SRC_EID,
@@ -105,66 +89,77 @@ contract HyperLiquidComposerTest is Test {
             abi.encodePacked(addressToBytes32(userA), composeMsg)
         );
 
-        assertEq(oft.balanceOf(address(hyperLiquidComposer)), amount);
-
-        // Expect the Transfer event to be emitted
-        vm.expectEmit(address(oft));
-        emit IERC20.Transfer(address(hyperLiquidComposer), ALICE.assetBridgeAddress, amount);
-
-        // Expect the SpotSend event to be emitted
-        vm.expectEmit(hyperLiquidComposer.L1WritePrecompileAddress());
-        emit IHyperLiquidWritePrecompile.SpotSend(
-            address(hyperLiquidComposer),
-            userB,
-            ALICE.coreIndexId,
-            uint64(amount / 10 ** ALICE.decimalDiff)
+        bytes memory message = this.getComposeMessage(composerMsg_);
+        bytes memory expectedErrorMessage = abi.encodeWithSelector(
+            IHyperLiquidComposerErrors.HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength.selector,
+            message,
+            message.length
         );
+
+        vm.expectEmit(address(oft));
+        emit IERC20.Transfer(address(hyperLiquidComposer), userA, amount);
+
+        vm.expectEmit(address(hyperLiquidComposer));
+        emit IHyperLiquidComposerCore.errorRefund(userA, amount);
+        emit IHyperLiquidComposer.errorMessage(expectedErrorMessage);
 
         vm.startPrank(HL_LZ_ENDPOINT_V2);
         hyperLiquidComposer.lzCompose(address(oft), bytes32(0), composerMsg_, msg.sender, "");
         vm.stopPrank();
 
         assertEq(oft.balanceOf(address(hyperLiquidComposer)), 0);
+        assertEq(oft.balanceOf(userA), amount);
     }
 
-    function test_SendSpot_and_FundAddress() public {
-        bytes memory composeMsg = abi.encodePacked(userB);
+    function test_refund_receiver_excessive_amount(uint64 _exceedAmountBy) public {
+        _exceedAmountBy = uint64(bound(_exceedAmountBy, 0, type(uint64).max - 10 ether));
+        uint256 totalTransferAmount = amount + _exceedAmountBy;
+        deal(address(oft), address(hyperLiquidComposer), totalTransferAmount);
+        uint256 scaleAliceDecimalDiff = 10 ** ALICE.decimalDiff;
 
-        // Build composerMsg similar to the outcome of OFTCore.send()
+        SpotBalancePrecompileMock(L1ReadPrecompileAddress_SpotBalance).setSpotBalance(
+            ALICE.assetBridgeAddress,
+            ALICE.coreIndexId,
+            uint64(amount / scaleAliceDecimalDiff)
+        );
+
+        bytes memory composeMsg = abi.encodePacked(userB);
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
             0,
             SRC_EID,
-            amount,
+            totalTransferAmount,
             abi.encodePacked(addressToBytes32(userA), composeMsg)
         );
 
-        assertEq(oft.balanceOf(address(hyperLiquidComposer)), amount);
+        uint256 normalizedTotalTransferAmount = totalTransferAmount - (totalTransferAmount % scaleAliceDecimalDiff);
+        if (normalizedTotalTransferAmount > amount) {
+            vm.expectEmit(address(hyperLiquidComposer));
+            emit HyperLiquidComposerCodec.OverflowDetected(
+                uint64(totalTransferAmount / scaleAliceDecimalDiff),
+                uint64(1 ether / scaleAliceDecimalDiff)
+            );
+        }
 
-        // Expect the Received event to be emitted - this is for the HYPE precompile
-        vm.expectEmit(hyperLiquidComposer.getHypeAsset().assetBridgeAddress);
-        emit IHYPEPrecompile.Received(address(hyperLiquidComposer), amountToFund);
-
-        // Expect the Transfer event to be emitted
         vm.expectEmit(address(oft));
         emit IERC20.Transfer(address(hyperLiquidComposer), ALICE.assetBridgeAddress, amount);
-
-        // Expect the SpotSend event to be emitted - this is for the ALICE asset bridge
-        vm.expectEmit(hyperLiquidComposer.L1WritePrecompileAddress());
-        emit IHyperLiquidWritePrecompile.SpotSend(
-            address(hyperLiquidComposer),
-            userB,
-            ALICE.coreIndexId,
-            uint64(amount / 10 ** ALICE.decimalDiff)
-        );
+        // Triggers when dust > 0
+        if (_exceedAmountBy > 0) {
+            emit IERC20.Transfer(address(hyperLiquidComposer), userB, _exceedAmountBy);
+        }
 
         vm.startPrank(HL_LZ_ENDPOINT_V2);
-        hyperLiquidComposer.lzCompose{ value: amountToFund }(address(oft), bytes32(0), composerMsg_, msg.sender, "");
+        hyperLiquidComposer.lzCompose(address(oft), bytes32(0), composerMsg_, msg.sender, "");
         vm.stopPrank();
 
         assertEq(oft.balanceOf(address(hyperLiquidComposer)), 0);
+        assertEq(oft.balanceOf(userB), _exceedAmountBy);
     }
 
     function addressToBytes32(address _addr) internal pure returns (bytes32) {
         return bytes32(uint256(uint160(_addr)));
+    }
+
+    function getComposeMessage(bytes calldata _composerMsg) external pure returns (bytes memory) {
+        return OFTComposeMsgCodec.composeMsg(_composerMsg);
     }
 }

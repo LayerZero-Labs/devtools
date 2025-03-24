@@ -2,16 +2,19 @@
 pragma solidity ^0.8.20;
 
 import { HyperLiquidComposerCodec } from "../../contracts/library/HyperLiquidComposerCodec.sol";
-import { HyperAsset, HyperAssetAmount } from "../../contracts/interfaces/IHyperLiquidComposer.sol";
+import { IHyperLiquidComposerErrors, ErrorMessage } from "../../contracts/interfaces/IHyperLiquidComposerErrors.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
 import { Test, console } from "forge-std/Test.sol";
 
 contract ComposeMessageTest is Test {
     uint256 constant DEFAULT_AMOUNT = 1e18;
-    bytes4 INVALID_LENGTH_ERROR =
-        HyperLiquidComposerCodec.HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength.selector;
-    address constant sender = address(bytes20(keccak256("sender")));
+    uint256 constant DEFAULT_DECIMAL_DIFF = 12;
+    address sender;
+
+    function setUp() public {
+        sender = makeAddr("sender");
+    }
 
     function test_validateAndDecodeMessage_EncodingVariants(address receiver, bool useEncodePacked) public view {
         vm.assume(receiver != address(0));
@@ -44,9 +47,14 @@ contract ComposeMessageTest is Test {
 
         if (isNoiseLength12 && useEncodePacked) {
             bytes memory expectedRevertMessage = this.composeMsg(message);
-            vm.expectRevert(
-                abi.encodeWithSelector(INVALID_LENGTH_ERROR, expectedRevertMessage, expectedRevertMessage.length)
+            address expectedRevertTo = sender;
+            uint256 expectedRevertAmount = DEFAULT_AMOUNT;
+            bytes memory expectedRevertReason = abi.encodeWithSelector(
+                IHyperLiquidComposerErrors.HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength.selector,
+                expectedRevertMessage,
+                expectedRevertMessage.length
             );
+            vm.expectRevert(createErrorMessage(expectedRevertTo, expectedRevertAmount, expectedRevertReason));
         } else {
             vm.expectRevert();
         }
@@ -57,7 +65,7 @@ contract ComposeMessageTest is Test {
         bytes memory receiver,
         uint256 amount,
         bytes memory extraData
-    ) internal pure returns (bytes memory) {
+    ) internal view returns (bytes memory) {
         bytes memory payload = abi.encodePacked(addressToBytes32(sender), receiver, extraData);
         return OFTComposeMsgCodec.encode(0, 0, amount, payload);
     }
@@ -74,5 +82,13 @@ contract ComposeMessageTest is Test {
 
     function addressToBytes32(address _addr) internal pure returns (bytes32) {
         return bytes32(uint256(uint160(_addr)));
+    }
+
+    function createErrorMessage(address _to, uint256 _amount, bytes memory _reason) public pure returns (bytes memory) {
+        return
+            abi.encodeWithSelector(
+                IHyperLiquidComposerErrors.ErrorMsg.selector,
+                HyperLiquidComposerCodec.createErrorMessage(_to, _amount, _reason)
+            );
     }
 }

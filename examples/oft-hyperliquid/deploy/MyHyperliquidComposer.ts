@@ -3,20 +3,13 @@ import assert from 'assert'
 import { Wallet } from 'ethers'
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-import {
-    finalizeEvmContract,
-    getNativeSpot,
-    requestEvmContract,
-    useBigBlock,
-    useSmallBlock,
-    writeNativeSpotConnected,
-} from '@layerzerolabs/oft-hyperliquid-evm'
+import { getNativeSpot, useBigBlock, useSmallBlock } from '@layerzerolabs/oft-hyperliquid-evm'
 
 const contractName_oft = 'MyHyperLiquidOFT'
 const contractName_composer = 'MyHyperLiquidComposer'
 
 const evmDecimals = 18
-const nativeSpotName = 'ALICE'
+const nativeSpotName = 'CHARLI'
 
 const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
@@ -41,8 +34,6 @@ const deploy: DeployFunction = async (hre) => {
     console.log(`Deployer: ${deployer}`)
 
     const evmExtraWeiDecimals = evmDecimals - hip1Token.nativeSpot.weiDecimals
-    console.log(`EVM extra wei decimals: ${evmExtraWeiDecimals}`)
-    console.log(`Native spot index: ${hip1Token.nativeSpot.index}`)
 
     // This is an external deployment pulled in from @layerzerolabs/lz-evm-sdk-v2
     //
@@ -85,7 +76,7 @@ const deploy: DeployFunction = async (hre) => {
             evmExtraWeiDecimals,
         ],
         log: true,
-        skipIfAlreadyDeployed: true,
+        skipIfAlreadyDeployed: false,
     })
 
     console.log(
@@ -98,34 +89,6 @@ const deploy: DeployFunction = async (hre) => {
         const res = await useSmallBlock(wallet, isTestnet, loglevel)
         console.log(JSON.stringify(res, null, 2))
     }
-
-    // Request EVM contract - sends a request to HyperCore to connect the HyperCore HIP1 token to HyperEVM ERC20 token
-    {
-        const res = await requestEvmContract(
-            wallet,
-            isTestnet,
-            address_oft,
-            evmExtraWeiDecimals,
-            hip1Token.nativeSpot.index,
-            loglevel
-        )
-        console.log(JSON.stringify(res, null, 2))
-    }
-
-    // Finalize EVM contract - sends a request to HyperCore to finalize the HyperCore HIP1 token to HyperEVM ERC20 token
-    {
-        const res = await finalizeEvmContract(
-            wallet,
-            isTestnet,
-            hip1Token.nativeSpot.index,
-            hip1Token.txData.nonce,
-            loglevel
-        )
-        console.log(JSON.stringify(res, null, 2))
-    }
-
-    writeNativeSpotConnected(nativeSpotName, true, evmExtraWeiDecimals)
-    console.log('GIVE THIS ADDRESS SOME NATIVE TOKENS TO ACTIVATE ON HYPERCORE')
 }
 
 deploy.tags = [contractName_composer]

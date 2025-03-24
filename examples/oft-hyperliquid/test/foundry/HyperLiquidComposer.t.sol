@@ -7,6 +7,9 @@ import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contract
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
+import { HyperLiquidComposer, IHyperAsset } from "@layerzerolabs/oft-hyperliquid-evm/contracts/HyperLiquidComposer.sol";
+import { IHyperLiquidWritePrecompile } from "@layerzerolabs/oft-hyperliquid-evm/contracts/interfaces/IHyperLiquidWritePrecompile.sol";
+
 import { HyperLiquidComposer, IHyperAsset } from "@layerzerolabs/hyperliquid-composer/contracts/HyperLiquidComposer.sol";
 import { IHyperLiquidWritePrecompile } from "@layerzerolabs/hyperliquid-composer/contracts/interfaces/IHyperLiquidWritePrecompile.sol";
 
@@ -39,6 +42,11 @@ contract HyperLiquidComposerTest is Test {
     uint64 public constant AMOUNT_TO_FUND = 100 gwei;
     uint64 public constant DUST = 1 wei;
 
+    address public constant HYPERLIQUID_PRECOMPILE = 0x2222222222222222222222222222222222222222;
+    address public constant SPOT_BALANCE_PRECOMPILE = 0x0000000000000000000000000000000000000801;
+
+    uint64 public aliceHlIndexId = 1231;
+    uint64 public hypeHlIndexId = 1105;
     function setUp() public {
         vm.createSelectFork("https://rpc.hyperliquid-testnet.xyz/evm");
 
