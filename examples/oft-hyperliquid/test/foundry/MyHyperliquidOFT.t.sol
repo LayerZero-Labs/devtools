@@ -9,18 +9,24 @@ import { IOFT, SendParam, OFTReceipt } from "@layerzerolabs/oft-evm/contracts/in
 import { MessagingFee, MessagingReceipt } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
+import { HypePrecompileMock } from "@layerzerolabs/oft-hyperliquid-evm/test/mocks/HypePrecompileMock.sol";
+import { SpotBalancePrecompileMock } from "@layerzerolabs/oft-hyperliquid-evm/test/mocks/SpotBalancePrecompileMock.sol";
+import { HyperLiquidComposerCodec } from "@layerzerolabs/oft-hyperliquid-evm/contracts/library/HyperLiquidComposerCodec.sol";
+import { IHyperAsset } from "@layerzerolabs/oft-hyperliquid-evm/contracts/HyperLiquidComposer.sol";
+
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import { MyHyperLiquidComposer } from "../../contracts/MyHyperLiquidComposer.sol";
-
 import { MyHyperLiquidOFTMock as MyHyperLiquidOFT } from "./mocks/MyHyperLiquidOFTMock.sol";
-import { HypePrecompileMock } from "./mocks/HypePrecompileMock.sol";
 
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 import { console } from "forge-std/console.sol";
 
 contract MyHyperLiquidOFTTest is TestHelperOz5 {
     using OptionsBuilder for bytes;
+
+    IHyperAsset public OFT;
+    IHyperAsset public HYPE;
 
     uint32 internal constant SRC_EID = 1;
     uint32 internal constant DST_EID = 2;
@@ -35,7 +41,7 @@ contract MyHyperLiquidOFTTest is TestHelperOz5 {
     uint64 internal constant WEI_DIFF = OFT_DECIMALS_EVM - OFT_DECIMALS_HYPECORE;
 
     address public constant HYPERLIQUID_PRECOMPILE = 0x2222222222222222222222222222222222222222;
-
+    address public constant SPOT_BALANCE_PRECOMPILE = 0x0000000000000000000000000000000000000801;
     MyHyperLiquidOFT internal srcOFT;
     MyHyperLiquidOFT internal dstOFT;
 
@@ -43,12 +49,34 @@ contract MyHyperLiquidOFTTest is TestHelperOz5 {
 
     address public userA = makeAddr("userA");
     address public userB = makeAddr("userB");
-    uint64 public hlIndexId = 1;
+    uint64 public oftHlIndexId = 1;
+    uint64 public hypeHlIndexId = 1105;
 
     uint256 public initialBalance = 100 ether;
     uint256 public initialNativeBalance = 1000 ether;
 
     function setUp() public virtual override {
+        OFT = IHyperAsset({
+            assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(oftHlIndexId),
+            coreIndexId: oftHlIndexId,
+            decimalDiff: OFT_DECIMALS_EVM - OFT_DECIMALS_HYPECORE
+        });
+
+        HYPE = IHyperAsset({
+            assetBridgeAddress: 0x2222222222222222222222222222222222222222,
+            coreIndexId: hypeHlIndexId,
+            decimalDiff: 10
+        });
+
+        HypePrecompileMock hypePrecompileMock = new HypePrecompileMock();
+        vm.etch(HYPERLIQUID_PRECOMPILE, address(hypePrecompileMock).code);
+
+        SpotBalancePrecompileMock spotBalancePrecompileMock = new SpotBalancePrecompileMock();
+        vm.etch(SPOT_BALANCE_PRECOMPILE, address(spotBalancePrecompileMock).code);
+
+        spotBalancePrecompileMock.setSpotBalance(OFT.assetBridgeAddress, oftHlIndexId, type(uint64).max);
+        spotBalancePrecompileMock.setSpotBalance(HYPE.assetBridgeAddress, hypeHlIndexId, type(uint64).max);
+
         vm.deal(userA, initialNativeBalance);
         vm.deal(userB, initialNativeBalance);
 
@@ -59,7 +87,7 @@ contract MyHyperLiquidOFTTest is TestHelperOz5 {
         srcOFT = new MyHyperLiquidOFT(SRC_OFT_NAME, SRC_OFT_SYMBOL, address(endpoints[SRC_EID]), address(this));
         dstOFT = new MyHyperLiquidOFT(DST_OFT_NAME, DST_OFT_SYMBOL, address(endpoints[DST_EID]), address(this));
 
-        dstLZComposer = new MyHyperLiquidComposer(address(endpoints[DST_EID]), address(dstOFT), hlIndexId, WEI_DIFF);
+        dstLZComposer = new MyHyperLiquidComposer(address(endpoints[DST_EID]), address(dstOFT), oftHlIndexId, WEI_DIFF);
 
         // config and wire the ofts
         address[] memory ofts = new address[](2);
@@ -69,10 +97,6 @@ contract MyHyperLiquidOFTTest is TestHelperOz5 {
 
         // mint tokens
         deal(address(srcOFT), userA, initialBalance);
-
-        // Mocking the HypePrecompile contract
-        HypePrecompileMock mock = new HypePrecompileMock();
-        vm.etch(HYPERLIQUID_PRECOMPILE, address(mock).code);
     }
 
     function test_deployment() public view {
