@@ -28,18 +28,46 @@ npm install @layerzerolabs/metadata-tools
 
 ## Usage
 
-Without custom params:
+### Without custom params:
 
 ```typescript
 import { generateConnectionsConfig } from "@layerzerolabs/metadata-tools";
 
+const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
+    {
+        msgType: 1,
+        optionType: ExecutorOptionType.LZ_RECEIVE,
+        gas: 80000,
+        value: 0,
+    },
+    {
+        msgType: 2,
+        optionType: ExecutorOptionType.LZ_RECEIVE,
+        gas: 80000,
+        value: 0,
+    },
+    {
+        msgType: 2,
+        optionType: ExecutorOptionType.COMPOSE,
+        index: 0,
+        gas: 80000,
+        value: 0,
+    },
+]
+
 // [srcContract, dstContract, [requiredDVNs, [optionalDVNs, threshold]], [srcToDstConfirmations, dstToSrcConfirmations]], [enforcedOptionsSrcToDst, enforcedOptionsDstToSrc]
-const connections = await generateConnectionsConfig([
+const pathways = [
   [avalancheContract, polygonContract, [['LayerZero Labs'], []], [1, 1], [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS]],
-]);
+]
+
+const connections = await generateConnectionsConfig(pathways)
 ```
 
-With custom fetchMetadata, to add the custom DVN 'SuperCustomDVN' for Solana Devnet and Fuji:
+### With custom params
+
+#### With custom fetchMetadata
+
+To add a custom DVN with the name 'SuperCustomDVN' for Amoy Testnet (Polygon Testnet) and Fuji (Avalanche Testnet), do the following:
 
 ```typescript
 import { generateConnectionsConfig, defaultFetchMetadata, IMetadata, IMetadataDvns } from "@layerzerolabs/metadata-tools";
@@ -49,10 +77,10 @@ const customFetchMetadata = async (): Promise<IMetadata> => {
     // get the default metadata
     const defaultMetadata = await defaultFetchMetadata() 
 
-    // extend the Solana DVNs with custom DVN(s)
-    const solanaTestnetDVNsWithCustom: IMetadataDvns = {
-      ...metadata['solana-testnet']!.dvns,
-      '29EKzmCscUg8mf4f5uskwMqvu2SXM8hKF1gWi1cCBoKT': {
+    // extend the Amoy DVNs with custom DVN(s)
+    const amoyTestnetDVNsWithCustom: IMetadataDvns = {
+      ...metadata['amoy-testnet']!.dvns,
+      '0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467': {
           version: 2,
           canonicalName: 'SuperCustomDVN',
           id: 'super-custom-dvn',
@@ -70,9 +98,9 @@ const customFetchMetadata = async (): Promise<IMetadata> => {
 
     return {
         ...metadata,
-        'solana-testnet': {
-            ...metadata['solana-testnet']!,
-            dvns: solanaTestnetDVNsWithCustom,
+        'amoy-testnet': {
+            ...metadata['amoy-testnet']!,
+            dvns: amoyTestnetDVNsWithCustom,
         },
         fuji: {
             ...metadata.fuji!,
@@ -81,10 +109,14 @@ const customFetchMetadata = async (): Promise<IMetadata> => {
     }
 }
 
-// We can now pass 'SuperCustomDVN' as a DVN value
-// [srcContract, dstContract, [requiredDVNs, [optionalDVNs, threshold]], [srcToDstConfirmations, dstToSrcConfirmations]], [enforcedOptionsSrcToDst, enforcedOptionsDstToSrc]
-const connections = await generateConnectionsConfig([
+// declare enforced options like in the example without custom fetchMetadata
+
+  // We can now pass 'SuperCustomDVN' as a DVN value in our pathway(s)
+const pathways = [
   [avalancheContract, polygonContract, [['SuperCustomDVN'], []], [1, 1], [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS]],
-]);
+]
+
+const connections = await generateConnectionsConfig(pathways, { fetchMetadata: customFetchMetadata })
 ```
 
+In the above example, we extended the result of the default `fetchMetadata` with our own DVN entries - under the respective chains. We added a DVN with the `canonicalName` of `SuperCustomDVN` and id `super-custom-dvn`. The `canonicalName` and `id` can be arbitrary, but they must be consistent for all pathways that require that DVN. In our case, since we have a pathway between Fuji and Amoy, we extended the DVNs entry in both Fuji and Amoy.
