@@ -83,10 +83,9 @@ contract HyperLiquidComposer is IHyperLiquidComposer, HyperLiquidComposerCore {
         uint256 amountLD;
 
         /// @dev Validate the message and decode it -
-        /// @dev The message is expected to be of type: (address receiver)
-        /// @dev The bytes object can be encoded as abi.encodePacked() or abi.encode() and should be the receiver address
+        /// @dev The bytes message is expected to be of type: (address receiver)
+        /// @dev address _receiver can be encoded as abi.encodePacked() or abi.encode()
         /// @dev This is found as SendParam.composeMsg that the OFTCore contract populates on the send() call
-        /// @dev Now we validate the amount. if we are over the max amount, we refund to the _receiver the difference between the max amount transferable and the amountLD
         ///
         /// @notice reverts here are custom reverts and cause refuneds to sender or receiver
         try HyperLiquidComposerCodec.validateAndDecodeMessage(_message) returns (address _receiver, uint256 _amountLD) {
@@ -128,7 +127,7 @@ contract HyperLiquidComposer is IHyperLiquidComposer, HyperLiquidComposerCore {
     function _sendAssetToHyperCore(address _receiver, uint256 _amountLD) internal virtual {
         /// @dev Computes the tokens to send to HyperCore, dust (refund amount), and the swap amount.
         /// @dev It also takes into account the maximum transferable amount at any given time.
-        /// @dev This is done by reading from L1ReadPrecompileAddress_SpotBalance the tokens in the HyperCore side of the asset bridge
+        /// @dev This is done by reading from L1ReadPrecompileAddress_SpotBalance the tokens on the HyperCore side of the asset bridge
         ///
         /// @notice The swap amount (HIP1) and tokens to send (ERC20) are different because they have different decimals
         IHyperAssetAmount memory amounts = quoteHyperCoreAmount(_amountLD, true);
@@ -158,7 +157,7 @@ contract HyperLiquidComposer is IHyperLiquidComposer, HyperLiquidComposerCore {
     function _fundAddressOnHyperCore(address _receiver, uint256 _amount) internal virtual {
         /// @dev Computes the tokens to send to HyperCore, dust (refund amount), and the swap amount.
         /// @dev It also takes into account the maximum transferable amount at any given time.
-        /// @dev This is done by reading from L1ReadPrecompileAddress_SpotBalance the tokens in the HyperCore side of the asset bridge
+        /// @dev This is done by reading from L1ReadPrecompileAddress_SpotBalance the tokens on the HyperCore side of the asset bridge
         ///
         /// @notice The swap amount (HIP1) and tokens to send (ERC20) are different because they have different decimals
         IHyperAssetAmount memory amounts = quoteHyperCoreAmount(_amount, false);
@@ -175,7 +174,9 @@ contract HyperLiquidComposer is IHyperLiquidComposer, HyperLiquidComposerCore {
         /// @dev Tries transferring any leftover dust to the _receiver on HyperEVM
         /// @dev If the transfer fails, the dust is locked in the contract
         if (amounts.dust > 0) {
-            this.refundNativeTokens{ value: amounts.dust }(_receiver);
+            try this.refundNativeTokens{ value: amounts.dust }(_receiver) {} catch {
+                emit errorNativeRefund_Failed(_receiver, amounts.dust);
+            }
         }
     }
 

@@ -90,7 +90,7 @@ library HyperLiquidComposerCodec {
     /// @param _asset The asset to convert
     ///
     /// @return IHyperAssetAmount memory - The evm amount, core amount, and dust
-    function into_core_amount_and_dust(
+    function into_hyper_asset_amount(
         uint256 _amount,
         uint64 _maxTransferableAmount,
         IHyperAsset memory _asset
