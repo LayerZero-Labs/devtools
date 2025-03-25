@@ -79,6 +79,9 @@ contract OmniCall is OApp {
     /// @dev Error for when a zero gas limit is passed as a parameter.
     error LZ_OmniCall__ZeroGasLimit();
 
+    /// @dev Error for when a call target is the endpoint.
+    error LZ_OmniCall__InvalidTarget();
+
     /// -----------------------------------------------------------------------
     /// Constructor
     /// -----------------------------------------------------------------------
@@ -111,6 +114,10 @@ contract OmniCall is OApp {
         Transfer calldata dstTransfer,
         uint128 dstGasLimit
     ) external payable returns (MessagingReceipt memory receipt) {
+        if (dstCall.target == address(endpoint) || dstTransfer.to == address(endpoint)) {
+            revert LZ_OmniCall__InvalidTarget();
+        }
+
         (MessagingFee memory fee, bytes memory options) = _quoteWithOptions(
             messageType,
             dstEid,
