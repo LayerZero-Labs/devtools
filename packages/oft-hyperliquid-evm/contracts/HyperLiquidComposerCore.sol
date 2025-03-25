@@ -35,7 +35,7 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     /// @param _amount The amount of tokens to send
     /// @param _isOFT Whether the amount is an OFT amount or a HYPE amount
     ///
-    /// @return _amounts The amount of tokens to send to HyperCore (scaled on evm), dust (to be refunded), and the swap amount (of the tokens scaled on hypercore)
+    /// @return IHyperAssetAmount - The amount of tokens to send to HyperCore (scaled on evm), dust (to be refunded), and the swap amount (of the tokens scaled on hypercore)
     function quoteHyperCoreAmount(uint256 _amount, bool _isOFT) public returns (IHyperAssetAmount memory) {
         IHyperAsset memory asset;
         uint64 maxTransferableAmount;
@@ -48,10 +48,10 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
             maxTransferableAmount = _balanceOfHyperCore(hypeAsset.assetBridgeAddress, hypeAsset.coreIndexId);
         }
 
-        return HyperLiquidComposerCodec.into_core_amount_and_dust(_amount, maxTransferableAmount, asset);
+        return HyperLiquidComposerCodec.into_hyper_asset_amount(_amount, maxTransferableAmount, asset);
     }
 
-    function balanceOfHyperCore(address _user, uint64 _tokenId) public view returns (uint64) {
+    function balanceOfHyperCore(address _user, uint64 _tokenId) external view returns (uint64) {
         return _balanceOfHyperCore(_user, _tokenId);
     }
 
@@ -80,6 +80,7 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     /// @return errMsg.errorMessage The error message
     function refundTokens(bytes calldata err) external payable onlyComposer returns (bytes memory) {
         if (err.length == 0) {
+            // This is the only non-custom revert - failure @ abi.decode(bytes, (address))
             return abi.encode("Error: Not logic based - malformed receiver address with a non-evm sender");
         }
         // All error messages beyond this point as of the form ErrorMessage(address refundTo, uint256 refundAmount, bytes errorMessage)

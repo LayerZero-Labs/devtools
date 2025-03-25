@@ -29,7 +29,7 @@ contract TypeConversionTest is Test {
         assertEq(tokenId, _coreIndexId);
     }
 
-    function test_into_core_amount_and_dust_without_overflow(uint64 amount, uint8 _coreDecimals) public {
+    function test_into_hyper_asset_amount_without_overflow(uint64 amount, uint8 _coreDecimals) public {
         // Skip condition based on the decimal count
         // BASE_DECIMALS >= _coreDecimals + 5 for all non 0 core decimal values
         _coreDecimals = uint8(bound(_coreDecimals, 1, BASE_DECIMALS - 5));
@@ -47,7 +47,7 @@ contract TypeConversionTest is Test {
             decimalDiff: BASE_DECIMALS - _coreDecimals
         });
 
-        IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_core_amount_and_dust(
+        IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyper_asset_amount(
             amount,
             type(uint64).max,
             oftAsset
@@ -61,7 +61,7 @@ contract TypeConversionTest is Test {
         assertEq(amounts.core, amount / scale, "core amount is not equal to the input amount");
     }
 
-    function test_into_core_amount_and_dust_with_overflow(
+    function test_into_hyper_asset_amount_with_overflow(
         uint64 amount,
         uint64 maxAmountTransferable,
         uint8 _coreDecimals
@@ -83,7 +83,7 @@ contract TypeConversionTest is Test {
             decimalDiff: BASE_DECIMALS - _coreDecimals
         });
 
-        IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_core_amount_and_dust(
+        IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyper_asset_amount(
             amount,
             maxAmountTransferable,
             oftAsset
