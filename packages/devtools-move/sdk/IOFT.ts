@@ -8,6 +8,7 @@ export type TypedAptosPayload = InputEntryFunctionData & {
 
 export type TypedInitiaPayload = MsgExecute & {
     types: string[]
+    multiSigArgs: any[]
 }
 
 export type TypedInputGenerateTransactionPayloadData = TypedAptosPayload | TypedInitiaPayload

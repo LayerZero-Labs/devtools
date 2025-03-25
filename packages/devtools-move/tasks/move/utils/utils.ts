@@ -4,7 +4,7 @@ import * as readline from 'readline'
 import { Aptos, InputGenerateTransactionPayloadData } from '@aptos-labs/ts-sdk'
 import { EndpointId, getNetworkForChainId, Stage } from '@layerzerolabs/lz-definitions'
 
-import { IOFT, TypedAptosPayload } from '../../../sdk/IOFT'
+import { IOFT, TypedAptosPayload, TypedInitiaPayload } from '../../../sdk/IOFT'
 
 import { TransactionPayload } from './moveVMOftConfigOps'
 
@@ -178,8 +178,7 @@ async function sendAllInitiaTxs(
         console.log('🎉 Execution Summary:')
         console.log(`   • ${cleanedPayloads.length} transactions executed successfully`)
     } else if (action === 'export') {
-        console.log('Transaction export not yet supported for Initia.')
-        // await exportTransactionsToJson(cleanedPayloads)
+        await exportInitiaTransactionsToJson(cleanedPayloads)
     } else {
         console.log('Operation cancelled.')
         process.exit(0)
@@ -304,6 +303,45 @@ function isAptosPayload(payload: TransactionPayload): payload is {
     return 'function' in payload.payload && 'functionArguments' in payload.payload
 }
 
+function isInitiaPayload(payload: TransactionPayload): payload is {
+    description: string
+    payload: TypedInitiaPayload
+} {
+    return payload.payload instanceof MsgExecute && 'types' in payload.payload
+}
+
+async function exportInitiaTransactionsToJson(payloads: TransactionPayload[]) {
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+    const exportDir = `./initia-raw-transactions/tx-export-${timestamp}`
+
+    if (!fs.existsSync(exportDir)) {
+        fs.mkdirSync(exportDir, { recursive: true })
+    }
+
+    payloads.forEach((payload, index) => {
+        if (!isInitiaPayload(payload)) {
+            throw new Error('Cannot export non-Initia payload to JSON')
+        }
+        const msgExecute = payload.payload as TypedInitiaPayload
+
+        const jsonPayload = {
+            sender: msgExecute.sender,
+            module_address: msgExecute.module_address,
+            module_name: msgExecute.module_name,
+            function_name: msgExecute.function_name,
+            type_args: msgExecute.type_args,
+            args: msgExecute.args,
+            multiSigArgs: formatInitiaArgumentValue(msgExecute.multiSigArgs),
+            types: msgExecute.types,
+        }
+
+        const filePath = path.join(exportDir, `tx-${index + 1}.json`)
+        fs.writeFileSync(filePath, JSON.stringify(jsonPayload, null, 2))
+    })
+
+    console.log(`\n📄 Transactions exported to: ${exportDir}`)
+}
+
 async function exportTransactionsToJson(payloads: TransactionPayload[]) {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
     const exportDir = `./aptos-raw-transactions/tx-export-${timestamp}`
@@ -331,6 +369,16 @@ async function exportTransactionsToJson(payloads: TransactionPayload[]) {
     })
 
     console.log(`\n📄 Transactions exported to: ${exportDir}`)
+}
+
+function formatInitiaArgumentValue(arg: any): any {
+    if (Array.isArray(arg)) {
+        return arg.map((item: any) => formatInitiaArgumentValue(item))
+    }
+    if (arg instanceof Uint8Array) {
+        return Array.from(arg)
+    }
+    return arg
 }
 
 function formatArgumentValue(arg: any): any {

@@ -63,7 +63,10 @@ export class InitiaOFT implements IOFT {
                 bcs.u8().serialize(local_decimals).toBase64(),
             ]
         )
-        return Object.assign(msg, { types: ['u8', 'u8', 'u8', 'u8', 'u8', 'u8'] })
+        return Object.assign(msg, {
+            types: ['u8', 'u8', 'u8', 'u8', 'u8', 'u8'],
+            multiSigArgs: [token_name, symbol, icon_uri, project_uri, shared_decimals, local_decimals],
+        })
     }
 
     initializeOFTPayload(
@@ -102,7 +105,10 @@ export class InitiaOFT implements IOFT {
                 bcs.u8().serialize(local_decimals).toBase64(),
             ]
         )
-        return Object.assign(msg, { types: ['u8', 'u8', 'u8', 'u8', 'u8', 'u8'] })
+        return Object.assign(msg, {
+            types: ['u8', 'u8', 'u8', 'u8', 'u8', 'u8'],
+            multiSigArgs: [token_name, symbol, icon_uri, project_uri, shared_decimals, local_decimals],
+        })
     }
 
     createSetRateLimitTx(
@@ -123,7 +129,10 @@ export class InitiaOFT implements IOFT {
                 bcs.u64().serialize(window_seconds).toBase64(),
             ]
         )
-        return Object.assign(msg, { types: ['u32', 'u64', 'u64'] })
+        return Object.assign(msg, {
+            types: ['u32', 'u64', 'u64'],
+            multiSigArgs: [eid, limit, window_seconds, oftType],
+        })
     }
 
     createUnsetRateLimitTx(eid: EndpointId, oftType: OFTType): TypedInputGenerateTransactionPayloadData {
@@ -135,7 +144,10 @@ export class InitiaOFT implements IOFT {
             [],
             [bcs.u32().serialize(eid).toBase64()]
         )
-        return Object.assign(msg, { types: ['u32'] })
+        return Object.assign(msg, {
+            types: ['u32'],
+            multiSigArgs: [eid, oftType],
+        })
     }
 
     async getRateLimitConfig(eid: EndpointId, oftType: OFTType): Promise<[bigint, bigint]> {
@@ -161,7 +173,10 @@ export class InitiaOFT implements IOFT {
             [],
             [bcs.u64().serialize(fee_bps).toBase64()]
         )
-        return Object.assign(msg, { types: ['u64'] })
+        return Object.assign(msg, {
+            types: ['u64'],
+            multiSigArgs: [fee_bps, oftType],
+        })
     }
 
     async getFeeBps(oftType: OFTType): Promise<bigint> {
@@ -178,7 +193,10 @@ export class InitiaOFT implements IOFT {
             [],
             [bcs.address().serialize(recipient).toBase64(), bcs.u64().serialize(amount).toBase64()]
         )
-        return Object.assign(msg, { types: ['address', 'u64'] })
+        return Object.assign(msg, {
+            types: ['address', 'u64'],
+            multiSigArgs: [recipient, amount],
+        })
     }
 
     async getBalance(account: string): Promise<number> {
@@ -279,7 +297,20 @@ export class InitiaOFT implements IOFT {
                 bcs.u64().serialize(zro_fee).toBase64(),
             ]
         )
-        return Object.assign(msg, { types: ['u32', 'u8', 'u64', 'u64', 'u8', 'u8', 'u8', 'u64', 'u64'] })
+        return Object.assign(msg, {
+            types: ['u32', 'u8', 'u64', 'u64', 'u8', 'u8', 'u8', 'u64', 'u64'],
+            multiSigArgs: [
+                dst_eid,
+                to,
+                amount_ld,
+                min_amount_ld,
+                extra_options,
+                compose_message,
+                oft_cmd,
+                native_fee,
+                zro_fee,
+            ],
+        })
     }
 
     setPeerPayload(eid: EndpointId, peerAddress: string): TypedInputGenerateTransactionPayloadData {
@@ -298,7 +329,10 @@ export class InitiaOFT implements IOFT {
                     .toBase64(),
             ]
         )
-        return Object.assign(msg, { types: ['u32', 'u8'] })
+        return Object.assign(msg, {
+            types: ['u32', 'u8'],
+            multiSigArgs: [eid, peerAddressAsBytes],
+        })
     }
 
     setDelegatePayload(delegateAddress: string): TypedInputGenerateTransactionPayloadData {
@@ -310,7 +344,10 @@ export class InitiaOFT implements IOFT {
             [],
             [bcs.address().serialize(delegateAddress).toBase64()]
         )
-        return Object.assign(msg, { types: ['address'] })
+        return Object.assign(msg, {
+            types: ['address'],
+            multiSigArgs: [delegateAddress],
+        })
     }
 
     async getDelegate(): Promise<string> {
@@ -332,7 +369,10 @@ export class InitiaOFT implements IOFT {
             [],
             [bcs.address().serialize(adminAddress).toBase64()]
         )
-        return Object.assign(msg, { types: ['address'] })
+        return Object.assign(msg, {
+            types: ['address'],
+            multiSigArgs: [adminAddress],
+        })
     }
 
     transferObjectPayload(object_address: string, new_owner_address: string): TypedInputGenerateTransactionPayloadData {
@@ -344,12 +384,18 @@ export class InitiaOFT implements IOFT {
             [],
             [bcs.address().serialize(object_address).toBase64(), bcs.address().serialize(new_owner_address).toBase64()]
         )
-        return Object.assign(msg, { types: ['address', 'address'] })
+        return Object.assign(msg, {
+            types: ['address', 'address'],
+            multiSigArgs: [object_address, new_owner_address],
+        })
     }
 
     renounceAdminPayload(): TypedInputGenerateTransactionPayloadData {
         const msg = new MsgExecute(this.accountAddress, this.oft_address, 'oapp_core', 'renounce_admin', [], [])
-        return Object.assign(msg, { types: [] })
+        return Object.assign(msg, {
+            types: [],
+            multiSigArgs: [],
+        })
     }
 
     async getPeer(eid: EndpointId): Promise<string> {
@@ -398,7 +444,10 @@ export class InitiaOFT implements IOFT {
                     .toBase64(),
             ]
         )
-        return Object.assign(msg, { types: ['u32', 'u16', 'u8'] })
+        return Object.assign(msg, {
+            types: ['u32', 'u16', 'u8'],
+            multiSigArgs: [eid, msgType, enforcedOptions],
+        })
     }
 
     setSendLibraryPayload(remoteEid: number, msglibAddress: string): TypedInputGenerateTransactionPayloadData {
@@ -410,7 +459,10 @@ export class InitiaOFT implements IOFT {
             [],
             [bcs.u32().serialize(remoteEid).toBase64(), bcs.address().serialize(msglibAddress).toBase64()]
         )
-        return Object.assign(msg, { types: ['u32', 'address'] })
+        return Object.assign(msg, {
+            types: ['u32', 'address'],
+            multiSigArgs: [remoteEid, msglibAddress],
+        })
     }
 
     setReceiveLibraryPayload(
@@ -430,7 +482,10 @@ export class InitiaOFT implements IOFT {
                 bcs.u64().serialize(gracePeriod).toBase64(),
             ]
         )
-        return Object.assign(msg, { types: ['u32', 'address', 'u64'] })
+        return Object.assign(msg, {
+            types: ['u32', 'address', 'u64'],
+            multiSigArgs: [remoteEid, msglibAddress, gracePeriod],
+        })
     }
 
     setReceiveLibraryTimeoutPayload(
@@ -450,7 +505,10 @@ export class InitiaOFT implements IOFT {
                 bcs.u64().serialize(expiry).toBase64(),
             ]
         )
-        return Object.assign(msg, { types: ['u32', 'address', 'u64'] })
+        return Object.assign(msg, {
+            types: ['u32', 'address', 'u64'],
+            multiSigArgs: [remoteEid, msglibAddress, expiry],
+        })
     }
 
     setConfigPayload(
@@ -475,7 +533,10 @@ export class InitiaOFT implements IOFT {
                     .toBase64(),
             ]
         )
-        return Object.assign(msg, { types: ['address', 'u32', 'u32', 'u8'] })
+        return Object.assign(msg, {
+            types: ['address', 'u32', 'u32', 'u8'],
+            multiSigArgs: [msgLibAddress, eid, configType, config],
+        })
     }
 
     irrevocablyDisableBlocklistPayload(oftType: OFTType): TypedInputGenerateTransactionPayloadData {
@@ -487,7 +548,10 @@ export class InitiaOFT implements IOFT {
             [],
             []
         )
-        return Object.assign(msg, { types: [] })
+        return Object.assign(msg, {
+            types: [],
+            multiSigArgs: [oftType],
+        })
     }
 
     permanentlyDisableFungibleStoreFreezingPayload(): TypedInputGenerateTransactionPayloadData {
@@ -499,7 +563,10 @@ export class InitiaOFT implements IOFT {
             [],
             []
         )
-        return Object.assign(msg, { types: [] })
+        return Object.assign(msg, {
+            types: [],
+            multiSigArgs: [],
+        })
     }
 
     async signSubmitAndWaitForTx(transaction: MsgExecute): Promise<any> {
@@ -544,7 +611,10 @@ export class InitiaOFT implements IOFT {
             [],
             [bcs.address().serialize(tokenMetadataAddress).toBase64(), bcs.u8().serialize(sharedDecimals).toBase64()]
         )
-        return Object.assign(msg, { types: ['address', 'u8'] })
+        return Object.assign(msg, {
+            types: ['address', 'u8'],
+            multiSigArgs: [tokenMetadataAddress, sharedDecimals],
+        })
     }
 
     async getEnforcedOptions(eid: number, msgType: number): Promise<string> {

@@ -15,13 +15,15 @@ npm install -g pnpm@8.14.0
 Deploying to Initia requires the Initia CLI tool (Initiad). To install Initiad, follow the official documentation at:
 https://docs.initia.xyz/build-on-initia/initiad
 
-After installation, add your private key to the keyring:
+After installation, generate a new key and add it to the keyring:
 
 ```bash
-initiad keys import-hex <your-key-name> <your-key-hex> --key-type secp256k1 --coin-type 118 --keyring-backend test
+initiad keys add <you-key-name> --key-type secp256k1 --coin-type 118 --keyring-backend test
 ```
 
-To verify your keys are properly imported:
+For more information on key management please reference the Initiad docs: https://docs.initia.xyz/build-on-initia/initiad#managing-keys
+
+To list of your imported or generated keys run:
 
 ```bash
 initiad keys list --keyring-backend test
@@ -301,6 +303,21 @@ pnpm run lz:sdk:evm:send-evm \
   --to <your-source-account-address> \
   --amount <your-amount> \
   --min-amount <your-min-amount>
+```
+
+## Multi-sig
+
+Multi-sig wallet creation and transaction execution on Initia can be done using the Initia multi-sig builder: https://multisig.testnet.initia.xyz/
+
+For executing transactions on Initia multi-sig you to first generate the transaction parameters using the CLI. This is because some of the OApp methods take parameters that are encoded on the client side by our CLI. In order to obtain the encoded data you can run the desired command in the CLI and choose option 'e' to export the parameters to a json file. When 'e' is selected, the command will not be executed, and instead the transaction data will be written to a json file. From there you can copy the encoded values into the Initia multi-sig front end and execute them with your multi-sig wallet.
+
+Example of console prinout after running a command in the CLI:
+
+```
+Choose an action:
+(y)es - execute transactions
+(e)xport - save as JSON for multisig execution
+(n)o - cancel
 ```
 
 ## Help
