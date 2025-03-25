@@ -31,7 +31,7 @@ initiad keys list --keyring-backend test
 
 Create a `.env` file with the following variables:
 
-> **Important:** The INITIA_ACCOUNT_ADDRESS must be in the bech32 format starting with "init" (example: init19ck72hj3vt2ccsw78zwv7mtu4r0rjs9xzf3gc3)
+> **Important:** Inside the .env file, the INITIA_ACCOUNT_ADDRESS must be in the bech32 format starting with "init" (example: init19ck72hj3vt2ccsw78zwv7mtu4r0rjs9xzf3gc3)
 
 ```bash
 # You only need to set one of these values based on your preference
@@ -62,7 +62,7 @@ pnpm turbo build --force
 
 ### Wire setup
 
-Before running the deploy and wire commands, first inside of `move.layerzero.config.ts`, set the delegate and owner address to your deployer account address. These can be changed in the future with commands shown later in this README, but for now they should be set to the address you will be running the commands from (deployer account address).
+Before running the deploy and wire commands, first inside of `move.layerzero.config.ts`, configure the delegate and owner address to your deployer account address. These can be changed in the future with commands shown later in this README, but for now they should be set to the address you will be running the commands from (deployer account address).
 
 ```ts
     contracts: [
@@ -84,10 +84,16 @@ To build the contracts without deploying them, run the following command:
 pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --oapp-type oft
 ```
 
-To build and deploy the contracts, run the following command:
+To build and deploy the contracts and set the delegate, run the following command:
 
 ```bash
 pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --move-deploy-script deploy-move/OFTInitParams.ts --oapp-type oft
+```
+
+To only set the delegate you can run the following command:
+
+```bash
+pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 ```
 
 ## EVM Deployment
@@ -98,7 +104,7 @@ npx hardhat lz:deploy
 
 Select only the EVM networks you wish to deploy to (do not select Aptos, Movement, Solana, or Initia).
 
-## Init and Set Delegate
+## Init the OFT
 
 First modify deploy-move/OFTInitParams.ts and replace the oftMetadata with your desired values:
 
@@ -111,12 +117,6 @@ const oftMetadata = {
   sharedDecimals: 6,
   localDecimals: 6,
 };
-```
-
-Then run the following command to set the delegate:
-
-```bash
-pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 ```
 
 Then run the following command to initialize the oft:
@@ -209,6 +209,10 @@ pnpm run lz:sdk:move:permanently-disable-blocklist --oapp-config move.layerzero.
 ```bash
 pnpm run lz:sdk:move:permanently-disable-freezing --oapp-config move.layerzero.config.ts
 ```
+
+### Token address
+
+When deploying an OFT, the underlying token address is different from the object address of the OFT. The underlying token address can be found on the Move-VM block explorer by entering your OFT object address in search, navigating to modules, selecting view, then under 'oft' select 'token' and click the 'view' button. The token() function on the OFT module will return your Fungible Asset's address.
 
 ### Transferring Ownership of your Move OApp (OFT)
 
