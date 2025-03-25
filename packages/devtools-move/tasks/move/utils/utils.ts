@@ -4,7 +4,7 @@ import * as readline from 'readline'
 import { Aptos, InputGenerateTransactionPayloadData } from '@aptos-labs/ts-sdk'
 import { EndpointId, getNetworkForChainId, Stage } from '@layerzerolabs/lz-definitions'
 
-import { IOFT, TypedAptosPayload, TypedInitiaPayload } from '../../../sdk/IOFT'
+import { IOFT, TypedAptosPayload, InitiaPayload } from '../../../sdk/IOFT'
 
 import { TransactionPayload } from './moveVMOftConfigOps'
 
@@ -305,9 +305,9 @@ function isAptosPayload(payload: TransactionPayload): payload is {
 
 function isInitiaPayload(payload: TransactionPayload): payload is {
     description: string
-    payload: TypedInitiaPayload
+    payload: InitiaPayload
 } {
-    return payload.payload instanceof MsgExecute && 'types' in payload.payload
+    return payload.payload instanceof MsgExecute && 'multiSigArgs' in payload.payload
 }
 
 async function exportInitiaTransactionsToJson(payloads: TransactionPayload[]) {
@@ -322,7 +322,7 @@ async function exportInitiaTransactionsToJson(payloads: TransactionPayload[]) {
         if (!isInitiaPayload(payload)) {
             throw new Error('Cannot export non-Initia payload to JSON')
         }
-        const msgExecute = payload.payload as TypedInitiaPayload
+        const msgExecute = payload.payload as InitiaPayload
 
         const jsonPayload = {
             sender: msgExecute.sender,
@@ -332,7 +332,6 @@ async function exportInitiaTransactionsToJson(payloads: TransactionPayload[]) {
             type_args: msgExecute.type_args,
             args: msgExecute.args,
             multiSigArgs: formatInitiaArgumentValue(msgExecute.multiSigArgs),
-            types: msgExecute.types,
         }
 
         const filePath = path.join(exportDir, `tx-${index + 1}.json`)
@@ -377,6 +376,9 @@ function formatInitiaArgumentValue(arg: any): any {
     }
     if (arg instanceof Uint8Array) {
         return Array.from(arg)
+    }
+    if (typeof arg === 'bigint') {
+        return arg.toString()
     }
     return arg
 }

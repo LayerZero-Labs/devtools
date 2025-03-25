@@ -6,12 +6,11 @@ export type TypedAptosPayload = InputEntryFunctionData & {
     types: string[]
 }
 
-export type TypedInitiaPayload = MsgExecute & {
-    types: string[]
+export type InitiaPayload = MsgExecute & {
     multiSigArgs: any[]
 }
 
-export type TypedInputGenerateTransactionPayloadData = TypedAptosPayload | TypedInitiaPayload
+export type TypedInputGenerateTransactionPayloadData = TypedAptosPayload | InitiaPayload
 
 export enum OFTType {
     OFT_FA = 'oft_fa',

@@ -64,7 +64,6 @@ export class InitiaOFT implements IOFT {
             ]
         )
         return Object.assign(msg, {
-            types: ['u8', 'u8', 'u8', 'u8', 'u8', 'u8'],
             multiSigArgs: [token_name, symbol, icon_uri, project_uri, shared_decimals, local_decimals],
         })
     }
@@ -106,7 +105,6 @@ export class InitiaOFT implements IOFT {
             ]
         )
         return Object.assign(msg, {
-            types: ['u8', 'u8', 'u8', 'u8', 'u8', 'u8'],
             multiSigArgs: [token_name, symbol, icon_uri, project_uri, shared_decimals, local_decimals],
         })
     }
@@ -130,7 +128,6 @@ export class InitiaOFT implements IOFT {
             ]
         )
         return Object.assign(msg, {
-            types: ['u32', 'u64', 'u64'],
             multiSigArgs: [eid, limit, window_seconds, oftType],
         })
     }
@@ -145,7 +142,6 @@ export class InitiaOFT implements IOFT {
             [bcs.u32().serialize(eid).toBase64()]
         )
         return Object.assign(msg, {
-            types: ['u32'],
             multiSigArgs: [eid, oftType],
         })
     }
@@ -174,7 +170,6 @@ export class InitiaOFT implements IOFT {
             [bcs.u64().serialize(fee_bps).toBase64()]
         )
         return Object.assign(msg, {
-            types: ['u64'],
             multiSigArgs: [fee_bps, oftType],
         })
     }
@@ -194,7 +189,6 @@ export class InitiaOFT implements IOFT {
             [bcs.address().serialize(recipient).toBase64(), bcs.u64().serialize(amount).toBase64()]
         )
         return Object.assign(msg, {
-            types: ['address', 'u64'],
             multiSigArgs: [recipient, amount],
         })
     }
@@ -298,7 +292,6 @@ export class InitiaOFT implements IOFT {
             ]
         )
         return Object.assign(msg, {
-            types: ['u32', 'u8', 'u64', 'u64', 'u8', 'u8', 'u8', 'u64', 'u64'],
             multiSigArgs: [
                 dst_eid,
                 to,
@@ -330,7 +323,6 @@ export class InitiaOFT implements IOFT {
             ]
         )
         return Object.assign(msg, {
-            types: ['u32', 'u8'],
             multiSigArgs: [eid, peerAddressAsBytes],
         })
     }
@@ -345,7 +337,6 @@ export class InitiaOFT implements IOFT {
             [bcs.address().serialize(delegateAddress).toBase64()]
         )
         return Object.assign(msg, {
-            types: ['address'],
             multiSigArgs: [delegateAddress],
         })
     }
@@ -370,7 +361,6 @@ export class InitiaOFT implements IOFT {
             [bcs.address().serialize(adminAddress).toBase64()]
         )
         return Object.assign(msg, {
-            types: ['address'],
             multiSigArgs: [adminAddress],
         })
     }
@@ -385,7 +375,6 @@ export class InitiaOFT implements IOFT {
             [bcs.address().serialize(object_address).toBase64(), bcs.address().serialize(new_owner_address).toBase64()]
         )
         return Object.assign(msg, {
-            types: ['address', 'address'],
             multiSigArgs: [object_address, new_owner_address],
         })
     }
@@ -445,7 +434,6 @@ export class InitiaOFT implements IOFT {
             ]
         )
         return Object.assign(msg, {
-            types: ['u32', 'u16', 'u8'],
             multiSigArgs: [eid, msgType, enforcedOptions],
         })
     }
@@ -460,7 +448,6 @@ export class InitiaOFT implements IOFT {
             [bcs.u32().serialize(remoteEid).toBase64(), bcs.address().serialize(msglibAddress).toBase64()]
         )
         return Object.assign(msg, {
-            types: ['u32', 'address'],
             multiSigArgs: [remoteEid, msglibAddress],
         })
     }
@@ -483,7 +470,6 @@ export class InitiaOFT implements IOFT {
             ]
         )
         return Object.assign(msg, {
-            types: ['u32', 'address', 'u64'],
             multiSigArgs: [remoteEid, msglibAddress, gracePeriod],
         })
     }
@@ -506,7 +492,6 @@ export class InitiaOFT implements IOFT {
             ]
         )
         return Object.assign(msg, {
-            types: ['u32', 'address', 'u64'],
             multiSigArgs: [remoteEid, msglibAddress, expiry],
         })
     }
@@ -534,7 +519,6 @@ export class InitiaOFT implements IOFT {
             ]
         )
         return Object.assign(msg, {
-            types: ['address', 'u32', 'u32', 'u8'],
             multiSigArgs: [msgLibAddress, eid, configType, config],
         })
     }
@@ -549,7 +533,6 @@ export class InitiaOFT implements IOFT {
             []
         )
         return Object.assign(msg, {
-            types: [],
             multiSigArgs: [oftType],
         })
     }
@@ -564,7 +547,6 @@ export class InitiaOFT implements IOFT {
             []
         )
         return Object.assign(msg, {
-            types: [],
             multiSigArgs: [],
         })
     }
