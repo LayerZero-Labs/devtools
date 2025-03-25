@@ -9,6 +9,9 @@ const contractName_oft = 'MyHyperLiquidOFT'
 const tokenSymbol = 'MYOFT'
 
 const deploy: DeployFunction = async (hre) => {
+    assert(tokenSymbol != '', 'tokenSymbol needs to be set in deploy/MyHyperLiquidOFT.ts')
+    assert(nativeSpotName != '', 'nativeSpotName needs to be set in deploy/MyHyperLiquidOFT.ts')
+
     const { getNamedAccounts, deployments } = hre
 
     const { deploy } = deployments

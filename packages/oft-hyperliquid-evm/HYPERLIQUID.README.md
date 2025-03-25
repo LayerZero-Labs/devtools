@@ -2,14 +2,19 @@
 
 ## Architecture diff
 
-Hyperliquid has 2 “chains” - an `EVM` named `HyperEVM` and a "`L1`" called `Hyperliquid`.
+Hyperliquid has 2 “chains” - an `EVM` named `HyperEVM` and a "`L1`" called `HyperCore`.
 
-The `EVM` has precompiles that let you interact with the `L1`. The `L1` is where all the trading occurs.
+The `EVM` has precompiles that let you interact with `HyperCore`. The `HyperCore` is where all the spot and perp trading happens.
 
 ## RPC
 
 You interact with the `EVM` via traditional `eth_` rpc calls - full list [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/evm/json-rpc).
+
 The `L1` however takes in a domain specific calls named `L1 actions` or `actions` - full list [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/exchange-endpoint).
+
+Note: archival nodes are NOT available on `HyperEVM`.
+
+`HyperEVM` and `HyperCore` have their own block explorers. A list of explorers is [here](https://hyperliquid-co.gitbook.io/community-docs/community-and-projects/ecosystem-projects/tools). I personally use the hypurrscan for `HyperCore` - <https://testnet.hypurrscan.io/> and for `HyperEVM` I use purrsec - <https://testnet.purrsec.com/>.
 
 ## Accounts
 
@@ -19,7 +24,7 @@ On `HyperEVM` and the `L1` you use the same account. You sign transactions (on `
 
 There are small blocks that are quicker and with less gas - 2 seconds and 2M gas. (this is the default)
 
-There are big blocks that are slower and with more gas - 60 seconds and 30M gas. (this is where deployments occur)
+There are big blocks that are slower and with more gas - 60 seconds and 30M gas. (this is where contract deployments happen)
 
 They are both EVM blocks and you can toggle between them by sending an L1 action of type `evmUserModify`.
 
@@ -35,57 +40,65 @@ Note: This flags the user as using big blocks and all subsequent actions will be
 
 Precompiles are what they call "system addresses" and are abundant:
 `0x0000000000000000000000000000000000000000` lets you get data about the L1 such as L1 block number.
-`0x2222222222222222222222222222222222222222` is like a treasury/gateway and should have `non-system EVM spot supply = max native spot supply`.
+`0x2222222222222222222222222222222222222222` is the system contract address for `HYPE` - this is a special asset bridge address as it is a precompile to handle `receive()` calls - required for native (gas token) transfers.
 `0x3333333333333333333333333333333333333333` is to send transaction from EVM to L1.
 `0x5555555555555555555555555555555555555555` is the wrapped `HYPE` token.
 
 ## Tokens Standards
 
-Tokens on the `EVM` are `ERC20` (EVM Spot) and on L1 are `HIP-1` (Native Spot).
-They need to be linked together, which is an irreversible process - described [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/deploying-hip-1-and-hip-2-assets).
-If you do not link them, then you can't use the token on L1 - which means no trading and spot. In this case it would be like a normal ERC20.
+Tokens on the `EVM` are `ERC20` (EVM Spot) and on `HyperCore` are `HIP-1` (Core Spot).
 
-`ERC20`:`HIP-1` = 1:1
+Projects willing to buy a core spot need to undergo a 31 hour dutch auction to get a spot index after which they need to deploy the spot - setting its configuration, genesis balances, token information, etc.
 
-You can also use Hyperliquid's explorer to deploy the token on L1 - [here](https://app.hyperliquid.xyz/deploySpot).
+Note: if you use the [Hyperliquid UI](https://app.hyperliquid.xyz/deploySpot).
+ you are forced to use an optional hyperliquid thing called "Hyperliquidity". You can avoid this by using their API to deploy the spot.
+
+The core spot then needs to be linked to the EVM Spot (ERC20) - which is an irreversible process - described [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers#linking-core-and-evm-spot-assets).
+
+If you do not link them, then you can't use the token on `HyperCore` - which means no spot and perp trading. Since you only have the EVM Spot (ERC20) you can still trade on `HyperEVM` via defi protocols.
 
 Note : There are no checks to ensure that the balance of the token on the EVM is the same as the balance of the token on L1.
 
 ## Linking the ERC20 to the HIP-1
 
-The ERC20 needs to be linked to the HIP-1. Documentation [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/evm/native-transfers).
+The ERC20 needs to be linked to the HIP-1. Documentation [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers).
 
 There are 2 actions that need to be performed:
 
 1. `requestEvmContract` - Populates the intention to link the HIP-1 to the ERC20.
 2. `finalizeEvmContract` - usable when an `EOA` sends the transactions to confirm the link.
 
-Now transactions can be send to the `0x2222222222222222222222222222222222222222` address to send tokens from the EVM to L1.
-L1 to EVM is done via the actions `spotSend` (or the front end)
+Now transactions can be send to the asset bridge address `0x2000...abcd` (where `abcd` is the `coreIndexId` of the HIP-1 in hex) to send tokens between HyperEVM and HyperCore.
+The asset bridge address is computed by `0x2000000000000000000000000000000000000000` + the `coreIndexId` of the HIP-1 (in hex) - you can checkout `HyperLiquidComposerCodec.into_assetBridgeAddress()` in the `HyperLiquidComposer` contract to see how this is done - code found [here](contracts/library/HyperLiquidComposerCodec.sol).
 
-[This](https://2356094849-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FyUdp569E6w18GdfqlGvJ%2Fuploads%2F4k3MpHVOdp1EBQ7jaUW2%2Ferc20_example.py?alt=media&token=eb96dabe-3de0-425f-a998-5a78bb1f94b9) is an example on how to deploy and link.
+HyperCore to HyperEVM is done via the action `spotSend` (or the front end which does the same thing) with the destination address being the asset bridge address.
 
 ## HyperEvm <> L1 Communication
 
-HyperEVM can read state from the L1 via `precompiles` - such as perps positions.
-HyperEVM can send state to the L1 through `events` at certain `precompile` addresses.
+HyperEVM can read state from HyperCore via `precompiles` - such as perps positions.
+HyperEVM can send state to HyperCore through `events` at certain `precompile` addresses AND by transferring tokens through the asset bridge address.
 
 ## Transfers
 
-Spot assets can be sent from EVM to L1 and vice versa. They are called `Native Spot` and `EVM Spot`.
-These are done by sending an `ERC20::transfer` with `0x2222222222222222222222222222222222222222` as the recipient.
+Spot assets can be sent from HyperEVM to HyperCore and vice versa. They are called `Core Spot` and `EVM Spot`.
+These are done by sending an `ERC20::transfer` with asset bridge address as the recipient.
 
-The event emitted is `Transfer(address from, address to, uint256 value)` => `Transfer(_from, 0x2222222222222222222222222222222222222222, value);`
-And this is picked up by the Hyperliquid team running the backend.
+The event emitted is `Transfer(address from, address to, uint256 value)` => `Transfer(_from, assetBridgeAddress, value);`
+And this is picked up by the Hyperliquid team running the backend. (we do not have move information about this as Hyperliquid is extremely closed source)
 
-Note: The transaction MUST be sent to the `0x2222222222222222222222222222222222222222` address.
+Note: The transaction MUST be sent to the `assetBridgeAddress`. Transfers to any other address is and address-address transfer within HyperEVM/HyperCore. For a cross-chain transfer you need to to:
 
-## OFT level differences
+1. Send the tokens to the asset bridge address to get the token on the other HyperNetwork.
+2. Send an transaction/action to transfer from your address to the receiver address on the other HyperNetwork.
+
+This is what we do in the `HyperLiquidComposer` contract found - [here](contracts/HyperLiquidComposer.sol).
+
+## HyperLiquid Composer
 
 We can't auto convert all tokens to `native spot` in an `lzReceive` function because users might want to hold the token on `HyperEVM` and only move it to `L1` when they want to trade.
 
 The solution is to have an `lzCompose` function for the `evm spot` and `native spot` conversion on the ingress.
-Unfortunately this means that `OFT` developers who already have an `lzCompose` function will need to do some plumbing - chain this `lzCompose` function to their existing one.
+Unfortunately this means that `OFT` developers who already have an `lzCompose` function will need to do some plumbing - like chaining this `lzCompose` function to their existing one.
 Also requires some changes to the security model of the `OFT` contract since the `msg.sender` changes.
 [UNAUDITED EXAMPLE THAT CAN BE A POINTER](https://github.com/LayerZero-Labs/devtools/tree/experimental/hyperliquid_oft_multi_compose/packages/oft-hyperliquid-evm/contracts)
 NEVER USE THE CODE IN THE EXAMPLE ABOVE - IT IS UNAUDITED AND NOT TESTED - PROLLY DOESN'T EVEN COMPILE.

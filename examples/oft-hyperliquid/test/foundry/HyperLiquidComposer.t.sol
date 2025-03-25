@@ -45,8 +45,9 @@ contract HyperLiquidComposerTest is Test {
     address public constant HYPERLIQUID_PRECOMPILE = 0x2222222222222222222222222222222222222222;
     address public constant SPOT_BALANCE_PRECOMPILE = 0x0000000000000000000000000000000000000801;
 
-    uint64 public aliceHlIndexId = 1231;
-    uint64 public hypeHlIndexId = 1105;
+    uint64 public constant ALICE_HL_INDEX_ID = 1231;
+    uint64 public constant HYPE_HL_INDEX_ID = 1105;
+
     function setUp() public {
         vm.createSelectFork("https://rpc.hyperliquid-testnet.xyz/evm");
 
