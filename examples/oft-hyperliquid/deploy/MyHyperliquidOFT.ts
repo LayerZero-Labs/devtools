@@ -7,10 +7,13 @@ import { type DeployFunction } from 'hardhat-deploy/types'
 import { useBigBlock, useSmallBlock, writeUpdatedNativeSpots } from '@layerzerolabs/oft-hyperliquid-evm'
 
 const contractName_oft = 'MyHyperLiquidOFT'
-const tokenSymbol = 'CHARLI'
-const nativeSpotName = 'CHARLI'
+const tokenSymbol = ''
+const nativeSpotName = ''
 
 const deploy: DeployFunction = async (hre) => {
+    assert(tokenSymbol != '', 'tokenSymbol needs to be set in deploy/MyHyperLiquidOFT.ts')
+    assert(nativeSpotName != '', 'nativeSpotName needs to be set in deploy/MyHyperLiquidOFT.ts')
+
     const { getNamedAccounts, deployments } = hre
 
     const { deploy } = deployments

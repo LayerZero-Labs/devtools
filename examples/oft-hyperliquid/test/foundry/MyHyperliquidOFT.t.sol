@@ -17,7 +17,7 @@ import { IHyperAsset } from "@layerzerolabs/oft-hyperliquid-evm/contracts/HyperL
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import { MyHyperLiquidComposer } from "../../contracts/MyHyperLiquidComposer.sol";
-import { MyHyperLiquidOFTMock as MyHyperLiquidOFT } from "./mocks/MyHyperLiquidOFTMock.sol";
+import { MyHyperLiquidOFT } from "../../contracts/MyHyperLiquidOFT.sol";
 
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 import { console } from "forge-std/console.sol";
@@ -40,6 +40,7 @@ contract MyHyperLiquidOFTTest is TestHelperOz5 {
     uint64 internal constant OFT_DECIMALS_HYPECORE = 6;
     uint64 internal constant WEI_DIFF = OFT_DECIMALS_EVM - OFT_DECIMALS_HYPECORE;
 
+    // https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers#system-addresses
     address public constant HYPERLIQUID_PRECOMPILE = 0x2222222222222222222222222222222222222222;
     address public constant SPOT_BALANCE_PRECOMPILE = 0x0000000000000000000000000000000000000801;
     MyHyperLiquidOFT internal srcOFT;

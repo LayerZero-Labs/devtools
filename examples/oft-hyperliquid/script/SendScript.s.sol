@@ -12,7 +12,7 @@ import { OFT } from "@layerzerolabs/oft-evm/contracts/OFT.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
 /**
- * @title Lets the user send an LZ cctx to transfer an amount of OFT from a source EVM chain to HyperEVM testnet or mainnet
+ * @title Lets the user send an LZ OFT transfer to transfer an amount of OFT from a source EVM chain to HyperEVM testnet or mainnet
  * @notice There are 3 supported modes that correspond to <amount>, <gas>, <value> in the forge script below:
  * @notice forge script script/SendScript.s.sol --private-key $PRIVATE_KEY --rpc-url $RPC_URL_BSC_TESTNET --sig "exec(uint256,uint128,uint128)" <amount> <gas> <value> [--broadcast]
  * @notice 1. Send to HyperEVM 
@@ -36,8 +36,8 @@ contract SendScript is Script {
     uint32 public dstEid;
 
     function exec(uint256 _amount, uint128 _lzComposeGas, uint128 _lzComposeValue) public {
-        address_HyperEVM_Composer = payable(vm.envAddress("HyperEVM_Composer"));
-        address_HyperEVM_OFT = vm.envAddress("HyperEVM_OFT");
+        address_HyperEVM_Composer = payable(vm.envAddress("HYPEREVM_COMPOSER"));
+        address_HyperEVM_OFT = vm.envAddress("HYPEREVM_OFT");
         address_src_OFT = vm.envAddress("SRC_OFT");
 
         srcEid = uint32(vm.envUint("SRC_EID"));

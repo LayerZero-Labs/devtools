@@ -16,7 +16,7 @@ import { IHYPEPrecompile } from "@layerzerolabs/oft-hyperliquid-evm/contracts/in
 import { HypePrecompileMock } from "@layerzerolabs/oft-hyperliquid-evm/test/mocks/HypePrecompileMock.sol";
 import { SpotBalancePrecompileMock } from "@layerzerolabs/oft-hyperliquid-evm/test/mocks/SpotBalancePrecompileMock.sol";
 
-import { OFTMock } from "./mocks/OFTMock.sol";
+import { MyHyperLiquidOFT } from "../../contracts/MyHyperLiquidOFT.sol";
 
 contract HyperLiquidComposerTest is Test {
     IHyperAsset public OFT;
@@ -29,7 +29,7 @@ contract HyperLiquidComposerTest is Test {
     // HyperLiquid Testnet
     uint32 public DST_EID;
 
-    OFTMock internal oft;
+    MyHyperLiquidOFT internal oft;
     HyperLiquidComposer internal hyperLiquidComposer;
     SpotBalancePrecompileMock internal spotBalancePrecompileMock;
 
@@ -42,8 +42,9 @@ contract HyperLiquidComposerTest is Test {
     address public constant HYPERLIQUID_PRECOMPILE = 0x2222222222222222222222222222222222222222;
     address public constant SPOT_BALANCE_PRECOMPILE = 0x0000000000000000000000000000000000000801;
 
-    uint64 public aliceHlIndexId = 1231;
-    uint64 public hypeHlIndexId = 1105;
+    uint64 public constant ALICE_HL_INDEX_ID = 1231;
+    uint64 public constant HYPE_HL_INDEX_ID = 1105;
+
     function setUp() public {
         vm.createSelectFork("https://rpc.hyperliquid-testnet.xyz/evm");
 
@@ -69,7 +70,7 @@ contract HyperLiquidComposerTest is Test {
         spotBalancePrecompileMock.setSpotBalance(OFT.assetBridgeAddress, OFT.coreIndexId, type(uint64).max);
         spotBalancePrecompileMock.setSpotBalance(HYPE.assetBridgeAddress, HYPE.coreIndexId, type(uint64).max);
 
-        oft = new OFTMock("test", "test", HL_LZ_ENDPOINT_V2, msg.sender);
+        oft = new MyHyperLiquidOFT("test", "test", HL_LZ_ENDPOINT_V2, msg.sender);
         hyperLiquidComposer = new HyperLiquidComposer(
             HL_LZ_ENDPOINT_V2,
             address(oft),

@@ -8,10 +8,12 @@ import { getNativeSpot, useBigBlock, useSmallBlock } from '@layerzerolabs/oft-hy
 const contractName_oft = 'MyHyperLiquidOFT'
 const contractName_composer = 'MyHyperLiquidComposer'
 
-const evmDecimals = 18
-const nativeSpotName = 'CHARLI'
+const evmDecimals = 0
+const nativeSpotName = ''
 
 const deploy: DeployFunction = async (hre) => {
+    assert(nativeSpotName != '', 'nativeSpotName needs to be set in deploy/MyHyperLiquidComposer.ts')
+    assert(evmDecimals != 0, 'evmDecimals needs to be set in deploy/MyHyperLiquidComposer.ts')
     const { getNamedAccounts, deployments } = hre
 
     // Validates and returns the native spot
