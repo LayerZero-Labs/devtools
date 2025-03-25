@@ -30,8 +30,8 @@ const config: OAppOmniGraphHardhat = {
         {
             contract: initiaContract,
             config: {
-                delegate: '0x2e2de55e5162d58c41de389ccf6d7ca8de3940a6',
-                owner: '0x2e2de55e5162d58c41de389ccf6d7ca8de3940a6',
+                delegate: '',
+                owner: '',
             },
         },
     ],
