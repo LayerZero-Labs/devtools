@@ -26,42 +26,7 @@ class InitOperation implements INewOperation {
                 help: 'filter flags',
                 required: false,
             },
-        },
-        {
-            name: '--oapp-config',
-            arg: {
-                help: 'path to the layerzeroconfig file',
-                required: false,
-            },
-        },
-        {
-            name: '--move-deploy-script',
-            arg: {
-                help: 'path to the move deploy script',
-                required: false,
-            },
-        },
-        {
-            name: '--named-addresses',
-            arg: {
-                help: 'deployer account address based on your config',
-                required: false,
-            },
-        },
-        {
-            name: '--force-build',
-            arg: {
-                help: 'Force aptos build even if contracts already built',
-                required: false,
-            },
-        },
-        {
-            name: '--force-deploy',
-            arg: {
-                help: 'Force aptos deploy even if deployment already exists',
-                required: false,
-            },
-        },
+        }
     ]
 
     async impl(args: any): Promise<void> {
