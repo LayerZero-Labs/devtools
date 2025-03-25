@@ -27,7 +27,6 @@ class InitOFTFA implements INewOperation {
             oftMetadata.token_symbol,
             oftMetadata.icon_uri,
             oftMetadata.project_uri,
-            oftMetadata.sharedDecimals,
             oftMetadata.localDecimals,
             taskContext
         )
