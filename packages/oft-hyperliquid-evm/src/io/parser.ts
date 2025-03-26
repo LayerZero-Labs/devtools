@@ -43,7 +43,7 @@ export function writeCoreSpotDeployment(
 export function writeUpdatedCoreSpotDeployment(
     index: string,
     isTestnet: boolean,
-    tokenName: string,
+    tokenFullName: string,
     tokenAddress: string,
     txData: TxData,
     logger?: Logger
@@ -51,11 +51,11 @@ export function writeUpdatedCoreSpotDeployment(
     const fullPath = getFullPath(index, isTestnet)
 
     const spot = getCoreSpotDeployment(index, isTestnet, logger)
-    spot.nativeSpot.evmContract = {
+    spot.coreSpot.evmContract = {
         address: tokenAddress,
         evm_extra_wei_decimals: txData.weiDiff ?? 0,
     }
-    spot.nativeSpot.fullName = tokenName
+    spot.coreSpot.fullName = tokenFullName
     spot.txData.txHash = txData.txHash
     spot.txData.nonce = txData.nonce
     spot.txData.from = txData.from
@@ -93,14 +93,20 @@ export async function getHyperEVMOAppDeployment(
             ? EndpointId.HYPERLIQUID_V2_TESTNET.valueOf()
             : EndpointId.HYPERLIQUID_V2_MAINNET.valueOf()
 
-    const lzConfig = await importDefault(path.join(process.cwd(), oapp_config))
+    const lzConfigPath = path.join(process.cwd(), oapp_config)
+    logger?.info(`LZ config path: ${lzConfigPath}`)
+
+    const lzConfig = await importDefault(lzConfigPath)
     const contracts = (lzConfig as OAppOmniGraphHardhat).contracts
     const contractName = contracts.find((contract) => contract.contract.eid === targetEid)?.contract.contractName
     if (!contractName) {
         throw new Error(`HyperEVM deployment not found for ${targetEid}`)
     }
 
-    const hardhatConfig = await importDefault(path.join(process.cwd(), 'hardhat.config.ts'))
+    const hardhatConfigPath = path.join(process.cwd(), 'hardhat.config.ts')
+    logger?.info(`Hardhat config path: ${hardhatConfigPath}`)
+
+    const hardhatConfig = await importDefault(hardhatConfigPath)
     const networks = (hardhatConfig as HardhatUserConfig).networks
     const networkKey = Object.keys(networks as NetworkUserConfig).find((key) => networks?.[key]?.eid === targetEid)
     if (!networkKey) {

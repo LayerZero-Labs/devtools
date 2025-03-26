@@ -22,10 +22,10 @@ export interface CoreSpotMetaData {
 }
 
 export interface TxData {
-    from?: string
-    txHash?: string
-    nonce?: number
-    weiDiff?: number
+    from: string
+    txHash: string
+    nonce: number
+    weiDiff: number
     connected: boolean
 }
 
@@ -34,7 +34,7 @@ export interface SpotMeta {
 }
 
 export interface CoreSpotDeployment {
-    nativeSpot: CoreSpotMetaData
+    coreSpot: CoreSpotMetaData
     txData: TxData
 }
 

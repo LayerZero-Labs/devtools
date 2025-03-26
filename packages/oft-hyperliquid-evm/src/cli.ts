@@ -17,7 +17,6 @@ program
 program
     .command('register-token')
     .description('Register a token on HyperLiquid')
-    .requiredOption('-oapp, --oapp-config <oapp-config>', 'OAPP config')
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
     .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
     .option('-l, --log-level <level>', 'Log level', LogLevel.info)
@@ -30,6 +29,12 @@ program
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
     .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
     .option('-l, --log-level <level>', 'Log level', LogLevel.info)
-    .action(coreSpotDeployment)
+    .option('-oapp, --oapp-config <oapp-config>', 'OAPP config')
+    .action(async (options) => {
+        if (options.action === 'create' && !options.oappConfig) {
+            throw new Error('--oapp-config is required when action is create')
+        }
+        await coreSpotDeployment(options)
+    })
 
 program.parse()
