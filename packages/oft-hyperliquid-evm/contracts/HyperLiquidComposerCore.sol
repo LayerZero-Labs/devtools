@@ -44,7 +44,7 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     /// @return _amountLD The amount of tokens to send
     function validateAndDecodeMessage(
         bytes calldata _composeMessage
-    ) public pure returns (address _receiver, uint256 _amountLD) {
+    ) external pure returns (address _receiver, uint256 _amountLD) {
         bytes memory message = OFTComposeMsgCodec.composeMsg(_composeMessage);
 
         _amountLD = OFTComposeMsgCodec.amountLD(_composeMessage);

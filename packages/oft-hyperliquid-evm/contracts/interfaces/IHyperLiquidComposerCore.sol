@@ -27,6 +27,9 @@ interface IHyperLiquidComposerCore {
     function L1WritePrecompileAddress() external view returns (address);
     function L1ReadPrecompileAddress_SpotBalance() external view returns (address);
 
+    function validateAndDecodeMessage(
+        bytes calldata _composeMessage
+    ) external view returns (address _receiver, uint256 _amountLD);
     function quoteHyperCoreAmount(uint256 _amount, bool _isOFT) external returns (IHyperAssetAmount memory);
     function balanceOfHyperCore(address _user, uint64 _tokenId) external view returns (uint64);
     function getOFTAsset() external view returns (IHyperAsset memory);
