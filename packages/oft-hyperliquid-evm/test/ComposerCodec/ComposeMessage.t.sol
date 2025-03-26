@@ -2,6 +2,7 @@
 pragma solidity ^0.8.20;
 
 import { HyperLiquidComposerCodec } from "../../contracts/library/HyperLiquidComposerCodec.sol";
+import { HyperLiquidComposerCore } from "../../contracts/HyperLiquidComposerCore.sol";
 import { IHyperLiquidComposerErrors, ErrorMessage } from "../../contracts/interfaces/IHyperLiquidComposerErrors.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
@@ -10,6 +11,8 @@ import { Test, console } from "forge-std/Test.sol";
 contract ComposeMessageTest is Test {
     uint256 constant DEFAULT_AMOUNT = 1e18;
     uint256 constant DEFAULT_DECIMAL_DIFF = 12;
+    HyperLiquidComposerCore composerCore = new HyperLiquidComposerCore();
+
     address sender;
 
     function setUp() public {
@@ -72,8 +75,8 @@ contract ComposeMessageTest is Test {
 
     function validateAndDecodeMessage(
         bytes calldata message
-    ) public pure returns (address _receiver, uint256 _amountLD) {
-        (_receiver, _amountLD) = HyperLiquidComposerCodec.validateAndDecodeMessage(message);
+    ) public view returns (address _receiver, uint256 _amountLD) {
+        (_receiver, _amountLD) = composerCore.validateAndDecodeMessage(message);
     }
 
     function composeMsg(bytes calldata message) public pure returns (bytes memory) {

@@ -1,7 +1,8 @@
 import axios, { AxiosInstance } from 'axios'
 import { Wallet } from 'ethers'
+import inquirer from 'inquirer'
 
-import { Logger, createLogger } from '@layerzerolabs/io-devtools'
+import { Logger, createModuleInteractionLogger } from '@layerzerolabs/io-devtools'
 
 import { getTimestampMs, signL1Action } from '../signer'
 import { HYPERLIQUID_URLS, ValueType } from '../types'
@@ -15,7 +16,7 @@ export class HyperliquidClient {
     constructor(isTestnet: boolean, logLevel: string) {
         this.baseUrl = isTestnet ? HYPERLIQUID_URLS.TESTNET : HYPERLIQUID_URLS.MAINNET
         this.isTestnet = isTestnet
-        this.logger = createLogger(logLevel)
+        this.logger = createModuleInteractionLogger('hyperliquid-client', logLevel)
         this.client = axios.create({
             baseURL: this.baseUrl,
             headers: {
@@ -25,31 +26,55 @@ export class HyperliquidClient {
     }
 
     async submitHyperliquidAction(endpoint: string, wallet: Wallet, action: ValueType) {
-        const nonce = getTimestampMs()
+        let payload = action
 
-        const signature = await signL1Action({
-            wallet,
-            action,
-            nonce,
-            isTestnet: this.isTestnet,
-            vaultAddress: null,
-        })
+        if (endpoint === '/exchange') {
+            const nonce = getTimestampMs()
 
-        const payload = {
-            action,
-            nonce,
-            signature,
-            vaultAddress: null,
+            const signature = await signL1Action({
+                wallet,
+                action,
+                nonce,
+                isTestnet: this.isTestnet,
+                vaultAddress: null,
+            })
+
+            payload = {
+                action,
+                nonce,
+                signature,
+                vaultAddress: null,
+            }
+
+            const { executeTx } = await inquirer.prompt([
+                {
+                    type: 'confirm',
+                    name: 'executeTx',
+                    message: `Do you want to execute the transaction ${JSON.stringify(payload, null, 2)}?`,
+                    default: false,
+                },
+            ])
+
+            if (!executeTx) {
+                this.logger.info('Transaction bundle cancelled - quitting.')
+                process.exit(1)
+            }
         }
 
         this.logger.debug(`Sending payload to full url: ${this.baseUrl}${endpoint}`)
-        this.logger.debug(`payload: ${JSON.stringify(payload, null, 2)}`)
+        this.logger.debug(`payload: \n ${JSON.stringify(payload, null, 2)}`)
 
         try {
             const response = await this.client.post(endpoint, payload)
-            return response.data
+            const data = response.data
+            if (data.status === 'err') {
+                this.logger.error(`Hyperliquid API error: ${data['response']}`)
+            } else if (endpoint === '/exchange') {
+                this.logger.info(`Hyperliquid API response: ${JSON.stringify(data['response'], null, 2)}`)
+            }
+            return data
         } catch (error) {
-            console.error(error)
+            // These are HTTP errors that we catch
             this.logger.error(error)
             this.logger.error(`Sending payload to full url: ${this.baseUrl}${endpoint}`)
             this.logger.error(`payload: ${JSON.stringify(payload, null, 2)}`)

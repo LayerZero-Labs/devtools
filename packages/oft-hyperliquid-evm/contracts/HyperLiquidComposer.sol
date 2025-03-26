@@ -3,15 +3,16 @@ pragma solidity ^0.8.0;
 
 import { IOFT } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
+import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
 import { HyperLiquidComposerCodec } from "./library/HyperLiquidComposerCodec.sol";
+
 import { IHyperLiquidComposer } from "./interfaces/IHyperLiquidComposer.sol";
 import { IHyperLiquidWritePrecompile } from "./interfaces/IHyperLiquidWritePrecompile.sol";
 import { IHyperLiquidReadPrecompile } from "./interfaces/IHyperLiquidReadPrecompile.sol";
-import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
-import { HyperLiquidComposerCore, IHyperAsset, IHyperAssetAmount } from "./HyperLiquidComposerCore.sol";
 import { IHyperLiquidComposerErrors, ErrorMessage } from "./interfaces/IHyperLiquidComposerErrors.sol";
+
+import { HyperLiquidComposerCore, IHyperAsset, IHyperAssetAmount } from "./HyperLiquidComposerCore.sol";
 
 contract HyperLiquidComposer is IHyperLiquidComposer, HyperLiquidComposerCore {
     /// @notice Constructor for the HyperLiquidLZComposer contract
@@ -88,7 +89,7 @@ contract HyperLiquidComposer is IHyperLiquidComposer, HyperLiquidComposerCore {
         /// @dev This is found as SendParam.composeMsg that the OFTCore contract populates on the send() call
         ///
         /// @notice reverts here are custom reverts and cause refuneds to sender or receiver
-        try HyperLiquidComposerCodec.validateAndDecodeMessage(_message) returns (address _receiver, uint256 _amountLD) {
+        try this.validateAndDecodeMessage(_message) returns (address _receiver, uint256 _amountLD) {
             receiver = _receiver;
             amountLD = _amountLD;
         } catch (bytes memory _err) {

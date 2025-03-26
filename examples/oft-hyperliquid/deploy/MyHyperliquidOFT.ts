@@ -1,19 +1,14 @@
 import assert from 'assert'
 
-import { Wallet, providers } from 'ethers'
-import { HttpNetworkConfig } from 'hardhat/types'
+import { Wallet } from 'ethers'
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-import { useBigBlock, useSmallBlock, writeUpdatedNativeSpots } from '@layerzerolabs/oft-hyperliquid-evm'
+import { useBigBlock, useSmallBlock } from '@layerzerolabs/oft-hyperliquid-evm'
 
 const contractName_oft = 'MyHyperLiquidOFT'
-const tokenSymbol = ''
-const nativeSpotName = ''
+const tokenSymbol = 'MYOFT'
 
 const deploy: DeployFunction = async (hre) => {
-    assert(tokenSymbol != '', 'tokenSymbol needs to be set in deploy/MyHyperLiquidOFT.ts')
-    assert(nativeSpotName != '', 'nativeSpotName needs to be set in deploy/MyHyperLiquidOFT.ts')
-
     const { getNamedAccounts, deployments } = hre
 
     const { deploy } = deployments
@@ -61,18 +56,12 @@ const deploy: DeployFunction = async (hre) => {
 
     if (!isDeployed_oft) {
         console.log(`Switching to hyperliquid big block for the address ${deployer} to deploy ${contractName_oft}`)
-        const res = await useBigBlock(wallet, isTestnet, loglevel)
-        console.log(res)
+        await useBigBlock(wallet, isTestnet, loglevel)
         console.log(`Deplying a contract uses big block which is mined at a transaction per minute.`)
     }
 
-    const ethersProvider = new providers.JsonRpcProvider(
-        (hre.config.networks[hre.network.name] as HttpNetworkConfig).url
-    )
-    const nonce = await ethersProvider.getTransactionCount(deployer)
-
     // Deploy the OFT on HyperEVM
-    const { address: address_oft, transactionHash } = await deploy(contractName_oft, {
+    const { address: address_oft } = await deploy(contractName_oft, {
         from: deployer,
         args: [
             contractName_oft, // name
@@ -85,9 +74,6 @@ const deploy: DeployFunction = async (hre) => {
     })
 
     console.log(`Deployed OFT contract: ${contractName_oft}, network: ${hre.network.name}, address: ${address_oft}`)
-    if (transactionHash) {
-        writeUpdatedNativeSpots(nativeSpotName, address_oft, contractName_oft, transactionHash, nonce, deployer, false)
-    }
 
     // Set small block eitherway as we do not have a method to check which hyperliquidblock we are on
     {

@@ -15,32 +15,6 @@
       "stateMutability": "view"
     },
     {
-      "type": "function",
-      "name": "VALID_COMPOSE_MESSAGE_LENGTH_ENCODE",
-      "inputs": [],
-      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "VALID_COMPOSE_MESSAGE_LENGTH_PACKED",
-      "inputs": [],
-      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "validateAndDecodeMessage",
-      "inputs": [
-        { "name": "_composeMessage", "type": "bytes", "internalType": "bytes" }
-      ],
-      "outputs": [
-        { "name": "_receiver", "type": "address", "internalType": "address" },
-        { "name": "_amountLD", "type": "uint256", "internalType": "uint256" }
-      ],
-      "stateMutability": "pure"
-    },
-    {
       "type": "event",
       "name": "OverflowDetected",
       "inputs": [
@@ -58,45 +32,28 @@
         }
       ],
       "anonymous": false
-    },
-    {
-      "type": "error",
-      "name": "ErrorMsg",
-      "inputs": [
-        { "name": "errorMessage", "type": "bytes", "internalType": "bytes" }
-      ]
     }
   ],
   "bytecode": {
-    "object": "0x610619610035600b8282823980515f1a60731461002957634e487b7160e01b5f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040526004361061006f575f3560e01c8063807d6c3f11610058578063807d6c3f146100e05780639278d99a146100e8578063d58daedf146100f0575f80fd5b806303e41b7714610073578063233449e7146100a1575b5f80fd5b61008e73200000000000000000000000000000000000000081565b6040519081526020015b60405180910390f35b6100b46100af3660046103b2565b610130565b6040805173ffffffffffffffffffffffffffffffffffffffff9093168352602083019190915201610098565b61008e601481565b61008e602081565b61010b73200000000000000000000000000000000000000081565b60405173ffffffffffffffffffffffffffffffffffffffff9091168152602001610098565b5f805f61013d85856102dd565b90506101498585610329565b9150601481511415801561015f57506020815114155b156102a25780516040515f917f09b34731000000000000000000000000000000000000000000000000000000009161019b91859160240161047f565b604080517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe08184030181529190526020810180517bffffffffffffffffffffffffffffffffffffffffffffffffffffffff167fffffffff000000000000000000000000000000000000000000000000000000009093169290921790915290505f6102258787610348565b60405160200161023791815260200190565b60405160208183030381529060405280602001905181019061025991906104a0565b9050610266818584610357565b6040517f4f95203300000000000000000000000000000000000000000000000000000000815260040161029991906104d3565b60405180910390fd5b60148151036102be576102b4816104e5565b60601c92506102d5565b808060200190518101906102d291906104a0565b92505b509250929050565b60606102ec82604c8186610534565b8080601f0160208091040260200160405190810160405280939291908181526020018383808284375f920191909152509293505050505b92915050565b5f610338602c600c8486610534565b6103419161055b565b9392505050565b5f610338604c602c8486610534565b606060405180606001604052808573ffffffffffffffffffffffffffffffffffffffff1681526020018481526020018381525060405160200161039a9190610597565b60405160208183030381529060405290509392505050565b5f80602083850312156103c3575f80fd5b823567ffffffffffffffff808211156103da575f80fd5b818501915085601f8301126103ed575f80fd5b8135818111156103fb575f80fd5b86602082850101111561040c575f80fd5b60209290920196919550909350505050565b5f81518084525f5b8181101561044257602081850181015186830182015201610426565b505f6020828601015260207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0601f83011685010191505092915050565b604081525f610491604083018561041e565b90508260208301529392505050565b5f602082840312156104b0575f80fd5b815173ffffffffffffffffffffffffffffffffffffffff81168114610341575f80fd5b602081525f610341602083018461041e565b5f815160208301517fffffffffffffffffffffffffffffffffffffffff0000000000000000000000008082169350601483101561052c5780818460140360031b1b83161693505b505050919050565b5f8085851115610542575f80fd5b8386111561054e575f80fd5b5050820193919092039150565b80356020831015610323577fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff602084900360031b1b1692915050565b6020815273ffffffffffffffffffffffffffffffffffffffff8251166020820152602082015160408201525f60408301516060808401526105db608084018261041e565b94935050505056fea26469706673582212202101eb2bcf0d45c16dc2db8883ac20a1286566d617af114028e5955edc93112264736f6c63430008160033",
-    "sourceMap": "434:5890:7:-:0;;;;;;;;;;;;;;;-1:-1:-1;;;434:5890:7;;;;;;;;;;;;;;;;;",
+    "object": "0x60e1610034600b8282823980515f1a60731461002857634e487b7160e01b5f525f60045260245ffd5b305f52607381538281f3fe7300000000000000000000000000000000000000003014608060405260043610603c575f3560e01c806303e41b77146040578063d58daedf14606d575b5f80fd5b605a73200000000000000000000000000000000000000081565b6040519081526020015b60405180910390f35b608773200000000000000000000000000000000000000081565b60405173ffffffffffffffffffffffffffffffffffffffff9091168152602001606456fea26469706673582212207ef99ba30f5995ae2e79aecf274d2f2f39f8f2454a3b8cf203a804a18f922ea064736f6c63430008160033",
+    "sourceMap": "434:3146:8:-:0;;;;;;;;;;;;;;;-1:-1:-1;;;434:3146:8;;;;;;;;;;;;;;;;;",
     "linkReferences": {}
   },
   "deployedBytecode": {
-    "object": "0x730000000000000000000000000000000000000000301460806040526004361061006f575f3560e01c8063807d6c3f11610058578063807d6c3f146100e05780639278d99a146100e8578063d58daedf146100f0575f80fd5b806303e41b7714610073578063233449e7146100a1575b5f80fd5b61008e73200000000000000000000000000000000000000081565b6040519081526020015b60405180910390f35b6100b46100af3660046103b2565b610130565b6040805173ffffffffffffffffffffffffffffffffffffffff9093168352602083019190915201610098565b61008e601481565b61008e602081565b61010b73200000000000000000000000000000000000000081565b60405173ffffffffffffffffffffffffffffffffffffffff9091168152602001610098565b5f805f61013d85856102dd565b90506101498585610329565b9150601481511415801561015f57506020815114155b156102a25780516040515f917f09b34731000000000000000000000000000000000000000000000000000000009161019b91859160240161047f565b604080517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe08184030181529190526020810180517bffffffffffffffffffffffffffffffffffffffffffffffffffffffff167fffffffff000000000000000000000000000000000000000000000000000000009093169290921790915290505f6102258787610348565b60405160200161023791815260200190565b60405160208183030381529060405280602001905181019061025991906104a0565b9050610266818584610357565b6040517f4f95203300000000000000000000000000000000000000000000000000000000815260040161029991906104d3565b60405180910390fd5b60148151036102be576102b4816104e5565b60601c92506102d5565b808060200190518101906102d291906104a0565b92505b509250929050565b60606102ec82604c8186610534565b8080601f0160208091040260200160405190810160405280939291908181526020018383808284375f920191909152509293505050505b92915050565b5f610338602c600c8486610534565b6103419161055b565b9392505050565b5f610338604c602c8486610534565b606060405180606001604052808573ffffffffffffffffffffffffffffffffffffffff1681526020018481526020018381525060405160200161039a9190610597565b60405160208183030381529060405290509392505050565b5f80602083850312156103c3575f80fd5b823567ffffffffffffffff808211156103da575f80fd5b818501915085601f8301126103ed575f80fd5b8135818111156103fb575f80fd5b86602082850101111561040c575f80fd5b60209290920196919550909350505050565b5f81518084525f5b8181101561044257602081850181015186830182015201610426565b505f6020828601015260207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0601f83011685010191505092915050565b604081525f610491604083018561041e565b90508260208301529392505050565b5f602082840312156104b0575f80fd5b815173ffffffffffffffffffffffffffffffffffffffff81168114610341575f80fd5b602081525f610341602083018461041e565b5f815160208301517fffffffffffffffffffffffffffffffffffffffff0000000000000000000000008082169350601483101561052c5780818460140360031b1b83161693505b505050919050565b5f8085851115610542575f80fd5b8386111561054e575f80fd5b5050820193919092039150565b80356020831015610323577fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff602084900360031b1b1692915050565b6020815273ffffffffffffffffffffffffffffffffffffffff8251166020820152602082015160408201525f60408301516060808401526105db608084018261041e565b94935050505056fea26469706673582212202101eb2bcf0d45c16dc2db8883ac20a1286566d617af114028e5955edc93112264736f6c63430008160033",
-    "sourceMap": "434:5890:7:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;945:103;;897:42;945:103;;;;;168:25:59;;;156:2;141:18;945:103:7;;;;;;;;1870:2001;;;;;;:::i;:::-;;:::i;:::-;;;;1012:42:59;1000:55;;;982:74;;1087:2;1072:18;;1065:34;;;;955:18;1870:2001:7;800:305:59;1288:64:7;;1350:2;1288:64;;1358;;1420:2;1358:64;;845:94;;897:42;845:94;;;;;1294:42:59;1282:55;;;1264:74;;1252:2;1237:18;845:94:7;1110:234:59;1870:2001:7;1971:17;1990;2019:20;2042:46;2072:15;;2042:29;:46::i;:::-;2019:69;;2111:44;2139:15;;2111:27;:44::i;:::-;2099:56;;1350:2;2344:7;:14;:53;;:122;;;;;1420:2;2413:7;:14;:53;;2344:122;2327:1244;;;2689:14;;2513:204;;2491:19;;2553:93;;2513:204;;2664:7;;2513:204;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;3183:47:7;3214:15;;3183:30;:47::i;:::-;3170:61;;;;;;2257:19:59;;2301:2;2292:12;;2128:182;3170:61:7;;;;;;;;;;;;;3159:84;;;;;;;;;;;;:::i;:::-;3142:101;;3476:70;3520:6;3528:9;3539:6;3476:43;:70::i;:::-;3423:137;;;;;;;;;;;:::i;:::-;;;;;;;;2327:1244;1350:2;3675:7;:14;:53;3671:194;;3764:16;3772:7;3764:16;:::i;:::-;3756:25;;3744:37;;3671:194;;;3835:7;3824:30;;;;;;;;;;;;:::i;:::-;3812:42;;3671:194;2009:1862;1870:2001;;;;;:::o;2273:128:19:-;2337:12;2368:26;:4;335:2;2368:4;;:26;:::i;:::-;2361:33;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;2361:33:19;;-1:-1:-1;;;;2273:128:19;;;;;:::o;1676:150::-;1738:7;1780:37;282:2;232;1780:4;;:37;:::i;:::-;1772:46;;;:::i;:::-;1764:55;1676:150;-1:-1:-1;;;1676:150:19:o;1989:149::-;2054:7;2088:42;335:2;282;2088:4;;:42;:::i;6038:284:7:-;6183:12;6225:89;;;;;;;;6250:7;6225:89;;;;;;6273:9;6225:89;;;;6298:13;6225:89;;;6214:101;;;;;;;;:::i;:::-;;;;;;;;;;;;;6207:108;;6038:284;;;;;:::o;204:591:59:-;274:6;282;335:2;323:9;314:7;310:23;306:32;303:52;;;351:1;348;341:12;303:52;391:9;378:23;420:18;461:2;453:6;450:14;447:34;;;477:1;474;467:12;447:34;515:6;504:9;500:22;490:32;;560:7;553:4;549:2;545:13;541:27;531:55;;582:1;579;572:12;531:55;622:2;609:16;648:2;640:6;637:14;634:34;;;664:1;661;654:12;634:34;709:7;704:2;695:6;691:2;687:15;683:24;680:37;677:57;;;730:1;727;720:12;677:57;761:2;753:11;;;;;783:6;;-1:-1:-1;204:591:59;;-1:-1:-1;;;;204:591:59:o;1349:481::-;1390:3;1428:5;1422:12;1455:6;1450:3;1443:19;1480:1;1490:162;1504:6;1501:1;1498:13;1490:162;;;1566:4;1622:13;;;1618:22;;1612:29;1594:11;;;1590:20;;1583:59;1519:12;1490:162;;;1494:3;1697:1;1690:4;1681:6;1676:3;1672:16;1668:27;1661:38;1819:4;1749:66;1744:2;1736:6;1732:15;1728:88;1723:3;1719:98;1715:109;1708:116;;;1349:481;;;;:::o;1835:288::-;2010:2;1999:9;1992:21;1973:4;2030:44;2070:2;2059:9;2055:18;2047:6;2030:44;:::i;:::-;2022:52;;2110:6;2105:2;2094:9;2090:18;2083:34;1835:288;;;;;:::o;2315:321::-;2393:6;2446:2;2434:9;2425:7;2421:23;2417:32;2414:52;;;2462:1;2459;2452:12;2414:52;2494:9;2488:16;2544:42;2537:5;2533:54;2526:5;2523:65;2513:93;;2602:1;2599;2592:12;2641:217;2788:2;2777:9;2770:21;2751:4;2808:44;2848:2;2837:9;2833:18;2825:6;2808:44;:::i;2863:410::-;2947:5;2987;2981:12;3029:4;3022:5;3018:16;3012:23;3054:66;3146:2;3142;3138:11;3129:20;;3172:2;3164:6;3161:14;3158:109;;;3254:2;3248;3238:6;3234:2;3230:15;3227:1;3223:23;3219:32;3215:2;3211:41;3207:50;3198:59;;3158:109;;;;2863:410;;;:::o;3278:331::-;3383:9;3394;3436:8;3424:10;3421:24;3418:44;;;3458:1;3455;3448:12;3418:44;3487:6;3477:8;3474:20;3471:40;;;3507:1;3504;3497:12;3471:40;-1:-1:-1;;3533:23:59;;;3578:25;;;;;-1:-1:-1;3278:331:59:o;3614:315::-;3734:19;;3773:2;3765:11;;3762:161;;;3845:66;3834:2;3830:12;;;3827:1;3823:20;3819:93;3808:105;3614:315;;;;:::o;3934:516::-;4121:2;4110:9;4103:21;4179:42;4170:6;4164:13;4160:62;4155:2;4144:9;4140:18;4133:90;4277:2;4269:6;4265:15;4259:22;4254:2;4243:9;4239:18;4232:50;4084:4;4329:2;4321:6;4317:15;4311:22;4371:4;4364;4353:9;4349:20;4342:34;4393:51;4439:3;4428:9;4424:19;4410:12;4393:51;:::i;:::-;4385:59;3934:516;-1:-1:-1;;;;3934:516:59:o",
+    "object": "0x7300000000000000000000000000000000000000003014608060405260043610603c575f3560e01c806303e41b77146040578063d58daedf14606d575b5f80fd5b605a73200000000000000000000000000000000000000081565b6040519081526020015b60405180910390f35b608773200000000000000000000000000000000000000081565b60405173ffffffffffffffffffffffffffffffffffffffff9091168152602001606456fea26469706673582212207ef99ba30f5995ae2e79aecf274d2f2f39f8f2454a3b8cf203a804a18f922ea064736f6c63430008160033",
+    "sourceMap": "434:3146:8:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;945:103;;897:42;945:103;;;;;168:25:81;;;156:2;141:18;945:103:8;;;;;;;;845:94;;897:42;845:94;;;;;388:42:81;376:55;;;358:74;;346:2;331:18;845:94:8;204:234:81",
     "linkReferences": {}
   },
   "methodIdentifiers": {
     "BASE_ASSET_BRIDGE_ADDRESS()": "d58daedf",
-    "BASE_ASSET_BRIDGE_ADDRESS_UINT256()": "03e41b77",
-    "VALID_COMPOSE_MESSAGE_LENGTH_ENCODE()": "9278d99a",
-    "VALID_COMPOSE_MESSAGE_LENGTH_PACKED()": "807d6c3f",
-    "validateAndDecodeMessage(bytes)": "233449e7"
+    "BASE_ASSET_BRIDGE_ADDRESS_UINT256()": "03e41b77"
   },
-  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"errorMessage\",\"type\":\"bytes\"}],\"name\":\"ErrorMsg\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"amountCore\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"maxTransferableAmount\",\"type\":\"uint64\"}],\"name\":\"OverflowDetected\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"BASE_ASSET_BRIDGE_ADDRESS\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"BASE_ASSET_BRIDGE_ADDRESS_UINT256\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VALID_COMPOSE_MESSAGE_LENGTH_ENCODE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VALID_COMPOSE_MESSAGE_LENGTH_PACKED\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_composeMessage\",\"type\":\"bytes\"}],\"name\":\"validateAndDecodeMessage\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amountLD\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"validateAndDecodeMessage(bytes)\":{\"params\":{\"_composeMessage\":\"The compose message to validate and decode\"},\"returns\":{\"_amountLD\":\"The amount of tokens to send\",\"_receiver\":\"The address of the receiver\"}}},\"stateVariables\":{\"BASE_ASSET_BRIDGE_ADDRESS\":{\"details\":\"The base asset bridge address is the address of the HyperLiquid L1 contractThis is the address that the OFT contract will transfer the tokens to when we want to send tokens to HyperLiquid L1https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers#system-addresses\"},\"VALID_COMPOSE_MESSAGE_LENGTH_PACKED\":{\"details\":\"The length of the message that is valid for the HyperLiquidComposerThis is 20 bytes because addresses are 20 bytesWe are in encodePacked mode, if we are in encode mode, the length is 32 bytes\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"validateAndDecodeMessage(bytes)\":{\"notice\":\"Validates the compose message and decodes it into an address and amountThis function is called by the HyperLiquidComposer contract\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/library/HyperLiquidComposerCodec.sol\":\"HyperLiquidComposerCodec\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/interfaces/IHyperLiquidComposer.sol\":{\"keccak256\":\"0x7ac40fccbeaaed8c6d3720ef69a7ff4dd2203b1c59e3dc846213deebd4ed0862\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://3df30f4894e16bb9c576b09507685a68575738ed766391d367f9c562976275f2\",\"dweb:/ipfs/QmeQAWvct8o7qLF2vV7pVfm7jZx77d7tbpYFCuUH2XDwDH\"]},\"contracts/interfaces/IHyperLiquidComposerCore.sol\":{\"keccak256\":\"0x7cef2c558843d26626c06588c5823f7d0568a43df091d7cc5c6b5e802afa62ae\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a89f31c2c56eee72fc2055fc94c52bc412ef14614f8cdf5eb45c9521e4dfb913\",\"dweb:/ipfs/QmRqL8gPCfWoPrL8bpmazMK1D9MpUwCum1mrXb75aLsLud\"]},\"contracts/interfaces/IHyperLiquidComposerErrors.sol\":{\"keccak256\":\"0x0ea8795209e1a9dda7663a16e826fef6bd1b7565756125e909aaae38d5d62f29\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9036fd3027cccd21cf413db783133dd03e97f5cbe6fbf00219d134f113fb9fc9\",\"dweb:/ipfs/QmSG2RqtzLZkfUXD5yZicHM4pXkorHUo7bbXDTarBXxL6H\"]},\"contracts/library/HyperLiquidComposerCodec.sol\":{\"keccak256\":\"0x6b6afe518e4346390cbd02b29517c76128c2e5d459ca77bb4e95c5bdcd269ba7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b9448123554306ab60fe6d4adbd868066982476cb91cf0cb42fcd957b283872d\",\"dweb:/ipfs/Qmd3TVP7XAPfgxHNyQJdVdV7i4zESrJf63q64ptWbjqqZZ\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol\":{\"keccak256\":\"0xfaca7205d4211ee9208a7e59171e2301731f3d2a20c49b4a839821871f5fdd49\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f254bc60ac26687b5320a43a556e30777b0745abf7cd64d5f4720d9b1d1f7fdf\",\"dweb:/ipfs/QmRSJEZVgxaC3L2DdE6s8P5qkYfM3V5JMeseeFJJqGR4xz\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol\":{\"keccak256\":\"0xf7f941bee89ea6369950fe54e8ac476ae6478b958b20fc0e8a83e8ff1364eac3\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bacc29fd3866af71e59cb0bdc1cf82c882a4a7f4e2652fd413c9f12649762083\",\"dweb:/ipfs/QmZh2toLnrQDWaNYhS5K4NoW7Vxd2GdZx9KA77vKEDLAqs\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol\":{\"keccak256\":\"0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b\",\"dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol\":{\"keccak256\":\"0x0878f64dffebf58c4165569416372f40860fab546b88cd926eba0d5cb6d8d972\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7e1b245d58221d16d8b5e0f01ef3e289a24a7df1ace3b94239e4d5b954ad5927\",\"dweb:/ipfs/Qmappsgp7PCY9rSSNE9Cdn4BTRX591WfCSEgq2HxhA3z6S\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol\":{\"keccak256\":\"0x85bc7090134529ec474866dc4bb1c48692d518c756eb0a961c82574829c51901\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b18b23a1643fc6636c4ad9d9023e2e6ca2d3c2a4a046482d4655bff09950598d\",\"dweb:/ipfs/Qma6G5SqiovwrMPfgqTrRngK1HWW373Wkf9c6YP2NhXpPk\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol\":{\"keccak256\":\"0xff0c546c2813dae3e440882f46b377375f7461b0714efd80bd3f0c6e5cb8da4e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5173fc9143bea314b159ca5a9adb5626659ef763bc598e27de5fa46efe3291a6\",\"dweb:/ipfs/QmSLFeMFPmVeGxT4sxRPW28ictjAS22M8rLeYRu9TXkA6D\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/OAppCore.sol\":{\"keccak256\":\"0x13a9c2d1d2c1f086b8624f2e84c4a4702212daae36f701d92bb915b535cbe4cc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://606515dd9193551bd2c94ac8c304f3776fafcc70e544ebf441f334658b2fd5f0\",\"dweb:/ipfs/QmZ88ey7DdZqV5taAoebabvszX5kdPMSrQCAmTteVdDtcH\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/OAppSender.sol\":{\"keccak256\":\"0x518cf4adca601923ed4baa6619846a253ea32b8d8775f8bc1faa3dfac7f67c20\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d42b471418efadcc3577ef3fa9f8f504e8bed7db90c3b0c862038d8b29529eb2\",\"dweb:/ipfs/QmZETDQiJN4U92fmLKo8T9ZbdDf7BNBUUvo9H7M7GqAyFU\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol\":{\"keccak256\":\"0xe5014c411acb2b59dd74ae74a1bab02cf32d94a41a548a5ab553d64aeeb55dae\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://29dfb7bc121002fc7e7931c34eb17af0ae0f0127dcc3199511c83a58a917160d\",\"dweb:/ipfs/QmPdq1wcRRBdUP169LHCLoLuPRunN9eR71TQN42FjGpowx\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol\":{\"keccak256\":\"0x40e49f2de74506e1da5dcaed53a39853f691647f4ceb0fccc8f49a68d3f47c58\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4a1deb2a6a3eb1fb83936c9578469142bff470295f403d7d07d955a76be3adbd\",\"dweb:/ipfs/QmS9bjSfBaE4YhQ1PCQ1TknbEPbNfRXzBK9E7SaPGyiZEv\"]},\"node_modules/@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol\":{\"keccak256\":\"0x7ba6bb62fba7ee83451cfb0e727ddeef0e96b4388bd4e9ff0fc6ce103e1101c8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://cfbd447f2e8a730bd46a14c3c3e6a0b2bf7446145579603a9793ba5ac1dd38b4\",\"dweb:/ipfs/QmZ4nx4iGrFmBHvYFgki5TXFdCHz4Co38hgdgwpRaM7NLs\"]},\"node_modules/@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol\":{\"keccak256\":\"0xaae73d6eb8b9561c43f1802f3c416c00ccd35f172b711f9781ccdf1b25a40db5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7beda2d895ae9e15269dd261a492ce0a29b498e5bebf088ed6f2ae6a5185719e\",\"dweb:/ipfs/QmScog2tW1YVyEPLVcUVqGGc85ub46sA28nUKNzFEZcFdK\"]},\"node_modules/@openzeppelin/contracts/access/Ownable.sol\":{\"keccak256\":\"0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8ed324d3920bb545059d66ab97d43e43ee85fd3bd52e03e401f020afb0b120f6\",\"dweb:/ipfs/QmfEckWLmZkDDcoWrkEvMWhms66xwTLff9DDhegYpvHo1a\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC1363.sol\":{\"keccak256\":\"0x9b6b3e7803bc5f2f8cd7ad57db8ac1def61a9930a5a3107df4882e028a9605d7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://da62d6be1f5c6edf577f0cb45666a8aa9c2086a4bac87d95d65f02e2f4c36a4b\",\"dweb:/ipfs/QmNkpvBpoCMvX8JwAFNSc5XxJ2q5BXJpL5L1txb4QkqVFF\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC165.sol\":{\"keccak256\":\"0xde7e9fd9aee8d4f40772f96bb3b58836cbc6dfc0227014a061947f8821ea9724\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://11fea9f8bc98949ac6709f0c1699db7430d2948137aa94d5a9e95a91f61a710a\",\"dweb:/ipfs/QmQdfRXxQjwP6yn3DVo1GHPpriKNcFghSPi94Z1oKEFUNS\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC20.sol\":{\"keccak256\":\"0xce41876e78d1badc0512229b4d14e4daf83bc1003d7f83978d18e0e56f965b9c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a2608291cb038b388d80b79a06b6118a42f7894ff67b7da10ec0dbbf5b2973ba\",\"dweb:/ipfs/QmWohqcBLbcxmA4eGPhZDXe5RYMMEEpFq22nfkaUMvTfw1\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0xe06a3f08a987af6ad2e1c1e774405d4fe08f1694b67517438b467cecf0da0ef7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://df6f0c459663c9858b6cba2cda1d14a7d05a985bed6d2de72bd8e78c25ee79db\",\"dweb:/ipfs/QmeTTxZ7qVk9rjEv2R4CpCwdf8UMCcRqDNMvzNxHc3Fnn9\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\":{\"keccak256\":\"0xca2ae13e0610f6a99238dd00b97bd786bc92732dae6d6b9d61f573ec51018310\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://75f8c71ce0c91c40dd5f249ace0b7d8270f8f1767231bcf71490f7157d6ba862\",\"dweb:/ipfs/QmYXgxeDyFHvz3JsXxLEYN6GNUR44ThHeFj5XkpkgMoG4w\"]},\"node_modules/@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0x9d8da059267bac779a2dbbb9a26c2acf00ca83085e105d62d5d4ef96054a47f5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c78e2aa4313323cecd1ef12a8d6265b96beee1a199923abf55d9a2a9e291ad23\",\"dweb:/ipfs/QmUTs2KStXucZezzFo3EYeqYu47utu56qrF7jj1Gue65vb\"]},\"node_modules/@openzeppelin/contracts/utils/Context.sol\":{\"keccak256\":\"0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6a708e8a5bdb1011c2c381c9a5cfd8a9a956d7d0a9dc1bd8bcdaf52f76ef2f12\",\"dweb:/ipfs/Qmax9WHBnVsZP46ZxEMNRQpLQnrdE4dK8LehML1Py8FowF\"]},\"node_modules/@openzeppelin/contracts/utils/Errors.sol\":{\"keccak256\":\"0x6afa713bfd42cf0f7656efa91201007ac465e42049d7de1d50753a373648c123\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ba1d02f4847670a1b83dec9f7d37f0b0418d6043447b69f3a29a5f9efc547fcf\",\"dweb:/ipfs/QmQ7iH2keLNUKgq2xSWcRmuBE5eZ3F5whYAkAGzCNNoEWB\"]},\"node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol\":{\"keccak256\":\"0x79796192ec90263f21b464d5bc90b777a525971d3de8232be80d9c4f9fb353b8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f6fda447a62815e8064f47eff0dd1cf58d9207ad69b5d32280f8d7ed1d1e4621\",\"dweb:/ipfs/QmfDRc7pxfaXB2Dh9np5Uf29Na3pQ7tafRS684wd3GLjVL\"]}},\"version\":1}",
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"amountCore\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"maxTransferableAmount\",\"type\":\"uint64\"}],\"name\":\"OverflowDetected\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"BASE_ASSET_BRIDGE_ADDRESS\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"BASE_ASSET_BRIDGE_ADDRESS_UINT256\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"stateVariables\":{\"BASE_ASSET_BRIDGE_ADDRESS\":{\"details\":\"The base asset bridge address is the address of the HyperLiquid L1 contractThis is the address that the OFT contract will transfer the tokens to when we want to send tokens to HyperLiquid L1https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers#system-addresses\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/library/HyperLiquidComposerCodec.sol\":\"HyperLiquidComposerCodec\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":hardhat/=node_modules/hardhat/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/interfaces/IHyperLiquidComposer.sol\":{\"keccak256\":\"0x7ac40fccbeaaed8c6d3720ef69a7ff4dd2203b1c59e3dc846213deebd4ed0862\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://3df30f4894e16bb9c576b09507685a68575738ed766391d367f9c562976275f2\",\"dweb:/ipfs/QmeQAWvct8o7qLF2vV7pVfm7jZx77d7tbpYFCuUH2XDwDH\"]},\"contracts/interfaces/IHyperLiquidComposerCore.sol\":{\"keccak256\":\"0x8e08a397c50d13a14badb6a108b589ad92dbd35ec9b09073f1f2e64d1880ee2c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0d95a69a5c9169f519fb13f8bf9248eee181923e5789ba92d910dd86313b0c38\",\"dweb:/ipfs/QmbfQWzmCgkSbYJKKqeRuT2Zj8q1kcCA5Trp9Sf35qaKUo\"]},\"contracts/interfaces/IHyperLiquidComposerErrors.sol\":{\"keccak256\":\"0x0ea8795209e1a9dda7663a16e826fef6bd1b7565756125e909aaae38d5d62f29\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9036fd3027cccd21cf413db783133dd03e97f5cbe6fbf00219d134f113fb9fc9\",\"dweb:/ipfs/QmSG2RqtzLZkfUXD5yZicHM4pXkorHUo7bbXDTarBXxL6H\"]},\"contracts/library/HyperLiquidComposerCodec.sol\":{\"keccak256\":\"0xddc917b6a4c6b7357f696156416ad0821cb9758c6e417d892d4b85b17de8cce6\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://197f155e7fa69f3425f2f9ef47a4fb380fd58cbb1db703fee9c2e8873e9709ee\",\"dweb:/ipfs/QmXLdKN29wLAScBnoPfWQ23kMXJd7FWkuqsnJ8EbKjrxup\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol\":{\"keccak256\":\"0xfaca7205d4211ee9208a7e59171e2301731f3d2a20c49b4a839821871f5fdd49\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f254bc60ac26687b5320a43a556e30777b0745abf7cd64d5f4720d9b1d1f7fdf\",\"dweb:/ipfs/QmRSJEZVgxaC3L2DdE6s8P5qkYfM3V5JMeseeFJJqGR4xz\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol\":{\"keccak256\":\"0xf7f941bee89ea6369950fe54e8ac476ae6478b958b20fc0e8a83e8ff1364eac3\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bacc29fd3866af71e59cb0bdc1cf82c882a4a7f4e2652fd413c9f12649762083\",\"dweb:/ipfs/QmZh2toLnrQDWaNYhS5K4NoW7Vxd2GdZx9KA77vKEDLAqs\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol\":{\"keccak256\":\"0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b\",\"dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol\":{\"keccak256\":\"0x0878f64dffebf58c4165569416372f40860fab546b88cd926eba0d5cb6d8d972\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7e1b245d58221d16d8b5e0f01ef3e289a24a7df1ace3b94239e4d5b954ad5927\",\"dweb:/ipfs/Qmappsgp7PCY9rSSNE9Cdn4BTRX591WfCSEgq2HxhA3z6S\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol\":{\"keccak256\":\"0x85bc7090134529ec474866dc4bb1c48692d518c756eb0a961c82574829c51901\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b18b23a1643fc6636c4ad9d9023e2e6ca2d3c2a4a046482d4655bff09950598d\",\"dweb:/ipfs/Qma6G5SqiovwrMPfgqTrRngK1HWW373Wkf9c6YP2NhXpPk\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol\":{\"keccak256\":\"0xff0c546c2813dae3e440882f46b377375f7461b0714efd80bd3f0c6e5cb8da4e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5173fc9143bea314b159ca5a9adb5626659ef763bc598e27de5fa46efe3291a6\",\"dweb:/ipfs/QmSLFeMFPmVeGxT4sxRPW28ictjAS22M8rLeYRu9TXkA6D\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/OAppCore.sol\":{\"keccak256\":\"0x13a9c2d1d2c1f086b8624f2e84c4a4702212daae36f701d92bb915b535cbe4cc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://606515dd9193551bd2c94ac8c304f3776fafcc70e544ebf441f334658b2fd5f0\",\"dweb:/ipfs/QmZ88ey7DdZqV5taAoebabvszX5kdPMSrQCAmTteVdDtcH\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/OAppSender.sol\":{\"keccak256\":\"0x518cf4adca601923ed4baa6619846a253ea32b8d8775f8bc1faa3dfac7f67c20\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d42b471418efadcc3577ef3fa9f8f504e8bed7db90c3b0c862038d8b29529eb2\",\"dweb:/ipfs/QmZETDQiJN4U92fmLKo8T9ZbdDf7BNBUUvo9H7M7GqAyFU\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol\":{\"keccak256\":\"0xe5014c411acb2b59dd74ae74a1bab02cf32d94a41a548a5ab553d64aeeb55dae\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://29dfb7bc121002fc7e7931c34eb17af0ae0f0127dcc3199511c83a58a917160d\",\"dweb:/ipfs/QmPdq1wcRRBdUP169LHCLoLuPRunN9eR71TQN42FjGpowx\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol\":{\"keccak256\":\"0x40e49f2de74506e1da5dcaed53a39853f691647f4ceb0fccc8f49a68d3f47c58\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4a1deb2a6a3eb1fb83936c9578469142bff470295f403d7d07d955a76be3adbd\",\"dweb:/ipfs/QmS9bjSfBaE4YhQ1PCQ1TknbEPbNfRXzBK9E7SaPGyiZEv\"]},\"node_modules/@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol\":{\"keccak256\":\"0x7ba6bb62fba7ee83451cfb0e727ddeef0e96b4388bd4e9ff0fc6ce103e1101c8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://cfbd447f2e8a730bd46a14c3c3e6a0b2bf7446145579603a9793ba5ac1dd38b4\",\"dweb:/ipfs/QmZ4nx4iGrFmBHvYFgki5TXFdCHz4Co38hgdgwpRaM7NLs\"]},\"node_modules/@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol\":{\"keccak256\":\"0xaae73d6eb8b9561c43f1802f3c416c00ccd35f172b711f9781ccdf1b25a40db5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7beda2d895ae9e15269dd261a492ce0a29b498e5bebf088ed6f2ae6a5185719e\",\"dweb:/ipfs/QmScog2tW1YVyEPLVcUVqGGc85ub46sA28nUKNzFEZcFdK\"]},\"node_modules/@openzeppelin/contracts/access/Ownable.sol\":{\"keccak256\":\"0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8ed324d3920bb545059d66ab97d43e43ee85fd3bd52e03e401f020afb0b120f6\",\"dweb:/ipfs/QmfEckWLmZkDDcoWrkEvMWhms66xwTLff9DDhegYpvHo1a\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC1363.sol\":{\"keccak256\":\"0x9b6b3e7803bc5f2f8cd7ad57db8ac1def61a9930a5a3107df4882e028a9605d7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://da62d6be1f5c6edf577f0cb45666a8aa9c2086a4bac87d95d65f02e2f4c36a4b\",\"dweb:/ipfs/QmNkpvBpoCMvX8JwAFNSc5XxJ2q5BXJpL5L1txb4QkqVFF\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC165.sol\":{\"keccak256\":\"0xde7e9fd9aee8d4f40772f96bb3b58836cbc6dfc0227014a061947f8821ea9724\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://11fea9f8bc98949ac6709f0c1699db7430d2948137aa94d5a9e95a91f61a710a\",\"dweb:/ipfs/QmQdfRXxQjwP6yn3DVo1GHPpriKNcFghSPi94Z1oKEFUNS\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC20.sol\":{\"keccak256\":\"0xce41876e78d1badc0512229b4d14e4daf83bc1003d7f83978d18e0e56f965b9c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a2608291cb038b388d80b79a06b6118a42f7894ff67b7da10ec0dbbf5b2973ba\",\"dweb:/ipfs/QmWohqcBLbcxmA4eGPhZDXe5RYMMEEpFq22nfkaUMvTfw1\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0xe06a3f08a987af6ad2e1c1e774405d4fe08f1694b67517438b467cecf0da0ef7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://df6f0c459663c9858b6cba2cda1d14a7d05a985bed6d2de72bd8e78c25ee79db\",\"dweb:/ipfs/QmeTTxZ7qVk9rjEv2R4CpCwdf8UMCcRqDNMvzNxHc3Fnn9\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\":{\"keccak256\":\"0xca2ae13e0610f6a99238dd00b97bd786bc92732dae6d6b9d61f573ec51018310\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://75f8c71ce0c91c40dd5f249ace0b7d8270f8f1767231bcf71490f7157d6ba862\",\"dweb:/ipfs/QmYXgxeDyFHvz3JsXxLEYN6GNUR44ThHeFj5XkpkgMoG4w\"]},\"node_modules/@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0x9d8da059267bac779a2dbbb9a26c2acf00ca83085e105d62d5d4ef96054a47f5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c78e2aa4313323cecd1ef12a8d6265b96beee1a199923abf55d9a2a9e291ad23\",\"dweb:/ipfs/QmUTs2KStXucZezzFo3EYeqYu47utu56qrF7jj1Gue65vb\"]},\"node_modules/@openzeppelin/contracts/utils/Context.sol\":{\"keccak256\":\"0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6a708e8a5bdb1011c2c381c9a5cfd8a9a956d7d0a9dc1bd8bcdaf52f76ef2f12\",\"dweb:/ipfs/Qmax9WHBnVsZP46ZxEMNRQpLQnrdE4dK8LehML1Py8FowF\"]},\"node_modules/@openzeppelin/contracts/utils/Errors.sol\":{\"keccak256\":\"0x6afa713bfd42cf0f7656efa91201007ac465e42049d7de1d50753a373648c123\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ba1d02f4847670a1b83dec9f7d37f0b0418d6043447b69f3a29a5f9efc547fcf\",\"dweb:/ipfs/QmQ7iH2keLNUKgq2xSWcRmuBE5eZ3F5whYAkAGzCNNoEWB\"]},\"node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol\":{\"keccak256\":\"0x79796192ec90263f21b464d5bc90b777a525971d3de8232be80d9c4f9fb353b8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f6fda447a62815e8064f47eff0dd1cf58d9207ad69b5d32280f8d7ed1d1e4621\",\"dweb:/ipfs/QmfDRc7pxfaXB2Dh9np5Uf29Na3pQ7tafRS684wd3GLjVL\"]}},\"version\":1}",
   "metadata": {
     "compiler": { "version": "0.8.22+commit.4fc1097e" },
     "language": "Solidity",
     "output": {
       "abi": [
-        {
-          "inputs": [
-            { "internalType": "bytes", "name": "errorMessage", "type": "bytes" }
-          ],
-          "type": "error",
-          "name": "ErrorMsg"
-        },
         {
           "inputs": [
             {
@@ -133,74 +90,10 @@
           "outputs": [
             { "internalType": "uint256", "name": "", "type": "uint256" }
           ]
-        },
-        {
-          "inputs": [],
-          "stateMutability": "view",
-          "type": "function",
-          "name": "VALID_COMPOSE_MESSAGE_LENGTH_ENCODE",
-          "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
-          ]
-        },
-        {
-          "inputs": [],
-          "stateMutability": "view",
-          "type": "function",
-          "name": "VALID_COMPOSE_MESSAGE_LENGTH_PACKED",
-          "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
-          ]
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "bytes",
-              "name": "_composeMessage",
-              "type": "bytes"
-            }
-          ],
-          "stateMutability": "pure",
-          "type": "function",
-          "name": "validateAndDecodeMessage",
-          "outputs": [
-            {
-              "internalType": "address",
-              "name": "_receiver",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "_amountLD",
-              "type": "uint256"
-            }
-          ]
         }
       ],
-      "devdoc": {
-        "kind": "dev",
-        "methods": {
-          "validateAndDecodeMessage(bytes)": {
-            "params": {
-              "_composeMessage": "The compose message to validate and decode"
-            },
-            "returns": {
-              "_amountLD": "The amount of tokens to send",
-              "_receiver": "The address of the receiver"
-            }
-          }
-        },
-        "version": 1
-      },
-      "userdoc": {
-        "kind": "user",
-        "methods": {
-          "validateAndDecodeMessage(bytes)": {
-            "notice": "Validates the compose message and decodes it into an address and amountThis function is called by the HyperLiquidComposer contract"
-          }
-        },
-        "version": 1
-      }
+      "devdoc": { "kind": "dev", "methods": {}, "version": 1 },
+      "userdoc": { "kind": "user", "methods": {}, "version": 1 }
     },
     "settings": {
       "remappings": [
@@ -208,6 +101,7 @@
         "@openzeppelin/=node_modules/@openzeppelin/",
         "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/",
         "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/",
+        "hardhat/=node_modules/hardhat/",
         "solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/"
       ],
       "optimizer": { "enabled": true, "runs": 20000 },
@@ -228,10 +122,10 @@
         "license": "MIT"
       },
       "contracts/interfaces/IHyperLiquidComposerCore.sol": {
-        "keccak256": "0x7cef2c558843d26626c06588c5823f7d0568a43df091d7cc5c6b5e802afa62ae",
+        "keccak256": "0x8e08a397c50d13a14badb6a108b589ad92dbd35ec9b09073f1f2e64d1880ee2c",
         "urls": [
-          "bzz-raw://a89f31c2c56eee72fc2055fc94c52bc412ef14614f8cdf5eb45c9521e4dfb913",
-          "dweb:/ipfs/QmRqL8gPCfWoPrL8bpmazMK1D9MpUwCum1mrXb75aLsLud"
+          "bzz-raw://0d95a69a5c9169f519fb13f8bf9248eee181923e5789ba92d910dd86313b0c38",
+          "dweb:/ipfs/QmbfQWzmCgkSbYJKKqeRuT2Zj8q1kcCA5Trp9Sf35qaKUo"
         ],
         "license": "MIT"
       },
@@ -244,10 +138,10 @@
         "license": "MIT"
       },
       "contracts/library/HyperLiquidComposerCodec.sol": {
-        "keccak256": "0x6b6afe518e4346390cbd02b29517c76128c2e5d459ca77bb4e95c5bdcd269ba7",
+        "keccak256": "0xddc917b6a4c6b7357f696156416ad0821cb9758c6e417d892d4b85b17de8cce6",
         "urls": [
-          "bzz-raw://b9448123554306ab60fe6d4adbd868066982476cb91cf0cb42fcd957b283872d",
-          "dweb:/ipfs/Qmd3TVP7XAPfgxHNyQJdVdV7i4zESrJf63q64ptWbjqqZZ"
+          "bzz-raw://197f155e7fa69f3425f2f9ef47a4fb380fd58cbb1db703fee9c2e8873e9709ee",
+          "dweb:/ipfs/QmXLdKN29wLAScBnoPfWQ23kMXJd7FWkuqsnJ8EbKjrxup"
         ],
         "license": "MIT"
       },
@@ -430,5 +324,5 @@
     },
     "version": 1
   },
-  "id": 7
+  "id": 8
 }
