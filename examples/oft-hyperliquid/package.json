@@ -58,6 +58,7 @@
     "hardhat": "^2.22.10",
     "hardhat-contract-sizer": "^2.10.0",
     "hardhat-deploy": "^0.12.1",
+    "inquirer": "^12.3.3",
     "mocha": "^10.2.0",
     "prettier": "^3.2.5",
     "solhint": "^4.1.1",

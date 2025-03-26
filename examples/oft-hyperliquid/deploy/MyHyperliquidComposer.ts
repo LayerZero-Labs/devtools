@@ -2,22 +2,23 @@ import assert from 'assert'
 
 import { Wallet } from 'ethers'
 import { type DeployFunction } from 'hardhat-deploy/types'
+import inquirer from 'inquirer'
 
-import { getNativeSpot, useBigBlock, useSmallBlock } from '@layerzerolabs/oft-hyperliquid-evm'
+import { getCoreSpotDeployment, useBigBlock, useSmallBlock } from '@layerzerolabs/oft-hyperliquid-evm'
 
 const contractName_oft = 'MyHyperLiquidOFT'
 const contractName_composer = 'MyHyperLiquidComposer'
 
-const evmDecimals = 0
-const nativeSpotName = ''
-
 const deploy: DeployFunction = async (hre) => {
-    assert(nativeSpotName != '', 'nativeSpotName needs to be set in deploy/MyHyperLiquidComposer.ts')
-    assert(evmDecimals != 0, 'evmDecimals needs to be set in deploy/MyHyperLiquidComposer.ts')
-    const { getNamedAccounts, deployments } = hre
+    const { coreSpotIndex } = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'coreSpotIndex',
+            message: 'Enter the core spot index from deployments that you would like to use',
+        },
+    ])
 
-    // Validates and returns the native spot
-    const hip1Token = getNativeSpot(nativeSpotName)
+    const { getNamedAccounts, deployments } = hre
 
     const { deploy } = deployments
     const { deployer } = await getNamedAccounts()
@@ -35,7 +36,8 @@ const deploy: DeployFunction = async (hre) => {
     console.log(`Network: ${hre.network.name}`)
     console.log(`Deployer: ${deployer}`)
 
-    const evmExtraWeiDecimals = evmDecimals - hip1Token.nativeSpot.weiDecimals
+    // Validates and returns the native spot
+    const hip1Token = getCoreSpotDeployment(coreSpotIndex, isTestnet)
 
     // This is an external deployment pulled in from @layerzerolabs/lz-evm-sdk-v2
     //
@@ -74,8 +76,8 @@ const deploy: DeployFunction = async (hre) => {
         args: [
             endpointV2Deployment.address, // LayerZero's EndpointV2 address
             address_oft, // OFT address
-            hip1Token.nativeSpot.index, // Core index id
-            evmExtraWeiDecimals,
+            hip1Token.coreSpot.index, // Core index id
+            hip1Token.txData.weiDiff,
         ],
         log: true,
         skipIfAlreadyDeployed: false,

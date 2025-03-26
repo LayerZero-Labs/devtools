@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from 'axios'
 import { Wallet } from 'ethers'
+import inquirer from 'inquirer'
 
 import { Logger, createModuleInteractionLogger } from '@layerzerolabs/io-devtools'
 
@@ -25,7 +26,8 @@ export class HyperliquidClient {
     }
 
     async submitHyperliquidAction(endpoint: string, wallet: Wallet, action: ValueType) {
-        let payload
+        let payload = action
+
         if (endpoint === '/exchange') {
             const nonce = getTimestampMs()
 
@@ -43,8 +45,20 @@ export class HyperliquidClient {
                 signature,
                 vaultAddress: null,
             }
-        } else if (endpoint === '/info') {
-            payload = action
+
+            const { executeTx } = await inquirer.prompt([
+                {
+                    type: 'confirm',
+                    name: 'executeTx',
+                    message: `Do you want to execute the transaction ${JSON.stringify(payload, null, 2)}?`,
+                    default: false,
+                },
+            ])
+
+            if (!executeTx) {
+                this.logger.info('Transaction bundle cancelled - quitting.')
+                process.exit(1)
+            }
         }
 
         this.logger.debug(`Sending payload to full url: ${this.baseUrl}${endpoint}`)
