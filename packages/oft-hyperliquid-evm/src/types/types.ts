@@ -6,27 +6,41 @@ export interface Signature {
     v: number
 }
 
-export interface NativeSpot {
+export interface CoreSpotMetaData {
     name: string
     szDecimals: number
     weiDecimals: number
     index: number
     tokenId: string
     isCanonical: boolean
-    evmContract: string | null
+    evmContract: null | {
+        address: string
+        evm_extra_wei_decimals: number
+    }
     fullName: string | null
     deployerTradingFeeShare: string
 }
 
-export interface NativeSpotDeployment {
-    nativeSpot: NativeSpot
-    txData: {
-        txHash: string
-        nonce: number
-        weiDiff: number | undefined
-        from: string
-        connected: boolean
-    }
+export interface TxData {
+    from?: string
+    txHash?: string
+    nonce?: number
+    weiDiff?: number
+    connected: boolean
+}
+
+export interface SpotMeta {
+    tokens: CoreSpotMetaData[]
+}
+
+export interface CoreSpotDeployment {
+    nativeSpot: CoreSpotMetaData
+    txData: TxData
+}
+
+export interface BaseInfoRequest {
+    type: string
+    [key: string]: unknown
 }
 
 /** Base structure for exchange requests. */
@@ -105,7 +119,16 @@ export interface SuccessResponse extends BaseExchangeResponse {
     }
 }
 
-export type ValueType = number | bigint | string | boolean | null | Uint8Array | readonly ValueType[] | ValueMap
+export type ValueType =
+    | number
+    | bigint
+    | string
+    | boolean
+    | null
+    | Uint8Array
+    | readonly ValueType[]
+    | ValueMap
+    | BaseInfoRequest
 
 export interface ValueMap {
     [key: string]: ValueType
