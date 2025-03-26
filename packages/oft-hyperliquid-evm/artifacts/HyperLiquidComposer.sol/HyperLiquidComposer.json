@@ -348,6 +348,13 @@
     },
     {
       "type": "error",
+      "name": "ErrorMsg",
+      "inputs": [
+        { "name": "errorMessage", "type": "bytes", "internalType": "bytes" }
+      ]
+    },
+    {
+      "type": "error",
       "name": "HyperLiquidComposer_FailedToSend_HYPE",
       "inputs": [
         { "name": "amount", "type": "uint256", "internalType": "uint256" }

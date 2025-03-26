@@ -324,6 +324,13 @@
     },
     {
       "type": "error",
+      "name": "ErrorMsg",
+      "inputs": [
+        { "name": "errorMessage", "type": "bytes", "internalType": "bytes" }
+      ]
+    },
+    {
+      "type": "error",
       "name": "HyperLiquidComposer_InvalidCall_NotComposer",
       "inputs": [
         {
