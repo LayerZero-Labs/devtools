@@ -40,9 +40,6 @@
     "hardhat-deploy": "^0.12.1",
     "rustbn.js": "^0.3.0"
   },
-  "dependencies": {
-    "@layerzerolabs/oft-hyperliquid-evm": "workspace:*"
-  },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
     "@layerzerolabs/prettier-config-next": "^2.3.39",

@@ -14,10 +14,6 @@ overrides:
 importers:
 
   .:
-    dependencies:
-      '@layerzerolabs/oft-hyperliquid-evm':
-        specifier: workspace:*
-        version: link:packages/oft-hyperliquid-evm
     devDependencies:
       '@changesets/cli':
         specifier: ^2.27.1
