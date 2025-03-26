@@ -6,6 +6,7 @@ import { requestEvmContract, finalizeEvmContract } from '@/operations'
 
 import assert from 'assert'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function registerToken(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger('register-token', args.logLevel)

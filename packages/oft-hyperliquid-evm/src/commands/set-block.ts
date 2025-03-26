@@ -3,6 +3,7 @@ import { createModuleLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtoo
 import { getHyperliquidWallet } from '@/signer'
 import { useBigBlock, useSmallBlock } from '@/operations'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function setBlock(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger('set-block', args.logLevel)

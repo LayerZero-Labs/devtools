@@ -7,6 +7,7 @@ import type { CoreSpotDeployment, CoreSpotMetaData, TxData } from '@/types'
 import { ethers } from 'ethers'
 import { RPC_URLS } from '@/types'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function coreSpotDeployment(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger('core-spot-deployment', args.logLevel)
