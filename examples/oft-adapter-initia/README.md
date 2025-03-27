@@ -314,7 +314,6 @@ Choose an action:
 pnpm run lz:sdk:help
 ```
 
-
 ## Validating object ownership of your deployed Initia OApp:
 
 Go to your OFT object address on the block explorer. Under resources, 0x1, click on 'object'. Verify owner field displays the desired object owner address.
