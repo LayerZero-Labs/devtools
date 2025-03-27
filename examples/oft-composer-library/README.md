@@ -18,13 +18,12 @@
   A Composer library to integrate LayerZero composer contracts with the Omnichain Fungible Token (OFT) standard.
 </p>
 
-<p align="left">
+
 - [What is an Omnichain Fungible Token?](#what-is-an-omnichain-fungible-token)
 - [Using Composer with OFTs](#using-composer-with-ofts)
 - [LayerZero Hardhat Helper Tasks](#layerzero-hardhat-helper-tasks)
 - [Developing & Deploying Contracts](#developing-contracts)
 - [Connecting Contracts](#connecting-contracts)
-</p>
 
 ## What is an Omnichain Fungible Token?
 
@@ -38,7 +37,7 @@ Learn more about OFTs in the [OFT Quickstart](https://docs.layerzero.network/v2/
 
 This repository is not only a template for OFTs, it’s a fully featured **composer library** that empowers you to build composable, cross-chain applications using LayerZero’s composer contracts in combination with the OFT standard.
 
-For example, our repository includes an example contract (see [UniswapV3Composer.sol](./path/to/UniswapV3Composer.sol)) that demonstrates how to:
+For example, our repository includes an example contract (see [UniswapV3Composer.sol](./contracts/UniswapV3Composer.sol)) that demonstrates how to:
 
 - Receive cross-chain messages via LayerZero.
 - Decode composable messages (using `OFTComposeMsgCodec`) to extract parameters.
