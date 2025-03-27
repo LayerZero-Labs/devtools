@@ -5,9 +5,16 @@ use crate::*;
 /// enabling the endpoint to interact with registered applications for cross-chain messaging.
 ///
 /// The state includes:
-/// - `delegate`: The public key of the delegate associated with the OApp. The delegate may be responsible
-///   for performing certain administrative actions or handling cross-chain messages on behalf of the OApp.
-/// - `bump`: The bump seed used for PDA derivation of this account.
+/// - `delegate`: The public key of the delegate associated with the OApp. This delegate is authorized to
+///   make program calls on the endpoint to manage the OApp’s settings. In particular, the delegate can
+///   invoke the following endpoint instructions:
+///     - `endpoint.set_config`: Set the configuration for the OApp.
+///     - `endpoint.set_send_library`: Set the send library for the OApp.
+///     - `endpoint.set_receive_library`: Set the receive library for the OApp.
+///     - `endpoint.skip`: Skip a specific message nonce for the OApp.
+///     - `endpoint.burn`: Burn a specific message nonce for the OApp.
+///     - `endpoint.clear`: Clear the message nonce state for the OApp.
+///     - `endpoint.nullify`: Nullify a specific message nonce for the OApp.
 #[account]
 #[derive(InitSpace)]
 pub struct OAppRegistry {

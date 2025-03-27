@@ -7,13 +7,6 @@ pub const ENFORCED_OPTIONS_SEND_MAX_LEN: usize = 512;
 pub const ENFORCED_OPTIONS_SEND_AND_CALL_MAX_LEN: usize = 1024;
 
 /// PeerConfig stores the configuration settings for a remote peer endpoint used in cross-chain messaging.
-///
-/// This state includes:
-/// - The peer address used for cross-chain communication.
-/// - Enforced options that determine default messaging options for send operations.
-/// - Optional rate limiters for both outbound and inbound messages.
-/// - An optional fee basis points setting for fee calculations.
-/// - A bump seed used for PDA derivation.
 #[account]
 #[derive(InitSpace)]
 pub struct PeerConfig {

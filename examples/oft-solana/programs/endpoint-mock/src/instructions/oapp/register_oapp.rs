@@ -3,17 +3,9 @@ use cpi_helper::CpiContext;
 
 /// The `RegisterOApp` instruction context is used to register an OApp (Omnichain Application)
 /// with the endpoint. This registration is required for cross-chain messaging in the OFT system.
-/// 
-/// The accounts in this context include:
-/// - `payer`: The signer paying for the account initialization.
-/// - `oapp`: The PDA representing the OApp that is being registered.
-/// - `oapp_registry`: The account that stores the registry data for the OApp (initialized if not present).
-/// - `system_program`: The system program required for account creation.
-#[event_cpi]
 #[derive(CpiContext, Accounts)]
 #[instruction(params: RegisterOAppParams)]
 pub struct RegisterOApp<'info> {
-    // The payer account that funds the initialization of the oapp_registry.
     #[account(mut)]
     pub payer: Signer<'info>,
 
@@ -41,13 +33,6 @@ impl RegisterOApp<'_> {
     ///
     /// This function sets the delegate in the oapp_registry to the provided delegate value,
     /// and stores the bump seed for future PDA derivations.
-    ///
-    /// # Parameters
-    /// - `ctx`: The context containing the accounts for registration.
-    /// - `params`: The parameters for registration, including the delegate to set.
-    ///
-    /// # Returns
-    /// - `Ok(())` on successful registration.
     pub fn apply(ctx: &mut Context<RegisterOApp>, params: &RegisterOAppParams) -> Result<()> {
         // Set the delegate in the OApp registry to the provided value.
         ctx.accounts.oapp_registry.delegate = params.delegate;

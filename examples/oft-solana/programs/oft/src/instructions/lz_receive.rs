@@ -47,8 +47,8 @@ pub struct LzReceive<'info> {
     )]
     pub oft_store: Account<'info, OFTStore>,
 
-    // Token escrow account, which holds tokens in escrow.
-    // The authority of this account is the OFTStore and its address is derived from it.
+    // Token escrow account, which holds tokens in escrow during OFT Adapter outbound cross-chain transfers or for configured fees.
+    // The authority of this account is the OFTStore and its address is derived from the token escrow address.
     #[account(
         mut,
         address = oft_store.token_escrow,

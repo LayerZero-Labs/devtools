@@ -43,7 +43,7 @@ pub struct OFTStore {
 }
 
 /// OFTType defines the two possible types of OFT implementations:
-/// - **Native:** Uses a native mint-and-burn mechanism.
+/// - **Native:** Uses a native mint-and-burn mechanism (Vanilla OFT and Mint and Burn Adapter OFT).
 /// - **Adapter:** Uses an adapter mechanism where tokens are locked in escrow and then unlocked.
 #[derive(InitSpace, Clone, AnchorSerialize, AnchorDeserialize, PartialEq, Eq)]
 pub enum OFTType {
