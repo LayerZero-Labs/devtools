@@ -15,15 +15,15 @@ const avalancheContract: OmniPointHardhat = {
     contractName: 'MyOFT',
 }
 
-const polygonContract: OmniPointHardhat = {
-    eid: EndpointId.AMOY_V2_TESTNET,
+const arbitrumContract: OmniPointHardhat = {
+    eid: EndpointId.ARBSEP_V2_TESTNET,
     contractName: 'MyOFT',
 }
 
 // To connect all the above chains to each other, we need the following pathways:
 // Optimism <-> Avalanche
-// Optimism <-> Polygon
-// Avalanche <-> Polygon
+// Optimism <-> Arbitrum
+// Avalanche <-> Arbitrum
 
 const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
     {
@@ -46,14 +46,14 @@ const pathways: TwoWayConfig[] = [
     ],
     [
         optimismContract, // Chain A contract
-        polygonContract, // Chain C contract
+        arbitrumContract, // Chain C contract
         [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
         [1, 1], // [A to B confirmations, B to A confirmations]
         [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain C enforcedOptions, Chain A enforcedOptions
     ],
     [
         avalancheContract, // Chain B contract
-        polygonContract, // Chain C contract
+        arbitrumContract, // Chain C contract
         [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
         [1, 1], // [A to B confirmations, B to A confirmations]
         [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain C enforcedOptions, Chain B enforcedOptions
@@ -64,7 +64,7 @@ export default async function () {
     // Generate the connections config based on the pathways
     const connections = await generateConnectionsConfig(pathways)
     return {
-        contracts: [{ contract: optimismContract }, { contract: avalancheContract }, { contract: polygonContract }],
+        contracts: [{ contract: optimismContract }, { contract: avalancheContract }, { contract: arbitrumContract }],
         connections,
     }
 }
