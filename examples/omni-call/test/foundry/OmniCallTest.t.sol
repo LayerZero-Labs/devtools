@@ -9,14 +9,15 @@ pragma solidity 0.8.22;
 
 import { console } from "forge-std/Test.sol";
 import { Vm } from "forge-std/Vm.sol";
-import { TestHelperOz5, EndpointV2 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
+import { EndpointV2 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 
 //  ==========  Internal imports    ==========
 
-import { OmniCall, MessagingFee, MessagingReceipt, Origin, MessageType, Call, Transfer } from "../../contracts/OmniCall.sol";
-import { OmniCallMsgCodecLib } from "../../contracts/OmniCallMsgCodecLib.sol";
+import { OmniCall, MessagingFee, MessagingReceipt, Origin } from "../../contracts/OmniCall.sol";
+import { OmniCallMsgCodecLib, Call, Transfer } from "../../contracts/OmniCallMsgCodecLib.sol";
 import { ERC20Mock } from "./ERC20Mock.sol";
 import { OmniCallFixture } from "./OmniCallFixture.sol";
+import { TestHelperOz5WithRevertAssertions } from "./TestHelperOz5WithRevertAssertions.sol";
 
 /// -----------------------------------------------------------------------
 /// Contract
@@ -26,7 +27,7 @@ import { OmniCallFixture } from "./OmniCallFixture.sol";
  * @title Generic omnichain proxy test.
  * @author LayerZeroLabs (@EWCunha).
  */
-contract OmniCallTest is TestHelperOz5 {
+contract OmniCallTest is TestHelperOz5WithRevertAssertions {
     OmniCall public srcOmniCall;
     OmniCall public dstOmniCall;
     OmniCallFixture public fixture;
@@ -89,24 +90,32 @@ contract OmniCallTest is TestHelperOz5 {
 
     //  ==========  send  ==========
 
-    function testSendNativeTokenSuccess() public {
+    function testSendNativeTokenNonAtomicSuccess() public {
         uint128 dstGasLimit = 50_000;
-        uint128 dstMsgValue = 0.1 ether;
+
+        // Call
+        address callTarget = address(0);
+        uint128 callValue = 0;
+        bytes memory callData = "";
+
+        // Transfer
+        address transferTo = dstAddress;
+        uint128 transferValue = 0.1 ether;
 
         MessagingFee memory fee = srcOmniCall.quote(
-            MessageType.NON_ATOMIC,
+            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
             dstEid,
-            Call(address(0), 0, ""),
-            Transfer(dstAddress, dstMsgValue),
+            Call(callTarget, callValue, callData),
+            Transfer(transferTo, transferValue),
             dstGasLimit
         );
 
         vm.prank(srcAddress);
         MessagingReceipt memory receipt = srcOmniCall.send{ value: fee.nativeFee }(
-            MessageType.NON_ATOMIC,
+            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
             dstEid,
-            Call(address(0), 0, ""),
-            Transfer(dstAddress, dstMsgValue),
+            Call(callTarget, callValue, callData),
+            Transfer(transferTo, transferValue),
             dstGasLimit
         );
 
@@ -117,27 +126,193 @@ contract OmniCallTest is TestHelperOz5 {
         assertEq(receipt.fee.lzTokenFee, 0);
         assertEq(receipt.nonce, 1);
         assertEq(srcAddress.balance, INITIAL_BALANCE - fee.nativeFee);
-        assertEq(dstAddress.balance, INITIAL_BALANCE + dstMsgValue);
+        assertEq(transferTo.balance, INITIAL_BALANCE + transferValue);
     }
 
-    function testSendCalldataSuccess() public {
+    function testSendCalldataNonAtomicSuccess() public {
         uint128 dstGasLimit = 500_000;
-        uint128 dstMsgValue = 0;
+
+        // Call
+        address callTarget = address(token);
+        uint128 callValue = 0;
+        bytes memory callData = abi.encodeWithSignature("mint(address,uint256)", dstAddress, 1);
+
+        // Transfer
+        address transferTo = address(0);
+        uint128 transferValue = 0;
 
         MessagingFee memory fee = srcOmniCall.quote(
-            MessageType.ATOMIC,
+            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
             dstEid,
-            Call(address(token), 0, abi.encodeWithSignature("mint(address,uint256)", dstAddress, 1)),
-            Transfer(address(0), dstMsgValue),
+            Call(callTarget, callValue, callData),
+            Transfer(transferTo, transferValue),
             dstGasLimit
         );
 
         vm.prank(srcAddress);
         MessagingReceipt memory receipt = srcOmniCall.send{ value: fee.nativeFee }(
-            MessageType.ATOMIC,
+            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
             dstEid,
-            Call(address(token), 0, abi.encodeWithSignature("mint(address,uint256)", dstAddress, 1)),
-            Transfer(dstAddress, dstMsgValue),
+            Call(callTarget, callValue, callData),
+            Transfer(transferTo, transferValue),
+            dstGasLimit
+        );
+
+        verifyPackets(dstEid, addressToBytes32(address(dstOmniCall)));
+
+        assertNotEq(receipt.guid, bytes32(0));
+        assertEq(receipt.fee.nativeFee, fee.nativeFee);
+        assertEq(receipt.fee.lzTokenFee, 0);
+        assertEq(receipt.nonce, 1);
+        assertEq(srcAddress.balance, INITIAL_BALANCE - fee.nativeFee);
+        assertEq(token.balanceOf(dstAddress), 1);
+    }
+
+    function testSendNativeTokenAndCalldataNonAtomicSuccess() public {
+        uint128 dstGasLimit = 500_000;
+
+        // Call
+        address callTarget = address(token);
+        uint128 callValue = 0;
+        bytes memory callData = abi.encodeWithSignature("mint(address,uint256)", dstAddress, 1);
+
+        // Transfer
+        address transferTo = dstAddress;
+        uint128 transferValue = 0.1 ether;
+
+        MessagingFee memory fee = srcOmniCall.quote(
+            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
+            dstEid,
+            Call(callTarget, callValue, callData),
+            Transfer(transferTo, transferValue),
+            dstGasLimit
+        );
+
+        vm.prank(srcAddress);
+        MessagingReceipt memory receipt = srcOmniCall.send{ value: fee.nativeFee }(
+            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
+            dstEid,
+            Call(callTarget, callValue, callData),
+            Transfer(transferTo, transferValue),
+            dstGasLimit
+        );
+
+        verifyPackets(dstEid, addressToBytes32(address(dstOmniCall)));
+
+        assertNotEq(receipt.guid, bytes32(0));
+        assertEq(receipt.fee.nativeFee, fee.nativeFee);
+        assertEq(receipt.fee.lzTokenFee, 0);
+        assertEq(receipt.nonce, 1);
+        assertEq(srcAddress.balance, INITIAL_BALANCE - fee.nativeFee);
+        assertEq(transferTo.balance, INITIAL_BALANCE + transferValue);
+        assertEq(token.balanceOf(dstAddress), 1);
+    }
+
+    function testSendNativeTokenAndCalldataNonAtomicRevertsIfCallFails() public {
+        uint128 dstGasLimit = 500_000;
+
+        // Call
+        address callTarget = address(token);
+        uint128 callValue = 0;
+        bytes memory callData = abi.encodeWithSignature("minta(address,uint256)", dstAddress, 1);
+
+        // Transfer
+        address transferTo = dstAddress;
+        uint128 transferValue = 0.1 ether;
+
+        MessagingFee memory fee = srcOmniCall.quote(
+            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
+            dstEid,
+            Call(callTarget, callValue, callData),
+            Transfer(transferTo, transferValue),
+            dstGasLimit
+        );
+
+        vm.prank(srcAddress);
+        MessagingReceipt memory receipt = srcOmniCall.send{ value: fee.nativeFee }(
+            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
+            dstEid,
+            Call(callTarget, callValue, callData),
+            Transfer(transferTo, transferValue),
+            dstGasLimit
+        );
+
+        verifyPacketsWithReceiveRevertAssertion(dstEid, addressToBytes32(address(dstOmniCall)), bytes("EvmError"));
+
+        assertNotEq(receipt.guid, bytes32(0));
+        assertEq(receipt.fee.nativeFee, fee.nativeFee);
+        assertEq(receipt.fee.lzTokenFee, 0);
+        assertEq(receipt.nonce, 1);
+        assertEq(srcAddress.balance, INITIAL_BALANCE - fee.nativeFee);
+        assertEq(transferTo.balance, INITIAL_BALANCE + transferValue);
+        assertEq(token.balanceOf(dstAddress), 0);
+    }
+
+    function testSendNativeTokenAtomicSuccess() public {
+        uint128 dstGasLimit = 500_000;
+
+        // Call
+        address callTarget = address(0);
+        uint128 callValue = 0;
+        bytes memory callData = "";
+
+        // Transfer
+        address transferTo = dstAddress;
+        uint128 transferValue = 0.1 ether;
+
+        MessagingFee memory fee = srcOmniCall.quote(
+            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            dstEid,
+            Call(callTarget, callValue, callData),
+            Transfer(transferTo, transferValue),
+            dstGasLimit
+        );
+
+        vm.prank(srcAddress);
+        MessagingReceipt memory receipt = srcOmniCall.send{ value: fee.nativeFee }(
+            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            dstEid,
+            Call(callTarget, callValue, callData),
+            Transfer(transferTo, transferValue),
+            dstGasLimit
+        );
+
+        verifyPackets(dstEid, addressToBytes32(address(dstOmniCall)));
+
+        assertNotEq(receipt.guid, bytes32(0));
+        assertEq(receipt.fee.nativeFee, fee.nativeFee);
+        assertEq(receipt.fee.lzTokenFee, 0);
+        assertEq(receipt.nonce, 1);
+        assertEq(srcAddress.balance, INITIAL_BALANCE - fee.nativeFee);
+        assertEq(dstAddress.balance, INITIAL_BALANCE + transferValue);
+    }
+
+    function testSendCalldataAtomicSuccess() public {
+        uint128 dstGasLimit = 500_000;
+
+        // Call
+        address callTarget = address(token);
+        uint128 callValue = 0;
+        bytes memory callData = abi.encodeWithSignature("mint(address,uint256)", dstAddress, 1);
+
+        // Transfer
+        address transferTo = address(0);
+        uint128 transferValue = 0;
+
+        MessagingFee memory fee = srcOmniCall.quote(
+            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            dstEid,
+            Call(callTarget, callValue, callData),
+            Transfer(transferTo, transferValue),
+            dstGasLimit
+        );
+
+        vm.prank(srcAddress);
+        MessagingReceipt memory receipt = srcOmniCall.send{ value: fee.nativeFee }(
+            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            dstEid,
+            Call(callTarget, callValue, callData),
+            Transfer(transferTo, transferValue),
             dstGasLimit
         );
 
@@ -152,7 +327,47 @@ contract OmniCallTest is TestHelperOz5 {
         assertEq(token.balanceOf(dstAddress), 1);
     }
 
-    function testSendCalldataMalicious() public {
+    function testSendCallDataWithNativeTokenAtomicSuccess() public {
+        uint128 dstGasLimit = 500_000;
+
+        // Call
+        address callTarget = address(token);
+        uint128 callValue = 0;
+        bytes memory callData = abi.encodeWithSignature("mint(address,uint256)", dstAddress, 1);
+
+        // Transfer
+        address transferTo = dstAddress;
+        uint128 transferValue = 0.1 ether;
+
+        MessagingFee memory fee = srcOmniCall.quote(
+            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            dstEid,
+            Call(callTarget, callValue, callData),
+            Transfer(transferTo, transferValue),
+            dstGasLimit
+        );
+
+        vm.prank(srcAddress);
+        MessagingReceipt memory receipt = srcOmniCall.send{ value: fee.nativeFee }(
+            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            dstEid,
+            Call(callTarget, callValue, callData),
+            Transfer(transferTo, transferValue),
+            dstGasLimit
+        );
+
+        verifyPackets(dstEid, addressToBytes32(address(dstOmniCall)));
+
+        assertNotEq(receipt.guid, bytes32(0));
+        assertEq(receipt.fee.nativeFee, fee.nativeFee);
+        assertEq(receipt.fee.lzTokenFee, 0);
+        assertEq(receipt.nonce, 1);
+        assertEq(srcAddress.balance, INITIAL_BALANCE - fee.nativeFee);
+        assertEq(transferTo.balance, INITIAL_BALANCE + transferValue);
+        assertEq(token.balanceOf(dstAddress), 1);
+    }
+
+    function testSendCalldataMaliciousRevertsIfTargetOrToIsEndpoint() public {
         uint128 dstGasLimit = 500_000;
         uint128 dstMsgValue = 0;
 
@@ -160,7 +375,7 @@ contract OmniCallTest is TestHelperOz5 {
         address blockedLib = dstEndpoint.blockedLibrary();
 
         MessagingFee memory fee = srcOmniCall.quote(
-            MessageType.ATOMIC,
+            OmniCallMsgCodecLib.ATOMIC_TYPE,
             dstEid,
             Call(
                 address(endpoints[dstEid]),
@@ -173,7 +388,7 @@ contract OmniCallTest is TestHelperOz5 {
 
         vm.prank(srcAddress);
         MessagingReceipt memory receipt = srcOmniCall.send{ value: fee.nativeFee }(
-            MessageType.ATOMIC,
+            OmniCallMsgCodecLib.ATOMIC_TYPE,
             dstEid,
             Call(
                 address(endpoints[dstEid]),
@@ -183,55 +398,12 @@ contract OmniCallTest is TestHelperOz5 {
             Transfer(dstAddress, dstMsgValue),
             dstGasLimit
         );
-        vm.recordLogs();
-        verifyPackets(dstEid, addressToBytes32(address(dstOmniCall)));
-        Vm.Log[] memory entries = vm.getRecordedLogs();
 
-        // Compute the event signature hash.
-        bytes32 expectedSig = keccak256("SendLibrarySet(address,uint32,address)");
-        bool found = false;
-
-        for (uint256 i = 0; i < entries.length; i++) {
-            // Compare the first topic (the event signature) with our expected signature.
-            if (entries[i].topics.length > 0 && entries[i].topics[0] == expectedSig) {
-                // Optionally, further decode topics and data to verify sender, eid, and newLib.
-                found = true;
-                break;
-            }
-        }
-        assertTrue(found);
-    }
-
-    function testSendCallDataWithNativeTokenSuccess() public {
-        uint128 dstGasLimit = 500_000;
-        uint128 dstMsgValue = 0.1 ether;
-
-        MessagingFee memory fee = srcOmniCall.quote(
-            MessageType.ATOMIC,
+        verifyPacketsWithReceiveRevertAssertion(
             dstEid,
-            Call(address(token), 0, abi.encodeWithSignature("mint(address,uint256)", dstAddress, 1)),
-            Transfer(dstAddress, dstMsgValue),
-            dstGasLimit
+            addressToBytes32(address(dstOmniCall)),
+            abi.encodeWithSelector(OmniCall.LZ_OmniCall__InvalidTarget.selector)
         );
-
-        vm.prank(srcAddress);
-        MessagingReceipt memory receipt = srcOmniCall.send{ value: fee.nativeFee }(
-            MessageType.ATOMIC,
-            dstEid,
-            Call(address(token), 0, abi.encodeWithSignature("mint(address,uint256)", dstAddress, 1)),
-            Transfer(dstAddress, dstMsgValue),
-            dstGasLimit
-        );
-
-        verifyPackets(dstEid, addressToBytes32(address(dstOmniCall)));
-
-        assertNotEq(receipt.guid, bytes32(0));
-        assertEq(receipt.fee.nativeFee, fee.nativeFee);
-        assertEq(receipt.fee.lzTokenFee, 0);
-        assertEq(receipt.nonce, 1);
-        assertEq(srcAddress.balance, INITIAL_BALANCE - fee.nativeFee);
-        assertEq(dstAddress.balance, INITIAL_BALANCE + dstMsgValue);
-        assertEq(token.balanceOf(dstAddress), 1);
     }
 
     /// -----------------------------------------------------------------------
@@ -258,7 +430,7 @@ contract OmniCallTest is TestHelperOz5 {
 
     function testLzReceiveInternalWithPayloadSuccess() public {
         bytes memory payload = fixture.encode(
-            MessageType.ATOMIC,
+            OmniCallMsgCodecLib.ATOMIC_TYPE,
             Call(address(token), 0, abi.encodeWithSignature("mint(address,uint256)", dstAddress, 1)),
             Transfer(address(0), 0)
         );
@@ -276,7 +448,7 @@ contract OmniCallTest is TestHelperOz5 {
 
     function testLzReceiveInternalRevertsIfPayloadDoesNotDecode() public {
         bytes memory payload = fixture.encode(
-            MessageType.ATOMIC,
+            OmniCallMsgCodecLib.ATOMIC_TYPE,
             Call(address(token), 0, abi.encodeWithSignature("mint(address,uint256)", dstAddress, 1)),
             Transfer(address(0), 0)
         );
@@ -324,7 +496,7 @@ contract OmniCallTest is TestHelperOz5 {
         uint128 dstMsgValue = 0.1 ether;
 
         MessagingFee memory fee = srcOmniCall.quote(
-            MessageType.NON_ATOMIC,
+            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
             dstEid,
             Call(address(0), 0, ""),
             Transfer(dstAddress, dstMsgValue),
@@ -346,7 +518,7 @@ contract OmniCallTest is TestHelperOz5 {
         uint128 dstMsgValue = 0;
 
         (MessagingFee memory fee, bytes memory options) = fixture.quoteWithOptionsInternal(
-            MessageType.NON_ATOMIC,
+            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
             dstEid,
             Call(address(token), 0, abi.encodeWithSignature("mint(address,uint256)", dstAddress, 1)),
             Transfer(dstAddress, dstMsgValue),
@@ -363,7 +535,7 @@ contract OmniCallTest is TestHelperOz5 {
         uint128 dstMsgValue = 0.1 ether;
 
         (MessagingFee memory fee, bytes memory options) = fixture.quoteWithOptionsInternal(
-            MessageType.NON_ATOMIC,
+            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
             dstEid,
             Call(address(token), 0, abi.encodeWithSignature("mint(address,uint256)", dstAddress, 1)),
             Transfer(dstAddress, dstMsgValue),
@@ -378,7 +550,7 @@ contract OmniCallTest is TestHelperOz5 {
     function testQuoteWithOptionsRevertsIfZeroGasLimit() public {
         vm.expectRevert(OmniCall.LZ_OmniCall__ZeroGasLimit.selector);
         fixture.quoteWithOptionsInternal(
-            MessageType.NON_ATOMIC,
+            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
             dstEid,
             Call(address(0), 0, ""),
             Transfer(dstAddress, 0),

@@ -14,46 +14,7 @@ import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/Opti
 
 //  ==========  Internal imports    ==========
 
-import { OmniCallMsgCodecLib } from "./OmniCallMsgCodecLib.sol";
-
-/// -----------------------------------------------------------------------
-/// Custom types
-/// -----------------------------------------------------------------------
-
-/**
- * @dev Enum to represent the type of message.
- * @param NON_ATOMIC: a non-atomic transfer. This means the gas token transfer (native drop)
- * is executed in other transaction, separated from the message send transaction (lzReceive).
- * @param ATOMIC: an atomic transfer. This means the gas token transfer (native drop) is executed
- * in the same transaction as the message send transaction (lzReceive). If the intent is just to
- * send a message, use `ATOMIC`.
- */
-enum MessageType {
-    NON_ATOMIC,
-    ATOMIC
-}
-
-/**
- * @dev Struct to represent a call.
- * @param target: call target address;
- * @param value: value to be sent with the call;
- * @param callData: call calldata.
- */
-struct Call {
-    address target;
-    uint128 value;
-    bytes callData;
-}
-
-/**
- * @dev Struct to represent a transfer.
- * @param to: transfer destination address;
- * @param value: value to be sent with the transfer.
- */
-struct Transfer {
-    address to;
-    uint128 value;
-}
+import { OmniCallMsgCodecLib, Call, Transfer } from "./OmniCallMsgCodecLib.sol";
 
 /// -----------------------------------------------------------------------
 /// Contract
@@ -82,6 +43,24 @@ contract OmniCall is OApp {
     /// @dev Error for when a call target is the endpoint.
     error LZ_OmniCall__InvalidTarget();
 
+    /// @dev Error for when a message type is invalid.
+    error LZ_OmniCall__InvalidMessageType();
+
+    /// -----------------------------------------------------------------------
+    /// Modifiers
+    /// -----------------------------------------------------------------------
+
+    /**
+     * @dev Modifier to validate the message type.
+     * @param messageType: type of message to be sent.
+     */
+    modifier validateMessageType(uint8 messageType) {
+        if (!(messageType < OmniCallMsgCodecLib.MAX_MESSAGE_TYPE_VALUE)) {
+            revert LZ_OmniCall__InvalidMessageType();
+        }
+        _;
+    }
+
     /// -----------------------------------------------------------------------
     /// Constructor
     /// -----------------------------------------------------------------------
@@ -108,16 +87,12 @@ contract OmniCall is OApp {
      * @param dstGasLimit: gas limit for destination call/transfer.
      */
     function send(
-        MessageType messageType,
+        uint8 messageType,
         uint32 dstEid,
         Call calldata dstCall,
         Transfer calldata dstTransfer,
         uint128 dstGasLimit
-    ) external payable returns (MessagingReceipt memory receipt) {
-        if (dstCall.target == address(endpoint) || dstTransfer.to == address(endpoint)) {
-            revert LZ_OmniCall__InvalidTarget();
-        }
-
+    ) external payable validateMessageType(messageType) returns (MessagingReceipt memory receipt) {
         (MessagingFee memory fee, bytes memory options) = _quoteWithOptions(
             messageType,
             dstEid,
@@ -162,11 +137,17 @@ contract OmniCall is OApp {
                 bytes memory callData
             ) = OmniCallMsgCodecLib.decode(payload);
 
+            if (target == address(endpoint) || to == address(endpoint)) {
+                revert LZ_OmniCall__InvalidTarget();
+            }
+
             if (transferValue > 0) {
                 _call(to, transferValue, "");
             }
 
-            _call(target, value, callData);
+            if (callData.length > 0) {
+                _call(target, value, callData);
+            }
         }
     }
 
@@ -203,12 +184,12 @@ contract OmniCall is OApp {
      * @return fee - MessagingFee - struct with fee in native and lz token.
      */
     function quote(
-        MessageType messageType,
+        uint8 messageType,
         uint32 dstEid,
         Call calldata dstCall,
         Transfer calldata dstTransfer,
         uint128 dstGasLimit
-    ) public view returns (MessagingFee memory fee) {
+    ) public view validateMessageType(messageType) returns (MessagingFee memory fee) {
         (fee, ) = _quoteWithOptions(messageType, dstEid, dstCall, dstTransfer, dstGasLimit);
     }
 
@@ -227,7 +208,7 @@ contract OmniCall is OApp {
      * @return options - bytes - the cross-chain message options.
      */
     function _quoteWithOptions(
-        MessageType messageType,
+        uint8 messageType,
         uint32 dstEid,
         Call calldata dstCall,
         Transfer calldata dstTransfer,
@@ -237,7 +218,7 @@ contract OmniCall is OApp {
             revert LZ_OmniCall__ZeroGasLimit();
         }
 
-        if (messageType == MessageType.ATOMIC) {
+        if (messageType == OmniCallMsgCodecLib.ATOMIC_TYPE) {
             options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(
                 dstGasLimit,
                 dstTransfer.value + dstCall.value

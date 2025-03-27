@@ -7,8 +7,7 @@ pragma solidity 0.8.22;
 
 //  ==========  Internal imports    ==========
 
-import { OmniCallMsgCodecLib } from "../../contracts/OmniCallMsgCodecLib.sol";
-import { MessageType, Call, Transfer } from "../../contracts/OmniCall.sol";
+import { OmniCallMsgCodecLib, Call, Transfer } from "../../contracts/OmniCallMsgCodecLib.sol";
 
 /// -----------------------------------------------------------------------
 /// Fixture
@@ -20,7 +19,7 @@ import { MessageType, Call, Transfer } from "../../contracts/OmniCall.sol";
  */
 contract OmniCallMsgCodecLibFixture {
     function encode(
-        MessageType messageType,
+        uint8 messageType,
         Call calldata dstCall,
         Transfer calldata dstTransfer
     ) external pure returns (bytes memory) {
