@@ -167,6 +167,11 @@ export const getSolanaDeployment = (
     return JSON.parse(fileContents)
 }
 
+export const getOftStoreAddress = (eid: EndpointId) => {
+    const { oftStore } = getSolanaDeployment(eid)
+    return oftStore
+}
+
 // TODO: move below outside of solana folder since it's generic
 export const getLayerZeroScanLink = (hash: string, isTestnet = false) =>
     isTestnet ? `https://testnet.layerzeroscan.com/tx/${hash}` : `https://layerzeroscan.com/tx/${hash}`
