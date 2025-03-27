@@ -248,6 +248,17 @@ pnpm run lz:sdk:move:permanently-disable-blocklist --oapp-config move.layerzero.
 pnpm run lz:sdk:move:permanently-disable-freezing --oapp-config move.layerzero.config.ts
 ```
 
+### Token address
+
+When deploying an OFT, the underlying token address is different from the object address of the OFT. The underlying token address can be found on the Move-VM block explorer by entering your OFT object address in search, navigating to modules, selecting view, then under 'oft' select 'token' and click the 'view' button. The token() function on the OFT module will return your Fungible Asset's address.
+
+### Removing the Unverified flag from your Fungible Asset
+
+In order to remove the `Unverified` flag on your underlying fungible asset you have to make a verifcation request to the chain.
+
+- Movement chain: https://github.com/movementlabsxyz/movement-tokens
+- Aptos chain: https://github.com/PanoraExchange/Aptos-Tokens
+
 ### Transferring Ownership of your Move OApp (OFT)
 
 There are three steps to transferring ownership of your Move OFT:

@@ -910,6 +910,9 @@ importers:
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.75
         version: 3.0.75
+      '@layerzerolabs/metadata-tools':
+        specifier: ^0.4.1
+        version: link:../../packages/metadata-tools
       '@layerzerolabs/oapp-evm':
         specifier: ^0.3.2
         version: link:../../packages/oapp-evm
@@ -1304,7 +1307,7 @@ importers:
         specifier: ^0.0.6
         version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^1.0.4
+        specifier: ^1.0.5
         version: link:../../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -1472,7 +1475,7 @@ importers:
         specifier: ^0.0.6
         version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^1.0.3
+        specifier: ^1.0.5
         version: link:../../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -1773,7 +1776,7 @@ importers:
         specifier: ^0.0.6
         version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^1.0.4
+        specifier: ^1.0.5
         version: link:../../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39

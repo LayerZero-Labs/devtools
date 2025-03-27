@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-aptos-move-example
 
+## 1.0.4
+
+### Patch Changes
+
+- 2095f14: docs: update README with token address details and verification process for fungible assets
+
 ## 1.0.3
 
 ### Patch Changes
