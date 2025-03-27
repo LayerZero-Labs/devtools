@@ -488,14 +488,14 @@ npx hardhat lz:oapp:config:init --contract-name [YOUR_CONTRACT_NAME] --oapp-conf
 
 ```typescript
 const optimismContract: OmniPointHardhat = {
-    eid: EndpointId.OPTSEP_V2_TESTNET,
-    contractName: 'MyOFTAdapter',
-}
+  eid: EndpointId.OPTSEP_V2_TESTNET,
+  contractName: "MyOFTAdapter",
+};
 
 const avalancheContract: OmniPointHardhat = {
-    eid: EndpointId.AVALANCHE_V2_TESTNET,
-    contractName: 'MyOFT',
-}
+  eid: EndpointId.AVALANCHE_V2_TESTNET,
+  contractName: "MyOFT",
+};
 ```
 
 ### Apply configurations
@@ -507,7 +507,6 @@ npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts
 ```
 
 Congratulations! Your contracts are now wired and can begin sending messages to each other.
-
 
 ### Manual Configuration
 
