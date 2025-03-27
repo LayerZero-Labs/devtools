@@ -3,6 +3,8 @@ import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
 import { generateConnectionsConfig } from '@layerzerolabs/metadata-tools'
 import { OAppEnforcedOption, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
+import { getOftStoreAddress } from './tasks/solana'
+
 // Note:  Do not use address for EVM OmniPointHardhat contracts.  Contracts are loaded using hardhat-deploy.
 // If you do use an address, ensure artifacts exists.
 const sepoliaContract: OmniPointHardhat = {
@@ -12,7 +14,7 @@ const sepoliaContract: OmniPointHardhat = {
 
 const solanaContract: OmniPointHardhat = {
     eid: EndpointId.SOLANA_V2_TESTNET,
-    address: '', // NOTE: update this with the OFTStore address.
+    address: getOftStoreAddress(EndpointId.SOLANA_V2_TESTNET), // NOTE: this will return an empty string if the create task has not been run.
 }
 
 const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
