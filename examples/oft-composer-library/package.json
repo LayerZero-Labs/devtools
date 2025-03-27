@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-composer-library-example",
-  "version": "0.5.1",
+  "version": "0.0.1",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -19,9 +19,6 @@
   "resolutions": {
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1"
-  },
-  "dependencies": {
-    "@uniswap/v3-core": "^1.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
@@ -47,6 +44,7 @@
     "@types/chai": "^4.3.11",
     "@types/mocha": "^10.0.6",
     "@types/node": "~18.18.14",
+    "@uniswap/v3-core": "^1.0.1",
     "@uniswap/v3-periphery": "^1.4.4",
     "chai": "^4.4.1",
     "concurrently": "~9.1.0",
