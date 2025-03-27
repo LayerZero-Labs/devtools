@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-move
 
+## 1.0.5
+
+### Patch Changes
+
+- cd6de9d: Tx export functinality for Initia, improving README.md instructions for clarity, 2 minor bug fixes.
+
 ## 1.0.4
 
 ### Patch Changes
