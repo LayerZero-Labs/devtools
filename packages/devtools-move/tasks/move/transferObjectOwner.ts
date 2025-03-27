@@ -7,7 +7,12 @@ async function transferObjectOwner(taskContext: TaskContext, newOwner: string) {
     console.log(`\tFor Object at: ${taskContext.oAppAddress}\n`)
     console.log(`\tNew Owner: ${newOwner}\n`)
 
-    const transferOwnerPayload = createTransferObjectOwnerPayload(taskContext.oAppAddress, newOwner)
+    const transferOwnerPayload = createTransferObjectOwnerPayload(
+        taskContext.oAppAddress,
+        newOwner,
+        taskContext.chain,
+        taskContext.accountAddress
+    )
 
     const payloads = [transferOwnerPayload]
 

@@ -24,6 +24,7 @@ import { ExecutorConfig, UlnConfig } from '.'
 import type { OAppOmniGraphHardhat, Uln302ExecutorConfig } from '@layerzerolabs/toolbox-hardhat'
 import { decodeSolanaAddress } from '../../shared/basexToBytes32'
 import { IEndpoint } from '../../../sdk/IEndpoint'
+import { bcs, MsgExecute } from '@initia/initia.js'
 
 export type TransactionPayload = {
     description: string
@@ -60,7 +61,30 @@ export async function createTransferOwnerOAppPayload(
     }
 }
 
-export function createTransferObjectOwnerPayload(objectAddress: string, toAddress: string): TransactionPayload {
+export function createTransferObjectOwnerPayload(
+    objectAddress: string,
+    toAddress: string,
+    chain: string,
+    accountAddress: string
+): TransactionPayload {
+    if (chain === 'initia') {
+        const msg = new MsgExecute(
+            accountAddress,
+            '0x1',
+            'object',
+            'transfer_call',
+            [],
+            [bcs.address().serialize(objectAddress).toBase64(), bcs.address().serialize(toAddress).toBase64()]
+        )
+        const typedMsg = Object.assign(msg, {
+            types: ['address', 'address'],
+            multiSigArgs: [objectAddress, toAddress],
+        })
+        return {
+            payload: typedMsg,
+            description: `Transfer object ${objectAddress} to ${toAddress}`,
+        }
+    }
     return {
         payload: {
             function: '0x1::object::transfer_call',
