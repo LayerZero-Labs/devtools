@@ -62,9 +62,9 @@ const config: HardhatUserConfig = {
             url: process.env.RPC_URL_FUJI || 'https://avalanche-fuji.drpc.org',
             accounts,
         },
-        'polygon-testnet': {
-            eid: EndpointId.AMOY_V2_TESTNET,
-            url: process.env.RPC_URL_AMOY || 'https://polygon-amoy-bor-rpc.publicnode.com',
+        'arbitrum-testnet': {
+            eid: EndpointId.ARBSEP_V2_TESTNET,
+            url: process.env.RPC_URL_ARB_SEPOLIA || 'https://arbitrum-sepolia.gateway.tenderly.co',
             accounts,
         },
         hardhat: {
