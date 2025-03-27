@@ -25,19 +25,6 @@ const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
         gas: 80000,
         value: 0,
     },
-    {
-        msgType: 2,
-        optionType: ExecutorOptionType.LZ_RECEIVE,
-        gas: 80000,
-        value: 0,
-    },
-    {
-        msgType: 2,
-        optionType: ExecutorOptionType.COMPOSE,
-        index: 0,
-        gas: 80000,
-        value: 0,
-    },
 ]
 
 // To connect all the above chains to each other, we need the following pathways:
