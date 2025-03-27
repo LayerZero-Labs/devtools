@@ -43,29 +43,12 @@ contract OmniCall is OApp {
     /// @dev Error for when a call target is the endpoint.
     error LZ_OmniCall__InvalidTarget();
 
-    /// @dev Error for when a message type is invalid.
-    error LZ_OmniCall__InvalidMessageType();
-
     /// -----------------------------------------------------------------------
     /// State variables
     /// -----------------------------------------------------------------------
 
+    /// @dev For better readability
     uint8 internal constant ATOMIC_MESSAGE_TYPE = OmniCallMsgCodecLib.CALL_TYPE;
-
-    /// -----------------------------------------------------------------------
-    /// Modifiers
-    /// -----------------------------------------------------------------------
-
-    /**
-     * @dev Modifier to validate the message type.
-     * @param messageType: type of message to be sent.
-     */
-    modifier validateMessageType(uint8 messageType) {
-        if (!(messageType < OmniCallMsgCodecLib.MAX_MESSAGE_TYPE_VALUE)) {
-            revert LZ_OmniCall__InvalidMessageType();
-        }
-        _;
-    }
 
     /// -----------------------------------------------------------------------
     /// Constructor
@@ -98,7 +81,7 @@ contract OmniCall is OApp {
         Call calldata dstCall,
         Transfer calldata dstTransfer,
         uint128 dstGasLimit
-    ) external payable validateMessageType(messageType) returns (MessagingReceipt memory receipt) {
+    ) external payable returns (MessagingReceipt memory receipt) {
         (MessagingFee memory fee, bytes memory options) = _quoteWithOptions(
             messageType,
             dstEid,
@@ -195,7 +178,7 @@ contract OmniCall is OApp {
         Call calldata dstCall,
         Transfer calldata dstTransfer,
         uint128 dstGasLimit
-    ) public view validateMessageType(messageType) returns (MessagingFee memory fee) {
+    ) public view returns (MessagingFee memory fee) {
         (fee, ) = _quoteWithOptions(messageType, dstEid, dstCall, dstTransfer, dstGasLimit);
     }
 

@@ -36,21 +36,8 @@ const action: ActionType<TaskArguments> = async (
     const contract = await hre.ethers.getContractAt(contractName, deployment.address)
     const omniCall = contract.connect(signer)
 
-    let messageTypeInt
-    if (messageType === 'non-atomic') {
-        messageTypeInt = BigNumber.from(0)
-        if (!transferTo || !transferValue) {
-            throw new Error('Transfer to and value are required for non-atomic messages')
-        }
-    } else if (messageType === 'atomic') {
-        messageTypeInt = BigNumber.from(1)
-        if (!transferTo && transferValue === 0 && (!callTarget || callCalldata === '')) {
-            throw new Error('Call target and call data are required for atomic messages')
-        }
-        if (!callTarget && callCalldata === '' && (!transferTo || transferValue === 0)) {
-            throw new Error('Transfer to and value are required for atomic messages')
-        }
-    } else {
+    const messageTypeInt = messageType === 'non-atomic' ? 0 : 1
+    if (messageType !== 'non-atomic' && messageType !== 'atomic') {
         throw new Error('Invalid message type')
     }
 

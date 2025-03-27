@@ -55,9 +55,9 @@ library OmniCallMsgCodecLib {
     /// Constants
     /// -----------------------------------------------------------------------
 
-    uint8 internal constant TRANSFER_TYPE = 0;
-    uint8 internal constant CALL_TYPE = 1;
-    uint8 internal constant CALL_AND_TRANSFER_TYPE = 2;
+    uint8 internal constant TRANSFER_TYPE = 0; // Non-atomic
+    uint8 internal constant CALL_TYPE = 1; // Non-atomic
+    uint8 internal constant CALL_AND_TRANSFER_TYPE = 2; // Atomic
     uint8 internal constant MAX_MESSAGE_TYPE_VALUE = 2;
     uint256 internal constant MINIMAL_LENGTH_CALL = 36;
     uint256 internal constant MINIMAL_LENGTH_CALL_AND_TRANSFER = 72;
@@ -78,6 +78,10 @@ library OmniCallMsgCodecLib {
         Call calldata dstCall,
         Transfer calldata dstTransfer
     ) internal pure returns (bytes memory) {
+        if (!(messageType < MAX_MESSAGE_TYPE_VALUE)) {
+            revert LZ_OmniCallMsgCodecLib__InvalidMessageType();
+        }
+
         uint8 messageTypeUint = (messageType == TRANSFER_TYPE && dstCall.callData.length > 0) ||
             (messageType == CALL_TYPE && dstTransfer.value > 0)
             ? messageType + 1
