@@ -55,8 +55,8 @@ library OmniCallMsgCodecLib {
     /// Constants
     /// -----------------------------------------------------------------------
 
-    uint8 internal constant NON_ATOMIC_TYPE = 0;
-    uint8 internal constant ATOMIC_TYPE = 1;
+    uint8 internal constant TRANSFER_TYPE = 0;
+    uint8 internal constant CALL_TYPE = 1;
     uint8 internal constant CALL_AND_TRANSFER_TYPE = 2;
     uint8 internal constant MAX_MESSAGE_TYPE_VALUE = 2;
     uint256 internal constant MINIMAL_LENGTH_CALL = 36;
@@ -78,11 +78,11 @@ library OmniCallMsgCodecLib {
         Call calldata dstCall,
         Transfer calldata dstTransfer
     ) internal pure returns (bytes memory) {
-        uint8 messageTypeUint = (messageType == NON_ATOMIC_TYPE && dstCall.callData.length > 0) ||
-            (messageType == ATOMIC_TYPE && dstTransfer.value > 0)
+        uint8 messageTypeUint = (messageType == TRANSFER_TYPE && dstCall.callData.length > 0) ||
+            (messageType == CALL_TYPE && dstTransfer.value > 0)
             ? messageType + 1
             : messageType;
-        if (messageTypeUint == ATOMIC_TYPE) {
+        if (messageTypeUint == CALL_TYPE) {
             return abi.encodePacked(messageTypeUint, dstCall.target, dstCall.value, dstCall.callData);
         } else if (messageTypeUint == CALL_AND_TRANSFER_TYPE) {
             return
@@ -115,7 +115,7 @@ library OmniCallMsgCodecLib {
         bytes calldata data
     ) internal pure returns (address to, uint128 transferValue, address target, uint128 value, bytes memory callData) {
         uint8 messageType = uint8(data[0]);
-        if (messageType == ATOMIC_TYPE) {
+        if (messageType == CALL_TYPE) {
             if (data.length < MINIMAL_LENGTH_CALL) {
                 revert LZ_OmniCallMsgCodecLib__InvalidDataLength(messageType, data.length);
             }
@@ -144,7 +144,7 @@ library OmniCallMsgCodecLib {
      * @return - bool - True if the message type is a call type, false otherwise.
      */
     function isCallType(bytes calldata data) internal pure returns (bool) {
-        return uint8(data[0]) == ATOMIC_TYPE && !(data.length < MINIMAL_LENGTH_CALL);
+        return uint8(data[0]) == CALL_TYPE && !(data.length < MINIMAL_LENGTH_CALL);
     }
 
     /**

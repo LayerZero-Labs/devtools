@@ -38,7 +38,7 @@ contract OmniCallMsgCodecLibTest is Test {
 
     function testEncodeCallTypeSuccess() public {
         bytes memory encoded = fixture.encode(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             Call(address(0), 0, ""),
             Transfer(address(0), 0)
         );
@@ -47,7 +47,7 @@ contract OmniCallMsgCodecLibTest is Test {
 
     function testEncodeCallAndTransferTypeSuccess() public {
         bytes memory encoded = fixture.encode(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             Call(address(0), 0, ""),
             Transfer(address(0), 1)
         );
@@ -56,7 +56,7 @@ contract OmniCallMsgCodecLibTest is Test {
 
     function testEncodeEmptyData() public {
         bytes memory encoded = fixture.encode(
-            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
+            OmniCallMsgCodecLib.TRANSFER_TYPE,
             Call(address(0), 0, ""),
             Transfer(address(0), 0)
         );
@@ -71,7 +71,7 @@ contract OmniCallMsgCodecLibTest is Test {
         bytes memory callData = abi.encodeWithSignature("mint(address,uint256)", callTarget, 1);
 
         bytes memory encoded = fixture.encode(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             Call(callTarget, callValue, callData),
             Transfer(address(0), 0)
         );
@@ -92,7 +92,7 @@ contract OmniCallMsgCodecLibTest is Test {
         uint128 transferValue = 1;
 
         bytes memory encoded = fixture.encode(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             Call(callTarget, callValue, callData),
             Transfer(transferTarget, transferValue)
         );
@@ -108,7 +108,7 @@ contract OmniCallMsgCodecLibTest is Test {
 
     function testDecodeRevertsIfInvalidMessageType() public {
         bytes memory encoded = fixture.encode(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             Call(address(0), 0, ""),
             Transfer(address(0), 0)
         );
@@ -119,17 +119,17 @@ contract OmniCallMsgCodecLibTest is Test {
 
     function testDecodeCallTypeRevertsIfInvalidLength() public {
         bytes memory encoded = fixture.encode(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             Call(address(0), 0, ""),
             Transfer(address(0), 0)
         );
         encoded = BytesLib.slice(encoded, 0, encoded.length - 5);
 
-        assertEq(uint8(encoded[0]), OmniCallMsgCodecLib.ATOMIC_TYPE);
+        assertEq(uint8(encoded[0]), OmniCallMsgCodecLib.CALL_TYPE);
         vm.expectRevert(
             abi.encodeWithSelector(
                 OmniCallMsgCodecLib.LZ_OmniCallMsgCodecLib__InvalidDataLength.selector,
-                OmniCallMsgCodecLib.ATOMIC_TYPE,
+                OmniCallMsgCodecLib.CALL_TYPE,
                 encoded.length
             )
         );
@@ -138,17 +138,17 @@ contract OmniCallMsgCodecLibTest is Test {
 
     function testDecodeCallAndTransferTypeRevertsIfInvalidLength() public {
         bytes memory encoded = fixture.encode(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             Call(address(0), 0, ""),
             Transfer(address(0), 1)
         );
         encoded = BytesLib.slice(encoded, 0, encoded.length - 5);
 
-        assertEq(uint8(encoded[0]), OmniCallMsgCodecLib.ATOMIC_TYPE + 1);
+        assertEq(uint8(encoded[0]), OmniCallMsgCodecLib.CALL_AND_TRANSFER_TYPE);
         vm.expectRevert(
             abi.encodeWithSelector(
                 OmniCallMsgCodecLib.LZ_OmniCallMsgCodecLib__InvalidDataLength.selector,
-                OmniCallMsgCodecLib.ATOMIC_TYPE + 1,
+                OmniCallMsgCodecLib.CALL_AND_TRANSFER_TYPE,
                 encoded.length
             )
         );
@@ -159,7 +159,7 @@ contract OmniCallMsgCodecLibTest is Test {
 
     function testIsCallTypeSuccess() public {
         bytes memory encoded = fixture.encode(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             Call(address(0), 0, ""),
             Transfer(address(0), 0)
         );
@@ -168,7 +168,7 @@ contract OmniCallMsgCodecLibTest is Test {
 
     function testIsCallTypeUnsuccessInvalidMessageType() public {
         bytes memory encoded = fixture.encode(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             Call(address(0), 0, ""),
             Transfer(address(0), 1)
         );
@@ -177,7 +177,7 @@ contract OmniCallMsgCodecLibTest is Test {
 
     function testIsCallTypeUnsuccessInvalidLength() public {
         bytes memory encoded = fixture.encode(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             Call(address(0), 0, ""),
             Transfer(address(0), 0)
         );
@@ -189,7 +189,7 @@ contract OmniCallMsgCodecLibTest is Test {
 
     function testIsCallAndTransferTypeSuccess() public {
         bytes memory encoded = fixture.encode(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             Call(address(0), 0, ""),
             Transfer(address(0), 1)
         );
@@ -198,7 +198,7 @@ contract OmniCallMsgCodecLibTest is Test {
 
     function testIsCallAndTransferTypeUnsuccessInvalidMessageType() public {
         bytes memory encoded = fixture.encode(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             Call(address(0), 0, ""),
             Transfer(address(0), 0)
         );
@@ -207,7 +207,7 @@ contract OmniCallMsgCodecLibTest is Test {
 
     function testIsCallAndTransferTypeUnsuccessInvalidLength() public {
         bytes memory encoded = fixture.encode(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             Call(address(0), 0, ""),
             Transfer(address(0), 1)
         );

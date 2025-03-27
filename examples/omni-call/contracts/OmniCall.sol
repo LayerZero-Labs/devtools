@@ -47,6 +47,12 @@ contract OmniCall is OApp {
     error LZ_OmniCall__InvalidMessageType();
 
     /// -----------------------------------------------------------------------
+    /// State variables
+    /// -----------------------------------------------------------------------
+
+    uint8 internal constant ATOMIC_MESSAGE_TYPE = OmniCallMsgCodecLib.CALL_TYPE;
+
+    /// -----------------------------------------------------------------------
     /// Modifiers
     /// -----------------------------------------------------------------------
 
@@ -218,7 +224,7 @@ contract OmniCall is OApp {
             revert LZ_OmniCall__ZeroGasLimit();
         }
 
-        if (messageType == OmniCallMsgCodecLib.ATOMIC_TYPE) {
+        if (messageType == ATOMIC_MESSAGE_TYPE) {
             options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(
                 dstGasLimit,
                 dstTransfer.value + dstCall.value

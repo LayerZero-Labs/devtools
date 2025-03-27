@@ -103,7 +103,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
         uint128 transferValue = 0.1 ether;
 
         MessagingFee memory fee = srcOmniCall.quote(
-            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
+            OmniCallMsgCodecLib.TRANSFER_TYPE,
             dstEid,
             Call(callTarget, callValue, callData),
             Transfer(transferTo, transferValue),
@@ -112,7 +112,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
 
         vm.prank(srcAddress);
         MessagingReceipt memory receipt = srcOmniCall.send{ value: fee.nativeFee }(
-            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
+            OmniCallMsgCodecLib.TRANSFER_TYPE,
             dstEid,
             Call(callTarget, callValue, callData),
             Transfer(transferTo, transferValue),
@@ -142,7 +142,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
         uint128 transferValue = 0;
 
         MessagingFee memory fee = srcOmniCall.quote(
-            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
+            OmniCallMsgCodecLib.TRANSFER_TYPE,
             dstEid,
             Call(callTarget, callValue, callData),
             Transfer(transferTo, transferValue),
@@ -151,7 +151,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
 
         vm.prank(srcAddress);
         MessagingReceipt memory receipt = srcOmniCall.send{ value: fee.nativeFee }(
-            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
+            OmniCallMsgCodecLib.TRANSFER_TYPE,
             dstEid,
             Call(callTarget, callValue, callData),
             Transfer(transferTo, transferValue),
@@ -181,7 +181,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
         uint128 transferValue = 0.1 ether;
 
         MessagingFee memory fee = srcOmniCall.quote(
-            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
+            OmniCallMsgCodecLib.TRANSFER_TYPE,
             dstEid,
             Call(callTarget, callValue, callData),
             Transfer(transferTo, transferValue),
@@ -190,7 +190,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
 
         vm.prank(srcAddress);
         MessagingReceipt memory receipt = srcOmniCall.send{ value: fee.nativeFee }(
-            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
+            OmniCallMsgCodecLib.TRANSFER_TYPE,
             dstEid,
             Call(callTarget, callValue, callData),
             Transfer(transferTo, transferValue),
@@ -221,7 +221,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
         uint128 transferValue = 0.1 ether;
 
         MessagingFee memory fee = srcOmniCall.quote(
-            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
+            OmniCallMsgCodecLib.TRANSFER_TYPE,
             dstEid,
             Call(callTarget, callValue, callData),
             Transfer(transferTo, transferValue),
@@ -230,7 +230,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
 
         vm.prank(srcAddress);
         MessagingReceipt memory receipt = srcOmniCall.send{ value: fee.nativeFee }(
-            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
+            OmniCallMsgCodecLib.TRANSFER_TYPE,
             dstEid,
             Call(callTarget, callValue, callData),
             Transfer(transferTo, transferValue),
@@ -261,7 +261,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
         uint128 transferValue = 0.1 ether;
 
         MessagingFee memory fee = srcOmniCall.quote(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             dstEid,
             Call(callTarget, callValue, callData),
             Transfer(transferTo, transferValue),
@@ -270,7 +270,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
 
         vm.prank(srcAddress);
         MessagingReceipt memory receipt = srcOmniCall.send{ value: fee.nativeFee }(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             dstEid,
             Call(callTarget, callValue, callData),
             Transfer(transferTo, transferValue),
@@ -300,7 +300,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
         uint128 transferValue = 0;
 
         MessagingFee memory fee = srcOmniCall.quote(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             dstEid,
             Call(callTarget, callValue, callData),
             Transfer(transferTo, transferValue),
@@ -309,7 +309,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
 
         vm.prank(srcAddress);
         MessagingReceipt memory receipt = srcOmniCall.send{ value: fee.nativeFee }(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             dstEid,
             Call(callTarget, callValue, callData),
             Transfer(transferTo, transferValue),
@@ -340,7 +340,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
         uint128 transferValue = 0.1 ether;
 
         MessagingFee memory fee = srcOmniCall.quote(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             dstEid,
             Call(callTarget, callValue, callData),
             Transfer(transferTo, transferValue),
@@ -349,7 +349,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
 
         vm.prank(srcAddress);
         MessagingReceipt memory receipt = srcOmniCall.send{ value: fee.nativeFee }(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             dstEid,
             Call(callTarget, callValue, callData),
             Transfer(transferTo, transferValue),
@@ -375,7 +375,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
         address blockedLib = dstEndpoint.blockedLibrary();
 
         MessagingFee memory fee = srcOmniCall.quote(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             dstEid,
             Call(
                 address(endpoints[dstEid]),
@@ -388,7 +388,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
 
         vm.prank(srcAddress);
         MessagingReceipt memory receipt = srcOmniCall.send{ value: fee.nativeFee }(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             dstEid,
             Call(
                 address(endpoints[dstEid]),
@@ -430,7 +430,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
 
     function testLzReceiveInternalWithPayloadSuccess() public {
         bytes memory payload = fixture.encode(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             Call(address(token), 0, abi.encodeWithSignature("mint(address,uint256)", dstAddress, 1)),
             Transfer(address(0), 0)
         );
@@ -448,7 +448,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
 
     function testLzReceiveInternalRevertsIfPayloadDoesNotDecode() public {
         bytes memory payload = fixture.encode(
-            OmniCallMsgCodecLib.ATOMIC_TYPE,
+            OmniCallMsgCodecLib.CALL_TYPE,
             Call(address(token), 0, abi.encodeWithSignature("mint(address,uint256)", dstAddress, 1)),
             Transfer(address(0), 0)
         );
@@ -496,7 +496,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
         uint128 dstMsgValue = 0.1 ether;
 
         MessagingFee memory fee = srcOmniCall.quote(
-            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
+            OmniCallMsgCodecLib.TRANSFER_TYPE,
             dstEid,
             Call(address(0), 0, ""),
             Transfer(dstAddress, dstMsgValue),
@@ -518,7 +518,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
         uint128 dstMsgValue = 0;
 
         (MessagingFee memory fee, bytes memory options) = fixture.quoteWithOptionsInternal(
-            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
+            OmniCallMsgCodecLib.TRANSFER_TYPE,
             dstEid,
             Call(address(token), 0, abi.encodeWithSignature("mint(address,uint256)", dstAddress, 1)),
             Transfer(dstAddress, dstMsgValue),
@@ -535,7 +535,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
         uint128 dstMsgValue = 0.1 ether;
 
         (MessagingFee memory fee, bytes memory options) = fixture.quoteWithOptionsInternal(
-            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
+            OmniCallMsgCodecLib.TRANSFER_TYPE,
             dstEid,
             Call(address(token), 0, abi.encodeWithSignature("mint(address,uint256)", dstAddress, 1)),
             Transfer(dstAddress, dstMsgValue),
@@ -550,7 +550,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
     function testQuoteWithOptionsRevertsIfZeroGasLimit() public {
         vm.expectRevert(OmniCall.LZ_OmniCall__ZeroGasLimit.selector);
         fixture.quoteWithOptionsInternal(
-            OmniCallMsgCodecLib.NON_ATOMIC_TYPE,
+            OmniCallMsgCodecLib.TRANSFER_TYPE,
             dstEid,
             Call(address(0), 0, ""),
             Transfer(dstAddress, 0),
@@ -564,7 +564,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
 
     function testRevertsIfMaxMessageLengthExceeded() public {
         bytes memory payload = abi.encodePacked(
-            uint8(OmniCallMsgCodecLib.CALL_AND_TRANSFER_TYPE),
+            uint8(OmniCallMsgCodecLib.CALL_TYPE),
             address(token),
             uint128(0),
             abi.encodeWithSignature("mint(address,uint256)", dstAddress, 1),

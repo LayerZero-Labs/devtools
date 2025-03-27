@@ -18,10 +18,8 @@ OmniCall is a generic omnichain messaging protocol that allows for the sending a
 
 There are two types of messages:
 
-1. Non-atomic messages (`MessageType.NON_ATOMIC`): the gas token transfer (native drop) is executed in other transaction, separated from the message send transaction
-2. Atomic messages (`MessageType.ATOMIC`): the gas token transfer (native drop) is executed in the same transaction as the message send transaction
-
-If the intent is just to send a message, use `MessageType.ATOMIC`.
+1. Non-atomic messages (`messageType = 0`): the gas token transfer (native drop) is executed in other transaction, separated from the message send transaction
+2. Atomic messages (`messageType = 1`): the gas token transfer (native drop) is executed in the same transaction as the message send transaction
 
 Furthermore, there are two data structures that comprise the data needed for each message type (native drop and message):
 
