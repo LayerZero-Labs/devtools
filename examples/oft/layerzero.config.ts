@@ -25,6 +25,9 @@ const arbitrumContract: OmniPointHardhat = {
 // Optimism <-> Arbitrum
 // Avalanche <-> Arbitrum
 
+// For this example's simplicity, we will use the same enforced options values for sending to all chains
+// For production, you should ensure `gas` is set to the correct value through profiling the gas usage of calling OFT._lzReceive(...) on the destination chain
+// To learn more, read https://docs.layerzero.network/v2/concepts/applications/oapp-standard#execution-options-and-enforced-settings
 const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
     {
         msgType: 1,
