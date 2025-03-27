@@ -16,6 +16,7 @@ export interface WireFlowArgs<TOmniGraph extends OmniGraph> {
     graph: TOmniGraph
     assert?: boolean
     dryRun?: boolean
+    skipConnectionsFromEids?: string[]
 }
 
 export const createWireFlow =
@@ -24,7 +25,12 @@ export const createWireFlow =
         executeConfig,
         signAndSend,
     }: CreateWireFlowArgs<TOmniGraph>) =>
-    async ({ graph, assert = false, dryRun = false }: WireFlowArgs<TOmniGraph>): Promise<SignAndSendResult> => {
+    async ({
+        graph,
+        assert = false,
+        dryRun = false,
+        skipConnectionsFromEids = [],
+    }: WireFlowArgs<TOmniGraph>): Promise<SignAndSendResult> => {
         if (assert) {
             logger.info(`Running in assertion mode`)
         } else if (dryRun) {
@@ -33,6 +39,11 @@ export const createWireFlow =
 
         // At this point we are ready to create the list of transactions
         logger.verbose(`Creating a list of wiring transactions`)
+
+        if (skipConnectionsFromEids.length > 0) {
+            const excluded = skipConnectionsFromEids.map((eid) => parseInt(eid))
+            graph.connections = graph.connections.filter((connection) => !excluded.includes(connection.vector.from.eid))
+        }
 
         // We'll get the list of OmniTransactions using the config execution flow
         const transactions: OmniTransaction[] = await executeConfig({ graph })

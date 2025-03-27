@@ -28,7 +28,10 @@ export class OmniGraphBuilder<TNodeConfig = unknown, TEdgeConfig = unknown> {
         const from = formatOmniPoint(edge.vector.from)
 
         assert(isVectorPossible(edge.vector), `Cannot add edge ${label}: cannot connect the two endpoints`)
-        assert(this.getNodeAt(edge.vector.from), `Cannot add edge ${label}: ${from} is not in the graph`)
+        assert(
+            this.getNodeAt(edge.vector.from),
+            `Cannot add edge ${label}: ${from} is not in the graph.  Please check that it is included in the --oapp-config contracts.`
+        )
     }
 
     //   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-

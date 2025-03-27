@@ -59,8 +59,8 @@ const getSolanaPrivateKeyFromEnv = () => getFromEnv('SOLANA_PRIVATE_KEY')
  * Derive common connection and UMI objects for a given endpoint ID.
  * @param eid {EndpointId}
  */
-export const deriveConnection = async (eid: EndpointId) => {
-    const privateKey = getSolanaPrivateKeyFromEnv()
+export const deriveConnection = async (eid: EndpointId, readOnly = false) => {
+    const privateKey = readOnly ? bs58.encode(Keypair.generate().secretKey) : getSolanaPrivateKeyFromEnv()
     const connectionFactory = createSolanaConnectionFactory()
     const connection = await connectionFactory(eid)
     const umi = createUmi(connection.rpcEndpoint).use(mplToolbox())

@@ -1,5 +1,17 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.7.12
+
+### Patch Changes
+
+- 292803d: introduce fix suggestions, starting with when Solana init-config is skipped
+
+## 0.7.11
+
+### Patch Changes
+
+- 8817095: Add the ability to filter out connections from specified EndpointIds
+
 ## 0.7.10
 
 ### Patch Changes

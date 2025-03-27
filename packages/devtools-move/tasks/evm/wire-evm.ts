@@ -50,7 +50,14 @@ export async function createEvmOmniContracts(args: any, privateKey: string, chai
 
         const configOapp = conn?.config
 
-        const provider = new ethers.providers.JsonRpcProvider(rpcUrls[fromEid])
+        // A standard JsonRpcProvider does not work with the ethers library when it is defined in a worker thread
+        // https://github.com/ethers-io/ethers.js/issues/3536
+        // This is a workaround on ethersv5 (ethersv6 is supposed to have this fixed)
+        const provider = new ethers.providers.JsonRpcProvider({
+            url: rpcUrls[fromEid],
+            skipFetchSetup: true,
+        })
+
         const signer = new ethers.Wallet(privateKey, provider)
 
         const OAppDeploymentPath = path.resolve(`deployments/${fromNetworkFolderString}/${conn.from.contractName}.json`)
@@ -59,7 +66,35 @@ export async function createEvmOmniContracts(args: any, privateKey: string, chai
         const WireOAppDeploymentPath = path.resolve(`deployments/${toNetworkFolderString}/${conn.to.contractName}.json`)
         const WireOAppDeploymentData = JSON.parse(fs.readFileSync(WireOAppDeploymentPath, 'utf8'))
 
-        const EndpointV2DeploymentData = getDeploymentAddressAndAbi(fromNetworkFolderString, 'EndpointV2')
+        // @layerzerolabs/lz-evm-sdk-v2 's getDeploymentAddressAndAbi looks at the local deployments folder
+        // This is incorrect and it should look at the node_modules folder where the lz-evm-sdk-v2 is installed
+        // This is a workaround to get the correct deployment data from our local node_modules folder
+        let EndpointV2DeploymentData
+        try {
+            EndpointV2DeploymentData = getDeploymentAddressAndAbi(fromNetworkFolderString, 'EndpointV2')
+        } catch (error) {
+            const sdkDeploymentPath = path.resolve(
+                args.rootDir,
+                'node_modules',
+                '@layerzerolabs',
+                'lz-evm-sdk-v2',
+                'deployments',
+                fromNetworkFolderString,
+                'EndpointV2.json'
+            )
+
+            if (fs.existsSync(sdkDeploymentPath)) {
+                const deploymentData = JSON.parse(fs.readFileSync(sdkDeploymentPath, 'utf8'))
+                EndpointV2DeploymentData = {
+                    address: deploymentData.address,
+                    abi: deploymentData.abi,
+                }
+            } else {
+                throw new Error(`EndpointV2 deployment not found for ${fromNetworkFolderString}. Checked paths: 
+                - Via SDK function
+                - ${sdkDeploymentPath}`)
+            }
+        }
 
         const { address: oappAddress, abi: oappAbi } = OAppDeploymentData
         const { address: epv2Address, abi: epv2Abi } = EndpointV2DeploymentData
@@ -138,6 +173,7 @@ async function wireEvm(args: any) {
     const privateKey = readPrivateKey(args)
 
     const omniContracts = await createEvmOmniContracts(args, privateKey, ChainType.EVM)
+
     await validateOmniContractsOrTerminate(omniContracts)
 
     // Build a Transaction mapping for each type of transaction. It is further indexed by the eid.

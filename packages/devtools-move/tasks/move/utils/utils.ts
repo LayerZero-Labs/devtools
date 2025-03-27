@@ -4,7 +4,7 @@ import * as readline from 'readline'
 import { Aptos, InputGenerateTransactionPayloadData } from '@aptos-labs/ts-sdk'
 import { EndpointId, getNetworkForChainId, Stage } from '@layerzerolabs/lz-definitions'
 
-import { IOFT, TypedAptosPayload } from '../../../sdk/IOFT'
+import { IOFT, TypedAptosPayload, InitiaPayload } from '../../../sdk/IOFT'
 
 import { TransactionPayload } from './moveVMOftConfigOps'
 
@@ -145,33 +145,32 @@ async function sendAllInitiaTxs(
         console.log('\n📦 Transaction Summary:')
         console.log(`   • Total transactions: ${cleanedPayloads.length}`)
 
-        const maxRetries = 3
         for (let i = 0; i < cleanedPayloads.length; i++) {
             console.log(
                 `🔄 [${i + 1}/${cleanedPayloads.length}] Processing transaction: ${cleanedPayloads[i].description}...`
             )
+            try {
+                const result = await oft.signSubmitAndWaitForTx(cleanedPayloads[i].payload as MsgExecute)
+                console.log(`\t📎 Transaction hash: ${result.txhash}`)
+                printExplorerLink(oft.eid, result.txhash, getNetworkForChainId(oft.eid))
+            } catch (error: any) {
+                console.error('❌ Transaction failed.')
+                const rl = readline.createInterface({
+                    input: process.stdin,
+                    output: process.stdout,
+                })
 
-            let retryCount = 0
-            while (retryCount < maxRetries) {
-                try {
-                    const result = await oft.signSubmitAndWaitForTx(cleanedPayloads[i].payload as MsgExecute)
-                    console.log(`\t📎 Transaction hash: ${result.txhash}`)
-                    printExplorerLink(oft.eid, result.txhash, getNetworkForChainId(oft.eid))
-                    break // Success, exit retry loop
-                } catch (error: any) {
-                    retryCount++
-                    if (retryCount === maxRetries) {
-                        throw error // Throw if retries failed
-                    }
+                const answer = await new Promise<string>((resolve) => {
+                    rl.question('Would you like to see the detailed error? (y/n): ', resolve)
+                })
 
-                    // If sequence number error, wait and retry
-                    if (error?.data?.error_code === 'sequence_number_too_old') {
-                        console.log('Retrying with updated sequence number...')
-                        await new Promise((resolve) => setTimeout(resolve, 1000))
-                        continue
-                    }
+                rl.close()
 
+                if (answer.toLowerCase().trim() === 'y') {
                     throw error
+                } else {
+                    console.error('🛑 Halting execution.')
+                    process.exit(0)
                 }
             }
         }
@@ -179,8 +178,7 @@ async function sendAllInitiaTxs(
         console.log('🎉 Execution Summary:')
         console.log(`   • ${cleanedPayloads.length} transactions executed successfully`)
     } else if (action === 'export') {
-        console.log('Transaction export not yet supported for Initia.')
-        // await exportTransactionsToJson(cleanedPayloads)
+        await exportInitiaTransactionsToJson(cleanedPayloads)
     } else {
         console.log('Operation cancelled.')
         process.exit(0)
@@ -305,6 +303,44 @@ function isAptosPayload(payload: TransactionPayload): payload is {
     return 'function' in payload.payload && 'functionArguments' in payload.payload
 }
 
+function isInitiaPayload(payload: TransactionPayload): payload is {
+    description: string
+    payload: InitiaPayload
+} {
+    return payload.payload instanceof MsgExecute && 'multiSigArgs' in payload.payload
+}
+
+async function exportInitiaTransactionsToJson(payloads: TransactionPayload[]) {
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+    const exportDir = `./initia-raw-transactions/tx-export-${timestamp}`
+
+    if (!fs.existsSync(exportDir)) {
+        fs.mkdirSync(exportDir, { recursive: true })
+    }
+
+    payloads.forEach((payload, index) => {
+        if (!isInitiaPayload(payload)) {
+            throw new Error('Cannot export non-Initia payload to JSON')
+        }
+        const msgExecute = payload.payload as InitiaPayload
+
+        const jsonPayload = {
+            sender: msgExecute.sender,
+            module_address: msgExecute.module_address,
+            module_name: msgExecute.module_name,
+            function_name: msgExecute.function_name,
+            type_args: msgExecute.type_args,
+            args: msgExecute.args,
+            multiSigArgs: formatInitiaArgumentValue(msgExecute.multiSigArgs),
+        }
+
+        const filePath = path.join(exportDir, `tx-${index + 1}.json`)
+        fs.writeFileSync(filePath, JSON.stringify(jsonPayload, null, 2))
+    })
+
+    console.log(`\n📄 Transactions exported to: ${exportDir}`)
+}
+
 async function exportTransactionsToJson(payloads: TransactionPayload[]) {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
     const exportDir = `./aptos-raw-transactions/tx-export-${timestamp}`
@@ -332,6 +368,19 @@ async function exportTransactionsToJson(payloads: TransactionPayload[]) {
     })
 
     console.log(`\n📄 Transactions exported to: ${exportDir}`)
+}
+
+function formatInitiaArgumentValue(arg: any): any {
+    if (Array.isArray(arg)) {
+        return arg.map((item: any) => formatInitiaArgumentValue(item))
+    }
+    if (arg instanceof Uint8Array) {
+        return Array.from(arg)
+    }
+    if (typeof arg === 'bigint') {
+        return arg.toString()
+    }
+    return arg
 }
 
 function formatArgumentValue(arg: any): any {

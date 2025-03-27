@@ -75,7 +75,9 @@ export async function initializeDeployTaskContext(configPath: string): Promise<D
     const network = getNetworkForChainId(selectedContract.contract.eid)
     const chainName = network.chainName
     const stage = network.env
-    await checkConfigYamlNetwork(chainName)
+    if (chainName === 'movement' || chainName === 'aptos') {
+        await checkConfigYamlNetwork(chainName)
+    }
     const accountAddress = getMoveVMAccountAddress(chainName)
     const moveVMConnection = getConnection(chainName, stage)
     const moveVMPrivateKey = getMoveVMPrivateKey(chainName)

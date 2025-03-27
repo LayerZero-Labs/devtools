@@ -17,7 +17,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 //
 // If you prefer using a mnemonic, set a MNEMONIC environment variable
 // to a valid mnemonic
-const MNEMONIC = process.env.MNEMONIC
+const MNEMONIC = process.env.EVM_MNEMONIC
 
 // If you prefer to be authenticated using a private key, set a PRIVATE_KEY environment variable
 const PRIVATE_KEY = process.env.EVM_PRIVATE_KEY
@@ -57,12 +57,7 @@ const config: HardhatUserConfig = {
             url: process.env.RPC_URL_BSC || 'https://bsc-testnet.public.blastapi.io',
             accounts,
         },
-        'eth-testnet': {
-            eid: EndpointId.ETHEREUM_V2_TESTNET,
-            url: process.env.RPC_URL_ETHEREUM_TESTNET || 'https://sepolia.infura.io/v3/',
-            accounts,
-        },
-        'solana-devnet': {
+        'solana-testnet': {
             eid: EndpointId.SOLANA_V2_TESTNET,
             url: process.env.RPC_URL_SOLANA_TESTNET || 'https://api.devnet.solana.com',
             accounts,

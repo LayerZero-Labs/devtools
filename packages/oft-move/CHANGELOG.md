@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-move
 
+## 1.0.1
+
+### Patch Changes
+
+- c31fec8: exporting typescript packages
+
 ## 1.0.0
 
 ### Major Changes

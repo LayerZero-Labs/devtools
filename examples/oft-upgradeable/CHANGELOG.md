@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-upgradeable-example
 
+## 0.2.12
+
+### Patch Changes
+
+- ed9aed9: Percolate --skip-connections-from-eids by upgrading toolbox-hardhat across the project
+
 ## 0.2.11
 
 ### Patch Changes

@@ -1,8 +1,7 @@
 import { Options } from '@layerzerolabs/lz-v2-utilities'
-import { hexAddrToAptosBytesAddr } from '@layerzerolabs/devtools-move/sdk/utils'
-import { evmAddressToAptos } from '@layerzerolabs/devtools-move/tasks/move/utils/moveVMOftConfigOps'
-import { TaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
+
+import { hexAddrToAptosBytesAddr, evmAddressToAptos, TaskContext } from '@layerzerolabs/devtools-move'
 
 async function quoteSendOFT(
     taskContext: TaskContext,

@@ -1,5 +1,13 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 6.0.11
+
+### Patch Changes
+
+- dc86373: Add the ability to filter out connections from specified EndpointIds
+- Updated dependencies [dc86373]
+  - @layerzerolabs/devtools@0.4.9
+
 ## 6.0.10
 
 ### Patch Changes
