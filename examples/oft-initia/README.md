@@ -15,13 +15,15 @@ npm install -g pnpm@8.14.0
 Deploying to Initia requires the Initia CLI tool (Initiad). To install Initiad, follow the official documentation at:
 https://docs.initia.xyz/build-on-initia/initiad
 
-After installation, add your private key to the keyring:
+After installation, generate a new key and add it to the keyring:
 
 ```bash
-initiad keys import-hex <your-key-name> <your-key-hex> --key-type secp256k1 --coin-type 118 --keyring-backend test
+initiad keys add <you-key-name> --key-type secp256k1 --coin-type 118 --keyring-backend test
 ```
 
-To verify your keys are properly imported:
+For more information on key management please reference the Initiad docs: https://docs.initia.xyz/build-on-initia/initiad#managing-keys
+
+To list of your imported or generated keys run:
 
 ```bash
 initiad keys list --keyring-backend test
@@ -29,7 +31,7 @@ initiad keys list --keyring-backend test
 
 Create a `.env` file with the following variables:
 
-> **Important:** The INITIA_ACCOUNT_ADDRESS must be in the bech32 format starting with "init" (example: init19ck72hj3vt2ccsw78zwv7mtu4r0rjs9xzf3gc3)
+> **Important:** Inside the .env file, the INITIA_ACCOUNT_ADDRESS must be in the bech32 format starting with "init" (example: init19ck72hj3vt2ccsw78zwv7mtu4r0rjs9xzf3gc3)
 
 ```bash
 # You only need to set one of these values based on your preference
@@ -60,7 +62,7 @@ pnpm turbo build --force
 
 ### Wire setup
 
-Before running the deploy and wire commands, first inside of `move.layerzero.config.ts`, set the delegate and owner address to your deployer account address. These can be changed in the future with commands shown later in this README, but for now they should be set to the address you will be running the commands from (deployer account address).
+Before running the deploy and wire commands, first inside of `move.layerzero.config.ts`, configure the delegate and owner address to your deployer account address. These can be changed in the future with commands shown later in this README, but for now they should be set to the address you will be running the commands from (deployer account address).
 
 ```ts
     contracts: [
@@ -82,10 +84,16 @@ To build the contracts without deploying them, run the following command:
 pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --oapp-type oft
 ```
 
-To build and deploy the contracts, run the following command:
+To build and deploy the contracts and set the delegate, run the following command:
 
 ```bash
 pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --move-deploy-script deploy-move/OFTInitParams.ts --oapp-type oft
+```
+
+To only set the delegate you can run the following command:
+
+```bash
+pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 ```
 
 ## EVM Deployment
@@ -96,7 +104,7 @@ npx hardhat lz:deploy
 
 Select only the EVM networks you wish to deploy to (do not select Aptos, Movement, Solana, or Initia).
 
-## Init and Set Delegate
+## Init the OFT
 
 First modify deploy-move/OFTInitParams.ts and replace the oftMetadata with your desired values:
 
@@ -109,12 +117,6 @@ const oftMetadata = {
   sharedDecimals: 6,
   localDecimals: 6,
 };
-```
-
-Then run the following command to set the delegate:
-
-```bash
-pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 ```
 
 Then run the following command to initialize the oft:
@@ -207,6 +209,10 @@ pnpm run lz:sdk:move:permanently-disable-blocklist --oapp-config move.layerzero.
 ```bash
 pnpm run lz:sdk:move:permanently-disable-freezing --oapp-config move.layerzero.config.ts
 ```
+
+### Token address
+
+When deploying an OFT, the underlying token address is different from the object address of the OFT. The underlying token address can be found on the Move-VM block explorer by entering your OFT object address in search, navigating to modules, selecting view, then under 'oft' select 'token' and click the 'view' button. The token() function on the OFT module will return your Fungible Asset's address.
 
 ### Transferring Ownership of your Move OApp (OFT)
 
@@ -301,6 +307,21 @@ pnpm run lz:sdk:evm:send-evm \
   --to <your-source-account-address> \
   --amount <your-amount> \
   --min-amount <your-min-amount>
+```
+
+## Multi-sig
+
+Multi-sig wallet creation and transaction execution on Initia can be done using the Initia multi-sig builder: https://multisig.testnet.initia.xyz/
+
+For executing transactions on Initia multi-sig you to first generate the transaction parameters using the CLI. This is because some of the OApp methods take parameters that are encoded on the client side by our CLI. In order to obtain the encoded data you can run the desired command in the CLI and choose option 'e' to export the parameters to a json file. When 'e' is selected, the command will not be executed, and instead the transaction data will be written to a json file. From there you can copy the encoded values into the Initia multi-sig front end and execute them with your multi-sig wallet.
+
+Example of console prinout after running a command in the CLI:
+
+```
+Choose an action:
+(y)es - execute transactions
+(e)xport - save as JSON for multisig execution
+(n)o - cancel
 ```
 
 ## Help
