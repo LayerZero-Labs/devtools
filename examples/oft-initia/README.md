@@ -53,13 +53,6 @@ After creating the `.env` file, load the environment variables:
 source .env
 ```
 
-Install dependencies and build the project:
-
-```bash
-pnpm install
-pnpm turbo build --force
-```
-
 ### Wire setup
 
 Before running the deploy and wire commands, first inside of `move.layerzero.config.ts`, configure the delegate and owner address to your deployer account address. These can be changed in the future with commands shown later in this README, but for now they should be set to the address you will be running the commands from (deployer account address).
