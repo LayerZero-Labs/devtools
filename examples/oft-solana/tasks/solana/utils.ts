@@ -3,6 +3,7 @@ import { backOff } from 'exponential-backoff'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
+import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import {
     OAppOmniGraphHardhatSchema,
     SUBTASK_LZ_OAPP_CONFIG_LOAD,
@@ -34,37 +35,43 @@ export const assertAccountInitialized = async (connection: Connection, publicKey
     )
 }
 
-export const findSolanaEndpointIdInGraph = async (hre: HardhatRuntimeEnvironment, oappConfig: string) => {
-    const graph = await hre.run(SUBTASK_LZ_OAPP_CONFIG_LOAD, {
-        configPath: oappConfig,
-        schema: OAppOmniGraphHardhatSchema,
-        task: TASK_LZ_OAPP_CONFIG_GET,
-    } satisfies SubtaskLoadConfigTaskArgs)
+export const findSolanaEndpointIdInGraph = async (
+    hre: HardhatRuntimeEnvironment,
+    oappConfig: string
+): Promise<EndpointId> => {
+    if (!oappConfig) throw new Error('Missing oappConfig')
 
-    let solanaEid: EndpointId | null = null
-
-    // Helper function to check and assign Solana Endpoint ID
-    const checkSolanaEndpoint = (eid: EndpointId) => {
-        if (endpointIdToChainType(eid) === ChainType.SOLANA) {
-            if (solanaEid === null) {
-                solanaEid = eid
-            } else if (solanaEid !== eid) {
-                throw new Error(`Multiple Solana Endpoint IDs found in the graph: ${solanaEid}, ${eid}`)
-            }
+    let graph: OAppOmniGraph
+    try {
+        graph = await hre.run(SUBTASK_LZ_OAPP_CONFIG_LOAD, {
+            configPath: oappConfig,
+            schema: OAppOmniGraphHardhatSchema,
+            task: TASK_LZ_OAPP_CONFIG_GET,
+        } satisfies SubtaskLoadConfigTaskArgs)
+    } catch (error) {
+        if (error instanceof Error) {
+            throw new Error(`Failed to load OApp configuration: ${error.message}`)
+        } else {
+            throw new Error('Failed to load OApp configuration: Unknown error')
         }
     }
 
-    // Iterate through connections and check both `from` and `to` endpoints
-    for (const connection of graph.connections) {
-        checkSolanaEndpoint(connection.vector.from.eid)
-        checkSolanaEndpoint(connection.vector.to.eid)
-        // we also ahve the option of terminating early as soon as we find a solana endpoint
-        // that means we assume that there will never be more than one solana endpoint in the graph
+    let solanaEid: EndpointId | null = null
+
+    const checkSolanaEndpoint = (eid: EndpointId) => {
+        if (endpointIdToChainType(eid) === ChainType.SOLANA) {
+            if (solanaEid && solanaEid !== eid) {
+                throw new Error(`Multiple Solana Endpoint IDs found: ${solanaEid}, ${eid}`)
+            }
+            solanaEid = eid
+        }
     }
 
-    if (solanaEid === null) {
-        throw new Error('No Solana Endpoint ID found in the graph')
+    for (const { vector } of graph.connections) {
+        checkSolanaEndpoint(vector.from.eid)
+        checkSolanaEndpoint(vector.to.eid)
+        if (solanaEid) return solanaEid
     }
 
-    return solanaEid
+    throw new Error('No Solana Endpoint ID found. Ensure your OApp configuration includes a valid Solana endpoint.')
 }
