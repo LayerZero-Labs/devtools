@@ -5,8 +5,7 @@ const oftMetadata: OFTFaInitParams = {
     token_symbol: 'MOFT',
     icon_uri: '',
     project_uri: '',
-    sharedDecimals: 6,
-    localDecimals: 6,
+    localDecimals: 8,
 }
 
 export default oftMetadata

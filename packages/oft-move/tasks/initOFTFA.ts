@@ -5,7 +5,7 @@ async function initOFTFA(
     token_symbol: string,
     icon_uri: string,
     project_uri: string,
-    shared_decimals: number,
+    sharedDecimals: number = 6,
     local_decimals: number,
     taskContext: TaskContext
 ) {
@@ -17,7 +17,6 @@ async function initOFTFA(
     console.log(`\tToken Symbol: ${token_symbol}`)
     console.log(`\tIcon URI: ${icon_uri}`)
     console.log(`\tProject URI: ${project_uri}`)
-    console.log(`\tShared Decimals: ${shared_decimals}`)
     console.log(`\tLocal Decimals: ${local_decimals}`)
 
     const initializePayload = taskContext.oft.initializeOFTFAPayload(
@@ -25,7 +24,7 @@ async function initOFTFA(
         token_symbol,
         icon_uri,
         project_uri,
-        shared_decimals,
+        sharedDecimals,
         local_decimals
     )
 

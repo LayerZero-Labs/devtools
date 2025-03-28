@@ -2,6 +2,8 @@
 
 ## Setup and Installation
 
+### Aptos CLI
+
 Install the Aptos CLI (required for deployment):
 
 Aptos does not have native version management capabilities. To simplify the installation process, LayerZero has developed an Aptos CLI Version Manager.
@@ -16,6 +18,12 @@ git clone https://github.com/LayerZero-Labs/aptosup
 >
 > - For Aptos chain: Use version 6.0.1
 > - For Movement chain: Use version 3.5.0
+
+### Example installation
+
+To download the example run:
+
+`LZ_ENABLE_EXPERIMENTAL_MOVE_VM_EXAMPLES=1 npx create-lz-oapp@latest`
 
 Set pnpm to the required version:
 
@@ -97,14 +105,27 @@ Note: the Movement specific values can be found at: https://docs.movementnetwork
 > # subdir = "aptos-framework"
 > ```
 
-### Wire setup
+## OApp Config Setup
 
 Before running the deploy and wire commands, first inside of `move.layerzero.config.ts`, set the delegate and owner address to your deployer account address. These can be changed in the future with commands shown later in this README, but for now they should be set to the address you will be running the commands from (deployer account address).
 
+> **Important:** Follow the [LayerZero Project Configuration Guide](https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/project-config) to properly set up your `move.layerzero.config.ts` file with correct endpoint IDs and network configurations before running wiring commands. The configuration can be modified to wire any number supported networks to each other. The current move.layerzero.config.ts file is an example of what is required to deploy and wire BSC testnet to Movement testent.
+
+`move.layerzero.config.ts`:
+
 ```ts
+// Create contract entries for all contracts you would like to deploy.
+// This is an example entry for Movement testnet.
+const movementContract: OmniPointHardhat = {
+    eid: EndpointId.MOVEMENT_V2_TESTNET,
+    contractName: 'MyOFTAdapter',
+}
+
+...
+
     contracts: [
         {
-            contract: your_contract_name,
+            contract: movementContract,
             config: {
                 delegate: 'YOUR_ACCOUNT_ADDRESS',
                 owner: 'YOUR_ACCOUNT_ADDRESS',
@@ -113,14 +134,13 @@ Before running the deploy and wire commands, first inside of `move.layerzero.con
     ],
 ```
 
-### Build and Deploy the modules
+### Build and Deploy
 
 First modify deploy-move/OFTAdapterInitParams.ts and replace the oftMetadata with your desired values:
 
 ```ts
 const oftMetadata = {
   move_vm_fa_address: "0x0",
-  shared_decimals: 6,
 };
 ```
 

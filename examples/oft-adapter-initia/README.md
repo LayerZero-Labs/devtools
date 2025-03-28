@@ -4,6 +4,10 @@ The following is a guide for deploying OFT's and wiring them to Initia.
 
 ## Setup and Installation
 
+To download the example run:
+
+`LZ_ENABLE_EXPERIMENTAL_INITIA_EXAMPLES=1 npx create-lz-oapp@latest`
+
 Set pnpm to the required version:
 
 ```bash
@@ -18,7 +22,7 @@ https://docs.initia.xyz/build-on-initia/initiad
 After installation, generate a new key and add it to the keyring:
 
 ```bash
-initiad keys add <you-key-name> --key-type secp256k1 --coin-type 118 --keyring-backend test
+initiad keys add <your-key-name> --key-type secp256k1 --coin-type 118 --keyring-backend test
 ```
 
 For more information on key management please reference the Initiad docs: https://docs.initia.xyz/build-on-initia/initiad#managing-keys
@@ -53,24 +57,19 @@ After creating the `.env` file, load the environment variables:
 source .env
 ```
 
-Install dependencies and build the project:
-
-```bash
-pnpm install
-pnpm turbo build --force
-```
-
 ### Wire setup
 
-Before running the deploy and wire commands, first inside of `move.layerzero.config.ts`, set the delegate and owner address to your deployer account address. These can be changed in the future with commands shown later in this README, but for now they should be set to the address you will be running the commands from (deployer account address).
+Before running the deploy and wire commands, inside of `move.layerzero.config.ts`, configure the delegate and owner address to your deployer account address. These can be changed in the future with commands shown later in this README, but for now they should be set to the address you will be running the commands from (deployer account address).
+
+> **Note:** in move.layerzero.config.ts ALL Initia addresses must be in hex format e.g.: 0x1a2b3c...
 
 ```ts
     contracts: [
         {
-            contract: your_contract_name,
+            contract: your_initia_contract_name,
             config: {
-                delegate: 'YOUR_ACCOUNT_ADDRESS',
-                owner: 'YOUR_ACCOUNT_ADDRESS',
+                delegate: 'your_initia_hex_account_address',
+                owner: 'your_initia_hex_account_address',
             },
         },
     ],
@@ -105,7 +104,6 @@ First modify deploy-move/OFTAdapterInitParams.ts and replace the oftMetadata wit
 ```ts
 const oftMetadata = {
   move_vm_fa_address: "<your fungible asset address>",
-  shared_decimals: 6,
 };
 ```
 
