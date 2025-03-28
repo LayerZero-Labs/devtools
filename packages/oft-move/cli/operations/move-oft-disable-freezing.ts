@@ -1,7 +1,7 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 
 import { permanentlyDisableFreezing } from '../../tasks/permanentlyDisableFreezing'
-import { initializeTaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
+import { initializeTaskContext } from '@layerzerolabs/devtools-move'
 
 class IrrevocablyDisableFreezing implements INewOperation {
     vm = 'move'

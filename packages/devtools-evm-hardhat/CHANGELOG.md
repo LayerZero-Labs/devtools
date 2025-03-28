@@ -1,5 +1,26 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 2.0.9
+
+### Patch Changes
+
+- 13bdae7: In task lz:healthcheck:validate:rpcs:
+
+  - more descriptive logs
+  - flexible RPCs health check
+  - fix support of --stage param
+
+## 2.0.8
+
+### Patch Changes
+
+- 24311f8: Minor bug fixes
+- 8b6c422: Bump monorepo dependencies to latest patch version
+- Updated dependencies [24311f8]
+- Updated dependencies [8b6c422]
+  - @layerzerolabs/devtools-evm@1.0.6
+  - @layerzerolabs/devtools@0.4.8
+
 ## 2.0.7
 
 ### Patch Changes

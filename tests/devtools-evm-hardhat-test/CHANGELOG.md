@@ -1,5 +1,27 @@
 # @layerzerolabs/devtools-evm-hardhat-test
 
+## 0.3.11
+
+### Patch Changes
+
+- 13bdae7: In task lz:healthcheck:validate:rpcs:
+
+  - more descriptive logs
+  - flexible RPCs health check
+  - fix support of --stage param
+
+## 0.3.10
+
+### Patch Changes
+
+- ed9aed9: Percolate --skip-connections-from-eids by upgrading toolbox-hardhat across the project
+
+## 0.3.9
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+
 ## 0.3.8
 
 ### Patch Changes

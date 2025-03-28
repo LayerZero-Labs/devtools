@@ -4,27 +4,15 @@ import { toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { PublicKey } from '@solana/web3.js'
 import { task } from 'hardhat/config'
 
+import { denormalizePeer } from '@layerzerolabs/devtools'
 import { types } from '@layerzerolabs/devtools-evm-hardhat'
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 import { EndpointPDADeriver, EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
-import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
+import { OftPDA, oft } from '@layerzerolabs/oft-v2-solana-sdk'
+
+import { DebugLogger, decodeLzReceiveOptions, uint8ArrayToHex } from '../common/utils'
 
 import { deriveConnection, getSolanaDeployment } from './index'
-
-// Logger class for better logging
-class Logger {
-    static keyValue(key: string, value: any) {
-        console.log(`\x1b[33m${key}:\x1b[0m ${value}`)
-    }
-
-    static header(text: string) {
-        console.log(`\x1b[36m${text}\x1b[0m`)
-    }
-
-    static separator() {
-        console.log('\x1b[90m----------------------------------------\x1b[0m')
-    }
-}
 
 const DEBUG_ACTIONS = {
     OFT_STORE: 'oft-store',
@@ -32,6 +20,7 @@ const DEBUG_ACTIONS = {
     GET_DELEGATE: 'delegate',
     CHECKS: 'checks',
     GET_TOKEN: 'token',
+    GET_PEERS: 'peers',
 }
 
 /**
@@ -40,6 +29,14 @@ const DEBUG_ACTIONS = {
  * @param {string} oftStore
  */
 const getOftStore = (eid: EndpointId, oftStore?: string) => publicKey(oftStore ?? getSolanaDeployment(eid).oftStore)
+
+type DebugTaskArgs = {
+    eid: EndpointId
+    oftStore?: string
+    endpoint: string
+    dstEids: EndpointId[]
+    action?: string
+}
 
 task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
     .addParam(
@@ -56,73 +53,102 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
         true
     )
     .addParam('endpoint', 'The Endpoint public key', EndpointProgram.PROGRAM_ID.toBase58(), types.string)
+    .addOptionalParam('dstEids', 'Destination eids to check (comma-separated list)', [], types.csv)
     .addOptionalParam(
         'action',
         `The action to perform: ${Object.keys(DEBUG_ACTIONS).join(', ')} (defaults to all)`,
         undefined,
         types.string
     )
-    .setAction(async (taskArgs, _) => {
-        const { eid, oftStore, endpoint, action } = taskArgs
-        const { umi, connection } = await deriveConnection(eid)
+    .setAction(async (taskArgs: DebugTaskArgs) => {
+        const { eid, oftStore, endpoint, dstEids, action } = taskArgs
+        const { umi, connection } = await deriveConnection(eid, true)
         const store = getOftStore(eid, oftStore)
         const oftStoreInfo = await oft.accounts.fetchOFTStore(umi, store)
         const mintAccount = await fetchMint(umi, publicKey(oftStoreInfo.tokenMint))
 
+        const epDeriver = new EndpointPDADeriver(new PublicKey(endpoint))
+        const [oAppRegistry] = epDeriver.oappRegistry(toWeb3JsPublicKey(store))
+        const oAppRegistryInfo = await EndpointProgram.accounts.OAppRegistry.fromAccountAddress(
+            connection,
+            oAppRegistry
+        )
+
+        const oftDeriver = new OftPDA(oftStoreInfo.header.owner)
+
         const printOftStore = async () => {
-            Logger.header('OFT Store Information')
-            Logger.keyValue('Owner', oftStoreInfo.header.owner)
-            Logger.keyValue('OFT Type', oft.types.OFTType[oftStoreInfo.oftType])
-            Logger.keyValue('Admin', oftStoreInfo.admin)
-            Logger.keyValue('Token Mint', oftStoreInfo.tokenMint)
-            Logger.keyValue('Token Escrow', oftStoreInfo.tokenEscrow)
-            Logger.keyValue('Endpoint Program', oftStoreInfo.endpointProgram)
-            Logger.separator()
+            DebugLogger.header('OFT Store Information')
+            DebugLogger.keyValue('Owner', oftStoreInfo.header.owner)
+            DebugLogger.keyValue('OFT Type', oft.types.OFTType[oftStoreInfo.oftType])
+            DebugLogger.keyValue('Admin', oftStoreInfo.admin)
+            DebugLogger.keyValue('Token Mint', oftStoreInfo.tokenMint)
+            DebugLogger.keyValue('Token Escrow', oftStoreInfo.tokenEscrow)
+            DebugLogger.keyValue('Endpoint Program', oftStoreInfo.endpointProgram)
+            DebugLogger.separator()
         }
 
         const printAdmin = async () => {
             const admin = oftStoreInfo.admin
-            Logger.keyValue('Admin', admin)
+            DebugLogger.keyValue('Admin', admin)
         }
 
         const printDelegate = async () => {
-            const deriver = new EndpointPDADeriver(new PublicKey(endpoint))
-            const [oAppRegistry] = deriver.oappRegistry(toWeb3JsPublicKey(store))
-            const oAppRegistryInfo = await EndpointProgram.accounts.OAppRegistry.fromAccountAddress(
-                connection,
-                oAppRegistry
-            )
             const delegate = oAppRegistryInfo?.delegate?.toBase58()
-            Logger.header('OApp Registry Information')
-            Logger.keyValue('Delegate', delegate)
-            Logger.separator()
+            DebugLogger.header('OApp Registry Information')
+            DebugLogger.keyValue('Delegate', delegate)
+            DebugLogger.separator()
         }
 
         const printToken = async () => {
-            Logger.header('Token Information')
-            Logger.keyValue('Mint Authority', unwrapOption(mintAccount.mintAuthority))
-            Logger.keyValue(
+            DebugLogger.header('Token Information')
+            DebugLogger.keyValue('Mint Authority', unwrapOption(mintAccount.mintAuthority))
+            DebugLogger.keyValue(
                 'Freeze Authority',
                 unwrapOption(mintAccount.freezeAuthority, () => 'None')
             )
-            Logger.separator()
+            DebugLogger.separator()
         }
 
         const printChecks = async () => {
-            const admin = oftStoreInfo.admin
-
-            const deriver = new EndpointPDADeriver(new PublicKey(endpoint))
-            const [oAppRegistry] = deriver.oappRegistry(toWeb3JsPublicKey(store))
-            const oAppRegistryInfo = await EndpointProgram.accounts.OAppRegistry.fromAccountAddress(
-                connection,
-                oAppRegistry
-            )
             const delegate = oAppRegistryInfo?.delegate?.toBase58()
 
-            Logger.header('Checks')
-            Logger.keyValue('Admin (Owner) same as Delegate', admin === delegate)
-            Logger.keyValue('Token Mint Authority is OFT Store', unwrapOption(mintAccount.mintAuthority) === store)
-            Logger.separator()
+            DebugLogger.header('Checks')
+            DebugLogger.keyValue('Admin (Owner) same as Delegate', oftStoreInfo.admin === delegate)
+            DebugLogger.keyValue('Token Mint Authority is OFT Store', unwrapOption(mintAccount.mintAuthority) === store)
+            DebugLogger.separator()
+        }
+
+        const printPeerConfigs = async () => {
+            const peerConfigs = dstEids.map((dstEid) => {
+                const peerConfig = oftDeriver.peer(store, dstEid)
+                return publicKey(peerConfig)
+            })
+
+            DebugLogger.header('Peer Configurations')
+            const peerConfigInfos = await oft.accounts.safeFetchAllPeerConfig(umi, peerConfigs)
+            dstEids.forEach((dstEid, index) => {
+                const info = peerConfigInfos[index]
+                const network = getNetworkForChainId(dstEid)
+                DebugLogger.header(`${dstEid} (${network.chainName})`)
+                if (info) {
+                    DebugLogger.keyValue('PeerConfig Account', peerConfigs[index].toString())
+                    DebugLogger.keyValue('Peer Address', denormalizePeer(info.peerAddress, dstEid))
+                    DebugLogger.keyHeader('Enforced Options')
+                    DebugLogger.keyValue(
+                        'Send',
+                        decodeLzReceiveOptions(uint8ArrayToHex(info.enforcedOptions.send, true)),
+                        2
+                    )
+                    DebugLogger.keyValue(
+                        'SendAndCall',
+                        decodeLzReceiveOptions(uint8ArrayToHex(info.enforcedOptions.sendAndCall, true)),
+                        2
+                    )
+                } else {
+                    console.log(`No PeerConfig account found for ${dstEid} (${network.chainName}).`)
+                }
+                DebugLogger.separator()
+            })
         }
 
         if (action) {
@@ -142,6 +168,9 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
                 case DEBUG_ACTIONS.GET_TOKEN:
                     await printToken()
                     break
+                case DEBUG_ACTIONS.GET_PEERS:
+                    await printPeerConfigs()
+                    break
                 default:
                     console.error(`Invalid action specified. Use any of ${Object.keys(DEBUG_ACTIONS)}.`)
             }
@@ -149,6 +178,7 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
             await printOftStore()
             await printDelegate()
             await printToken()
+            if (dstEids.length > 0) await printPeerConfigs()
             await printChecks()
         }
     })

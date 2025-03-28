@@ -1,96 +1,71 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
+import { TwoWayConfig, generateConnectionsConfig } from '@layerzerolabs/metadata-tools'
+import { OAppEnforcedOption, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
-import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
-
-const sepoliaContract: OmniPointHardhat = {
-    eid: EndpointId.SEPOLIA_V2_TESTNET,
+const optimismContract: OmniPointHardhat = {
+    eid: EndpointId.OPTSEP_V2_TESTNET,
     contractName: 'MyOApp',
 }
 
-const fujiContract: OmniPointHardhat = {
+const avalancheContract: OmniPointHardhat = {
     eid: EndpointId.AVALANCHE_V2_TESTNET,
     contractName: 'MyOApp',
 }
 
-const amoyContract: OmniPointHardhat = {
-    eid: EndpointId.AMOY_V2_TESTNET,
+const arbitrumContract: OmniPointHardhat = {
+    eid: EndpointId.ARBSEP_V2_TESTNET,
     contractName: 'MyOApp',
 }
 
-const config: OAppOmniGraphHardhat = {
-    contracts: [
-        {
-            contract: fujiContract,
-            /**
-             * This config object is optional.
-             * The callerBpsCap refers to the maximum fee (in basis points) that the contract can charge.
-             */
+// For this example's simplicity, we will use the same enforced options values for sending to all chains
+// For production, you should ensure `gas` is set to the correct value through profiling the gas usage of calling OApp._lzReceive(...) on the destination chain
+// To learn more, read https://docs.layerzero.network/v2/concepts/applications/oapp-standard#execution-options-and-enforced-settings
+const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
+    {
+        msgType: 1,
+        optionType: ExecutorOptionType.LZ_RECEIVE,
+        gas: 80000,
+        value: 0,
+    },
+]
 
-            // config: {
-            //     callerBpsCap: BigInt(300),
-            // },
-        },
-        {
-            contract: sepoliaContract,
-        },
-        {
-            contract: amoyContract,
-        },
+// To connect all the above chains to each other, we need the following pathways:
+// Optimism <-> Avalanche
+// Optimism <-> Arbitrum
+// Avalanche <-> Arbitrum
+
+// With the config generator, pathways declared are automatically bidirectional
+// i.e. if you declare A,B there's no need to declare B,A
+const pathways: TwoWayConfig[] = [
+    [
+        optimismContract, // Chain A contract
+        avalancheContract, // Chain B contract
+        [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
+        [1, 1], // [A to B confirmations, B to A confirmations]
+        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain B enforcedOptions, Chain A enforcedOptions
     ],
-    connections: [
-        {
-            from: fujiContract,
-            to: sepoliaContract,
-            config: {
-                sendConfig: {
-                    executorConfig: {
-                        maxMessageSize: 99,
-                        executor: '0x71d7a02cDD38BEa35E42b53fF4a42a37638a0066',
-                    },
-                    ulnConfig: {
-                        confirmations: BigInt(42),
-                        requiredDVNs: [],
-                        optionalDVNs: [
-                            '0xe9dCF5771a48f8DC70337303AbB84032F8F5bE3E',
-                            '0x0AD50201807B615a71a39c775089C9261A667780',
-                        ],
-                        optionalDVNThreshold: 2,
-                    },
-                },
-                receiveConfig: {
-                    ulnConfig: {
-                        confirmations: BigInt(42),
-                        requiredDVNs: [],
-                        optionalDVNs: [
-                            '0x3Eb0093E079EF3F3FC58C41e13FF46c55dcb5D0a',
-                            '0x0AD50201807B615a71a39c775089C9261A667780',
-                        ],
-                        optionalDVNThreshold: 2,
-                    },
-                },
-            },
-        },
-        {
-            from: fujiContract,
-            to: amoyContract,
-        },
-        {
-            from: sepoliaContract,
-            to: fujiContract,
-        },
-        {
-            from: sepoliaContract,
-            to: amoyContract,
-        },
-        {
-            from: amoyContract,
-            to: sepoliaContract,
-        },
-        {
-            from: amoyContract,
-            to: fujiContract,
-        },
+    [
+        optimismContract, // Chain A contract
+        arbitrumContract, // Chain C contract
+        [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
+        [1, 1], // [A to B confirmations, B to A confirmations]
+        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain C enforcedOptions, Chain A enforcedOptions
     ],
+    [
+        avalancheContract, // Chain B contract
+        arbitrumContract, // Chain C contract
+        [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
+        [1, 1], // [A to B confirmations, B to A confirmations]
+        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain C enforcedOptions, Chain B enforcedOptions
+    ],
+]
+
+export default async function () {
+    // Generate the connections config based on the pathways
+    const connections = await generateConnectionsConfig(pathways)
+    return {
+        contracts: [{ contract: optimismContract }, { contract: avalancheContract }, { contract: arbitrumContract }],
+        connections,
+    }
 }
-
-export default config

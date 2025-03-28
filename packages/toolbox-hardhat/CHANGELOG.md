@@ -1,5 +1,28 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.6.9
+
+### Patch Changes
+
+- 8817095: Add the ability to filter out connections from specified EndpointIds
+
+## 0.6.8
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+- Updated dependencies [24311f8]
+- Updated dependencies [8b6c422]
+  - @layerzerolabs/devtools-evm-hardhat@2.0.8
+  - @layerzerolabs/devtools-evm@1.0.6
+  - @layerzerolabs/protocol-devtools-evm@3.0.7
+  - @layerzerolabs/test-devtools-evm-hardhat@0.5.2
+  - @layerzerolabs/ua-devtools-evm-hardhat@6.0.10
+  - @layerzerolabs/protocol-devtools@1.1.6
+  - @layerzerolabs/ua-devtools-evm@5.0.7
+  - @layerzerolabs/ua-devtools@3.0.6
+  - @layerzerolabs/devtools@0.4.8
+
 ## 0.6.7
 
 ### Patch Changes

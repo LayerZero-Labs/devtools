@@ -68,7 +68,7 @@ To get started with the LayerZero Developer Tools, follow these steps:
 1. Clone the Repository
 
 ```
-git clone https://github.com/layerzerolabs/devtools.git
+git clone https://github.com/LayerZero-Labs/devtools.git
 cd devtools
 ```
 

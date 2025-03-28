@@ -1,5 +1,17 @@
 # @layerzerolabs/onft721-zksync-example
 
+## 1.0.8
+
+### Patch Changes
+
+- ed9aed9: Percolate --skip-connections-from-eids by upgrading toolbox-hardhat across the project
+
+## 1.0.7
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+
 ## 1.0.6
 
 ### Patch Changes

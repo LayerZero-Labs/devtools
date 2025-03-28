@@ -1,5 +1,19 @@
 # @layerzerolabs/metadata-tools
 
+## 0.4.1
+
+### Patch Changes
+
+- 630ca77: fix generateConnectionsConfig when called with no params
+- Updated dependencies [13bdae7]
+  - @layerzerolabs/devtools-evm-hardhat@2.0.9
+
+## 0.4.0
+
+### Minor Changes
+
+- 6e233e3: allow for custom fetchMetadata implementation
+
 ## 0.3.2
 
 ### Patch Changes

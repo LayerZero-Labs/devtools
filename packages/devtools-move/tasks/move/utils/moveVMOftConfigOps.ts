@@ -24,6 +24,7 @@ import { ExecutorConfig, UlnConfig } from '.'
 import type { OAppOmniGraphHardhat, Uln302ExecutorConfig } from '@layerzerolabs/toolbox-hardhat'
 import { decodeSolanaAddress } from '../../shared/basexToBytes32'
 import { IEndpoint } from '../../../sdk/IEndpoint'
+import { bcs, MsgExecute } from '@initia/initia.js'
 
 export type TransactionPayload = {
     description: string
@@ -50,7 +51,7 @@ export async function createTransferOwnerOAppPayload(
     eid: EndpointId
 ): Promise<TransactionPayload | null> {
     const currOwner = await oft.getAdmin()
-    if (currOwner == newOwner) {
+    if (formatAddress(currOwner) == formatAddress(newOwner)) {
         console.log(`✅ Owner already set to ${newOwner}\n`)
         return null
     } else {
@@ -60,7 +61,30 @@ export async function createTransferOwnerOAppPayload(
     }
 }
 
-export function createTransferObjectOwnerPayload(objectAddress: string, toAddress: string): TransactionPayload {
+export function createTransferObjectOwnerPayload(
+    objectAddress: string,
+    toAddress: string,
+    chain: string,
+    accountAddress: string
+): TransactionPayload {
+    if (chain === 'initia') {
+        const msg = new MsgExecute(
+            accountAddress,
+            '0x1',
+            'object',
+            'transfer_call',
+            [],
+            [bcs.address().serialize(objectAddress).toBase64(), bcs.address().serialize(toAddress).toBase64()]
+        )
+        const typedMsg = Object.assign(msg, {
+            types: ['address', 'address'],
+            multiSigArgs: [objectAddress, toAddress],
+        })
+        return {
+            payload: typedMsg,
+            description: `Transfer object ${objectAddress} to ${toAddress}`,
+        }
+    }
     return {
         payload: {
             function: '0x1::object::transfer_call',
@@ -77,7 +101,8 @@ export async function createSetDelegatePayload(
     eid: EndpointId
 ): Promise<TransactionPayload | null> {
     const currDelegate = await oft.getDelegate()
-    if (currDelegate == delegate) {
+
+    if (formatAddress(currDelegate) == formatAddress(delegate)) {
         console.log(`✅ Delegate already set to ${delegate}\n`)
         return null
     } else {
@@ -91,6 +116,11 @@ export async function createSetDelegatePayload(
         const tx = oft.setDelegatePayload(delegate)
         return { payload: tx, description: 'Set Delegate', eid: eid }
     }
+}
+
+function formatAddress(address: string): string {
+    const hex = address.toLowerCase().replace('0x', '')
+    return '0x' + hex.padStart(64, '0')
 }
 
 export function evmAddressToAptos(address: string, eid: string): string {
@@ -210,7 +240,8 @@ export async function createSetReceiveLibraryTx(
 
     // if unset, fallbackToDefault will be true and the receive library should be set regardless of the current value
     if (
-        currentReceiveLibraryAddress === connection.config.receiveLibraryConfig.receiveLibrary &&
+        formatAddress(currentReceiveLibraryAddress) ===
+            formatAddress(connection.config.receiveLibraryConfig.receiveLibrary) &&
         !isFallbackToDefault
     ) {
         printAlreadySet('Receive library', connection)
@@ -252,7 +283,10 @@ export async function createSetSendLibraryTx(
     const isFallbackToDefault = currentSendLibrary[1]
 
     // if unset, fallbackToDefault will be true and the receive library should be set regardless of the current value
-    if (currentSendLibraryAddress === connection.config.sendLibrary && !isFallbackToDefault) {
+    if (
+        formatAddress(currentSendLibraryAddress) === formatAddress(connection.config.sendLibrary) &&
+        !isFallbackToDefault
+    ) {
         printAlreadySet('Send library', connection)
         return null
     } else {
@@ -432,7 +466,7 @@ export async function checkExecutorConfigEqualsDefault(
 ): Promise<boolean> {
     const defaultExecutorConfig = await msgLib.getDefaultExecutorConfig(eid)
     return (
-        newExecutorConfig.executor_address === defaultExecutorConfig.executor_address &&
+        formatAddress(newExecutorConfig.executor_address) === formatAddress(defaultExecutorConfig.executor_address) &&
         newExecutorConfig.max_message_size === defaultExecutorConfig.max_message_size
     )
 }
@@ -612,11 +646,13 @@ function addOptions(enforcedOption: any, options: Options) {
     } else if (enforcedOption.optionType === ExecutorOptionType.NATIVE_DROP) {
         options.addExecutorNativeDropOption(enforcedOption.amount, enforcedOption.receiver)
     } else if (enforcedOption.optionType === ExecutorOptionType.COMPOSE) {
-        options.addExecutorComposeOption(enforcedOption.gas, enforcedOption.value)
+        options.addExecutorComposeOption(enforcedOption.index, enforcedOption.gas, enforcedOption.value)
     } else if (enforcedOption.optionType === ExecutorOptionType.ORDERED) {
         options.addExecutorOrderedExecutionOption()
     } else if (enforcedOption.optionType === ExecutorOptionType.LZ_READ) {
         options.addExecutorLzReadOption(enforcedOption.gas, enforcedOption.value)
+    } else {
+        throw new Error(`Unknown option type: ${enforcedOption.optionType}`)
     }
 }
 

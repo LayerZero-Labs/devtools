@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oapp-evm",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "LayerZero Labs reference EVM OmniChain Application (OApp) implementation",
   "keywords": [
     "LayerZero",
@@ -36,18 +36,18 @@
     "ethers": "^5.7.2"
   },
   "devDependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
-    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
-    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
-    "@layerzerolabs/test-devtools-evm-foundry": "~6.0.2",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.75",
+    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.75",
+    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.75",
+    "@layerzerolabs/test-devtools-evm-foundry": "~6.0.3",
     "@layerzerolabs/toolbox-foundry": "^0.1.12",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2"
   },
   "peerDependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
-    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
-    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.75",
+    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.75",
+    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.75",
     "@openzeppelin/contracts": "^4.8.1 || ^5.0.0",
     "@openzeppelin/contracts-upgradeable": "^4.8.1 || ^5.0.0"
   },
