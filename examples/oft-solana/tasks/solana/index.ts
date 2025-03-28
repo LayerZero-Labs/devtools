@@ -58,6 +58,19 @@ const getFromEnv = (key: string, optional = false): string | undefined => {
     return value
 }
 
+// create a safe version of getKeypairFromFile that returns undefined if the file does not exist, for checking the default keypair
+async function safeGetKeypairDefaultPath(filePath?: string) {
+    try {
+        return await getKeypairFromFile(filePath)
+    } catch (error) {
+        // If the error is due to the file not existing, return undefined
+        if (error instanceof Error && error.message.includes('Could not read keypair')) {
+            return undefined
+        }
+        throw error // Rethrow if it's a different error
+    }
+}
+
 // TODO in another PR: consider moving keypair related functions to tasks/solana/utils.ts
 async function getSolanaKeypair(readOnly = false): Promise<Keypair> {
     const logger = createLogger()
@@ -75,9 +88,9 @@ async function getSolanaKeypair(readOnly = false): Promise<Keypair> {
     const keypairEnvPath = process.env.SOLANA_KEYPAIR_PATH
         ? await getKeypairFromFile(process.env.SOLANA_KEYPAIR_PATH)
         : undefined // #2 SOLANA_KEYPAIR_PATH
-    const keypairDefaultPath = await getKeypairFromFile() // #3 ~/.config/solana/id.json
+    const keypairDefaultPath = await safeGetKeypairDefaultPath() // #3 ~/.config/solana/id.json
 
-    // Fail if none is found
+    // Throw if no keypair is found via all 3 methods
     if (!keypairEnvPrivate && !keypairEnvPath && !keypairDefaultPath) {
         throw new Error(
             'No Solana keypair found. Provide SOLANA_PRIVATE_KEY, ' +
