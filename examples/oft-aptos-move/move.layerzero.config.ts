@@ -10,7 +10,7 @@ enum MsgType {
 
 const bscContract: OmniPointHardhat = {
     eid: EndpointId.BSC_V2_TESTNET,
-    address: '0x53Ec31EbaE300dE8E8d840eF174b4FA274e2c7e8',
+    contractName: 'MyOFT',
 }
 
 const movementContract: OmniPointHardhat = {
@@ -23,15 +23,15 @@ const config: OAppOmniGraphHardhat = {
         {
             contract: bscContract,
             config: {
-                owner: '0x1fa1c72A48243E7C7D78f4b95D942D96A8d05588',
-                delegate: '0x1fa1c72A48243E7C7D78f4b95D942D96A8d05588',
+                owner: '',
+                delegate: '',
             },
         },
         {
             contract: movementContract,
             config: {
-                delegate: '48397c8e50beadee3b1ffa79f61c0d802cc6fb6af6da3371936f496153e947e4',
-                owner: '48397c8e50beadee3b1ffa79f61c0d802cc6fb6af6da3371936f496153e947e4',
+                delegate: '',
+                owner: '',
             },
         },
     ],
