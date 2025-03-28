@@ -22,19 +22,6 @@ const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
         gas: 80000,
         value: 0,
     },
-    {
-        msgType: 2,
-        optionType: ExecutorOptionType.LZ_RECEIVE,
-        gas: 80000,
-        value: 0,
-    },
-    {
-        msgType: 2,
-        optionType: ExecutorOptionType.COMPOSE,
-        index: 0,
-        gas: 80000,
-        value: 0,
-    },
 ]
 
 const SOLANA_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
@@ -43,20 +30,6 @@ const SOLANA_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
         optionType: ExecutorOptionType.LZ_RECEIVE,
         gas: 200000,
         value: 2500000,
-    },
-    {
-        msgType: 2,
-        optionType: ExecutorOptionType.LZ_RECEIVE,
-        gas: 200000,
-        value: 2500000,
-    },
-    {
-        // Solana options use (gas == compute units, value == lamports)
-        msgType: 2,
-        optionType: ExecutorOptionType.COMPOSE,
-        index: 0,
-        gas: 0,
-        value: 0,
     },
 ]
 

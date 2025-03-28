@@ -19,7 +19,7 @@ ARG NODE_VERSION=20.10.0
 # 
 # Local development does not by default have access to GHCR and would require
 # an additional step (docker login). While this step is easy, it is still nicer 
-# to provide a transiton period during which the local flow remains unchanged 
+# to provide a transition period during which the local flow remains unchanged 
 # and the base image is built locally
 # 
 # The CI environment will use base images from https://github.com/LayerZero-Labs/devtools/pkgs/container/devtools-dev-base
@@ -84,7 +84,7 @@ RUN apt-get install --yes \
     # 
     # See a tutorial here https://www.baeldung.com/linux/bash-interactive-prompts
     expect \
-    # Parallel is a utilit we use to parallelize the BATS (user) tests
+    # Parallel is a utility we use to parallelize the BATS (user) tests
     parallel \
     # Utilities required to build solana - and cmake is required for building platform tools used by solana
     pkg-config libudev-dev llvm libclang-dev protobuf-compiler cmake \
