@@ -53,13 +53,6 @@ After creating the `.env` file, load the environment variables:
 source .env
 ```
 
-Install dependencies and build the project:
-
-```bash
-pnpm install
-pnpm turbo build --force
-```
-
 ### Wire setup
 
 Before running the deploy and wire commands, first inside of `move.layerzero.config.ts`, configure the delegate and owner address to your deployer account address. These can be changed in the future with commands shown later in this README, but for now they should be set to the address you will be running the commands from (deployer account address).
@@ -332,10 +325,4 @@ pnpm run lz:sdk:help
 
 ## Validating object ownership of your deployed Initia OApp:
 
-Go to: https://scan.testnet.initia.xyz/initiation-2/interact?address=0x1&moduleName=object&functionType=view&functionName=owner (use mainnet equivalent contract for mainnet)
-
-Fill in the text boxes as follows:
-For TO: 0x1::Object::ObjectCore
-For the argument: your deployed Object Address
-
-Verify the method returns your desired Initia account address as the object owner.
+Go to your OFT object address on the block explorer. Under resources, 0x1, click on 'object'. Verify owner field displays the desired object owner address.
