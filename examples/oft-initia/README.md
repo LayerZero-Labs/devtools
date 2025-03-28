@@ -63,6 +63,12 @@ Before running the deploy and wire commands, inside of `move.layerzero.config.ts
 
 > **Note:** in move.layerzero.config.ts all Initia addresses must be in hex format e.g.: 0x1a2b3c...
 
+To convert your init prefixed bech32 address to hex, run the command:
+
+```initiad keys parse <your-bech32-addresss> --output json```
+
+move.layerzero.config.ts:
+
 ```ts
     contracts: [
         {
@@ -113,8 +119,7 @@ const oftMetadata = {
   token_symbol: "MMOFT",
   icon_uri: "",
   project_uri: "",
-  sharedDecimals: 6,
-  localDecimals: 6,
+  localDecimals: 8,
 };
 ```
 

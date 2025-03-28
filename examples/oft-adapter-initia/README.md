@@ -61,7 +61,13 @@ source .env
 
 Before running the deploy and wire commands, inside of `move.layerzero.config.ts`, configure the delegate and owner address to your deployer account address. These can be changed in the future with commands shown later in this README, but for now they should be set to the address you will be running the commands from (deployer account address).
 
-> **Note:** in move.layerzero.config.ts ALL Initia addresses must be in hex format e.g.: 0x1a2b3c...
+> **Note:** in move.layerzero.config.ts all Initia addresses must be in hex format e.g.: 0x1a2b3c...
+
+To convert your init prefixed bech32 address to hex, run the command:
+
+```initiad keys parse <your-bech32-addresss> --output json```
+
+move.layerzero.config.ts:
 
 ```ts
     contracts: [
