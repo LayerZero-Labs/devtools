@@ -58,7 +58,7 @@ const getFromEnv = (key: string, optional = false): string | undefined => {
     return value
 }
 
-// TODO in another PR: considerg moving keypair related functions to tasks/solana/utils.ts
+// TODO in another PR: consider moving keypair related functions to tasks/solana/utils.ts
 async function getSolanaKeypair(readOnly = false): Promise<Keypair> {
     const logger = createLogger()
 
