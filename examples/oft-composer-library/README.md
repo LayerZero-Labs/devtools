@@ -18,7 +18,6 @@
   A Composer library to integrate LayerZero composer contracts with the Omnichain Fungible Token (OFT) standard.
 </p>
 
-
 - [What is an Omnichain Fungible Token?](#what-is-an-omnichain-fungible-token)
 - [Using Composer with OFTs](#using-composer-with-ofts)
 - [LayerZero Hardhat Helper Tasks](#layerzero-hardhat-helper-tasks)
