@@ -231,9 +231,9 @@ In [layerzero.config.ts](./layerzero.config.ts), the `solanaContract.address` is
 
 ```typescript
 const solanaContract: OmniPointHardhat = {
-    eid: EndpointId.SOLANA_V2_TESTNET,
-    address: getOftStoreAddress(EndpointId.SOLANA_V2_TESTNET),
-}
+  eid: EndpointId.SOLANA_V2_TESTNET,
+  address: getOftStoreAddress(EndpointId.SOLANA_V2_TESTNET),
+};
 ```
 
 :warning: Ensure that you `address` is specified only for the solana contract object. Do not specify addresses for the EVM chain contract objects. Under the hood, we use `hardhat-deploy` to retrieve the contract addresses of the deployed EVM chain contracts. You will run into an error if you specify `address` for an EVM chain contract object.
