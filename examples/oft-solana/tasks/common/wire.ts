@@ -74,6 +74,11 @@ task(TASK_LZ_OAPP_WIRE)
         const keypair = useWeb3Js().web3JsKeypair
         const userAccount = keypair.publicKey
 
+        if (!args.solanaEid) {
+            logger.error('Missing --solana-eid argument')
+            return
+        }
+
         const solanaDeployment = getSolanaDeployment(args.solanaEid)
 
         // Then we grab the programId from the args
