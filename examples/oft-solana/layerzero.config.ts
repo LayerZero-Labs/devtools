@@ -14,7 +14,7 @@ const sepoliaContract: OmniPointHardhat = {
 
 const solanaContract: OmniPointHardhat = {
     eid: EndpointId.SOLANA_V2_TESTNET,
-    address: getOftStoreAddress(EndpointId.SOLANA_V2_TESTNET), // NOTE: this will return an empty string if the create task has not been run.
+    address: getOftStoreAddress(EndpointId.SOLANA_V2_TESTNET),
 }
 
 const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
