@@ -225,18 +225,18 @@ pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <
 
 :warning: Note that for MABA mode, before attempting any cross-chain transfers, **you must transfer the Mint Authority** for `lz_receive` to work, as that is not handled in the script (since you are using an existing token). If you opted for `--additional-minters`, then you must transfer the Mint Authority to the newly created multisig (this is the `mintAuthority` value in the `/deployments/solana-<mainnet/testnet>/OFT.json`). If not, then it should be set to the OFT Store address, which is `oftStore` in the same file.
 
-### Update [layerzero.config.ts](./layerzero.config.ts)
+### Note on the LZ Config file, [layerzero.config.ts](./layerzero.config.ts)
 
-Make sure to update [layerzero.config.ts](./layerzero.config.ts) and set `solanaContract.address` with the `oftStore` address.
+In [layerzero.config.ts](./layerzero.config.ts), the `solanaContract.address` is auto-populated with the `oftStore` address from the deployment file, which has the default path of `deployments/solana-<mainnet/testnet>`.
 
 ```typescript
 const solanaContract: OmniPointHardhat = {
   eid: EndpointId.SOLANA_V2_TESTNET,
-  address: "", // <---TODO update this with the OFTStore address.
+  address: getOftStoreAddress(EndpointId.SOLANA_V2_TESTNET),
 };
 ```
 
-:warning: Ensure that you only specify `address` for the solana contract object. Do not specify addresses for the EVM chain contract objects. Under the hood, we use `hardhat-deploy` to retrieve the contract addresses of the deployed EVM chain contracts. You will run into an error if you specify `address` for an EVM chain contract object.
+:warning: Ensure that you `address` is specified only for the solana contract object. Do not specify addresses for the EVM chain contract objects. Under the hood, we use `hardhat-deploy` to retrieve the contract addresses of the deployed EVM chain contracts. You will run into an error if you specify `address` for an EVM chain contract object.
 
 ### Deploy a sepolia OFT peer
 

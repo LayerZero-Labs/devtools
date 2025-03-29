@@ -34,7 +34,7 @@ import { promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { OftPDA } from '@layerzerolabs/oft-v2-solana-sdk'
 
-import { createSolanaConnectionFactory } from '../common/utils'
+import { DebugLogger, KnownErrors, createSolanaConnectionFactory } from '../common/utils'
 import getFee from '../utils/getFee'
 
 const LOOKUP_TABLE_ADDRESS: Partial<Record<EndpointId, PublicKey>> = {
@@ -156,15 +156,27 @@ export const getSolanaDeployment = (
     escrow: string
     oftStore: string
 } => {
+    if (!eid) {
+        throw new Error('eid is required')
+    }
     const outputDir = path.join('deployments', endpointIdToNetwork(eid))
     const filePath = path.join(outputDir, 'OFT.json') // Note: if you have multiple deployments, change this filename to refer to the desired deployment file
 
     if (!existsSync(filePath)) {
+        DebugLogger.printErrorAndFixSuggestion(KnownErrors.SOLANA_DEPLOYMENT_NOT_FOUND)
         throw new Error(`Could not find Solana deployment file for eid ${eid} at: ${filePath}`)
     }
 
     const fileContents = readFileSync(filePath, 'utf-8')
     return JSON.parse(fileContents)
+}
+
+export const getOftStoreAddress = (eid: EndpointId) => {
+    const { oftStore } = getSolanaDeployment(eid)
+    if (!oftStore) {
+        throw new Error('oftStore not defined in the deployment file')
+    }
+    return oftStore
 }
 
 // TODO: move below outside of solana folder since it's generic
