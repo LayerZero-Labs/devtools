@@ -149,7 +149,7 @@ contract HyperLiquidERC20Extended is ERC20 {
 The composer will be a separate contract because we don't want developers to change their OFT contract apart from the import for `HyperLiquidERC20Extended`.
 
 ```solidity
-contract HyperLiquidLZComposer is IHyperLiquidComposer {
+contract HyperLiquidComposer is IHyperLiquidComposer {
     constructor(address _endpoint, address _oApp) {
         endpoint = _endpoint;
         oApp = _oApp;
@@ -165,14 +165,14 @@ The `LZComposer` will need to be approved by the `owner` of the `HyperLiquidERC2
 
 ## LZ Transaction
 
-Since this is a compose call - the `toAddress` is the `HyperLiquidLZComposer` contract address.
+Since this is a compose call - the `toAddress` is the `HyperLiquidComposer` contract address.
 The token receiver is encoded as an `abi.encodePacked()` of the `receiver` address into `SendParam.composeMsg`. This is later used in the `lzCompose` phase to transfer the tokens to the L1 spot address on behalf of the `token receiver` address.
 
 ```solidity
 _credit(toAddress, _toLD(_message.amountSD()), _origin.srcEid)
 ```
 
-which `mints` the amount in local decimals to the token receiver (`HyperLiquidLZComposer` contract address).
+which `mints` the amount in local decimals to the token receiver (`HyperLiquidComposer` contract address).
 We now need to send the tokens to the L1 spot address on behalf of the `token receiver` address.
 
 ```solidity
