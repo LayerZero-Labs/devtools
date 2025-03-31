@@ -9,6 +9,14 @@
     },
     {
       "type": "error",
+      "name": "HyperLiquidComposerCore_SpotBalanceRead_Failed",
+      "inputs": [
+        { "name": "user", "type": "address", "internalType": "address" },
+        { "name": "tokenId", "type": "uint64", "internalType": "uint64" }
+      ]
+    },
+    {
+      "type": "error",
       "name": "HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength",
       "inputs": [
         { "name": "message", "type": "bytes", "internalType": "bytes" },
@@ -17,7 +25,7 @@
     },
     {
       "type": "error",
-      "name": "HyperLiquidComposer_FailedToReturn_HYPE_Dust",
+      "name": "HyperLiquidComposer_FailedToRefund_HYPE",
       "inputs": [
         { "name": "to", "type": "address", "internalType": "address" },
         { "name": "amount", "type": "uint256", "internalType": "uint256" }
@@ -72,12 +80,19 @@
           "internalType": "address"
         }
       ]
+    },
+    {
+      "type": "error",
+      "name": "HyperLiquidComposer_InvalidComposeMessage",
+      "inputs": [
+        { "name": "errorMessage", "type": "bytes", "internalType": "bytes" }
+      ]
     }
   ],
   "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
   "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
   "methodIdentifiers": {},
-  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"errorMessage\",\"type\":\"bytes\"}],\"name\":\"ErrorMsg\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"message\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"length\",\"type\":\"uint256\"}],\"name\":\"HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"HyperLiquidComposer_FailedToReturn_HYPE_Dust\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"HyperLiquidComposer_FailedToSend_HYPE\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"notComposerAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotComposer\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"notEndpointAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"expectedEndpointAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotEndpoint\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"internalOFTAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"receivedOFTAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotOFT\",\"type\":\"error\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interfaces/IHyperLiquidComposerErrors.sol\":\"IHyperLiquidComposerErrors\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/interfaces/IHyperLiquidComposerErrors.sol\":{\"keccak256\":\"0x0ea8795209e1a9dda7663a16e826fef6bd1b7565756125e909aaae38d5d62f29\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9036fd3027cccd21cf413db783133dd03e97f5cbe6fbf00219d134f113fb9fc9\",\"dweb:/ipfs/QmSG2RqtzLZkfUXD5yZicHM4pXkorHUo7bbXDTarBXxL6H\"]}},\"version\":1}",
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"errorMessage\",\"type\":\"bytes\"}],\"name\":\"ErrorMsg\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"tokenId\",\"type\":\"uint64\"}],\"name\":\"HyperLiquidComposerCore_SpotBalanceRead_Failed\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"message\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"length\",\"type\":\"uint256\"}],\"name\":\"HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"HyperLiquidComposer_FailedToRefund_HYPE\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"HyperLiquidComposer_FailedToSend_HYPE\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"notComposerAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotComposer\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"notEndpointAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"expectedEndpointAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotEndpoint\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"internalOFTAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"receivedOFTAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotOFT\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"errorMessage\",\"type\":\"bytes\"}],\"name\":\"HyperLiquidComposer_InvalidComposeMessage\",\"type\":\"error\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interfaces/IHyperLiquidComposerErrors.sol\":\"IHyperLiquidComposerErrors\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":hardhat/=node_modules/hardhat/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/interfaces/IHyperLiquidComposerErrors.sol\":{\"keccak256\":\"0xb2444c6b5070d989f610d8dafff535ece8af031a78464f27f56af1cc74e06f69\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0a636fa5beff36bde5c49fa5433df8c6dc94a47b220d984eb8caf1004f2ea22c\",\"dweb:/ipfs/QmaZLvXPUnN2VxzsyG5EASRXVQCwG3JhExJF58Wa5ScoPy\"]}},\"version\":1}",
   "metadata": {
     "compiler": { "version": "0.8.22+commit.4fc1097e" },
     "language": "Solidity",
@@ -89,6 +104,14 @@
           ],
           "type": "error",
           "name": "ErrorMsg"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "user", "type": "address" },
+            { "internalType": "uint64", "name": "tokenId", "type": "uint64" }
+          ],
+          "type": "error",
+          "name": "HyperLiquidComposerCore_SpotBalanceRead_Failed"
         },
         {
           "inputs": [
@@ -104,7 +127,7 @@
             { "internalType": "uint256", "name": "amount", "type": "uint256" }
           ],
           "type": "error",
-          "name": "HyperLiquidComposer_FailedToReturn_HYPE_Dust"
+          "name": "HyperLiquidComposer_FailedToRefund_HYPE"
         },
         {
           "inputs": [
@@ -155,6 +178,13 @@
           ],
           "type": "error",
           "name": "HyperLiquidComposer_InvalidCall_NotOFT"
+        },
+        {
+          "inputs": [
+            { "internalType": "bytes", "name": "errorMessage", "type": "bytes" }
+          ],
+          "type": "error",
+          "name": "HyperLiquidComposer_InvalidComposeMessage"
         }
       ],
       "devdoc": { "kind": "dev", "methods": {}, "version": 1 },
@@ -166,9 +196,10 @@
         "@openzeppelin/=node_modules/@openzeppelin/",
         "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/",
         "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/",
+        "hardhat/=node_modules/hardhat/",
         "solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/"
       ],
-      "optimizer": { "enabled": true, "runs": 20000 },
+      "optimizer": { "enabled": false, "runs": 200 },
       "metadata": { "bytecodeHash": "ipfs" },
       "compilationTarget": {
         "contracts/interfaces/IHyperLiquidComposerErrors.sol": "IHyperLiquidComposerErrors"
@@ -178,15 +209,678 @@
     },
     "sources": {
       "contracts/interfaces/IHyperLiquidComposerErrors.sol": {
-        "keccak256": "0x0ea8795209e1a9dda7663a16e826fef6bd1b7565756125e909aaae38d5d62f29",
+        "keccak256": "0xb2444c6b5070d989f610d8dafff535ece8af031a78464f27f56af1cc74e06f69",
         "urls": [
-          "bzz-raw://9036fd3027cccd21cf413db783133dd03e97f5cbe6fbf00219d134f113fb9fc9",
-          "dweb:/ipfs/QmSG2RqtzLZkfUXD5yZicHM4pXkorHUo7bbXDTarBXxL6H"
+          "bzz-raw://0a636fa5beff36bde5c49fa5433df8c6dc94a47b220d984eb8caf1004f2ea22c",
+          "dweb:/ipfs/QmaZLvXPUnN2VxzsyG5EASRXVQCwG3JhExJF58Wa5ScoPy"
         ],
         "license": "MIT"
       }
     },
     "version": 1
   },
-  "id": 5
+  "ast": {
+    "absolutePath": "contracts/interfaces/IHyperLiquidComposerErrors.sol",
+    "id": 1052,
+    "exportedSymbols": {
+      "ErrorMessagePayload": [1004],
+      "IHyperLiquidComposerErrors": [1051]
+    },
+    "nodeType": "SourceUnit",
+    "src": "32:925:4",
+    "nodes": [
+      {
+        "id": 997,
+        "nodeType": "PragmaDirective",
+        "src": "32:23:4",
+        "nodes": [],
+        "literals": ["solidity", "^", "0.8", ".0"]
+      },
+      {
+        "id": 1004,
+        "nodeType": "StructDefinition",
+        "src": "57:102:4",
+        "nodes": [],
+        "canonicalName": "ErrorMessagePayload",
+        "members": [
+          {
+            "constant": false,
+            "id": 999,
+            "mutability": "mutable",
+            "name": "refundTo",
+            "nameLocation": "98:8:4",
+            "nodeType": "VariableDeclaration",
+            "scope": 1004,
+            "src": "90:16:4",
+            "stateVariable": false,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 998,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "90:7:4",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 1001,
+            "mutability": "mutable",
+            "name": "refundAmount",
+            "nameLocation": "120:12:4",
+            "nodeType": "VariableDeclaration",
+            "scope": 1004,
+            "src": "112:20:4",
+            "stateVariable": false,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 1000,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "112:7:4",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 1003,
+            "mutability": "mutable",
+            "name": "errorMessage",
+            "nameLocation": "144:12:4",
+            "nodeType": "VariableDeclaration",
+            "scope": 1004,
+            "src": "138:18:4",
+            "stateVariable": false,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bytes_storage_ptr",
+              "typeString": "bytes"
+            },
+            "typeName": {
+              "id": 1002,
+              "name": "bytes",
+              "nodeType": "ElementaryTypeName",
+              "src": "138:5:4",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bytes_storage_ptr",
+                "typeString": "bytes"
+              }
+            },
+            "visibility": "internal"
+          }
+        ],
+        "name": "ErrorMessagePayload",
+        "nameLocation": "64:19:4",
+        "scope": 1052,
+        "visibility": "public"
+      },
+      {
+        "id": 1051,
+        "nodeType": "ContractDefinition",
+        "src": "161:795:4",
+        "nodes": [
+          {
+            "id": 1008,
+            "nodeType": "ErrorDefinition",
+            "src": "204:35:4",
+            "nodes": [],
+            "errorSelector": "4f952033",
+            "name": "ErrorMsg",
+            "nameLocation": "210:8:4",
+            "parameters": {
+              "id": 1007,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1006,
+                  "mutability": "mutable",
+                  "name": "errorMessage",
+                  "nameLocation": "225:12:4",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1008,
+                  "src": "219:18:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 1005,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "219:5:4",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "218:20:4"
+            }
+          },
+          {
+            "id": 1014,
+            "nodeType": "ErrorDefinition",
+            "src": "245:111:4",
+            "nodes": [],
+            "errorSelector": "efa9309d",
+            "name": "HyperLiquidComposer_InvalidCall_NotEndpoint",
+            "nameLocation": "251:43:4",
+            "parameters": {
+              "id": 1013,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1010,
+                  "mutability": "mutable",
+                  "name": "notEndpointAddress",
+                  "nameLocation": "303:18:4",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1014,
+                  "src": "295:26:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1009,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "295:7:4",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1012,
+                  "mutability": "mutable",
+                  "name": "expectedEndpointAddress",
+                  "nameLocation": "331:23:4",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1014,
+                  "src": "323:31:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1011,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "323:7:4",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "294:61:4"
+            }
+          },
+          {
+            "id": 1020,
+            "nodeType": "ErrorDefinition",
+            "src": "361:101:4",
+            "nodes": [],
+            "errorSelector": "86fee0c0",
+            "name": "HyperLiquidComposer_InvalidCall_NotOFT",
+            "nameLocation": "367:38:4",
+            "parameters": {
+              "id": 1019,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1016,
+                  "mutability": "mutable",
+                  "name": "internalOFTAddress",
+                  "nameLocation": "414:18:4",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1020,
+                  "src": "406:26:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1015,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "406:7:4",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1018,
+                  "mutability": "mutable",
+                  "name": "receivedOFTAddress",
+                  "nameLocation": "442:18:4",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1020,
+                  "src": "434:26:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1017,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "434:7:4",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "405:56:4"
+            }
+          },
+          {
+            "id": 1024,
+            "nodeType": "ErrorDefinition",
+            "src": "467:78:4",
+            "nodes": [],
+            "errorSelector": "5950c85e",
+            "name": "HyperLiquidComposer_InvalidCall_NotComposer",
+            "nameLocation": "473:43:4",
+            "parameters": {
+              "id": 1023,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1022,
+                  "mutability": "mutable",
+                  "name": "notComposerAddress",
+                  "nameLocation": "525:18:4",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1024,
+                  "src": "517:26:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1021,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "517:7:4",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "516:28:4"
+            }
+          },
+          {
+            "id": 1028,
+            "nodeType": "ErrorDefinition",
+            "src": "551:68:4",
+            "nodes": [],
+            "errorSelector": "00d4895a",
+            "name": "HyperLiquidComposer_InvalidComposeMessage",
+            "nameLocation": "557:41:4",
+            "parameters": {
+              "id": 1027,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1026,
+                  "mutability": "mutable",
+                  "name": "errorMessage",
+                  "nameLocation": "605:12:4",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1028,
+                  "src": "599:18:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 1025,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "599:5:4",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "598:20:4"
+            }
+          },
+          {
+            "id": 1034,
+            "nodeType": "ErrorDefinition",
+            "src": "625:74:4",
+            "nodes": [],
+            "errorSelector": "c8ee485e",
+            "name": "HyperLiquidComposer_FailedToRefund_HYPE",
+            "nameLocation": "631:39:4",
+            "parameters": {
+              "id": 1033,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1030,
+                  "mutability": "mutable",
+                  "name": "to",
+                  "nameLocation": "679:2:4",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1034,
+                  "src": "671:10:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1029,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "671:7:4",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1032,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nameLocation": "691:6:4",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1034,
+                  "src": "683:14:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1031,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "683:7:4",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "670:28:4"
+            }
+          },
+          {
+            "id": 1038,
+            "nodeType": "ErrorDefinition",
+            "src": "704:60:4",
+            "nodes": [],
+            "errorSelector": "b7e54a07",
+            "name": "HyperLiquidComposer_FailedToSend_HYPE",
+            "nameLocation": "710:37:4",
+            "parameters": {
+              "id": 1037,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1036,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nameLocation": "756:6:4",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1038,
+                  "src": "748:14:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1035,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "748:7:4",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "747:16:4"
+            }
+          },
+          {
+            "id": 1044,
+            "nodeType": "ErrorDefinition",
+            "src": "770:95:4",
+            "nodes": [],
+            "errorSelector": "09b34731",
+            "name": "HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength",
+            "nameLocation": "776:57:4",
+            "parameters": {
+              "id": 1043,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1040,
+                  "mutability": "mutable",
+                  "name": "message",
+                  "nameLocation": "840:7:4",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1044,
+                  "src": "834:13:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 1039,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "834:5:4",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1042,
+                  "mutability": "mutable",
+                  "name": "length",
+                  "nameLocation": "857:6:4",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1044,
+                  "src": "849:14:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1041,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "849:7:4",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "833:31:4"
+            }
+          },
+          {
+            "id": 1050,
+            "nodeType": "ErrorDefinition",
+            "src": "871:83:4",
+            "nodes": [],
+            "errorSelector": "a91ed721",
+            "name": "HyperLiquidComposerCore_SpotBalanceRead_Failed",
+            "nameLocation": "877:46:4",
+            "parameters": {
+              "id": 1049,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1046,
+                  "mutability": "mutable",
+                  "name": "user",
+                  "nameLocation": "932:4:4",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1050,
+                  "src": "924:12:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1045,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "924:7:4",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1048,
+                  "mutability": "mutable",
+                  "name": "tokenId",
+                  "nameLocation": "945:7:4",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1050,
+                  "src": "938:14:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint64",
+                    "typeString": "uint64"
+                  },
+                  "typeName": {
+                    "id": 1047,
+                    "name": "uint64",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "938:6:4",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint64",
+                      "typeString": "uint64"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "923:30:4"
+            }
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "IHyperLiquidComposerErrors",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": true,
+        "linearizedBaseContracts": [1051],
+        "name": "IHyperLiquidComposerErrors",
+        "nameLocation": "171:26:4",
+        "scope": 1052,
+        "usedErrors": [1008, 1014, 1020, 1024, 1028, 1034, 1038, 1044, 1050],
+        "usedEvents": []
+      }
+    ],
+    "license": "MIT"
+  },
+  "id": 4
 }
