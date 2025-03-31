@@ -37,7 +37,7 @@ contract OFTProfilerExample is Script {
 
     /// @notice Entry point for the script. Generates fuzzed payloads and profiles gas usage on multiple networks.
     /// @param numberOfPayloads The number of payloads to generate and profile.
-    function run(uint256 numberOfPayloads) external {
+    function run(uint256 numberOfPayloads) external virtual {
         // Step 1: Deploy the GasProfilerScript contract which handles gas profiling.
         profiler = new GasProfilerScript();
 
