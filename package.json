@@ -41,7 +41,7 @@
     "rustbn.js": "^0.3.0"
   },
   "dependencies": {
-    "@layerzerolabs/oft-hyperliquid-evm": "workspace:*"
+    "@layerzerolabs/hyperliquid-composer": "workspace:*"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
