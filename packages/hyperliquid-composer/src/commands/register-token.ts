@@ -11,9 +11,10 @@ export async function registerToken(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger('register-token', args.logLevel)
 
+    const wallet = await getHyperliquidWallet(args.privateKey)
+
     const hyperAssetIndex = args.tokenIndex
     const network = args.network
-    const wallet = await getHyperliquidWallet()
     const isTestnet = network == 'testnet'
 
     logger.info(`Found public key ${wallet.address} from .env file`)

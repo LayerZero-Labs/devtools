@@ -8,7 +8,7 @@ export async function setBlock(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger('set-block', args.logLevel)
 
-    const wallet = await getHyperliquidWallet()
+    const wallet = await getHyperliquidWallet(args.privateKey)
     const isTestnet = args.network === 'testnet'
     const blockSize = args.size
 
