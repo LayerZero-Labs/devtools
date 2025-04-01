@@ -18,22 +18,24 @@ struct IHyperAssetAmount {
 }
 
 interface IHyperLiquidComposerCore {
-    event errorRefund(address refundTo, uint256 refundAmount);
-    event errorNativeRefund_Failed(address refundTo, uint256 refundAmount);
+    event ErrorERC20_Refund(address refundTo, uint256 refundAmount);
+    event ErrorHYPE_Refund(address refundTo, uint256 refundAmount);
+    event ErrorMessage(bytes reason);
 
     function endpoint() external view returns (address);
     function oft() external view returns (IOFT);
     function token() external view returns (IERC20);
-    function L1WritePrecompileAddress() external view returns (address);
-    function L1ReadPrecompileAddress_SpotBalance() external view returns (address);
+    function HLP_PRECOMPILE_WRITE() external view returns (address);
+    function HLP_PRECOMPILE_READ_SPOT_BALANCE() external view returns (address);
 
-    function validateAndDecodeMessage(
-        bytes calldata _composeMessage
-    ) external view returns (address _receiver, uint256 _amountLD);
+    function validate_addresses_or_refund(
+        bytes calldata _maybeReceiver,
+        bytes32 _senderBytes32,
+        uint256 _amountLD
+    ) external returns (address _receiver);
     function quoteHyperCoreAmount(uint256 _amount, bool _isOFT) external returns (IHyperAssetAmount memory);
     function balanceOfHyperCore(address _user, uint64 _tokenId) external view returns (uint64);
     function getOFTAsset() external view returns (IHyperAsset memory);
     function getHypeAsset() external view returns (IHyperAsset memory);
-    function refundTokens(bytes calldata err) external payable returns (bytes memory);
     function refundNativeTokens(address refundAddress) external payable;
 }
