@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.22;
 
-import { HyperLiquidComposer } from "@layerzerolabs/oft-hyperliquid-evm/contracts/HyperLiquidComposer.sol";
+import { HyperLiquidComposer } from "@layerzerolabs/hyperliquid-composer/contracts/HyperLiquidComposer.sol";
 
 contract MyHyperLiquidComposer is HyperLiquidComposer {
     /// @notice Constructor for the HyperLiquidComposer

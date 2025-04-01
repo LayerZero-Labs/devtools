@@ -7,14 +7,14 @@ import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contract
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import { HyperLiquidComposer, IHyperAsset } from "@layerzerolabs/oft-hyperliquid-evm/contracts/HyperLiquidComposer.sol";
-import { IHyperLiquidWritePrecompile } from "@layerzerolabs/oft-hyperliquid-evm/contracts/interfaces/IHyperLiquidWritePrecompile.sol";
+import { HyperLiquidComposer, IHyperAsset } from "@layerzerolabs/hyperliquid-composer/contracts/HyperLiquidComposer.sol";
+import { IHyperLiquidWritePrecompile } from "@layerzerolabs/hyperliquid-composer/contracts/interfaces/IHyperLiquidWritePrecompile.sol";
 
-import { HyperLiquidComposerCodec } from "@layerzerolabs/oft-hyperliquid-evm/contracts/library/HyperLiquidComposerCodec.sol";
+import { HyperLiquidComposerCodec } from "@layerzerolabs/hyperliquid-composer/contracts/library/HyperLiquidComposerCodec.sol";
 
-import { IHYPEPrecompile } from "@layerzerolabs/oft-hyperliquid-evm/contracts/interfaces/IHYPEPrecompile.sol";
-import { HypePrecompileMock } from "@layerzerolabs/oft-hyperliquid-evm/test/mocks/HypePrecompileMock.sol";
-import { SpotBalancePrecompileMock } from "@layerzerolabs/oft-hyperliquid-evm/test/mocks/SpotBalancePrecompileMock.sol";
+import { IHYPEPrecompile } from "@layerzerolabs/hyperliquid-composer/contracts/interfaces/IHYPEPrecompile.sol";
+import { HypePrecompileMock } from "@layerzerolabs/hyperliquid-composer/test/mocks/HypePrecompileMock.sol";
+import { SpotBalancePrecompileMock } from "@layerzerolabs/hyperliquid-composer/test/mocks/SpotBalancePrecompileMock.sol";
 
 import { MyHyperLiquidOFT } from "../../contracts/MyHyperLiquidOFT.sol";
 

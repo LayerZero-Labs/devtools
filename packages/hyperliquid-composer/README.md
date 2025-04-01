@@ -4,28 +4,28 @@
   </a>
 </p>
 
-<h1 align="center">@layerzerolabs/oft-hyperliquid-evm</h1>
+<h1 align="center">@layerzerolabs/hyperliquid-composer</h1>
 
 <!-- The badges section -->
 <p align="center">
   <!-- Shields.io NPM published package version -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/oft-hyperliquid-evm"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/oft-hyperliquid-evm"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/hyperliquid-composer"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/hyperliquid-composer"/></a>
   <!-- Shields.io NPM downloads -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/oft-hyperliquid-evm"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/oft-hyperliquid-evm"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/hyperliquid-composer"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/hyperliquid-composer"/></a>
   <!-- Shields.io license badge -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/oft-hyperliquid-evm"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/oft-hyperliquid-evm"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/hyperliquid-composer"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/hyperliquid-composer"/></a>
 </p>
 
 ## Installation
 
 ```bash
-pnpm install @layerzerolabs/oft-hyperliquid-evm
+pnpm install @layerzerolabs/hyperliquid-composer
 ```
 
 ```bash
-yarn install @layerzerolabs/oft-hyperliquid-evm
+yarn install @layerzerolabs/hyperliquid-composer
 ```
 
 ```bash
-npm install @layerzerolabs/oft-hyperliquid-evm
+npm install @layerzerolabs/hyperliquid-composer
 ```

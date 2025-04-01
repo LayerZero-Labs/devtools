@@ -11,7 +11,7 @@ module.exports = {
         'import/no-unresolved': [
             'error',
             {
-                ignore: ['@layerzerolabs/oft-hyperliquid-evm'],
+                ignore: ['@layerzerolabs/hyperliquid-composer'],
             },
         ],
     },
