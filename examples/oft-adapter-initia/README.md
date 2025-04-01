@@ -65,7 +65,7 @@ Before running the deploy and wire commands, inside of `move.layerzero.config.ts
 
 To convert your init prefixed bech32 address to hex, run the command:
 
-```initiad keys parse <your-bech32-addresss> --output json```
+`initiad keys parse <your-bech32-addresss> --output json`
 
 move.layerzero.config.ts:
 
