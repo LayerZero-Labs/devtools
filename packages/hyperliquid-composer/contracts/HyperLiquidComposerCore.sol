@@ -40,6 +40,12 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     IHyperAsset public oftAsset;
     IHyperAsset public hypeAsset;
 
+    constructor(address _endpoint, address _oft) {
+        endpoint = _endpoint;
+        oft = IOFT(_oft);
+        token = IERC20(oft.token());
+    }
+
     function validate_payload(bytes calldata _composeMessage) external pure returns (uint256, bytes32, bytes memory) {
         /// @dev Revert type : out of bounds or type cast error
         /// @dev Reason: Trying to slice the bytes object when it isn't of the form created by a OFTComposeMsgCodec.encode()

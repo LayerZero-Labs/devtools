@@ -26,7 +26,12 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
     /// @param _oft The OFT contract address associated with this composer
     /// @param _coreIndexId The core index id of the HyperLiquid L1 contract
     /// @param _weiDiff The difference in decimals between the HyperEVM OFT deployment and HyperLiquid L1 HIP-1 listing
-    constructor(address _endpoint, address _oft, uint64 _coreIndexId, uint64 _weiDiff) {
+    constructor(
+        address _endpoint,
+        address _oft,
+        uint64 _coreIndexId,
+        uint64 _weiDiff
+    ) HyperLiquidComposerCore(_endpoint, _oft) {
         /// @dev Hyperliquid L1 contract address is the prefix (0x2000...0000) + the core index id
         /// @dev This is the address that the OFT contract will transfer the tokens to when we want to send tokens between HyperEVM and HyperLiquid L1
         /// @dev https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers#system-addresses
@@ -47,11 +52,6 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
             /// @dev 8 is the number of decimals in the HYPE Core Spot on HyperLiquid L1
             decimalDiff: 18 - 8
         });
-
-        // Used during validation of the lzCompose call
-        oft = IOFT(_oft);
-        token = IERC20(oft.token());
-        endpoint = _endpoint;
     }
 
     /// @notice Composes a message to be sent to the HyperLiquidComposer
