@@ -4,7 +4,7 @@ import { Wallet } from 'ethers'
 import { type DeployFunction } from 'hardhat-deploy/types'
 import inquirer from 'inquirer'
 
-import { getCoreSpotDeployment, useBigBlock, useSmallBlock } from '@layerzerolabs/oft-hyperliquid-evm'
+import { getCoreSpotDeployment, useBigBlock, useSmallBlock } from '@layerzerolabs/hyperliquid-composer'
 
 const contractName_oft = 'MyHyperLiquidOFT'
 const contractName_composer = 'MyHyperLiquidComposer'
@@ -31,10 +31,13 @@ const deploy: DeployFunction = async (hre) => {
     const loglevel = hre.hardhatArguments.verbose ? 'debug' : 'error'
 
     const wallet = new Wallet(privateKey)
+    const isHyperliquid = hre.network.name === 'hyperliquid-mainnet' || hre.network.name === 'hyperliquid-testnet'
     const isTestnet = hre.network.name === 'hyperliquid-testnet'
 
     console.log(`Network: ${hre.network.name}`)
     console.log(`Deployer: ${deployer}`)
+
+    assert(isHyperliquid, 'This deploys to hyperliquid networks')
 
     // Validates and returns the native spot
     const hip1Token = getCoreSpotDeployment(coreSpotIndex, isTestnet)

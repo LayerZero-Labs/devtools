@@ -3,7 +3,7 @@ import assert from 'assert'
 import { Wallet } from 'ethers'
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-import { useBigBlock, useSmallBlock } from '@layerzerolabs/oft-hyperliquid-evm'
+import { useBigBlock, useSmallBlock } from '@layerzerolabs/hyperliquid-composer'
 
 const contractName_oft = 'MyHyperLiquidOFT'
 const tokenSymbol = 'MYOFT'
@@ -22,16 +22,16 @@ const deploy: DeployFunction = async (hre) => {
     const loglevel = hre.hardhatArguments.verbose ? 'debug' : 'info'
 
     const wallet = new Wallet(privateKey)
+    const isHyperliquid = hre.network.name === 'hyperliquid-mainnet' || hre.network.name === 'hyperliquid-testnet'
     const isTestnet = hre.network.name === 'hyperliquid-testnet'
 
     const networkName = hre.network.name
     console.log(`Network: ${networkName}`)
     console.log(`Deployer: ${deployer}`)
 
-    assert(
-        networkName === 'hyperliquid-testnet' || networkName === 'hyperliquid-mainnet',
-        'This deploys to hyperliquid networks'
-    )
+    if (isHyperliquid) {
+        console.log('This deploys to hyperliquid networks')
+    }
 
     // This is an external deployment pulled in from @layerzerolabs/lz-evm-sdk-v2
     //
@@ -54,7 +54,7 @@ const deploy: DeployFunction = async (hre) => {
     // Switch to hyperliquidbig block if the contract is not deployed
     const isDeployed_oft = await hre.deployments.getOrNull(contractName_oft)
 
-    if (!isDeployed_oft) {
+    if (!isDeployed_oft && isHyperliquid) {
         console.log(`Switching to hyperliquid big block for the address ${deployer} to deploy ${contractName_oft}`)
         await useBigBlock(wallet, isTestnet, loglevel)
         console.log(`Deplying a contract uses big block which is mined at a transaction per minute.`)
@@ -76,7 +76,7 @@ const deploy: DeployFunction = async (hre) => {
     console.log(`Deployed OFT contract: ${contractName_oft}, network: ${hre.network.name}, address: ${address_oft}`)
 
     // Set small block eitherway as we do not have a method to check which hyperliquidblock we are on
-    {
+    if (isHyperliquid) {
         console.log(`Using small block with address ${deployer} for faster transactions`)
         const res = await useSmallBlock(wallet, isTestnet, loglevel)
         console.log(JSON.stringify(res, null, 2))
