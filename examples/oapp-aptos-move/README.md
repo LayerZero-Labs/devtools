@@ -75,13 +75,17 @@ Note: Your private key is stored in the .aptos/config.yaml file and will be extr
 
 Create a `.env` file with the following variables:
 
+Note: the aptos specific values can be found in `.aptos/config.yaml` after running `aptos init`
+
+Note: the Movement specific values can be found at: https://docs.movementnetwork.xyz/devs/networkEndpoints#movement-bardock-testnet-aptos-environment and currently Bardock testnet is the only Movement testnet with a deployed layerzero endpoint.
+
 ```bash
 EVM_PRIVATE_KEY=<your-evm-private-key>
 EVM_MNEMONIC=<your-mnemonic>
 
 # If you are deploying to Movement chain
-MOVEMENT_INDEXER_URL=https://indexer.testnet.movementnetwork.xyz/v1/graphql
-MOVEMENT_FULLNODE_URL=https://aptos.testnet.bardock.movementlabs.xyz/v1
+MOVEMENT_INDEXER_URL=<indexer-url>
+MOVEMENT_FULLNODE_URL=<fullnode-url>
 MOVEMENT_ACCOUNT_ADDRESS=<your-movement-account-address>
 MOVEMENT_PRIVATE_KEY=<your-movement-private-key>
 
@@ -91,10 +95,6 @@ APTOS_PRIVATE_KEY=<your-aptos-private-key>
 ```
 
 Then run `source .env` in order for your values to be mapped.
-
-Note: the aptos specific values can be found in `.aptos/config.yaml` after running `aptos init`
-
-Note: the Movement specific values can be found at: https://docs.movementnetwork.xyz/devs/networkEndpoints#movement-bardock-testnet-aptos-environment and currently Bardock testnet is the only Movement testnet with a deployed layerzero endpoint.
 
 > **Important:** If using Aptos CLI version >= 6.1.0 (required for Aptos chain), you need to uncomment the following lines in Move.toml and remove the existing AptosFramework dependency:
 >

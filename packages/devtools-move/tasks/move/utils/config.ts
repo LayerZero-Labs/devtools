@@ -292,6 +292,28 @@ async function getAptosVersion(aptosCommand: string): Promise<string> {
     })
 }
 
+async function getInitiaVersion(): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const childProcess = spawn('initiad', ['version'])
+        let stdout = ''
+
+        childProcess.stdout?.on('data', (data) => {
+            stdout += data.toString()
+        })
+
+        childProcess.on('close', (code) => {
+            if (code === 0) {
+                const versionMatch = stdout.match(/v(\d+\.\d+\.\d+)/)
+                versionMatch ? resolve(versionMatch[1]) : reject(new Error('Could not parse version'))
+            } else {
+                reject(new Error(`initiad version exited with code ${code}`))
+            }
+        })
+
+        childProcess.on('error', reject)
+    })
+}
+
 export async function getAptosCLICommand(chain: string, stage: string): Promise<string> {
     const aptosCommand = 'aptos'
     const version = await getAptosVersion(aptosCommand)
@@ -316,6 +338,17 @@ export async function getAptosCLICommand(chain: string, stage: string): Promise<
         throw new Error(`Chain ${chain}-${stage} not supported for build.`)
     }
     return aptosCommand
+}
+
+export async function checkInitiaCLIVersion(): Promise<void> {
+    const version = await getInitiaVersion()
+    const SUPPORTED_VERSION = '0.7.3'
+
+    if (version === SUPPORTED_VERSION) {
+        console.log(`🚀 Initia CLI version ${version} is compatible.`)
+    } else {
+        throw Error(`❌ Initia CLI version ${version} is not supported. Required: ${SUPPORTED_VERSION}`)
+    }
 }
 
 function greaterThanOrEqualTo(installed: string, required: string): boolean {

@@ -16,7 +16,7 @@ npm install -g pnpm@8.14.0
 
 ## Initiad Setup
 
-Deploying to Initia requires the Initia CLI tool (Initiad). To install Initiad, follow the official documentation at:
+Deploying to Initia requires the Initia CLI tool (Initiad). We **ONLY** support version 0.7.3 of Initiad. To install Initiad, follow the official documentation at:
 https://docs.initia.xyz/build-on-initia/initiad
 
 After installation, generate a new key and add it to the keyring:
