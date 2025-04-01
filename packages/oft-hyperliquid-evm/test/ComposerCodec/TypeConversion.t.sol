@@ -113,18 +113,16 @@ contract TypeConversionTest is Test {
         assertEq(decodedAddress, _addr);
     }
 
+    /// forge-config: default.fuzz.runs = 128
     function test_bytes32_into_address(bytes32 _byte32String) public {
         bytes memory byte32String = bytes.concat(_byte32String);
         bool res = this.areFirst12BytesZero(byte32String);
 
         if (!res) {
-            // If we have a non evm address (i.e. a bytes32 string - we do not expect this is decode)
+            // If we have a non evm address (i.e. a bytes32 string - we do not expect this to decode)
             vm.expectRevert();
-            abi.decode(bytes.concat(_byte32String), (address));
-        } else {
-            // We expect all bytes20 strings to be decoded as an address
-            abi.decode(bytes.concat(_byte32String), (address));
         }
+        abi.decode(bytes.concat(_byte32String), (address));
     }
 
     function addressToBytes32(address _addr) internal pure returns (bytes32) {
