@@ -23,4 +23,5 @@ pnpm-error.log
 .DS_Store
 .idea
 
-deployments/nativeSpot.ts
+broadcast
+deployments
