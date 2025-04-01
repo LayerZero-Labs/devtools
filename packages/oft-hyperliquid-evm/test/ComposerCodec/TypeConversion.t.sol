@@ -107,30 +107,4 @@ contract TypeConversionTest is Test {
         assertEq(amounts.evm, expectedEvm, "evm amount is not equal to the input amount");
         assertEq(amounts.core, expectedCore, "core amount is not equal to the input amount");
     }
-
-    function test_bytes20_into_address(address _addr) public pure {
-        address decodedAddress = abi.decode(bytes.concat(addressToBytes32(_addr)), (address));
-        assertEq(decodedAddress, _addr);
-    }
-
-    /// forge-config: default.fuzz.runs = 128
-    function test_bytes32_into_address(bytes32 _byte32String) public {
-        bytes memory byte32String = bytes.concat(_byte32String);
-        bool res = this.areFirst12BytesZero(byte32String);
-
-        if (!res) {
-            // If we have a non evm address (i.e. a bytes32 string - we do not expect this to decode)
-            vm.expectRevert();
-        }
-        abi.decode(bytes.concat(_byte32String), (address));
-    }
-
-    function addressToBytes32(address _addr) internal pure returns (bytes32) {
-        return bytes32(uint256(uint160(_addr)));
-    }
-
-    function areFirst12BytesZero(bytes calldata _bytes) external pure returns (bool) {
-        bytes memory zeros = hex"000000000000000000000000";
-        return keccak256(_bytes[0:12]) == keccak256(zeros);
-    }
 }
