@@ -1,10 +1,15 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.20;
 
-import { HyperLiquidComposerCodec } from "../../contracts/library/HyperLiquidComposerCodec.sol";
-import { HyperLiquidComposerCore } from "../../contracts/HyperLiquidComposerCore.sol";
-import { IHyperLiquidComposerErrors, ErrorMessagePayload } from "../../contracts/interfaces/IHyperLiquidComposerErrors.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
+
+import { HyperLiquidComposerCodec } from "../../contracts/library/HyperLiquidComposerCodec.sol";
+
+import { IHyperLiquidComposerErrors, ErrorMessagePayload } from "../../contracts/interfaces/IHyperLiquidComposerErrors.sol";
+import { IHyperAsset, IHyperLiquidComposerCore } from "../../contracts/interfaces/IHyperLiquidComposerCore.sol";
+
+import { HyperLiquidComposer } from "../../contracts/HyperLiquidComposer.sol";
+import { OFTMock } from "../mocks/OFTMock.sol";
 
 import { Test, console } from "forge-std/Test.sol";
 
@@ -13,12 +18,39 @@ contract ComposeMessageTest is Test {
 
     uint256 public constant DEFAULT_AMOUNT = 1e18;
 
-    HyperLiquidComposerCore public composerCore = new HyperLiquidComposerCore();
+    IHyperAsset public ALICE;
+    IHyperAsset public HYPE;
+    address public constant HL_LZ_ENDPOINT_V2 = 0xf9e1815F151024bDE4B7C10BAC10e8Ba9F6b53E1;
+
+    OFTMock public oft;
+    HyperLiquidComposer public hyperLiquidComposer;
 
     address public sender;
 
     function setUp() public {
+        vm.createSelectFork("https://rpc.hyperliquid-testnet.xyz/evm");
         sender = makeAddr("sender");
+
+        ALICE = IHyperAsset({
+            assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1231),
+            coreIndexId: 1231,
+            decimalDiff: 18 - 6
+        });
+
+        HYPE = IHyperAsset({
+            assetBridgeAddress: 0x2222222222222222222222222222222222222222,
+            coreIndexId: 1105,
+            decimalDiff: 18 - 10
+        });
+
+        oft = new OFTMock("test", "test", HL_LZ_ENDPOINT_V2, msg.sender);
+
+        hyperLiquidComposer = new HyperLiquidComposer(
+            HL_LZ_ENDPOINT_V2,
+            address(oft),
+            ALICE.coreIndexId,
+            ALICE.decimalDiff
+        );
     }
 
     function test_validateAndDecodeMessage_EncodingVariants(address _receiver, bool _useEncodePacked) public view {
@@ -82,7 +114,7 @@ contract ComposeMessageTest is Test {
         bytes32 senderBytes32 = OFTComposeMsgCodec.composeFrom(_message);
 
         _amountLD = OFTComposeMsgCodec.amountLD(_message);
-        _receiver = composerCore.validate_addresses_or_refund(maybeReceiver, senderBytes32, _amountLD);
+        _receiver = hyperLiquidComposer.validate_addresses_or_refund(maybeReceiver, senderBytes32, _amountLD);
     }
 
     function composeMsg(bytes calldata _message) public pure returns (bytes memory) {

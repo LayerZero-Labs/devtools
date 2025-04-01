@@ -150,14 +150,18 @@ export function getTimestampMs(): number {
     return Date.now()
 }
 
-export async function getHyperliquidWallet() {
+export async function getHyperliquidWallet(privateKey?: string) {
     const env = loadEnv()
 
-    const privateKey = env.PRIVATE_KEY_HYPERLIQUID
-    if (!privateKey) {
-        console.error('PRIVATE_KEY_HYPERLIQUID is not set in .env file')
-        process.exit(1)
-    }
+    if (privateKey) {
+        return new Wallet(privateKey)
+    } else {
+        const privateKey = env.PRIVATE_KEY_HYPERLIQUID
+        if (!privateKey) {
+            console.error('PRIVATE_KEY_HYPERLIQUID is not set in .env file')
+            process.exit(1)
+        }
 
-    return new Wallet(privateKey)
+        return new Wallet(privateKey)
+    }
 }

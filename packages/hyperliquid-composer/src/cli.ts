@@ -12,6 +12,7 @@ program
     .requiredOption('-s, --size <size>', 'Block size (big/small)')
     .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
     .option('-l, --log-level <level>', 'Log level', LogLevel.info)
+    .option('-pk, --private-key <0x>', 'Private Key')
     .action(setBlock)
 
 program
@@ -20,6 +21,7 @@ program
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
     .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
     .option('-l, --log-level <level>', 'Log level', LogLevel.info)
+    .option('-pk, --private-key', 'Private key')
     .action(registerToken)
 
 program

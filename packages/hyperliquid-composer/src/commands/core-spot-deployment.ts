@@ -12,7 +12,7 @@ export async function coreSpotDeployment(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger('core-spot-deployment', args.logLevel)
 
-    const wallet = await getHyperliquidWallet()
+    const wallet = await getHyperliquidWallet(args.privateKey)
 
     const oappConfig = args.oappConfig
     const network = args.network
