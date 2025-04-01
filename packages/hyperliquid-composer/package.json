@@ -1,5 +1,5 @@
 {
-  "name": "@layerzerolabs/oft-hyperliquid-evm",
+  "name": "@layerzerolabs/hyperliquid-composer",
   "version": "0.0.1",
   "private": false,
   "description": "LayerZero Labs reference EVM OmniChain Fungible Token (OFT) implementation for Hyperliquid",
