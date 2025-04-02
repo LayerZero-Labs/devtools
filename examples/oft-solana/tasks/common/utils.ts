@@ -183,6 +183,7 @@ export enum KnownErrors {
     // e.g. If the user forgets to deploy the OFT Program, the variable name should be:
     // FIX_SUGGESTION_OFT_PROGRAM_NOT_DEPLOYED
     ULN_INIT_CONFIG_SKIPPED = 'ULN_INIT_CONFIG_SKIPPED',
+    SOLANA_DEPLOYMENT_NOT_FOUND = 'SOLANA_DEPLOYMENT_NOT_FOUND',
 }
 
 interface ErrorFixInfo {
@@ -194,5 +195,9 @@ export const ERRORS_FIXES_MAP: Record<KnownErrors, ErrorFixInfo> = {
     [KnownErrors.ULN_INIT_CONFIG_SKIPPED]: {
         tip: 'Did you run `npx hardhat lz:oft:solana:init-config --oapp-config <LZ_CONFIG_FILE_NAME> --solana-eid <SOLANA_EID>` ?',
         info: 'You must run lz:oft:solana:init-config once before you run lz:oapp:wire. If you have added new pathways, you must also run lz:oft:solana:init-config again.',
+    },
+    [KnownErrors.SOLANA_DEPLOYMENT_NOT_FOUND]: {
+        tip: 'Did you run `npx hardhat lz:oft:solana:create` ?',
+        info: 'The Solana deployment file is required to run config tasks. The default path is ./deployments/solana-<mainnet/testnet>/OFT.json',
     },
 }
