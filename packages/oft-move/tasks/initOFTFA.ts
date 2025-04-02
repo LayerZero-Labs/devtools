@@ -17,6 +17,7 @@ async function initOFTFA(
     console.log(`\tToken Symbol: ${token_symbol}`)
     console.log(`\tIcon URI: ${icon_uri}`)
     console.log(`\tProject URI: ${project_uri}`)
+    console.log(`\tShared Decimals: ${sharedDecimals}`)
     console.log(`\tLocal Decimals: ${local_decimals}`)
 
     const initializePayload = taskContext.oft.initializeOFTFAPayload(

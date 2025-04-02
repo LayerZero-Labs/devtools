@@ -282,7 +282,9 @@ async function getAptosVersion(aptosCommand: string): Promise<string> {
         childProcess.on('close', (code) => {
             if (code === 0) {
                 const versionMatch = stdout.match(/aptos (\d+\.\d+\.\d+)/)
-                versionMatch ? resolve(versionMatch[1]) : reject(new Error('Could not parse version'))
+                versionMatch
+                    ? resolve(versionMatch[1])
+                    : reject(new Error(`Could not parse version: "${stdout.trim()}"`))
             } else {
                 reject(new Error(`aptos --version exited with code ${code}`))
             }
@@ -304,7 +306,9 @@ async function getInitiaVersion(): Promise<string> {
         childProcess.on('close', (code) => {
             if (code === 0) {
                 const versionMatch = stdout.match(/v(\d+\.\d+\.\d+)/)
-                versionMatch ? resolve(versionMatch[1]) : reject(new Error('Could not parse version'))
+                versionMatch
+                    ? resolve(versionMatch[1])
+                    : reject(new Error(`Could not parse version: "${stdout.trim()}"`))
             } else {
                 reject(new Error(`initiad version exited with code ${code}`))
             }
@@ -324,7 +328,7 @@ export async function getAptosCLICommand(chain: string, stage: string): Promise<
         if (greaterThanOrEqualTo(version, MIN_VERSION)) {
             console.log(`🚀 Aptos CLI version ${version} is compatible.`)
         } else {
-            throw Error(`❌ Aptos CLI version too old. Required: ${MIN_VERSION} or newer, Found: ${version}`)
+            throw new Error(`❌ Aptos CLI version too old. Required: ${MIN_VERSION} or newer, Found: ${version}`)
         }
     } else if (chain === 'movement') {
         const MAX_VERSION = '3.5.0'
@@ -332,7 +336,7 @@ export async function getAptosCLICommand(chain: string, stage: string): Promise<
         if (lessThanOrEqualTo(version, MAX_VERSION)) {
             console.log(`🚀 Aptos CLI version ${version} is compatible.`)
         } else {
-            throw Error(`❌ Aptos CLI version too new. Required: ${MAX_VERSION} or older, Found: ${version}`)
+            throw new Error(`❌ Aptos CLI version too new. Required: ${MAX_VERSION} or older, Found: ${version}`)
         }
     } else {
         throw new Error(`Chain ${chain}-${stage} not supported for build.`)
@@ -347,7 +351,7 @@ export async function checkInitiaCLIVersion(): Promise<void> {
     if (version === SUPPORTED_VERSION) {
         console.log(`🚀 Initia CLI version ${version} is compatible.`)
     } else {
-        throw Error(`❌ Initia CLI version ${version} is not supported. Required: ${SUPPORTED_VERSION}`)
+        throw new Error(`❌ Initia CLI version ${version} is not supported. Required: ${SUPPORTED_VERSION}`)
     }
 }
 
