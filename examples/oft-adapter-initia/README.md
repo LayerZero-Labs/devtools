@@ -320,10 +320,4 @@ pnpm run lz:sdk:help
 
 ## Validating object ownership of your deployed Initia OApp:
 
-Go to: https://scan.testnet.initia.xyz/initiation-2/interact?address=0x1&moduleName=object&functionType=view&functionName=owner (use mainnet equivalent contract for mainnet)
-
-Fill in the text boxes as follows:
-For TO: 0x1::Object::ObjectCore
-For the argument: your deployed Object Address
-
-Verify the method returns your desired Initia account address as the object owner.
+Go to your OFT object address on the block explorer. Under resources, 0x1, click on 'object'. Verify owner field displays the desired object owner address.
