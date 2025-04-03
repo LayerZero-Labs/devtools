@@ -2,14 +2,15 @@
 
 pragma solidity ^0.8.20;
 
-import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import { IOAppCore, ILayerZeroEndpointV2 } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol";
+import {OnlyLZAdmin} from "../OnlyLZAdmin.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {IOAppCore, ILayerZeroEndpointV2} from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol";
 
 /**
  * @title OAppCore
  * @dev Abstract contract implementing the IOAppCore interface with basic OApp configurations.
  */
-abstract contract OAppCoreUpgradeable is IOAppCore, OwnableUpgradeable {
+abstract contract OAppCoreUpgradeable is IOAppCore, Initializable, OnlyLZAdmin {
     struct OAppCoreStorage {
         mapping(uint32 => bytes32) peers;
     }
@@ -72,7 +73,7 @@ abstract contract OAppCoreUpgradeable is IOAppCore, OwnableUpgradeable {
      * @dev Set this to bytes32(0) to remove the peer address.
      * @dev Peer is a bytes32 to accommodate non-evm chains.
      */
-    function setPeer(uint32 _eid, bytes32 _peer) public virtual onlyOwner {
+    function setPeer(uint32 _eid, bytes32 _peer) public virtual onlyLZAdmin {
         OAppCoreStorage storage $ = _getOAppCoreStorage();
         $.peers[_eid] = _peer;
         emit PeerSet(_eid, _peer);
@@ -98,7 +99,7 @@ abstract contract OAppCoreUpgradeable is IOAppCore, OwnableUpgradeable {
      * @dev Only the owner/admin of the OApp can call this function.
      * @dev Provides the ability for a delegate to set configs, on behalf of the OApp, directly on the Endpoint contract.
      */
-    function setDelegate(address _delegate) public onlyOwner {
+    function setDelegate(address _delegate) public onlyLZAdmin {
         endpoint.setDelegate(_delegate);
     }
 }

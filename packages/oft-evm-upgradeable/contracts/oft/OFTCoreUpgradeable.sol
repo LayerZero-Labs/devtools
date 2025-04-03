@@ -129,7 +129,7 @@ abstract contract OFTCoreUpgradeable is
      * @dev This is an optional contract that can be used to inspect both 'message' and 'options'.
      * @dev Set it to address(0) to disable it, or set it to a contract address to enable it.
      */
-    function setMsgInspector(address _msgInspector) public virtual onlyOwner {
+    function setMsgInspector(address _msgInspector) public virtual onlyLZAdmin {
         OFTCoreStorage storage $ = _getOFTCoreStorage();
         $.msgInspector = _msgInspector;
         emit MsgInspectorSet(_msgInspector);
