@@ -11,7 +11,6 @@ module oft::oapp_store {
 
     friend oft::oapp_core;
     friend oft::oapp_receive;
-    friend oft::oapp_compose;
     friend oft::oft;
 
     // ************************************************* CONFIGURATION *************************************************
