@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-move
 
+## 1.0.7
+
+### Patch Changes
+
+- b1feef7: Devex improvements.
+
 ## 1.0.6
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-initia-example
 
+## 0.0.5
+
+### Patch Changes
+
+- b1feef7: Devex improvements.
+
 ## 0.0.4
 
 ### Patch Changes

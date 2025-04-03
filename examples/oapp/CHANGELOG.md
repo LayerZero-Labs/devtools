@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.5.9
+
+### Patch Changes
+
+- d24cc34: examples/oapp: update to use simple config
+
 ## 0.5.8
 
 ### Patch Changes
