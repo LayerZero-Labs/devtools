@@ -2070,8 +2070,8 @@ importers:
         specifier: ^1.7.0
         version: 1.7.0
       '@solana-developers/helpers':
-        specifier: ~2.4.0
-        version: 2.4.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
+        specifier: ~2.8.1
+        version: 2.8.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@solana/spl-token':
         specifier: ^0.4.8
         version: 0.4.8(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
@@ -6387,7 +6387,6 @@ packages:
   /@coral-xyz/anchor-errors@0.30.1:
     resolution: {integrity: sha512-9Mkradf5yS5xiLWrl9WrpjqOrAV+/W2RQHDlbnAZBivoGpOs1ECjoDCkVk4aRG8ZdiFiB8zQEVlxf+8fKkmSfQ==}
     engines: {node: '>=10'}
-    dev: false
 
   /@coral-xyz/anchor@0.26.0:
     resolution: {integrity: sha512-PxRl+wu5YyptWiR9F2MBHOLLibm87Z4IMUBPreX+DYBtPM+xggvcPi0KAN7+kIL4IrIhXI8ma5V0MCXxSN1pHg==}
@@ -6461,7 +6460,6 @@ packages:
       - bufferutil
       - encoding
       - utf-8-validate
-    dev: false
 
   /@coral-xyz/borsh@0.26.0(@solana/web3.js@1.95.8):
     resolution: {integrity: sha512-uCZ0xus0CszQPHYfWAqKS5swS1UxvePu83oOF+TWpUkedsNlg6p2p4azxZNSSqwXb9uXMFgxhuMBX9r3Xoi0vQ==}
@@ -6494,7 +6492,6 @@ packages:
       '@solana/web3.js': 1.95.8
       bn.js: 5.2.1
       buffer-layout: 1.2.2
-    dev: false
 
   /@cspotcode/source-map-support@0.8.1:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -11056,21 +11053,6 @@ packages:
     dependencies:
       tslib: 2.6.3
 
-  /@solana-developers/helpers@2.4.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
-    resolution: {integrity: sha512-eiqHOluJlP9cYfAkgSLaM6o5etWfbBbjNnR3AL0Ds09CJdA3A61qimCPQFmjiLynAb6U7/NSWq0Q28/hnb02Bw==}
-    dependencies:
-      '@solana/spl-token': 0.4.12(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
-      '@solana/web3.js': 1.95.8
-      bs58: 6.0.0
-      dotenv: 16.4.7
-    transitivePeerDependencies:
-      - bufferutil
-      - encoding
-      - fastestsmallesttextencoderdecoder
-      - typescript
-      - utf-8-validate
-    dev: true
-
   /@solana-developers/helpers@2.7.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
     resolution: {integrity: sha512-b00myc4LkKgdJarAk6ILAMQ4IDd+ixNua71GDCejoOie+SkL1cTedyBLQw0h6OJqA2NgigQRKM+apEop9ozXQw==}
     dependencies:
@@ -11087,6 +11069,24 @@ packages:
       - typescript
       - utf-8-validate
     dev: false
+
+  /@solana-developers/helpers@2.8.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
+    resolution: {integrity: sha512-xvoOj+ewL18+h6fMrXp1vTss0WBLnhQHnBb6mMPfEQE32w0THlxm8OPXNUY8g4tREX7ugU5cDEP7c2teye1Z7A==}
+    dependencies:
+      '@coral-xyz/anchor': 0.30.1
+      '@solana/spl-token': 0.4.12(@solana/web3.js@1.98.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
+      '@solana/spl-token-metadata': 0.1.6(@solana/web3.js@1.98.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
+      '@solana/web3.js': 1.98.0
+      bn.js: 5.2.1
+      bs58: 6.0.0
+      dotenv: 16.4.7
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - fastestsmallesttextencoderdecoder
+      - typescript
+      - utf-8-validate
+    dev: true
 
   /@solana/buffer-layout-utils@0.2.0:
     resolution: {integrity: sha512-szG4sxgJGktbuZYDg2FfNmkMi0DYQoVjN2h7ta1W1hPrwzarcFLBq9UpX1UjNXsNpT9dn+chgprtWGioUAr4/g==}
@@ -11345,6 +11345,7 @@ packages:
     transitivePeerDependencies:
       - fastestsmallesttextencoderdecoder
       - typescript
+    dev: false
 
   /@solana/spl-token-group@0.0.7(@solana/web3.js@1.98.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
     resolution: {integrity: sha512-V1N/iX7Cr7H0uazWUT2uk27TMqlqedpXHRqqAbVO2gvmJyT0E0ummMEAVQeXZ05ZhQ/xF39DLSdBp90XebWEug==}
@@ -11357,7 +11358,6 @@ packages:
     transitivePeerDependencies:
       - fastestsmallesttextencoderdecoder
       - typescript
-    dev: false
 
   /@solana/spl-token-metadata@0.1.4(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22):
     resolution: {integrity: sha512-N3gZ8DlW6NWDV28+vCCDJoTqaCZiF/jDUnk3o8GRkAFzHObiR60Bs1gXHBa8zCPdvOwiG6Z3dg5pg7+RW6XNsQ==}
@@ -11395,6 +11395,7 @@ packages:
     transitivePeerDependencies:
       - fastestsmallesttextencoderdecoder
       - typescript
+    dev: false
 
   /@solana/spl-token-metadata@0.1.6(@solana/web3.js@1.98.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
     resolution: {integrity: sha512-7sMt1rsm/zQOQcUWllQX9mD2O6KhSAtY1hFR2hfFwgqfFWzSY9E9GDvFVNYUI1F0iQKcm6HmePU9QbKRXTEBiA==}
@@ -11407,7 +11408,6 @@ packages:
     transitivePeerDependencies:
       - fastestsmallesttextencoderdecoder
       - typescript
-    dev: false
 
   /@solana/spl-token@0.3.11(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22):
     resolution: {integrity: sha512-bvohO3rIMSVL24Pb+I4EYTJ6cL82eFpInEXD/I8K8upOGjpqHsKUoAempR/RnUlI1qSFNyFlWJfu6MNUgfbCQQ==}
@@ -11444,6 +11444,7 @@ packages:
       - fastestsmallesttextencoderdecoder
       - typescript
       - utf-8-validate
+    dev: false
 
   /@solana/spl-token@0.4.12(@solana/web3.js@1.98.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
     resolution: {integrity: sha512-K6CxzSoO1vC+WBys25zlSDaW0w4UFZO/IvEZquEI35A/PjqXNQHeVigmDCZYEJfESvYarKwsr8tYr/29lPtvaw==}
@@ -11463,7 +11464,6 @@ packages:
       - fastestsmallesttextencoderdecoder
       - typescript
       - utf-8-validate
-    dev: false
 
   /@solana/spl-token@0.4.8(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
     resolution: {integrity: sha512-RO0JD9vPRi4LsAbMUdNbDJ5/cv2z11MGhtAvFeRzT4+hAGE/FUzRi0tkkWtuCfSIU3twC6CtmAihRp/+XXjWsA==}
@@ -11536,7 +11536,6 @@ packages:
       - bufferutil
       - encoding
       - utf-8-validate
-    dev: false
 
   /@solidity-parser/parser@0.14.5:
     resolution: {integrity: sha512-6dKnHZn7fg/iQATVEzqyUOyEidbn05q7YA2mQ9hC0MMXhhV3/JrsxmFSYZAcr7j1yUP700LLhTruvJ3MiQmjJg==}
