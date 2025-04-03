@@ -282,9 +282,7 @@ async function getAptosVersion(aptosCommand: string): Promise<string> {
         childProcess.on('close', (code) => {
             if (code === 0) {
                 const versionMatch = stdout.match(/aptos (\d+\.\d+\.\d+)/)
-                versionMatch
-                    ? resolve(versionMatch[1])
-                    : reject(new Error(`Could not parse version: "${stdout.trim()}"`))
+                versionMatch ? resolve(versionMatch[1]) : reject(new Error(`Could not parse version`))
             } else {
                 reject(new Error(`aptos --version exited with code ${code}`))
             }
@@ -306,9 +304,7 @@ async function getInitiaVersion(): Promise<string> {
         childProcess.on('close', (code) => {
             if (code === 0) {
                 const versionMatch = stdout.match(/v(\d+\.\d+\.\d+)/)
-                versionMatch
-                    ? resolve(versionMatch[1])
-                    : reject(new Error(`Could not parse version: "${stdout.trim()}"`))
+                versionMatch ? resolve(versionMatch[1]) : reject(new Error(`Could not parse version`))
             } else {
                 reject(new Error(`initiad version exited with code ${code}`))
             }
