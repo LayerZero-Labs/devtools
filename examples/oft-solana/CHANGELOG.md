@@ -1,5 +1,13 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.7.13
+
+### Patch Changes
+
+- 4ff1db8: feat(oft-solana): remove need for manual solana endpoint ID input
+- 28eb8be: feat(oft-solana): support loading keypair via path
+- 0385135: fix import in setInboundRateLimit
+
 ## 0.7.12
 
 ### Patch Changes
