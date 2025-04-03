@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-aptos-move-example",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -50,7 +50,7 @@
     "@babel/core": "^7.23.9",
     "@jest/globals": "^29.7.0",
     "@layerzerolabs/devtools-extensible-cli": "^0.0.6",
-    "@layerzerolabs/devtools-move": "^1.0.5",
+    "@layerzerolabs/devtools-move": "^1.0.7",
     "@layerzerolabs/eslint-config-next": "~2.3.39",
     "@layerzerolabs/lz-config-types": "^3.0.15",
     "@layerzerolabs/lz-definitions": "^3.0.75",
@@ -64,7 +64,7 @@
     "@layerzerolabs/move-definitions": "^3.0.15",
     "@layerzerolabs/oapp-evm": "^0.3.2",
     "@layerzerolabs/oft-evm": "^3.1.3",
-    "@layerzerolabs/oft-move": "^1.0.1",
+    "@layerzerolabs/oft-move": "^1.0.2",
     "@layerzerolabs/prettier-config-next": "^2.3.39",
     "@layerzerolabs/solhint-config": "^3.0.12",
     "@layerzerolabs/test-devtools-evm-foundry": "~6.0.3",

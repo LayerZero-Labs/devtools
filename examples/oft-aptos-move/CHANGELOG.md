@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-aptos-move-example
 
+## 1.0.5
+
+### Patch Changes
+
+- b1feef7: Devex improvements.
+
 ## 1.0.4
 
 ### Patch Changes

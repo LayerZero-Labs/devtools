@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-move",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MIT",
   "exports": {
     ".": {
@@ -34,7 +34,7 @@
   "devDependencies": {
     "@aptos-labs/ts-sdk": "^1.33.1",
     "@layerzerolabs/devtools-extensible-cli": "^0.0.6",
-    "@layerzerolabs/devtools-move": "^1.0.1",
+    "@layerzerolabs/devtools-move": "^1.0.7",
     "@layerzerolabs/io-devtools": "^0.1.16",
     "@layerzerolabs/lz-definitions": "^3.0.75",
     "@layerzerolabs/lz-v2-utilities": "^3.0.75",
