@@ -1,6 +1,6 @@
 import { Command } from 'commander'
 import { LogLevel } from '@layerzerolabs/io-devtools'
-import { setBlock, registerToken, coreSpotDeployment } from './commands'
+import { setBlock, registerToken, coreSpotDeployment, tradingFee } from './commands'
 
 const program = new Command()
 
@@ -38,5 +38,15 @@ program
         }
         await coreSpotDeployment(options)
     })
+
+program
+    .command('trading-fee')
+    .description('Set trading fee share')
+    .requiredOption('-idx, --token-index <token-index>', 'Token index')
+    .requiredOption('-s, --share <share>', 'Share')
+    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
+    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
+    .option('-pk, --private-key', 'Private key')
+    .action(tradingFee)
 
 program.parse()

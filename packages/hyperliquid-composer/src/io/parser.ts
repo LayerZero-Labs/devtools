@@ -5,7 +5,7 @@ import { CoreSpotDeployment, TxData } from '@/types'
 import { importDefault, Logger } from '@layerzerolabs/io-devtools'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
-import 'hardhat/register'
+// import 'hardhat/register'
 import type { HardhatUserConfig, NetworkUserConfig } from 'hardhat/types'
 
 function getFullPath(index: string, isTestnet: boolean): string {
