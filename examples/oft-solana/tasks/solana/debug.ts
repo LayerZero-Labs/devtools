@@ -84,6 +84,11 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
             oAppRegistry
         )
 
+        if (!oAppRegistryInfo) {
+            console.warn('OAppRegistry info not found.')
+            return
+        }
+
         const oftDeriver = new OftPDA(oftStoreInfo.header.owner)
 
         const printOftStore = async () => {
