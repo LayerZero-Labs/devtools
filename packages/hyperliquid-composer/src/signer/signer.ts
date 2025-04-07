@@ -1,5 +1,5 @@
 import { encode } from '@msgpack/msgpack'
-import { Wallet } from 'ethers'
+import { ethers, Wallet } from 'ethers'
 import { keccak256 } from 'ethers/lib/utils'
 import { Wallet as ethersV6Wallet } from 'ethers-v6'
 
@@ -132,6 +132,13 @@ async function abstractSignTypedData(args: {
          */
         const signerv6 = new ethersV6Wallet(wallet.privateKey)
         const signature = await signerv6.signTypedData(domain, types, message)
+
+        const signedBy = await ethers.utils.verifyTypedData(domain, types, message, signature)
+
+        if (signedBy !== wallet.address) {
+            throw new Error('Invalid signature')
+        }
+
         return signature as Hex
     } else {
         throw new Error('Unsupported wallet for signing typed data')

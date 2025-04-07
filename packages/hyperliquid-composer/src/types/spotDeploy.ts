@@ -21,7 +21,7 @@ export interface UserGenesis {
     token: number
     userAndWei: Array<[string, string]>
     existingTokenAndWei: Array<[number, string]>
-    blacklistUsers: Array<[string, boolean]>
+    blacklistUsers?: Array<[string, boolean]>
 }
 
 /**
