@@ -18,14 +18,28 @@ export interface TxData {
     txHash: string
     nonce: number
     weiDiff: number
+    assetBridgeAddress: string
     connected: boolean
 }
 
-export interface SpotMeta {
-    tokens: CoreSpotMetaData[]
+export interface UserGenesis {
+    userAndWei: Array<{
+        address: string
+        wei: string
+    }>
+    existingTokenAndWei: Array<{
+        token: number
+        wei: string
+    }>
+    blacklistUsers: string[]
 }
 
 export interface CoreSpotDeployment {
     coreSpot: CoreSpotMetaData
     txData: TxData
+    userGenesis: UserGenesis
+}
+
+export interface SpotMeta {
+    tokens: CoreSpotMetaData[]
 }

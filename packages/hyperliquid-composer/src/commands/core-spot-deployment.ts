@@ -1,9 +1,9 @@
 import { createModuleLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 
-import { getHyperliquidWallet } from '@/signer'
 import { getHyperEVMOAppDeployment, writeCoreSpotDeployment } from '@/io'
 import { getSpotMeta } from '@/operations'
-import type { CoreSpotDeployment, CoreSpotMetaData, TxData } from '@/types'
+import { toAssetBridgeAddress } from '@/types'
+import type { CoreSpotDeployment, CoreSpotMetaData, TxData, UserGenesis } from '@/types'
 import { ethers } from 'ethers'
 import { RPC_URLS } from '@/types'
 
@@ -12,15 +12,13 @@ export async function coreSpotDeployment(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger('core-spot-deployment', args.logLevel)
 
-    const wallet = await getHyperliquidWallet(args.privateKey)
-
     const oappConfig = args.oappConfig
     const network = args.network
     const tokenIndex = args.tokenIndex
     const action = args.action
     const isTestnet = args.network === 'testnet'
 
-    const coreSpot: CoreSpotMetaData = await getSpotMeta(wallet, isTestnet, args.logLevel, tokenIndex)
+    const coreSpot: CoreSpotMetaData = await getSpotMeta(null, isTestnet, args.logLevel, tokenIndex)
 
     if (action === 'create') {
         const { deployment } = await getHyperEVMOAppDeployment(oappConfig, network, logger)
@@ -51,17 +49,46 @@ export async function coreSpotDeployment(args: any): Promise<void> {
         const weiDiff = decimals - coreSpot.weiDecimals
         logger.verbose(`Wei diff: ${weiDiff}`)
 
+        const assetBridgeAddress = toAssetBridgeAddress(tokenIndex)
+        logger.verbose(`Asset bridge address: ${assetBridgeAddress}`)
+
         const txData: TxData = {
             txHash,
             nonce,
             from,
             weiDiff,
+            assetBridgeAddress,
             connected: coreSpot.evmContract ? true : false,
+        }
+
+        const userGenesis: UserGenesis = {
+            userAndWei: [
+                {
+                    address: from,
+                    wei: '',
+                },
+                {
+                    address: assetBridgeAddress,
+                    wei: '',
+                },
+                {
+                    address: '0x',
+                    wei: '',
+                },
+            ],
+            existingTokenAndWei: [
+                {
+                    token: 0,
+                    wei: '',
+                },
+            ],
+            blacklistUsers: [],
         }
 
         const coreSpotDeployment: CoreSpotDeployment = {
             coreSpot,
             txData,
+            userGenesis,
         }
 
         writeCoreSpotDeployment(tokenIndex, isTestnet, coreSpotDeployment, logger)

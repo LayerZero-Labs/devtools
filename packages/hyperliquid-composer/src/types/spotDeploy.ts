@@ -21,7 +21,7 @@ export interface UserGenesis {
     token: number
     userAndWei: Array<[string, string]>
     existingTokenAndWei: Array<[number, string]>
-    blacklistUsers?: Array<[string, boolean]>
+    blacklistUsers: Array<[string, boolean]>
 }
 
 /**
@@ -32,11 +32,11 @@ export interface UserGenesis {
 export interface Genesis {
     token: number
     maxSupply: string
-    noHyperliquidity?: boolean
+    noHyperliquidity: boolean
 }
 
 /**
- * @param tokens - [base index, quote index]
+ * @param tokens - [the token index,  token index for like USDC]
  */
 export interface RegisterSpot {
     tokens: [number, number]
