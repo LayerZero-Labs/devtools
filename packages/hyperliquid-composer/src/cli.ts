@@ -1,6 +1,6 @@
 import { Command } from 'commander'
 import { LogLevel } from '@layerzerolabs/io-devtools'
-import { setBlock, registerToken, coreSpotDeployment, tradingFee, userGenesis } from './commands'
+import { setBlock, registerToken, coreSpotDeployment, tradingFee, userGenesis, genesis } from './commands'
 
 const program = new Command()
 
@@ -64,5 +64,14 @@ program
         }
         await userGenesis(options)
     })
+
+program
+    .command('set-genesis')
+    .description('Set genesis')
+    .requiredOption('-idx, --token-index <token-index>', 'Token index')
+    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
+    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
+    .option('-pk, --private-key <0x>', 'Private key')
+    .action(genesis)
 
 program.parse()

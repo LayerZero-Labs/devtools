@@ -2,7 +2,7 @@ import { createModuleLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtoo
 import inquirer from 'inquirer'
 
 import { getHyperliquidWallet } from '@/signer'
-import { setTradingFeeShare, setUserGenesis } from '@/operations'
+import { setTradingFeeShare, setUserGenesis, setGenesis } from '@/operations'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function tradingFee(args: any): Promise<void> {
@@ -50,4 +50,19 @@ export async function userGenesis(args: any): Promise<void> {
     const tokenIndex: number = parseInt(args.tokenIndex)
 
     await setUserGenesis(wallet, isTestnet, tokenIndex, action, args.logLevel)
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function genesis(args: any): Promise<void> {
+    setDefaultLogLevel(args.logLevel)
+    const logger = createModuleLogger('genesis', args.logLevel)
+
+    const wallet = await getHyperliquidWallet(args.privateKey)
+    const isTestnet = args.network === 'testnet'
+
+    logger.info(`Setting genesis for token ${args.tokenIndex}`)
+
+    const tokenIndex: number = parseInt(args.tokenIndex)
+
+    await setGenesis(wallet, isTestnet, tokenIndex, args.logLevel)
 }

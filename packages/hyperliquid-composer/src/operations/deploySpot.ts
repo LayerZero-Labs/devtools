@@ -115,3 +115,42 @@ export async function setUserGenesis(
 
     return { responseForUserGenesis, responseForBlacklistUsers }
 }
+
+export async function setGenesis(wallet: Wallet, isTestnet: boolean, nativeSpotTokenId: number, logLevel: string) {
+    const logger = createModuleLogger('setGenesis', logLevel)
+    const coreSpotDeployment = getCoreSpotDeployment(nativeSpotTokenId, isTestnet, logger)
+
+    const maxUserWei = coreSpotDeployment.userGenesis.userAndWei.reduce(
+        (acc, user) => acc + BigInt(user.wei),
+        BigInt(0)
+    )
+    const maxExistingTokenWei = coreSpotDeployment.userGenesis.existingTokenAndWei.reduce(
+        (acc, token) => acc + BigInt(token.wei),
+        BigInt(0)
+    )
+
+    const configMaxSupply = maxUserWei + maxExistingTokenWei
+
+    logger.verbose(`Max supply: ${configMaxSupply} (u64.max-1: ${MAX_HYPERCORE_SUPPLY})`)
+
+    if (configMaxSupply > MAX_HYPERCORE_SUPPLY) {
+        logger.error(
+            `Total user and existing token wei exceeds the maximum hypercore supply: ${configMaxSupply} > ${MAX_HYPERCORE_SUPPLY} (u64.max-1)`
+        )
+        process.exit(1)
+    }
+
+    const actionForGenesis: SpotDeployAction['action'] = {
+        type: 'spotDeploy',
+        genesis: {
+            token: nativeSpotTokenId,
+            maxSupply: configMaxSupply.toString(),
+            noHyperliquidity: true,
+        },
+    }
+
+    logger.info('Setting genesis')
+    const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, actionForGenesis)
+    return response
+}
