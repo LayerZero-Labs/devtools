@@ -13,8 +13,8 @@ function getFullPath(index: string, isTestnet: boolean): string {
     return path.join(process.cwd(), 'deployments', `hypercore-${isTestnet ? 'testnet' : 'mainnet'}`, `${index}.json`)
 }
 
-export function getCoreSpotDeployment(index: string, isTestnet: boolean, logger?: Logger): CoreSpotDeployment {
-    const fullPath = getFullPath(index, isTestnet)
+export function getCoreSpotDeployment(index: string | number, isTestnet: boolean, logger?: Logger): CoreSpotDeployment {
+    const fullPath = getFullPath(index.toString(), isTestnet)
     const nativeSpot = fs.readFileSync(fullPath, 'utf8')
     if (!nativeSpot) {
         const errMsg = `Native spot ${index} not found - make sure the native spot for the token ${index} is found at ${fullPath}`
@@ -25,12 +25,12 @@ export function getCoreSpotDeployment(index: string, isTestnet: boolean, logger?
 }
 
 export function writeCoreSpotDeployment(
-    index: string,
+    index: string | number,
     isTestnet: boolean,
     coreSpotDeployment: CoreSpotDeployment,
     logger?: Logger
 ) {
-    const fullPath = getFullPath(index, isTestnet)
+    const fullPath = getFullPath(index.toString(), isTestnet)
 
     const dir = path.dirname(fullPath)
     if (!fs.existsSync(dir)) {
@@ -42,14 +42,14 @@ export function writeCoreSpotDeployment(
 }
 
 export function writeUpdatedCoreSpotDeployment(
-    index: string,
+    index: string | number,
     isTestnet: boolean,
     tokenFullName: string,
     tokenAddress: string,
     txData: TxData,
     logger?: Logger
 ) {
-    const fullPath = getFullPath(index, isTestnet)
+    const fullPath = getFullPath(index.toString(), isTestnet)
 
     const spot = getCoreSpotDeployment(index, isTestnet, logger)
     spot.coreSpot.evmContract = {
@@ -68,13 +68,13 @@ export function writeUpdatedCoreSpotDeployment(
 }
 
 export function writeNativeSpotConnected(
-    index: string,
+    index: string | number,
     isTestnet: boolean,
     connected: boolean,
     weiDiff: number,
     logger?: Logger
 ) {
-    const fullPath = getFullPath(index, isTestnet)
+    const fullPath = getFullPath(index.toString(), isTestnet)
 
     const spot = getCoreSpotDeployment(index, isTestnet, logger)
     spot.txData.connected = connected
