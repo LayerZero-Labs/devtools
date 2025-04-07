@@ -1,6 +1,6 @@
 import { Command } from 'commander'
 import { LogLevel } from '@layerzerolabs/io-devtools'
-import { setBlock, registerToken, coreSpotDeployment, tradingFee } from './commands'
+import { setBlock, registerToken, coreSpotDeployment, tradingFee, userGenesis } from './commands'
 
 const program = new Command()
 
@@ -48,5 +48,21 @@ program
     .option('-l, --log-level <level>', 'Log level', LogLevel.info)
     .option('-pk, --private-key', 'Private key')
     .action(tradingFee)
+
+program
+    .command('user-genesis')
+    .description('Set user genesis')
+    .option('-a, --action <action>', 'Action (userAndWei/existingTokenAndWei/blacklistUsers)', '*')
+    .requiredOption('-idx, --token-index <token-index>', 'Token index')
+    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
+    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
+    .option('-pk, --private-key <0x>', 'Private key')
+    .action(async (options) => {
+        const validActions = ['*', 'userAndWei', 'existingTokenAndWei', 'blacklistUsers']
+        if (!validActions.includes(options.action)) {
+            throw new Error(`Invalid action: ${options.action}. Valid actions are: ${validActions.join(', ')}`)
+        }
+        await userGenesis(options)
+    })
 
 program.parse()
