@@ -13,6 +13,8 @@ export const ENDPOINTS = {
     EXCHANGE: '/exchange',
 }
 
+export const MAX_HYPERCORE_SUPPLY = 2 ** 64 - 1
+
 export function toAssetBridgeAddress(tokenIndex: number): string {
     const addressLength = 42
     const addressPrefix = '0x2'

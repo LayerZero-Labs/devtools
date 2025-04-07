@@ -2,7 +2,7 @@ import { createModuleLogger } from '@layerzerolabs/io-devtools'
 import { Wallet } from 'ethers'
 
 import { HyperliquidClient } from '../signer'
-import { SpotDeployAction } from '../types'
+import { MAX_HYPERCORE_SUPPLY, SpotDeployAction } from '../types'
 import { getCoreSpotDeployment } from '@/io/parser'
 
 export async function setTradingFeeShare(
@@ -63,6 +63,20 @@ export async function setUserGenesis(
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
 
     if (userAndWei.length > 0 || existingTokenAndWei.length > 0) {
+        const totalUserWei = userAndWei.reduce((acc, [_, wei]) => acc + BigInt(wei), BigInt(0))
+        const totalExistingTokenWei = existingTokenAndWei.reduce((acc, [_, wei]) => acc + BigInt(wei), BigInt(0))
+
+        logger.verbose(
+            `Total user and existing token wei: ${totalUserWei + totalExistingTokenWei} (u64.max-1: ${MAX_HYPERCORE_SUPPLY})`
+        )
+
+        if (totalUserWei + totalExistingTokenWei > MAX_HYPERCORE_SUPPLY) {
+            logger.error(
+                `Total user and existing token wei exceeds the maximum hypercore supply: ${totalUserWei + totalExistingTokenWei} > ${MAX_HYPERCORE_SUPPLY} (u64.max-1)`
+            )
+            process.exit(1)
+        }
+
         const actionForUserGenesis: SpotDeployAction['action'] = {
             type: 'spotDeploy',
             userGenesis: {
