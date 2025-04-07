@@ -4,26 +4,25 @@ import * as path from 'path'
 import {
     ChainType,
     EndpointId,
-    Stage,
     endpointIdToChainType,
     endpointIdToStage,
     getNetworkForChainId,
+    Stage,
 } from '@layerzerolabs/lz-definitions'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 
-import { MessageLibFactory } from '../../../sdk/messageLibFactory'
-import { IMessageLib } from '../../../sdk/IMessageLib'
-import { IOFT, TypedInputGenerateTransactionPayloadData } from '../../../sdk/IOFT'
-import { OFTType } from '../../../sdk/IOFT'
-import { createEidToNetworkMapping, diffPrinter } from '../../shared/utils'
+import { MessageLibFactory } from '../../../sdk'
+import { IMessageLib } from '../../../sdk'
+import { IOFT, OFTType, TypedInputGenerateTransactionPayloadData } from '../../../sdk'
+import { createEidToNetworkMapping, diffPrinter } from '../../shared'
 
 import { createSerializableUlnConfig } from './ulnConfigBuilder'
 
 import { ExecutorConfig, UlnConfig } from '.'
 
 import type { OAppOmniGraphHardhat, Uln302ExecutorConfig } from '@layerzerolabs/toolbox-hardhat'
-import { decodeSolanaAddress } from '../../shared/basexToBytes32'
-import { IEndpoint } from '../../../sdk/IEndpoint'
+import { decodeSolanaAddress } from '../../shared'
+import { IEndpoint } from '../../../sdk'
 import { bcs, MsgExecute } from '@initia/initia.js'
 
 export type TransactionPayload = {
@@ -142,19 +141,42 @@ export function evmAddressToAptos(address: string, eid: string): string {
     return '0x' + paddedHex
 }
 
-export async function createSetPeerTx(
-    oft: IOFT,
-    connection: OAppOmniGraphHardhat['connections'][number]
-): Promise<TransactionPayload | null> {
-    const eidToNetworkMapping = await createEidToNetworkMapping()
-
+/**
+ * Helper to determine the EVM deployment address using hardhat-deploy 'deployments' directory.  This function also
+ * validates that there is a corresponding network defined in hardhat.config.ts
+ */
+const getEVMDeploymentAddress = async (connection: OAppOmniGraphHardhat['connections'][number]) => {
     if (!connection.to.contractName) {
         printNotSet('peer', connection)
         return null
     }
+    const eidToNetworkMapping = await createEidToNetworkMapping()
     const networkName = eidToNetworkMapping[connection.to.eid]
     validateNetwork(networkName, connection)
-    const contractAddress = getContractAddress(networkName, connection.to.contractName)
+    return getContractAddress(networkName, connection.to.contractName)
+}
+
+const getDeploymentAddress = async (
+    connection: OAppOmniGraphHardhat['connections'][number]
+): Promise<string | null> => {
+    switch (endpointIdToChainType(connection.to.eid)) {
+        case ChainType.EVM:
+            return await getEVMDeploymentAddress(connection)
+        case ChainType.SOLANA:
+            return connection.to.address ?? null
+        default:
+            throw new Error(`Unsupported peer chain type: ${endpointIdToChainType(connection.to.eid)}`)
+    }
+}
+
+export async function createSetPeerTx(
+    oft: IOFT,
+    connection: OAppOmniGraphHardhat['connections'][number]
+): Promise<TransactionPayload | null> {
+    const contractAddress = await getDeploymentAddress(connection)
+    if (!contractAddress) {
+        return null
+    }
     const newPeer = evmAddressToAptos(contractAddress, connection.to.eid.toString())
     const currentPeerHex = await getCurrentPeer(oft, connection.to.eid as EndpointId)
 
