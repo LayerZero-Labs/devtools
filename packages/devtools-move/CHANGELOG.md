@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-move
 
+## 1.0.8
+
+### Patch Changes
+
+- 139bf08: fix to allow move OFTs to be wired to a Solana peer
+
 ## 1.0.7
 
 ### Patch Changes
