@@ -25,10 +25,15 @@ export class HyperliquidClient {
         })
     }
 
-    async submitHyperliquidAction(endpoint: string, wallet: Wallet, action: ValueType) {
+    async submitHyperliquidAction(endpoint: string, wallet: Wallet | null, action: ValueType) {
         let payload = action
 
         if (endpoint === '/exchange') {
+            if (!wallet) {
+                this.logger.error('Wallet is null')
+                process.exit(1)
+            }
+
             const nonce = getTimestampMs()
 
             const signature = await signL1Action({

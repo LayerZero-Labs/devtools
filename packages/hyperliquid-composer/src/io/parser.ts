@@ -1,12 +1,13 @@
 import fs from 'fs'
 import path from 'path'
+import 'hardhat/register'
 
-import { CoreSpotDeployment, TxData } from '@/types'
 import { importDefault, Logger } from '@layerzerolabs/io-devtools'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
-// import 'hardhat/register'
+
 import type { HardhatUserConfig, NetworkUserConfig } from 'hardhat/types'
+import type { CoreSpotDeployment, TxData } from '@/types'
 
 function getFullPath(index: string, isTestnet: boolean): string {
     return path.join(process.cwd(), 'deployments', `hypercore-${isTestnet ? 'testnet' : 'mainnet'}`, `${index}.json`)

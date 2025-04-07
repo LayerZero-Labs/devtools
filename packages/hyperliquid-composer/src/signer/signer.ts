@@ -151,11 +151,10 @@ export function getTimestampMs(): number {
 }
 
 export async function getHyperliquidWallet(privateKey?: string) {
-    const env = loadEnv()
-
     if (privateKey) {
         return new Wallet(privateKey)
     } else {
+        const env = loadEnv()
         const privateKey = env.PRIVATE_KEY_HYPERLIQUID
         if (!privateKey) {
             console.error('PRIVATE_KEY_HYPERLIQUID is not set in .env file')
