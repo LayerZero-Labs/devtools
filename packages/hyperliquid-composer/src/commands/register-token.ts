@@ -1,18 +1,19 @@
 import { createModuleLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
+import inquirer from 'inquirer'
 
-import { getCoreSpotDeployment, writeUpdatedCoreSpotDeployment } from '@/io/parser'
+import { getCoreSpotDeployment, getHyperEVMOAppDeployment, writeUpdatedCoreSpotDeployment } from '@/io/parser'
 import { getHyperliquidWallet } from '@/signer'
 import { requestEvmContract, finalizeEvmContract } from '@/operations'
-
-import assert from 'assert'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function registerToken(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger('register-token', args.logLevel)
+    logger.verbose(JSON.stringify(args, null, 2))
 
     const wallet = await getHyperliquidWallet(args.privateKey)
 
+    const oappConfig = args.oappConfig
     const hyperAssetIndex = args.tokenIndex
     const network = args.network
     const isTestnet = network == 'testnet'
@@ -22,33 +23,40 @@ export async function registerToken(args: any): Promise<void> {
     const nativeSpot = coreSpotDeployment.coreSpot
     const txData = coreSpotDeployment.txData
 
-    assert(nativeSpot.evmContract, 'Native spot EVM contract is not set')
+    const { deployment } = await getHyperEVMOAppDeployment(oappConfig, network, logger)
+
+    if (!deployment) {
+        logger.error(`Deployment file not found for ${network}`)
+        return
+    }
+
+    const oftAddress = deployment['address']
 
     logger.verbose(`txData: \n ${JSON.stringify(txData, null, 2)}`)
 
     const hyperAssetIndexInt = parseInt(hyperAssetIndex)
 
+    const { executeTx } = await inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'executeTx',
+            message: `Found evm address for HyperCore-EVM ${oftAddress}. Do you want to execute the transaction?`,
+            default: false,
+        },
+    ])
+
+    if (!executeTx) {
+        logger.info('Transaction cancelled - quitting.')
+        process.exit(1)
+    }
+
     logger.info(`Request EVM contract`)
-    await requestEvmContract(
-        wallet,
-        isTestnet,
-        nativeSpot.evmContract.address,
-        txData.weiDiff,
-        hyperAssetIndexInt,
-        args.loglevel
-    )
+    await requestEvmContract(wallet, isTestnet, oftAddress, txData.weiDiff, hyperAssetIndexInt, args.loglevel)
 
     logger.info(`Finalize EVM contract`)
     await finalizeEvmContract(wallet, isTestnet, hyperAssetIndexInt, txData.nonce, args.logLevel)
 
-    writeUpdatedCoreSpotDeployment(
-        hyperAssetIndex,
-        isTestnet,
-        nativeSpot.fullName ?? '',
-        nativeSpot.evmContract.address,
-        txData,
-        logger
-    )
+    writeUpdatedCoreSpotDeployment(hyperAssetIndex, isTestnet, nativeSpot.fullName ?? '', oftAddress, txData, logger)
 
     logger.info(`Token ${hyperAssetIndex} registered on ${network}`)
 }
