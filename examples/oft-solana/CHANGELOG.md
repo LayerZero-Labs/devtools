@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.7.14
+
+### Patch Changes
+
+- eba3669: Rename clear script to retry-payload
+
 ## 0.7.13
 
 ### Patch Changes
