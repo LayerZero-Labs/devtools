@@ -141,7 +141,7 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     function completeRefund(bytes memory _err) internal returns (bytes memory) {
         // All error messages beyond this point are of the form ErrorMessage(address refundTo, uint256 refundAmount, bytes errorMessage)
 
-        bytes memory encodedErrorMessage = _err.extractErrorPayload();
+        bytes memory encodedErrorMessage = this.getErrorPayload(_err);
         ErrorMessagePayload memory errMsg = abi.decode(encodedErrorMessage, (ErrorMessagePayload));
 
         // The refund amount can vary based on partial refunds
@@ -204,5 +204,9 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
 
     function getHypeAsset() external view returns (IHyperAsset memory) {
         return hypeAsset;
+    }
+
+    function getErrorPayload(bytes calldata _err) external pure returns (bytes memory) {
+        return _err.extractErrorPayload();
     }
 }

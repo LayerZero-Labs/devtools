@@ -114,7 +114,7 @@ library HyperLiquidComposerCodec {
     /// @param _err The bytes array to extract the error payload from
     ///
     /// @return _errorPayload The error payload
-    function extractErrorPayload(bytes calldata _err) external pure returns (bytes memory) {
+    function extractErrorPayload(bytes calldata _err) internal pure returns (bytes memory) {
         return _err[64 + 4:];
     }
 
