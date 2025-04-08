@@ -1,4 +1,4 @@
-export * from './spotDeploy'
+export * from './registerEvmContract'
 export * from './evmUserModify'
 export * from './spotMeta'
-export * from './deploySpot'
+export * from './spotDeploy'

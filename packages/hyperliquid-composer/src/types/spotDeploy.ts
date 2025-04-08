@@ -36,7 +36,9 @@ export interface Genesis {
 }
 
 /**
- * @param tokens - [the token index,  token index for like USDC]
+ * @param tokens - [base token index,  quote token index]
+ * @dev The base token index is the token index of the token that will be used as the base for the spot.
+ * @dev The quote token index is the token index of the token that will be used as the quote for the spot - this is the token that will be used to pay the trading fee like USDC.
  */
 export interface RegisterSpot {
     tokens: [number, number]
