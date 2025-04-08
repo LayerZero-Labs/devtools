@@ -16,7 +16,7 @@ importers:
   .:
     dependencies:
       '@layerzerolabs/hyperliquid-composer':
-        specifier: workspace:*
+        specifier: link:/workspaces/devtools-hyperliquid-main/packages/hyperliquid-composer
         version: link:packages/hyperliquid-composer
     devDependencies:
       '@changesets/cli':

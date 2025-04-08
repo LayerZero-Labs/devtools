@@ -3,7 +3,7 @@ import { Wallet } from 'ethers'
 import { HyperliquidClient } from '../signer'
 import { BaseInfoRequest, SpotMeta } from '../types'
 
-export async function getSpotMeta(wallet: Wallet, isTestnet: boolean, logLevel: string, tokenIndex: string) {
+export async function getSpotMeta(wallet: Wallet | null, isTestnet: boolean, logLevel: string, tokenIndex: string) {
     const action: BaseInfoRequest = {
         type: 'spotMeta',
     }
