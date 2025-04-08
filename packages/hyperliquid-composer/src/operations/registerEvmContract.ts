@@ -8,11 +8,11 @@ export async function requestEvmContract(
     isTestnet: boolean,
     evmSpotTokenAddress: string,
     evmExtraWeiDecimals: number,
-    nativeSpotTokenId: number,
+    coreSpotTokenId: number,
     logLevel: string
 ) {
     const requestEvmContract: EvmSpotDeploy['action']['requestEvmContract'] = {
-        token: nativeSpotTokenId,
+        token: coreSpotTokenId,
         address: evmSpotTokenAddress.toLowerCase(),
         evmExtraWeiDecimals: evmExtraWeiDecimals,
     }
@@ -30,13 +30,13 @@ export async function requestEvmContract(
 export async function finalizeEvmContract(
     wallet: Wallet,
     isTestnet: boolean,
-    nativeSpotTokenId: number,
+    coreSpotTokenId: number,
     nonce: number,
     logLevel: string
 ) {
     const action: FinalizeEvmContract['action'] = {
         type: 'finalizeEvmContract',
-        token: nativeSpotTokenId,
+        token: coreSpotTokenId,
         input: {
             create: {
                 nonce: nonce,

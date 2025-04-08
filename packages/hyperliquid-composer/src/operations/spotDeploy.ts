@@ -1,21 +1,22 @@
 import { createModuleLogger } from '@layerzerolabs/io-devtools'
 import { Wallet } from 'ethers'
 
+import { getCoreSpotDeployment } from '../io'
 import { HyperliquidClient } from '../signer'
-import { MAX_HYPERCORE_SUPPLY, SpotDeployAction } from '../types'
-import { getCoreSpotDeployment } from '@/io/parser'
+import { MAX_HYPERCORE_SUPPLY } from '../types'
+import type { SpotDeployAction } from '../types'
 
 export async function setTradingFeeShare(
     wallet: Wallet,
     isTestnet: boolean,
-    nativeSpotTokenId: number,
+    coreSpotTokenId: number,
     share: string,
     logLevel: string
 ) {
     const action: SpotDeployAction['action'] = {
         type: 'spotDeploy',
         setDeployerTradingFeeShare: {
-            token: nativeSpotTokenId,
+            token: coreSpotTokenId,
             share: share,
         },
     }
@@ -28,12 +29,12 @@ export async function setTradingFeeShare(
 export async function setUserGenesis(
     wallet: Wallet,
     isTestnet: boolean,
-    nativeSpotTokenId: number,
+    coreSpotTokenId: number,
     action: string,
     logLevel: string
 ) {
     const logger = createModuleLogger('setUserGenesis', logLevel)
-    const coreSpotDeployment = getCoreSpotDeployment(nativeSpotTokenId, isTestnet, logger)
+    const coreSpotDeployment = getCoreSpotDeployment(coreSpotTokenId, isTestnet, logger)
 
     const userGenesis = coreSpotDeployment.userGenesis
 
@@ -80,7 +81,7 @@ export async function setUserGenesis(
         const actionForUserGenesis: SpotDeployAction['action'] = {
             type: 'spotDeploy',
             userGenesis: {
-                token: nativeSpotTokenId,
+                token: coreSpotTokenId,
                 userAndWei: userAndWei,
                 existingTokenAndWei: existingTokenAndWei,
             },
@@ -98,7 +99,7 @@ export async function setUserGenesis(
         const actionForBlacklistUsers: SpotDeployAction['action'] = {
             type: 'spotDeploy',
             userGenesis: {
-                token: nativeSpotTokenId,
+                token: coreSpotTokenId,
                 userAndWei: [],
                 existingTokenAndWei: [],
                 blacklistUsers: blacklistUsers,
@@ -116,9 +117,9 @@ export async function setUserGenesis(
     return { responseForUserGenesis, responseForBlacklistUsers }
 }
 
-export async function setGenesis(wallet: Wallet, isTestnet: boolean, nativeSpotTokenId: number, logLevel: string) {
+export async function setGenesis(wallet: Wallet, isTestnet: boolean, coreSpotTokenId: number, logLevel: string) {
     const logger = createModuleLogger('setGenesis', logLevel)
-    const coreSpotDeployment = getCoreSpotDeployment(nativeSpotTokenId, isTestnet, logger)
+    const coreSpotDeployment = getCoreSpotDeployment(coreSpotTokenId, isTestnet, logger)
 
     const maxUserWei = coreSpotDeployment.userGenesis.userAndWei.reduce(
         (acc, user) => acc + BigInt(user.wei),
@@ -143,7 +144,7 @@ export async function setGenesis(wallet: Wallet, isTestnet: boolean, nativeSpotT
     const actionForGenesis: SpotDeployAction['action'] = {
         type: 'spotDeploy',
         genesis: {
-            token: nativeSpotTokenId,
+            token: coreSpotTokenId,
             maxSupply: configMaxSupply.toString(),
             noHyperliquidity: true,
         },
