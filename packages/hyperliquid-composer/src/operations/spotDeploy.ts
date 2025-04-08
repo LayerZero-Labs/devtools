@@ -1,9 +1,10 @@
 import { createModuleLogger } from '@layerzerolabs/io-devtools'
 import { Wallet } from 'ethers'
+import inquirer from 'inquirer'
 
 import { getCoreSpotDeployment } from '../io'
 import { HyperliquidClient } from '../signer'
-import { MAX_HYPERCORE_SUPPLY } from '../types'
+import { MAX_HYPERCORE_SUPPLY, USDC_TOKEN_ID } from '../types'
 import type { SpotDeployAction } from '../types'
 
 export async function setTradingFeeShare(
@@ -153,5 +154,36 @@ export async function setGenesis(wallet: Wallet, isTestnet: boolean, coreSpotTok
     logger.info('Setting genesis')
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
     const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, actionForGenesis)
+    return response
+}
+
+export async function registerSpot(wallet: Wallet, isTestnet: boolean, coreSpotTokenId: number, logLevel: string) {
+    const logger = createModuleLogger('register-spot', logLevel)
+
+    const { executeTx } = await inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'executeTx',
+            message: `This transaction will create a trading spot with USDC (which is the only supported quote token by Hyperliquid at the moment).\n Would you like to continue?`,
+            default: false,
+        },
+    ])
+
+    if (!executeTx) {
+        logger.info('Transaction bundle cancelled - quitting.')
+        process.exit(1)
+    }
+
+    const usdc_tokenId = isTestnet ? USDC_TOKEN_ID.TESTNET : USDC_TOKEN_ID.MAINNET
+    const actionForRegisterSpot: SpotDeployAction['action'] = {
+        type: 'spotDeploy',
+        registerSpot: {
+            tokens: [coreSpotTokenId, usdc_tokenId],
+        },
+    }
+
+    logger.info('Register trading spot against USDC')
+    const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, actionForRegisterSpot)
     return response
 }

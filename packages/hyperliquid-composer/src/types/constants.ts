@@ -15,6 +15,17 @@ export const ENDPOINTS = {
 
 export const MAX_HYPERCORE_SUPPLY = 2 ** 64 - 1
 
+/**
+ * These are the token ids for USDC on hypercore mainnet and testnet
+ * It can be reproduced by grabbing the entire spotMeta and finding USDC because Hyperliquid does not have an API to target query an asset (April 8, 2025)
+ *  -   curl -X POST "https://api.hyperliquid.xyz/info" -H "Content-Type: application/json" -d '{"type": "spotMeta"}' > spotOut.json
+ *  -   Goto tokens and the first entry should be USDC with an index of 0
+ */
+export const USDC_TOKEN_ID = {
+    MAINNET: 0,
+    TESTNET: 0,
+}
+
 export function toAssetBridgeAddress(tokenIndex: number): string {
     const addressLength = 42
     const addressPrefix = '0x2'

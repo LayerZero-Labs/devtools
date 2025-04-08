@@ -1,6 +1,14 @@
 import { Command } from 'commander'
 import { LogLevel } from '@layerzerolabs/io-devtools'
-import { setBlock, registerToken, coreSpotDeployment, tradingFee, userGenesis, genesis } from './commands'
+import {
+    setBlock,
+    registerToken,
+    coreSpotDeployment,
+    tradingFee,
+    userGenesis,
+    genesis,
+    registerTradingSpot,
+} from './commands'
 
 const program = new Command()
 
@@ -73,5 +81,14 @@ program
     .option('-l, --log-level <level>', 'Log level', LogLevel.info)
     .option('-pk, --private-key <0x>', 'Private key')
     .action(genesis)
+
+program
+    .command('register-spot')
+    .description('Register trading spot against USDC')
+    .requiredOption('-idx, --token-index <token-index>', 'Token index')
+    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
+    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
+    .option('-pk, --private-key <0x>', 'Private key')
+    .action(registerTradingSpot)
 
 program.parse()
