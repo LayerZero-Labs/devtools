@@ -15,7 +15,7 @@ const bscTestnetContract: OmniPointHardhat = {
 
 const hyperliquidTestnetContract: OmniPointHardhat = {
     eid: EndpointId.HYPERLIQUID_V2_TESTNET,
-    contractName: 'WrappedHyperliquidOFT',
+    contractName: 'MyHyperLiquidOFT',
 }
 
 const config: OAppOmniGraphHardhat = {
@@ -44,13 +44,13 @@ const config: OAppOmniGraphHardhat = {
                     {
                         msgType: MsgType.SEND,
                         optionType: ExecutorOptionType.LZ_RECEIVE,
-                        gas: 80_000, // gas limit in wei for EndpointV2.lzReceive
+                        gas: 200_000, // gas limit in wei for EndpointV2.lzReceive
                         value: 0, // msg.value in wei for EndpointV2.lzReceive
                     },
                     {
                         msgType: MsgType.SEND_AND_CALL,
                         optionType: ExecutorOptionType.LZ_RECEIVE,
-                        gas: 80_000, // gas limit in wei for EndpointV2.lzReceive
+                        gas: 200_000, // gas limit in wei for EndpointV2.lzReceive
                         value: 0, // msg.value in wei for EndpointV2.lzReceive
                     },
                 ],
@@ -89,13 +89,13 @@ const config: OAppOmniGraphHardhat = {
                     {
                         msgType: MsgType.SEND,
                         optionType: ExecutorOptionType.LZ_RECEIVE,
-                        gas: 80_000, // gas limit in wei for EndpointV2.lzReceive
+                        gas: 200_000, // gas limit in wei for EndpointV2.lzReceive
                         value: 0, // msg.value in wei for EndpointV2.lzReceive
                     },
                     {
                         msgType: MsgType.SEND_AND_CALL,
                         optionType: ExecutorOptionType.LZ_RECEIVE,
-                        gas: 80_000, // gas limit in wei for EndpointV2.lzReceive
+                        gas: 200_000, // gas limit in wei for EndpointV2.lzReceive
                         value: 0, // msg.value in wei for EndpointV2.lzReceive
                     },
                 ],
