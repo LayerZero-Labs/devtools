@@ -18462,7 +18462,7 @@ packages:
     engines: {node: '>=0.12'}
     dependencies:
       d: 1.0.2
-      es5-ext: git@github.com+LayerZero-Labs/es5-ext/7e360296a7e27176e240bc063b32f5ada55f9aa6
+      es5-ext: github.com/LayerZero-Labs/es5-ext/7e360296a7e27176e240bc063b32f5ada55f9aa6
       es6-weak-map: 2.0.3
       event-emitter: 0.3.5
       is-promise: 2.2.2
@@ -22810,17 +22810,6 @@ packages:
 
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
-
-  git@github.com+LayerZero-Labs/es5-ext/7e360296a7e27176e240bc063b32f5ada55f9aa6:
-    resolution: {commit: 7e360296a7e27176e240bc063b32f5ada55f9aa6, repo: git@github.com:LayerZero-Labs/es5-ext.git, type: git}
-    name: es5-ext
-    version: 0.10.62
-    engines: {node: '>=0.10'}
-    requiresBuild: true
-    dependencies:
-      es6-iterator: 2.0.3
-      es6-symbol: 3.1.4
-      next-tick: 1.1.0
 
   github.com/LayerZero-Labs/es5-ext/7e360296a7e27176e240bc063b32f5ada55f9aa6:
     resolution: {tarball: https://codeload.github.com/LayerZero-Labs/es5-ext/tar.gz/7e360296a7e27176e240bc063b32f5ada55f9aa6}
