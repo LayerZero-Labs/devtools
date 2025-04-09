@@ -111,6 +111,14 @@ More information about available CLI arguments can be found using the `--help` f
 npx hardhat lz:deploy --help
 ```
 
+## 3) Connecting Contracts
+
+Wire your deployed contracts by running:
+
+```bash
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts
+```
+
 By following these steps, you can focus more on creating innovative omnichain solutions and less on the complexities of cross-chain communication.
 
 <br></br>
