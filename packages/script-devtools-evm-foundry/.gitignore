@@ -1,0 +1,7 @@
+cache
+# Ignore everything in the artifacts folder
+artifacts/*
+
+# Do not ignore the directory structure up to the specific file
+!artifacts/
+!artifacts/*.s.sol/
