@@ -99,7 +99,7 @@ More information about available CLI arguments can be found using the `--help` f
 npx hardhat lz:deploy --help
 ```
 
-## 2) Configuring Contracts
+## 3) Connecting Contracts
 
 Wire your deployed contracts by running:
 
