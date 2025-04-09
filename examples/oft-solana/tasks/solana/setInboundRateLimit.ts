@@ -11,7 +11,7 @@ import { task } from 'hardhat/config'
 import { types } from '@layerzerolabs/devtools-evm-hardhat'
 import { deserializeTransactionMessage } from '@layerzerolabs/devtools-solana'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { OftPDA, accounts } from '@layerzerolabs/oft-v2-solana-sdk'
+import { OftPDA, oft } from '@layerzerolabs/oft-v2-solana-sdk'
 import { createOFTFactory } from '@layerzerolabs/ua-devtools-solana'
 
 import { createSolanaConnectionFactory } from '../common/utils'
@@ -72,7 +72,7 @@ task(
             const txId = await sendAndConfirmTransaction(connection, tx, [keypair])
             console.log(`Transaction successful with ID: ${txId}`)
             const [peer] = new OftPDA(publicKey(taskArgs.programId)).peer(publicKey(taskArgs.oftStore), taskArgs.srcEid)
-            const peerInfo = await accounts.fetchPeerConfig({ rpc: umi.rpc }, peer)
+            const peerInfo = await oft.accounts.fetchPeerConfig({ rpc: umi.rpc }, peer)
             console.dir({ peerInfo }, { depth: null })
         } catch (error) {
             console.error(`setInboundRateLimit failed:`, error)

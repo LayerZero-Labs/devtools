@@ -1,5 +1,17 @@
 # @layerzerolabs/oft-initia-example
 
+## 0.0.5
+
+### Patch Changes
+
+- b1feef7: Devex improvements.
+
+## 0.0.4
+
+### Patch Changes
+
+- bb6ac29: Updating object ownership validation instructions
+
 ## 0.0.3
 
 ### Patch Changes

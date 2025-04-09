@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-move
 
+## 1.0.2
+
+### Patch Changes
+
+- b1feef7: Devex improvements.
+
 ## 1.0.1
 
 ### Patch Changes

@@ -79,9 +79,17 @@ We recommend that you request 5 devnet SOL, which should be sufficient for this 
 cp .env.example .env
 ```
 
-In the `.env` just created, set `SOLANA_PRIVATE_KEY` to your private key value in base58 format. Since the locally stored keypair is in an integer array format, we'd need to encode it into base58 first.
+#### Solana Keypair
 
-You can run the `npx hardhat lz:solana:base-58` to output your private key in base58 format. Optionally, pass in a value for the `--keypair-file` flag if you want to use the keypair other than the default at `~/.config/solana/id.json`
+By default, the scripts will use the keypair at the default location `~/.config/solana/id.json`. If you want to use this keypair, there is no need to set any environment variable. There will, however, be a prompt when running certain commands to confirm that you want to use the default keypair.
+
+If you wish to use a different keypair, then you can set either of the following in the `.env`:
+
+1. `SOLANA_PRIVATE_KEY` - this can be either in base58 string format (i.e. when imported from a wallet) or the Uint8 Array in string format (all in one line, e.g. `[1,1,...1]`).
+
+2. `SOLANA_KEYPAIR_PATH` - the location to the keypair file that you want to use.
+
+#### Solana RPC
 
 Also set the `RPC_URL_SOLANA_TESTNET` value. Note that while the naming used here is `TESTNET`, it refers to the [Solana Devnet](https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#solana-testnet). We use `TESTNET` to keep it consistent with the existing EVM testnets.
 
@@ -225,18 +233,18 @@ pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <
 
 :warning: Note that for MABA mode, before attempting any cross-chain transfers, **you must transfer the Mint Authority** for `lz_receive` to work, as that is not handled in the script (since you are using an existing token). If you opted for `--additional-minters`, then you must transfer the Mint Authority to the newly created multisig (this is the `mintAuthority` value in the `/deployments/solana-<mainnet/testnet>/OFT.json`). If not, then it should be set to the OFT Store address, which is `oftStore` in the same file.
 
-### Update [layerzero.config.ts](./layerzero.config.ts)
+### Note on the LZ Config file, [layerzero.config.ts](./layerzero.config.ts)
 
-Make sure to update [layerzero.config.ts](./layerzero.config.ts) and set `solanaContract.address` with the `oftStore` address.
+In [layerzero.config.ts](./layerzero.config.ts), the `solanaContract.address` is auto-populated with the `oftStore` address from the deployment file, which has the default path of `deployments/solana-<mainnet/testnet>`.
 
 ```typescript
 const solanaContract: OmniPointHardhat = {
   eid: EndpointId.SOLANA_V2_TESTNET,
-  address: "", // <---TODO update this with the OFTStore address.
+  address: getOftStoreAddress(EndpointId.SOLANA_V2_TESTNET),
 };
 ```
 
-:warning: Ensure that you only specify `address` for the solana contract object. Do not specify addresses for the EVM chain contract objects. Under the hood, we use `hardhat-deploy` to retrieve the contract addresses of the deployed EVM chain contracts. You will run into an error if you specify `address` for an EVM chain contract object.
+:warning: Ensure that you `address` is specified only for the solana contract object. Do not specify addresses for the EVM chain contract objects. Under the hood, we use `hardhat-deploy` to retrieve the contract addresses of the deployed EVM chain contracts. You will run into an error if you specify `address` for an EVM chain contract object.
 
 ### Deploy a sepolia OFT peer
 
@@ -253,7 +261,7 @@ Note: If you are on testnet, consider using `MyOFTMock` to allow test token mint
 Run the following command to init the pathway config. This step is unique to pathways that involve Solana.
 
 ```bash
-npx hardhat lz:oft:solana:init-config --oapp-config layerzero.config.ts --solana-eid <SOLANA_ENDPOINT_ID>
+npx hardhat lz:oft:solana:init-config --oapp-config layerzero.config.ts
 ```
 
 ### Wire
@@ -261,7 +269,7 @@ npx hardhat lz:oft:solana:init-config --oapp-config layerzero.config.ts --solana
 Run the following to wire the pathways specified in your `layerzero.config.ts`
 
 ```bash
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-eid <SOLANA_ENDPOINT_ID>
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts
 ```
 
 With a squads multisig, you can simply append the `--multisig-key` flag to the end of the above command.
@@ -348,7 +356,7 @@ How to set delegate: https://docs.layerzero.network/v2/developers/evm/create-lz-
 Now run
 
 ```
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-eid <SOLANA_ENDPOINT_ID>
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts
 ```
 
 and execute the transactions.
@@ -360,7 +368,7 @@ How to set owner: https://docs.layerzero.network/v2/developers/evm/create-lz-oap
 Now, run
 
 ```
-npx hardhat lz:ownable:transfer-ownership --oapp-config layerzero.config.ts --solana-eid <SOLANA_ENDPOINT_ID>
+npx hardhat lz:ownable:transfer-ownership --oapp-config layerzero.config.ts
 ```
 
 ### Troubleshooting

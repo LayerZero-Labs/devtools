@@ -20,7 +20,7 @@ export async function createSetPeerTransactions(eidDataMappings: OmniContractMet
             const { eid: peerToEid, address: peerAddressBytes32 } = peer
             const currPeer = await getPeer(contract.oapp, peerToEid)
 
-            if (currPeer === peerAddressBytes32) {
+            if (currPeer.toLowerCase() === peerAddressBytes32.toLowerCase()) {
                 printAlreadySet('peer', Number(toEid), Number(peerToEid))
                 continue
             }
