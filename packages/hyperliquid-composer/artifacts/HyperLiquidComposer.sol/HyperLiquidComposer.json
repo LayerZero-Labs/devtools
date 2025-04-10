@@ -544,6 +544,17 @@
     },
     {
       "type": "error",
+      "name": "HyperLiquidComposer_InvalidArgument_EndpointShouldNotBeZeroAddress",
+      "inputs": [
+        {
+          "name": "receivedEndpointAddress",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
+    },
+    {
+      "type": "error",
       "name": "HyperLiquidComposer_InvalidCall_NotComposer",
       "inputs": [
         {
@@ -593,6 +604,17 @@
           "name": "errorMessage",
           "type": "bytes",
           "internalType": "bytes"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "SafeERC20FailedOperation",
+      "inputs": [
+        {
+          "name": "token",
+          "type": "address",
+          "internalType": "address"
         }
       ]
     },
@@ -837,6 +859,17 @@
           ],
           "type": "error",
           "name": "HyperLiquidComposer_InvalidComposeMessage"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "token",
+              "type": "address"
+            }
+          ],
+          "type": "error",
+          "name": "SafeERC20FailedOperation"
         },
         {
           "inputs": [
