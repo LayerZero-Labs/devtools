@@ -8,7 +8,7 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 struct IHyperAsset {
     address assetBridgeAddress;
     uint64 coreIndexId;
-    uint64 decimalDiff;
+    int64 decimalDiff;
 }
 
 struct IHyperAssetAmount {
@@ -18,9 +18,15 @@ struct IHyperAssetAmount {
 }
 
 interface IHyperLiquidComposerCore {
+    // 0xeb907f6e
     event ErrorERC20_Refund(address refundTo, uint256 refundAmount);
+    // 0x0b0fd82e
     event ErrorHYPE_Refund(address refundTo, uint256 refundAmount);
+    // 0x612baef0
     event ErrorMessage(bytes reason);
+
+    // 0xbb643711
+    event ExcessHYPE_Refund(address refundTo, uint256 refundAmount);
 
     function endpoint() external view returns (address);
     function oft() external view returns (IOFT);

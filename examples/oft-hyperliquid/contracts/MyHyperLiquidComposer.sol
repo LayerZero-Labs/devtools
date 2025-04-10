@@ -17,6 +17,6 @@ contract MyHyperLiquidComposer is HyperLiquidComposer {
         address _lzEndpoint,
         address _oft,
         uint64 _hlIndexId,
-        uint64 _weiDiff
+        int64 _weiDiff
     ) HyperLiquidComposer(_lzEndpoint, _oft, _hlIndexId, _weiDiff) {}
 }

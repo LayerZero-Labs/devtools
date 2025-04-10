@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import { IOFT } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { SafeERC20, IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import { HyperLiquidComposerCodec } from "./library/HyperLiquidComposerCodec.sol";
 import { IHyperLiquidComposerErrors, ErrorMessagePayload } from "./interfaces/IHyperLiquidComposerErrors.sol";
@@ -12,6 +12,8 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
 import { IHyperLiquidComposerCore, IHyperAsset, IHyperAssetAmount } from "./interfaces/IHyperLiquidComposerCore.sol";
 
 contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
+    using SafeERC20 for IERC20;
+
     using HyperLiquidComposerCodec for bytes32;
     using HyperLiquidComposerCodec for bytes;
     using HyperLiquidComposerCodec for uint256;
@@ -22,12 +24,6 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
         }
         _;
     }
-
-    /// @dev Valid compose message lengths for the HyperLiquidComposer - can be abi.encodePacked(address) or abi.encode(address)
-    /// @dev If we are in abi.encodePacked(address) mode, the length is 20 bytes because addresses are 20 bytes
-    uint256 public constant VALID_COMPOSE_MESSAGE_LENGTH_PACKED = 20;
-    /// @dev If we are in abi.encode(address) mode, the length is 32 bytes
-    uint256 public constant VALID_COMPOSE_MESSAGE_LENGTH_ENCODE = 32;
 
     address public constant HLP_PRECOMPILE_WRITE = 0x3333333333333333333333333333333333333333;
     address public constant HLP_PRECOMPILE_READ_SPOT_BALANCE = 0x0000000000000000000000000000000000000801;
@@ -41,7 +37,14 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     IHyperAsset public hypeAsset;
 
     constructor(address _endpoint, address _oft) {
+        if (_endpoint == address(0)) {
+            revert IHyperLiquidComposerErrors.HyperLiquidComposer_InvalidArgument_EndpointShouldNotBeZeroAddress(
+                _endpoint
+            );
+        }
         endpoint = _endpoint;
+
+        // _oft address is validated by it returning token()
         oft = IOFT(_oft);
         token = IERC20(oft.token());
     }
@@ -136,9 +139,10 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     /// @dev This is applicable in cases when we would normally revert the transaction but can't due to the composer being the intermediate recipient of the minted tokens
     ///
     /// @param _err The error message
+    /// @param _executor The caller of EndpointV2::lzCompose()
     ///
     /// @return errMsg.errorMessage The error message
-    function completeRefund(bytes memory _err) internal returns (bytes memory) {
+    function completeRefund(bytes memory _err, address _executor) internal returns (bytes memory) {
         // All error messages beyond this point are of the form ErrorMessage(address refundTo, uint256 refundAmount, bytes errorMessage)
 
         bytes memory encodedErrorMessage = this.getErrorPayload(_err);
@@ -149,14 +153,16 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
             emit ErrorERC20_Refund(errMsg.refundTo, errMsg.refundAmount);
         }
 
+        address refundNative = errMsg.refundTo == address(0) ? _executor : errMsg.refundTo;
+
         // Try to refund the native tokens and if this fails, we fallback to the tx.origin
-        try this.refundNativeTokens{ value: msg.value }(errMsg.refundTo) {} catch {
+        try this.refundNativeTokens{ value: msg.value }(refundNative) {} catch {
             (bool success, ) = tx.origin.call{ value: msg.value }("");
             if (!success) {
                 emit ErrorHYPE_Refund(tx.origin, msg.value);
             }
 
-            emit ErrorHYPE_Refund(errMsg.refundTo, msg.value);
+            emit ErrorHYPE_Refund(refundNative, msg.value);
         }
         return errMsg.errorMessage;
     }
@@ -171,7 +177,7 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     /// @param _amount The amount of tokens to refund
     function refundERC20(address _refundAddress, uint256 _amount) external payable onlyComposer {
         if (_amount > 0 && _refundAddress != address(0)) {
-            token.transfer(_refundAddress, _amount);
+            token.safeTransfer(_refundAddress, _amount);
         }
     }
 
@@ -186,14 +192,10 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     ///
     /// @param _refundAddress The address to refund the native tokens to
     function refundNativeTokens(address _refundAddress) external payable onlyComposer {
-        if (msg.value > 0) {
-            /// @dev If the refund address is the zero address, we refund to the tx.origin
-            /// @dev This is to emulate the behavior on a revert - where the msg.value is returned to the transaction sender
-            address refundAddress = _refundAddress == address(0) ? tx.origin : _refundAddress;
-
-            (bool success, ) = refundAddress.call{ value: msg.value }("");
+        if (msg.value > 0 && _refundAddress != address(0)) {
+            (bool success, ) = _refundAddress.call{ value: msg.value }("");
             if (!success) {
-                revert IHyperLiquidComposerErrors.HyperLiquidComposer_FailedToRefund_HYPE(refundAddress, msg.value);
+                revert IHyperLiquidComposerErrors.HyperLiquidComposer_FailedToRefund_HYPE(_refundAddress, msg.value);
             }
         }
     }

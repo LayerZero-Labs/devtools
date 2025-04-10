@@ -7,7 +7,8 @@ import { IHyperAsset, IHyperAssetAmount } from "../../contracts/interfaces/IHype
 import { Test, console } from "forge-std/Test.sol";
 
 contract TypeConversionTest is Test {
-    uint8 public constant BASE_DECIMALS = 18;
+    int8 MIN_DECIMAL_DIFF = -2;
+    int8 MAX_DECIMAL_DIFF = 8;
 
     function setUp() public {}
 
@@ -29,47 +30,57 @@ contract TypeConversionTest is Test {
         assertEq(tokenId, _coreIndexId);
     }
 
-    function test_into_hyperAssetAmount_without_overflow(uint64 amount, uint8 _coreDecimals) public {
+    function test_into_hyperAssetAmount_decimal_diff_leq_zero(
+        uint64 amount,
+        uint64 maxAmountTransferable,
+        int8 evmExtraWeiDecimals
+    ) public {
         // Skip condition based on the decimal count
-        // BASE_DECIMALS >= _coreDecimals + 5 for all non 0 core decimal values
-        _coreDecimals = uint8(bound(_coreDecimals, 1, BASE_DECIMALS - 5));
-        uint256 scale = 10 ** (BASE_DECIMALS - _coreDecimals);
+        evmExtraWeiDecimals = int8(bound(evmExtraWeiDecimals, MIN_DECIMAL_DIFF, 0));
+
+        uint256 scale = 10 ** uint8(-1 * evmExtraWeiDecimals);
 
         // Skip condition for when we are:
         // 1. under 1 core token
         // 2. over 2^64-1 core tokens
         // [1, 2 ** 64 * 10 ** (weiDifference))
-        amount = uint64(bound(amount, scale, type(uint64).max * scale - 1));
+        amount = uint64(bound(amount, 0, type(uint64).max * scale - 1));
 
         IHyperAsset memory oftAsset = IHyperAsset({
             assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1),
             coreIndexId: 1,
-            decimalDiff: BASE_DECIMALS - _coreDecimals
+            decimalDiff: evmExtraWeiDecimals
         });
 
         IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyperAssetAmount(
             amount,
-            type(uint64).max,
+            maxAmountTransferable,
             oftAsset
         );
 
-        assertEq(amounts.evm, amounts.core * scale, "evm and core amounts should differ by a factor of scale");
+        uint256 expectedDust = 0;
+        uint256 expectedEvm = amount;
+        uint256 expectedCore = amount * scale;
+
+        if (amount * scale > maxAmountTransferable) {
+            expectedCore = maxAmountTransferable;
+            expectedEvm = expectedCore / scale;
+            expectedDust = amount - expectedEvm;
+        }
+
+        assertEq(amounts.dust, expectedDust, "dust should be zero");
         assertEq(amounts.dust + amounts.evm, amount, "dust + evm is not equal to the input amount");
-
-        assertEq(amounts.dust, amount % scale, "dust is not equal to the remainder of the input amount");
-        assertEq(amounts.evm, amount - (amount % scale), "evm amount is not equal to the input amount");
-        assertEq(amounts.core, amount / scale, "core amount is not equal to the input amount");
+        assertEq(amounts.evm, amounts.core / scale, "evm and core amounts should differ by a factor of scale");
+        assertEq(amounts.core, expectedCore, "core amount is not equal to the input amount");
     }
-
-    function test_into_hyperAssetAmount_with_overflow(
+    function test_into_hyperAssetAmount_decimal_diff_gt_zero(
         uint64 amount,
         uint64 maxAmountTransferable,
-        uint8 _coreDecimals
+        int8 evmExtraWeiDecimals
     ) public {
         // Skip condition based on the decimal count
-        // BASE_DECIMALS >= _coreDecimals + 5 for all non 0 core decimal values
-        _coreDecimals = uint8(bound(_coreDecimals, 1, BASE_DECIMALS - 5));
-        uint256 scale = 10 ** (BASE_DECIMALS - _coreDecimals);
+        evmExtraWeiDecimals = int8(bound(evmExtraWeiDecimals, 1, MAX_DECIMAL_DIFF));
+        uint256 scale = 10 ** uint8(evmExtraWeiDecimals);
 
         // Skip condition for when we are:
         // 1. under 1 core token
@@ -80,7 +91,7 @@ contract TypeConversionTest is Test {
         IHyperAsset memory oftAsset = IHyperAsset({
             assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1),
             coreIndexId: 1,
-            decimalDiff: BASE_DECIMALS - _coreDecimals
+            decimalDiff: evmExtraWeiDecimals
         });
 
         IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyperAssetAmount(

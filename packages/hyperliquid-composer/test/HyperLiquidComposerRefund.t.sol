@@ -173,7 +173,7 @@ contract HyperLiquidComposerRefundTest is Test {
         uint256 totalTransferAmount = AMOUNT_TO_SEND + _exceedAmountBy;
         deal(address(oft), address(hyperLiquidComposer), totalTransferAmount);
 
-        uint256 scaleAliceDecimalDiff = 10 ** ALICE.decimalDiff;
+        uint256 scaleAliceDecimalDiff = 10 ** uint64(ALICE.decimalDiff);
 
         SpotBalancePrecompileMock(HLP_PRECOMPILE_READ_SPOT_BALANCE).setSpotBalance(
             ALICE.assetBridgeAddress,
@@ -221,7 +221,7 @@ contract HyperLiquidComposerRefundTest is Test {
         deal(address(oft), address(hyperLiquidComposer), totalTransferAmount);
 
         address noFallback = address(new NoFallback());
-        uint256 scaleAliceDecimalDiff = 10 ** ALICE.decimalDiff;
+        uint256 scaleAliceDecimalDiff = 10 ** uint64(ALICE.decimalDiff);
 
         SpotBalancePrecompileMock(HLP_PRECOMPILE_READ_SPOT_BALANCE).setSpotBalance(
             ALICE.assetBridgeAddress,

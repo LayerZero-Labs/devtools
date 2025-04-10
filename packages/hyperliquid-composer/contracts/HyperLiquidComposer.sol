@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import { IOFT } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { SafeERC20, IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 import { IOAppComposer } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol";
 
@@ -14,6 +14,8 @@ import { IHyperLiquidComposerErrors } from "./interfaces/IHyperLiquidComposerErr
 import { HyperLiquidComposerCore, IHyperAsset, IHyperAssetAmount } from "./HyperLiquidComposerCore.sol";
 
 contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
+    using SafeERC20 for IERC20;
+
     using HyperLiquidComposerCodec for uint64;
 
     /// @notice Constructor for the HyperLiquidComposer contract
@@ -30,7 +32,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         address _endpoint,
         address _oft,
         uint64 _coreIndexId,
-        uint64 _weiDiff
+        int64 _weiDiff
     ) HyperLiquidComposerCore(_endpoint, _oft) {
         /// @dev Hyperliquid L1 contract address is the prefix (0x2000...0000) + the core index id
         /// @dev This is the address that the OFT contract will transfer the tokens to when we want to send tokens between HyperEVM and HyperLiquid L1
@@ -61,11 +63,12 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
     ///
     /// @param _oft The address of the OFT contract.
     /// @param _message The encoded message content, expected to be of type: (address receiver).
+    /// @param _executor The address that called EndpointV2::lzCompose()
     function lzCompose(
         address _oft,
         bytes32 /*_guid*/,
         bytes calldata _message,
-        address /*_executor*/,
+        address _executor,
         bytes calldata /*_extraData*/
     ) external payable virtual override {
         /// @dev The following reverts are for when the contract is incorrectly called.
@@ -104,12 +107,12 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         }
 
         /// @dev Checks if the receiver and sender are valid addresses
-        /// @dev If the addresses are invalid, the function will emit an error message and try a complete refund to the receiver else the sender
+        /// @dev If the addresses are invalid, the function will emit an error message and try a complete refund to the sender
         /// @dev If developers want custom error messages they need to implement their own custom revert messages
         try this.validate_addresses_or_refund(maybeEVMReceiver, maybeEVMSender, amountLD) returns (address _receiver) {
             receiver = _receiver;
         } catch (bytes memory _err) {
-            bytes memory errMsg = completeRefund(_err);
+            bytes memory errMsg = completeRefund(_err, _executor);
             emit ErrorMessage(errMsg);
             // Pre-emptive return after the refund
             return;
@@ -117,7 +120,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
 
         /// @dev If the message is being sent with a value, we fund the address on HyperCore
         if (msg.value > 0) {
-            _fundAddressOnHyperCore(receiver, msg.value);
+            _fundAddressOnHyperCore(receiver, msg.value, _executor);
         }
 
         _sendAssetToHyperCore(receiver, amountLD);
@@ -145,15 +148,17 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         /// @notice The swap amount (HIP1) and tokens to send (ERC20) are different because they have different decimals
         IHyperAssetAmount memory amounts = quoteHyperCoreAmount(_amountLD, true);
 
-        /// Transfers the tokens to the composer address on HyperCore
-        token.transfer(oftAsset.assetBridgeAddress, amounts.evm);
+        // Since amounts.evm and amounts.core differ by decimalDiff if evm is greater than 0 we have a transfer into HyperCore and must make a HyperCore transfer to the receiver
+        if (amounts.evm > 0) {
+            /// Transfers the tokens to the composer address on HyperCore
+            token.safeTransfer(oftAsset.assetBridgeAddress, amounts.evm);
 
-        /// Transfers tokens from the composer address on HyperCore to the _receiver
-        IHyperLiquidWritePrecompile(HLP_PRECOMPILE_WRITE).sendSpot(_receiver, oftAsset.coreIndexId, amounts.core);
-
+            /// Transfers tokens from the composer address on HyperCore to the _receiver
+            IHyperLiquidWritePrecompile(HLP_PRECOMPILE_WRITE).sendSpot(_receiver, oftAsset.coreIndexId, amounts.core);
+        }
         /// Transfers any leftover dust to the _receiver on HyperEVM
         if (amounts.dust > 0) {
-            token.transfer(_receiver, amounts.dust);
+            token.safeTransfer(_receiver, amounts.dust);
         }
     }
 
@@ -167,7 +172,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
     ///
     /// @param _receiver The address of the receiver
     /// @param _amount The amount of HYPE tokens to send
-    function _fundAddressOnHyperCore(address _receiver, uint256 _amount) internal virtual {
+    function _fundAddressOnHyperCore(address _receiver, uint256 _amount, address _executor) internal virtual {
         /// @dev Computes the tokens to send to HyperCore, dust (refund amount), and the swap amount.
         /// @dev It also takes into account the maximum transferable amount at any given time.
         /// @dev This is done by reading from HLP_PRECOMPILE_READ_SPOT_BALANCE the tokens on the HyperCore side of the asset bridge
@@ -185,14 +190,21 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         IHyperLiquidWritePrecompile(HLP_PRECOMPILE_WRITE).sendSpot(_receiver, hypeAsset.coreIndexId, amounts.core);
 
         /// @dev Tries transferring any leftover dust to the _receiver on HyperEVM
-        /// @dev If the transfer fails, we refund the tx.origin as to not have any dust locked in the contract
+        /// @dev If the transfer fails, we try refunding it to the executor and if that fails then we refund the tx.origin as to not have any dust locked in the contract
         if (amounts.dust > 0) {
-            try this.refundNativeTokens{ value: amounts.dust }(_receiver) {} catch {
-                (success, ) = tx.origin.call{ value: amounts.dust }("");
-                if (!success) {
-                    emit ErrorHYPE_Refund(tx.origin, amounts.dust);
+            // We know this _receiver address is a valid evm-address however it could be a contract with no fallback
+            try this.refundNativeTokens{ value: amounts.dust }(_receiver) {
+                emit ExcessHYPE_Refund(_receiver, amounts.dust);
+            } catch {
+                // Try refunding the executor and if that fails then refund tx.origin
+                (success, ) = _executor.call{ value: amounts.dust }("");
+                if (success) {
+                    emit ExcessHYPE_Refund(_executor, amounts.dust);
+                } else {
+                    // Finally refund the transaction origin - we know this is an eoa and can accept tokens
+                    (success, ) = tx.origin.call{ value: amounts.dust }("");
+                    emit ExcessHYPE_Refund(tx.origin, amounts.dust);
                 }
-                emit ErrorHYPE_Refund(_receiver, amounts.dust);
             }
         }
     }

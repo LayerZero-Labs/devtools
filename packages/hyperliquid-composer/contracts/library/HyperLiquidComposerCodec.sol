@@ -18,7 +18,7 @@ library HyperLiquidComposerCodec {
     address public constant BASE_ASSET_BRIDGE_ADDRESS = 0x2000000000000000000000000000000000000000;
     uint256 public constant BASE_ASSET_BRIDGE_ADDRESS_UINT256 = uint256(uint160(BASE_ASSET_BRIDGE_ADDRESS));
 
-    event OverflowDetected(uint64 amountCore, uint64 maxTransferableAmount);
+    event OverflowDetected(uint256 amountCore, uint64 maxTransferableAmount);
 
     /// @notice Converts a core index id to an asset bridge address
     /// @notice This function is called by the HyperLiquidComposer contract
@@ -52,28 +52,96 @@ library HyperLiquidComposerCodec {
         uint64 _maxTransferableAmount,
         IHyperAsset memory _asset
     ) internal returns (IHyperAssetAmount memory) {
-        uint256 scale = 10 ** _asset.decimalDiff;
-        uint256 dust;
         uint256 amountEVM;
+        uint256 dust;
+        uint64 amountCore;
 
+        if (_asset.decimalDiff > 0) {
+            (amountEVM, dust, amountCore) = into_hyperAssetAmount_decimal_difference_gt_zero(
+                _amount,
+                _maxTransferableAmount,
+                uint64(_asset.decimalDiff)
+            );
+        } else {
+            (amountEVM, dust, amountCore) = into_hyperAssetAmount_decimal_difference_leq_zero(
+                _amount,
+                _maxTransferableAmount,
+                uint64(-1 * _asset.decimalDiff)
+            );
+        }
+
+        return IHyperAssetAmount({ evm: amountEVM, dust: dust, core: amountCore });
+    }
+
+    /// @notice Computes hyperAssetAmount when EVM decimals > Core decimals
+    /// @notice This function is called by the HyperLiquidComposer contract
+    ///
+    /// @param _amount The amount to convert
+    /// @param _maxTransferableAmount The maximum transferrable amount capped by the asset bridge
+    /// @param _extraWeiDecimals The decimal difference between HyperEVM and HyperCore
+    ///
+    /// @return amountEVM The EVM amount
+    /// @return dust The dust amount
+    /// @return amountCore The core amount
+    function into_hyperAssetAmount_decimal_difference_gt_zero(
+        uint256 _amount,
+        uint64 _maxTransferableAmount,
+        uint64 _extraWeiDecimals
+    ) internal returns (uint256 amountEVM, uint256 dust, uint64 amountCore) {
+        uint256 scale = 10 ** _extraWeiDecimals;
+
+        /// @dev Fewer decimals on HyperCore leads to fewer decimals of precision
+        /// @dev This means we can't represent decimals from [LSb-(extraWeiDecimals)]
+        /// @dev Since LSb = 0, the numbers in extraWeiDecimals are dust - (% 10.pow(extraWeiDecimals))
         unchecked {
             dust = _amount % scale;
             amountEVM = _amount - dust;
         }
 
-        /// @dev _amount / scale is guaranteed to be smaller than 2 ** 64
-        uint64 amountCore = uint64(_amount / scale);
+        uint256 amountCore256 = _amount / scale;
+        amountCore = uint64(amountCore256);
 
-        if (amountCore > _maxTransferableAmount) {
-            emit OverflowDetected(amountCore, _maxTransferableAmount);
+        if (amountCore256 > _maxTransferableAmount) {
+            emit OverflowDetected(amountCore256, _maxTransferableAmount);
 
-            uint256 overflowEVM = (amountCore - _maxTransferableAmount) * scale;
+            uint256 overflowEVM = (amountCore256 - _maxTransferableAmount) * scale;
             amountCore = _maxTransferableAmount;
-            amountEVM = amountEVM - overflowEVM;
+            amountEVM = _maxTransferableAmount * scale;
             dust = dust + overflowEVM;
         }
+    }
 
-        return IHyperAssetAmount({ evm: amountEVM, dust: dust, core: amountCore });
+    /// @notice Computes hyperAssetAmount when EVM decimals < Core decimals and 0
+    /// @notice This function is called by the HyperLiquidComposer contract
+    ///
+    /// @param _amount The amount to convert
+    /// @param _maxTransferableAmount The maximum transferrable amount capped by the asset bridge
+    /// @param _extraWeiDecimals The decimal difference between HyperEVM and HyperCore
+    ///
+    /// @return amountEVM The EVM amount
+    /// @return dust The dust amount
+    /// @return amountCore The core amount
+    function into_hyperAssetAmount_decimal_difference_leq_zero(
+        uint256 _amount,
+        uint64 _maxTransferableAmount,
+        uint64 _extraWeiDecimals
+    ) internal returns (uint256 amountEVM, uint256 dust, uint64 amountCore) {
+        uint256 scale = 10 ** _extraWeiDecimals;
+
+        /// @dev When Core is greater than EVM there will be no dust since all tokens in evm can be represented on cores
+        dust = 0;
+        amountEVM = _amount;
+
+        uint256 amountCore256 = _amount * scale;
+        amountCore = uint64(amountCore256);
+
+        if (amountCore256 > _maxTransferableAmount) {
+            emit OverflowDetected(amountCore256, _maxTransferableAmount);
+
+            amountCore = _maxTransferableAmount;
+            amountEVM = _maxTransferableAmount / scale;
+            dust = _amount - amountEVM;
+        }
     }
 
     /// @notice Converts a bytes32 to an evm address

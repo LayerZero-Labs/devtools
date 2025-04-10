@@ -117,7 +117,7 @@ contract HyperLiquidComposerTest is Test {
             address(hyperLiquidComposer),
             userB,
             ALICE.coreIndexId,
-            uint64(AMOUNT_TO_SEND / 10 ** ALICE.decimalDiff)
+            uint64(AMOUNT_TO_SEND / 10 ** uint64(ALICE.decimalDiff))
         );
 
         uint256 balanceBefore = oft.balanceOf(userB);
@@ -158,7 +158,7 @@ contract HyperLiquidComposerTest is Test {
             address(hyperLiquidComposer),
             userB,
             ALICE.coreIndexId,
-            uint64(AMOUNT_TO_SEND / 10 ** ALICE.decimalDiff)
+            uint64(AMOUNT_TO_SEND / 10 ** uint64(ALICE.decimalDiff))
         );
 
         uint256 balanceBeforeBridge = HYPE.assetBridgeAddress.balance;
