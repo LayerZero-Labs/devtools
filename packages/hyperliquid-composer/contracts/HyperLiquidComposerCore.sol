@@ -139,9 +139,10 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     /// @dev This is applicable in cases when we would normally revert the transaction but can't due to the composer being the intermediate recipient of the minted tokens
     ///
     /// @param _err The error message
+    /// @param _executor The caller of EndpointV2::lzCompose()
     ///
     /// @return errMsg.errorMessage The error message
-    function completeRefund(bytes memory _err) internal returns (bytes memory) {
+    function completeRefund(bytes memory _err, address _executor) internal returns (bytes memory) {
         // All error messages beyond this point are of the form ErrorMessage(address refundTo, uint256 refundAmount, bytes errorMessage)
 
         bytes memory encodedErrorMessage = this.getErrorPayload(_err);
@@ -152,14 +153,16 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
             emit ErrorERC20_Refund(errMsg.refundTo, errMsg.refundAmount);
         }
 
+        address refundNative = errMsg.refundTo == address(0) ? _executor : errMsg.refundTo;
+
         // Try to refund the native tokens and if this fails, we fallback to the tx.origin
-        try this.refundNativeTokens{ value: msg.value }(errMsg.refundTo) {} catch {
+        try this.refundNativeTokens{ value: msg.value }(refundNative) {} catch {
             (bool success, ) = tx.origin.call{ value: msg.value }("");
             if (!success) {
                 emit ErrorHYPE_Refund(tx.origin, msg.value);
             }
 
-            emit ErrorHYPE_Refund(errMsg.refundTo, msg.value);
+            emit ErrorHYPE_Refund(refundNative, msg.value);
         }
         return errMsg.errorMessage;
     }
@@ -189,14 +192,10 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     ///
     /// @param _refundAddress The address to refund the native tokens to
     function refundNativeTokens(address _refundAddress) external payable onlyComposer {
-        if (msg.value > 0) {
-            /// @dev If the refund address is the zero address, we refund to the tx.origin
-            /// @dev This is to emulate the behavior on a revert - where the msg.value is returned to the transaction sender
-            address refundAddress = _refundAddress == address(0) ? tx.origin : _refundAddress;
-
-            (bool success, ) = refundAddress.call{ value: msg.value }("");
+        if (msg.value > 0 && _refundAddress != address(0)) {
+            (bool success, ) = _refundAddress.call{ value: msg.value }("");
             if (!success) {
-                revert IHyperLiquidComposerErrors.HyperLiquidComposer_FailedToRefund_HYPE(refundAddress, msg.value);
+                revert IHyperLiquidComposerErrors.HyperLiquidComposer_FailedToRefund_HYPE(_refundAddress, msg.value);
             }
         }
     }
