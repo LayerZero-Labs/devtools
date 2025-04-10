@@ -106,7 +106,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         }
 
         /// @dev Checks if the receiver and sender are valid addresses
-        /// @dev If the addresses are invalid, the function will emit an error message and try a complete refund to the receiver else the sender
+        /// @dev If the addresses are invalid, the function will emit an error message and try a complete refund to the sender
         /// @dev If developers want custom error messages they need to implement their own custom revert messages
         try this.validate_addresses_or_refund(maybeEVMReceiver, maybeEVMSender, amountLD) returns (address _receiver) {
             receiver = _receiver;
