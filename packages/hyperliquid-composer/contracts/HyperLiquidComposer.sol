@@ -148,12 +148,14 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         /// @notice The swap amount (HIP1) and tokens to send (ERC20) are different because they have different decimals
         IHyperAssetAmount memory amounts = quoteHyperCoreAmount(_amountLD, true);
 
-        /// Transfers the tokens to the composer address on HyperCore
-        token.safeTransfer(oftAsset.assetBridgeAddress, amounts.evm);
+        // Since amounts.evm and amounts.core differ by decimalDiff if evm is greater than 0 we have a transfer into HyperCore and must make a HyperCore transfer to the receiver
+        if (amounts.evm > 0) {
+            /// Transfers the tokens to the composer address on HyperCore
+            token.safeTransfer(oftAsset.assetBridgeAddress, amounts.evm);
 
-        /// Transfers tokens from the composer address on HyperCore to the _receiver
-        IHyperLiquidWritePrecompile(HLP_PRECOMPILE_WRITE).sendSpot(_receiver, oftAsset.coreIndexId, amounts.core);
-
+            /// Transfers tokens from the composer address on HyperCore to the _receiver
+            IHyperLiquidWritePrecompile(HLP_PRECOMPILE_WRITE).sendSpot(_receiver, oftAsset.coreIndexId, amounts.core);
+        }
         /// Transfers any leftover dust to the _receiver on HyperEVM
         if (amounts.dust > 0) {
             token.safeTransfer(_receiver, amounts.dust);
