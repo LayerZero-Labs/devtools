@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import { IOFT } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { SafeERC20, IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 import { IOAppComposer } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol";
 
@@ -14,6 +14,8 @@ import { IHyperLiquidComposerErrors } from "./interfaces/IHyperLiquidComposerErr
 import { HyperLiquidComposerCore, IHyperAsset, IHyperAssetAmount } from "./HyperLiquidComposerCore.sol";
 
 contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
+    using SafeERC20 for IERC20;
+
     using HyperLiquidComposerCodec for uint64;
 
     /// @notice Constructor for the HyperLiquidComposer contract
@@ -146,14 +148,14 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         IHyperAssetAmount memory amounts = quoteHyperCoreAmount(_amountLD, true);
 
         /// Transfers the tokens to the composer address on HyperCore
-        token.transfer(oftAsset.assetBridgeAddress, amounts.evm);
+        token.safeTransfer(oftAsset.assetBridgeAddress, amounts.evm);
 
         /// Transfers tokens from the composer address on HyperCore to the _receiver
         IHyperLiquidWritePrecompile(HLP_PRECOMPILE_WRITE).sendSpot(_receiver, oftAsset.coreIndexId, amounts.core);
 
         /// Transfers any leftover dust to the _receiver on HyperEVM
         if (amounts.dust > 0) {
-            token.transfer(_receiver, amounts.dust);
+            token.safeTransfer(_receiver, amounts.dust);
         }
     }
 

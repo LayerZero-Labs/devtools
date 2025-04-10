@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import { IOFT } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { SafeERC20, IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import { HyperLiquidComposerCodec } from "./library/HyperLiquidComposerCodec.sol";
 import { IHyperLiquidComposerErrors, ErrorMessagePayload } from "./interfaces/IHyperLiquidComposerErrors.sol";
@@ -12,6 +12,8 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
 import { IHyperLiquidComposerCore, IHyperAsset, IHyperAssetAmount } from "./interfaces/IHyperLiquidComposerCore.sol";
 
 contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
+    using SafeERC20 for IERC20;
+
     using HyperLiquidComposerCodec for bytes32;
     using HyperLiquidComposerCodec for bytes;
     using HyperLiquidComposerCodec for uint256;
@@ -35,7 +37,14 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     IHyperAsset public hypeAsset;
 
     constructor(address _endpoint, address _oft) {
+        if (_endpoint == address(0)) {
+            revert IHyperLiquidComposerErrors.HyperLiquidComposer_InvalidArgument_EndpointShouldNotBeZeroAddress(
+                _endpoint
+            );
+        }
         endpoint = _endpoint;
+
+        // _oft address is validated by it returning token()
         oft = IOFT(_oft);
         token = IERC20(oft.token());
     }
@@ -165,7 +174,7 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     /// @param _amount The amount of tokens to refund
     function refundERC20(address _refundAddress, uint256 _amount) external payable onlyComposer {
         if (_amount > 0 && _refundAddress != address(0)) {
-            token.transfer(_refundAddress, _amount);
+            token.safeTransfer(_refundAddress, _amount);
         }
     }
 
