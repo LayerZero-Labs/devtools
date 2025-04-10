@@ -23,12 +23,6 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
         _;
     }
 
-    /// @dev Valid compose message lengths for the HyperLiquidComposer - can be abi.encodePacked(address) or abi.encode(address)
-    /// @dev If we are in abi.encodePacked(address) mode, the length is 20 bytes because addresses are 20 bytes
-    uint256 public constant VALID_COMPOSE_MESSAGE_LENGTH_PACKED = 20;
-    /// @dev If we are in abi.encode(address) mode, the length is 32 bytes
-    uint256 public constant VALID_COMPOSE_MESSAGE_LENGTH_ENCODE = 32;
-
     address public constant HLP_PRECOMPILE_WRITE = 0x3333333333333333333333333333333333333333;
     address public constant HLP_PRECOMPILE_READ_SPOT_BALANCE = 0x0000000000000000000000000000000000000801;
 
