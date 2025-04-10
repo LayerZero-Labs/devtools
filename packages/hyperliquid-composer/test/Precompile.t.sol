@@ -103,7 +103,7 @@ contract PrecompileTest is Test {
     }
 
     /// forge-config: default.fuzz.runs = 64
-    function test_quoteHyperCoreAmount(uint64 _amount, bool _isOFT) public {
+    function test_quoteHyperCoreAmount_decimal_diff_greater_zero(uint64 _amount, bool _isOFT) public {
         uint64 maxTransferableAmount = type(uint64).max;
         IHyperAsset memory asset;
         if (_isOFT) {
@@ -112,10 +112,10 @@ contract PrecompileTest is Test {
             asset = HYPE;
         }
 
-        typeConversionTest.test_into_hyperAssetAmount_with_overflow(
+        typeConversionTest.test_into_hyperAssetAmount_decimal_diff_gt_zero(
             _amount,
             maxTransferableAmount,
-            uint8(18 - asset.decimalDiff)
+            int8(18 - asset.decimalDiff)
         );
     }
 }

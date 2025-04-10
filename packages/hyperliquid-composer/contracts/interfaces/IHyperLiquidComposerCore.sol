@@ -8,7 +8,7 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 struct IHyperAsset {
     address assetBridgeAddress;
     uint64 coreIndexId;
-    uint64 decimalDiff;
+    int64 decimalDiff;
 }
 
 struct IHyperAssetAmount {

@@ -36,9 +36,9 @@ contract MyHyperLiquidOFTTest is TestHelperOz5 {
     string internal constant DST_OFT_NAME = "dstOFT";
     string internal constant DST_OFT_SYMBOL = "dstOFT";
 
-    uint64 internal constant OFT_DECIMALS_EVM = 18;
-    uint64 internal constant OFT_DECIMALS_HYPECORE = 6;
-    uint64 internal constant WEI_DIFF = OFT_DECIMALS_EVM - OFT_DECIMALS_HYPECORE;
+    int64 internal constant OFT_DECIMALS_EVM = 18;
+    int64 internal constant OFT_DECIMALS_HYPECORE = 6;
+    int64 internal constant WEI_DIFF = OFT_DECIMALS_EVM - OFT_DECIMALS_HYPECORE;
 
     // https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers#system-addresses
     address public constant HYPERLIQUID_PRECOMPILE = 0x2222222222222222222222222222222222222222;

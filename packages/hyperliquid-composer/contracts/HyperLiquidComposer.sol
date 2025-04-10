@@ -30,7 +30,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         address _endpoint,
         address _oft,
         uint64 _coreIndexId,
-        uint64 _weiDiff
+        int64 _weiDiff
     ) HyperLiquidComposerCore(_endpoint, _oft) {
         /// @dev Hyperliquid L1 contract address is the prefix (0x2000...0000) + the core index id
         /// @dev This is the address that the OFT contract will transfer the tokens to when we want to send tokens between HyperEVM and HyperLiquid L1
