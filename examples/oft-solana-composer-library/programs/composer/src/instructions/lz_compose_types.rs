@@ -1,61 +1,61 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{Token, TokenAccount};
-use anchor_spl::token_interface::Token2022;
-
-// LayerZero / OApp endpoint CPI helpers:
+use anchor_spl::token::{Token};
+use anchor_spl::token_interface::{Token2022, TokenAccount, Mint};
+use spl_memo;
+use raydium_clmm_cpi::{
+    program::RaydiumClmm,
+    states::{AmmConfig, ObservationState, PoolState},
+};
 use oapp::endpoint_cpi::{get_accounts_for_clear_compose, LzAccount};
 use oapp::{endpoint::ID as ENDPOINT_ID, LzComposeParams};
 
 #[derive(Accounts)]
 pub struct LzComposeTypes<'info> {
-    #[account(seeds = [b"composer"], bump)]
-    pub lz_program: AccountInfo<'info>,
+    pub clmm_program: Program<'info, RaydiumClmm>,
+    /// The user performing the swap.
     pub payer: Signer<'info>,
-    #[account(seeds = [b"authority"], bump)]
-    pub authority: AccountInfo<'info>,
-    pub amm_config: AccountInfo<'info>,
+    #[account(address = pool_state.load()?.amm_config)]
+    pub amm_config: Box<Account<'info, AmmConfig>>,
     #[account(mut)]
-    pub pool_state: AccountInfo<'info>,
+    pub pool_state: AccountLoader<'info, PoolState>,
     #[account(mut)]
-    pub source_token_account: Account<'info, TokenAccount>,
+    pub input_token_account: Box<InterfaceAccount<'info, TokenAccount>>,
     #[account(mut)]
-    pub dest_token_account: Account<'info, TokenAccount>,
+    pub output_token_account: Box<InterfaceAccount<'info, TokenAccount>>,
     #[account(mut)]
-    pub input_vault: AccountInfo<'info>,
+    pub input_vault: Box<InterfaceAccount<'info, TokenAccount>>,
     #[account(mut)]
-    pub output_vault: AccountInfo<'info>,
+    pub output_vault: Box<InterfaceAccount<'info, TokenAccount>>,
+    #[account(mut, address = pool_state.load()?.observation_key)]
+    pub observation_state: AccountLoader<'info, ObservationState>,
     pub token_program: Program<'info, Token>,
     pub token_program_2022: Program<'info, Token2022>,
-    #[account(mut)]
-    pub input_token_mint: AccountInfo<'info>,
-    #[account(mut)]
-    pub output_token_mint: AccountInfo<'info>,
-    #[account(mut)]
-    pub observation_state: AccountInfo<'info>,
-    /// CHECK: Required for memo instructions. Must match spl_memo::id().
-    pub memo_program: AccountInfo<'info>,
+    #[account(address = spl_memo::id())]
+    pub memo_program: UncheckedAccount<'info>,
+    #[account(address = input_vault.mint)]
+    pub input_vault_mint: Box<InterfaceAccount<'info, Mint>>,
+    #[account(address = output_vault.mint)]
+    pub output_vault_mint: Box<InterfaceAccount<'info, Mint>>,
+    // Extra accounts required for the clear_compose call.
+    /// The LayerZero endpoint program.
+    pub lz_program: AccountInfo<'info>,
+    /// The authority account for the swap.
+    pub authority: AccountInfo<'info>,
+    /// Tick array accounts for the swap range.
     #[account(mut)]
     pub tick_array_lower: AccountInfo<'info>,
     #[account(mut)]
     pub tick_array_current: AccountInfo<'info>,
     #[account(mut)]
     pub tick_array_upper: AccountInfo<'info>,
-    pub raydium_program: Program<'info, crate::AmmV3>,
 }
 
 impl LzComposeTypes<'_> {
-    /// Processes the lz_compose_types instruction and returns a vector of LzAccount.
-    /// The list of accounts should follow the rules below:
-    /// 1. Include all the accounts that are used in the LzCompose instruction, including the
-    /// accounts that are used by the Endpoint program.
-    /// 2. Set the account is a signer with ZERO address if the LzCompose instruction needs a payer
-    /// to pay fee, like rent.
-    /// 3. Set the account is writable if the LzCompose instruction needs to modify the account.
+    /// Generates the list of LzAccounts expected by the clear_compose call.
     pub fn apply(
         ctx: &Context<LzComposeTypes>,
         params: &LzComposeParams,
     ) -> Result<Vec<LzAccount>> {
-        // LayerZero endpoint accounts first.
         let mut accounts = get_accounts_for_clear_compose(
             ENDPOINT_ID,
             &params.from,
@@ -64,8 +64,6 @@ impl LzComposeTypes<'_> {
             params.index,
             &params.message,
         );
-
-        // Append the Raydium CLMM CPI accounts in the exact order required.
         accounts.push(LzAccount {
             pubkey: ctx.accounts.payer.key(),
             is_signer: true,
@@ -86,14 +84,13 @@ impl LzComposeTypes<'_> {
             is_signer: false,
             is_writable: true,
         });
-        // Assumes that the source is the user's input token account.
         accounts.push(LzAccount {
-            pubkey: ctx.accounts.source_token_account.key(),
+            pubkey: ctx.accounts.input_token_account.key(),
             is_signer: false,
             is_writable: true,
         });
         accounts.push(LzAccount {
-            pubkey: ctx.accounts.dest_token_account.key(),
+            pubkey: ctx.accounts.output_token_account.key(),
             is_signer: false,
             is_writable: true,
         });
@@ -108,52 +105,10 @@ impl LzComposeTypes<'_> {
             is_writable: true,
         });
         accounts.push(LzAccount {
-            pubkey: ctx.accounts.token_program.key(),
-            is_signer: false,
-            is_writable: false,
-        });
-        accounts.push(LzAccount {
-            pubkey: ctx.accounts.token_program_2022.key(),
-            is_signer: false,
-            is_writable: false,
-        });
-        accounts.push(LzAccount {
-            pubkey: ctx.accounts.memo_program.key(),
-            is_signer: false,
-            is_writable: false,
-        });
-        accounts.push(LzAccount {
-            pubkey: ctx.accounts.input_token_mint.key(),
-            is_signer: false,
-            is_writable: false,
-        });
-        accounts.push(LzAccount {
-            pubkey: ctx.accounts.output_token_mint.key(),
-            is_signer: false,
-            is_writable: false,
-        });
-        accounts.push(LzAccount {
             pubkey: ctx.accounts.observation_state.key(),
             is_signer: false,
             is_writable: true,
         });
-        // Include tick arrays for swap range (if required)
-        accounts.push(LzAccount {
-            pubkey: ctx.accounts.tick_array_lower.key(),
-            is_signer: false,
-            is_writable: true,
-        });
-        accounts.push(LzAccount {
-            pubkey: ctx.accounts.tick_array_current.key(),
-            is_signer: false,
-            is_writable: true,
-        });
-        accounts.push(LzAccount {
-            pubkey: ctx.accounts.tick_array_upper.key(),
-            is_signer: false,
-            is_writable: true,
-        });
-
         Ok(accounts)
     }
 }
