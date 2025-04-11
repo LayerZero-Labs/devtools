@@ -22,4 +22,5 @@ anchor-spl = "0.29.0"
 raydium-clmm-cpi = { git = "https://github.com/St0rmBr3w/raydium-cpi/", package = "raydium-clmm-cpi", branch = "anchor-0.29.0" }
 oapp = { git = "https://github.com/LayerZero-Labs/LayerZero-v2.git", rev = "34321ac15e47e0dafd25d66659e2f3d1b9b6db8f" }
 utils = { git = "https://github.com/LayerZero-Labs/LayerZero-v2.git", rev = "34321ac15e47e0dafd25d66659e2f3d1b9b6db8f" }
+spl-memo = "=4.0.0"
 solana-helper = "0.1.0"
