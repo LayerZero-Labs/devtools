@@ -2321,6 +2321,9 @@ importers:
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.75
         version: 3.0.75
+      '@layerzerolabs/metadata-tools':
+        specifier: ^0.4.1
+        version: link:../../packages/metadata-tools
       '@layerzerolabs/oapp-evm':
         specifier: ^0.3.2
         version: link:../../packages/oapp-evm
@@ -11507,7 +11510,6 @@ packages:
     transitivePeerDependencies:
       - fastestsmallesttextencoderdecoder
       - typescript
-    dev: false
 
   /@solana/spl-token-metadata@0.1.6(@solana/web3.js@1.98.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
     resolution: {integrity: sha512-7sMt1rsm/zQOQcUWllQX9mD2O6KhSAtY1hFR2hfFwgqfFWzSY9E9GDvFVNYUI1F0iQKcm6HmePU9QbKRXTEBiA==}

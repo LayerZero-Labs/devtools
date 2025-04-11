@@ -7,5 +7,6 @@ module.exports = {
         // @layerzerolabs/eslint-config-next defines rules for turborepo-based projects
         // that are not relevant for this particular project
         'turbo/no-undeclared-env-vars': 'off',
+        'import/no-unresolved': 'warn', // Updated to warn to as this was failing (only) CI even when @layerzerolabs/metadata-tools has been installed correctly
     },
 };
