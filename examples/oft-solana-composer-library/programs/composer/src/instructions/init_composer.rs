@@ -9,10 +9,20 @@ pub struct InitComposer<'info> {
         init,
         payer = payer,
         space = Composer::SIZE,
-        seeds = [LZ_COMPOSE_TYPES_SEED, payer.key().as_ref(), &[params.id]],
+        seeds = [COMPOSER_SEED, params.oft.as_ref()],
         bump
     )]
     pub composer: Account<'info, Composer>,
+
+    /// The LzComposeTypesAccounts account, storing extra addresses required for lz_compose_types.
+    #[account(
+        init,
+        payer = payer,
+        space = LzComposeTypesAccounts::SIZE,
+        seeds = [LZ_COMPOSE_TYPES_SEED, composer.key().as_ref()],
+        bump
+    )]
+    pub lz_compose_types_accounts: Account<'info, LzComposeTypesAccounts>,
 
     #[account(mut)]
     pub payer: Signer<'info>,
@@ -33,6 +43,12 @@ impl InitComposer<'_> {
         let composer = &mut ctx.accounts.composer;
         composer.oft = params.oft;
         composer.endpoint_program = params.endpoint_program;
+        composer.bump = ctx.bumps.composer;
+
+        // Initialize lz_compose_types_accounts with the composer address.
+        let lz_accounts = &mut ctx.accounts.lz_compose_types_accounts;
+        lz_accounts.composer = composer.key();
+        // Other fields in LzComposeTypesAccounts can be set as needed.
         Ok(())
     }
 }

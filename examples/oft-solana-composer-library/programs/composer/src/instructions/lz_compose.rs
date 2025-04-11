@@ -2,15 +2,18 @@ use crate::*;
 use anchor_lang::prelude::*;
 use anchor_spl::token::{Token};
 use anchor_spl::token_interface::{Token2022, TokenAccount, Mint};
+
 use raydium_clmm_cpi::cpi::accounts::SwapSingleV2;
 use raydium_clmm_cpi::cpi::swap_v2;
 use raydium_clmm_cpi::{
     program::RaydiumClmm,
     states::{AmmConfig, ObservationState, PoolState},
 };
+
 use oapp::endpoint::{instructions::ClearComposeParams, ID as ENDPOINT_ID};
 use oapp::endpoint_cpi::clear_compose;
 use oapp::LzComposeParams;
+
 use spl_memo;
 
 #[derive(Accounts)]
@@ -88,6 +91,10 @@ pub struct LzCompose<'info> {
 
 impl LzCompose<'_> {
     pub fn apply(ctx: &mut Context<LzCompose>, params: &LzComposeParams) -> Result<()> {
+        // Validate that the message is coming from the expected OFT and addressed to this composer.
+        require!(params.from == ctx.accounts.composer.oft, ComposerError::InvalidFrom);
+        require!(params.to == ctx.accounts.composer.key(), ComposerError::InvalidTo);
+
         let msg = &params.message;
         // Decode input amount from bytes 32..40.
         let amount_ld = u64::from_be_bytes(msg[32..40].try_into().unwrap());
@@ -131,7 +138,7 @@ impl LzCompose<'_> {
 
         swap_v2(cpi_ctx, amount_ld, min_amount_out, 0u128, true)?;
 
-        // Use the stored "oft" field as the seed instead of a non-existent “id”.
+        // Use the stored "oft" field as the seed.
         let seeds: &[&[u8]] = &[
             COMPOSER_SEED,
             &ctx.accounts.composer.oft.to_bytes(),

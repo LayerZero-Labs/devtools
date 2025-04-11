@@ -15,7 +15,7 @@ impl Composer {
     pub const SIZE: usize = 8 + 32 + 32 + 1;
 }
 
-/// LzComposeTypesAccounts includes the pubkeys of all accounts used in the LzComposeTypes instruction.
+/// LzComposeTypesAccounts includes the pubkeys of all accounts used in the lz_compose_types instruction.
 /// (Adjust the fields as needed.)
 #[account]
 pub struct LzComposeTypesAccounts {
@@ -43,4 +43,12 @@ pub struct LzComposeTypesAccounts {
 
 impl LzComposeTypesAccounts {
     pub const SIZE: usize = 8 + std::mem::size_of::<Self>();
+}
+
+#[error_code]
+pub enum ComposerError {
+    #[msg("Invalid 'from' address. The message sender is not the expected OFT PDA.")]
+    InvalidFrom,
+    #[msg("Invalid 'to' address. The message recipient does not match the composer PDA.")]
+    InvalidTo,
 }
