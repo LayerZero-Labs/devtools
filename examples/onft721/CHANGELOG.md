@@ -1,5 +1,11 @@
 # @layerzerolabs/onft721-example
 
+## 0.3.10
+
+### Patch Changes
+
+- 001170b: feat(examples/onft721): apply simple config generator
+
 ## 0.3.9
 
 ### Patch Changes

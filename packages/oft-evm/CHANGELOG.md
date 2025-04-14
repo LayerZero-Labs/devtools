@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-evm
 
+## 3.1.4
+
+### Patch Changes
+
+- f8c0f9f: make test_quoteOFT virtual so it can be overridden in the fee variant
+
 ## 3.1.3
 
 ### Patch Changes
