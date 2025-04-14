@@ -175,7 +175,7 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     ///
     /// @param _refundAddress The address to refund the native tokens to
     /// @param _amount The amount of tokens to refund
-    function refundERC20(address _refundAddress, uint256 _amount) external payable onlyComposer {
+    function refundERC20(address _refundAddress, uint256 _amount) external onlyComposer {
         if (_amount > 0 && _refundAddress != address(0)) {
             token.safeTransfer(_refundAddress, _amount);
         }
