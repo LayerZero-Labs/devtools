@@ -157,12 +157,15 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
 
         // Try to refund the native tokens and if this fails, we fallback to the tx.origin
         try this.refundNativeTokens{ value: msg.value }(refundNative) {} catch {
-            (bool success, ) = tx.origin.call{ value: msg.value }("");
-            if (!success) {
-                emit ErrorHYPE_Refund(tx.origin, msg.value);
+            // Try refunding the executor and if that fails then refund tx.origin
+            (bool success, ) = _executor.call{ value: msg.value }("");
+            if (success) {
+                emit ExcessHYPE_Refund(_executor, msg.value);
+            } else {
+                // Finally refund the transaction origin - we know this is an eoa and can accept tokens
+                (success, ) = tx.origin.call{ value: msg.value }("");
+                emit ExcessHYPE_Refund(tx.origin, msg.value);
             }
-
-            emit ErrorHYPE_Refund(refundNative, msg.value);
         }
         return errMsg.errorMessage;
     }
@@ -173,7 +176,7 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     /// @dev If the refund address is set to the zero address - it means that the transaction sender is a non-evm address and the receiver is malformed.
     /// @dev In this case, the tokens are locked in the composer.
     ///
-    /// @param _refundAddress The address to refund the native tokens to
+    /// @param _refundAddress The address to refund the ERC20 tokens to
     /// @param _amount The amount of tokens to refund
     function refundERC20(address _refundAddress, uint256 _amount) external onlyComposer {
         if (_amount > 0 && _refundAddress != address(0)) {
