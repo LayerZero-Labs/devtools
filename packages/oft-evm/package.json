@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-evm",
-  "version": "3.1.3",
+  "version": "3.1.4",
   "description": "LayerZero Labs reference EVM OmniChain Fungible Token (OFT) implementation",
   "keywords": [
     "LayerZero",
