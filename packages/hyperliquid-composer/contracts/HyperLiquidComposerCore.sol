@@ -167,7 +167,7 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
         return errMsg.errorMessage;
     }
 
-    /// @notice Refunds the native tokens to the refund address
+    /// @notice Refunds the ERC20 tokens to the refund address
     /// @notice This function is called by the refundTokens function
     ///
     /// @dev If the refund address is set to the zero address - it means that the transaction sender is a non-evm address and the receiver is malformed.
