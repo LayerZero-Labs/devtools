@@ -9,7 +9,7 @@ pub struct InitComposer<'info> {
         init,
         payer = payer,
         space = Composer::SIZE,
-        seeds = [COMPOSER_SEED, params.oft.as_ref()],
+        seeds = [COMPOSER_SEED, params.oft_pda.as_ref()],
         bump
     )]
     pub composer: Account<'info, Composer>,
@@ -32,17 +32,16 @@ pub struct InitComposer<'info> {
 
 #[derive(Clone, AnchorSerialize, AnchorDeserialize)]
 pub struct InitComposerParams {
-    pub id: u8,
-    pub oft: Pubkey,
-    pub endpoint_program: Pubkey,
+    pub oft_pda: Pubkey,
+    pub endpoint_pda: Pubkey,
 }
 
 impl InitComposer<'_> {
     /// Processes the init_composer instruction by writing the provided values to the Composer account.
     pub fn apply(ctx: &mut Context<InitComposer>, params: &InitComposerParams) -> Result<()> {
         let composer = &mut ctx.accounts.composer;
-        composer.oft = params.oft;
-        composer.endpoint_program = params.endpoint_program;
+        composer.oft = params.oft_pda;
+        composer.endpoint = params.endpoint_pda;
         composer.bump = ctx.bumps.composer;
 
         // Initialize lz_compose_types_accounts with the composer address.

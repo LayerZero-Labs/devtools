@@ -5,7 +5,7 @@ pub struct Composer {
     /// The OFT PDA (unique to this composer instance)
     pub oft: Pubkey,
     /// The Endpoint PDA (the authorized endpoint for LZ messages)
-    pub endpoint_program: Pubkey,
+    pub endpoint: Pubkey,
     /// Bump for PDA derivation.
     pub bump: u8,
 }

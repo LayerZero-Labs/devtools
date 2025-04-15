@@ -6,14 +6,15 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-oft = "G2BYTnfGCMQAErMZkTBCFSapKevzf6QCjizjXi8hFEtJ"
+composer = "2TUdVCMQsefMs28hTeMKAHTjgz8cdMbo7V5oEdrYSu7G"
+oft = "BH2YoCQV4i7gagmJqhj6nBByroJJwAQHa76XKV921e9m"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
-wallet = "./junk-id.json"
+cluster = "http://localhost:8899"
+wallet = "./krak.json"
 
 [scripts]
-test = "npx jest test/anchor"
+test = "npx jest test/anchor/"

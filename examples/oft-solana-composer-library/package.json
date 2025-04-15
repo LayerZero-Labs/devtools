@@ -22,6 +22,11 @@
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1"
   },
+  "dependencies": {
+    "@raydium-io/raydium-sdk-v2": "0.1.120-alpha",
+    "@solana/spl-memo": "^0.2.5",
+    "axios": "^1.8.4"
+  },
   "devDependencies": {
     "@coral-xyz/anchor": "^0.29.0",
     "@ethersproject/bytes": "^5.7.0",
@@ -92,6 +97,7 @@
     "hardhat-deploy": "^0.12.1",
     "hardhat-deploy-ethers": "^0.4.2",
     "jest": "^29.7.0",
+    "litesvm": "^0.2.0",
     "mocha": "^10.2.0",
     "prettier": "^3.2.5",
     "solhint": "^4.1.1",
