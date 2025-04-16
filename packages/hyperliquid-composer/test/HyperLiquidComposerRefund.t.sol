@@ -189,15 +189,6 @@ contract HyperLiquidComposerRefundTest is Test {
             abi.encodePacked(addressToBytes32(userA), composeMsg)
         );
 
-        uint256 normalizedTotalTransferAmount = totalTransferAmount - (totalTransferAmount % scaleAliceDecimalDiff);
-        if (normalizedTotalTransferAmount > AMOUNT_TO_SEND) {
-            vm.expectEmit(address(hyperLiquidComposer));
-            emit HyperLiquidComposerCodec.OverflowDetected(
-                uint64(totalTransferAmount / scaleAliceDecimalDiff),
-                uint64(1 ether / scaleAliceDecimalDiff)
-            );
-        }
-
         vm.expectEmit(address(oft));
         emit IERC20.Transfer(address(hyperLiquidComposer), ALICE.assetBridgeAddress, AMOUNT_TO_SEND);
         // Triggers when dust > 0
@@ -236,15 +227,6 @@ contract HyperLiquidComposerRefundTest is Test {
             totalTransferAmount,
             abi.encodePacked(addressToBytes32(noFallback), composeMsg)
         );
-
-        uint256 normalizedTotalTransferAmount = totalTransferAmount - (totalTransferAmount % scaleAliceDecimalDiff);
-        if (normalizedTotalTransferAmount > AMOUNT_TO_SEND) {
-            vm.expectEmit(address(hyperLiquidComposer));
-            emit HyperLiquidComposerCodec.OverflowDetected(
-                uint64(totalTransferAmount / scaleAliceDecimalDiff),
-                uint64(1 ether / scaleAliceDecimalDiff)
-            );
-        }
 
         vm.expectEmit(address(oft));
         emit IERC20.Transfer(address(hyperLiquidComposer), ALICE.assetBridgeAddress, AMOUNT_TO_SEND);

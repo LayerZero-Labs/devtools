@@ -103,7 +103,7 @@ contract PrecompileTest is Test {
     }
 
     /// forge-config: default.fuzz.runs = 64
-    function test_quoteHyperCoreAmount_decimal_diff_greater_zero(uint64 _amount, bool _isOFT) public {
+    function test_quoteHyperCoreAmount_decimal_diff_greater_zero(uint64 _amount, bool _isOFT) public view {
         uint64 maxTransferableAmount = type(uint64).max;
         IHyperAsset memory asset;
         if (_isOFT) {
