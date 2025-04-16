@@ -53,6 +53,18 @@ cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 anchor-cli
 LZ_ENABLE_SOLANA_OFT_EXAMPLE=1 npx create-lz-oapp@latest
 ```
 
+Make sure you select the **OFT (Solana)** example from the dropdown:
+
+```bash
+✔ Where do you want to start your project? … ./example
+? Which example would you like to use as a starting point? › - Use arrow-keys. Return to submit.
+    OApp
+    OFT
+    OFTAdapter
+    ONFT721
+❯   OFT (Solana)
+```
+
 ### Installing Dependencies
 
 ```bash
