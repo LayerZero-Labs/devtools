@@ -91,19 +91,19 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     /// @param _isOFT Whether the amount is an OFT amount or a HYPE amount
     ///
     /// @return IHyperAssetAmount - The amount of tokens to send to HyperCore (scaled on evm), dust (to be refunded), and the swap amount (of the tokens scaled on hypercore)
-    function quoteHyperCoreAmount(uint256 _amount, bool _isOFT) public returns (IHyperAssetAmount memory) {
+    function quoteHyperCoreAmount(uint256 _amount, bool _isOFT) public view returns (IHyperAssetAmount memory) {
         IHyperAsset memory asset;
-        uint64 maxTransferableAmount;
+        uint64 coreBalanceOfAssetBridge;
 
         if (_isOFT) {
             asset = oftAsset;
-            maxTransferableAmount = _balanceOfHyperCore(oftAsset.assetBridgeAddress, oftAsset.coreIndexId);
+            coreBalanceOfAssetBridge = _balanceOfHyperCore(oftAsset.assetBridgeAddress, oftAsset.coreIndexId);
         } else {
             asset = hypeAsset;
-            maxTransferableAmount = _balanceOfHyperCore(hypeAsset.assetBridgeAddress, hypeAsset.coreIndexId);
+            coreBalanceOfAssetBridge = _balanceOfHyperCore(hypeAsset.assetBridgeAddress, hypeAsset.coreIndexId);
         }
 
-        return _amount.into_hyperAssetAmount(maxTransferableAmount, asset);
+        return _amount.into_hyperAssetAmount(coreBalanceOfAssetBridge, asset);
     }
 
     /// @notice External function to read the balance of the user in the hypercore

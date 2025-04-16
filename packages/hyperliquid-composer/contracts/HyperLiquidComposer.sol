@@ -62,7 +62,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
     /// @dev This function is called by the OFTCore contract when a message is sent
     ///
     /// @param _oft The address of the OFT contract.
-    /// @param _message The encoded message content, expected to be of type: (address receiver).
+    /// @param _message The encoded message content, expected to contain a composeMsg that decodes to type: (address receiver).
     /// @param _executor The address that called EndpointV2::lzCompose()
     function lzCompose(
         address _oft,

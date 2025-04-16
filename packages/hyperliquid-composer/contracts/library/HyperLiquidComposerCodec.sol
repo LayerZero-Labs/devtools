@@ -6,6 +6,9 @@ import { IHyperAsset, IHyperAssetAmount } from "../interfaces/IHyperLiquidCompos
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
 library HyperLiquidComposerCodec {
+    /// @dev This is the largest possible token supply on HyperCore
+    uint64 public constant EVM_MAX_TRANSFERABLE_INTO_CORE_PER_TX = type(uint64).max;
+
     /// @dev Valid compose message lengths for the HyperLiquidComposer - can be abi.encodePacked(address) or abi.encode(address)
     /// @dev If we are in abi.encodePacked(address) mode, the length is 20 bytes because addresses are 20 bytes
     uint256 public constant VALID_COMPOSE_MESSAGE_LENGTH_PACKED = 20;
@@ -17,8 +20,6 @@ library HyperLiquidComposerCodec {
     /// @dev https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers#system-addresses
     address public constant BASE_ASSET_BRIDGE_ADDRESS = 0x2000000000000000000000000000000000000000;
     uint256 public constant BASE_ASSET_BRIDGE_ADDRESS_UINT256 = uint256(uint160(BASE_ASSET_BRIDGE_ADDRESS));
-
-    event OverflowDetected(uint256 amountCore, uint64 maxTransferableAmount);
 
     /// @notice Converts a core index id to an asset bridge address
     /// @notice This function is called by the HyperLiquidComposer contract
@@ -44,28 +45,38 @@ library HyperLiquidComposerCodec {
     /// @notice This function is called by the HyperLiquidComposer contract
     ///
     /// @param _amount The amount to convert
+    /// @param _assetBridgeSupply The maximum amount transferable capped by the number of tokens located on the HyperCore's side of the asset bridge
     /// @param _asset The asset to convert
     ///
     /// @return IHyperAssetAmount memory - The evm amount, core amount, and dust
     function into_hyperAssetAmount(
         uint256 _amount,
-        uint64 _maxTransferableAmount,
+        uint64 _assetBridgeSupply,
         IHyperAsset memory _asset
-    ) internal returns (IHyperAssetAmount memory) {
+    ) internal pure returns (IHyperAssetAmount memory) {
         uint256 amountEVM;
         uint256 dust;
         uint64 amountCore;
 
+        uint64 maxTransferableCoreAmount = min_u64(_assetBridgeSupply, EVM_MAX_TRANSFERABLE_INTO_CORE_PER_TX);
+
+        /// @dev The general functioning of these function calls are:
+        /// @dev 1. Compute the max evm sendable amount from the max core amount computed above as maxTransferableCoreAmount
+        /// @dev 2. This gives us evmMaxTransferable which is a u256 scaling of the core amount by 10.pow(decimalDiff)
+        /// @dev 3. evmMaxTransferable is the maximal number of tokens that we can send across in a single SendSpot transaction
+        /// @dev 4. If amount > evmMaxTransferable then only send evmMaxTransferable and refund the difference by accumulating it in dust
+        /// @dev 5. The above step bounds evm amount to be an input that is guaranteed to, on hypercore, have a maximum of u64.
+        /// @dev 6. Compute amountCore from evmMaxTransferable by evmMaxTransferable / 10.pow(decimalDiff)
         if (_asset.decimalDiff > 0) {
             (amountEVM, dust, amountCore) = into_hyperAssetAmount_decimal_difference_gt_zero(
                 _amount,
-                _maxTransferableAmount,
+                maxTransferableCoreAmount,
                 uint64(_asset.decimalDiff)
             );
         } else {
             (amountEVM, dust, amountCore) = into_hyperAssetAmount_decimal_difference_leq_zero(
                 _amount,
-                _maxTransferableAmount,
+                maxTransferableCoreAmount,
                 uint64(-1 * _asset.decimalDiff)
             );
         }
@@ -77,7 +88,7 @@ library HyperLiquidComposerCodec {
     /// @notice This function is called by the HyperLiquidComposer contract
     ///
     /// @param _amount The amount to convert
-    /// @param _maxTransferableAmount The maximum transferrable amount capped by the asset bridge
+    /// @param _maxTransferableCoreAmount The maximum transferrable amount capped by the asset bridge has range [0,u64.max]
     /// @param _extraWeiDecimals The decimal difference between HyperEVM and HyperCore
     ///
     /// @return amountEVM The EVM amount
@@ -85,37 +96,30 @@ library HyperLiquidComposerCodec {
     /// @return amountCore The core amount
     function into_hyperAssetAmount_decimal_difference_gt_zero(
         uint256 _amount,
-        uint64 _maxTransferableAmount,
+        uint64 _maxTransferableCoreAmount,
         uint64 _extraWeiDecimals
-    ) internal returns (uint256 amountEVM, uint256 dust, uint64 amountCore) {
+    ) internal pure returns (uint256 amountEVM, uint256 dust, uint64 amountCore) {
         uint256 scale = 10 ** _extraWeiDecimals;
+        uint256 maxEvmAmountFromCoreMax = _maxTransferableCoreAmount * scale;
 
-        /// @dev Fewer decimals on HyperCore leads to fewer decimals of precision
-        /// @dev This means we can't represent decimals from [LSb-(extraWeiDecimals)]
-        /// @dev Since LSb = 0, the numbers in extraWeiDecimals are dust - (% 10.pow(extraWeiDecimals))
-        unchecked {
-            dust = _amount % scale;
-            amountEVM = _amount - dust;
-        }
+        /// @dev Strip out the dust from _amount so that _amount and maxEvmAmountFromCoreMax have a maximum of _extraWeiDecimals starting 0s
+        dust = _amount % scale;
+        _amount = _amount - dust;
 
-        uint256 amountCore256 = _amount / scale;
-        amountCore = uint64(amountCore256);
+        /// @dev Bound amountEvm to the range of [0, evmscaled u64.max]
+        /// @dev If _amount is larger then we have an overflow as we can't send over u64.max tokens. Limit the tokens to u64.max and overflow into the dust
+        amountEVM = min_u256(_amount, maxEvmAmountFromCoreMax);
+        dust = dust + (_amount - amountEVM);
 
-        if (amountCore256 > _maxTransferableAmount) {
-            emit OverflowDetected(amountCore256, _maxTransferableAmount);
-
-            uint256 overflowEVM = (amountCore256 - _maxTransferableAmount) * scale;
-            amountCore = _maxTransferableAmount;
-            amountEVM = _maxTransferableAmount * scale;
-            dust = dust + overflowEVM;
-        }
+        /// @dev Guaranteed to be in the range of [0, u64.max] because it is uppoerbounded by uint64 _maxTransferableCoreAmount
+        amountCore = uint64(amountEVM / scale);
     }
 
     /// @notice Computes hyperAssetAmount when EVM decimals < Core decimals and 0
     /// @notice This function is called by the HyperLiquidComposer contract
     ///
     /// @param _amount The amount to convert
-    /// @param _maxTransferableAmount The maximum transferrable amount capped by the asset bridge
+    /// @param _maxTransferableCoreAmount The maximum transferrable amount capped by the asset bridge
     /// @param _extraWeiDecimals The decimal difference between HyperEVM and HyperCore
     ///
     /// @return amountEVM The EVM amount
@@ -123,25 +127,20 @@ library HyperLiquidComposerCodec {
     /// @return amountCore The core amount
     function into_hyperAssetAmount_decimal_difference_leq_zero(
         uint256 _amount,
-        uint64 _maxTransferableAmount,
+        uint64 _maxTransferableCoreAmount,
         uint64 _extraWeiDecimals
-    ) internal returns (uint256 amountEVM, uint256 dust, uint64 amountCore) {
+    ) internal pure returns (uint256 amountEVM, uint256 dust, uint64 amountCore) {
         uint256 scale = 10 ** _extraWeiDecimals;
+        uint256 maxEvmAmountFromCoreMax = _maxTransferableCoreAmount / scale;
 
-        /// @dev When Core is greater than EVM there will be no dust since all tokens in evm can be represented on cores
-        dust = 0;
-        amountEVM = _amount;
+        /// @dev When Core is greater than EVM there will be no opening dust to strip out since all tokens in evm can be represented on cores
+        /// @dev Bound amountEvm to the range of [0, evmscaled u64.max]
+        /// @dev Overflow the excess into dust
+        amountEVM = min_u256(_amount, maxEvmAmountFromCoreMax);
+        dust = _amount - amountEVM;
 
-        uint256 amountCore256 = _amount * scale;
-        amountCore = uint64(amountCore256);
-
-        if (amountCore256 > _maxTransferableAmount) {
-            emit OverflowDetected(amountCore256, _maxTransferableAmount);
-
-            amountCore = _maxTransferableAmount;
-            amountEVM = _maxTransferableAmount / scale;
-            dust = _amount - amountEVM;
-        }
+        /// @dev Guaranteed to be in the range of [0, u64.max] because it is uppoerbounded by uint64 _maxTransferableCoreAmount
+        amountCore = uint64(amountEVM * scale);
     }
 
     /// @notice Converts a bytes32 to an evm address
@@ -203,5 +202,13 @@ library HyperLiquidComposerCodec {
             abi.encode(
                 ErrorMessagePayload({ refundTo: _sender, refundAmount: _amountLD, errorMessage: _errorMessage })
             );
+    }
+
+    function min_u256(uint256 a, uint256 b) internal pure returns (uint256) {
+        return (a > b ? b : a);
+    }
+
+    function min_u64(uint64 a, uint64 b) internal pure returns (uint64) {
+        return (a > b ? b : a);
     }
 }
