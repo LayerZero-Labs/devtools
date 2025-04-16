@@ -91,19 +91,19 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     /// @param _isOFT Whether the amount is an OFT amount or a HYPE amount
     ///
     /// @return IHyperAssetAmount - The amount of tokens to send to HyperCore (scaled on evm), dust (to be refunded), and the swap amount (of the tokens scaled on hypercore)
-    function quoteHyperCoreAmount(uint256 _amount, bool _isOFT) public returns (IHyperAssetAmount memory) {
+    function quoteHyperCoreAmount(uint256 _amount, bool _isOFT) public view returns (IHyperAssetAmount memory) {
         IHyperAsset memory asset;
-        uint64 maxTransferableAmount;
+        uint64 coreBalanceOfAssetBridge;
 
         if (_isOFT) {
             asset = oftAsset;
-            maxTransferableAmount = _balanceOfHyperCore(oftAsset.assetBridgeAddress, oftAsset.coreIndexId);
+            coreBalanceOfAssetBridge = _balanceOfHyperCore(oftAsset.assetBridgeAddress, oftAsset.coreIndexId);
         } else {
             asset = hypeAsset;
-            maxTransferableAmount = _balanceOfHyperCore(hypeAsset.assetBridgeAddress, hypeAsset.coreIndexId);
+            coreBalanceOfAssetBridge = _balanceOfHyperCore(hypeAsset.assetBridgeAddress, hypeAsset.coreIndexId);
         }
 
-        return _amount.into_hyperAssetAmount(maxTransferableAmount, asset);
+        return _amount.into_hyperAssetAmount(coreBalanceOfAssetBridge, asset);
     }
 
     /// @notice External function to read the balance of the user in the hypercore
@@ -157,25 +157,28 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
 
         // Try to refund the native tokens and if this fails, we fallback to the tx.origin
         try this.refundNativeTokens{ value: msg.value }(refundNative) {} catch {
-            (bool success, ) = tx.origin.call{ value: msg.value }("");
-            if (!success) {
-                emit ErrorHYPE_Refund(tx.origin, msg.value);
+            // Try refunding the executor and if that fails then refund tx.origin
+            (bool success, ) = _executor.call{ value: msg.value }("");
+            if (success) {
+                emit ExcessHYPE_Refund(_executor, msg.value);
+            } else {
+                // Finally refund the transaction origin - we know this is an eoa and can accept tokens
+                (success, ) = tx.origin.call{ value: msg.value }("");
+                emit ExcessHYPE_Refund(tx.origin, msg.value);
             }
-
-            emit ErrorHYPE_Refund(refundNative, msg.value);
         }
         return errMsg.errorMessage;
     }
 
-    /// @notice Refunds the native tokens to the refund address
+    /// @notice Refunds the ERC20 tokens to the refund address
     /// @notice This function is called by the refundTokens function
     ///
     /// @dev If the refund address is set to the zero address - it means that the transaction sender is a non-evm address and the receiver is malformed.
     /// @dev In this case, the tokens are locked in the composer.
     ///
-    /// @param _refundAddress The address to refund the native tokens to
+    /// @param _refundAddress The address to refund the ERC20 tokens to
     /// @param _amount The amount of tokens to refund
-    function refundERC20(address _refundAddress, uint256 _amount) external payable onlyComposer {
+    function refundERC20(address _refundAddress, uint256 _amount) external onlyComposer {
         if (_amount > 0 && _refundAddress != address(0)) {
             token.safeTransfer(_refundAddress, _amount);
         }
