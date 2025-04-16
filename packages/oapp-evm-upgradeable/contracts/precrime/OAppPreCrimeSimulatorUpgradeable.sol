@@ -2,7 +2,8 @@
 
 pragma solidity ^0.8.20;
 
-import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import { OnlyLZAdmin } from "../OnlyLZAdmin.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import { IPreCrime } from "@layerzerolabs/oapp-evm/contracts/precrime/interfaces/IPreCrime.sol";
 import { IOAppPreCrimeSimulator, InboundPacket, Origin } from "@layerzerolabs/oapp-evm/contracts/precrime/interfaces/IOAppPreCrimeSimulator.sol";
 
@@ -10,7 +11,7 @@ import { IOAppPreCrimeSimulator, InboundPacket, Origin } from "@layerzerolabs/oa
  * @title OAppPreCrimeSimulator
  * @dev Abstract contract serving as the base for preCrime simulation functionality in an OApp.
  */
-abstract contract OAppPreCrimeSimulatorUpgradeable is IOAppPreCrimeSimulator, OwnableUpgradeable {
+abstract contract OAppPreCrimeSimulatorUpgradeable is IOAppPreCrimeSimulator, Initializable, OnlyLZAdmin {
     struct OAppPreCrimeSimulatorStorage {
         // The address of the preCrime implementation.
         address preCrime;
@@ -54,7 +55,7 @@ abstract contract OAppPreCrimeSimulatorUpgradeable is IOAppPreCrimeSimulator, Ow
      * @dev Sets the preCrime contract address.
      * @param _preCrime The address of the preCrime contract.
      */
-    function setPreCrime(address _preCrime) public virtual onlyOwner {
+    function setPreCrime(address _preCrime) public virtual onlyLZAdmin {
         OAppPreCrimeSimulatorStorage storage $ = _getOAppPreCrimeSimulatorStorage();
         $.preCrime = _preCrime;
         emit PreCrimeSet(_preCrime);

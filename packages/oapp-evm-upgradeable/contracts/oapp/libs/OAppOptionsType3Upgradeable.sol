@@ -2,14 +2,15 @@
 
 pragma solidity ^0.8.20;
 
-import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import { OnlyLZAdmin } from "../../OnlyLZAdmin.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import { IOAppOptionsType3, EnforcedOptionParam } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppOptionsType3.sol";
 
 /**
  * @title OAppOptionsType3
  * @dev Abstract contract implementing the IOAppOptionsType3 interface with type 3 options.
  */
-abstract contract OAppOptionsType3Upgradeable is IOAppOptionsType3, OwnableUpgradeable {
+abstract contract OAppOptionsType3Upgradeable is IOAppOptionsType3, Initializable, OnlyLZAdmin {
     struct OAppOptionsType3Storage {
         // @dev The "msgType" should be defined in the child contract.
         mapping(uint32 => mapping(uint16 => bytes)) enforcedOptions;
@@ -50,7 +51,7 @@ abstract contract OAppOptionsType3Upgradeable is IOAppOptionsType3, OwnableUpgra
      * eg. Amount of lzReceive() gas necessary to deliver a lzCompose() message adds overhead you dont want to pay
      * if you are only making a standard LayerZero message ie. lzReceive() WITHOUT sendCompose().
      */
-    function setEnforcedOptions(EnforcedOptionParam[] calldata _enforcedOptions) public virtual onlyOwner {
+    function setEnforcedOptions(EnforcedOptionParam[] calldata _enforcedOptions) public virtual onlyLZAdmin {
         OAppOptionsType3Storage storage $ = _getOAppOptionsType3Storage();
         for (uint256 i = 0; i < _enforcedOptions.length; i++) {
             // @dev Enforced options are only available for optionType 3, as type 1 and 2 dont support combining.
