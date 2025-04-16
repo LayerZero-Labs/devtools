@@ -41,6 +41,19 @@
     },
     {
       "type": "function",
+      "name": "EVM_MAX_TRANSFERABLE_INTO_CORE_PER_TX",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
       "name": "VALID_COMPOSE_MESSAGE_LENGTH_ENCODE",
       "inputs": [],
       "outputs": [
@@ -114,6 +127,19 @@
               "internalType": "uint256",
               "name": "",
               "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "EVM_MAX_TRANSFERABLE_INTO_CORE_PER_TX",
+          "outputs": [
+            {
+              "internalType": "uint64",
+              "name": "",
+              "type": "uint64"
             }
           ]
         },
