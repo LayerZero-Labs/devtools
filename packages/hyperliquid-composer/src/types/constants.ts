@@ -8,6 +8,11 @@ export const RPC_URLS = {
     TESTNET: 'https://rpc.hyperliquid-testnet.xyz/evm',
 }
 
+export const CHAIN_IDS = {
+    MAINNET: 999,
+    TESTNET: 998,
+}
+
 export const ENDPOINTS = {
     INFO: '/info',
     EXCHANGE: '/exchange',
