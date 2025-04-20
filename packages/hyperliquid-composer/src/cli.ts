@@ -2,7 +2,8 @@ import { Command } from 'commander'
 import { LogLevel } from '@layerzerolabs/io-devtools'
 import {
     setBlock,
-    registerToken,
+    requestEvmContract,
+    finalizeEvmContract,
     coreSpotDeployment,
     tradingFee,
     userGenesis,
@@ -24,14 +25,24 @@ program
     .action(setBlock)
 
 program
-    .command('register-token')
-    .description('Register a token on HyperLiquid')
+    .command('request-evm-contract')
+    .description('Set the core spot to connect to an EVM contract')
+    .option('-oapp, --oapp-config <oapp-config>', 'OAPP config')
+    .requiredOption('-idx, --token-index <token-index>', 'Token index')
+    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
+    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
+    .option('-pk, --private-key <0x>', 'HyperCore Asset deployer private key')
+    .action(requestEvmContract)
+
+program
+    .command('finalize-evm-contract')
+    .description('Finalize the EVM contract')
     .option('-oapp, --oapp-config <oapp-config>', 'OAPP config')
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
     .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
     .option('-l, --log-level <level>', 'Log level', LogLevel.info)
     .option('-pk, --private-key <0x>', 'Private key')
-    .action(registerToken)
+    .action(finalizeEvmContract)
 
 program
     .command('core-spot')
@@ -55,7 +66,7 @@ program
     .requiredOption('-s, --share <share>', 'Share')
     .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
     .option('-l, --log-level <level>', 'Log level', LogLevel.info)
-    .option('-pk, --private-key', 'Private key')
+    .option('-pk, --private-key <0x>', 'Private key')
     .action(tradingFee)
 
 program

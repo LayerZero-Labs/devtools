@@ -3,7 +3,7 @@ import assert from 'assert'
 import { Wallet } from 'ethers'
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-import { useBigBlock, useSmallBlock } from '@layerzerolabs/hyperliquid-composer'
+import { CHAIN_IDS, useBigBlock, useSmallBlock } from '@layerzerolabs/hyperliquid-composer'
 
 const contractName_oft = 'MyHyperLiquidOFT'
 const tokenSymbol = 'MYOFT'
@@ -15,15 +15,18 @@ const deploy: DeployFunction = async (hre) => {
     const { deployer } = await getNamedAccounts()
     assert(deployer, 'Missing named deployer account')
 
-    const privateKey = process.env.PRIVATE_KEY_HYPERLIQUID
-    assert(privateKey, 'PRIVATE_KEY_HYPERLIQUID is not set in .env file')
+    // Grab the private key used to deploy to this network from hardhat.config.ts -> networks -> networkName -> accounts
+    const privateKey = hre.network.config.accounts
+    assert(privateKey, 'PRIVATE_KEY is not set in .env file')
 
     // Get logger from hardhat flag --log-level
     const loglevel = hre.hardhatArguments.verbose ? 'debug' : 'info'
 
-    const wallet = new Wallet(privateKey)
-    const isHyperliquid = hre.network.name === 'hyperliquid-mainnet' || hre.network.name === 'hyperliquid-testnet'
-    const isTestnet = hre.network.name === 'hyperliquid-testnet'
+    const wallet = new Wallet(privateKey.toString())
+
+    const chainId = (await hre.ethers.provider.getNetwork()).chainId
+    const isHyperliquid = chainId === CHAIN_IDS.MAINNET || chainId === CHAIN_IDS.TESTNET
+    const isTestnet = chainId === CHAIN_IDS.TESTNET
 
     const networkName = hre.network.name
     console.log(`Network: ${networkName}`)
@@ -56,7 +59,8 @@ const deploy: DeployFunction = async (hre) => {
 
     if (!isDeployed_oft && isHyperliquid) {
         console.log(`Switching to hyperliquid big block for the address ${deployer} to deploy ${contractName_oft}`)
-        await useBigBlock(wallet, isTestnet, loglevel)
+        const res = await useBigBlock(wallet, isTestnet, loglevel)
+        console.log(JSON.stringify(res, null, 2))
         console.log(`Deplying a contract uses big block which is mined at a transaction per minute.`)
     }
 
