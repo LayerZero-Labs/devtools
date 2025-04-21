@@ -15,6 +15,12 @@ abstract contract OAppSenderAlt is OAppSender {
     // Additional error messages for the OAppSenderAlt contract.
     error NativeTokenUnavailable();
 
+    address public immutable nativeToken;
+
+    constructor() {
+        nativeToken = endpoint.nativeToken();
+    }
+
     /**
      * @dev Internal function to interact with the LayerZero EndpointV2.send() for sending a message.
      * @param _dstEid The destination endpoint ID.
@@ -59,8 +65,6 @@ abstract contract OAppSenderAlt is OAppSender {
      * @dev The endpoint is EITHER/OR, ie. it will NOT support both types of native payment at a time.
      */
     function _payNative(uint256 _nativeFee) internal override returns (uint256 nativeFee) {
-        // @dev Cannot cache the token because it is not immutable in the endpoint.
-        address nativeToken = endpoint.nativeToken();
         if (nativeToken == address(0)) revert NativeTokenUnavailable();
 
         // Pay Native token fee by sending tokens to the endpoint.
