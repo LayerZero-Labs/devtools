@@ -1,0 +1,938 @@
+{
+  "version": "0.1.0",
+  "name": "executor",
+  "instructions": [
+    {
+      "name": "initExecutor",
+      "docs": [
+        "--------------------------- Owner Instructions ---------------------------"
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "config",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "InitExecutorParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ownerSetConfig",
+      "accounts": [
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "config",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "OwnerSetConfigParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "adminSetConfig",
+      "docs": [
+        "--------------------------- Admin Instructions ---------------------------"
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "config",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "AdminSetConfigParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "extendExecutorConfig",
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "config",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "nativeDrop",
+      "accounts": [
+        {
+          "name": "executor",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "config",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": ["For native drop transfer"]
+        },
+        {
+          "name": "eventAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "program",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "NativeDropParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "execute",
+      "accounts": [
+        {
+          "name": "executor",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "config",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "endpointProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "endpointEventAuthority",
+          "isMut": false,
+          "isSigner": false,
+          "docs": ["The authority for the endpoint program to emit events"]
+        },
+        {
+          "name": "eventAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "program",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "ExecuteParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "compose",
+      "accounts": [
+        {
+          "name": "executor",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "config",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "endpointProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "endpointEventAuthority",
+          "isMut": false,
+          "isSigner": false,
+          "docs": ["The authority for the endpoint program to emit events"]
+        },
+        {
+          "name": "eventAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "program",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "ComposeParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "quoteExecutor",
+      "docs": [
+        "--------------------------- MsgLib Instructions ---------------------------"
+      ],
+      "accounts": [
+        {
+          "name": "executorConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "priceFeedProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "priceFeedConfig",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "QuoteExecutorParams"
+          }
+        }
+      ],
+      "returns": "u64"
+    },
+    {
+      "name": "executable",
+      "accounts": [
+        {
+          "name": "nonce",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payloadHash",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "ExecutableParams"
+          }
+        }
+      ],
+      "returns": {
+        "defined": "ExecutionState"
+      }
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Nonce",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "outboundNonce",
+            "type": "u64"
+          },
+          {
+            "name": "inboundNonce",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ExecutorConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "owner",
+            "type": "publicKey"
+          },
+          {
+            "name": "acl",
+            "type": {
+              "defined": "Acl"
+            }
+          },
+          {
+            "name": "admins",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "executors",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "msglibs",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "paused",
+            "type": "bool"
+          },
+          {
+            "name": "defaultMultiplierBps",
+            "type": "u16"
+          },
+          {
+            "name": "priceFeed",
+            "type": "publicKey"
+          },
+          {
+            "name": "dstConfigs",
+            "type": {
+              "vec": {
+                "defined": "DstConfig"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "AdminSetConfigParams",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "PriceFeed",
+            "fields": ["publicKey"]
+          },
+          {
+            "name": "DefaultMultiplierBps",
+            "fields": ["u16"]
+          },
+          {
+            "name": "DstConfigs",
+            "fields": [
+              {
+                "vec": {
+                  "defined": "DstConfig"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "ComposeParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "lzCompose",
+            "type": {
+              "defined": "LzComposeParams"
+            }
+          },
+          {
+            "name": "computeUnits",
+            "type": "u64"
+          },
+          {
+            "name": "value",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ExecutableParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "receiver",
+            "type": "publicKey"
+          },
+          {
+            "name": "srcEid",
+            "type": "u32"
+          },
+          {
+            "name": "sender",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "nonce",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ExecutionState",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "NotExecutable"
+          },
+          {
+            "name": "VerifiedButNotExecutable"
+          },
+          {
+            "name": "Executable"
+          },
+          {
+            "name": "Executed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ExecuteParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "receiver",
+            "type": "publicKey"
+          },
+          {
+            "name": "lzReceive",
+            "type": {
+              "defined": "LzReceiveParams"
+            }
+          },
+          {
+            "name": "value",
+            "type": "u64"
+          },
+          {
+            "name": "computeUnits",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "InitExecutorParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "publicKey"
+          },
+          {
+            "name": "admins",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "executors",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "msglibs",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "priceFeed",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "NativeDropParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "srcEid",
+            "type": "u32"
+          },
+          {
+            "name": "sender",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "nonce",
+            "type": "u64"
+          },
+          {
+            "name": "dstEid",
+            "type": "u32"
+          },
+          {
+            "name": "oapp",
+            "type": "publicKey"
+          },
+          {
+            "name": "nativeDropRequests",
+            "type": {
+              "vec": {
+                "defined": "NativeDropRequest"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "NativeDropRequest",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "receiver",
+            "type": "publicKey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "OwnerSetConfigParams",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Admins",
+            "fields": [
+              {
+                "vec": "publicKey"
+              }
+            ]
+          },
+          {
+            "name": "Executors",
+            "fields": [
+              {
+                "vec": "publicKey"
+              }
+            ]
+          },
+          {
+            "name": "Msglibs",
+            "fields": [
+              {
+                "vec": "publicKey"
+              }
+            ]
+          },
+          {
+            "name": "Owner",
+            "fields": ["publicKey"]
+          },
+          {
+            "name": "Paused",
+            "fields": ["bool"]
+          },
+          {
+            "name": "Allowlist",
+            "fields": [
+              {
+                "vec": "publicKey"
+              }
+            ]
+          },
+          {
+            "name": "Denylist",
+            "fields": [
+              {
+                "vec": "publicKey"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "DstConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "eid",
+            "type": "u32"
+          },
+          {
+            "name": "lzReceiveBaseGas",
+            "type": "u32"
+          },
+          {
+            "name": "lzComposeBaseGas",
+            "type": "u32"
+          },
+          {
+            "name": "multiplierBps",
+            "type": {
+              "option": "u16"
+            }
+          },
+          {
+            "name": "floorMarginUsd",
+            "type": {
+              "option": "u128"
+            }
+          },
+          {
+            "name": "nativeDropCap",
+            "type": "u128"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LzComposeParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "from",
+            "type": "publicKey"
+          },
+          {
+            "name": "to",
+            "type": "publicKey"
+          },
+          {
+            "name": "guid",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "index",
+            "type": "u16"
+          },
+          {
+            "name": "message",
+            "type": "bytes"
+          },
+          {
+            "name": "extraData",
+            "type": "bytes"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LzReceiveParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "srcEid",
+            "type": "u32"
+          },
+          {
+            "name": "sender",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "nonce",
+            "type": "u64"
+          },
+          {
+            "name": "guid",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "message",
+            "type": "bytes"
+          },
+          {
+            "name": "extraData",
+            "type": "bytes"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LzOption",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "optionType",
+            "type": "u8"
+          },
+          {
+            "name": "params",
+            "type": "bytes"
+          }
+        ]
+      }
+    },
+    {
+      "name": "QuoteExecutorParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "msglib",
+            "type": "publicKey"
+          },
+          {
+            "name": "dstEid",
+            "type": "u32"
+          },
+          {
+            "name": "sender",
+            "type": "publicKey"
+          },
+          {
+            "name": "calldataSize",
+            "type": "u64"
+          },
+          {
+            "name": "options",
+            "type": {
+              "vec": {
+                "defined": "LzOption"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Acl",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "allowList",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "denyList",
+            "type": {
+              "vec": "publicKey"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "NativeDropAppliedEvent",
+      "fields": [
+        {
+          "name": "srcEid",
+          "type": "u32",
+          "index": false
+        },
+        {
+          "name": "sender",
+          "type": {
+            "array": ["u8", 32]
+          },
+          "index": false
+        },
+        {
+          "name": "nonce",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "dstEid",
+          "type": "u32",
+          "index": false
+        },
+        {
+          "name": "oapp",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "nativeDropRequests",
+          "type": {
+            "vec": {
+              "defined": "NativeDropRequest"
+            }
+          },
+          "index": false
+        },
+        {
+          "name": "successes",
+          "type": {
+            "vec": "bool"
+          },
+          "index": false
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidSize"
+    },
+    {
+      "code": 6001,
+      "name": "Paused"
+    },
+    {
+      "code": 6002,
+      "name": "UnsupportedOptionType"
+    },
+    {
+      "code": 6003,
+      "name": "ZeroLzComposeGasProvided"
+    },
+    {
+      "code": 6004,
+      "name": "ZeroLzReceiveGasProvided"
+    },
+    {
+      "code": 6005,
+      "name": "NativeAmountExceedsCap"
+    },
+    {
+      "code": 6006,
+      "name": "NotAdmin"
+    },
+    {
+      "code": 6007,
+      "name": "NotExecutor"
+    },
+    {
+      "code": 6008,
+      "name": "MsgLibNotAllowed"
+    },
+    {
+      "code": 6009,
+      "name": "TooManyAdmins"
+    },
+    {
+      "code": 6010,
+      "name": "TooManyExecutors"
+    },
+    {
+      "code": 6011,
+      "name": "TooManyOptionTypes"
+    },
+    {
+      "code": 6012,
+      "name": "InvalidNativeDropRequestsLength"
+    },
+    {
+      "code": 6013,
+      "name": "InvalidNativeDropReceiver"
+    },
+    {
+      "code": 6014,
+      "name": "InsufficientBalance"
+    },
+    {
+      "code": 6015,
+      "name": "EidNotSupported"
+    },
+    {
+      "code": 6016,
+      "name": "ExecutorIsAdmin"
+    },
+    {
+      "code": 6017,
+      "name": "InvalidOwner"
+    }
+  ]
+}

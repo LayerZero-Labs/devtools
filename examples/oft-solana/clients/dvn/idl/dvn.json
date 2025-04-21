@@ -1,0 +1,936 @@
+{
+  "version": "0.1.0",
+  "name": "dvn",
+  "instructions": [
+    {
+      "name": "initDvn",
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "config",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "InitDvnParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "setConfig",
+      "docs": [
+        "--------------------------- Admin Instructions ---------------------------"
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "config",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "eventAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "program",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "SetConfigParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "extendDvnConfig",
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "config",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "invoke",
+      "accounts": [
+        {
+          "name": "signer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "config",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "executeHash",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "eventAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "program",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "InvokeParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "closeExecute",
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "config",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "executeHash",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "CloseExecuteParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "withdrawFee",
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "config",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "receiver",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "eventAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "program",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "WithdrawFeeParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "quoteDvn",
+      "docs": [
+        "--------------------------- MsgLib Instructions ---------------------------"
+      ],
+      "accounts": [
+        {
+          "name": "dvnConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "priceFeedProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "priceFeedConfig",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "QuoteDvnParams"
+          }
+        }
+      ],
+      "returns": "u64"
+    },
+    {
+      "name": "verifiable",
+      "accounts": [
+        {
+          "name": "nonce",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payloadHash",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "receiveConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "defaultReceiveConfig",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "VerifiableParams"
+          }
+        }
+      ],
+      "returns": {
+        "defined": "VerificationState"
+      }
+    }
+  ],
+  "accounts": [
+    {
+      "name": "DvnConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vid",
+            "type": "u32"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "multisig",
+            "type": {
+              "defined": "Multisig"
+            }
+          },
+          {
+            "name": "acl",
+            "type": {
+              "defined": "Acl"
+            }
+          },
+          {
+            "name": "paused",
+            "type": "bool"
+          },
+          {
+            "name": "msglibs",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "admins",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "priceFeed",
+            "type": "publicKey"
+          },
+          {
+            "name": "dstConfigs",
+            "type": {
+              "vec": {
+                "defined": "DstConfig"
+              }
+            }
+          },
+          {
+            "name": "defaultMultiplierBps",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ExecuteHash",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "expiration",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ReceiveConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "uln",
+            "type": {
+              "defined": "UlnConfig"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "CloseExecuteParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "digestHash",
+            "type": {
+              "array": ["u8", 32]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ExecuteTransactionDigest",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vid",
+            "type": "u32"
+          },
+          {
+            "name": "programId",
+            "type": "publicKey"
+          },
+          {
+            "name": "accounts",
+            "type": {
+              "vec": {
+                "defined": "TransactionAccount"
+              }
+            }
+          },
+          {
+            "name": "data",
+            "type": "bytes"
+          },
+          {
+            "name": "expiration",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "InvokeParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "digest",
+            "type": {
+              "defined": "ExecuteTransactionDigest"
+            }
+          },
+          {
+            "name": "signatures",
+            "type": {
+              "vec": {
+                "array": ["u8", 65]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "MultisigConfig",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Admins",
+            "fields": [
+              {
+                "vec": "publicKey"
+              }
+            ]
+          },
+          {
+            "name": "Allowlist",
+            "fields": [
+              {
+                "vec": "publicKey"
+              }
+            ]
+          },
+          {
+            "name": "Denylist",
+            "fields": [
+              {
+                "vec": "publicKey"
+              }
+            ]
+          },
+          {
+            "name": "Msglibs",
+            "fields": [
+              {
+                "vec": "publicKey"
+              }
+            ]
+          },
+          {
+            "name": "Paused",
+            "fields": ["bool"]
+          },
+          {
+            "name": "Quorum",
+            "fields": ["u8"]
+          },
+          {
+            "name": "Signers",
+            "fields": [
+              {
+                "vec": {
+                  "array": ["u8", 64]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "TransactionAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "pubkey",
+            "type": "publicKey"
+          },
+          {
+            "name": "isSigner",
+            "type": "bool"
+          },
+          {
+            "name": "isWritable",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AdminConfig",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Admins",
+            "fields": [
+              {
+                "vec": "publicKey"
+              }
+            ]
+          },
+          {
+            "name": "DefaultMultiplierBps",
+            "fields": ["u16"]
+          },
+          {
+            "name": "DstConfigs",
+            "fields": [
+              {
+                "vec": {
+                  "defined": "DstConfig"
+                }
+              }
+            ]
+          },
+          {
+            "name": "PriceFeed",
+            "fields": ["publicKey"]
+          },
+          {
+            "name": "RemoveDstConfigs",
+            "fields": [
+              {
+                "vec": "u32"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "SetConfigParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "config",
+            "type": {
+              "defined": "AdminConfig"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "WithdrawFeeParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "InitDvnParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vid",
+            "type": "u32"
+          },
+          {
+            "name": "msglibs",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "priceFeed",
+            "type": "publicKey"
+          },
+          {
+            "name": "signers",
+            "type": {
+              "vec": {
+                "array": ["u8", 64]
+              }
+            }
+          },
+          {
+            "name": "quorum",
+            "type": "u8"
+          },
+          {
+            "name": "admins",
+            "type": {
+              "vec": "publicKey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "VerifiableParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "packetHeader",
+            "type": {
+              "array": ["u8", 81]
+            }
+          },
+          {
+            "name": "payloadHash",
+            "type": {
+              "array": ["u8", 32]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "VerificationState",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Verifying"
+          },
+          {
+            "name": "Verifiable"
+          },
+          {
+            "name": "Verified"
+          },
+          {
+            "name": "NotInitializable"
+          },
+          {
+            "name": "VerifiableButCapExceeded"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DstConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "eid",
+            "type": "u32"
+          },
+          {
+            "name": "dstGas",
+            "type": "u32"
+          },
+          {
+            "name": "multiplierBps",
+            "type": {
+              "option": "u16"
+            }
+          },
+          {
+            "name": "floorMarginUsd",
+            "type": {
+              "option": "u128"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Multisig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "signers",
+            "type": {
+              "vec": {
+                "array": ["u8", 64]
+              }
+            }
+          },
+          {
+            "name": "quorum",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "UlnConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "confirmations",
+            "type": "u64"
+          },
+          {
+            "name": "requiredDvnCount",
+            "type": "u8"
+          },
+          {
+            "name": "optionalDvnCount",
+            "type": "u8"
+          },
+          {
+            "name": "optionalDvnThreshold",
+            "type": "u8"
+          },
+          {
+            "name": "requiredDvns",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "optionalDvns",
+            "type": {
+              "vec": "publicKey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "LzOption",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "optionType",
+            "type": "u8"
+          },
+          {
+            "name": "params",
+            "type": "bytes"
+          }
+        ]
+      }
+    },
+    {
+      "name": "QuoteDvnParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "msglib",
+            "type": "publicKey"
+          },
+          {
+            "name": "dstEid",
+            "type": "u32"
+          },
+          {
+            "name": "sender",
+            "type": "publicKey"
+          },
+          {
+            "name": "packetHeader",
+            "type": "bytes"
+          },
+          {
+            "name": "payloadHash",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "confirmations",
+            "type": "u64"
+          },
+          {
+            "name": "options",
+            "type": {
+              "vec": {
+                "defined": "LzOption"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Acl",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "allowList",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "denyList",
+            "type": {
+              "vec": "publicKey"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "AdminConfigSetEvent",
+      "fields": [
+        {
+          "name": "config",
+          "type": {
+            "defined": "AdminConfig"
+          },
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "FeeWithdrawnEvent",
+      "fields": [
+        {
+          "name": "receiver",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "amount",
+          "type": "u64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "MultisigConfigSetEvent",
+      "fields": [
+        {
+          "name": "config",
+          "type": {
+            "defined": "MultisigConfig"
+          },
+          "index": false
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidSignatureLen"
+    },
+    {
+      "code": 6001,
+      "name": "NotAdmin"
+    },
+    {
+      "code": 6002,
+      "name": "MsgLibNotAllowed"
+    },
+    {
+      "code": 6003,
+      "name": "InvalidQuorum"
+    },
+    {
+      "code": 6004,
+      "name": "InvalidSignersLen"
+    },
+    {
+      "code": 6005,
+      "name": "UniqueOwners"
+    },
+    {
+      "code": 6006,
+      "name": "SignatureError"
+    },
+    {
+      "code": 6007,
+      "name": "SignerNotInCommittee"
+    },
+    {
+      "code": 6008,
+      "name": "TooManyAdmins"
+    },
+    {
+      "code": 6009,
+      "name": "TooManyOptionTypes"
+    },
+    {
+      "code": 6010,
+      "name": "DuplicateSignature"
+    },
+    {
+      "code": 6011,
+      "name": "Expired"
+    },
+    {
+      "code": 6012,
+      "name": "InvalidVid"
+    },
+    {
+      "code": 6013,
+      "name": "Paused"
+    },
+    {
+      "code": 6014,
+      "name": "UnexpiredExecuteHash"
+    },
+    {
+      "code": 6015,
+      "name": "InvalidAmount"
+    },
+    {
+      "code": 6016,
+      "name": "EidNotSupported"
+    }
+  ]
+}

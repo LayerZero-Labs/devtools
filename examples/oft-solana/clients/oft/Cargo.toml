@@ -1,0 +1,29 @@
+[package]
+name = "oft-client"
+version = "0.1.0"
+description = ""
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "oft_client"
+
+[features]
+default = ["fetch"]
+fetch = []
+
+[dependencies]
+base64 = "0.22.1"
+borsh = "0.10.3"
+num-derive = "0.4.2"
+num-traits = "0.2.19"
+solana-program = "1.17.31"
+solana-client = "1.17.31"
+solana-sdk = "1.17.31"
+thiserror = "1.0.61"
+endpoint-client = { path = "../endpoint" }
+uln-client = { path = "../uln" }
+
+[dev-dependencies]
+tokio = "1.44.1"
+hex = "0.4.3"
