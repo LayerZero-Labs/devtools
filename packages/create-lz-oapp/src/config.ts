@@ -86,6 +86,18 @@ export const getExamples = (): Example[] => {
                   },
               ]
             : []),
+        // OFT Alt example is feature flagged for the time being
+        ...(process.env.LZ_ENABLE_ALT_EXAMPLE
+            ? [
+                  {
+                      id: 'oft-alt',
+                      label: 'OFTAlt',
+                      repository,
+                      directory: 'examples/oft-alt',
+                      ref,
+                  },
+              ]
+            : []),
         // Mint Burn OFT Adapter example is feature flagged for the time being
         ...(process.env.LZ_ENABLE_MINTBURN_EXAMPLE
             ? [

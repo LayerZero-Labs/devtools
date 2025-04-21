@@ -6,7 +6,7 @@ test = "test"
 out = "artifacts"
 cache_path = "cache"
 optimizer = true
-optimizer_runs = 200
+optimizer_runs = 20_000
 
 remappings = [
     'ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/',
