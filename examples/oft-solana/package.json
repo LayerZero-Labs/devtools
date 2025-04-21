@@ -23,6 +23,8 @@
     "hardhat-deploy": "^0.12.1"
   },
   "devDependencies": {
+    "@codama/nodes-from-anchor": "^1.1.11",
+    "@codama/renderers": "^1.0.19",
     "@coral-xyz/anchor": "^0.29.0",
     "@ethersproject/bytes": "^5.7.0",
     "@layerzerolabs/devtools": "~0.4.8",
@@ -79,6 +81,7 @@
     "@types/node": "~18.18.14",
     "bs58": "^6.0.0",
     "chai": "^4.4.1",
+    "codama": "^1.2.11",
     "concurrently": "~9.1.0",
     "dotenv": "^16.4.5",
     "eslint": "^8.55.0",
