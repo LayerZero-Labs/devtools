@@ -7,8 +7,8 @@ import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contract
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import { HyperLiquidComposer, IHyperAsset } from "@layerzerolabs/oft-hyperliquid-evm/contracts/HyperLiquidComposer.sol";
-import { IHyperLiquidWritePrecompile } from "@layerzerolabs/oft-hyperliquid-evm/contracts/interfaces/IHyperLiquidWritePrecompile.sol";
+import { HyperLiquidComposer, IHyperAsset } from "@layerzerolabs/hyperliquid-composer/contracts/HyperLiquidComposer.sol";
+import { IHyperLiquidWritePrecompile } from "@layerzerolabs/hyperliquid-composer/contracts/interfaces/IHyperLiquidWritePrecompile.sol";
 
 import { HyperLiquidComposer, IHyperAsset } from "@layerzerolabs/hyperliquid-composer/contracts/HyperLiquidComposer.sol";
 import { IHyperLiquidWritePrecompile } from "@layerzerolabs/hyperliquid-composer/contracts/interfaces/IHyperLiquidWritePrecompile.sol";
