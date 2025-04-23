@@ -64,10 +64,33 @@ const deploy: DeployFunction = async (hre) => {
     //   }
     // }
     const endpointV2Deployment = await hre.deployments.get('EndpointV2')
-    const { address: address_oft } = await hre.deployments.get(contractName_oft).catch(() => {
-        throw new Error(`Needs ${contractName_oft} to be deployed before deploying MyHyperLiquidComposer`)
+    const { address: address_oft } = await hre.deployments.get(contractName_oft).catch(async () => {
+        console.log(`Deployment file for ${contractName_oft}.json in deployments/${networkName} not found`)
+        const { proceedWithOFTAddress } = await inquirer.prompt([
+            {
+                type: 'input',
+                name: 'proceedWithOFTAddress',
+                message: 'Do you have an OFT address that you would like to use? (y/n)',
+            },
+        ])
+        if (proceedWithOFTAddress) {
+            const { oftAddress } = await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'oftAddress',
+                    message: 'Please enter the OFT you would like the composer to be associated with:',
+                },
+            ])
+
+            return oftAddress
+        } else {
+            throw new Error(`Needs ${contractName_oft} to be deployed before deploying MyHyperLiquidComposer`)
+        }
     })
 
+    if (!hre.ethers.utils.isAddress(address_oft)) {
+        throw new Error(`Input address ${address_oft} is not a valid address`)
+    }
     // Switch to hyperliquidbig block if the contract is not deployed
     const isDeployed_composer = await hre.deployments.getOrNull(contractName_composer)
 
