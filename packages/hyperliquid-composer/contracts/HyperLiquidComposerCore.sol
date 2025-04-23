@@ -211,6 +211,13 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
         return hypeAsset;
     }
 
+    /// @notice Extracts the error payload from a bytes array
+    /// @notice This function is called by the HyperLiquidComposer contract
+    /// @dev Strips out the revert message to extract the payload ErrorMsg(bytes errorMessage) - ('0x' + 32 bytes) * 2 = 64 bytes
+    ///
+    /// @param _err The bytes array to extract the error payload from
+    ///
+    /// @return The error payload
     function getErrorPayload(bytes calldata _err) external pure returns (bytes memory) {
         return _err.extractErrorPayload();
     }
