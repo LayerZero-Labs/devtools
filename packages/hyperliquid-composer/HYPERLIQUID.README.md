@@ -59,7 +59,6 @@ This is because in ethers-v5 EIP-712 signing is not stable. - <https://docs.ethe
 
 You can use the official hyperliquid python sdk to interact with HyperCore. We also built an in-house minimal typescript sdk that focuses on switching blocks, deploying the hypercore token, and connecting the hypercore token to a hyperevm erc20 (oft).
 
-
 ## Accounts
 
 You can use the same account on `HyperEVM` and `HyperCore`, this is because `HyperCore` uses signed ethereum transactions to validate payload data.
@@ -135,7 +134,7 @@ This bridge is crucial to the interop between `HyperEVM` and `HyperCore` and it 
 
 Note : There are no checks in the system that checks asset bridge values before trying to transfer between `HyperCore` and `HyperEVM`.
 
-This means that token liquidity must be matched if tokens are to be sent across. For tokens to be sent into `HyperCore` the contract deployer needs to mint the maximum supply (`u64.max` via the api which isn't the same as the UI due to `hyperliquidity`) to either the token's asset bridge address or to their deployer account and later transfer it to the asset bridge address. 
+This means that token liquidity must be matched if tokens are to be sent across. For tokens to be sent into `HyperCore` the contract deployer needs to mint the maximum supply (`u64.max` via the api which isn't the same as the UI due to `hyperliquidity`) to either the token's asset bridge address or to their deployer account and later transfer it to the asset bridge address.
 
 The asset bridge address is denoted as `[evm | core]`
 
@@ -265,10 +264,11 @@ Since the composer also supports sending native token `$HYPE` into `HyperCore` t
 
 ## Using the LayerZero Hyperliquid SDK
 
-### Reading core spot state 
+### Reading core spot state
 
 #### List core spot metadata
-```bash 
+
+```bash
 npx @layerzerolabs/hyperliquid-composer core-spot \ 
     --action get \  
     --token-index <coreIndex> \
@@ -277,6 +277,7 @@ npx @layerzerolabs/hyperliquid-composer core-spot \
 ```
 
 #### Create a deployment file
+
 ```bash
 npx @layerzerolabs/hyperliquid-composer core-spot \
     --action create \
@@ -287,6 +288,7 @@ npx @layerzerolabs/hyperliquid-composer core-spot \
 ```
 
 ### Switching Blocks (`evmUserModify`)
+
 PR : <https://github.com/LayerZero-Labs/devtools/pull/1417>
 
 ```bash
@@ -298,9 +300,11 @@ npx @layerzerolabs/hyperliquid-composer set-block \
 ```
 
 ### Deploying a CoreSpot (`spotDeploy`)
+
 PR : <https://github.com/LayerZero-Labs/devtools/pull/1441>
 
 #### 1 `setDeployerTradingFeeShare`
+
 ```bash
 npx @layerzerolabs/hyperliquid-composer trading-fee \
     --token-index <coreIndex> \
@@ -311,6 +315,7 @@ npx @layerzerolabs/hyperliquid-composer trading-fee \
 ```
 
 #### 2 `userGenesis`
+
 ```bash
 npx @layerzerolabs/hyperliquid-composer user-genesis \
     --token-index <coreIndex> \ 
@@ -321,6 +326,7 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
 ```
 
 #### 3 `genesis`
+
 ```bash
 npx @layerzerolabs/hyperliquid-composer set-genesis \
     --token-index <coreIndex> \
@@ -328,7 +334,9 @@ npx @layerzerolabs/hyperliquid-composer set-genesis \
     -private-key $PRIVATE_KEY_HYPERLIQUID \ 
     [--log-level {info | verbose}]
 ```
+
 #### 4 `registerSpot`
+
 ```bash
 npx @layerzerolabs/hyperliquid-composer register-spot \
     --token-index <coreIndex> \
@@ -338,12 +346,55 @@ npx @layerzerolabs/hyperliquid-composer register-spot \
 ```
 
 ### Linking HyperEVM and HyperCore
+
 #### 1 `requestEvmContract`
+
+```bash
+npx @layerzerolabs/hyperliquid-composer request-evm-contract  \
+    --oapp-config <layerzero.config.ts> \
+    --token-index <coreIndex> \
+    --network {testnet | mainnet} \
+    --log-level verbose \
+    --private-key $PRIVATE_KEY_HYPERLIQUID
+```
+
 #### 2 `finalizeEvmContract`
 
-# Deploy and Connect your OFT Guide
+```bash
+npx @layerzerolabs/hyperliquid-composer finalize-evm-contract  \
+    --oapp-config <layerzero.config.ts> \
+    --token-index <coreIndex> \
+    --network {testnet | mainnet} \
+    --log-level verbose \
+    --private-key $PRIVATE_KEY_HYPERLIQUID
+```
 
-## Deploy your OFTs
+## Deploy and Connect your OFT Guide
+
+### Make changes to the underlying OFT (if you want to)
+
+The current architecture has certain error handling AND checks (because hyperliquid does not have any) to prevent tokens from locking up in the contract or at the asset bridge address, and you can change any of these behaviors.
+
+#### Transfer exceeding u64.max
+
+HyperCore's spot send only allows for a maximum of `u64` tokens to be transferred across. This means (in the unlikely event) that the user sends across greater than `u64` the difference would be returned the the `receiver` address on `HyperEVM`.
+
+#### Transfer exceeding HyperCore Bridge Capactiy
+
+HyperCore's core spots support a maximum of `u64` tokens on the core spot, and this is scaled by the decimal difference between the core spot and the evm spot. It is thus possible that the asset bridge on hypercore has been consumed to the point where the entire transfer can't be sent over. In this event we split the `amount` capping it by `amount * 10.pow(ERC20.decimals() - HyperCore.decimals())` which is the maximum possible core spot tokens that can be consumed at the bridge at any given instant and compute the difference between the computed max core amount converted to evm amount (unscaling) and removing that from the incoming evm amount. We now have `dust` which is the difference between the two and return this to the `receiver` address.
+
+#### Malformed `composeMsg` - unable to abi.decode(composeMsg) into address
+
+The above cases only occur in the stae when the compose payload is valid. In the event that developers write their own front end or try to interact with the composer with their own encoding and aren't careful it is possible that the message contains a `composeMsg` that can not be decoded to an `address`, as such we do not have the `receiver` address. In this event we try returning the tokens to the `sender` on HyperEVM where the sender is the `msg.sender` of the layerzero tx on the source chain.
+
+#### Malformed `composeMsg` - unable to abi.decode(composeMsg) into address and non-evm sender
+
+> Note: The only case when tokens can be locked in the Composer
+
+Building on the afore mentioned case, it is possible that the compose transaction comes from `Solana` or a `move` language network that uses a different system of addresses. As such we can't return funds to that address on `HyperEVM` - in an ideal world we can have a composer that returns tokens to the sending network but that would consume more gas (doubling the transaction) and since gas paid is non refundable it would simply be wasted.
+
+### Deploy your OFTs
+
 The [oft deploy script](https://github.com/LayerZero-Labs/devtools/blob/feat/oft-hyperliquid-no-hop/examples/oft-hyperliquid/deploy/MyHyperliquidOFT.ts) is configured with a `hardhat-deploy` tag `MyHyperLiquidOFT`, this is renameable.
 
 Since deploying contracts on HyperEVM needs big blocks, we need to submit an `L1Action`, the deploy script does this when the chainId matches those of HyperEVM testnet (998) or mainnet (999). Since this `action` is sent to `HyperCore` it requires an active `HyperCore` account - which you can do by funding the account with $1 of `HYPE` or `USDC` on `HyperCore`. If you do not do this you will get an error similar to:
@@ -351,6 +402,7 @@ Since deploying contracts on HyperEVM needs big blocks, we need to submit an `L1
 ```bash
 L1 error: User or API Wallet <public key> does not exist.
 ```
+
 Now wire your contracts:
 
 `npx hardhat lz:deploy --tags MyHyperLiquidOFT`
@@ -358,14 +410,17 @@ Now wire your contracts:
 ## Wire your contracts
 
 Wire the OFTs together with the standard layerzero wire command (or any other way you prefer doing it)
+
 ```bash
 npx hardhat lz:oapp:wire --oapp-config <layerzero.config.ts>
 ```
+
  Test the OFTs qith `quoteSend()` or by sending a test lzTransaction across the networks.
 
 ## Deploy the Core Spot
 
 Open <https://app.hyperliquid-testnet.xyz/deploySpot> in a tab so that you can monitor the difference in steps. Or you can use:
+
 ```bash
 curl -X POST "https://api.hyperliquid-testnet.xyz/info" \
      -H "Content-Type: application/json" \
@@ -375,7 +430,7 @@ curl -X POST "https://api.hyperliquid-testnet.xyz/info" \
      }'
 ```
 
-This will return a json object with the current state of the spot deployment. 
+This will return a json object with the current state of the spot deployment.
 (building a sdk wrapper around this is on our roadmap)
 
 ### Step 0 `core-spot create`
@@ -392,7 +447,9 @@ npx @layerzerolabs/hyperliquid-composer core-spot \
 ```
 
 ### Step 1/4 `setDeployerTradingFeeShare`
+
 This is the step where you set the trading fee share for the deployer. It can be in the range of `[0%,100%]`.
+> Note: The trading fee can be reset as long as the new share is lower than the previous share.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer trading-fee \
@@ -402,16 +459,18 @@ npx @layerzerolabs/hyperliquid-composer trading-fee \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
-Note: The trading fee can be reset as long as the new share is lower than the previous share.
-### Step 2/4 `userGenesis`
-This is the part where you set the genesis balances for the deployer and the users. Since `HyperCore` tokens are of uint type `u64` the most tokens possible are `18446744073709551615`. 
 
-You will have to edit the deployment created by `core-spot create` command that is under `./deployments/hypercore-{testnet | mainnet}` with the name of the core spot token index. It should be populated with the `deployer` and `asset bridge address` with both set to `0 wei`. 
+### Step 2/4 `userGenesis`
+
+This is the part where you set the genesis balances for the deployer and the users. Since `HyperCore` tokens are of uint type `u64` the most tokens possible are `18446744073709551615`.
+
+You will have to edit the deployment created by `core-spot create` command that is under `./deployments/hypercore-{testnet | mainnet}` with the name of the core spot token index. It should be populated with the `deployer` and `asset bridge address` with both set to `0 wei`.
 
 You can then use the `user-genesis` command to set the genesis balances for the deployer and the users.
 
 If you aren't using `existingTokenAndWei` or `userAndWei` you will need to remove the contents of it making it:
 Example:
+
 ```json
 "existingTokenAndWei": [
     {
@@ -421,13 +480,14 @@ Example:
 ],
 ```
 
-into 
+into
 
 ```json
 "existingTokenAndWei": []
 ```
 
 Otherwise you run into the error:
+
 ```bash
 Error deploying spot: missing token max_supply
 ```
@@ -441,10 +501,12 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
     [--log-level {info | verbose}]
 ```
 
-Note: There is no limit to the number of time you can re-run this command.
+> Note: There is no limit to the number of time you can re-run this command.
 
 ### Step 3/4 `genesis`
+
 This is the step that registers the above genesis balances on `HyperCore`.
+> Note: This is irreversible.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer set-genesis \
@@ -454,9 +516,8 @@ npx @layerzerolabs/hyperliquid-composer set-genesis \
     [--log-level {info | verbose}]
 ```
 
-Note: This is irreversible.
-
 ### Step 4/4 `registerSpot`
+
 This is the step that registers the core spot on `HyperCore` and creates a base-quote pair against `USDC`, which is the only supported quote token as of now.
 
 ```bash
@@ -474,12 +535,15 @@ curl -X POST "https://api.hyperliquid.xyz/info" \
      -H "Content-Type: application/json" \
      -d '{ "type": "tokenDetails", "tokenId": "<YOUR_TOKEN_ID>"}'
 ```
+
 ## Connect the OFT to the deployed Core Spot
 
 In order to enable transfers between the OFT and the core spot, we need to connect the OFT to the core spot. This is done in two steps:
 
 ### Step 1/2 `requestEvmContract`
+
 This step is issued by the core spot deployer and populates in `HyperCore` that a request has been made for the mentioned Core Spot to be connected to the ERC20 deployed at the mentioned erc20 address.
+> Note: This step can be issued multiple times until the `finalizeEvmContract` step is issued.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer request-evm-contract  \
@@ -490,10 +554,10 @@ npx @layerzerolabs/hyperliquid-composer request-evm-contract  \
     --private-key $PRIVATE_KEY_HYPERLIQUID
 ```
 
-Note: This step can be issued multiple times until the `finalizeEvmContract` step is issued.
-
 ### Step 2/2 `finalizeEvmContract`
+
 This step completes the connection between the OFT and the core spot. It pulls either hyperevm testnet or mainnet address from the layerzero config file based on the `eid` and the core spot information from the hypercore deployment.
+> Note: This step is the final step and can only be issued once.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer finalize-evm-contract  \
@@ -504,8 +568,6 @@ npx @layerzerolabs/hyperliquid-composer finalize-evm-contract  \
     --private-key $PRIVATE_KEY_HYPERLIQUID
 ```
 
-Note: This step is the final step and can only be issued once.
-
 ## Deploy the Composer
 
 While the composer could have been deployed at any point in time due to its statelessness, it is technically the final step of the deployment process. The following script automatically handles the block switching for you.
@@ -513,7 +575,6 @@ While the composer could have been deployed at any point in time due to its stat
 ```bash
 npx hardhat lz:deploy --tags MyHyperLiquidComposer
 ```
-
 
 ## Sending tokens from x-network to HyperEVM/Core
 
