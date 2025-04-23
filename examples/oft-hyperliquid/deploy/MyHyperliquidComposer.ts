@@ -24,18 +24,22 @@ const deploy: DeployFunction = async (hre) => {
     const { deployer } = await getNamedAccounts()
     assert(deployer, 'Missing named deployer account')
 
-    const privateKey = process.env.PRIVATE_KEY_HYPERLIQUID
-    assert(privateKey, 'PRIVATE_KEY_HYPERLIQUID is not set in .env file')
+    const networkName = hre.network.name
+    const privateKey = hre.network.config.accounts
+    assert(
+        privateKey,
+        `Can not find a private key associated with hre.network.config.accounts for the network ${networkName} in hardhat.config.ts`
+    )
 
     // Get logger from hardhat flag --log-level
     const loglevel = hre.hardhatArguments.verbose ? 'debug' : 'error'
 
-    const wallet = new Wallet(privateKey)
+    const wallet = new Wallet(privateKey.toString())
     const chainId = (await hre.ethers.provider.getNetwork()).chainId
     const isHyperliquid = chainId === CHAIN_IDS.MAINNET || chainId === CHAIN_IDS.TESTNET
     const isTestnet = chainId === CHAIN_IDS.TESTNET
 
-    console.log(`Network: ${hre.network.name}`)
+    console.log(`Network: ${networkName}`)
     console.log(`Deployer: ${deployer}`)
 
     assert(isHyperliquid, 'The hyperliquid composer is only supported on hyperliquid networks')
