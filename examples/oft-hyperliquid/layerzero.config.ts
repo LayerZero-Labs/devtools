@@ -9,12 +9,12 @@ enum MsgType {
 
 const bscTestnetContract: OmniPointHardhat = {
     eid: EndpointId.BSC_V2_TESTNET,
-    contractName: 'MyHyperLiquidOFT',
+    contractName: 'MyOFT',
 }
 
 const hyperliquidTestnetContract: OmniPointHardhat = {
     eid: EndpointId.HYPERLIQUID_V2_TESTNET,
-    contractName: 'MyHyperLiquidOFT',
+    contractName: 'MyOFT',
 }
 
 const config: OAppOmniGraphHardhat = {

@@ -5,7 +5,7 @@ import { type DeployFunction } from 'hardhat-deploy/types'
 
 import { CHAIN_IDS, useBigBlock, useSmallBlock } from '@layerzerolabs/hyperliquid-composer'
 
-const contractName_oft = 'MyHyperLiquidOFT'
+const contractName_oft = 'MyOFT'
 const tokenSymbol = 'MYOFT'
 
 const deploy: DeployFunction = async (hre) => {
@@ -15,9 +15,13 @@ const deploy: DeployFunction = async (hre) => {
     const { deployer } = await getNamedAccounts()
     assert(deployer, 'Missing named deployer account')
 
+    const networkName = hre.network.name
     // Grab the private key used to deploy to this network from hardhat.config.ts -> networks -> networkName -> accounts
     const privateKey = hre.network.config.accounts
-    assert(privateKey, 'PRIVATE_KEY is not set in .env file')
+    assert(
+        privateKey,
+        `Can not find a private key associated with hre.network.config.accounts for the network ${networkName} in hardhat.config.ts`
+    )
 
     // Get logger from hardhat flag --log-level
     const loglevel = hre.hardhatArguments.verbose ? 'debug' : 'info'
@@ -28,7 +32,6 @@ const deploy: DeployFunction = async (hre) => {
     const isHyperliquid = chainId === CHAIN_IDS.MAINNET || chainId === CHAIN_IDS.TESTNET
     const isTestnet = chainId === CHAIN_IDS.TESTNET
 
-    const networkName = hre.network.name
     console.log(`Network: ${networkName}`)
     console.log(`Deployer: ${deployer}`)
 

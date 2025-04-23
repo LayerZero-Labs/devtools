@@ -27,12 +27,12 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
     /// @param _endpoint The LayerZero endpoint address
     /// @param _oft The OFT contract address associated with this composer
     /// @param _coreIndexId The core index id of the HyperLiquid L1 contract
-    /// @param _weiDiff The difference in decimals between the HyperEVM OFT deployment and HyperLiquid L1 HIP-1 listing
+    /// @param _assetDecimalDiff The difference in decimals between the HyperEVM OFT deployment and HyperLiquid L1 HIP-1 listing
     constructor(
         address _endpoint,
         address _oft,
         uint64 _coreIndexId,
-        int64 _weiDiff
+        int64 _assetDecimalDiff
     ) HyperLiquidComposerCore(_endpoint, _oft) {
         /// @dev Hyperliquid L1 contract address is the prefix (0x2000...0000) + the core index id
         /// @dev This is the address that the OFT contract will transfer the tokens to when we want to send tokens between HyperEVM and HyperLiquid L1
@@ -40,7 +40,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         oftAsset = IHyperAsset({
             assetBridgeAddress: _coreIndexId.into_assetBridgeAddress(),
             coreIndexId: _coreIndexId,
-            decimalDiff: _weiDiff
+            decimalDiff: _assetDecimalDiff
         });
 
         /// @dev HYPE Core Spot address on HyperLiquid L1 - is a special address which is a precompile and has it's own asset bridge address which can be found here:
