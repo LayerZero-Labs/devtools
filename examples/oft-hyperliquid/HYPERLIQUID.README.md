@@ -14,8 +14,8 @@ Feel free to checkout our internal docs [here](https://github.com/LayerZero-Labs
 #### List core spot metadata
 
 ```bash
-npx @layerzerolabs/hyperliquid-composer core-spot \ 
-    --action get \  
+npx @layerzerolabs/hyperliquid-composer core-spot \
+    --action get \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
@@ -39,7 +39,7 @@ PR : <https://github.com/LayerZero-Labs/devtools/pull/1417>
 ```bash
 npx @layerzerolabs/hyperliquid-composer set-block \
     --size {small | big} \
-    --network {testnet | mainnet} \ 
+    --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY \
     [--log-level {info | verbose}]
 ```
@@ -63,10 +63,10 @@ npx @layerzerolabs/hyperliquid-composer trading-fee \
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer user-genesis \
-    --token-index <coreIndex> \ 
+    --token-index <coreIndex> \
     [--action  {* | userAndWei | existingTokenAndWei | blacklistUsers}]
-    --network {testnet | mainnet} \ 
-    -private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --network {testnet | mainnet} \
+    -private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -76,7 +76,7 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
 npx @layerzerolabs/hyperliquid-composer set-genesis \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
-    -private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    -private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -85,8 +85,8 @@ npx @layerzerolabs/hyperliquid-composer set-genesis \
 ```bash
 npx @layerzerolabs/hyperliquid-composer register-spot \
     --token-index <coreIndex> \
-    --network {testnet | mainnet} \ 
-    -private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --network {testnet | mainnet} \
+    -private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -160,7 +160,7 @@ Wire the OFTs together with the standard layerzero wire command (or any other wa
 npx hardhat lz:oapp:wire --oapp-config <layerzero.config.ts>
 ```
 
- Test the OFTs qith `quoteSend()` or by sending a test lzTransaction across the networks.
+Test the OFTs qith `quoteSend()` or by sending a test lzTransaction across the networks.
 
 ## Deploy the Core Spot
 
@@ -196,6 +196,7 @@ npx @layerzerolabs/hyperliquid-composer core-spot \
 ### Step 1/4 `setDeployerTradingFeeShare`
 
 This is the step where you set the trading fee share for the deployer. It can be in the range of `[0%,100%]`.
+
 > Note: The trading fee can be reset as long as the new share is lower than the previous share.
 
 ```bash
@@ -243,8 +244,8 @@ Error deploying spot: missing token max_supply
 npx @layerzerolabs/hyperliquid-composer user-genesis \
     --token-index <coreIndex> \
     [--action  {* | userAndWei | existingTokenAndWei | blacklistUsers}]
-    --network {testnet | mainnet} \ 
-    -private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --network {testnet | mainnet} \
+    -private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -253,13 +254,14 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
 ### Step 3/4 `genesis`
 
 This is the step that registers the above genesis balances on `HyperCore`.
+
 > Note: This is irreversible.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer set-genesis \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
-    -private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    -private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -270,8 +272,8 @@ This is the step that registers the core spot on `HyperCore` and creates a base-
 ```bash
 npx @layerzerolabs/hyperliquid-composer register-spot \
     --token-index <coreIndex> \
-    --network {testnet | mainnet} \ 
-    -private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --network {testnet | mainnet} \
+    -private-key $PRIVATE_KEY_HYPERLIQUID \
 ```
 
 Your core spot (that does not use hyperliquidity) has now been deployed and registered on `HyperCore`.
@@ -290,6 +292,7 @@ In order to enable transfers between the OFT and the core spot, we need to conne
 ### Step 1/2 `requestEvmContract`
 
 This step is issued by the core spot deployer and populates in `HyperCore` that a request has been made for the mentioned Core Spot to be connected to the ERC20 deployed at the mentioned erc20 address.
+
 > Note: This step can be issued multiple times until the `finalizeEvmContract` step is issued.
 
 ```bash
@@ -304,6 +307,7 @@ npx @layerzerolabs/hyperliquid-composer request-evm-contract  \
 ### Step 2/2 `finalizeEvmContract`
 
 This step completes the connection between the OFT and the core spot. It pulls either hyperevm testnet or mainnet address from the layerzero config file based on the `eid` and the core spot information from the hypercore deployment.
+
 > Note: This step is the final step and can only be issued once.
 
 ```bash
