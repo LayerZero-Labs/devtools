@@ -14,6 +14,7 @@ import {
     TransactionType,
     addComputeUnitInstructions,
     deriveConnection,
+    getAddressLookupTable,
     getExplorerTxLink,
     getLayerZeroScanLink,
     getSolanaDeployment,
@@ -88,7 +89,9 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
             },
             {
                 oft: oftProgramId,
-            }
+            },
+            [],
+            (await getAddressLookupTable(connection, umi, fromEid)).lookupTableAddress
         )
 
         const ix = await oft.send(
