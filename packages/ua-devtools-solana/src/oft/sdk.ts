@@ -180,19 +180,34 @@ export class OFT extends OmniSDK implements IOApp {
 
         const oftStore = this.umiPublicKey
 
+        const instructions = [
+            await this._createSetPeerAddressIx(normalizedPeer, eid), // admin
+        ]
+
+        const isSendLibraryInitialized = await this.isSendLibraryInitialized(eid)
+        if (!isSendLibraryInitialized) {
+            instructions.push(
+                oft.initSendLibrary({ admin: delegate, oftStore }, eid) // delegate
+            )
+        }
+
+        const isReceiveLibraryInitialized = await this.isReceiveLibraryInitialized(eid)
+        if (!isReceiveLibraryInitialized) {
+            instructions.push(
+                oft.initReceiveLibrary({ admin: delegate, oftStore }, eid) // delegate
+            )
+        }
+
+        instructions.push(
+            await this._setPeerEnforcedOptionsIx(new Uint8Array([0, 3]), new Uint8Array([0, 3]), eid), // admin
+            await this._setPeerFeeBpsIx(eid), // admin
+            oft.initOAppNonce({ admin: delegate, oftStore }, eid, normalizedPeer), // delegate
+            await this._createSetPeerAddressIx(normalizedPeer, eid) // admin but is this needed?  set twice...
+        )
+
         this.logger.debug(`Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32}`)
         return {
-            ...(await this.createTransaction(
-                this._umiToWeb3Tx([
-                    await this._createSetPeerAddressIx(normalizedPeer, eid), // admin
-                    oft.initSendLibrary({ admin: delegate, oftStore }, eid), // delegate
-                    oft.initReceiveLibrary({ admin: delegate, oftStore }, eid), // delegate
-                    await this._setPeerEnforcedOptionsIx(new Uint8Array([0, 3]), new Uint8Array([0, 3]), eid), // admin
-                    await this._setPeerFeeBpsIx(eid), // admin
-                    oft.initOAppNonce({ admin: delegate, oftStore }, eid, normalizedPeer), // delegate
-                    await this._createSetPeerAddressIx(normalizedPeer, eid), // admin but is this needed?  set twice...
-                ])
-            )),
+            ...(await this.createTransaction(this._umiToWeb3Tx(instructions))),
             description: `Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32} ${delegate.publicKey} ${(await this._getAdmin()).publicKey}`,
         }
     }
