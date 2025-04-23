@@ -5,7 +5,7 @@ import { type DeployFunction } from 'hardhat-deploy/types'
 
 import { CHAIN_IDS, useBigBlock, useSmallBlock } from '@layerzerolabs/hyperliquid-composer'
 
-const contractName_oft = 'MyHyperLiquidOFT'
+const contractName_oft = 'MyOFT'
 const tokenSymbol = 'MYOFT'
 
 const deploy: DeployFunction = async (hre) => {

@@ -9,7 +9,7 @@ import { IHyperLiquidComposerErrors, ErrorMessagePayload } from "@layerzerolabs/
 import { IHyperAsset, IHyperLiquidComposerCore } from "@layerzerolabs/hyperliquid-composer/contracts/interfaces/IHyperLiquidComposerCore.sol";
 
 import { HyperLiquidComposer } from "@layerzerolabs/hyperliquid-composer/contracts/HyperLiquidComposer.sol";
-import { MyHyperLiquidOFT } from "../../../contracts/MyHyperLiquidOFT.sol";
+import { MyOFT } from "../../../contracts/MyOFT.sol";
 
 import { Test, console } from "forge-std/Test.sol";
 
@@ -22,7 +22,7 @@ contract ComposeMessageTest is Test {
     IHyperAsset public HYPE;
     address public constant HL_LZ_ENDPOINT_V2 = 0xf9e1815F151024bDE4B7C10BAC10e8Ba9F6b53E1;
 
-    MyHyperLiquidOFT public oft;
+    MyOFT public oft;
     HyperLiquidComposer public hyperLiquidComposer;
 
     address public sender;
@@ -43,7 +43,7 @@ contract ComposeMessageTest is Test {
             decimalDiff: 18 - 10
         });
 
-        oft = new MyHyperLiquidOFT("test", "test", HL_LZ_ENDPOINT_V2, msg.sender);
+        oft = new MyOFT("test", "test", HL_LZ_ENDPOINT_V2, msg.sender);
 
         hyperLiquidComposer = new HyperLiquidComposer(
             HL_LZ_ENDPOINT_V2,

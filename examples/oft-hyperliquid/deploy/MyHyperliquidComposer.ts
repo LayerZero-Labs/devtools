@@ -6,7 +6,7 @@ import inquirer from 'inquirer'
 
 import { CHAIN_IDS, getCoreSpotDeployment, useBigBlock, useSmallBlock } from '@layerzerolabs/hyperliquid-composer'
 
-const contractName_oft = 'MyHyperLiquidOFT'
+const contractName_oft = 'MyOFT'
 const contractName_composer = 'MyHyperLiquidComposer'
 
 const deploy: DeployFunction = async (hre) => {
@@ -61,7 +61,7 @@ const deploy: DeployFunction = async (hre) => {
     // }
     const endpointV2Deployment = await hre.deployments.get('EndpointV2')
     const { address: address_oft } = await hre.deployments.get(contractName_oft).catch(() => {
-        throw new Error('Needs MyHyperLiquidOFT to be deployed before deploying MyHyperLiquidComposer')
+        throw new Error(`Needs ${contractName_oft} to be deployed before deploying MyHyperLiquidComposer`)
     })
 
     // Switch to hyperliquidbig block if the contract is not deployed

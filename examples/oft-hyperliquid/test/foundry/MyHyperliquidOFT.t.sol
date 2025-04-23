@@ -17,7 +17,7 @@ import { IHyperAsset } from "@layerzerolabs/hyperliquid-composer/contracts/Hyper
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import { MyHyperLiquidComposer } from "../../contracts/MyHyperLiquidComposer.sol";
-import { MyHyperLiquidOFT } from "../../contracts/MyHyperLiquidOFT.sol";
+import { MyOFT } from "../../contracts/MyOFT.sol";
 
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 import { console } from "forge-std/console.sol";
@@ -43,8 +43,8 @@ contract MyHyperLiquidOFTTest is TestHelperOz5 {
     // https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers#system-addresses
     address public constant HYPERLIQUID_PRECOMPILE = 0x2222222222222222222222222222222222222222;
     address public constant SPOT_BALANCE_PRECOMPILE = 0x0000000000000000000000000000000000000801;
-    MyHyperLiquidOFT internal srcOFT;
-    MyHyperLiquidOFT internal dstOFT;
+    MyOFT internal srcOFT;
+    MyOFT internal dstOFT;
 
     MyHyperLiquidComposer internal dstLZComposer;
 
@@ -85,8 +85,8 @@ contract MyHyperLiquidOFTTest is TestHelperOz5 {
 
         setUpEndpoints(2, LibraryType.UltraLightNode);
 
-        srcOFT = new MyHyperLiquidOFT(SRC_OFT_NAME, SRC_OFT_SYMBOL, address(endpoints[SRC_EID]), address(this));
-        dstOFT = new MyHyperLiquidOFT(DST_OFT_NAME, DST_OFT_SYMBOL, address(endpoints[DST_EID]), address(this));
+        srcOFT = new MyOFT(SRC_OFT_NAME, SRC_OFT_SYMBOL, address(endpoints[SRC_EID]), address(this));
+        dstOFT = new MyOFT(DST_OFT_NAME, DST_OFT_SYMBOL, address(endpoints[DST_EID]), address(this));
 
         dstLZComposer = new MyHyperLiquidComposer(address(endpoints[DST_EID]), address(dstOFT), oftHlIndexId, WEI_DIFF);
 

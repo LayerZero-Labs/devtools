@@ -19,7 +19,7 @@ import { IHYPEPrecompile } from "@layerzerolabs/hyperliquid-composer/contracts/i
 import { HypePrecompileMock } from "@layerzerolabs/hyperliquid-composer/test/mocks/HypePrecompileMock.sol";
 import { SpotBalancePrecompileMock } from "@layerzerolabs/hyperliquid-composer/test/mocks/SpotBalancePrecompileMock.sol";
 
-import { MyHyperLiquidOFT } from "../../contracts/MyHyperLiquidOFT.sol";
+import { MyOFT } from "../../contracts/MyOFT.sol";
 
 contract HyperLiquidComposerTest is Test {
     IHyperAsset public ALICE;
@@ -32,7 +32,7 @@ contract HyperLiquidComposerTest is Test {
     // HyperLiquid Testnet
     uint32 public DST_EID;
 
-    MyHyperLiquidOFT public oft;
+    MyOFT public oft;
     HyperLiquidComposer public hyperLiquidComposer;
 
     address public userA = makeAddr("userA");
@@ -76,7 +76,7 @@ contract HyperLiquidComposerTest is Test {
             type(uint64).max
         );
 
-        oft = new MyHyperLiquidOFT("test", "test", HL_LZ_ENDPOINT_V2, msg.sender);
+        oft = new MyOFT("test", "test", HL_LZ_ENDPOINT_V2, msg.sender);
 
         hyperLiquidComposer = new HyperLiquidComposer(
             HL_LZ_ENDPOINT_V2,
