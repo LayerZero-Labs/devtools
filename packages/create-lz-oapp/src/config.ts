@@ -167,6 +167,17 @@ export const getExamples = (): Example[] => {
                   },
               ]
             : []),
+        ...(process.env.LZ_ENABLE_EXPERIMENTAL_HYPERLIQUID_EXAMPLE
+            ? [
+                  {
+                      id: 'oft-hyperliquid',
+                      label: 'OFT + Composer (Hyperliquid)',
+                      repository,
+                      directory: 'examples/oft-hyperliquid',
+                      ref,
+                  },
+              ]
+            : []),
     ]
 }
 

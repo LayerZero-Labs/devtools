@@ -53,6 +53,7 @@ export async function requestEvmContract(args: any): Promise<void> {
     await setRequestEvmContract(wallet, isTestnet, oftAddress, txData.weiDiff, hyperAssetIndexInt, args.logLevel)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function finalizeEvmContract(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger('register-token', args.logLevel)

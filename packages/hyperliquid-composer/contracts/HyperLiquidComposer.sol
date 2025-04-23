@@ -94,7 +94,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         /// @dev Checks if the payload contains a compose message that can be sliced to extract the amount, sender as bytes32, and receiver as bytes
         /// @dev The slice ranges can be found in OFTComposeMsgCodec.sol
         /// @dev If the payload is invalid, the function will revert with the error message and there is no refunds
-        try this.validate_payload(_message) returns (
+        try this.validate_message(_message) returns (
             uint256 _amountLD,
             bytes32 _maybeSenderBytes32,
             bytes memory _maybeEVMReceiver
