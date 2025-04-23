@@ -225,6 +225,10 @@ contract HyperLiquidComposer is IHyperLiquidComposer {
 }
 ```
 
+## OFTWrapper for Hyperbridge
+
+Using `Hyperbridge` incurrs a `5bp` fee. We use Stargate's [OFT Wrapper](https://github.com/stargate-protocol/stargate-v2/blob/main/packages/stg-evm-v2/src/peripheral/oft-wrapper/OFTWrapper.sol) on ALL networks that we support on `Hyperbridge`. The repository that we use to deploy the bridge on various networks can be found [here](https://github.com/LayerZero-Labs/hyperliquid-oft-wrapper)
+
 ## LayerZero Transaction on HyperEVM
 
 Since this is a compose call - the `toAddress` is the `HyperLiquidComposer` contract address.
