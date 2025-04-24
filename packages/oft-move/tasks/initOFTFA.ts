@@ -1,5 +1,8 @@
 import { sendInitTransaction, TaskContext } from '@layerzerolabs/devtools-move'
 
+import { endpointIdToChainType, ChainType } from '@layerzerolabs/lz-definitions'
+import inquirer from 'inquirer'
+
 async function initOFTFA(
     token_name: string,
     token_symbol: string,
@@ -27,6 +30,36 @@ async function initOFTFA(
         sharedDecimals,
         local_decimals
     )
+    const chainType = endpointIdToChainType(taskContext.srcEid)
+    const INITIA_SUPPORTED_DECIMALS = 6
+
+    // Initia enforces token decimal requirements (local decimals must be 6)
+    if (chainType === ChainType.INITIA && local_decimals !== INITIA_SUPPORTED_DECIMALS) {
+        console.error(
+            `⚠️ Deployment Configuration Error ⚠️\n` +
+                `Target Chain: Initia\n` +
+                `→ Required local decimals: ${INITIA_SUPPORTED_DECIMALS}\n` +
+                `→ Provided local decimals: ${local_decimals}\n\n` +
+                `Initia strictly requires tokens to have exactly ${INITIA_SUPPORTED_DECIMALS} decimals.`
+        )
+
+        const { confirmDeployment } = await inquirer.prompt([
+            {
+                type: 'input',
+                name: 'confirmDeployment',
+                message: 'Do you want to proceed anyway? This may cause unexpected behavior. (y/N):',
+            },
+        ])
+
+        if (confirmDeployment.trim().toLowerCase() === 'y') {
+            console.warn(`⚠️ Proceeding with unsupported local decimals: ${local_decimals}`)
+        } else {
+            throw new Error(
+                `❌ Deployment aborted.\nInitia only supports tokens with ${INITIA_SUPPORTED_DECIMALS} decimals. ` +
+                    `Current config specifies: ${local_decimals}. Please update your configuration.`
+            )
+        }
+    }
 
     const payloads = [{ payload: initializePayload, description: 'Initialize Aptos OFT', eid: taskContext.srcEid }]
 
