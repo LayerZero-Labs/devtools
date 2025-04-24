@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-move
 
+## 1.0.9
+
+### Patch Changes
+
+- 8747ede: use 0.7.2 as a supported version
+
 ## 1.0.8
 
 ### Patch Changes
