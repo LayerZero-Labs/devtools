@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-move
 
+## 1.1.0
+
+### Minor Changes
+
+- 8747ede: Use local decimals = 6 for initia
+
 ## 1.0.2
 
 ### Patch Changes

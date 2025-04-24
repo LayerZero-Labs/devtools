@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.7.15
+
+### Patch Changes
+
+- 74ac06c: Adds a lookup table address to the quote instruction in sendOFT. While not breaking, errors can be thrown due to tx size if the OFT uses more than the standard 2 DVNs.
+
 ## 0.7.14
 
 ### Patch Changes
