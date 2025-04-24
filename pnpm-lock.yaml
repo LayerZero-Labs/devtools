@@ -3859,6 +3859,10 @@ importers:
         version: 5.0.9
 
   packages/oft-move:
+    dependencies:
+      '@layerzerolabs/devtools-move':
+        specifier: ^1.0.8
+        version: link:../devtools-move
     devDependencies:
       '@aptos-labs/ts-sdk':
         specifier: ^1.33.1
@@ -3866,9 +3870,6 @@ importers:
       '@layerzerolabs/devtools-extensible-cli':
         specifier: ^0.0.6
         version: link:../devtools-extensible-cli
-      '@layerzerolabs/devtools-move':
-        specifier: ^1.0.7
-        version: link:../devtools-move
       '@layerzerolabs/io-devtools':
         specifier: ^0.1.16
         version: link:../io-devtools
