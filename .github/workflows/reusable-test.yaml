@@ -61,7 +61,7 @@ jobs:
       # We'll run the build in series to avoid race conditions
       # when compiling hardhat projects in monorepo setups
       - name: Build
-        run: pnpm build
+        run: pnpm turbo run build --force
 
   test:
     name: Test
