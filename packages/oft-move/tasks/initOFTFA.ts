@@ -30,27 +30,33 @@ async function initOFTFA(
         sharedDecimals,
         local_decimals
     )
-
     const chainType = endpointIdToChainType(taskContext.srcEid)
     const INITIA_SUPPORTED_DECIMALS = 6
 
-    // Initia only supports local decimals = 6
-    if (chainType == ChainType.INITIA && local_decimals != INITIA_SUPPORTED_DECIMALS) {
-        console.log(
-            `It looks like you're trying to deploy an OFT to initia. \n This requires local decimals = ${INITIA_SUPPORTED_DECIMALS}. Found ${local_decimals} in config`
+    // Initia enforces token decimal requirements (local decimals must be 6)
+    if (chainType === ChainType.INITIA && local_decimals !== INITIA_SUPPORTED_DECIMALS) {
+        console.error(
+            `⚠️ Deployment Configuration Error ⚠️\n` +
+                `Target Chain: Initia\n` +
+                `→ Required local decimals: ${INITIA_SUPPORTED_DECIMALS}\n` +
+                `→ Provided local decimals: ${local_decimals}\n\n` +
+                `Initia strictly requires tokens to have exactly ${INITIA_SUPPORTED_DECIMALS} decimals.`
         )
-        const { proceedWithDeployment } = await inquirer.prompt([
+
+        const { confirmDeployment } = await inquirer.prompt([
             {
                 type: 'input',
-                name: 'proceedWithDeployment',
-                message: 'Would you like to continue? Are you really sure? (y/n)',
+                name: 'confirmDeployment',
+                message: 'Do you want to proceed anyway? This may cause unexpected behavior. (y/N):',
             },
         ])
-        if (proceedWithDeployment == 'y') {
-            console.log(`Proceeding with ${local_decimals}`)
+
+        if (confirmDeployment.trim().toLowerCase() === 'y') {
+            console.warn(`⚠️ Proceeding with unsupported local decimals: ${local_decimals}`)
         } else {
             throw new Error(
-                `OFTFA config : Initia only supportts local decimals = ${INITIA_SUPPORTED_DECIMALS}. Found ${local_decimals} in config`
+                `❌ Deployment aborted.\nInitia only supports tokens with ${INITIA_SUPPORTED_DECIMALS} decimals. ` +
+                    `Current config specifies: ${local_decimals}. Please update your configuration.`
             )
         }
     }
