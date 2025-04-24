@@ -342,12 +342,12 @@ export async function getAptosCLICommand(chain: string, stage: string): Promise<
 
 export async function checkInitiaCLIVersion(): Promise<void> {
     const version = await getInitiaVersion()
-    const SUPPORTED_VERSION = '0.7.3'
+    const SUPPORTED_VERSIONS = ['0.7.2', '0.7.3']
 
-    if (version === SUPPORTED_VERSION) {
+    if (SUPPORTED_VERSIONS.includes(version)) {
         console.log(`🚀 Initia CLI version ${version} is compatible.`)
     } else {
-        throw new Error(`❌ Initia CLI version ${version} is not supported. Required: ${SUPPORTED_VERSION}`)
+        throw new Error(`❌ Initia CLI version ${version} is not supported. Required: ${SUPPORTED_VERSIONS}`)
     }
 }
 
