@@ -1,5 +1,7 @@
 import { sendInitTransaction, TaskContext } from '@layerzerolabs/devtools-move'
+
 import { endpointIdToChainType, ChainType } from '@layerzerolabs/lz-definitions'
+import inquirer from 'inquirer'
 
 async function initOFTFA(
     token_name: string,
@@ -34,9 +36,23 @@ async function initOFTFA(
 
     // Initia only supports local decimals = 6
     if (chainType == ChainType.INITIA && local_decimals != INITIA_SUPPORTED_DECIMALS) {
-        throw new Error(
-            `OFTFA config : Initia only supportts local decimals = ${INITIA_SUPPORTED_DECIMALS}. Found ${local_decimals} in config`
+        console.log(
+            `It looks like you're trying to deploy an OFT to initia. \n This requires local decimals = ${INITIA_SUPPORTED_DECIMALS}. Found ${local_decimals} in config`
         )
+        const { proceedWithDeployment } = await inquirer.prompt([
+            {
+                type: 'input',
+                name: 'proceedWithDeployment',
+                message: 'Would you like to continue? Are you really sure? (y/n)',
+            },
+        ])
+        if (proceedWithDeployment == 'y') {
+            console.log(`Godspeed to you soldier`)
+        } else {
+            throw new Error(
+                `OFTFA config : Initia only supportts local decimals = ${INITIA_SUPPORTED_DECIMALS}. Found ${local_decimals} in config`
+            )
+        }
     }
 
     const payloads = [{ payload: initializePayload, description: 'Initialize Aptos OFT', eid: taskContext.srcEid }]

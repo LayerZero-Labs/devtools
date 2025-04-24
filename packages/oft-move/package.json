@@ -43,6 +43,7 @@
     "depcheck": "^1.4.7",
     "eslint": "^8.55.0",
     "hardhat": "^2.22.10",
+    "inquirer": "^12.3.3",
     "ts-node": "^10.9.2",
     "tsup": "^8.0.1",
     "typescript": "^5.4.4"
