@@ -47,7 +47,7 @@ async function initOFTFA(
             },
         ])
         if (proceedWithDeployment == 'y') {
-            console.log(`Godspeed to you soldier`)
+            console.log(`Proceeding with ${local_decimals}`)
         } else {
             throw new Error(
                 `OFTFA config : Initia only supportts local decimals = ${INITIA_SUPPORTED_DECIMALS}. Found ${local_decimals} in config`
