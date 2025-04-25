@@ -22,7 +22,7 @@ Note: archival nodes are NOT available on `HyperEVM`.
 
 ### Hyperliquid API
 
-There are several API functions available on Hyperliquid to query information, following is an example.
+Hyperliquid supports several API functions that users can use on HyperCore to query information, following is an example.
 
 ```bash
 curl -X POST https://api.hyperliquid-testnet.xyz/info \
@@ -30,14 +30,14 @@ curl -X POST https://api.hyperliquid-testnet.xyz/info \
   -d '{"type": "spotMeta"}'
 ```
 
-This will give you the spot meta data for the Hyperliquid L1. (this is an example)
+This will give you the spot meta data for HyperCore. (this is an example)
 
 ```json
 {"universe": [{"name": "ALICE", "szDecimals": 0, "weiDecimals": 6, "index": 1231, "tokenId": "0x503e1e612424896ec6e7a02c7350c963", "isCanonical": false, "evmContract": null, "fullName": null, "deployerTradingFeeShare": "1.0"}]}
 ```
 
-The `tokenId` is the address of the token on the Hyperliquid L1.
-The `evmContract` is the address of the token on the HyperEVM.
+The `tokenId` is the address of the token on HyperCore.
+The `evmContract` is the address of the `ERC20` token on HyperEVM.
 The `deployerTradingFeeShare` is the fee share for the deployer of the token.
 
 ### Hyperliquid L1 Actions
