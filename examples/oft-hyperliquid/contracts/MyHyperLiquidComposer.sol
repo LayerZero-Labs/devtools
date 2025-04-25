@@ -6,8 +6,6 @@ import { HyperLiquidComposer } from "@layerzerolabs/hyperliquid-composer/contrac
 contract MyHyperLiquidComposer is HyperLiquidComposer {
     /// @notice Constructor for the HyperLiquidComposer
     ///
-    /// @dev This constructor is used to initialize the HyperLiquidComposer
-    ///
     /// @param _lzEndpoint The address of the LayerZero endpoint
     /// @param _oft The address of the OFT
     /// @param _hlIndexId The HyperLiquid core spot's index value
