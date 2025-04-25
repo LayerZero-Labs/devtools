@@ -70,9 +70,11 @@ You can use the same account on `HyperEVM` and `HyperCore`, this is because `Hyp
 
 ## Multi Block Architecture
 
-HyperEVM has 2 blocks - small blocks that are quicker and with less gas - 2 seconds and 2M gas. (this is the default) and big blocks that are slower and with more gas - 60 seconds and 30M gas. (this is where contract deployments happen) and they occupy the entire block.
+Since `HyperEVM` and `HyperCore` are seperate entities they have their own blocks. `Hyperliquid` interleaves the EVM and Core blocks in order of which they are created. 
 
-They are both EVM blocks and you can toggle between them by sending an L1 action of type `evmUserModify`.
+`HyperEVM` has 2 blocks - "small blocks" that are designed for increased throughput and therefore have a quick block time and have a lower max gas limit - 2 seconds and 2M gas (this is the default) - these blocks are meant for transactions that update state and not really for deploying. While you can deploy contracts that consume lower than 2M gas (out OFTs are larger than 2M) you would need "big blocks" that are allow for a larger max gas (30M gas) at the tradeoff of there only being 1 block per minute. Every "big blocks" only has 1 transaction.
+
+They are both EVM blocks and you can toggle between them by sending an L1 action of type `evmUserModify` which is what [this block toggler does](https://hyperevm-block-toggle.vercel.app/)
 
 ```json
 {"type": "evmUserModify", "usingBigBlocks": true}
@@ -80,9 +82,9 @@ They are both EVM blocks and you can toggle between them by sending an L1 action
 
 You can also use `bigBlockGasPrice` instead of `gasPrice` in your transactions.
 
-Note: This flags the user as using big blocks and all subsequent actions will be sent to the big block chain. You can also toggle this flag on and off.
+> Note: This flags the user as using big blocks and all subsequent transactions on HyperEVM will be of type big block. You can also toggle this flag on and off.
 
-`HyperCore` has its own blocks which results in 3 blocks. `Hyperliquid` interleaves the EVM and Core blocks in order of which they are created. As Core and EVM blocks are produced at differing speeds with HyperCore creating more than HyperEVM the blocks created are not `[EVM]-[Core]-[EVM]` but rather something like:
+`HyperCore` has its own blocks which results in 3 blocks.  As Core and EVM blocks are produced at differing speeds with HyperCore creating more than HyperEVM the blocks created are not `[EVM]-[Core]-[EVM]` but rather something like:
 
 ```txt
 [Core]-[Core]-[EVM-small]-[Core]-[Core]-[EVM-small]-[Core]-[EVM-large]-[Core]-[EVM-small]
