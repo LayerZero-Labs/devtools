@@ -40,10 +40,11 @@ The `tokenId` is the address of the token on HyperCore.
 The `evmContract` is the address of the `ERC20` token on HyperEVM.
 The `deployerTradingFeeShare` is the fee share for the deployer of the token.
 
-### Hyperliquid L1 Actions
+### HyperCore Actions
 
-You need to use ethers-v6 to sign the actions - <https://docs.ethers.org/v6/api/providers/#Signer-signTypedData>
+An action as defined by Hyperliquid is a transaction that is sent to the `HyperCore` - as it updates state on the `HyperCore` it needs to be a signed transaction from the wallet of the action sender.
 
+You need to use `ethers-v6` to sign actions - <https://docs.ethers.org/v6/api/providers/#Signer-signTypedData>
 ```bash
 # add ethers-v6 to your project as an alias for ethers@^6.13.5
 pnpm add ethers-v6@npm:ethers@^6.13.5
@@ -61,7 +62,7 @@ This is because in ethers-v5 EIP-712 signing is not stable. - <https://docs.ethe
 > Experimental feature (this method name will change)
 > This is still an experimental feature. If using it, please specify the exact version of ethers you are using (e.g. spcify "5.0.18", not "^5.0.18") as the method name will be renamed from _signTypedData to signTypedData once it has been used in the field a bit.
 
-You can use the official Hyperliquid python SDK to interact with HyperCore. We also built an in-house minimal typescript SDK that focuses on switching blocks, deploying the HyperCore token, and connecting the HyperCore token to a HyperEVM ERC20 (oft).
+You can use the official `Hyperliquid Python SDK` linked [here](https://github.com/hyperliquid-dex/hyperliquid-python-sdk) to interact with HyperCore. We also built an in-house minimal typescript SDK that focuses on switching blocks, deploying the HyperCore token, and connecting the HyperCore token to a HyperEVM ERC20 (oft).
 
 ## Accounts
 
