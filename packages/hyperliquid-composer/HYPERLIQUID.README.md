@@ -177,12 +177,12 @@ Spot assets can be sent from HyperEVM to HyperCore and vice versa. They are call
 These are done by sending an `ERC20::transfer` with asset bridge address as the recipient.
 
 The event emitted is `Transfer(address from, address to, uint256 value)` => `Transfer(_from, assetBridgeAddress, value);`
-And this is picked up by the Hyperliquid team running the backend. (we do not have move information about this as Hyperliquid is extremely closed source)
+And this is picked up by the Hyperliquid team running the backend. (we do not have move information about this it is closed source and owned by the Hyperliquid team)
 
 Note: The transaction MUST be sent to the `assetBridgeAddress`. Transfers to any other address is an address-address transfer within HyperEVM/HyperCore. For a cross-chain transfer you need to to:
 
-1. Send the tokens to the asset bridge address to get the token on the other HyperNetwork.
-2. Send an transaction/action to transfer from your address to the receiver address on the other HyperNetwork.
+1. Send the tokens to the asset bridge address to get the token on the other Hyperliquid network.
+2. Send an transaction/action to transfer from your address to the receiver address on the other Hyperliquid network.
 
 This is what we do in the `HyperliquidComposer` contract found - [here](contracts/HyperLiquidComposer.sol).
 
