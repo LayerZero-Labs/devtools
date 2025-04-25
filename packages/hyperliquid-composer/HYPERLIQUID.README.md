@@ -2,9 +2,13 @@
 
 We first start this document by talking about Hyperliquid, its quirks and the changes we had to make to achieve an `X-network` -> `HyperCore` oft transfer.
 
-## Hyperliquid networks
+## Hyperliquid Networks
 
 Hyperliquid has 2 “chains” - an `EVM` named `HyperEVM` and a `L1` called `HyperCore`.
+
+HyperCore, or Core, is a high-performance Layer 1 which manages the Hyperliquid exchange’s on-chain perpetual futures and spot order books with one-block finality. ​
+
+HyperEVM, or EVM, is an Ethereum Virtual Machine (EVM)-compatible environment that allows developers to build decentralized applications (dApps).
 
 The `EVM` has precompiles that let you interact with `HyperCore`. The `HyperCore` is where the spot and perp trading happens (and is probably why you are interested in going to Hyperliquid and reading this doc. If you are not listing on HyperCore then HyperEVM is your almost standard EVM network - you just need to switch block sizes).
 
