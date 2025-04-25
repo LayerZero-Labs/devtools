@@ -135,13 +135,13 @@ Transactions can be sent to the asset bridge address `0x2000...abcd` (where `abc
 
 The asset bridge address is computed by `0x2000000000000000000000000000000000000000` + the `coreIndexId` of the HIP-1 (in hex) - you can checkout `HyperLiquidComposerCodec.into_assetBridgeAddress()` in the `HyperLiquidComposer` contract to see how this is done - code found [here](contracts/library/HyperLiquidComposerCodec.sol).
 
-HyperCore to HyperEVM is done via the action `spotSend` (or the front end which does the same thing) with the destination address being the asset bridge address.
+HyperCore to HyperEVM is done via the action `spotSend`, or via the front end, with the destination address being the asset bridge address.
 
 This bridge is crucial to the interop between `HyperEVM` and `HyperCore` and it behaves like a lockbox - unlocking tokens on the other side of the bridge where tokens are unlocked.
 
-Note : There are no checks in the system that checks asset bridge values before trying to transfer between `HyperCore` and `HyperEVM`.
+> ⚠️ Note : There are no checks in the system that checks asset bridge values before trying to transfer between `HyperCore` and `HyperEVM`.
 
-This means that token liquidity must be matched if tokens are to be sent across. For tokens to be sent into `HyperCore` the contract deployer needs to mint the maximum supply (`u64.max` via the API which isn't the same as the UI due to `Hyperliquidity`) to either the token's asset bridge address or to their deployer account and later transfer it to the asset bridge address.
+Since this bridge behaves like a lockbox, this means that the other side of the bridge must always have enough tokens as defined in the transaction at the other end so that tokens can be passed. For tokens to be sent into `HyperCore` the contract deployer needs to mint the maximum supply (`u64.max` via the API which isn't the same as the UI due to `Hyperliquidity`) to either the token's asset bridge address or to their deployer account and later transfer it to the asset bridge address. The following invariant should hold at all times `(assetBridgeBalance.hypercore >= assetBridgeBalance.hyperevm when scaled`)
 
 The asset bridge address is denoted as `[EVM | Core]`
 
@@ -154,7 +154,7 @@ This means that `X*1e10` tokens can be sent into the bridge on the EVM side and 
 
 It should be noted that any more tokens sent to the EVM bridge will remain in the asset bridge address and not transfer any tokens on `HyperCore` (the same applies for `HyperCore` -> `HyperEVM`) due to Hyperliquid NOT having ANY checks and the tokens will be locked in the asset bridge address FOREVER. The Composer contract has checks in place that refunds the `receivers` address on `HyperEVM` should it encounter a case of bridge consumption.
 
-This is also why you can't "partially fund" the HyperCore system address. If you mint tokens to an address you control and fund HyperCore's asset bridge address with a subset of it `[0 | X.Core]`, these tokens would be consumed by users locking in their HyperEVM tokens to obtain HyperCore tokens, and now lets say that all `X` tokens on HyperCore have been consused and you end in a state `[X.EVM | 0]`. You then fund it with `X.Core` more tokens hoping to make it `[X.EVM | X.Core]` -- except you can't do this as it will cause a withdraw on the `X.EVM`resulting in `[0 | X.Core]` with `X.Core` more tokens in circulation on HyperCore that can't be withdrawn.
+This is also why you can't "partially fund" the HyperCore system address. If you mint tokens to an address you control and fund HyperCore's asset bridge address with a subset of it `[0 | X.Core]`, these tokens would be consumed by users locking in their HyperEVM tokens to obtain HyperCore tokens, and now lets say that all `X` tokens on HyperCore have been consumed and you end in a state `[X.EVM | 0]`. You then fund it with `X.Core` more tokens hoping to make it `[X.EVM | X.Core]` -- except you can't do this as it will cause a withdraw on the `X.EVM`resulting in `[0 | X.Core]` with `X.Core` more tokens in circulation on HyperCore that can't be withdrawn.
 
 Homework to the reader:
 
