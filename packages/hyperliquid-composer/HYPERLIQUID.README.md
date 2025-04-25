@@ -188,14 +188,14 @@ This is what we do in the `HyperliquidComposer` contract found - [here](contract
 
 ## Hyperliquid Composer
 
-We can't auto convert all tokens to `native spot` in an `lzReceive` function because users might want to hold the token on `HyperEVM` and only move it to `L1` when they want to trade.
+We can't auto convert all tokens to `native spot` in an `lzReceive` function because users might want to hold the token on `HyperEVM` and only move it to `HyperCore` when they want to trade.
 
 The solution is to have an `lzCompose` function for the `EVM Spot` and `Core Spot` conversion on the ingress.
 Unfortunately this means that `OFT` developers who already have an `lzCompose` function will need to do some plumbing - like chaining this `lzCompose` function to their current composer.
 
 `_composeMsg` which is part of the `OFTComposeMsgCodec` (`SendParam.composeMsg`) should contain the `_receiver` address - and it should be encoded via `abi.encodePacked()` or `abi.encode()` of the `receiver` address.
 This is because the `to` address in the transfer is the `Composer` contract address and not the `receiver` address.
-The `Composer` contract receives the token during the `lzReceive` mint. It then `transfer`s the token amount to the asset bridge address corresponding to the token the composer is connected with.
+The `Composer` contract receives the token during the `lzReceive` mint. It then executes `transfer` at the underlying oft's erc20 with the token amount minted in `lzReceive` and the destination address as the asset bridge address corresponding to the token the composer is connected with.
 
 That particular `Transfer` event is what Hyperliquid L1 nodes/relayers listen to in order to credit the `receiver` address on the L1.
 
@@ -274,6 +274,8 @@ function _sendAssetToHyperCore(address _receiver, uint256 _amountLD) internal vi
 Since the composer also supports sending native token `$HYPE` into `HyperCore` the above function also has a native function variant in the composer that can be triggered by sending `msg.value` along with the compose payload.
 
 ## Using the LayerZero Hyperliquid SDK
+
+The following are just syntax and usage. Explanations are below in the section on "Deploy and Connect your OFT Guide".
 
 ### Reading Core Spot state
 
