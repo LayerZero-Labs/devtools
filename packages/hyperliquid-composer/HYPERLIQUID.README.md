@@ -95,14 +95,14 @@ You can also use `bigBlockGasPrice` instead of `gasPrice` in your transactions.
 There are 2 ways in which Hyperliquid uses precompiles - "System Contracts" and "L1ActionPrecompiles"
 
 The system contracts are:
-`0x2222222222222222222222222222222222222222` is the system contract address for `HYPE`
-`0x200000000000000000000000000000000000abcd` is the system contract address for a created Core Spot
+- `0x2222222222222222222222222222222222222222` is the system contract address for the `HYPE` token
+- `0x200000000000000000000000000000000000abcd` is the system contract address for a created Core Spot token
 
 and `L1ActionPrecompiles`
-`0x0000000000000000000000000000000000000000` is one of the many `L1Read` precompiles.
-`0x3333333333333333333333333333333333333333` is the `L1WritePrecompile` and is used to send transactions to HyperCore.
+- `0x0000000000000000000000000000000000000000` is one of the many `L1Read` precompiles.
+- `0x3333333333333333333333333333333333333333` is the `L1WritePrecompile` and is used to send transactions to HyperCore.
 
-with more found [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/interacting-with-hypercore).
+More `L1ActionPrecompiles` found [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/interacting-with-hypercore).
 
 `L1Read` reads from the last produced `HyperCore` block at the time of EVM-transaction execution. Similarly `L1Write` writes to the first produced `HyperCore` block after the production of the EVM-block.
 
