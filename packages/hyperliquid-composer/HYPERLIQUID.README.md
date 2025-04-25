@@ -108,19 +108,19 @@ More `L1ActionPrecompiles` found [here](https://hyperliquid.gitbook.io/hyperliqu
 
 Note: the `L1Read` and `L1Write` precompiles are enabled only on Testnet. We have no timeline from the Hyperliquid team regarding a mainnet launch, although they have updated their mainnet node to support them.
 
-## Tokens Standards
+## Token Standards
 
 Tokens on the `EVM` are `ERC20` (EVM Spot) and on `HyperCore` are `HIP-1` (Core Spot).
 
-Projects willing to buy a Core Spot need to undergo a 31 hour dutch auction to get a spot index after which they need to deploy the spot - setting its configuration, genesis balances, token information, etc.
+Projects willing to buy a Core Spot need to undergo a 31 hour dutch auction to secure a core spot index after which they need to deploy the core spot - setting its configuration, genesis balances, token information, etc.
 
 Note: if you use the [Hyperliquid UI](https://app.hyperliquid.xyz/deploySpot) you are forced to use an optional Hyperliquid token bootstrap thing called "Hyperliquidity". This is not supported by LayerZero because it ends up in a state where the asset bridge address can not be collaterized. More on this later in the document.
 
-You can avoid this by using their API to deploy the spot - we build an SDK <https://github.com/LayerZero-Labs/devtools/pull/1441> which lets you use scripts (listed in the PR description) to set trading fee share, trigger user genesis, token genesis, and register a trading spot with USDC.
+You can avoid this by using their API to deploy the core spot - we built an SDK <https://github.com/LayerZero-Labs/devtools/pull/1441> which lets you use scripts (listed in the PR description) to set trading fee share, trigger user genesis, token genesis, and register a trading spot with USDC.
 
 The Core Spot then needs to be connected to the EVM Spot (ERC20) - which is an irreversible process - described [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers#linking-Core-and-evm-spot-assets), we also have a SDK that lets you do this <https://github.com/LayerZero-Labs/devtools/pull/1432>
 
-If you do not link them, then you can't use the token on `HyperCore` - which means no spot and perp trading. Since you only have the EVM Spot (ERC20) you can still trade on `HyperEVM` via DeFi protocols.
+If you do not link the `EVM spot` and `Core spot` then no `asset bridge` is formed and users cannot bridge the tokens between `HyperEVM` and `HyperCore` (bi-directional).
 
 In order to connect the two assets and create the asset bridge there are 2 actions that need to be performed:
 
