@@ -58,6 +58,11 @@
     "test": "$npm_execpath test:forge",
     "test:forge": "forge test"
   },
+  "dependencies": {
+    "commander": "^11.1.0",
+    "hardhat": "^2.22.10",
+    "ts-node": "^10.9.2"
+  },
   "devDependencies": {
     "@layerzerolabs/devtools-extensible-cli": "^0.0.6",
     "@layerzerolabs/io-devtools": "^0.1.16",
@@ -75,16 +80,13 @@
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
     "axios": "^1.7.2",
-    "commander": "^11.1.0",
     "depcheck": "^1.4.7",
     "dotenv": "^16.4.7",
     "ethers": "^5.7.2",
     "ethers-v6": "npm:ethers@^6.13.5",
-    "hardhat": "^2.22.10",
     "inquirer": "^12.3.3",
     "jest": "^29.7.0",
     "rimraf": "^5.0.5",
-    "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
     "tsup": "^8.4.0"
   },
