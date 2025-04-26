@@ -51,6 +51,9 @@ export class HyperliquidClient {
                 vaultAddress: null,
             }
 
+            this.logger.info(
+                `Transaction is sent from ${wallet.address} on network hypercore-${this.isTestnet ? 'testnet' : 'mainnet'}`
+            )
             const { executeTx } = await inquirer.prompt([
                 {
                     type: 'confirm',

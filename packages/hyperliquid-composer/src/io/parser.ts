@@ -124,3 +124,10 @@ export async function getHyperEVMOAppDeployment(
         deployment: deploymentFile,
     }
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function getERC20abi(): Promise<any> {
+    const erc20Path = path.join(__dirname, '..', 'src', 'types', 'ERC20.json')
+    const erc20Abi = JSON.parse(fs.readFileSync(erc20Path, 'utf8'))
+    return erc20Abi['abi']
+}
