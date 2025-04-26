@@ -42,6 +42,7 @@
     "contracts/**/*",
     "test/**/*",
     "./dist/index.*",
+    "./dist/cli.*",
     "./src/**/*",
     "cli.js"
   ],
