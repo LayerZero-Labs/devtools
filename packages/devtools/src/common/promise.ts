@@ -115,7 +115,7 @@ export const tapError = async <T>(task: Task<T>, onError: Factory<[error: unknow
  * Will resolve with the output of the first task that resolves
  * or reject with the last rejection.
  *
- * Will reject immediatelly if no tasks have been passed
+ * Will reject immediately if no tasks have been passed
  *
  * @param {Task<T>[]} tasks
  * @returns {Promise<T>}
