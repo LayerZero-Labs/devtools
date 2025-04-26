@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-extensible-cli
 
+## 0.0.7
+
+### Patch Changes
+
+- 8747ede: remove unnecessary turbo.json
+
 ## 0.0.6
 
 ### Patch Changes
