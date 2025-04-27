@@ -1,5 +1,11 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 0.0.4
+
+### Patch Changes
+
+- 58fe156: fix dependencies vs devdeps
+
 ## 0.0.3
 
 ### Patch Changes
