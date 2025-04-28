@@ -331,7 +331,7 @@ npx hardhat lz:deploy --tags MyHyperLiquidComposer
 
 After populating your `.env` you can run the following script to send tokens across. Having the second argument `gas > 0` will send the tokens into `HyperCore`. Setting the third argument `value > 0` will also fund the user's address with `HYPE` tokens on `HyperCore`.
 
-> ⚠️ Note: You would need to fund the composer's address with HyperCore with at least $1 in USDC or HYPE so that it can perform L1WriteActions through it's address. 
+> ⚠️ Note: You would need to fund the composer's address with HyperCore with at least $1 in USDC or HYPE so that it can perform L1WriteActions through it's address.
 
 ```bash
 forge script script/SendScript.s.sol --private-key $PRIVATE_KEY --rpc-url $RPC_URL_BSC_TESTNET --sig "exec(uint256,uint128,uint128)" <oft-amount> <composer-gas> <composer-value> --broadcast
