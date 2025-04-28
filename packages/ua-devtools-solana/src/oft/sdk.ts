@@ -180,6 +180,8 @@ export class OFT extends OmniSDK implements IOApp {
 
         const oftStore = this.umiPublicKey
 
+        // the instructions vector is a vector of instructions that are executed in order
+        // order matters because the accounts need to be initialized
         const instructions = [
             await this._createSetPeerAddressIx(normalizedPeer, eid), // admin
         ]
@@ -198,6 +200,7 @@ export class OFT extends OmniSDK implements IOApp {
             )
         }
 
+        // since the order is important, we push the instructions in the order we want them to be executed
         instructions.push(
             await this._setPeerEnforcedOptionsIx(new Uint8Array([0, 3]), new Uint8Array([0, 3]), eid), // admin
             await this._setPeerFeeBpsIx(eid), // admin
