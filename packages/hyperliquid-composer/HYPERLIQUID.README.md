@@ -82,7 +82,7 @@ They are both EVM blocks and you can toggle between them by sending an L1 action
 
 You can also use `bigBlockGasPrice` instead of `gasPrice` in your transactions.
 
-> Note: This flags the user as using big blocks and all subsequent transactions on HyperEVM will be of type big block. You can also toggle this flag on and off.
+> ⚠️ Note: This flags the user as using big blocks and all subsequent transactions on HyperEVM will be of type big block. You can also toggle this flag on and off.
 
 `HyperCore` has its own blocks which results in 3 blocks.  As Core and EVM blocks are produced at differing speeds with HyperCore creating more than HyperEVM the blocks created are not `[EVM]-[Core]-[EVM]` but rather something like:
 
@@ -402,7 +402,7 @@ The above cases only occur in the stae when the compose payload is valid. In the
 
 #### Malformed `composeMsg` - unable to abi.decode(composeMsg) into address and non-EVM sender
 
-> Note: The only case when tokens can be locked in the Composer
+> ⚠️ Note: The only case when tokens can be locked in the Composer
 
 Building on the afore mentioned case, it is possible that the compose transaction comes from `Solana` or a `move` language network that uses a different system of addresses. As such we can't return funds to that address on `HyperEVM` - in an ideal world we can have a composer that returns tokens to the sending network but that would consume more gas (doubling the transaction) and since gas paid is non refundable it would simply be wasted.
 
@@ -462,7 +462,7 @@ npx @layerzerolabs/hyperliquid-composer core-spot \
 ### Step 1/4 `setDeployerTradingFeeShare`
 
 This is the step where you set the trading fee share for the deployer. It can be in the range of `[0%,100%]`.
-> Note: The trading fee can be reset as long as the new share is lower than the previous share.
+> ⚠️ Note: The trading fee can be reset as long as the new share is lower than the previous share.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer trading-fee \
@@ -514,12 +514,12 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
     [--log-level {info | verbose}]
 ```
 
-> Note: There is no limit to the number of time you can re-run this command.
+> ⚠️ Note: There is no limit to the number of time you can re-run this command.
 
 ### Step 3/4 `genesis`
 
 This is the step that registers the above genesis balances on `HyperCore`.
-> Note: This is irreversible.
+> ⚠️ Note: This is irreversible.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer set-genesis \
@@ -556,7 +556,7 @@ In order to enable transfers between the OFT and the Core Spot, we need to conne
 ### Step 1/2 `requestEvmContract`
 
 This step is issued by the Core Spot deployer and populates in `HyperCore` that a request has been made for the mentioned Core Spot to be connected to the ERC20 deployed at the mentioned ERC20 address.
-> Note: This step can be issued multiple times until the `finalizeEvmContract` step is issued.
+> ⚠️ Note: This step can be issued multiple times until the `finalizeEvmContract` step is issued.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer request-evm-contract  \
@@ -570,7 +570,7 @@ npx @layerzerolabs/hyperliquid-composer request-evm-contract  \
 ### Step 2/2 `finalizeEvmContract`
 
 This step completes the connection between the OFT and the Core Spot. It pulls either HyperEVM testnet or mainnet address from the LayerZero config file based on the `eid` and the Core Spot information from the HyperCore deployment.
-> Note: This step is the final step and can only be issued once.
+> ⚠️ Note: This step is the final step and can only be issued once.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer finalize-evm-contract  \
@@ -588,6 +588,8 @@ While the composer could have been deployed at any point in time due to its stat
 ```bash
 npx hardhat lz:deploy --tags MyHyperLiquidComposer
 ```
+
+> ⚠️ Note: You would need to fund the composer's address with HyperCore with at least $1 in USDC or HYPE so that it can perform L1WriteActions through it's address. 
 
 ## Sending tokens from x-network to HyperEVM/Core
 
