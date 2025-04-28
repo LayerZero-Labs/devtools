@@ -27,7 +27,7 @@
     "@babel/core": "^7.23.9",
     "@layerzerolabs/devtools-evm-hardhat": "^2.0.7",
     "@layerzerolabs/eslint-config-next": "~2.3.39",
-    "@layerzerolabs/hyperliquid-composer": "^0.0.1",
+    "@layerzerolabs/hyperliquid-composer": "^0.0.5",
     "@layerzerolabs/lz-definitions": "^3.0.59",
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
