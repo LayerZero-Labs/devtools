@@ -1,5 +1,11 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 0.0.5
+
+### Patch Changes
+
+- 56ec0eb: docs updated - tells devs to fund their address with $1 USDC or HYPE
+
 ## 0.0.4
 
 ### Patch Changes
