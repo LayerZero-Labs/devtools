@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.7.3
+
+### Patch Changes
+
+- b8d9c72: LZ_ENABLE_EXPERIMENTAL_HYPERLIQUID_EXAMPLE for examples/oft-hyperliquid
+
 ## 0.7.2
 
 ### Patch Changes
