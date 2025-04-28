@@ -43,6 +43,9 @@ contract OmniCall is OApp {
     /// @dev Error for when a call target is the endpoint.
     error LZ_OmniCall__InvalidTarget();
 
+    /// @dev Error for when a call has no calldata and non-zero value.
+    error LZ_OmniCall__InvalidCall();
+
     /// -----------------------------------------------------------------------
     /// State variables
     /// -----------------------------------------------------------------------
@@ -205,6 +208,9 @@ contract OmniCall is OApp {
     ) internal view returns (MessagingFee memory fee, bytes memory options) {
         if (dstGasLimit == 0) {
             revert LZ_OmniCall__ZeroGasLimit();
+        }
+        if (dstCall.callData.length == 0 && dstCall.value > 0) {
+            revert LZ_OmniCall__InvalidCall();
         }
 
         if (messageType == ATOMIC_MESSAGE_TYPE) {
