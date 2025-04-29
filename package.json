@@ -40,6 +40,9 @@
     "hardhat-deploy": "^0.12.1",
     "rustbn.js": "^0.3.0"
   },
+  "dependencies": {
+    "@layerzerolabs/hyperliquid-composer": "link:/workspaces/devtools-hyperliquid-main/packages/hyperliquid-composer"
+  },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
     "@layerzerolabs/prettier-config-next": "^2.3.39",
