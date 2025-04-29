@@ -52,12 +52,7 @@ program
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
     .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
     .option('-l, --log-level <level>', 'Log level', LogLevel.info)
-    .action(async (options) => {
-        if (options.action === 'create' && !options.oappConfig) {
-            throw new Error('--oapp-config is required when action is create')
-        }
-        await coreSpotDeployment(options)
-    })
+    .action(coreSpotDeployment)
 
 program
     .command('trading-fee')
