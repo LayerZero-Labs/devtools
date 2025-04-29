@@ -26,7 +26,7 @@ npx @layerzerolabs/hyperliquid-composer core-spot \
 ```bash
 npx @layerzerolabs/hyperliquid-composer core-spot \
     --action create \
-    --oapp-config <layerzeroConfigFile> \
+    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
@@ -96,7 +96,7 @@ npx @layerzerolabs/hyperliquid-composer register-spot \
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer request-evm-contract  \
-    --oapp-config <layerzero.config.ts> \
+    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --log-level verbose \
@@ -107,7 +107,7 @@ npx @layerzerolabs/hyperliquid-composer request-evm-contract  \
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer finalize-evm-contract  \
-    --oapp-config <layerzero.config.ts> \
+    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --log-level verbose \
@@ -187,7 +187,7 @@ This will create a new file under `./deployments/hypercore-{testnet | mainnet}` 
 ```bash
 npx @layerzerolabs/hyperliquid-composer core-spot \
     --action create \
-    --oapp-config <layerzero.config.ts> \
+    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
@@ -297,7 +297,7 @@ This step is issued by the core spot deployer and populates in `HyperCore` that 
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer request-evm-contract  \
-    --oapp-config <layerzero.config.ts> \
+    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --log-level verbose \
@@ -312,7 +312,7 @@ This step completes the connection between the OFT and the core spot. It pulls e
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer finalize-evm-contract  \
-    --oapp-config <layerzero.config.ts> \
+    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --log-level verbose \
