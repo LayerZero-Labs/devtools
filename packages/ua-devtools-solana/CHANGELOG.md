@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 4.1.3
+
+### Patch Changes
+
+- 3de5033: fix bug with double initialization of send and receive library in Solana SDK
+
 ## 4.1.2
 
 ### Patch Changes

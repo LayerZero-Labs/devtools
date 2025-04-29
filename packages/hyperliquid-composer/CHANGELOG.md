@@ -1,5 +1,11 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 0.0.6
+
+### Patch Changes
+
+- 000f6ec: hyperliquid sdk update - oapp-config is optional and will prompt the user for oft address and oft deploy transaction hash
+
 ## 0.0.5
 
 ### Patch Changes
