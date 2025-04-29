@@ -89,7 +89,7 @@ export async function getHyperEVMOAppDeployment(
     logger?: Logger
 ): Promise<{ contractName: string; deployment: string }> {
     if (oapp_config == undefined) {
-        logger?.info(`oapp-config not supplied. prompting user for hyperevm-${network} oft and oft transaction hash`)
+        logger?.info(`oapp-config not supplied. prompting user for inputs`)
         throw new Error(`oapp-config not found for ${network}`)
     }
 
