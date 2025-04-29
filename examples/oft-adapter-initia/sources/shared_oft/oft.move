@@ -36,7 +36,6 @@ module oft::oft {
     use oft_common::oft_limit::OftLimit;
 
     friend oft::oapp_receive;
-    friend oft::oapp_compose;
 
     // ======================================== For FungibleAsset Enabled OFTs ========================================
 
