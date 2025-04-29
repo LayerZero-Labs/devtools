@@ -38,7 +38,7 @@ export async function coreSpotDeployment(args: any): Promise<void> {
             logger.verbose(`Tx hash: ${oft_txHash}, address: ${oft_address}`)
         } catch {
             logger.error(
-                `Error fetching deployment for ${network} for oapp-config ${oappConfig}. \n Can you please provide the oft address and tx hash manually?`
+                `Error fetching deployment for ${network} for oapp-config ${oappConfig}. \n\n Can you please provide the oft address and tx hash manually?`
             )
 
             const { oftAddress, oftTxHash } = await inquirer.prompt([

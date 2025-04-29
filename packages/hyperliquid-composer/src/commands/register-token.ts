@@ -33,7 +33,7 @@ export async function requestEvmContract(args: any): Promise<void> {
         oft_address = deployment['address']
     } catch (error) {
         logger.error(
-            `Error fetching deployment for ${network} for oapp-config ${oappConfig}. \n Can you please provide the oft address manually?`
+            `Error fetching deployment for ${network} for oapp-config ${oappConfig}. \n\n Can you please provide the oft address manually?`
         )
         const { oftAddress } = await inquirer.prompt([
             {
@@ -98,7 +98,7 @@ export async function finalizeEvmContract(args: any): Promise<void> {
         oft_address = deployment['address']
     } catch (error) {
         logger.error(
-            `Error fetching deployment for ${network} for oapp-config ${oappConfig}. Can you please provide the oft address manually?`
+            `Error fetching deployment for ${network} for oapp-config ${oappConfig}. \n\n Can you please provide the oft address manually?`
         )
         const { oftAddress } = await inquirer.prompt([
             {
