@@ -1,0 +1,60 @@
+################################################################
+# Manage oft-solana-composer-library deployment through Crypto Infrastructure as Code
+################################################################
+
+addon "svm" {
+    rpc_api_url = input.rpc_api_url
+    network_id = input.network_id
+}
+variable "composer" {
+    value = svm::get_program_from_anchor_project("composer")
+}
+
+variable "initComposerTx" {
+    value = "c7c2de2b94f8c2ab3aad2be6167477f2fc6864f5623e3791aa2f25cbcb5207a202ff3c383bdc379f1c5eae5faa88478e8729bc45057eb95154f0f7ec4a3ec80503c62b8b7cdd97cc"
+}
+
+action "deploy_composer" "svm::deploy_program" {
+    description = "Deploy composer program"
+    program = variable.composer
+    authority = signer.authority
+    payer = signer.payer
+}
+
+action "program_call" "svm::process_instructions" {
+    description = "Invoke composer init instructions"
+    program = variable.composer
+    instruction {
+        program_idl = variable.composer.idl
+        instruction_name = "initComposer"
+        instruction_args = [{
+            oftPda: "4x3oQtX4MhjTKGBeXDZbtTSLZ9cUWo5waN2UChAuthtS",
+            endpointPda: "2uk9pQh3tB5ErV7LGQJcbWjb4KeJ2UJki5qJZ8QG56G3"
+        }]
+        composer {
+            public_key = "7XMGP9XXajZHXQpWoXZqqLawD5pUbY7tzxmiTga23mi9" // You'll need to provide the composer account public key
+        }
+        lzComposeTypesAccounts {
+            public_key = "2SwnA7KLCVwsQweHx6oiiW7Yo8WmLPjGgAiV6J8souDD" // You'll need to provide the lz_compose_types_accounts public key
+        }
+        payer {
+            public_key = signer.payer.public_key
+        }
+        systemProgram {
+            public_key = svm::system_program_id()
+        }
+    }
+    signers = [signer.payer]
+    depends_on = [action.deploy_composer]
+}
+
+// action "send_transaction" "svm::sign_transaction" {
+//     description = "Send transaction"
+//     transaction_bytes = variable.initComposerTx
+//     signers = [signer.payer]
+//     depends_on = [action.deploy_composer]
+// }
+
+// output "program_call_signature" {
+//     value = action.program_call.signature
+// }

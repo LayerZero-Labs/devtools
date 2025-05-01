@@ -1,0 +1,10 @@
+
+# For mainnet deployment, use web wallets, hardware wallets, or multisig for key security.
+
+# signer "payer" "svm::web_wallet" {
+#   address = "YOUR_WEB_WALLET_PUBLIC_KEY"
+# }
+
+# signer "authority" "svm::squads" {
+#   address = "YOUR_SQUAD_PUBLIC_KEY"
+# }

@@ -1,0 +1,8 @@
+
+signer "payer" "svm::secret_key" {
+    keypair_json = input.authority_keypair_json
+}
+    
+signer "authority" "svm::secret_key" {
+    keypair_json = input.authority_keypair_json
+}

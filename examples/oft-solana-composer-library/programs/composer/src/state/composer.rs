@@ -35,10 +35,10 @@ pub struct LzComposeTypesAccounts {
     pub input_vault_mint: Pubkey,
     pub output_vault_mint: Pubkey,
     pub lz_program: Pubkey,
-    pub authority: Pubkey,
     pub tick_array_lower: Pubkey,
     pub tick_array_current: Pubkey,
     pub tick_array_upper: Pubkey,
+    pub to_address: Pubkey,
 }
 
 impl LzComposeTypesAccounts {

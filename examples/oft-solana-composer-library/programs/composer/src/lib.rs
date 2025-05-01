@@ -8,7 +8,7 @@ use oapp::{endpoint_cpi::LzAccount, LzComposeParams};
 
 use state::*;
 
-declare_id!("2TUdVCMQsefMs28hTeMKAHTjgz8cdMbo7V5oEdrYSu7G");
+declare_id!("4CDvcxbE21FD3yd5AtVGmAndXxricN5aKBADz8UNyoQq");
 
 const LZ_COMPOSE_TYPES_SEED: &[u8] = b"LzComposeTypes";
 const COMPOSER_SEED: &[u8] = b"Composer";

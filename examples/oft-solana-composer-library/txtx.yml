@@ -1,0 +1,19 @@
+---
+name: oft-solana-composer-library
+id: oft-solana-composer-library
+runbooks:
+  - name: deployment
+    description: Deploy programs
+    location: runbooks/deployment
+environments:
+  localnet:
+      network_id: localnet
+      rpc_api_url: http://127.0.0.1:8899
+      payer_keypair_json: ./keypair.json
+      authority_keypair_json: ./keypair.json
+  devnet:
+      network_id: devnet
+      rpc_api_url: https://api.devnet.solana.com
+      payer_keypair_json: ./keypair.json
+      authority_keypair_json: ./keypair.json
+

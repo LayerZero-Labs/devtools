@@ -6,15 +6,54 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-composer = "2TUdVCMQsefMs28hTeMKAHTjgz8cdMbo7V5oEdrYSu7G"
-oft = "BH2YoCQV4i7gagmJqhj6nBByroJJwAQHa76XKV921e9m"
+composer = "4CDvcxbE21FD3yd5AtVGmAndXxricN5aKBADz8UNyoQq"
+oft = "Gwdvzz5Qo8qBzG9B1NVZgLjwBVfHpympeb17QZAFQVB5"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "http://localhost:8899"
-wallet = "./krak.json"
+cluster = "localnet"
+wallet = "./keypair.json"
 
 [scripts]
 test = "npx jest test/anchor/"
+
+[test]
+reset = true
+
+[test.validator]
+url = "https://api.mainnet-beta.solana.com" # This is the url of the cluster that accounts are cloned from (See `test.validator.clone`).
+
+[[test.validator.clone]]
+address = "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK"
+
+[[test.validator.clone]]
+address = "9iFER3bpjf1PTTCQCfTRu17EJgvsxo9pVyA9QWwEuX4x"
+
+[[test.validator.clone]]
+address = "D2bXjvT1xDiymTeX2mHqf9WGHkSVr2hPoHJiEg2jfVjL"
+
+[[test.validator.clone]]
+address = "Cv3s57YQzJRp988qvXPfZN5xX7BUFcgB1ycA9jzSrh2n"
+
+[[test.validator.clone]]
+address = "J1jEbmdbtsfA26igi1ryQjejnYVQRpxnobZh9tgSaH1h"
+
+[[test.validator.clone]]
+address = "8AQHmKsoFh5Uh8bzYnnQ4Fx2QL2axPao9hjnt1YQBvdS"
+
+[[test.validator.clone]]
+address = "3ZUDGLF7xw26gcXUhZK3tL4MU2VizCUkXoHdb2LQ4zDM"
+
+[[test.validator.clone]]
+address = "5Nb7bdyi4jkMdA8Xqmt72HS1fpkGRQ573Gf8PJeGunsy"
+
+[[test.validator.clone]]
+address = "sUfgz2jsDhN8qn1PrkWr9pVnUrLqqL1yB7WAnCj62Xz"
+
+[[test.validator.clone]]
+address = "DEkqHyPN7GMRJ5cArtQFAWefqbZb33Hyf6s5iCwjEonT"
+
+[[test.validator.clone]]
+address = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"

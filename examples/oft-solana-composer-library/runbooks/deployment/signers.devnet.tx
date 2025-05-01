@@ -1,0 +1,8 @@
+
+signer "payer" "svm::web_wallet" {
+    // expected_address = input.expected_payer_address
+}
+    
+signer "authority" "svm::web_wallet" {
+    // expected_address = input.expected_payer_address
+}

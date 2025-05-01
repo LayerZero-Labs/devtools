@@ -6,6 +6,9 @@ coverage.json
 target
 typechain
 typechain-types
+wallet.json
+keypair.json
+secret.txt
 
 # Hardhat files
 cache

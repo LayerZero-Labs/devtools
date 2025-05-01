@@ -2,6 +2,7 @@ use crate::*;
 use anchor_lang::prelude::*;
 use anchor_spl::token::{Token};
 use anchor_spl::token_interface::{Token2022, TokenAccount, Mint};
+use anchor_spl::associated_token::AssociatedToken;
 
 use raydium_clmm_cpi::cpi::accounts::SwapSingleV2;
 use raydium_clmm_cpi::cpi::swap_v2;
@@ -17,8 +18,9 @@ use oapp::LzComposeParams;
 use spl_memo;
 
 #[derive(Accounts)]
+#[instruction(params: LzComposeParams)]
 pub struct LzCompose<'info> {
-    // Use the stored “oft” field as the unique seed.
+    // Use the stored "oft" field as the unique seed.
     #[account(
         mut,
         seeds = [COMPOSER_SEED, &composer.oft.to_bytes()],
@@ -28,6 +30,9 @@ pub struct LzCompose<'info> {
 
     pub clmm_program: Program<'info, RaydiumClmm>,
     /// The user performing the swap.
+    /// The end-user or intermediary paying for this swap and transaction fees.
+    /// Must be mutable because we fund the ATA creation below.
+    #[account(mut)]
     pub payer: Signer<'info>,
 
     /// The factory state to read protocol fees.
@@ -77,9 +82,9 @@ pub struct LzCompose<'info> {
     pub output_vault_mint: Box<InterfaceAccount<'info, Mint>>,
 
     // Extra accounts required by the CPI.
-    /// The authority account for the swap.
-    pub authority: AccountInfo<'info>,
-
+    /// The bitmap extension account for this pool’s tick arrays
+    #[account(mut)]
+    pub tick_bitmap: AccountInfo<'info>,
     /// Tick arrays for the swap range.
     #[account(mut)]
     pub tick_array_lower: AccountInfo<'info>,
@@ -87,6 +92,26 @@ pub struct LzCompose<'info> {
     pub tick_array_current: AccountInfo<'info>,
     #[account(mut)]
     pub tick_array_upper: AccountInfo<'info>,
+    
+    /// CHECK: Will be validated in `apply()` against the payload.
+    #[account(mut)]
+    pub to_address: UncheckedAccount<'info>,
+
+    /// The recipient’s ATA for the output mint.  
+    /// If it doesn’t exist, Anchor will create it, funded by `payer`.
+    #[account(
+      init_if_needed,
+      payer = payer,
+      associated_token::mint = output_vault_mint,
+      associated_token::authority = to_address,
+      associated_token::token_program = token_program
+    )]
+    pub to_token_account: Box<InterfaceAccount<'info, TokenAccount>>,
+
+    /// Anchor needs these to create an ATA if missing:
+    pub associated_token_program: Program<'info, AssociatedToken>,
+    pub system_program: Program<'info, System>,
+    pub rent: Sysvar<'info, Rent>,
 }
 
 impl LzCompose<'_> {
@@ -102,6 +127,12 @@ impl LzCompose<'_> {
         compose_from.copy_from_slice(&msg[40..72]);
         let inner = &msg[72..];
         let min_amount_out = u64::from_be_bytes(inner[0..8].try_into().unwrap());
+        let receiver = Pubkey::new_from_array(inner[8..40].try_into().unwrap());
+        require_keys_eq!(
+            ctx.accounts.to_address.key(),
+            receiver,
+            ComposerError::InvalidTo
+        );
 
         // Build CPI accounts struct.
         let cpi_accounts = SwapSingleV2 {
@@ -109,7 +140,7 @@ impl LzCompose<'_> {
             amm_config: ctx.accounts.amm_config.to_account_info(),
             pool_state: ctx.accounts.pool_state.to_account_info(),
             input_token_account: ctx.accounts.input_token_account.to_account_info(),
-            output_token_account: ctx.accounts.output_token_account.to_account_info(),
+            output_token_account: ctx.accounts.to_token_account.to_account_info(),
             input_vault: ctx.accounts.input_vault.to_account_info(),
             output_vault: ctx.accounts.output_vault.to_account_info(),
             observation_state: ctx.accounts.observation_state.to_account_info(),
@@ -122,15 +153,7 @@ impl LzCompose<'_> {
 
         let mut cpi_ctx = CpiContext::new(ctx.accounts.clmm_program.to_account_info(), cpi_accounts);
         cpi_ctx = cpi_ctx.with_remaining_accounts(vec![
-            ctx.accounts.payer.to_account_info(),
-            ctx.accounts.authority.to_account_info(),
-            ctx.accounts.amm_config.to_account_info(),
-            ctx.accounts.pool_state.to_account_info(),
-            ctx.accounts.input_token_account.to_account_info(),
-            ctx.accounts.output_token_account.to_account_info(),
-            ctx.accounts.input_vault.to_account_info(),
-            ctx.accounts.output_vault.to_account_info(),
-            ctx.accounts.observation_state.to_account_info(),
+            ctx.accounts.tick_bitmap.to_account_info(),
             ctx.accounts.tick_array_lower.to_account_info(),
             ctx.accounts.tick_array_current.to_account_info(),
             ctx.accounts.tick_array_upper.to_account_info(),
