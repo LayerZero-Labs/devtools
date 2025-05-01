@@ -1,6 +1,5 @@
 import fs from 'fs'
 import path from 'path'
-import 'hardhat/register'
 
 import { importDefault, Logger } from '@layerzerolabs/io-devtools'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
@@ -89,6 +88,11 @@ export async function getHyperEVMOAppDeployment(
     network: string,
     logger?: Logger
 ): Promise<{ contractName: string; deployment: string }> {
+    if (oapp_config == undefined) {
+        logger?.info(`oapp-config not supplied. prompting user for inputs`)
+        throw new Error(`oapp-config not found for ${network}`)
+    }
+
     const targetEid =
         network === 'testnet'
             ? EndpointId.HYPERLIQUID_V2_TESTNET.valueOf()

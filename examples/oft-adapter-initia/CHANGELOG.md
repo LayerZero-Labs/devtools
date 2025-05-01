@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-adapter-initia-example
 
+## 0.1.0
+
+### Minor Changes
+
+- 72eb01b: Updating modules to latest version
+
 ## 0.0.5
 
 ### Patch Changes

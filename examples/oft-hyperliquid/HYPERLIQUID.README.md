@@ -26,7 +26,7 @@ npx @layerzerolabs/hyperliquid-composer core-spot \
 ```bash
 npx @layerzerolabs/hyperliquid-composer core-spot \
     --action create \
-    --oapp-config <layerzeroConfigFile> \
+    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
@@ -96,7 +96,7 @@ npx @layerzerolabs/hyperliquid-composer register-spot \
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer request-evm-contract  \
-    --oapp-config <layerzero.config.ts> \
+    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --log-level verbose \
@@ -107,7 +107,7 @@ npx @layerzerolabs/hyperliquid-composer request-evm-contract  \
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer finalize-evm-contract  \
-    --oapp-config <layerzero.config.ts> \
+    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --log-level verbose \
@@ -134,7 +134,7 @@ The above cases only occur in the stae when the compose payload is valid. In the
 
 #### Malformed `composeMsg` - unable to abi.decode(composeMsg) into address and non-evm sender
 
-> Note: The only case when tokens can be locked in the Composer
+> ⚠️ Note: The only case when tokens can be locked in the Composer
 
 Building on the afore mentioned case, it is possible that the compose transaction comes from `Solana` or a `move` language network that uses a different system of addresses. As such we can't return funds to that address on `HyperEVM` - in an ideal world we can have a composer that returns tokens to the sending network but that would consume more gas (doubling the transaction) and since gas paid is non refundable it would simply be wasted.
 
@@ -164,7 +164,7 @@ Test the OFTs qith `quoteSend()` or by sending a test lzTransaction across the n
 
 ## Deploy the Core Spot
 
-> REMINDER : HYPERLIQUIDITY IS NOT SUPPORTED
+> ⚠️ REMINDER : HYPERLIQUIDITY IS NOT SUPPORTED
 
 Open <https://app.hyperliquid-testnet.xyz/deploySpot> in a tab so that you can monitor the difference in steps. Or you can use:
 
@@ -187,7 +187,7 @@ This will create a new file under `./deployments/hypercore-{testnet | mainnet}` 
 ```bash
 npx @layerzerolabs/hyperliquid-composer core-spot \
     --action create \
-    --oapp-config <layerzero.config.ts> \
+    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
@@ -197,7 +197,7 @@ npx @layerzerolabs/hyperliquid-composer core-spot \
 
 This is the step where you set the trading fee share for the deployer. It can be in the range of `[0%,100%]`.
 
-> Note: The trading fee can be reset as long as the new share is lower than the previous share.
+> ⚠️ Note: The trading fee can be reset as long as the new share is lower than the previous share.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer trading-fee \
@@ -249,13 +249,13 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
     [--log-level {info | verbose}]
 ```
 
-> Note: There is no limit to the number of time you can re-run this command.
+> ⚠️ Note: There is no limit to the number of time you can re-run this command.
 
 ### Step 3/4 `genesis`
 
 This is the step that registers the above genesis balances on `HyperCore`.
 
-> Note: This is irreversible.
+> ⚠️ Note: This is irreversible.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer set-genesis \
@@ -293,11 +293,11 @@ In order to enable transfers between the OFT and the core spot, we need to conne
 
 This step is issued by the core spot deployer and populates in `HyperCore` that a request has been made for the mentioned Core Spot to be connected to the ERC20 deployed at the mentioned erc20 address.
 
-> Note: This step can be issued multiple times until the `finalizeEvmContract` step is issued.
+> ⚠️ Note: This step can be issued multiple times until the `finalizeEvmContract` step is issued.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer request-evm-contract  \
-    --oapp-config <layerzero.config.ts> \
+    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --log-level verbose \
@@ -308,11 +308,11 @@ npx @layerzerolabs/hyperliquid-composer request-evm-contract  \
 
 This step completes the connection between the OFT and the core spot. It pulls either hyperevm testnet or mainnet address from the layerzero config file based on the `eid` and the core spot information from the hypercore deployment.
 
-> Note: This step is the final step and can only be issued once.
+> ⚠️ Note: This step is the final step and can only be issued once.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer finalize-evm-contract  \
-    --oapp-config <layerzero.config.ts> \
+    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --log-level verbose \
@@ -330,6 +330,8 @@ npx hardhat lz:deploy --tags MyHyperLiquidComposer
 ## Sending tokens from x-network to HyperEVM/Core
 
 After populating your `.env` you can run the following script to send tokens across. Having the second argument `gas > 0` will send the tokens into `HyperCore`. Setting the third argument `value > 0` will also fund the user's address with `HYPE` tokens on `HyperCore`.
+
+> ⚠️ Note: You would need to fund the composer's address with HyperCore with at least $1 in USDC or HYPE so that it can perform L1WriteActions through it's address.
 
 ```bash
 forge script script/SendScript.s.sol --private-key $PRIVATE_KEY --rpc-url $RPC_URL_BSC_TESTNET --sig "exec(uint256,uint128,uint128)" <oft-amount> <composer-gas> <composer-value> --broadcast
