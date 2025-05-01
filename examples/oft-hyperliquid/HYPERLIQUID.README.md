@@ -9,6 +9,14 @@ Feel free to checkout our internal docs [here](https://github.com/LayerZero-Labs
 
 ## Using the LayerZero Hyperliquid SDK
 
+### Type conversions
+
+#### Get the asset bridge address
+
+```bash
+npx @layerzerolabs/hyperliquid-composer to-bridge --token-index <coreIndex>
+```
+
 ### Reading core spot state
 
 #### List core spot metadata

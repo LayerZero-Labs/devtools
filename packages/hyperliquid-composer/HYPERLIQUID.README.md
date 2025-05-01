@@ -277,6 +277,14 @@ Since the composer also supports sending native token `$HYPE` into `HyperCore` t
 
 The following are just syntax and usage. Explanations are below in the section on "Deploy and Connect your OFT Guide".
 
+### Type conversions
+
+#### Get the asset bridge address
+
+```bash
+npx @layerzerolabs/hyperliquid-composer to-bridge --token-index <coreIndex>
+```
+
 ### Reading Core Spot state
 
 #### List Core Spot metadata

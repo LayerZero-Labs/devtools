@@ -5,6 +5,7 @@ import {
     requestEvmContract,
     finalizeEvmContract,
     coreSpotDeployment,
+    intoAssetBridgeAddress,
     hipTokenInfo,
     tradingFee,
     userGenesis,
@@ -15,6 +16,13 @@ import {
 const program = new Command()
 
 program.name('oft-hyperliquid-evm').description('CLI tools for HyperLiquid OFT operations')
+
+program
+    .command('to-bridge')
+    .description('Returns the asset bridge address for a token index')
+    .requiredOption('-idx, --token-index <token-index>', 'Token index')
+    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
+    .action(intoAssetBridgeAddress)
 
 program
     .command('set-block')
