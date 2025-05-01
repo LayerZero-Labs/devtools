@@ -1,9 +1,9 @@
 import { createModuleLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 
 import { getERC20abi, getHyperEVMOAppDeployment, writeCoreSpotDeployment } from '@/io'
-import { getSpotMeta } from '@/operations'
+import { getSpotMeta, getHipTokenInfo } from '@/operations'
 import { toAssetBridgeAddress } from '@/types'
-import type { CoreSpotDeployment, CoreSpotMetaData, TxData, UserGenesis } from '@/types'
+import type { CoreSpotDeployment, CoreSpotMetaData, SpotInfo, TxData, UserGenesis } from '@/types'
 import { ethers } from 'ethers'
 import { RPC_URLS } from '@/types'
 
@@ -154,4 +154,19 @@ export async function coreSpotDeployment(args: any): Promise<void> {
     } else if (action === 'get') {
         logger.info(JSON.stringify(coreSpot, null, 2))
     }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function hipTokenInfo(args: any): Promise<void> {
+    setDefaultLogLevel(args.logLevel)
+    const logger = createModuleLogger('hip-token-info', args.logLevel)
+
+    const tokenIndex = args.tokenIndex
+    const network = args.network
+
+    const isTestnet = network === 'testnet'
+    const coreSpot: CoreSpotMetaData = await getSpotMeta(null, isTestnet, args.logLevel, tokenIndex)
+    const coreSpotInfo: SpotInfo = await getHipTokenInfo(null, isTestnet, args.logLevel, coreSpot.tokenId)
+
+    logger.info(JSON.stringify(coreSpotInfo, null, 2))
 }
