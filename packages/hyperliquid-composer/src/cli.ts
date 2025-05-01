@@ -5,6 +5,7 @@ import {
     requestEvmContract,
     finalizeEvmContract,
     coreSpotDeployment,
+    hipTokenInfo,
     tradingFee,
     userGenesis,
     genesis,
@@ -46,13 +47,21 @@ program
 
 program
     .command('core-spot')
-    .description('Get core spot information')
+    .description('Get core spot metadata information')
     .option('-a, --action <action>', 'Action (create/get)', 'get')
     .option('-oapp, --oapp-config <oapp-config>', 'OAPP config')
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
     .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
     .option('-l, --log-level <level>', 'Log level', LogLevel.info)
     .action(coreSpotDeployment)
+
+program
+    .command('hip-token')
+    .description('Get information about a HyperCore HIP-1 token')
+    .requiredOption('-idx, --token-index <token-index>', 'Token index')
+    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
+    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
+    .action(hipTokenInfo)
 
 program
     .command('trading-fee')

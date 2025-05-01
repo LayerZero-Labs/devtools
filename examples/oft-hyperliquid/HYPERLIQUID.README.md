@@ -32,6 +32,15 @@ npx @layerzerolabs/hyperliquid-composer core-spot \
     [--log-level {info | verbose}]
 ```
 
+#### Get a HIP-1 Token's information
+
+```bash
+npx @layerzerolabs/hyperliquid-composer hip-token   \
+    --token-index <coreIndex> \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+```
+
 ### Switching Blocks (`evmUserModify`)
 
 PR : <https://github.com/LayerZero-Labs/devtools/pull/1417>
@@ -286,6 +295,8 @@ curl -X POST "https://api.hyperliquid.xyz/info" \
 ```
 
 ## Connect the OFT to the deployed Core Spot
+
+If you have run the above steps then you can use `--oapp-config` in the following commands. If not do not worry! Our SDK will prompt you for the OFT address and the OFT deployed transaction hash (we need the deployment nonce).
 
 In order to enable transfers between the OFT and the core spot, we need to connect the OFT to the core spot. This is done in two steps:
 

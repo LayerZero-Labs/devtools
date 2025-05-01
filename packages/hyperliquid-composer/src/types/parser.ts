@@ -43,3 +43,27 @@ export interface CoreSpotDeployment {
 export interface SpotMeta {
     tokens: CoreSpotMetaData[]
 }
+
+export type SpotInfoBalance = [address: string, balance: string]
+
+export interface SpotInfo {
+    name: string
+    maxSupply: string
+    totalSupply: string
+    circulatingSupply: string
+    szDecimals: number
+    weiDecimals: number
+    midPx: string
+    markPx: string
+    prevDayPx: string
+    genesis: {
+        userBalances: SpotInfoBalance[]
+        existingTokenBalances: SpotInfoBalance[]
+    }
+    deployer: string
+    deployGas: string
+    deployTime: string
+    seededUsdc: string
+    nonCirculatingUserBalances: SpotInfoBalance[]
+    futureEmissions: string
+}
