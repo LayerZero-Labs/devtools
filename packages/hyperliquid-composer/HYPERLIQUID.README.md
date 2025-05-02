@@ -351,7 +351,7 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
     --token-index <coreIndex> \ 
     [--action  {* | userAndWei | existingTokenAndWei | blacklistUsers}]
     --network {testnet | mainnet} \ 
-    -private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
     [--log-level {info | verbose}]
 ```
 
@@ -361,7 +361,7 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
 npx @layerzerolabs/hyperliquid-composer set-genesis \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
-    -private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
     [--log-level {info | verbose}]
 ```
 
@@ -371,7 +371,7 @@ npx @layerzerolabs/hyperliquid-composer set-genesis \
 npx @layerzerolabs/hyperliquid-composer register-spot \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \ 
-    -private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
     [--log-level {info | verbose}]
 ```
 
@@ -527,7 +527,7 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
     --token-index <coreIndex> \
     [--action  {* | userAndWei | existingTokenAndWei | blacklistUsers}]
     --network {testnet | mainnet} \ 
-    -private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
     [--log-level {info | verbose}]
 ```
 
@@ -542,7 +542,7 @@ This is the step that registers the above genesis balances on `HyperCore`.
 npx @layerzerolabs/hyperliquid-composer set-genesis \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
-    -private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
     [--log-level {info | verbose}]
 ```
 
@@ -554,7 +554,7 @@ This is the step that registers the Core Spot on `HyperCore` and creates a base-
 npx @layerzerolabs/hyperliquid-composer register-spot \
     --token-index <CoreIndex> \
     --network {testnet | mainnet} \ 
-    -private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
 ```
 
 Your Core Spot (that does not use Hyperliquidity) has now been deployed and registered on `HyperCore`.
