@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 0.0.4
+
+### Patch Changes
+
+- 1900486: docs typo cleanup
+
 ## 0.0.3
 
 ### Patch Changes
