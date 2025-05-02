@@ -1,5 +1,11 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 0.0.8
+
+### Patch Changes
+
+- 1900486: docs typo cleanup
+
 ## 0.0.7
 
 ### Patch Changes
