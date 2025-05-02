@@ -20,6 +20,11 @@
 
 The following are just syntax and usage. Explanations are below in the section on "Deploy and Connect your OFT Guide".
 
+To view all commands, run:
+```bash
+npx @layerzerolabs/hyperliquid-composer -h
+```
+
 ### Reading Core Spot state
 
 #### List Core Spot metadata
@@ -77,7 +82,7 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
     --token-index <coreIndex> \ 
     [--action  {* | userAndWei | existingTokenAndWei | blacklistUsers}]
     --network {testnet | mainnet} \ 
-    -private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
     [--log-level {info | verbose}]
 ```
 
@@ -87,7 +92,7 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
 npx @layerzerolabs/hyperliquid-composer set-genesis \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
-    -private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
     [--log-level {info | verbose}]
 ```
 
@@ -97,7 +102,7 @@ npx @layerzerolabs/hyperliquid-composer set-genesis \
 npx @layerzerolabs/hyperliquid-composer register-spot \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \ 
-    -private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
     [--log-level {info | verbose}]
 ```
 

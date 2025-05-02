@@ -9,6 +9,14 @@ Feel free to checkout our internal docs [here](https://github.com/LayerZero-Labs
 
 ## Using the LayerZero Hyperliquid SDK
 
+The following are just syntax and usage. Explanations are below in the section on "Deploy and Connect your OFT Guide".
+
+To view all commands, run:
+
+```bash
+npx @layerzerolabs/hyperliquid-composer -h
+```
+
 ### Type conversions
 
 #### Get the asset bridge address
@@ -83,7 +91,7 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
     --token-index <coreIndex> \
     [--action  {* | userAndWei | existingTokenAndWei | blacklistUsers}]
     --network {testnet | mainnet} \
-    -private-key $PRIVATE_KEY_HYPERLIQUID \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -93,7 +101,7 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
 npx @layerzerolabs/hyperliquid-composer set-genesis \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
-    -private-key $PRIVATE_KEY_HYPERLIQUID \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -103,7 +111,7 @@ npx @layerzerolabs/hyperliquid-composer set-genesis \
 npx @layerzerolabs/hyperliquid-composer register-spot \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
-    -private-key $PRIVATE_KEY_HYPERLIQUID \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -262,7 +270,7 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
     --token-index <coreIndex> \
     [--action  {* | userAndWei | existingTokenAndWei | blacklistUsers}]
     --network {testnet | mainnet} \
-    -private-key $PRIVATE_KEY_HYPERLIQUID \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -278,7 +286,7 @@ This is the step that registers the above genesis balances on `HyperCore`.
 npx @layerzerolabs/hyperliquid-composer set-genesis \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
-    -private-key $PRIVATE_KEY_HYPERLIQUID \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -290,7 +298,7 @@ This is the step that registers the core spot on `HyperCore` and creates a base-
 npx @layerzerolabs/hyperliquid-composer register-spot \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
-    -private-key $PRIVATE_KEY_HYPERLIQUID \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
 ```
 
 Your core spot (that does not use hyperliquidity) has now been deployed and registered on `HyperCore`.
