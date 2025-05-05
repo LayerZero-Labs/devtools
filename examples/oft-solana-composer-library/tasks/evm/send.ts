@@ -31,14 +31,13 @@ const action: ActionType<TaskArguments> = async (
     // ─────────────────────────────────────────────────────────────────────────
 
     const amountLD = BigNumber.from(amount)
-    // 1) turn your Solana base58 address into a 32-byte hex string
-    const receiverBytes = bs58.decode(solanaReceiver) // Uint8Array of length 32
+    // 1) turn your Solana base58 address into a 32-byte hex string                          // Uint8Array of length 32
     // 2) solidity-pack your two fields:
-    //    - a 64-bit BE integer for minAmountLD
+    //    - a 64-bit BE integer for minAmount
     //    - a full 32-byte receiver pubkey
     const composeMsg = ethers.utils.solidityPack(
         ['uint64', 'bytes32'],
-        [BigNumber.from(minAmount), makeBytes32(bs58.decode(composer))]
+        [BigNumber.from(minAmount), makeBytes32(bs58.decode(solanaReceiver))]
     )
     const sendParam = {
         dstEid,

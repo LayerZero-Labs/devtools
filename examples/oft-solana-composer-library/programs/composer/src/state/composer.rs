@@ -1,54 +1,57 @@
 use anchor_lang::prelude::*;
 
+#[error_code]
+pub enum ComposerError {
+    #[msg("Invalid sender address")]
+    InvalidFrom,
+    #[msg("Invalid recipient address")]
+    InvalidTo,
+    #[msg("Invalid mint authority")]
+    InvalidMintAuthority,
+    #[msg("Invalid token destination")]
+    InvalidTokenDest,
+    #[msg("Invalid sender")]
+    InvalidSender,
+    #[msg("Program is paused")]
+    Paused,
+}
+
 #[account]
 pub struct Composer {
-    /// The OFT PDA (unique to this composer instance)
-    pub oft: Pubkey,
-    /// The Endpoint PDA (the authorized endpoint for LZ messages)
-    pub endpoint: Pubkey,
-    /// Bump for PDA derivation.
+    pub oft_pda: Pubkey,
+    pub endpoint_pda: Pubkey,
+    pub endpoint_program: Pubkey,
+    pub token_program: Pubkey,
+    pub token_program_2022: Pubkey,
+    pub clmm_program: Pubkey,
+    pub amm_config: Pubkey,
+    pub pool_state: Pubkey,
+    pub input_vault: Pubkey,
+    pub output_vault: Pubkey,
+    pub observation_state: Pubkey,
+    pub tick_bitmap: Pubkey,
+    pub tick_array_lower: Pubkey,
+    pub tick_array_current: Pubkey,
+    pub tick_array_upper: Pubkey,
+    pub input_token_account: Pubkey,
+    pub output_token_account: Pubkey,
+    pub input_vault_mint: Pubkey,
+    pub output_vault_mint: Pubkey,
     pub bump: u8,
 }
 
 impl Composer {
-    // Discriminator (8) + 32 + 32 + 1 = 73 bytes.
-    pub const SIZE: usize = 8 + 32 + 32 + 1;
+    // 8 (discriminator) + 19*32 + 1
+    pub const SIZE: usize = 8 + 19 * 32 + 1;
 }
 
-/// LzComposeTypesAccounts includes the pubkeys of all accounts used in the lz_compose_types instruction.
-/// (Adjust the fields as needed.)
+/// LzComposeTypesAccounts includes accounts that are used in the LzComposeTypes
+/// instruction.
 #[account]
 pub struct LzComposeTypesAccounts {
     pub composer: Pubkey,
-    pub clmm_program: Pubkey,
-    pub payer: Pubkey,
-    pub amm_config: Pubkey,
-    pub pool_state: Pubkey,
-    pub input_token_account: Pubkey,
-    pub output_token_account: Pubkey,
-    pub input_vault: Pubkey,
-    pub output_vault: Pubkey,
-    pub observation_state: Pubkey,
-    pub token_program: Pubkey,
-    pub token_program_2022: Pubkey,
-    pub memo_program: Pubkey,
-    pub input_vault_mint: Pubkey,
-    pub output_vault_mint: Pubkey,
-    pub lz_program: Pubkey,
-    pub tick_array_lower: Pubkey,
-    pub tick_array_current: Pubkey,
-    pub tick_array_upper: Pubkey,
-    pub to_address: Pubkey,
 }
 
 impl LzComposeTypesAccounts {
     pub const SIZE: usize = 8 + std::mem::size_of::<Self>();
-}
-
-#[error_code]
-pub enum ComposerError {
-    #[msg("Invalid 'from' address. The message sender is not the expected OFT PDA.")]
-    InvalidFrom,
-    #[msg("Invalid 'to' address. The message recipient does not match the composer PDA.")]
-    InvalidTo,
 }
