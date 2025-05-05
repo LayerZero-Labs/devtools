@@ -9,6 +9,22 @@ Feel free to checkout our internal docs [here](https://github.com/LayerZero-Labs
 
 ## Using the LayerZero Hyperliquid SDK
 
+The following are just syntax and usage. Explanations are below in the section on "Deploy and Connect your OFT Guide".
+
+To view all commands, run:
+
+```bash
+npx @layerzerolabs/hyperliquid-composer -h
+```
+
+### Type conversions
+
+#### Get the asset bridge address
+
+```bash
+npx @layerzerolabs/hyperliquid-composer to-bridge --token-index <coreIndex>
+```
+
 ### Reading core spot state
 
 #### List core spot metadata
@@ -27,6 +43,15 @@ npx @layerzerolabs/hyperliquid-composer core-spot \
 npx @layerzerolabs/hyperliquid-composer core-spot \
     --action create \
     [--oapp-config <layerzero.config.ts>] \
+    --token-index <coreIndex> \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+```
+
+#### Get a HIP-1 Token's information
+
+```bash
+npx @layerzerolabs/hyperliquid-composer hip-token   \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
@@ -66,7 +91,7 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
     --token-index <coreIndex> \
     [--action  {* | userAndWei | existingTokenAndWei | blacklistUsers}]
     --network {testnet | mainnet} \
-    -private-key $PRIVATE_KEY_HYPERLIQUID \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -76,7 +101,7 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
 npx @layerzerolabs/hyperliquid-composer set-genesis \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
-    -private-key $PRIVATE_KEY_HYPERLIQUID \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -86,7 +111,7 @@ npx @layerzerolabs/hyperliquid-composer set-genesis \
 npx @layerzerolabs/hyperliquid-composer register-spot \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
-    -private-key $PRIVATE_KEY_HYPERLIQUID \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -245,7 +270,7 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
     --token-index <coreIndex> \
     [--action  {* | userAndWei | existingTokenAndWei | blacklistUsers}]
     --network {testnet | mainnet} \
-    -private-key $PRIVATE_KEY_HYPERLIQUID \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -261,7 +286,7 @@ This is the step that registers the above genesis balances on `HyperCore`.
 npx @layerzerolabs/hyperliquid-composer set-genesis \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
-    -private-key $PRIVATE_KEY_HYPERLIQUID \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -273,7 +298,7 @@ This is the step that registers the core spot on `HyperCore` and creates a base-
 npx @layerzerolabs/hyperliquid-composer register-spot \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
-    -private-key $PRIVATE_KEY_HYPERLIQUID \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
 ```
 
 Your core spot (that does not use hyperliquidity) has now been deployed and registered on `HyperCore`.
@@ -286,6 +311,8 @@ curl -X POST "https://api.hyperliquid.xyz/info" \
 ```
 
 ## Connect the OFT to the deployed Core Spot
+
+If you have run the above steps then you can use `--oapp-config` in the following commands. If not do not worry! Our SDK will prompt you for the OFT address and the OFT deployed transaction hash (we need the deployment nonce).
 
 In order to enable transfers between the OFT and the core spot, we need to connect the OFT to the core spot. This is done in two steps:
 
