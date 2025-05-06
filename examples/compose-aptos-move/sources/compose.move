@@ -1,0 +1,279 @@
+module compose::compose {
+    use std::fungible_asset::{Self, FungibleAsset};
+    use std::event::emit;
+    use std::option::{Self, Option};
+    use std::object::object_address;
+    use std::string::utf8;
+    use std::type_info::{module_name, type_of};
+    use std::vector;
+    use std::primary_fungible_store;
+    use aptos_framework::event;
+    use std::bcs;
+
+    use endpoint_v2::endpoint::{Self, get_guid_and_index_from_wrapped, wrap_guid_and_index, WrappedGuidAndIndex};
+    use endpoint_v2_common::bytes32::{Bytes32, to_bytes32};
+    use endpoint_v2_common::contract_identity::{Self, CallRef, ContractSigner, create_contract_signer};
+    use endpoint_v2_common::serde;
+
+    struct ComposeStore has key {
+        contract_signer: ContractSigner,
+    }
+
+    struct LastMessageStore has key {
+        last_message: vector<u8>,
+    }
+
+    #[event]
+    struct ValueDepositedEvent has drop, store {
+        recipient: address,
+        amount: u64,
+    }
+
+    #[event]
+    struct ComposeWithValueReceivedEvent has drop, store {
+        from: address,
+        guid: Bytes32,
+        index: u16,
+        message: vector<u8>,
+        extra_data: vector<u8>,
+        has_value: bool,
+        value_amount: u64
+    }
+
+    #[event]
+    struct ComposeWithNoValueReceivedEvent has drop, store {
+        from: address,
+        guid: vector<u8>,
+        index: u16,
+        message: vector<u8>,
+        extra_data: vector<u8>
+    }
+
+    #[event]
+    struct MessageBreakdown has drop, store {
+        nonce: u64,
+        src_eid: u32,
+        amount_received_ld: u256,
+        compose_payload_length: u64,
+        compose_payload: vector<u8>,
+        sender_address: vector<u8>,
+        remaining_payload: vector<u8>,
+    }
+
+    #[event]
+    struct ComposeMsgPayload has drop, store {
+        min_amount_to_swap_on_dest: u64,
+        aptos_dest_wallet_address: vector<u8>,
+    }
+
+    public inline fun COMPOSE_ADDRESS(): address { @compose }
+
+
+    fun call_ref<Target>(): CallRef<Target> acquires ComposeStore {
+        contract_identity::make_call_ref<Target>(&store().contract_signer)
+    }
+
+    inline fun store(): &ComposeStore { borrow_global(COMPOSE_ADDRESS()) }
+
+    // _from is the address of the OFT that that triggered the composer
+    // _value is the amount of native token that was sent in the composer native drop options
+    // _message is encoded as:
+    //    [nonce, src_eid, amount_received_ld, sender_address, compose_payload]
+    fun lz_compose_impl(
+        _from: address,
+        _guid: Bytes32,
+        _index: u16,
+        _message: vector<u8>,
+        _extra_data: vector<u8>,
+        _value: Option<FungibleAsset>,
+    ) acquires LastMessageStore {
+        let (nonce, src_eid, amount_received_ld, compose_payload) = decode_message(&_message);
+        let (sender_address, remaining_payload) = extract_sender_and_payload(&compose_payload);
+
+        emit(MessageBreakdown {
+            nonce,
+            src_eid,
+            amount_received_ld,
+            compose_payload_length: vector::length(&compose_payload),
+            compose_payload,
+            sender_address,
+            remaining_payload,
+        });
+
+        let last_message_store = borrow_global_mut<LastMessageStore>(COMPOSE_ADDRESS());
+        last_message_store.last_message = _message;
+
+        // Extract encoded params from compose message in examples/compose-aptos-move/scripts/sendOFTWithCompose.ts
+        let min_amount_to_swap_on_dest = serde::extract_u64(&remaining_payload, &mut 0);
+        let aptos_dest_wallet_address = vector::slice(&remaining_payload, 8, 32);
+
+        emit(ComposeMsgPayload {
+            min_amount_to_swap_on_dest,
+            aptos_dest_wallet_address,
+        });
+
+
+        if (option::is_some(&_value)) {
+            let asset = option::extract(&mut _value);
+            let amount = fungible_asset::amount(&asset);
+            
+            let contract_address = COMPOSE_ADDRESS();
+            primary_fungible_store::deposit(contract_address, asset);
+        };
+        
+        option::destroy_none(_value);
+    }
+
+    fun decode_message(message: &vector<u8>): (u64, u32, u256, vector<u8>) {
+        let offset = 0;
+        
+        // Extract nonce (u64) - 8 bytes
+        let nonce = serde::extract_u64(message, &mut offset);
+        
+        // Extract src_eid (u32) - 4 bytes
+        let src_eid = serde::extract_u32(message, &mut offset);
+        
+        // Extract amount_received_ld (u256) - 32 bytes
+        let amount_received_ld = serde::extract_u256(message, &mut offset);
+        
+        // Extract compose_payload (remaining bytes)
+        let compose_payload = vector::empty<u8>();
+        let message_length = vector::length(message);
+        if (offset < message_length) {
+            compose_payload = vector::slice(message, offset, message_length);
+        };
+        
+        (nonce, src_eid, amount_received_ld, compose_payload)
+    }
+
+    fun extract_sender_and_payload(compose_payload: &vector<u8>): (vector<u8>, vector<u8>) {
+        let payload_length = vector::length(compose_payload);
+        
+        if (payload_length < 32) {
+            return (vector::empty(), *compose_payload)
+        };
+        
+        let address_slot_length = 32;
+        let address_slot = vector::slice(compose_payload, 0, address_slot_length);
+        
+        let remaining_payload = if (payload_length > address_slot_length) {
+            vector::slice(compose_payload, address_slot_length, payload_length)
+        } else {
+            vector::empty()
+        };
+        
+        (address_slot, remaining_payload)
+    }
+
+    /// LZ Compose function for self-execution
+    public entry fun lz_compose(
+        from: address,
+        guid: vector<u8>,
+        index: u16,
+        message: vector<u8>,
+        extra_data: vector<u8>,
+    ) acquires ComposeStore, LastMessageStore {
+        emit(ComposeWithNoValueReceivedEvent {
+            from,
+            guid,
+            index,
+            message,
+            extra_data,
+        });
+
+        let guid = to_bytes32(guid);
+        endpoint::clear_compose(&call_ref(), from, wrap_guid_and_index(guid, index), message);
+
+        lz_compose_impl(
+            from,
+            guid,
+            index,
+            message,
+            extra_data,
+            option::none(),
+        )
+    }
+
+    /// LZ Compose function to be called by the Executor
+    /// This is able to be provided a compose value in the form of a FungibleAsset
+    /// For self-executing with a value, this should be called with a script
+    public fun lz_compose_with_value(
+        from: address,
+        guid_and_index: WrappedGuidAndIndex,
+        message: vector<u8>,
+        extra_data: vector<u8>,
+        value: Option<FungibleAsset>,
+    ) acquires ComposeStore, LastMessageStore {
+        // Make sure that the value provided is of the native token type
+        assert!(option::is_none(&value) || is_native_token(option::borrow(&value)), EINVALID_TOKEN);
+
+        // Unwrap the guid and index from the wrapped guid and index, this wrapping
+        let (guid, index) = get_guid_and_index_from_wrapped(&guid_and_index);
+
+        // Check if there's a value and get its amount
+        let has_value = option::is_some(&value);
+        let value_amount = if (has_value) {
+            fungible_asset::amount(option::borrow(&value))
+        } else {
+            0
+        };
+
+        emit(ComposeWithValueReceivedEvent {
+            from,
+            guid,
+            index,
+            message,
+            extra_data,
+            has_value,
+            value_amount
+        });
+
+        endpoint::clear_compose(&call_ref(), from, guid_and_index, message);
+
+        lz_compose_impl(
+            from,
+            guid,
+            index,
+            message,
+            extra_data,
+            value,
+        );
+    }
+
+    public fun is_native_token(token: &FungibleAsset): bool {
+        object_address(&fungible_asset::asset_metadata(token)) == @native_token_metadata_address
+    }
+
+    // =============================================== View Functions ===============================================
+
+    #[view]
+    public fun get_last_message(): vector<u8> acquires LastMessageStore {
+        borrow_global<LastMessageStore>(COMPOSE_ADDRESS()).last_message
+    }
+
+    // ================================================ Initialization ================================================
+
+    fun init_module(account: &signer) {
+        move_to<ComposeStore>(account, ComposeStore {
+            contract_signer: create_contract_signer(account),
+        });
+        
+        move_to<LastMessageStore>(account, LastMessageStore {
+            last_message: vector::empty(),
+        });
+
+        let module_name = module_name(&type_of<LzComposeModule>());
+        endpoint::register_composer(account, utf8(module_name));
+    }
+    /// Struct to dynamically derive the module name to register on the endpoint
+    struct LzComposeModule {}
+
+    // #[test_only]
+    // public fun init_module_for_test() {
+    //     init_module(&std::account::create_signer_for_test(compose::compose::COMPOSE_ADDRESS()));
+    // }
+
+    // ================================================== Error Codes =================================================
+
+    const EINVALID_TOKEN: u64 = 1;
+}

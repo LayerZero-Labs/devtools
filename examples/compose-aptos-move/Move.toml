@@ -1,0 +1,53 @@
+[package]
+name = "compose"
+version = "1.0.1"
+authors = []
+
+[addresses]
+compose = "_"
+router_node_0 = "0x6de27e5aa7dbee0fc32af2a92b8aa0b96e0033026ade8f22e4692cd8603220e9"
+simple_msglib = "0x52d5c6f8dcb20ed8ace8dbaa7cc09a98eb1dbec0f184720795310c031ace5111"
+blocked_msglib = "0x3ca0d187f1938cf9776a0aa821487a650fc7bb2ab1c1d241ba319192aae4afc6"
+uln_302 = "0xc33752e0220faf79e45385dd73fb28d681dcd9f1569a1480725507c1f3c3aba9"
+router_node_1 = "0x2ae54c38567f217c42b255016a38ccd68b67eb276a6cc3ebad609935fe3cc70c"
+endpoint_v2_common = "0xe1dc2a62b445403bea0dbd73df8cee03b3ead0a06b003e72e401c030a810a133"
+endpoint_v2 = "0xe60045e20fc2c99e869c1c34a65b9291c020cd12a0d37a00a53ac1348af4f43c"
+layerzero_admin = "0x19f1c63510f3ea8b8cd467ebe663897371919c185218d2859927f5a357b0bcae"
+layerzero_treasury_admin = "0x19f1c63510f3ea8b8cd467ebe663897371919c185218d2859927f5a357b0bcae"
+msglib_types = "0xa3fac5ed887625dd1d4371a60c7bfd5869e8ce5c3c5783fb8898dc0128365c31"
+treasury = "0x77c941e60b8e2c8d784de2ee456fd497283edfe1e15704c99a192ff795fc38b7"
+worker_peripherals = "0x19f1c63510f3ea8b8cd467ebe663897371919c185218d2859927f5a357b0bcae"
+price_feed_router_0 = "0x969722e6e181bb17165c17492c037514cd213a0ce9830a59724190e13c011136"
+price_feed_router_1 = "0x3808a699d1a14d25de813a4e0bbcde7a8ce8d27ccc9055aee8070d28172faced"
+price_feed_module_0 = "0xad0f7141f626c07db99a7fe5b864fde080bc4966c144d88f6f14ac4af391f30"
+worker_common = "0x1bffc83ec332cb9de738e8f0c27dd2230ee57bdbc71473047fcfe8bfaa21fab7"
+executor_fee_lib_router_0 = "0xfb941d4e28fc08b94fe53c9043e392d6405a16475bccbfee5222d588cef5b709"
+executor_fee_lib_router_1 = "0xf8ed27afba36de5693de4c9ea654ee73de7b0e2ac7c43a54d36bc155a944d9d1"
+dvn_fee_lib_router_0 = "0x707f09a7db866c4be5d2ee7c4ffcfe38e1b893f8d757712fe224fa19da881c93"
+dvn_fee_lib_router_1 = "0x31dcc84f4bfffff09648cb9ae6d84261ddb7c04646d1f2f6c38bf6d7551a0831"
+executor_fee_lib_0 = "0xbbb5d80871b10c4a7c10b9bbc636fdca4faa05feb3b03dc27e3018a7bfcbd8cb"
+dvn_fee_lib_0 = "0x349c43bc506cbbe7b754b164867bd1751763410b6458a798c25bb6f3c3e9e487"
+dvn = "0xdf8f0a53b20f1656f998504b81259698d126523a31bdbbae45ba1e8a3078d8da"
+# thalaswap_v2 = "0x7730cd28ee1cdc9e999336cbc430f99e7c44397c0aa77516f6f23a78559bb5"
+native_token_metadata_address = "0xa"
+
+
+[dev-addresses]
+compose = "0x302814823"
+endpoint_v2_common = "0x100007"
+endpoint_v2 = "0x100006"
+# thalaswap_v2_demo = "0xABC"
+
+
+# Note for Aptos CLI version >= 6.1.0 (the version supported by Aptos), use the following dependencies
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-framework.git"
+rev = "mainnet"
+subdir = "aptos-framework"
+
+# [dependencies.ThalaSwapV2]
+# local = "../thalaswap_v2_interface/"
+
+[dependencies]
+endpoint_v2_common = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "main", subdir = "packages/layerzero-v2/aptos/contracts/endpoint_v2_common" }
+endpoint_v2 = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "main", subdir = "packages/layerzero-v2/aptos/contracts/endpoint_v2" }
