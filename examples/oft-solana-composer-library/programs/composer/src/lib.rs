@@ -8,9 +8,11 @@ use oapp::{endpoint_cpi::LzAccount, LzComposeParams};
 
 use state::*;
 
-declare_id!("AJDyttBGEdzXzUiW2WV2qxb1agCTpxeGJhMMjhXio6wr");
+declare_id!("6xhpdhwyzpjxc6n2KqQS8a3W7Busn6nqGYaobVV25kN5");
 
 const COMPOSER_SEED: &[u8] = b"Composer";
+
+pub mod compose_msg_codec;
 
 #[program]
 pub mod composer {

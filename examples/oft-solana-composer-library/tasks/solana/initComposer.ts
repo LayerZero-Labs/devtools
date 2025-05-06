@@ -21,11 +21,12 @@ task('lz:solana:init-composer', 'Initialize the Composer PDA on Solana')
     )
     .setAction(async ({ rpcUrl }) => {
         // ─── CONFIG ────────────────────────────────────────────────────────────────
-        const COMPOSER_ID = new PublicKey('AJDyttBGEdzXzUiW2WV2qxb1agCTpxeGJhMMjhXio6wr')
+        const COMPOSER_ID = new PublicKey('6xhpdhwyzpjxc6n2KqQS8a3W7Busn6nqGYaobVV25kN5')
         const OFT_PDA = new PublicKey('4x3oQtX4MhjTKGBeXDZbtTSL9cUWo5waN2UChAuthtS')
         const ENDPOINT_PDA = new PublicKey('2uk9pQh3tB5ErV7LGQJcbWjb4KeJ2UJki5qJZ8QG56G3')
         const ENDPOINT_PROGRAM_ID = new PublicKey('76y77prsiCMvXMjuoZ5VRrhG5qYBrUMYTE5WgHqgjEn6')
         const CLMM_PROGRAM_ID = new PublicKey('CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK')
+        const RECEIVER_PDA = new PublicKey('6tzUZqC33igPgP7YyDnUxQg6eupMmZGRGKdVAksgRzvk')
 
         const AMM_CONFIG_PDA = new PublicKey('9iFER3bpjf1PTTCQCfTRu17EJgvsxo9pVyA9QWwEuX4x')
         const POOL_STATE_PDA = new PublicKey('D2bXjvT1xDiymTeX2mHqf9WGHkSVr2hPoHJiEg2jfVjL')
@@ -61,6 +62,12 @@ task('lz:solana:init-composer', 'Initialize the Composer PDA on Solana')
         )
         console.log('⛓ composer PDA:', composerPda.toBase58())
 
+        const [typesPda] = PublicKey.findProgramAddressSync(
+            [Buffer.from('LzComposeTypes'), composerPda.toBuffer()],
+            COMPOSER_ID
+        )
+        console.log('⛓ types PDA:', typesPda.toBase58())
+
         // 4) Ensure Composer has ATAs for A & B mints
         const composerUsdeAta = await getOrCreateAssociatedTokenAccount(
             connection,
@@ -77,7 +84,7 @@ task('lz:solana:init-composer', 'Initialize the Composer PDA on Solana')
             connection,
             keypair,
             USDC_MINT,
-            composerPda,
+            RECEIVER_PDA,
             true,
             undefined,
             undefined,
@@ -114,6 +121,7 @@ task('lz:solana:init-composer', 'Initialize the Composer PDA on Solana')
             })
             .accounts({
                 composer: composerPda,
+                lzComposeTypesAccounts: typesPda,
                 payer: provider.wallet.publicKey,
                 systemProgram: SystemProgram.programId,
             })

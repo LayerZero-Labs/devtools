@@ -1,69 +1,96 @@
-import { arrayify } from '@ethersproject/bytes'
-import { toWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
-import { PublicKey, TransactionMessage, VersionedTransaction } from '@solana/web3.js'
+// tasks/solana/clearWithAlt.ts
+import { createSignerFromKeypair } from '@metaplex-foundation/umi'
+import { toWeb3JsKeypair, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
+import { Transaction } from '@solana/web3.js'
 import { task } from 'hardhat/config'
 
-import { types } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { lzCompose } from '@layerzerolabs/lz-solana-sdk-v2'
+import { EndpointProgram, extractComposeSentEventByTxHash, lzCompose } from '@layerzerolabs/lz-solana-sdk-v2'
 
-import { deriveConnection } from './index'
+import { deriveConnection } from '.'
 
 interface Args {
     srcTxHash: string
+    mnemonic?: string
 }
 
-task('lz:oapp:solana:clear-with-alt', 'Clear a stored payload on Solana')
-    .addParam('srcTxHash', 'The source transaction hash', undefined, types.string)
-    .setAction(async ({ srcTxHash }: Args) => {
-        if (!process.env.SOLANA_PRIVATE_KEY) {
-            throw new Error('SOLANA_PRIVATE_KEY is not defined in the environment variables.')
-        }
-
+task(
+    'lz:oapp:solana:clear-with-alt',
+    'Fetch a ComposeSent event by source-tx and clear it on Solana in one ALT-packed tx'
+)
+    .addParam('srcTxHash', 'The source transaction hash')
+    .addOptionalParam('mnemonic', 'Your wallet mnemonic (or set MNEMONIC env var)', process.env.MNEMONIC)
+    .setAction(async ({ srcTxHash, mnemonic }: Args, hre) => {
+        // 1) Build UMI + RPC connection
+        // Set up connection and wallet
         // Fetch message metadata
         const response = await fetch(`https://scan.layerzero-api.com/v1/messages/tx/${srcTxHash}`)
         const data = await response.json()
         const message = data.data?.[0]
+        const dstTxHash = message.destination.tx.txHash
+        console.log('message', message)
 
         // Set up connection and wallet
-        const { connection, umiWalletKeyPair } = await deriveConnection(message.pathway.dstEid as EndpointId)
-        const signer = toWeb3JsKeypair(umiWalletKeyPair)
-        const guidBytes = arrayify(message.guid)
+        const { umi, umiWalletSigner, connection } = await deriveConnection(message.pathway.dstEid as EndpointId)
+        const signer = createSignerFromKeypair(umi, umiWalletSigner)
+        const web3Signer = toWeb3JsKeypair(umiWalletSigner)
 
-        // Build the lzReceive (compose) instruction
-        const lzComposeInstruction = await lzCompose(
-            connection,
-            signer.publicKey,
-            {
-                from: new PublicKey(message.pathway.receiver.address),
-                to: new PublicKey('9eT5hbJ82Ng9khRa2K8pEjji79j7H9ieeeYmM8cCAeQP'),
-                guid: Array.from(guidBytes),
-                index: message.pathway.nonce,
-                message: arrayify(message.source.tx.payload),
-            },
-            new Uint8Array(),
-            'confirmed'
-        )
+        // 2) Look up the ComposeSent event from your source tx
+        const events = await extractComposeSentEventByTxHash(connection, EndpointProgram.PROGRAM_ID, dstTxHash)
+        if (!events || events.length === 0) {
+            throw new Error(`No ComposeSent event found for ${dstTxHash}`)
+        }
+        const event = events[0]
 
-        // Build and sign transaction
+        // 4) Build the lzCompose instruction
+        const ix = await lzCompose(connection, toWeb3JsPublicKey(signer.publicKey), event)
+
+        // 1) Build your Instruction exactly as before
+        const tx = new Transaction()
+        tx.add(ix)
+        tx.feePayer = toWeb3JsPublicKey(signer.publicKey)
+
+        // 2) Fetch a recent blockhash
         const { blockhash } = await connection.getLatestBlockhash('confirmed')
-        const txMessage = new TransactionMessage({
-            payerKey: signer.publicKey,
-            recentBlockhash: blockhash,
-            instructions: [lzComposeInstruction],
-        }).compileToV0Message()
+        tx.recentBlockhash = blockhash
 
-        const tx = new VersionedTransaction(txMessage)
-        tx.sign([signer])
+        // 3) Sign the transaction (`payer` must sign; adjust if you have more signers)
+        tx.sign(web3Signer)
+        const signedTx = tx
 
-        // Log serialized transaction
-        console.log(Buffer.from(tx.serialize()).toString('base64'))
+        // 4) Send *without* preflight
+        const signature = await connection.sendRawTransaction(signedTx.serialize(), {
+            skipPreflight: true,
+            preflightCommitment: 'confirmed',
+        })
 
-        // Optional: simulate
-        const simulation = await connection.simulateTransaction(tx, { sigVerify: true })
-        console.log('simulation', simulation)
+        // 5) Wait for confirmation
+        await connection.confirmTransaction(signature, 'confirmed')
 
-        // Send
-        const sig = await connection.sendTransaction(tx)
-        console.log('lzReceive tx signature', sig)
+        // 6) Fetch the *on-chain* logs
+        const txInfo = await connection.getTransaction(signature, { commitment: 'confirmed' })
+        console.log('On-chain logs:\n', txInfo?.meta?.logMessages?.join('\n'))
+
+        //   const umiInstruction = {
+        //     programId: publicKey(ix.programId.toBase58()),
+        //     keys: ix.keys.map((key) => ({
+        //         pubkey: publicKey(key.pubkey.toBase58()),
+        //         isSigner: key.isSigner,
+        //         isWritable: key.isWritable,
+        //     })),
+        //     data: ix.data,
+        // }
+        // let txBuilder = transactionBuilder().add({
+        //     instruction: umiInstruction,
+        //     signers: [umiWalletSigner], // Include all required signers here
+        //     bytesCreatedOnChain: 0,
+        // })
+
+        // const { signature } = await txBuilder.sendAndConfirm(umi, {
+        //   skipPreflight:       true,
+        //   preflightCommitment: 'confirmed',
+        // })
+        // console.log(
+        //   `lzCompose: ${getExplorerTxLink(bs58.encode(signature), false)}`
+        // )
     })

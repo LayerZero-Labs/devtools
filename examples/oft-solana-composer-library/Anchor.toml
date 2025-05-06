@@ -6,24 +6,29 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-composer = "4CDvcxbE21FD3yd5AtVGmAndXxricN5aKBADz8UNyoQq"
-oft = "Gwdvzz5Qo8qBzG9B1NVZgLjwBVfHpympeb17QZAFQVB5"
+composer = "6xhpdhwyzpjxc6n2KqQS8a3W7Busn6nqGYaobVV25kN5"
+oft = "HipE7QwWtLyDTQNP61dEqGN8JNjUUzCMsUxpxRQMoeYx"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "localnet"
+cluster = "Localnet"
 wallet = "./keypair.json"
 
 [scripts]
 test = "npx jest test/anchor/"
 
 [test]
-reset = true
+startup_wait = 5000
+shutdown_wait = 2000
+upgradeable = false
 
 [test.validator]
-url = "https://api.mainnet-beta.solana.com" # This is the url of the cluster that accounts are cloned from (See `test.validator.clone`).
+bind_address = "0.0.0.0"
+url = "https://api.mainnet-beta.solana.com"
+ledger = ".anchor/test-ledger"
+rpc_port = 8899
 
 [[test.validator.clone]]
 address = "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK"

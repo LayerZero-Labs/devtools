@@ -87,6 +87,7 @@ task('lz:raydium:get-pools', 'Fetches Raydium CLMM pool PDAs')
         // 5) Print them out
         console.log('\n🔑 Raydium CLMM PDAs:')
         console.log('  Pool Program ID: ', poolInfo.programId)
+        console.log('  Pool ID: ', poolId)
         console.log('  Pool State PDA:   ', poolStatePda)
         console.log('  AMM Config PDA:   ', ammConfigPda)
         console.log('  Observation PDA:  ', poolKeys.observationId)
