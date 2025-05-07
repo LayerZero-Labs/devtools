@@ -14,14 +14,6 @@ pub struct SetPeer<'info> {
         bump
     )]
     pub peer: Account<'info, Peer>,
-    #[account(
-        init_if_needed,
-        payer = admin,
-        space = Nonce::SIZE,
-        seeds = [NONCE_SEED, &store.key().to_bytes(), &params.remote_eid.to_be_bytes(), &params.peer_address],
-        bump
-    )]
-    pub nonce_account: Account<'info, Nonce>,
     #[account(seeds = [STORE_SEED], bump = store.bump)]
     pub store: Account<'info, Store>,
     pub system_program: Program<'info, System>,
@@ -31,7 +23,6 @@ impl SetPeer<'_> {
     pub fn apply(ctx: &mut Context<SetPeer>, params: &SetPeerParams) -> Result<()> {
         ctx.accounts.peer.address = params.peer_address;
         ctx.accounts.peer.bump = ctx.bumps.peer;
-        ctx.accounts.nonce_account.bump = ctx.bumps.nonce_account;
         Ok(())
     }
 }

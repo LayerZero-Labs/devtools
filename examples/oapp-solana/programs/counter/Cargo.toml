@@ -1,12 +1,12 @@
 [package]
-name = "omnicounter"
+name = "my_oapp"
 version = "0.1.0"
 description = "Created with Anchor"
 edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-name = "omnicounter"
+name = "my_oapp"
 
 [features]
 no-entrypoint = []

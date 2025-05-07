@@ -984,6 +984,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "my_oapp"
+version = "0.1.0"
+dependencies = [
+ "anchor-lang",
+ "oapp",
+ "solana-helper",
+]
+
+[[package]]
 name = "num-bigint"
 version = "0.4.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1029,15 +1038,6 @@ version = "0.1.0"
 dependencies = [
  "anchor-lang",
  "endpoint",
-]
-
-[[package]]
-name = "omnicounter"
-version = "0.1.0"
-dependencies = [
- "anchor-lang",
- "oapp",
- "solana-helper",
 ]
 
 [[package]]

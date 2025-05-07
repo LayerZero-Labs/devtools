@@ -35,7 +35,7 @@ import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
 import { EndpointV2 } from '@layerzerolabs/protocol-devtools-solana'
 
-import { omnicounter } from './client'
+import { myoapp } from './client'
 
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IOApp, OAppEnforcedOptionParam } from '@layerzerolabs/ua-devtools'
@@ -79,7 +79,7 @@ export class CustomOAppSDK extends OmniSDK implements IOApp {
     protected readonly umiUserAccount: UmiPublicKey
     protected readonly umiProgramId: UmiPublicKey
     protected readonly umiPublicKey: UmiPublicKey
-    protected readonly umiOmnicounterSdk: omnicounter.OmniCounter
+    protected readonly umiMyOAppSdk: myoapp.MyOApp
 
     constructor(
         connection: Connection,
@@ -94,7 +94,7 @@ export class CustomOAppSDK extends OmniSDK implements IOApp {
         this.umiUserAccount = fromWeb3JsPublicKey(userAccount)
         this.umiProgramId = fromWeb3JsPublicKey(this.programId)
         this.umiPublicKey = fromWeb3JsPublicKey(this.publicKey)
-        this.umiOmnicounterSdk = new omnicounter.OmniCounter(fromWeb3JsPublicKey(this.programId))
+        this.umiMyOAppSdk = new myoapp.MyOApp(fromWeb3JsPublicKey(this.programId))
     }
 
     @AsyncRetriable()
@@ -103,7 +103,7 @@ export class CustomOAppSDK extends OmniSDK implements IOApp {
 
         const config = await mapError(
             () => {
-                return omnicounter.accounts.fetchStore(this.umi, this.umiPublicKey)
+                return myoapp.accounts.fetchStore(this.umi, this.umiPublicKey)
                 // return oft.accounts.fetchOFTStore(this.umi, this.umiPublicKey)
             },
             (error) => new Error(`Failed to get owner for ${this.label}: ${error}`)
@@ -149,7 +149,7 @@ export class CustomOAppSDK extends OmniSDK implements IOApp {
         this.logger.debug(`Getting peer for ${eidLabel}`)
         try {
             // const peer = await oft.getPeerAddress(this.umi.rpc, this.umiPublicKey, eid, this.umiProgramId)
-            const peer = await omnicounter.getPeer(this.umi.rpc, eid, this.umiProgramId)
+            const peer = await myoapp.getPeer(this.umi.rpc, eid, this.umiProgramId)
 
             // We run the hex string we got through a normalization/de-normalization process
             // that will ensure that zero addresses will get stripped
@@ -185,12 +185,12 @@ export class CustomOAppSDK extends OmniSDK implements IOApp {
 
         this.logger.debug(`Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32}`)
         const umiTxs = [
-            // await this._createSetPeerAddressIx(normalizedPeer, eid), // admin
-            this.umiOmnicounterSdk.setPeer(delegate, { peer: normalizedPeer, remoteEid: eid }),
+            // await this._createSetPeerAddressIx(normalizedPeer, eid), // admin // needed?
+            this.umiMyOAppSdk.setPeer(delegate, { peer: normalizedPeer, remoteEid: eid }),
             // await this._setPeerEnforcedOptionsIx(new Uint8Array([0, 3]), new Uint8Array([0, 3]), eid), // admin
             // await this._setPeerFeeBpsIx(eid), // admin
             // TODO: is below needed for counter?
-            omnicounter.initOAppNonce({ admin: delegate, oapp }, eid, normalizedPeer), // delegate // TODO: check if already inited before adding
+            myoapp.initOAppNonce({ admin: delegate, oapp }, eid, normalizedPeer), // delegate // TODO: check if already inited before adding
             // await this._createSetPeerAddressIx(normalizedPeer, eid), // admin but is this needed?  set twice...
         ]
 
@@ -198,11 +198,11 @@ export class CustomOAppSDK extends OmniSDK implements IOApp {
         const isReceiveLibraryInitialized = await this.isReceiveLibraryInitialized(eid)
 
         if (!isSendLibraryInitialized) {
-            umiTxs.push(omnicounter.initSendLibrary({ admin: delegate, oapp }, eid))
+            umiTxs.push(myoapp.initSendLibrary({ admin: delegate, oapp }, eid))
         }
 
         if (!isReceiveLibraryInitialized) {
-            umiTxs.push(omnicounter.initReceiveLibrary({ admin: delegate, oapp }, eid))
+            umiTxs.push(myoapp.initReceiveLibrary({ admin: delegate, oapp }, eid))
         }
 
         return {
@@ -291,7 +291,7 @@ export class CustomOAppSDK extends OmniSDK implements IOApp {
     }
 
     async setEnforcedOptions(enforcedOptions: OAppEnforcedOptionParam[]): Promise<OmniTransaction> {
-        // omnicounter does not currently support enforced options
+        // myoapp does not currently support enforced options
         // for OFT, this is stored in the the PeerConfig account's enforced_options field
         this.logger.verbose(`Setting enforced options to ${printJson(enforcedOptions)}`)
         const emptyOptions = Options.newOptions().toBytes()
@@ -428,7 +428,7 @@ export class CustomOAppSDK extends OmniSDK implements IOApp {
         return {
             ...(await this.createTransaction(
                 this._umiToWeb3Tx([
-                    omnicounter.initConfig(
+                    myoapp.initConfig(
                         this.umiProgramId,
                         {
                             admin: delegate,
@@ -446,7 +446,7 @@ export class CustomOAppSDK extends OmniSDK implements IOApp {
     }
 
     protected async _setOAppConfigIx(param: SetOFTConfigParams) {
-        return omnicounter.instructions.set(
+        return myoapp.instructions.set(
             {
                 oftStore: this.umiPublicKey,
                 admin: await this._getAdmin(),

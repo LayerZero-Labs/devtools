@@ -4,14 +4,13 @@ mod msg_codec;
 mod state;
 
 use anchor_lang::prelude::*;
-use errors::*;
 use instructions::*;
 use oapp::{endpoint::MessagingFee, endpoint_cpi::LzAccount, LzComposeParams, LzReceiveParams};
 use solana_helper::program_id_from_env;
 use state::*;
 
 declare_id!(anchor_lang::solana_program::pubkey::Pubkey::new_from_array(program_id_from_env!(
-    "OMNICOUNTER_ID",
+    "MYOAPP_ID",
     "HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay"
 )));
 
@@ -19,10 +18,9 @@ const LZ_RECEIVE_TYPES_SEED: &[u8] = b"LzReceiveTypes";
 const LZ_COMPOSE_TYPES_SEED: &[u8] = b"LzComposeTypes";
 const STORE_SEED: &[u8] = b"Store";
 const PEER_SEED: &[u8] = b"Peer";
-const NONCE_SEED: &[u8] = b"Nonce";
 
 #[program]
-pub mod omnicounter {
+pub mod my_oapp {
     use super::*;
 
     pub fn init_store(mut ctx: Context<InitStore>, params: InitStoreParams) -> Result<()> {
@@ -61,23 +59,5 @@ pub mod omnicounter {
         params: LzComposeParams,
     ) -> Result<Vec<LzAccount>> {
         LzComposeTypes::apply(&ctx, &params)
-    }
-
-    pub fn next_nonce(ctx: Context<NextNonce>, params: NextNonceParams) -> Result<u64> {
-        NextNonce::apply(&ctx, &params)
-    }
-
-    pub fn skip_inbound_nonce(
-        mut ctx: Context<SkipInboundNonce>,
-        params: SkipInboundNonceParams,
-    ) -> Result<()> {
-        SkipInboundNonce::apply(&mut ctx, &params)
-    }
-
-    pub fn set_ordered_nonce(
-        mut ctx: Context<SetOrderedNonce>,
-        params: SetOrderedNonceParams,
-    ) -> Result<()> {
-        SetOrderedNonce::apply(&mut ctx, &params)
     }
 }

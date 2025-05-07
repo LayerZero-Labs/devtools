@@ -1,3 +1,3 @@
 fn main() {
-    println!("cargo:rerun-if-env-changed=OMNICOUNTER_ID");
+    println!("cargo:rerun-if-env-changed=MYOAPP_ID");
 }

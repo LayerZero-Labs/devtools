@@ -6,7 +6,6 @@ pub struct Store {
     pub composed_count: u64,
     pub bump: u8,
     pub endpoint_program: Pubkey,
-    pub ordered_nonce: bool,
     pub string: String,
 }
 

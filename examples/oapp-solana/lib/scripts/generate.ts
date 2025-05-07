@@ -11,8 +11,8 @@ async function sleep(ms: number): Promise<void> {
 }
 
 async function generateTypeScriptSDK(): Promise<void> {
-    const generatedSDKDir = path.join(__dirname, '..', 'sdk', 'generated', 'omnicounter')
-    const anchorIdlPath = path.join(__dirname, '..', '..', 'target', 'idl', 'omnicounter.json')
+    const generatedSDKDir = path.join(__dirname, '..', 'client', 'generated', 'my_oapp')
+    const anchorIdlPath = path.join(__dirname, '..', '..', 'target', 'idl', 'my_oapp.json')
     const anchorIdl = exchangeIDLJson(anchorIdlPath)
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
     anchorIdl.metadata = { ...anchorIdl.metadata, address: 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay' }

@@ -3,7 +3,7 @@ use anchor_lang::prelude::*;
 use oapp::{
     endpoint::{
         cpi::accounts::Clear,
-        instructions::{ClearParams, SendComposeParams},
+        instructions::ClearParams,
         ConstructCPIContext, ID as ENDPOINT_ID,
     },
     LzReceiveParams,
@@ -19,13 +19,7 @@ pub struct LzReceive<'info> {
         bump = peer.bump,
         constraint = params.sender == peer.address
     )]
-    pub peer: Account<'info, Peer>,
-    #[account(
-        mut,
-        seeds = [NONCE_SEED, &store.key().to_bytes(), &params.src_eid.to_be_bytes(), &params.sender],
-        bump = nonce_account.bump
-    )]
-    pub nonce_account: Account<'info, Nonce>,
+    pub peer: Account<'info, Peer>
 }
 
 impl LzReceive<'_> {
@@ -49,28 +43,10 @@ impl LzReceive<'_> {
             },
         )?;
 
-        accept_nonce(&ctx.accounts.store, &mut ctx.accounts.nonce_account, params.nonce)?;
-
         let string_value = msg_codec::decode(&params.message);
         let count = &mut ctx.accounts.store;
         count.string = string_value;
 
         Ok(())
     }
-}
-
-fn accept_nonce<'info>(
-    store_acc: &Account<'info, Store>,
-    nonce_acc: &mut Account<'info, Nonce>,
-    nonce: u64,
-) -> Result<()> {
-    let current_nonce = nonce_acc.max_received_nonce;
-    if store_acc.ordered_nonce {
-        require!(nonce == current_nonce + 1, CounterError::InvalidNonce);
-    }
-    // update the max nonce anyway. once the ordered mode is turned on, missing early nonces will be rejected
-    if nonce > current_nonce {
-        nonce_acc.max_received_nonce = nonce;
-    }
-    Ok(())
 }

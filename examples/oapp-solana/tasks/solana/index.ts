@@ -32,7 +32,7 @@ import { formatEid } from '@layerzerolabs/devtools'
 import { createLogger, promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 
-import { OmniCounter } from '../../lib/client/omnicounter'
+import { MyOApp } from '../../lib/client/myoapp'
 import { DebugLogger, KnownErrors, createSolanaConnectionFactory } from '../common/utils'
 
 import { getPrioritizationFees } from './utils'
@@ -156,10 +156,10 @@ export const useWeb3Js = async () => {
 export const deriveKeys = (programIdStr: string) => {
     const programId = publicKey(programIdStr)
     const eddsa: EddsaInterface = createWeb3JsEddsa()
-    const omnicounterDeriver = new OmniCounter(programId)
+    const myoappDeriver = new MyOApp(programId)
     const lockBox = eddsa.generateKeypair()
     const escrowPK = lockBox.publicKey
-    const [oappPda] = omnicounterDeriver.pda.oapp()
+    const [oappPda] = myoappDeriver.pda.oapp()
     return {
         programId,
         lockBox,

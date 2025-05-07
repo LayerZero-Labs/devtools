@@ -6,7 +6,7 @@ import { OmniAppPDA } from '@layerzerolabs/lz-solana-sdk-v2/umi'
 
 const eddsa = createWeb3JsEddsa()
 
-export class OmniCounterPDA extends OmniAppPDA {
+export class MyOAppPDA extends OmniAppPDA {
     static STORE_SEED = 'Store'
     static NONCE_SEED = 'Nonce'
 
@@ -16,7 +16,7 @@ export class OmniCounterPDA extends OmniAppPDA {
 
     // seeds = [STORE_SEED],
     oapp(): Pda {
-        return eddsa.findPda(this.programId, [Buffer.from(OmniCounterPDA.STORE_SEED, 'utf8')])
+        return eddsa.findPda(this.programId, [Buffer.from(MyOAppPDA.STORE_SEED, 'utf8')])
     }
 
     // seeds = [PEER_SEED, &count.key().to_bytes(), &params.dst_eid.to_be_bytes()],
@@ -32,7 +32,7 @@ export class OmniCounterPDA extends OmniAppPDA {
     // seeds = [NONCE_SEED, &params.receiver, &params.src_eid.to_be_bytes(), &params.sender]
     nonce(receiver: PublicKey, remoteEid: number, sender: Uint8Array): Pda {
         return eddsa.findPda(this.programId, [
-            Buffer.from(OmniCounterPDA.NONCE_SEED, 'utf8'),
+            Buffer.from(MyOAppPDA.NONCE_SEED, 'utf8'),
             publicKeyBytes(receiver),
             u32({ endian: Endian.Big }).serialize(remoteEid),
             sender,

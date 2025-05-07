@@ -38,7 +38,6 @@ impl InitStore<'_> {
         ctx.accounts.store.admin = params.admin;
         ctx.accounts.store.bump = ctx.bumps.store;
         ctx.accounts.store.endpoint_program = params.endpoint;
-        ctx.accounts.store.ordered_nonce = params.ordered_nonce;
         ctx.accounts.store.string = "Nothing received yet.".to_string();
 
         ctx.accounts.lz_receive_types_accounts.store = ctx.accounts.store.key();
@@ -63,5 +62,4 @@ impl InitStore<'_> {
 pub struct InitStoreParams {
     pub admin: Pubkey,
     pub endpoint: Pubkey,
-    pub ordered_nonce: bool,
 }

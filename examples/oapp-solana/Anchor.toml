@@ -5,7 +5,7 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-omnicounter = "4kEmYs28s5ZERrfSDo9QSgX31Lhu3RYU4d8HQBPRjFua"
+my_oapp = "6Vju5NhRNcBkftQMjpNtynbuyoURF9bqGm1m5NLJjc2P"
 
 [registry]
 url = "https://api.apr.dev"

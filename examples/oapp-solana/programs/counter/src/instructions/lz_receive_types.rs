@@ -31,18 +31,11 @@ impl LzReceiveTypes<'_> {
         let peer_seeds = [PEER_SEED, &store.to_bytes(), &params.src_eid.to_be_bytes()];
         let (peer, _) = Pubkey::find_program_address(&peer_seeds, ctx.program_id);
 
-        // The third account is the nonce account, we find it by the params.src_eid and params.sender.
-        let nonce_seeds =
-            [NONCE_SEED, &store.to_bytes(), &params.src_eid.to_be_bytes(), &params.sender];
-        let (nonce_account, _) = Pubkey::find_program_address(&nonce_seeds, ctx.program_id);
-
         let mut accounts = vec![
             // count
             LzAccount { pubkey: store, is_signer: false, is_writable: true },
             // peer
-            LzAccount { pubkey: peer, is_signer: false, is_writable: false },
-            // nonce_account
-            LzAccount { pubkey: nonce_account, is_signer: false, is_writable: true },
+            LzAccount { pubkey: peer, is_signer: false, is_writable: false }
         ];
 
         // append the accounts for the clear ix

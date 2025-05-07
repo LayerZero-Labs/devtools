@@ -7,7 +7,7 @@ import { normalizePeer } from '@layerzerolabs/devtools'
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
-import { omnicounter } from '../../lib/client'
+import { myoapp } from '../../lib/client'
 
 import { deriveConnection, getExplorerTxLink, getLayerZeroScanLink, getSolanaDeployment } from '.'
 
@@ -21,10 +21,10 @@ interface Args {
 const action: ActionType<Args> = async (args, hre: HardhatRuntimeEnvironment) => {
     const { fromEid, sender, nonce, toEid } = args
     const solanaDeployment = getSolanaDeployment(toEid)
-    const counter: omnicounter.OmniCounter = new omnicounter.OmniCounter(publicKey(solanaDeployment.programId))
+    const counter: myoapp.MyOApp = new myoapp.MyOApp(publicKey(solanaDeployment.programId))
     const { connection, umi, umiWalletSigner } = await deriveConnection(toEid)
 
-    const params: Pick<omnicounter.instructions.SkipInboundNonceInstructionDataArgs, 'srcEid' | 'sender' | 'nonce'> = {
+    const params: Pick<myoapp.instructions.SkipInboundNonceInstructionDataArgs, 'srcEid' | 'sender' | 'nonce'> = {
         srcEid: fromEid,
         sender: normalizePeer(sender, fromEid),
         nonce: nonce,

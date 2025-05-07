@@ -62,7 +62,7 @@ importers:
         specifier: ^3.0.75
         version: 3.0.86(@openzeppelin/contracts-upgradeable@5.3.0(@openzeppelin/contracts@5.3.0))(@openzeppelin/contracts@5.3.0)(hardhat-deploy@0.12.4(bufferutil@4.0.9)(utf-8-validate@5.0.10))
       '@layerzerolabs/lz-solana-sdk-v2':
-        specifier: ^3.0.59
+        specifier: ^3.0.86
         version: 3.0.86(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10)
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.75

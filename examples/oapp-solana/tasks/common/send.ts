@@ -6,7 +6,7 @@ import { ActionType, HardhatRuntimeEnvironment } from 'hardhat/types'
 import { ChainType, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 
-import { omnicounter } from '../../lib/client'
+import { myoapp } from '../../lib/client'
 import {
     TransactionType,
     addComputeUnitInstructions,
@@ -44,12 +44,11 @@ async function sendFromSolana(fromEid: number, dstEid: number, message: string, 
     const solanaDeployment = getSolanaDeployment(solanaEid)
     const { connection, umi, umiWalletSigner } = await deriveConnection(solanaEid)
 
-    const counter: omnicounter.OmniCounter = new omnicounter.OmniCounter(publicKey(solanaDeployment.programId))
+    const counter: myoapp.MyOApp = new myoapp.MyOApp(publicKey(solanaDeployment.programId))
 
     // 3) Build the cross-chain send options (example uses executor LzReceive option).
     const options = Options.newOptions()
         .addExecutorLzReceiveOption(100_000, 0) // adjust gas if necessary
-        .addExecutorOrderedExecutionOption()
         .toBytes()
 
     // 4) Quote the native fee for sending your message.
@@ -98,7 +97,6 @@ async function sendFromEvm(dstEid: number, message: string, contractName: string
     // 3) Build the cross-chain send options (example uses executor LzReceive option).
     const options = Options.newOptions()
         .addExecutorLzReceiveOption(200_000, 0) // adjust gas if necessary
-        .addExecutorOrderedExecutionOption()
         .toHex()
         .toString()
 
