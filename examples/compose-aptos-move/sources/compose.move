@@ -14,9 +14,12 @@ module compose::compose {
     use endpoint_v2_common::contract_identity::{Self, CallRef, ContractSigner, create_contract_signer};
     use endpoint_v2_common::serde;
 
+    use aptos_framework::account;
+
     struct ComposeStore has key {
         contract_signer: ContractSigner,
         extend_ref: ExtendRef,
+        signer_cap: account::SignerCapability,
     }
 
     #[event]
@@ -284,7 +287,6 @@ module compose::compose {
     }
 
     public fun metadata_addr_from_oft(oft_addr: address): address {
-        // deterministic; no storage read
         object::create_object_address(&oft_addr, b"oft_fa")
     }
 
