@@ -7,20 +7,16 @@ module compose::compose {
     use std::type_info::{module_name, type_of};
     use std::vector;
     use std::primary_fungible_store;
-    use aptos_framework::event;
-    use std::bcs;
+    use std::object::{Self, ExtendRef, create_named_object, generate_extend_ref, generate_signer_for_extending};
 
     use endpoint_v2::endpoint::{Self, get_guid_and_index_from_wrapped, wrap_guid_and_index, WrappedGuidAndIndex};
-    use endpoint_v2_common::bytes32::{Bytes32, to_bytes32};
+    use endpoint_v2_common::bytes32::{Self, Bytes32, to_bytes32, to_address};
     use endpoint_v2_common::contract_identity::{Self, CallRef, ContractSigner, create_contract_signer};
     use endpoint_v2_common::serde;
 
     struct ComposeStore has key {
         contract_signer: ContractSigner,
-    }
-
-    struct LastMessageStore has key {
-        last_message: vector<u8>,
+        extend_ref: ExtendRef,
     }
 
     #[event]
@@ -62,8 +58,28 @@ module compose::compose {
 
     #[event]
     struct ComposeMsgPayload has drop, store {
+        remaining_payload_length: u64,
         min_amount_to_swap_on_dest: u64,
-        aptos_dest_wallet_address: vector<u8>,
+        aptos_dest_wallet_address_bytes: vector<u8>,
+        aptos_dest_wallet_address_bytes_length: u64,
+    }
+
+    #[event]
+    struct AptosDestWalletAddress has drop, store {
+        aptos_dest_wallet_address: address,
+    }
+
+    #[event]
+    struct TokenTransferredEvent has drop, store {
+        token_address: address,
+        recipient: address,
+        amount: u64,
+    }
+
+    #[event]
+    struct TokenMetadata has drop, store {
+        oft_address: address,
+        token_metadata_address: address,
     }
 
     public inline fun COMPOSE_ADDRESS(): address { @compose }
@@ -86,7 +102,7 @@ module compose::compose {
         _message: vector<u8>,
         _extra_data: vector<u8>,
         _value: Option<FungibleAsset>,
-    ) acquires LastMessageStore {
+    ) acquires ComposeStore {
         let (nonce, src_eid, amount_received_ld, compose_payload) = decode_message(&_message);
         let (sender_address, remaining_payload) = extract_sender_and_payload(&compose_payload);
 
@@ -100,22 +116,30 @@ module compose::compose {
             remaining_payload,
         });
 
-        let last_message_store = borrow_global_mut<LastMessageStore>(COMPOSE_ADDRESS());
-        last_message_store.last_message = _message;
-
+        let remaining_payload_length = vector::length(&remaining_payload);
         // Extract encoded params from compose message in examples/compose-aptos-move/scripts/sendOFTWithCompose.ts
         let min_amount_to_swap_on_dest = serde::extract_u64(&remaining_payload, &mut 0);
-        let aptos_dest_wallet_address = vector::slice(&remaining_payload, 8, 32);
+        let aptos_dest_wallet_address_bytes = vector::slice(&remaining_payload, 8, 40);
+        let aptos_dest_wallet_address_bytes_length = vector::length(&aptos_dest_wallet_address_bytes);
 
         emit(ComposeMsgPayload {
+            remaining_payload_length,
             min_amount_to_swap_on_dest,
-            aptos_dest_wallet_address,
+            aptos_dest_wallet_address_bytes,
+            aptos_dest_wallet_address_bytes_length,
         });
 
+        // Convert the address bytes directly to address using bcs
+        let aptos_dest_wallet_address = bytes32::to_address(bytes32::to_bytes32(aptos_dest_wallet_address_bytes));
+
+        emit(AptosDestWalletAddress {
+            aptos_dest_wallet_address,
+        });
+        
+        transfer_oft_tokens(_from, aptos_dest_wallet_address, (amount_received_ld as u64));
 
         if (option::is_some(&_value)) {
             let asset = option::extract(&mut _value);
-            let amount = fungible_asset::amount(&asset);
             
             let contract_address = COMPOSE_ADDRESS();
             primary_fungible_store::deposit(contract_address, asset);
@@ -172,7 +196,7 @@ module compose::compose {
         index: u16,
         message: vector<u8>,
         extra_data: vector<u8>,
-    ) acquires ComposeStore, LastMessageStore {
+    ) acquires ComposeStore, {
         emit(ComposeWithNoValueReceivedEvent {
             from,
             guid,
@@ -203,7 +227,7 @@ module compose::compose {
         message: vector<u8>,
         extra_data: vector<u8>,
         value: Option<FungibleAsset>,
-    ) acquires ComposeStore, LastMessageStore {
+    ) acquires ComposeStore {
         // Make sure that the value provided is of the native token type
         assert!(option::is_none(&value) || is_native_token(option::borrow(&value)), EINVALID_TOKEN);
 
@@ -247,19 +271,69 @@ module compose::compose {
     // =============================================== View Functions ===============================================
 
     #[view]
-    public fun get_last_message(): vector<u8> acquires LastMessageStore {
-        borrow_global<LastMessageStore>(COMPOSE_ADDRESS()).last_message
+    public fun get_token_balance(oft_address: address): u64 {
+        let token_metadata_address = metadata_addr_from_oft(oft_address);
+
+        emit(TokenMetadata {
+            oft_address,
+            token_metadata_address,
+        });
+
+        let token_metadata = metadata_from_oft(oft_address);
+        primary_fungible_store::balance(COMPOSE_ADDRESS(), token_metadata)
+    }
+
+    public fun metadata_addr_from_oft(oft_addr: address): address {
+        // deterministic; no storage read
+        object::create_object_address(&oft_addr, b"oft_fa")
+    }
+
+    public fun metadata_from_oft(oft_addr: address): object::Object<fungible_asset::Metadata> {
+        object::address_to_object<fungible_asset::Metadata>(
+            metadata_addr_from_oft(oft_addr)
+        )
+    }
+
+    #[view]
+    public fun get_token_metadata(oft_address: address): object::Object<fungible_asset::Metadata> {
+        metadata_from_oft(oft_address)
+    }
+
+    public entry fun transfer_oft_tokens(oft_address: address, recipient: address, amount: u64) acquires ComposeStore {
+        let compose_store = borrow_global<ComposeStore>(COMPOSE_ADDRESS());
+        
+        let signer_ref = &generate_signer_for_extending(&compose_store.extend_ref);
+        
+        let token_metadata = metadata_from_oft(oft_address);
+        
+        let sender_balance = primary_fungible_store::balance(COMPOSE_ADDRESS(), token_metadata);
+        assert!(sender_balance >= amount, EINSUFFICIENT_BALANCE);
+        
+        primary_fungible_store::transfer(
+            signer_ref,
+            token_metadata,
+            recipient,
+            amount
+        );
+        
+        emit(TokenTransferredEvent {
+            token_address: oft_address,
+            recipient,
+            amount,
+        });
     }
 
     // ================================================ Initialization ================================================
 
     fun init_module(account: &signer) {
+        let constructor_ref = create_named_object(account, b"compose_signer");
+        let extend_ref = generate_extend_ref(&constructor_ref);
+        let contract_signer = create_contract_signer(account);
+
+
         move_to<ComposeStore>(account, ComposeStore {
-            contract_signer: create_contract_signer(account),
-        });
-        
-        move_to<LastMessageStore>(account, LastMessageStore {
-            last_message: vector::empty(),
+            contract_signer,
+            extend_ref,
         });
 
         let module_name = module_name(&type_of<LzComposeModule>());
@@ -268,12 +342,15 @@ module compose::compose {
     /// Struct to dynamically derive the module name to register on the endpoint
     struct LzComposeModule {}
 
-    // #[test_only]
-    // public fun init_module_for_test() {
-    //     init_module(&std::account::create_signer_for_test(compose::compose::COMPOSE_ADDRESS()));
-    // }
+    #[test_only]
+    public fun init_module_for_test() {
+        init_module(&std::account::create_signer_for_test(compose::compose::COMPOSE_ADDRESS()));
+    }
 
     // ================================================== Error Codes =================================================
 
     const EINVALID_TOKEN: u64 = 1;
+    const EUNAUTHORIZED: u64 = 2;
+    const EINSUFFICIENT_BALANCE: u64 = 3;
+
 }
