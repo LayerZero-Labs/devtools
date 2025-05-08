@@ -18,11 +18,6 @@ const aptosContract: OmniPointHardhat = {
     contractName: 'MyOApp',
 }
 
-const aptosContract2: OmniPointHardhat = {
-    eid: EndpointId.APTOS_V2_MAINNET,
-    contractName: 'MyOApp',
-}
-
 const config: OAppOmniGraphHardhat = {
     contracts: [
         {
@@ -34,13 +29,6 @@ const config: OAppOmniGraphHardhat = {
         },
         {
             contract: aptosContract,
-            config: {
-                delegate: '',
-                owner: '',
-            },
-        },
-        {
-            contract: aptosContract2,
             config: {
                 delegate: '',
                 owner: '',
