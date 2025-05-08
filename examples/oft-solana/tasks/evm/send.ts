@@ -44,7 +44,6 @@ const action: ActionType<TaskArguments> = async (
     const [msgFee] = await token.functions.quoteSend(sendParam, false)
     const txResponse = await token.functions.send(sendParam, msgFee, signer.address, {
         value: msgFee.nativeFee,
-        gasLimit: 500_000,
     })
     const txReceipt = await txResponse.wait()
     console.log(`send: ${amount} to ${to}: ${txReceipt.transactionHash}`)
