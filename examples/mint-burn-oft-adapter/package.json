@@ -16,10 +16,6 @@
     "test:forge": "forge test",
     "test:hardhat": "hardhat test"
   },
-  "overrides": {
-    "ethers": "^5.7.2",
-    "hardhat-deploy": "^0.12.1"
-  },
   "resolutions": {
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1"
@@ -71,5 +67,9 @@
       "ethers": "^5.7.2",
       "hardhat-deploy": "^0.12.1"
     }
+  },
+  "overrides": {
+    "ethers": "^5.7.2",
+    "hardhat-deploy": "^0.12.1"
   }
 }
