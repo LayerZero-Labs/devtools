@@ -16,6 +16,16 @@
     "test:forge": "forge test",
     "test:hardhat": "hardhat test"
   },
+  "pnpm": {
+    "overrides": {
+      "ethers": "^5.7.2",
+      "hardhat-deploy": "^0.12.1"
+    }
+  },
+  "overrides": {
+    "ethers": "^5.7.2",
+    "hardhat-deploy": "^0.12.1"
+  },
   "resolutions": {
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1"
@@ -61,15 +71,5 @@
   },
   "engines": {
     "node": ">=18.16.0"
-  },
-  "pnpm": {
-    "overrides": {
-      "ethers": "^5.7.2",
-      "hardhat-deploy": "^0.12.1"
-    }
-  },
-  "overrides": {
-    "ethers": "^5.7.2",
-    "hardhat-deploy": "^0.12.1"
   }
 }
