@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rm -rf artifacts cache out build",
     "compile": "$npm_execpath run compile:forge && $npm_execpath run compile:hardhat && $npm_execpath run compile:aptos",
-    "compile:aptos": "aptos move compile --dev --skip-attribute-checks --included-artifacts=none --skip-fetch-latest-git-deps",
+    "compile:aptos": "aptosup -s 6.0.1 && aptos move compile --dev --skip-attribute-checks --included-artifacts=none --skip-fetch-latest-git-deps",
     "compile:forge": "forge build",
     "compile:hardhat": "hardhat compile",
     "lint": "$npm_execpath run lint:js && $npm_execpath run lint:sol",
