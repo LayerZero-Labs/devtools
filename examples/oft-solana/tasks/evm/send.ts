@@ -34,7 +34,10 @@ const action: ActionType<TaskArguments> = async (
     const amountLD = BigNumber.from(amount)
     const sendParam = {
         dstEid,
-        to: makeBytes32(bs58.decode(to)),
+        to:
+            dstEid === EndpointId.SOLANA_V2_TESTNET || dstEid === EndpointId.SOLANA_V2_MAINNET
+                ? makeBytes32(bs58.decode(to))
+                : makeBytes32(to),
         amountLD: amountLD.toString(),
         minAmountLD: amountLD.mul(9_000).div(10_000).toString(),
         extraOptions: '0x',
