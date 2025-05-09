@@ -2,7 +2,10 @@ import assert from 'assert'
 
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-// TODO declare your contract name here
+// Note: If you are using this example to migrate your existing Endpoint V1 OFT to use ULN301, then you should be using the MyEndpointV1OFTV2Mock.ts deploy script instead
+// This deploy script is for deploying a generic OApp on Endpoint V2, which is relevant if you want to test out connecting to an LzApp instance that is using ULN301
+
+// Note: declare your contract name here
 const contractName = 'MyOApp'
 
 const deploy: DeployFunction = async (hre) => {

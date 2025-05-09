@@ -185,6 +185,8 @@ To deploy your contracts to your desired EVM chains, run the following command i
 npx hardhat lz:deploy
 ```
 
+When prompted for the deploy tag to use, input `MyEndpointV1OFTV2Mock`, which is a contract that is using OFTV2 on EndpointV1.
+
 More information about available CLI arguments can be found using the `--help` flag:
 
 ```bash
