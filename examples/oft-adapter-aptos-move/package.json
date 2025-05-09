@@ -34,7 +34,6 @@
     "lz:sdk:move:wire": "ts-node scripts/cli.ts --vm move --op wire",
     "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat && $npm_execpath run test:aptos:v3 && $npm_execpath run test:aptos:v6",
     "test:aptos": "aptos move test --dev --skip-fetch-latest-git-deps",
-    "test:aptos:v3": "aptosup -s 3.5.0 && aptos move test --dev --skip-fetch-latest-git-deps",
     "test:aptos:v6": "aptosup -s 6.0.1 && aptos move test --dev --skip-fetch-latest-git-deps",
     "test:forge": "forge test",
     "test:hardhat": "hardhat test"
