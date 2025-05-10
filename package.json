@@ -24,7 +24,7 @@
     "test:jest": "$npm_execpath turbo run test:jest $DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS",
     "test:local": ". bin/env && $npm_execpath start && $npm_execpath test",
     "test:local:jest": ". bin/env && $npm_execpath start && $npm_execpath test:jest",
-    "test:user": "docker compose -f docker-compose.registry.yaml run --build --rm $DOCKER_COMPOSE_ARGS tests",
+    "test:user": "docker compose -f docker-compose.registry.yaml build --no-cache --pull tests && docker compose -f docker-compose.registry.yaml run --rm $DOCKER_COMPOSE_ARGS tests",
     "ton:message-info": "ts-node packages/devtools-ton/scripts/debugTon.ts"
   },
   "lint-staged": {

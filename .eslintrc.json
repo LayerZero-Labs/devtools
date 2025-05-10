@@ -27,7 +27,7 @@
   "parserOptions": {
     "ecmaVersion": 8
   },
-  "ignorePatterns": ["node_modules/", "dist/", ".turbo/"],
+  "ignorePatterns": ["node_modules/", "dist/", ".turbo/", "package.json"],
   "rules": {
     "prettier/prettier": "error",
     "curly": "error",
