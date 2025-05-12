@@ -43,10 +43,6 @@
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1"
   },
-  "overrides": {
-    "ethers": "^5.7.2",
-    "hardhat-deploy": "^0.12.1"
-  },
   "devDependencies": {
     "@aptos-labs/ts-sdk": "^1.33.1",
     "@babel/core": "^7.23.9",
@@ -113,5 +109,9 @@
       "ethers": "^5.7.2",
       "hardhat-deploy": "^0.12.1"
     }
+  },
+  "overrides": {
+    "ethers": "^5.7.2",
+    "hardhat-deploy": "^0.12.1"
   }
 }
