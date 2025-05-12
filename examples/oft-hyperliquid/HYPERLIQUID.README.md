@@ -222,7 +222,10 @@ npx @layerzerolabs/hyperliquid-composer core-spot \
 
 This is the step where you set the trading fee share for the deployer. It can be in the range of `[0%,100%]`.
 
+A deployer fee share <https://hyperliquid.gitbook.io/hyperliquid-docs/trading/fees> is claimed per transaction on HyperCore. Half of the base rate (50%) is allocated as the deployer fee share. The deployer can choose to forgo this fee share by setting the share to `0%`. This causes the deployer's fee share part to be burnt. If it were to be set to `100%`, the deployer would receive the full fee share part of the fee.
+
 > ⚠️ Note: The trading fee can be reset as long as the new share is lower than the previous share.
+> ⚠️ Note: This step can also be run after the core spot is deployed.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer trading-fee \
