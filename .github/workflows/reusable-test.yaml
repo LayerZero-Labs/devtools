@@ -55,6 +55,11 @@ jobs:
       - name: Setup build cache
         uses: ./.github/workflows/actions/setup-build-cache
 
+      - name: Debug Prettier binary
+        run: |
+          pnpm exec which prettier
+          pnpm exec prettier --version
+
       - name: Lint
         run: pnpm lint
 
