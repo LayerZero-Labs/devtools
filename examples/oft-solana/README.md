@@ -36,7 +36,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ### Install Solana
 
 ```bash
-sh -c "$(curl -sSfL https://release.solana.com/v1.17.31/install)"
+sh -c "$(curl -sSfL https://release.anza.xyz/v1.17.31/install)"
 ```
 
 ### Install Anchor
@@ -178,7 +178,7 @@ While for building, we must use Solana `v1.17.31`, for deploying, we will be usi
 First, we switch to Solana `v1.18.26` (remember to switch back to `v1.17.31` later)
 
 ```bash
-sh -c "$(curl -sSfL https://release.solana.com/v1.18.26/install)"
+sh -c "$(curl -sSfL https://release.anza.xyz/v1.18.26/install)"
 ```
 
 ##### (Recommended) Deploying with a priority fee
@@ -204,7 +204,7 @@ solana program deploy --program-id target/deploy/oft-keypair.json target/verifia
 :warning: After deploying, make sure to switch back to v1.17.31 after deploying. If you need to rebuild artifacts, you must use Solana CLI version `1.17.31` and Anchor version `0.29.0`
 
 ```bash
-sh -c "$(curl -sSfL https://release.solana.com/v1.17.31/install)"
+sh -c "$(curl -sSfL https://release.anza.xyz/v1.17.31/install)"
 ```
 
 ### Create the Solana OFT
