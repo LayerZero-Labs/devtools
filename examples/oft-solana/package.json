@@ -22,6 +22,11 @@
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1"
   },
+  "overrides": {
+    "@solana/web3.js": "^1.98.0",
+    "ethers": "^5.7.2",
+    "hardhat-deploy": "^0.12.1"
+  },
   "devDependencies": {
     "@coral-xyz/anchor": "^0.29.0",
     "@ethersproject/bytes": "^5.7.0",
@@ -108,10 +113,5 @@
       "ethers": "^5.7.2",
       "hardhat-deploy": "^0.12.1"
     }
-  },
-  "overrides": {
-    "ethers": "^5.7.2",
-    "hardhat-deploy": "^0.12.1",
-    "@solana/web3.js": "^1.98.0"
   }
 }

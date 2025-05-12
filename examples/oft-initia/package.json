@@ -43,6 +43,10 @@
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1"
   },
+  "overrides": {
+    "ethers": "^5.7.2",
+    "hardhat-deploy": "^0.12.1"
+  },
   "dependencies": {
     "@initia/initia.js": "^0.2.28",
     "@types/glob": "^8.1.0",
@@ -113,9 +117,5 @@
       "ethers": "^5.7.2",
       "hardhat-deploy": "^0.12.1"
     }
-  },
-  "overrides": {
-    "ethers": "^5.7.2",
-    "hardhat-deploy": "^0.12.1"
   }
 }
