@@ -119,7 +119,7 @@ abstract contract NativeOFTAdapter is OFTCore {
     }
 
     /**
-     * @dev Overridden to be empty as this assertion is done higher up on the overriden send() function.
+     * @dev Overridden to be empty as this assertion is done higher up on the overridden send() function.
      * @param _nativeFee The native fee to be paid.
      * @return nativeFee The amount of native currency paid.
      */

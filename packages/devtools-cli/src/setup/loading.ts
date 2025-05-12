@@ -43,7 +43,7 @@ export const createSetupLoader =
             try {
                 rawSetupMaterialized = await rawSetup()
             } catch (error) {
-                throw new Error(`Got an exception while executing setup funtion from file '${path}': ${error}`)
+                throw new Error(`Got an exception while executing setup function from file '${path}': ${error}`)
             }
         } else {
             logger.verbose(`Using exported value from setup file '${absolutePath}'`)

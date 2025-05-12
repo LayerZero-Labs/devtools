@@ -71,7 +71,7 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
         address sender = _senderBytes32.into_evmAddress_or_zero();
         address receiver = _maybeReceiver.into_evmAddress_or_zero();
 
-        /// @dev Initiate refund if the receiver is not a valid evm adress
+        /// @dev Initiate refund if the receiver is not a valid evm address
         /// @dev Handling the if sender is not a valid evm address in the refund function
         if (receiver == address(0)) {
             bytes memory errMsg = abi.encodeWithSelector(
@@ -188,7 +188,7 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     /// @notice This function is called by the refundTokens function
     ///
     /// @dev It is possible that the refund address is a contract without fallback or receive functions - in that case the transfer fails and tokens will be locked in the contract.
-    /// @dev Since this is an external function - the msg.value can be different to the msg.value sent to the lzCompose function by tx.origin
+    /// @dev Since this is an external function - the msg.value can be different from the msg.value sent to the lzCompose function by tx.origin
     /// @dev It is different in the case of a partial refund where the call is:
     /// @dev `this.refundNativeTokens{ value: amounts.dust }(_receiver)`
     /// @dev In this case, the msg.value is the amount of the dust and not the msg.value sent to the lzCompose function by tx.origin

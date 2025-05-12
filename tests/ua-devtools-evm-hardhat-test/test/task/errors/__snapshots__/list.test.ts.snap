@@ -4324,7 +4324,7 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "CCIPDVNAdapter",
-      "Error": "DVNAdapter_MissingRecieveLib(address,uint32)",
+      "Error": "DVNAdapter_MissingReceiveLib(address,uint32)",
       "Signature": "0xf25127e6",
     },
     {
@@ -4374,7 +4374,7 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "DVNAdapterBase",
-      "Error": "DVNAdapter_MissingRecieveLib(address,uint32)",
+      "Error": "DVNAdapter_MissingReceiveLib(address,uint32)",
       "Signature": "0xf25127e6",
     },
     {
@@ -4414,7 +4414,7 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "ArbitrumDVNAdapterL1",
-      "Error": "DVNAdapter_MissingRecieveLib(address,uint32)",
+      "Error": "DVNAdapter_MissingReceiveLib(address,uint32)",
       "Signature": "0xf25127e6",
     },
     {
@@ -4464,7 +4464,7 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "ArbitrumDVNAdapterL2",
-      "Error": "DVNAdapter_MissingRecieveLib(address,uint32)",
+      "Error": "DVNAdapter_MissingReceiveLib(address,uint32)",
       "Signature": "0xf25127e6",
     },
     {
@@ -4524,7 +4524,7 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "AxelarDVNAdapter",
-      "Error": "DVNAdapter_MissingRecieveLib(address,uint32)",
+      "Error": "DVNAdapter_MissingReceiveLib(address,uint32)",
       "Signature": "0xf25127e6",
     },
     {
@@ -4604,7 +4604,7 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "OptimismDVNAdapterL1",
-      "Error": "DVNAdapter_MissingRecieveLib(address,uint32)",
+      "Error": "DVNAdapter_MissingReceiveLib(address,uint32)",
       "Signature": "0xf25127e6",
     },
     {
@@ -4659,7 +4659,7 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "OptimismDVNAdapterL2",
-      "Error": "DVNAdapter_MissingRecieveLib(address,uint32)",
+      "Error": "DVNAdapter_MissingReceiveLib(address,uint32)",
       "Signature": "0xf25127e6",
     },
     {

@@ -72,7 +72,7 @@ export const estimateTransactionSize = (transaction: Transaction, numSigners: nu
  * `false` otherwise.
  *
  * Since the transaction size on Solana also depends on the number of signers,
- * we allow this number to be overriden.
+ * we allow this number to be overridden.
  *
  * @param {Transaction} transaction
  * @param {TransactionInstruction} instruction

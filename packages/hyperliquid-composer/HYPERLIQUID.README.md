@@ -60,7 +60,7 @@ const signature = await signerv6.signTypedData(domain, types, message)
 
 This is because in ethers-v5 EIP-712 signing is not stable. - <https://docs.ethers.org/v5/api/signer/#Signer-signTypedData>
 > Experimental feature (this method name will change)
-> This is still an experimental feature. If using it, please specify the exact version of ethers you are using (e.g. spcify "5.0.18", not "^5.0.18") as the method name will be renamed from _signTypedData to signTypedData once it has been used in the field a bit.
+> This is still an experimental feature. If using it, please specify the exact version of ethers you are using (e.g. specify "5.0.18", not "^5.0.18") as the method name will be renamed from _signTypedData to signTypedData once it has been used in the field a bit.
 
 You can use the official `Hyperliquid Python SDK` linked [here](https://github.com/hyperliquid-dex/hyperliquid-python-sdk) to interact with HyperCore. We also built an in-house minimal typescript SDK that focuses on switching blocks, deploying the HyperCore token, and connecting the HyperCore token to a HyperEVM ERC20 (oft).
 
@@ -70,9 +70,9 @@ You can use the same account on `HyperEVM` and `HyperCore`, this is because `Hyp
 
 ## Multi Block Architecture
 
-Since `HyperEVM` and `HyperCore` are seperate entities they have their own blocks. `Hyperliquid` interleaves the EVM and Core blocks in order of which they are created. 
+Since `HyperEVM` and `HyperCore` are separate entities they have their own blocks. `Hyperliquid` interleaves the EVM and Core blocks in order of which they are created. 
 
-`HyperEVM` has 2 blocks - "small blocks" that are designed for increased throughput and therefore have a quick block time and have a lower max gas limit - 2 seconds and 2M gas (this is the default) - these blocks are meant for transactions that update state and not really for deploying. While you can deploy contracts that consume lower than 2M gas (out OFTs are larger than 2M) you would need "big blocks" that are allow for a larger max gas (30M gas) at the tradeoff of there only being 1 block per minute. Every "big blocks" only has 1 transaction.
+`HyperEVM` has 2 blocks - "small blocks" that are designed for increased throughput and therefore have a quick block time and have a lower max gas limit - 2 seconds and 2M gas (this is the default) - these blocks are meant for transactions that update state and not really for deploying. While you can deploy contracts that consume lower than 2M gas (out OFTs are larger than 2M) you would need "big blocks" that allow for a larger max gas (30M gas) at the tradeoff of there only being 1 block per minute. Every "big blocks" only has 1 transaction.
 
 They are both EVM blocks and you can toggle between them by sending an L1 action of type `evmUserModify` which is what [this block toggler does](https://hyperevm-block-toggle.vercel.app/)
 
@@ -114,7 +114,7 @@ Tokens on the `EVM` are `ERC20` (EVM Spot) and on `HyperCore` are `HIP-1` (Core 
 
 Projects willing to buy a Core Spot need to undergo a 31 hour dutch auction to secure a core spot index after which they need to deploy the core spot - setting its configuration, genesis balances, token information, etc.
 
-Note: if you use the [Hyperliquid UI](https://app.hyperliquid.xyz/deploySpot) you are forced to use an optional Hyperliquid token bootstrap thing called "Hyperliquidity". This is not supported by LayerZero because it ends up in a state where the asset bridge address can not be collaterized. More on this later in the document.
+Note: if you use the [Hyperliquid UI](https://app.hyperliquid.xyz/deploySpot) you are forced to use an optional Hyperliquid token bootstrap thing called "Hyperliquidity". This is not supported by LayerZero because it ends up in a state where the asset bridge address can not be collateralized. More on this later in the document.
 
 You can avoid this by using their API to deploy the core spot - we built an SDK <https://github.com/LayerZero-Labs/devtools/pull/1441> which lets you use scripts (listed in the PR description) to set trading fee share, trigger user genesis, token genesis, and register a trading spot with USDC.
 
@@ -125,7 +125,7 @@ If you do not link the `EVM spot` and `Core spot` then no `asset bridge` is form
 In order to connect the two assets and create the asset bridge there are 2 actions that need to be performed:
 
 1. `requestEvmContract` - initiated by the HyperCore deployer and populates the intention to link the HIP-1 to the ERC20.
-2. `finalizeEvmContract` - intiated by the HyperEVM deployer when an `EOA` sends the transactions to confirm the link.
+2. `finalizeEvmContract` - initiated by the HyperEVM deployer when an `EOA` sends the transactions to confirm the link.
 
 This creates the asset bridge precompile `0x2000...abcd` (where `abcd` is the `coreIndexId` of the HIP-1 in hex) to send tokens between HyperEVM and HyperCore.
 
@@ -154,12 +154,12 @@ This means that `X*1e10` tokens can be sent into the bridge on the EVM side and 
 
 It should be noted that any more tokens sent to the EVM bridge will remain in the asset bridge address and not transfer any tokens on `HyperCore` (the same applies for `HyperCore` -> `HyperEVM`) due to Hyperliquid NOT having ANY checks and the tokens will be locked in the asset bridge address FOREVER. The Composer contract has checks in place that refunds the `receivers` address on `HyperEVM` should it encounter a case of bridge consumption.
 
-This is also why you can't "partially fund" the HyperCore system address. If you mint tokens to an address you control and fund HyperCore's asset bridge address with a subset of it `[0 | X.Core]`, these tokens would be consumed by users locking in their HyperEVM tokens to obtain HyperCore tokens, and now lets say that all `X` tokens on HyperCore have been consumed and you end in a state `[X.EVM | 0]`. You then fund it with `X.Core` more tokens hoping to make it `[X.EVM | X.Core]` -- except you can't do this as it will cause a withdraw on the `X.EVM`resulting in `[0 | X.Core]` with `X.Core` more tokens in circulation on HyperCore that can't be withdrawn.
+This is also why you can't "partially fund" the HyperCore system address. If you mint tokens to an address you control and fund HyperCore's asset bridge address with a subset of it `[0 | X.Core]`, these tokens would be consumed by users locking in their HyperEVM tokens to obtain HyperCore tokens, and now let's say that all `X` tokens on HyperCore have been consumed and you end in a state `[X.EVM | 0]`. You then fund it with `X.Core` more tokens hoping to make it `[X.EVM | X.Core]` -- except you can't do this as it will cause a withdraw on the `X.EVM`resulting in `[0 | X.Core]` with `X.Core` more tokens in circulation on HyperCore that can't be withdrawn.
 
 Homework to the reader:
 
-1. Based on the above understanding of the asset bridge address can you figure out why `Hyperliquidity` breaks the bridge? (hint: it messes with collaterization)
-2. If you engage with partial funding and let's say you start with 100 Core tokens at your deployer address and you have intiated the bridge with:
+1. Based on the above understanding of the asset bridge address can you figure out why `Hyperliquidity` breaks the bridge? (hint: it messes with collateralization)
+2. If you engage with partial funding and let's say you start with 100 Core tokens at your deployer address and you have initiated the bridge with:
     a) 30 Core tokens
     b) 70 Core tokens
     And these initial tokens are consumed by the users on HyperEVM. Is there a way you can fund the bridge on HyperCore with your remaining tokens?
@@ -177,12 +177,12 @@ Spot assets can be sent from HyperEVM to HyperCore and vice versa. They are call
 These are done by sending an `ERC20::transfer` with asset bridge address as the recipient.
 
 The event emitted is `Transfer(address from, address to, uint256 value)` => `Transfer(_from, assetBridgeAddress, value);`
-And this is picked up by the Hyperliquid team running the backend. (we do not have move information about this it is closed source and owned by the Hyperliquid team)
+And this is picked up by the Hyperliquid team running the backend. (we do not have more information about this it is closed source and owned by the Hyperliquid team)
 
-Note: The transaction MUST be sent to the `assetBridgeAddress`. Transfers to any other address is an address-address transfer within HyperEVM/HyperCore. For a cross-chain transfer you need to to:
+Note: The transaction MUST be sent to the `assetBridgeAddress`. Transfers to any other address is an address-address transfer within HyperEVM/HyperCore. For a cross-chain transfer you need to:
 
 1. Send the tokens to the asset bridge address to get the token on the other Hyperliquid network.
-2. Send an transaction/action to transfer from your address to the receiver address on the other Hyperliquid network.
+2. Send a transaction/action to transfer from your address to the receiver address on the other Hyperliquid network.
 
 This is what we do in the `HyperliquidComposer` contract found - [here](contracts/HyperLiquidComposer.sol).
 
@@ -211,7 +211,7 @@ struct SendParam {
 }
 ```
 
-Now that the token is with the `Composer` on HyperCore it then performs a `L1WritePrecompile` transaction to `0x33...333` (the `L1WritePrecompile` address) telling it to perform a `spot transfer` of the tokens from it's address to the `receiver`.
+Now that the token is with the `Composer` on HyperCore it then performs a `L1WritePrecompile` transaction to `0x33...333` (the `L1WritePrecompile` address) telling it to perform a `spot transfer` of the tokens from its address to the `receiver`.
 
 It must be noted that due to the token decimal difference between the `EVM::ERC20` and `HyperCore::HIP1` the tokens you see on `HyperCore` would be different with the wei decimal different (`HIP1.decimals()` - `ERC20.decimals()` in range `[-2,18]`). But when converting them back from `HyperCore` to `HyperEVM` the token decimals gets restored.
 
@@ -234,7 +234,7 @@ contract HyperLiquidComposer is IHyperLiquidComposer {
 
 ## OFTWrapper for Hyperbridge
 
-Using `Hyperbridge` incurrs a `5bp` fee. We use Stargate's [OFT Wrapper](https://github.com/stargate-protocol/stargate-v2/blob/main/packages/stg-evm-v2/src/peripheral/oft-wrapper/OFTWrapper.sol) on ALL networks that we support on `Hyperbridge`. The repository that we use to deploy the bridge on various networks can be found [here](https://github.com/LayerZero-Labs/hyperliquid-oft-wrapper)
+Using `Hyperbridge` incurs a `5bp` fee. We use Stargate's [OFT Wrapper](https://github.com/stargate-protocol/stargate-v2/blob/main/packages/stg-evm-v2/src/peripheral/oft-wrapper/OFTWrapper.sol) on ALL networks that we support on `Hyperbridge`. The repository that we use to deploy the bridge on various networks can be found [here](https://github.com/LayerZero-Labs/hyperliquid-oft-wrapper)
 
 ## LayerZero Transaction on HyperEVM
 
@@ -407,21 +407,21 @@ The current architecture has certain error handling AND checks (because Hyperliq
 
 #### Transfer exceeding u64.max
 
-HyperCore's spot send only allows for a maximum of `u64` tokens to be transferred across. This means (in the unlikely event) that the user sends across greater than `u64` the difference would be returned the the `receiver` address on `HyperEVM`.
+HyperCore's spot send only allows for a maximum of `u64` tokens to be transferred across. This means (in the unlikely event) that the user sends across greater than `u64` the difference would be returned to the `receiver` address on `HyperEVM`.
 
-#### Transfer exceeding HyperCore Bridge Capactiy
+#### Transfer exceeding HyperCore Bridge Capacity
 
 HyperCore's Core Spots support a maximum of `u64` tokens on the Core Spot, and this is scaled by the decimal difference between the Core Spot and the EVM Spot. It is thus possible that the asset bridge on HyperCore has been consumed to the point where the entire transfer can't be sent over. In this event we split the `amount` capping it by `amount * 10.pow(ERC20.decimals() - HyperCore.decimals())` which is the maximum possible Core Spot tokens that can be consumed at the bridge at any given instant and compute the difference between the computed max Core amount converted to EVM amount (unscaling) and removing that from the incoming EVM amount. We now have `dust` which is the difference between the two and return this to the `receiver` address.
 
 #### Malformed `composeMsg` - unable to abi.decode(composeMsg) into address
 
-The above cases only occur in the stae when the compose payload is valid. In the event that developers write their own front end or try to interact with the composer with their own encoding and aren't careful it is possible that the message contains a `composeMsg` that can not be decoded to an `address`, as such we do not have the `receiver` address. In this event we try returning the tokens to the `sender` on HyperEVM where the sender is the `msg.sender` of the LayerZero tx on the source chain.
+The above cases only occur in the state when the compose payload is valid. In the event that developers write their own front end or try to interact with the composer with their own encoding and aren't careful it is possible that the message contains a `composeMsg` that can not be decoded to an `address`, as such we do not have the `receiver` address. In this event we try returning the tokens to the `sender` on HyperEVM where the sender is the `msg.sender` of the LayerZero tx on the source chain.
 
 #### Malformed `composeMsg` - unable to abi.decode(composeMsg) into address and non-EVM sender
 
 > ⚠️ Note: The only case when tokens can be locked in the Composer
 
-Building on the afore mentioned case, it is possible that the compose transaction comes from `Solana` or a `move` language network that uses a different system of addresses. As such we can't return funds to that address on `HyperEVM` - in an ideal world we can have a composer that returns tokens to the sending network but that would consume more gas (doubling the transaction) and since gas paid is non refundable it would simply be wasted.
+Building on the aforementioned case, it is possible that the compose transaction comes from `Solana` or a `move` language network that uses a different system of addresses. As such we can't return funds to that address on `HyperEVM` - in an ideal world we can have a composer that returns tokens to the sending network but that would consume more gas (doubling the transaction) and since gas paid is non refundable it would simply be wasted.
 
 ### Deploy your OFTs
 
@@ -445,7 +445,7 @@ Wire the OFTs together with the standard layerzero wire command (or any other wa
 npx hardhat lz:oapp:wire --oapp-config <layerzero.config.ts>
 ```
 
- Test the OFTs qith `quoteSend()` or by sending a test lzTransaction across the networks.
+ Test the OFTs with `quoteSend()` or by sending a test lzTransaction across the networks.
 
 ## Deploy the Core Spot
 
@@ -531,7 +531,7 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
     [--log-level {info | verbose}]
 ```
 
-> ⚠️ Note: There is no limit to the number of time you can re-run this command.
+> ⚠️ Note: There is no limit to the number of times you can re-run this command.
 
 ### Step 3/4 `genesis`
 
@@ -608,7 +608,7 @@ While the composer could have been deployed at any point in time due to its stat
 npx hardhat lz:deploy --tags MyHyperLiquidComposer
 ```
 
-> ⚠️ Note: You would need to fund the composer's address with HyperCore with at least $1 in USDC or HYPE so that it can perform L1WriteActions through it's address. 
+> ⚠️ Note: You would need to fund the composer's address with HyperCore with at least $1 in USDC or HYPE so that it can perform L1WriteActions through its address. 
 
 ## Sending tokens from x-network to HyperEVM/Core
 

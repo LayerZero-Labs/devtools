@@ -147,7 +147,7 @@ The current architecture has certain error handling AND checks (because hyperliq
 
 #### Transfer exceeding u64.max
 
-HyperCore's spot send only allows for a maximum of `u64` tokens to be transferred across. This means (in the unlikely event) that the user sends across greater than `u64` the difference would be returned the the `receiver` address on `HyperEVM`.
+HyperCore's spot send only allows for a maximum of `u64` tokens to be transferred across. This means (in the unlikely event) that the user sends across greater than `u64` the difference would be returned to the `receiver` address on `HyperEVM`.
 
 #### Transfer exceeding HyperCore Bridge Capactiy
 
@@ -155,13 +155,13 @@ HyperCore's core spots support a maximum of `u64` tokens on the core spot, and t
 
 #### Malformed `composeMsg` - unable to abi.decode(composeMsg) into address
 
-The above cases only occur in the stae when the compose payload is valid. In the event that developers write their own front end or try to interact with the composer with their own encoding and aren't careful it is possible that the message contains a `composeMsg` that can not be decoded to an `address`, as such we do not have the `receiver` address. In this event we try returning the tokens to the `sender` on HyperEVM where the sender is the `msg.sender` of the layerzero tx on the source chain.
+The above cases only occur in the state when the compose payload is valid. In the event that developers write their own front end or try to interact with the composer with their own encoding and aren't careful it is possible that the message contains a `composeMsg` that can not be decoded to an `address`, as such we do not have the `receiver` address. In this event we try returning the tokens to the `sender` on HyperEVM where the sender is the `msg.sender` of the layerzero tx on the source chain.
 
 #### Malformed `composeMsg` - unable to abi.decode(composeMsg) into address and non-evm sender
 
 > ⚠️ Note: The only case when tokens can be locked in the Composer
 
-Building on the afore mentioned case, it is possible that the compose transaction comes from `Solana` or a `move` language network that uses a different system of addresses. As such we can't return funds to that address on `HyperEVM` - in an ideal world we can have a composer that returns tokens to the sending network but that would consume more gas (doubling the transaction) and since gas paid is non refundable it would simply be wasted.
+Building on the aforementioned case, it is possible that the compose transaction comes from `Solana` or a `move` language network that uses a different system of addresses. As such we can't return funds to that address on `HyperEVM` - in an ideal world we can have a composer that returns tokens to the sending network but that would consume more gas (doubling the transaction) and since gas paid is non refundable it would simply be wasted.
 
 ### Deploy your OFTs
 
@@ -185,7 +185,7 @@ Wire the OFTs together with the standard layerzero wire command (or any other wa
 npx hardhat lz:oapp:wire --oapp-config <layerzero.config.ts>
 ```
 
-Test the OFTs qith `quoteSend()` or by sending a test lzTransaction across the networks.
+Test the OFTs with `quoteSend()` or by sending a test lzTransaction across the networks.
 
 ## Deploy the Core Spot
 
@@ -274,7 +274,7 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
     [--log-level {info | verbose}]
 ```
 
-> ⚠️ Note: There is no limit to the number of time you can re-run this command.
+> ⚠️ Note: There is no limit to the number of times you can re-run this command.
 
 ### Step 3/4 `genesis`
 
@@ -358,7 +358,7 @@ npx hardhat lz:deploy --tags MyHyperLiquidComposer
 
 After populating your `.env` you can run the following script to send tokens across. Having the second argument `gas > 0` will send the tokens into `HyperCore`. Setting the third argument `value > 0` will also fund the user's address with `HYPE` tokens on `HyperCore`.
 
-> ⚠️ Note: You would need to fund the composer's address with HyperCore with at least $1 in USDC or HYPE so that it can perform L1WriteActions through it's address.
+> ⚠️ Note: You would need to fund the composer's address with HyperCore with at least $1 in USDC or HYPE so that it can perform L1WriteActions through its address.
 
 ```bash
 forge script script/SendScript.s.sol --private-key $PRIVATE_KEY --rpc-url $RPC_URL_BSC_TESTNET --sig "exec(uint256,uint128,uint128)" <oft-amount> <composer-gas> <composer-value> --broadcast
