@@ -7,9 +7,9 @@ pragma solidity 0.8.22;
 
 import { TestHelperOz5, console } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 
-import { OmniRead, MessagingFee, MessagingReceipt, Origin } from "../../contracts/OmniRead.sol";
+import { OmniRead, IOmniRead, MessagingFee, MessagingReceipt, Origin } from "../../contracts/OmniRead.sol";
 import { OmniReadFixture } from "./OmniReadFixture.sol";
-import { ERC20Mock, ERC20 } from "./ERC20Mock.sol";
+import { ERC20Mock, ERC20 } from "./mocks/ERC20Mock.sol";
 
 /// -----------------------------------------------------------------------
 /// Contract (test)
@@ -25,9 +25,8 @@ contract OmniReadTest is TestHelperOz5 {
 
     ERC20Mock public token;
 
-    uint32 public srcEid = 1;
-    uint32 public dstEid = 2;
-    uint32 public fixtureEid = 3;
+    uint32 public readEid = 1;
+    uint32 public fixtureEid = 2;
 
     address public owner = makeAddr("owner");
     address public user = makeAddr("user");
@@ -35,24 +34,27 @@ contract OmniReadTest is TestHelperOz5 {
     address public dstAddress = makeAddr("dstAddress");
 
     uint256 public constant INITIAL_BALANCE = 10 ether;
+    uint256 public constant TOKEN_BALANCE = 1 ether;
 
     function setUp() public override {
         deal(srcAddress, INITIAL_BALANCE);
         deal(dstAddress, INITIAL_BALANCE);
 
         super.setUp();
-
-        setUpEndpoints(3, LibraryType.UltraLightNode);
+        setUpEndpoints(2, LibraryType.UltraLightNode);
 
         token = new ERC20Mock("Mock", "MCK");
-        srcOmniRead = new OmniRead(endpoints[srcEid], owner);
+        srcOmniRead = new OmniRead(endpoints[readEid], owner);
         fixture = new OmniReadFixture(endpoints[fixtureEid], owner);
+
+        deal(address(token), srcAddress, TOKEN_BALANCE);
 
         address[] memory omniReads = new address[](2);
         omniReads[0] = address(srcOmniRead);
         omniReads[1] = address(fixture);
-        uint32[] memory channels = new uint32[](1);
+        uint32[] memory channels = new uint32[](2);
         channels[0] = DEFAULT_CHANNEL_ID;
+        channels[1] = DEFAULT_CHANNEL_ID;
         vm.startPrank(owner);
         wireReadOApps(omniReads, channels);
         vm.stopPrank();
@@ -72,7 +74,7 @@ contract OmniReadTest is TestHelperOz5 {
         bytes memory responseBefore = fixture.getResponse(guid);
 
         fixture.lzReceiveInternal(
-            Origin({ srcEid: srcEid, sender: bytes32(uint256(uint160(address(srcOmniRead)))), nonce: 0 }),
+            Origin({ srcEid: readEid, sender: bytes32(uint256(uint160(address(srcOmniRead)))), nonce: 0 }),
             guid,
             payload,
             address(0),
@@ -87,16 +89,16 @@ contract OmniReadTest is TestHelperOz5 {
 
     function test_readInternal_success() public {
         OmniRead.OmniReadRequest[] memory readRequests = new OmniRead.OmniReadRequest[](2);
-        readRequests[0] = OmniRead.OmniReadRequest({
-            targetEid: dstEid,
+        readRequests[0] = IOmniRead.OmniReadRequest({
+            targetEid: readEid,
             isBlockNum: false,
             blockNumOrTimestamp: uint64(block.timestamp),
             confirmations: 0,
             to: address(token),
             callData: abi.encodeWithSelector(ERC20.balanceOf.selector, srcAddress)
         });
-        readRequests[1] = OmniRead.OmniReadRequest({
-            targetEid: dstEid,
+        readRequests[1] = IOmniRead.OmniReadRequest({
+            targetEid: readEid,
             isBlockNum: false,
             blockNumOrTimestamp: uint64(block.timestamp),
             confirmations: 0,
@@ -104,7 +106,7 @@ contract OmniReadTest is TestHelperOz5 {
             callData: abi.encodeWithSelector(ERC20.balanceOf.selector, srcAddress)
         });
         uint128 readGasLimit = 100000;
-        uint32 returnDataSize = 100000;
+        uint32 returnDataSize = 64;
         uint128 msgValue = 0;
         bytes32 identifier = bytes32(0);
 
@@ -118,8 +120,17 @@ contract OmniReadTest is TestHelperOz5 {
             msgValue,
             identifier
         );
-        verifyPackets(dstEid, addressToBytes32(address(srcOmniRead)));
+        verifyPackets(
+            fixtureEid,
+            addressToBytes32(address(fixture)),
+            0,
+            address(0x0),
+            abi.encode(TOKEN_BALANCE, TOKEN_BALANCE)
+        );
 
+        bytes memory response = fixture.getResponse(receipt.guid);
+
+        assertEq(response, abi.encode(TOKEN_BALANCE, TOKEN_BALANCE));
         assertEq(receipt.fee.nativeFee, fee.nativeFee);
         assertEq(receipt.fee.lzTokenFee, 0);
         assertNotEq(receipt.guid, bytes32(0));
@@ -129,16 +140,16 @@ contract OmniReadTest is TestHelperOz5 {
 
     function test_readInternal_event_emitted() public {
         OmniRead.OmniReadRequest[] memory readRequests = new OmniRead.OmniReadRequest[](2);
-        readRequests[0] = OmniRead.OmniReadRequest({
-            targetEid: dstEid,
+        readRequests[0] = IOmniRead.OmniReadRequest({
+            targetEid: readEid,
             isBlockNum: false,
             blockNumOrTimestamp: uint64(block.timestamp),
             confirmations: 0,
             to: address(token),
             callData: abi.encodeWithSelector(ERC20.balanceOf.selector, srcAddress)
         });
-        readRequests[1] = OmniRead.OmniReadRequest({
-            targetEid: dstEid,
+        readRequests[1] = IOmniRead.OmniReadRequest({
+            targetEid: readEid,
             isBlockNum: false,
             blockNumOrTimestamp: uint64(block.timestamp),
             confirmations: 0,
@@ -147,7 +158,7 @@ contract OmniReadTest is TestHelperOz5 {
         });
 
         uint128 readGasLimit = 100000;
-        uint32 returnDataSize = 100000;
+        uint32 returnDataSize = 64;
         uint128 msgValue = 0;
         bytes32 identifier = bytes32(0);
 
@@ -155,22 +166,22 @@ contract OmniReadTest is TestHelperOz5 {
 
         vm.prank(user);
         vm.expectEmit(true, true, false, false, address(fixture));
-        emit OmniRead.ReadRequestSent(user, identifier, bytes32(0));
+        emit IOmniRead.ReadRequestSent(user, identifier, bytes32(0));
         fixture.readInternal{ value: fee.nativeFee }(readRequests, readGasLimit, returnDataSize, msgValue, identifier);
     }
 
     function test_buildCmdInternal_success() public view {
-        OmniRead.OmniReadRequest[] memory readRequests = new OmniRead.OmniReadRequest[](2);
-        readRequests[0] = OmniRead.OmniReadRequest({
-            targetEid: dstEid,
+        IOmniRead.OmniReadRequest[] memory readRequests = new IOmniRead.OmniReadRequest[](2);
+        readRequests[0] = IOmniRead.OmniReadRequest({
+            targetEid: readEid,
             isBlockNum: false,
             blockNumOrTimestamp: uint64(block.timestamp),
             confirmations: 0,
             to: address(token),
             callData: abi.encodeWithSelector(ERC20.balanceOf.selector, srcAddress)
         });
-        readRequests[1] = OmniRead.OmniReadRequest({
-            targetEid: dstEid,
+        readRequests[1] = IOmniRead.OmniReadRequest({
+            targetEid: readEid,
             isBlockNum: false,
             blockNumOrTimestamp: uint64(block.timestamp),
             confirmations: 0,
@@ -185,16 +196,16 @@ contract OmniReadTest is TestHelperOz5 {
 
     function test_quoteWithOptionsInternal_success() public view {
         OmniRead.OmniReadRequest[] memory readRequests = new OmniRead.OmniReadRequest[](2);
-        readRequests[0] = OmniRead.OmniReadRequest({
-            targetEid: dstEid,
+        readRequests[0] = IOmniRead.OmniReadRequest({
+            targetEid: readEid,
             isBlockNum: false,
             blockNumOrTimestamp: uint64(block.timestamp),
             confirmations: 0,
             to: address(token),
             callData: abi.encodeWithSelector(ERC20.balanceOf.selector, srcAddress)
         });
-        readRequests[1] = OmniRead.OmniReadRequest({
-            targetEid: dstEid,
+        readRequests[1] = IOmniRead.OmniReadRequest({
+            targetEid: readEid,
             isBlockNum: false,
             blockNumOrTimestamp: uint64(block.timestamp),
             confirmations: 0,
@@ -203,7 +214,7 @@ contract OmniReadTest is TestHelperOz5 {
         });
 
         uint128 readGasLimit = 100000;
-        uint32 returnDataSize = 100000;
+        uint32 returnDataSize = 64;
         uint128 msgValue = 0;
 
         (MessagingFee memory fee, bytes memory options, bytes memory payload) = fixture.quoteWithOptionsInternal(
@@ -225,13 +236,13 @@ contract OmniReadTest is TestHelperOz5 {
 
     function test_constructor() public view {
         assertEq(srcOmniRead.owner(), owner);
-        assertEq(address(srcOmniRead.endpoint()), address(endpoints[srcEid]));
+        assertEq(address(srcOmniRead.endpoint()), address(endpoints[readEid]));
         assertEq(address(fixture.endpoint()), address(endpoints[fixtureEid]));
     }
 
     function test_readSimple_success() public {
-        OmniRead.OmniReadRequest memory readRequest = OmniRead.OmniReadRequest({
-            targetEid: dstEid,
+        IOmniRead.OmniReadRequest memory readRequest = IOmniRead.OmniReadRequest({
+            targetEid: fixtureEid,
             isBlockNum: false,
             blockNumOrTimestamp: uint64(block.timestamp),
             confirmations: 0,
@@ -240,7 +251,7 @@ contract OmniReadTest is TestHelperOz5 {
         });
 
         uint128 readGasLimit = 100000;
-        uint32 returnDataSize = 100000;
+        uint32 returnDataSize = 64;
         uint128 msgValue = 0;
         bytes32 identifier = bytes32(0);
 
@@ -254,7 +265,7 @@ contract OmniReadTest is TestHelperOz5 {
             msgValue,
             identifier
         );
-        verifyPackets(dstEid, addressToBytes32(address(srcOmniRead)));
+        verifyPackets(fixtureEid, addressToBytes32(address(srcOmniRead)));
 
         assertEq(receipt.fee.nativeFee, fee.nativeFee);
         assertEq(receipt.fee.lzTokenFee, 0);
@@ -264,17 +275,17 @@ contract OmniReadTest is TestHelperOz5 {
     }
 
     function test_readBatch_success() public {
-        OmniRead.OmniReadRequest[] memory readRequests = new OmniRead.OmniReadRequest[](2);
-        readRequests[0] = OmniRead.OmniReadRequest({
-            targetEid: dstEid,
+        IOmniRead.OmniReadRequest[] memory readRequests = new IOmniRead.OmniReadRequest[](2);
+        readRequests[0] = IOmniRead.OmniReadRequest({
+            targetEid: fixtureEid,
             isBlockNum: false,
             blockNumOrTimestamp: uint64(block.timestamp),
             confirmations: 0,
             to: address(token),
             callData: abi.encodeWithSelector(ERC20.balanceOf.selector, srcAddress)
         });
-        readRequests[1] = OmniRead.OmniReadRequest({
-            targetEid: dstEid,
+        readRequests[1] = IOmniRead.OmniReadRequest({
+            targetEid: fixtureEid,
             isBlockNum: false,
             blockNumOrTimestamp: uint64(block.timestamp),
             confirmations: 0,
@@ -282,7 +293,7 @@ contract OmniReadTest is TestHelperOz5 {
             callData: abi.encodeWithSelector(ERC20.balanceOf.selector, srcAddress)
         });
         uint128 readGasLimit = 100000;
-        uint32 returnDataSize = 100000;
+        uint32 returnDataSize = 64;
         uint128 msgValue = 0;
         bytes32 identifier = bytes32(0);
 
@@ -296,7 +307,7 @@ contract OmniReadTest is TestHelperOz5 {
             msgValue,
             identifier
         );
-        verifyPackets(dstEid, addressToBytes32(address(srcOmniRead)));
+        verifyPackets(fixtureEid, addressToBytes32(address(srcOmniRead)));
 
         assertEq(receipt.fee.nativeFee, fee.nativeFee);
         assertEq(receipt.fee.lzTokenFee, 0);
@@ -310,8 +321,8 @@ contract OmniReadTest is TestHelperOz5 {
     /// -----------------------------------------------------------------------
 
     function test_quoteSimple_success() public view {
-        OmniRead.OmniReadRequest memory readRequest = OmniRead.OmniReadRequest({
-            targetEid: dstEid,
+        IOmniRead.OmniReadRequest memory readRequest = IOmniRead.OmniReadRequest({
+            targetEid: fixtureEid,
             isBlockNum: false,
             blockNumOrTimestamp: uint64(block.timestamp),
             confirmations: 0,
@@ -320,7 +331,7 @@ contract OmniReadTest is TestHelperOz5 {
         });
 
         uint128 readGasLimit = 100000;
-        uint32 returnDataSize = 100000;
+        uint32 returnDataSize = 64;
         uint128 msgValue = 0;
 
         MessagingFee memory fee = srcOmniRead.quoteSingle(readRequest, readGasLimit, returnDataSize, msgValue);
@@ -330,17 +341,17 @@ contract OmniReadTest is TestHelperOz5 {
     }
 
     function test_quoteBatch_success() public view {
-        OmniRead.OmniReadRequest[] memory readRequests = new OmniRead.OmniReadRequest[](2);
-        readRequests[0] = OmniRead.OmniReadRequest({
-            targetEid: dstEid,
+        IOmniRead.OmniReadRequest[] memory readRequests = new IOmniRead.OmniReadRequest[](2);
+        readRequests[0] = IOmniRead.OmniReadRequest({
+            targetEid: fixtureEid,
             isBlockNum: false,
             blockNumOrTimestamp: uint64(block.timestamp),
             confirmations: 0,
             to: address(token),
             callData: abi.encodeWithSelector(ERC20.balanceOf.selector, srcAddress)
         });
-        readRequests[1] = OmniRead.OmniReadRequest({
-            targetEid: dstEid,
+        readRequests[1] = IOmniRead.OmniReadRequest({
+            targetEid: fixtureEid,
             isBlockNum: false,
             blockNumOrTimestamp: uint64(block.timestamp),
             confirmations: 0,
@@ -348,7 +359,7 @@ contract OmniReadTest is TestHelperOz5 {
             callData: abi.encodeWithSelector(ERC20.balanceOf.selector, srcAddress)
         });
         uint128 readGasLimit = 100000;
-        uint32 returnDataSize = 100000;
+        uint32 returnDataSize = 64;
         uint128 msgValue = 0;
 
         MessagingFee memory fee = srcOmniRead.quoteBatch(readRequests, readGasLimit, returnDataSize, msgValue);

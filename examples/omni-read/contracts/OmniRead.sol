@@ -15,70 +15,28 @@ import { MessagingReceipt } from "@layerzerolabs/oapp-evm/contracts/oapp/OAppSen
 import { ReadCodecV1, EVMCallRequestV1 } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/ReadCodecV1.sol";
 import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
 
+//  ==========  Internal imports    ==========
+
+import { IOmniRead } from "./interface/IOmniRead.sol";
+
 /// -----------------------------------------------------------------------
 /// Contract
 /// -----------------------------------------------------------------------
 
 /**
  * @title OmniRead
+ * @author LayerZero Labs (@EWCunha).
  * @dev A contract that allows for reading data from multiple chains using LayerZero's read functionality.
  * @notice This contract can be used for onchain and offchain reading.
  * Onchain reading is done by querying `getResponse` function.
  * Offchain reading is done by subscribing to `ReadRequestReceived` event and calling `getResponse` function.
  */
-contract OmniRead is OAppRead {
+contract OmniRead is IOmniRead, OAppRead {
     /// -----------------------------------------------------------------------
     /// Libraries
     /// -----------------------------------------------------------------------
 
     using OptionsBuilder for bytes;
-
-    /// -----------------------------------------------------------------------
-    /// Errors
-    /// -----------------------------------------------------------------------
-
-    /// @dev The channel ID is invalid.
-    error OmniRead__InvalidChannelId();
-
-    /// -----------------------------------------------------------------------
-    /// Events
-    /// -----------------------------------------------------------------------
-
-    /**
-     * @notice Emitted when a read request is sent.
-     * @param caller The address of the caller.
-     * @param identifier The identifier of the read request. Useful for multiple read requests in the same block.
-     * @param guid The GUID of the read request.
-     */
-    event ReadRequestSent(address indexed caller, bytes32 indexed identifier, bytes32 guid);
-
-    /**
-     * @notice Emitted when a read request is received.
-     * @param guid The GUID of the read request.
-     */
-    event ReadRequestReceived(bytes32 indexed guid);
-
-    /// -----------------------------------------------------------------------
-    /// Custom Types
-    /// -----------------------------------------------------------------------
-
-    /**
-     * @notice A struct representing a read request.
-     * @param targetEid The target EID.
-     * @param isBlockNum Whether the block number is used.
-     * @param blockNumOrTimestamp The block number or timestamp.
-     * @param confirmations The number of confirmations.
-     * @param to The address of the target contract.
-     * @param callData The call data.
-     */
-    struct OmniReadRequest {
-        uint32 targetEid;
-        bool isBlockNum;
-        uint64 blockNumOrTimestamp;
-        uint16 confirmations;
-        address to;
-        bytes callData;
-    }
 
     /// -----------------------------------------------------------------------
     /// State Variables
@@ -108,15 +66,7 @@ contract OmniRead is OAppRead {
     /// Write public/external functions
     /// -----------------------------------------------------------------------
 
-    /**
-     * @notice Sends a read request to the LayerZero endpoint.
-     * @param readRequest: The read request.
-     * @param readGasLimit: The gas limit for the read request.
-     * @param returnDataSize: The size of the return data for the read request.
-     * @param msgValue: The value of the read request.
-     * @param identifier: The identifier of the read request. Useful for multiple read requests in the same block.
-     * @return - MessagingReceipt - The receipt of the read request.
-     */
+    /// @inheritdoc IOmniRead
     function readSingle(
         OmniReadRequest calldata readRequest,
         uint128 readGasLimit,
@@ -132,15 +82,7 @@ contract OmniRead is OAppRead {
         return _read(readRequests, readGasLimit, returnDataSize, msgValue, identifier);
     }
 
-    /**
-     * @notice Sends a batch of read requests to the LayerZero endpoint.
-     * @param readRequests: Array of read requests.
-     * @param readGasLimit: The gas limit for the read requests.
-     * @param returnDataSize: The size of the return data for the read requests.
-     * @param msgValue: The value of the read requests.
-     * @param identifier: The identifier of the read request. Useful for multiple read requests in the same block.
-     * @return - MessagingReceipt - The receipt of the read request.
-     */
+    /// @inheritdoc IOmniRead
     function readBatch(
         OmniReadRequest[] memory readRequests,
         uint128 readGasLimit,
@@ -152,14 +94,7 @@ contract OmniRead is OAppRead {
         return _read(readRequests, readGasLimit, returnDataSize, msgValue, identifier);
     }
 
-    /**
-     * @notice Sets the LayerZero read channel.
-     *
-     * @dev Only callable by the owner.
-     *
-     * @param channelId: The channel ID to set.
-     * @param active: Flag to activate or deactivate the channel.
-     */
+    /// @inheritdoc OAppRead
     function setReadChannel(uint32 channelId, bool active) public override(OAppRead) onlyOwner {
         if (channelId < READ_CHANNEL_EID_THRESHOLD) {
             revert OmniRead__InvalidChannelId();
@@ -227,14 +162,7 @@ contract OmniRead is OAppRead {
     /// Read public/external functions
     /// -----------------------------------------------------------------------
 
-    /**
-     * @notice Quotes the gas needed to pay for the full omnichain transaction in native gas or ZRO token.
-     * @param readRequest: The read request.
-     * @param readGasLimit: The gas limit for the read request.
-     * @param returnDataSize: The size of the return data for the read request.
-     * @param msgValue: The value of the read request.
-     * @return fee A `MessagingFee` struct containing the calculated gas fee in either the native token or ZRO token.
-     */
+    /// @inheritdoc IOmniRead
     function quoteSingle(
         OmniReadRequest calldata readRequest,
         uint128 readGasLimit,
@@ -247,14 +175,7 @@ contract OmniRead is OAppRead {
         (fee, , ) = _quoteWithOptions(readRequests, readGasLimit, returnDataSize, msgValue);
     }
 
-    /**
-     * @notice Quotes the gas needed to pay for the full omnichain transaction in native gas or ZRO token.
-     * @param readRequests: The read requests.
-     * @param readGasLimit: The gas limit for the read requests.
-     * @param returnDataSize: The size of the return data for the read requests.
-     * @param msgValue: The value of the read requests.
-     * @return fee A `MessagingFee` struct containing the calculated gas fee in either the native token or ZRO token.
-     */
+    /// @inheritdoc IOmniRead
     function quoteBatch(
         OmniReadRequest[] calldata readRequests,
         uint128 readGasLimit,
@@ -264,27 +185,17 @@ contract OmniRead is OAppRead {
         (fee, , ) = _quoteWithOptions(readRequests, readGasLimit, returnDataSize, msgValue);
     }
 
-    /**
-     * @notice Gets the response for a given GUID.
-     * @param guid: The GUID of the read request.
-     * @return response The response for the given GUID.
-     */
+    /// @inheritdoc IOmniRead
     function getResponse(bytes32 guid) external view returns (bytes memory) {
         return s_responses[guid];
     }
 
-    /**
-     * @notice Gets the read channel.
-     * @return readChannel The read channel.
-     */
+    /// @inheritdoc IOmniRead
     function getReadChannel() external view returns (uint32) {
         return s_readChannel;
     }
 
-    /**
-     * @notice Gets the read channel EID threshold.
-     * @return readChannelEidThreshold The read channel EID threshold.
-     */
+    /// @inheritdoc IOmniRead
     function getReadChannelEidThreshold() external pure returns (uint32) {
         return READ_CHANNEL_EID_THRESHOLD;
     }

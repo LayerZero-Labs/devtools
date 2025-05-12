@@ -1,6 +1,6 @@
 {
-  "name": "@layerzerolabs/oapp-example",
-  "version": "0.5.9",
+  "name": "@layerzerolabs/omni-read",
+  "version": "0.0.1",
   "private": true,
   "license": "MIT",
   "scripts": {

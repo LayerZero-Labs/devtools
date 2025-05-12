@@ -29,5 +29,3 @@ remappings = [
     '@openzeppelin/=node_modules/@openzeppelin/',
 ]
 
-[fuzz]
-runs = 1000
