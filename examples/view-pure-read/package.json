@@ -20,10 +20,6 @@
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1"
   },
-  "overrides": {
-    "ethers": "^5.7.2",
-    "hardhat-deploy": "^0.12.1"
-  },
   "devDependencies": {
     "@babel/core": "^7.23.9",
     "@layerzerolabs/eslint-config-next": "~2.3.39",
@@ -69,5 +65,9 @@
       "ethers": "^5.7.2",
       "hardhat-deploy": "^0.12.1"
     }
+  },
+  "overrides": {
+    "ethers": "^5.7.2",
+    "hardhat-deploy": "^0.12.1"
   }
 }
