@@ -17,7 +17,7 @@
 
 This contract supports both onchain and offchain reading. The difference is that for offchain it emits the `ReadRequestSent` event so that the GUID generated for the request can be queried from offchain stack. It is also possible to provide an identifier in case of more than one read request per block for the same caller.
 
-To interact with a `OmniRead` instance, you can use the `read` Hardhat and `response` tasks.
+To interact with a `OmniRead` instance, you can use the `read` and `response` Hardhat tasks.
 
 ## Sending cross-chain read requests
 

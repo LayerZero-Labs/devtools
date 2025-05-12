@@ -38,7 +38,7 @@ contract OmniRead is OAppRead {
     /// -----------------------------------------------------------------------
 
     /// @dev The channel ID is invalid.
-    error InvalidChannelId();
+    error OmniRead__InvalidChannelId();
 
     /// -----------------------------------------------------------------------
     /// Events
@@ -162,7 +162,7 @@ contract OmniRead is OAppRead {
      */
     function setReadChannel(uint32 channelId, bool active) public override(OAppRead) onlyOwner {
         if (channelId < READ_CHANNEL_EID_THRESHOLD) {
-            revert InvalidChannelId();
+            revert OmniRead__InvalidChannelId();
         }
 
         _setPeer(channelId, active ? AddressCast.toBytes32(address(this)) : bytes32(0));
