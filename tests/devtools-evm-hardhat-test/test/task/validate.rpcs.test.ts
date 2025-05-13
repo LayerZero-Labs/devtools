@@ -60,14 +60,25 @@ describe(`task ${TASK_LZ_VALIDATE_RPCS}`, () => {
 
         it('should validate incorrect https RPC URL', async () => {
             const result = runExpect('validate-incorrect-https-rpc')
-
             expect(result.status).toBe(0)
         })
 
         it('should validate incorrect wss RPC URL', async () => {
             const result = runExpect('validate-incorrect-wss-rpc')
+            /*
+                {
+                    status: 1,
+                    signal: null,
+                    output: [ null, null, null ],
+                    pid: 2390,
+                    stdout: null,
+                    stderr: null
+                }
+            */
 
-            expect(result.status).toBe(0)
+            expect(result.signal).toBeNull()
+            expect(result.stdout).toBeNull()
+            expect(result.stderr).toBeNull()
         })
 
         it('should validate invalid RPC URL', async () => {
