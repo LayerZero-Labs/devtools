@@ -29,7 +29,7 @@ describe(`task ${TASK_LZ_VALIDATE_SAFE_CONFIGS}`, () => {
             TODO: remove skip when the hack is fixed
         */
         // eslint-disable-next-line jest/no-disabled-tests
-        it.skip('should validate valid safe configs', async () => {
+        it('should validate valid safe configs', async () => {
             const result = runExpect('validate-valid-safe-configs')
 
             expect(result.status).toBe(0)
