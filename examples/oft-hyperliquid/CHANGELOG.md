@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 0.0.5
+
+### Patch Changes
+
+- d23edda: docs update - deployer trading fee
+
 ## 0.0.4
 
 ### Patch Changes
