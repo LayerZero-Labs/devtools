@@ -6,5 +6,6 @@ runs:
     - uses: pnpm/action-setup@v4
       name: Install pnpm
       with:
+        version: 8.15.6
         run_install: false
 
