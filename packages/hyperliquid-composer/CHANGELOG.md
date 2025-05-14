@@ -1,5 +1,12 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 0.0.9
+
+### Patch Changes
+
+- 3417d6b: remove oft deployer address from core spot deployment file
+- d23edda: docs update - deployer trading fee
+
 ## 0.0.8
 
 ### Patch Changes
