@@ -90,3 +90,21 @@ export function parseDecimalToUnits(amount: string, decimals: number): bigint {
     )
     return wholeUnits + fracUnits
 }
+
+/**
+ * Suppresses Solana‐web3.js "429 Too Many Requests" retry spam
+ * by intercepting stderr.write and dropping any chunk
+ * that mentions the 429 retry.
+ */
+export function silenceSolana429(connection: Connection): void {
+    const origWrite = process.stderr.write.bind(process.stderr)
+    process.stderr.write = ((chunk: any, ...args: any[]) => {
+        const str = Buffer.isBuffer(chunk) ? chunk.toString('utf8') : chunk
+        if (typeof str === 'string' && str.includes('429 Too Many Requests')) {
+            // swallow it
+            return true
+        }
+        // otherwise pass through
+        return origWrite(chunk, ...args)
+    }) as typeof process.stderr.write
+}

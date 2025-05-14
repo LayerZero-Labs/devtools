@@ -7,7 +7,7 @@ import { EvmArgs, sendEvm } from '../evm/sendEvm'
 import { SolanaArgs, sendSolana } from '../solana/sendSolana'
 
 import { SendResult } from './types'
-import { DebugLogger, KnownOutputs, KnownWarnings } from './utils'
+import { DebugLogger, KnownOutputs, KnownWarnings, getBlockExplorerLink } from './utils'
 
 interface MasterArgs {
     srcEid: number
@@ -47,6 +47,7 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
             )
         }
 
+        // route to the correct function based on the chain type
         if (chainType === ChainType.EVM) {
             result = await sendEvm(args as EvmArgs, hre)
         } else if (chainType === ChainType.SOLANA) {
@@ -55,8 +56,13 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
             throw new Error(`The chain type ${chainType} is not implemented in sendOFT for this example`)
         }
 
-        // after you get your SendResult...
         DebugLogger.printLayerZeroOutput(KnownOutputs.SENT_VIA_OFT, `Sent ${args.amount} tokens`)
-        DebugLogger.printLayerZeroOutput(KnownOutputs.TX_HASH, result.txHash)
+        // print the explorer link for the srcEid from metadata
+        const explorerLink = await getBlockExplorerLink(args.srcEid, result.txHash)
+        // if explorer link is available, print the tx hash link
+        if (explorerLink) {
+            DebugLogger.printLayerZeroOutput(KnownOutputs.TX_HASH, explorerLink)
+        }
+        // print the LayerZero Scan link from metadata
         DebugLogger.printLayerZeroOutput(KnownOutputs.EXPLORER_LINK, result.scanLink)
     })

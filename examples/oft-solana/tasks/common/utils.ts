@@ -17,12 +17,32 @@ import {
     createConnectionFactory,
     createRpcUrlFactory,
 } from '@layerzerolabs/devtools-solana'
-import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
+import { ChainType, EndpointId, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { UlnProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { IOApp } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { createOFTFactory } from '@layerzerolabs/ua-devtools-solana'
+
+export const deploymentMetadataUrl = 'https://metadata.layerzero-api.com/v1/metadata/deployments'
+
+/**
+ * Given a srcEid and on-chain tx hash, return
+ * `https://…blockExplorers[0].url/tx/<txHash>`, or undefined.
+ */
+export async function getBlockExplorerLink(srcEid: number, txHash: string): Promise<string | undefined> {
+    const network = endpointIdToNetwork(srcEid) // e.g. "animechain-mainnet"
+    const res = await fetch(deploymentMetadataUrl)
+    if (!res.ok) return
+    const all = (await res.json()) as Record<string, any>
+    const meta = all[network]
+    const explorer = meta?.blockExplorers?.[0]?.url
+    if (explorer) {
+        // many explorers use `/tx/<hash>`
+        return `${explorer.replace(/\/+$/, '')}/tx/${txHash}`
+    }
+    return
+}
 
 export const createSolanaConnectionFactory = () =>
     createConnectionFactory(

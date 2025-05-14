@@ -5,11 +5,14 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { makeBytes32 } from '@layerzerolabs/devtools'
 import { createGetHreByEid } from '@layerzerolabs/devtools-evm-hardhat'
+import { createLogger } from '@layerzerolabs/io-devtools'
 import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
 
 import layerzeroConfig from '../../layerzero.config'
 import { SendResult } from '../common/types'
 import { getLayerZeroScanLink } from '../solana'
+
+const logger = createLogger()
 
 export interface EvmArgs {
     srcEid: number
@@ -84,7 +87,9 @@ export async function sendEvm(
     }
 
     // 6️⃣ Quote (MessagingFee = { nativeFee, lzTokenFee })
+    logger.info('Quoting the native gas cost for the send transaction...')
     const msgFee = await oft.quoteSend(sendParam, false)
+    logger.info('Sending the transaction...')
     const tx = await oft.send(sendParam, msgFee, signer.address, {
         value: msgFee.nativeFee,
     })

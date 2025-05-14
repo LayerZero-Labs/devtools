@@ -6,13 +6,14 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
 import bs58 from 'bs58'
 
+import { createLogger } from '@layerzerolabs/io-devtools'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { SendResult } from '../common/types'
 
-import { parseDecimalToUnits } from './utils'
+import { parseDecimalToUnits, silenceSolana429 } from './utils'
 
 import {
     TransactionType,
@@ -22,6 +23,8 @@ import {
     getLayerZeroScanLink,
     getSolanaDeployment,
 } from './index'
+
+const logger = createLogger()
 
 export interface SolanaArgs {
     amount: string
@@ -46,7 +49,7 @@ export async function sendSolana({
 }: SolanaArgs): Promise<SendResult> {
     // 1️⃣ RPC + UMI
     const { connection, umi, umiWalletSigner } = await deriveConnection(srcEid)
-
+    silenceSolana429(connection)
     // 2️⃣ Pick your OFT program ID (override or from deployment)
     const programId = oftProgramId ? publicKey(oftProgramId) : publicKey(getSolanaDeployment(srcEid).programId)
 
@@ -74,6 +77,7 @@ export async function sendSolana({
     }
 
     // 7️⃣ Quote (use our overridden `programId`)
+    logger.info('Quoting the native gas cost for the send transaction...')
     const recipient = addressToBytes32(to)
     const { nativeFee } = await oft.quote(
         umi.rpc,
@@ -97,6 +101,7 @@ export async function sendSolana({
     )
 
     // 8️⃣ Send (again passing `programId`)
+    logger.info('Sending the transaction...')
     const ix = await oft.send(
         umi.rpc,
         {
