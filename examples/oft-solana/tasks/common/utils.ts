@@ -176,6 +176,25 @@ export class DebugLogger {
         // log empty line to separate error messages
         console.log()
     }
+
+    /**
+     * Logs a warning (in yellow).
+     */
+    static printWarning(type: KnownWarnings, message?: string) {
+        const label = `\x1b[33mWarning:\x1b[0m`
+        console.log(`${label} ${type}${message ? ` – ${message}` : ''}`)
+    }
+
+    /**
+     * Logs a LayerZero-specific output in purple.
+     * @param type one of the KnownOutputs
+     * @param payload optional extra info to log
+     */
+    static printLayerZeroOutput(type: KnownOutputs, payload?: string) {
+        // \x1b[35m = purple, \x1b[0m = reset
+        const label = `\x1b[35m${type}:\x1b[0m`
+        console.log(`${label}${payload ? ' ' + payload : ''}`)
+    }
 }
 
 export enum KnownErrors {
@@ -183,7 +202,20 @@ export enum KnownErrors {
     // e.g. If the user forgets to deploy the OFT Program, the variable name should be:
     // FIX_SUGGESTION_OFT_PROGRAM_NOT_DEPLOYED
     ULN_INIT_CONFIG_SKIPPED = 'ULN_INIT_CONFIG_SKIPPED',
+}
+
+export enum KnownWarnings {
+    OFT_PROGRAM_NOT_DEPLOYED = 'OFT Program Not Deployed',
+    USING_OVERRIDE_OFT = 'Loading external OFT deployment',
+    SOLANA_DEPLOYMENT_MISSING_OFT_STORE = 'Solana deployment missing OFT store',
     SOLANA_DEPLOYMENT_NOT_FOUND = 'SOLANA_DEPLOYMENT_NOT_FOUND',
+    ERROR_LOADING_SOLANA_DEPLOYMENT = 'Error loading local Solana deployment',
+}
+
+export enum KnownOutputs {
+    TX_HASH = 'Transaction hash',
+    EXPLORER_LINK = 'LayerZero scan link',
+    SENT_VIA_OFT = 'OFT sent successfully',
 }
 
 interface ErrorFixInfo {
@@ -196,8 +228,27 @@ export const ERRORS_FIXES_MAP: Record<KnownErrors, ErrorFixInfo> = {
         tip: 'Did you run `npx hardhat lz:oft:solana:init-config --oapp-config <LZ_CONFIG_FILE_NAME> --solana-eid <SOLANA_EID>` ?',
         info: 'You must run lz:oft:solana:init-config once before you run lz:oapp:wire. If you have added new pathways, you must also run lz:oft:solana:init-config again.',
     },
-    [KnownErrors.SOLANA_DEPLOYMENT_NOT_FOUND]: {
+}
+
+export const WARNINGS_FIXES_MAP: Record<KnownWarnings, ErrorFixInfo> = {
+    [KnownWarnings.SOLANA_DEPLOYMENT_NOT_FOUND]: {
         tip: 'Did you run `npx hardhat lz:oft:solana:create` ?',
         info: 'The Solana deployment file is required to run config tasks. The default path is ./deployments/solana-<mainnet/testnet>/OFT.json',
+    },
+    [KnownWarnings.OFT_PROGRAM_NOT_DEPLOYED]: {
+        tip: 'Deploy the OFT program first',
+        info: 'The OFT program must be deployed before proceeding with other operations',
+    },
+    [KnownWarnings.USING_OVERRIDE_OFT]: {
+        tip: 'Using external OFT deployment',
+        info: 'This is expected when using an external OFT deployment',
+    },
+    [KnownWarnings.SOLANA_DEPLOYMENT_MISSING_OFT_STORE]: {
+        tip: 'OFT store is missing from deployment',
+        info: 'The OFT store must be initialized in the deployment',
+    },
+    [KnownWarnings.ERROR_LOADING_SOLANA_DEPLOYMENT]: {
+        tip: 'Failed to load Solana deployment',
+        info: 'Check if the deployment file exists and is properly formatted',
     },
 }

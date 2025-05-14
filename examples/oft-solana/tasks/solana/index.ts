@@ -33,7 +33,7 @@ import { createLogger, promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { OftPDA } from '@layerzerolabs/oft-v2-solana-sdk'
 
-import { DebugLogger, KnownErrors, createSolanaConnectionFactory } from '../common/utils'
+import { DebugLogger, KnownWarnings, createSolanaConnectionFactory } from '../common/utils'
 import getFee from '../utils/getFee'
 
 const LOOKUP_TABLE_ADDRESS: Partial<Record<EndpointId, PublicKey>> = {
@@ -244,7 +244,7 @@ export const getSolanaDeployment = (
     const filePath = path.join(outputDir, 'OFT.json') // Note: if you have multiple deployments, change this filename to refer to the desired deployment file
 
     if (!existsSync(filePath)) {
-        DebugLogger.printErrorAndFixSuggestion(KnownErrors.SOLANA_DEPLOYMENT_NOT_FOUND)
+        DebugLogger.printWarning(KnownWarnings.SOLANA_DEPLOYMENT_NOT_FOUND)
         throw new Error(`Could not find Solana deployment file for eid ${eid} at: ${filePath}`)
     }
 
@@ -252,12 +252,29 @@ export const getSolanaDeployment = (
     return JSON.parse(fileContents)
 }
 
-export const getOftStoreAddress = (eid: EndpointId) => {
-    const { oftStore } = getSolanaDeployment(eid)
-    if (!oftStore) {
-        throw new Error('oftStore not defined in the deployment file')
+/**
+ * Safely load the OFT store PDA for a given Solana endpoint.
+ * Logs a warning if the deployment file is missing or malformed,
+ * and returns null so consumers can decide how to proceed.
+ */
+export const getOftStoreAddress = (eid: EndpointId): string | null => {
+    try {
+        const { oftStore } = getSolanaDeployment(eid)
+        if (!oftStore) {
+            DebugLogger.printWarning(
+                KnownWarnings.SOLANA_DEPLOYMENT_MISSING_OFT_STORE,
+                `deployment file for ${endpointIdToNetwork(eid)} (eid ${eid}) missing 'oftStore' field.`
+            )
+            return null
+        }
+        return oftStore
+    } catch (err: any) {
+        DebugLogger.printWarning(
+            KnownWarnings.ERROR_LOADING_SOLANA_DEPLOYMENT,
+            `Could not load Solana deployment for ${endpointIdToNetwork(eid)} (eid ${eid}): ${err.message}`
+        )
+        return null
     }
-    return oftStore
 }
 
 // TODO: move below outside of solana folder since it's generic
