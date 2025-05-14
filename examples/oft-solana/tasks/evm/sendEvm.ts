@@ -99,7 +99,6 @@ export async function sendEvm(
     const receipt = await tx.wait()
 
     const txHash = receipt.transactionHash
-    // pick your explorer; here I use LayerZeroScan
     const scanLink = getLayerZeroScanLink(txHash, srcEid >= 40_000 && srcEid < 50_000)
 
     return { txHash, scanLink }
