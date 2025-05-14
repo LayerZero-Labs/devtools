@@ -33,9 +33,31 @@ native_token_metadata_address = "0xa"
 
 
 [dev-addresses]
-compose = "0x302814823"
-endpoint_v2_common = "0x100007"
-endpoint_v2 = "0x100006"
+# compose = "0x302814823"
+# router_node_0 = "0x1"
+# simple_msglib = "0x2"
+# blocked_msglib = "0x3"
+# uln_302 = "0x4"
+# router_node_1 = "0x5"
+# endpoint_v2_common = "0x100007"
+# endpoint_v2 = "0x100006"
+# layerzero_admin = "0x6"
+# layerzero_treasury_admin = "0x7"
+# msglib_types = "0x8"
+# treasury = "0x9"
+# worker_peripherals = "0xa"
+# price_feed_router_0 = "0xb"
+# price_feed_router_1 = "0xc"
+# price_feed_module_0 = "0xd"
+# worker_common = "0xe"
+# executor_fee_lib_router_0 = "0xf"
+# executor_fee_lib_router_1 = "0x10"
+# dvn_fee_lib_router_0 = "0x11"
+# dvn_fee_lib_router_1 = "0x12"
+# executor_fee_lib_0 = "0x13"
+# dvn_fee_lib_0 = "0x14"
+# dvn = "0x15"
+# native_token_metadata_address = "0xa"
 # thalaswap_v2_demo = "0xABC"
 
 
@@ -45,8 +67,10 @@ git = "https://github.com/aptos-labs/aptos-framework.git"
 rev = "mainnet"
 subdir = "aptos-framework"
 
-# [dependencies.ThalaSwapV2]
-# local = "../thalaswap_v2_interface/"
+[dependencies.ThalaSwapV2]
+git = "https://github.com/ThalaLabs/integrate-thala.git"
+rev = "main"
+subdir = "thalaswap_v2_interface"
 
 [dependencies]
 endpoint_v2_common = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "main", subdir = "packages/layerzero-v2/aptos/contracts/endpoint_v2_common" }

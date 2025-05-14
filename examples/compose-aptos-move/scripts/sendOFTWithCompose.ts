@@ -47,11 +47,10 @@ async function sendOFT(
         )
     }
 
-    // Check native token balance
     const nativeBalance = await oft.provider.getBalance(userAddress)
     console.log(`💰 Native Token Balance: ${ethers.utils.formatEther(nativeBalance)}`)
 
-    console.log(`🚀 Sending ${ethers.utils.formatUnits(amount, 0)} units`) // Assuming amount is in smallest unit
+    console.log(`🚀 Sending ${ethers.utils.formatUnits(amount, 0)} units`)
     console.log(`\t📝 Using OFT at address: ${oft.address}`)
     console.log(`\t👤 From account: ${userAddress}`)
     console.log(`\t🎯 To account (bytes32): ${aptosComposerAddressBytes32}`)
@@ -75,7 +74,6 @@ async function sendOFT(
     console.log('\t🏦 Native fee:', ethers.utils.formatEther(fee.nativeFee))
     console.log('\t🪙 LZ token fee:', fee.lzTokenFee.toString())
 
-    // Check if user has enough native token for the fee
     if (nativeBalance.lt(fee.nativeFee)) {
         throw new Error(
             `Insufficient native token for gas fees. You have ${ethers.utils.formatEther(nativeBalance)} but need ${ethers.utils.formatEther(fee.nativeFee)}.`
@@ -102,19 +100,14 @@ async function main() {
     const srcRpcUrl = 'https://base-rpc.publicnode.com' // Base Mainnet RPC
     const srcOftContractAddress = '0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34' // USDe OFT address on Base
     const destEndpointId = 30108 // Aptos Mainnet endpoint ID
-    // const toAddress = '0xff7558ca65cb0d0ab717ced3c25fbd3a2762faf5919e06fab5176a071cb081ae' // Replace with the Aptos composer address (in hex format)
-    // const aptosComposerAddress = '0xed2d7ad56e1239bba818e83b72e15b476aec2239e55d40048c4575c4c2f3dc98'
-    // const aptosComposerAddress = '0x217ee4424096fc954ed3faa1dece5be2196c59f2eac64ee0b02ac6339a8993a1'
-    // const aptosComposerAddress = '0xb9f56d94f2587d7e81e1e5f41a7d715b6fe445a26efbb6eecf4981dc2722b52f'
-    // const aptosComposerAddress = '0xd54c717756070dc3829a0a861f9b570daca4a61e9ed86644826e88b474c70b60'
-    const aptosComposerAddress = '0xbdf394352adc489fdf6282218a69702c6eee83ef73c26dde9fca253934850439'
-    const amountToSend = ethers.BigNumber.from('99000000000000000')
+    const aptosComposerAddress = '0x3ee478eec9694d427fcfbcf8209b66ed09879681533cc949a9865479c0e38eae'
+    const amountToSend = ethers.BigNumber.from('100000000000000000')
     const minAmountToSwapOnDest = ethers.BigNumber.from('9000000000000000')
     const customRefundAddress = undefined
     // This is the wallet we are sending the tokens to after the swap
-    // If swap fails, composer.move contracct will send the tokens the unswapped amount to this wallet
+    // If swap fails, composer.move contract the unswapped amount to this wallet
     // See composer.move implementation for more details
-    const aptosDestWalletAddress = '0x58b730d07e98a22f2b357bee721115c986e4dc873c1884763708ee3d4006f74e'
+    const aptosDestWalletAddress = '0x3ee478eec9694d427fcfbcf8209b66ed09879681533cc949a9865479c0e38eae'
     // The OFT contracdt ABI must be loaded here in order for the call to the OFT send function to work
     const abiPath = path.join(__dirname, 'abi.json')
     const abiJson = JSON.parse(fs.readFileSync(abiPath, 'utf8'))
