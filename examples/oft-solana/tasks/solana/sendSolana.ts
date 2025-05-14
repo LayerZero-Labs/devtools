@@ -31,6 +31,9 @@ export interface SolanaArgs {
     to: string
     srcEid: EndpointId
     dstEid: EndpointId
+    minAmount?: string
+    extraOptions?: string
+    composeMsg?: string
     oftAddress?: string
     oftProgramId?: string
     tokenProgram?: string
@@ -46,6 +49,9 @@ export async function sendSolana({
     oftProgramId,
     tokenProgram: tokenProgramStr,
     computeUnitPriceScaleFactor = 4,
+    minAmount,
+    extraOptions,
+    composeMsg,
 }: SolanaArgs): Promise<SendResult> {
     // 1️⃣ RPC + UMI
     const { connection, umi, umiWalletSigner } = await deriveConnection(srcEid)
@@ -91,9 +97,9 @@ export async function sendSolana({
             to: Buffer.from(recipient),
             dstEid: dstEid,
             amountLd: amountUnits,
-            minAmountLd: (amountUnits * 9n) / 10n,
-            options: Buffer.from(''),
-            composeMsg: undefined,
+            minAmountLd: minAmount ? parseDecimalToUnits(minAmount, decimals) : amountUnits,
+            options: Buffer.from(extraOptions ? extraOptions.toString() : ''),
+            composeMsg: Buffer.from(composeMsg ? composeMsg.toString() : '0x'),
         },
         { oft: programId }, // ← use override
         [],
@@ -114,9 +120,9 @@ export async function sendSolana({
             to: Buffer.from(recipient),
             dstEid: dstEid,
             amountLd: amountUnits,
-            minAmountLd: (amountUnits * 9n) / 10n,
-            options: Buffer.from(''),
-            composeMsg: undefined,
+            minAmountLd: minAmount ? parseDecimalToUnits(minAmount, decimals) : amountUnits,
+            options: Buffer.from(extraOptions ? extraOptions.toString() : ''),
+            composeMsg: Buffer.from(composeMsg ? composeMsg.toString() : '0x'),
             nativeFee,
         },
         { oft: programId, token: tokenProgramId } // ← use override

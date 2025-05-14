@@ -19,11 +19,14 @@ export interface EvmArgs {
     dstEid: number
     amount: string
     to: string
+    minAmount?: string
+    extraOptions?: string
+    composeMsg?: string
     oftAddress?: string
 }
 
 export async function sendEvm(
-    { srcEid, dstEid, amount, to, oftAddress }: EvmArgs,
+    { srcEid, dstEid, amount, to, minAmount, extraOptions, composeMsg, oftAddress }: EvmArgs,
     hre: HardhatRuntimeEnvironment
 ): Promise<SendResult> {
     if (endpointIdToChainType(srcEid) !== ChainType.EVM) {
@@ -80,9 +83,9 @@ export async function sendEvm(
         dstEid,
         to: toBytes,
         amountLD: amountUnits.toString(),
-        minAmountLD: amountUnits.mul(9_000).div(10_000).toString(),
-        extraOptions: '0x',
-        composeMsg: '0x',
+        minAmountLD: minAmount ? parseUnits(minAmount, decimals).toString() : amountUnits.toString(),
+        extraOptions: extraOptions ? extraOptions.toString() : '0x',
+        composeMsg: composeMsg ? composeMsg.toString() : '0x',
         oftCmd: '0x',
     }
 

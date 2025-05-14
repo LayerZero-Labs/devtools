@@ -17,12 +17,15 @@ import {
     createConnectionFactory,
     createRpcUrlFactory,
 } from '@layerzerolabs/devtools-solana'
+import { createLogger } from '@layerzerolabs/io-devtools'
 import { ChainType, EndpointId, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { UlnProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { IOApp } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { createOFTFactory } from '@layerzerolabs/ua-devtools-solana'
+
+const logger = createLogger()
 
 export const deploymentMetadataUrl = 'https://metadata.layerzero-api.com/v1/metadata/deployments'
 
@@ -212,8 +215,7 @@ export class DebugLogger {
      */
     static printLayerZeroOutput(type: KnownOutputs, payload?: string) {
         // \x1b[35m = purple, \x1b[0m = reset
-        const label = `\x1b[35m${type}:\x1b[0m`
-        console.log(`${label}${payload ? ' ' + payload : ''}`)
+        logger.info(`${payload ? ' ' + payload : ''}`)
     }
 }
 
