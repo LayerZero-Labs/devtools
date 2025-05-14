@@ -228,7 +228,7 @@ export enum KnownErrors {
 
 export enum KnownWarnings {
     OFT_PROGRAM_NOT_DEPLOYED = 'OFT Program Not Deployed',
-    USING_OVERRIDE_OFT = 'Loading external OFT deployment',
+    USING_OVERRIDE_OFT = 'Using address provided as an OFT deployment',
     SOLANA_DEPLOYMENT_MISSING_OFT_STORE = 'Solana deployment missing OFT store',
     SOLANA_DEPLOYMENT_NOT_FOUND = 'SOLANA_DEPLOYMENT_NOT_FOUND',
     ERROR_LOADING_SOLANA_DEPLOYMENT = 'Error loading local Solana deployment',

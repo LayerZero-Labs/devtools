@@ -61,7 +61,7 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
         if (args.oftAddress || args.oftProgramId) {
             DebugLogger.printWarning(
                 KnownWarnings.USING_OVERRIDE_OFT,
-                `Using this OFT address: ${args.oftAddress + (args.oftProgramId ? `, OFT program: ${args.oftProgramId}` : '')} for network: ${endpointIdToNetwork(args.srcEid)}`
+                `For network: ${endpointIdToNetwork(args.srcEid)}, OFT: ${args.oftAddress + (args.oftProgramId ? `, OFT program: ${args.oftProgramId}` : '')}`
             )
         }
 

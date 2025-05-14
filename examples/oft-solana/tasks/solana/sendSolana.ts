@@ -57,7 +57,18 @@ export async function sendSolana({
     const { connection, umi, umiWalletSigner } = await deriveConnection(srcEid)
     silenceSolana429(connection)
     // 2️⃣ Pick your OFT program ID (override or from deployment)
-    const programId = oftProgramId ? publicKey(oftProgramId) : publicKey(getSolanaDeployment(srcEid).programId)
+    const programId = oftProgramId
+        ? publicKey(oftProgramId)
+        : publicKey(
+              (() => {
+                  try {
+                      return getSolanaDeployment(srcEid).programId
+                  } catch (error) {
+                      logger.error(`No Program ID found for ${srcEid}: ${error}`)
+                      throw error
+                  }
+              })()
+          )
 
     // 3️⃣ Decide your store PDA (override or from your on‐disk deployment)
     const storePda = oftAddress ? publicKey(oftAddress) : publicKey(getSolanaDeployment(srcEid).oftStore)
