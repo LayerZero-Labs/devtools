@@ -29,7 +29,7 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
     .addParam('to', 'Base58 recipient (Solana) or bytes20-encoded target (EVM)', undefined, types.string)
     .addOptionalParam(
         'oftAddress',
-        'Override the source OFT address (20-byte hex for EVM, base58 PDA for Solana)',
+        'Override the source local deployment OFT address (20-byte hex for EVM, base58 PDA for Solana)',
         undefined,
         types.string
     )

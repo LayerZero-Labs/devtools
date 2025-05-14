@@ -12,6 +12,8 @@ import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { SendResult } from '../common/types'
 
+import { parseDecimalToUnits } from './utils'
+
 import {
     TransactionType,
     addComputeUnitInstructions,
@@ -20,21 +22,6 @@ import {
     getLayerZeroScanLink,
     getSolanaDeployment,
 } from './index'
-
-/**
- * Turn a human decimal amount (e.g. "1.234") into a BigInt of base‐units given `decimals`.
- */
-function parseDecimalToUnits(amount: string, decimals: number): bigint {
-    const [whole, fraction = ''] = amount.split('.')
-    const wholeUnits = BigInt(whole) * 10n ** BigInt(decimals)
-    // pad or trim the fractional part to exactly `decimals` digits
-    const fracUnits = BigInt(
-        fraction
-            .padEnd(decimals, '0') // "23"  → "230000"
-            .slice(0, decimals) // in case user typed more digits than `decimals`
-    )
-    return wholeUnits + fracUnits
-}
 
 export interface SolanaArgs {
     amount: string
