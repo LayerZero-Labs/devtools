@@ -25,14 +25,17 @@ Block switching is not present in the default oft deploy script.
 - [ ] Deploy the oft
 - [ ] Switch to small block after deploying the oft - `npx @layerzerolabs/hyperliquid-composer set-block --size small --network <testnet/mainnet> --log-level verbose --private-key $PRIVATE_KEY`
 
-> ⚠️ If you are only doing HyperEVM you are done. Following is only for HyperCore deployments.
+> ⚠️ If you are only doing HyperEVM you are done. Proceeding is only for HyperCore deployments.
 
 ## Step 1 : (optional) Purchase your HyperCore Spot
 
 | Action        | Performed by      | Actionable with                          | Required for |
 | ------------- | ----------------- | ---------------------------------------- | ------------ |
 | Purchase Spot | CoreSpot Deployer | <https://app.hyperliquid.xyz/deploySpot> | HyperCore    |
-| Blocked by    | none              | none                                     | Step 2       |
+
+| Depends on Step | Performed by | Future step depends on this |
+| --------------- | ------------ | --------------------------- |
+| none            | none         | Step 2                      |
 
 - [ ] Purchase your HyperCore Spot engaging in the [auction](https://hyperliquid.gitbook.io/hyperliquid-docs/hyperliquid-improvement-proposals-hips/hip-1-native-token-standard#gas-cost-for-deployment)
 
@@ -41,8 +44,11 @@ Block switching is not present in the default oft deploy script.
 | Action          | Performed by      | Actionable with                           | Required for |
 | --------------- | ----------------- | ----------------------------------------- | ------------ |
 | Deploy CoreSpot | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
-| Blocked by      | OFT Deployer      | Step 0                                    | Step 3       |
-| Blocked by      | CoreSpot Deployer | Step 1                                    | Step 3       |
+
+| Depends on Step | Step Performed by | Future step which depends on this |
+| --------------- | ----------------- | --------------------------------- |
+| Step 0          | OFT Deployer      | Step 3                            |
+| Step 1          | CoreSpot Deployer | Step 3                            |
 
 - [ ] Deploy the CoreSpot following the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#deploy-the-core-spot)
 
@@ -51,8 +57,11 @@ Block switching is not present in the default oft deploy script.
 | Action                           | Performed by      | Actionable with                           | Required for |
 | -------------------------------- | ----------------- | ----------------------------------------- | ------------ |
 | Create HyperCore Deployment File | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
-| Blocked by                       | OFT Deployer      | Step 0                                    | Step 3       |
-| Blocked by                       | CoreSpot Deployer | Step 1                                    | Step 2.2     |
+
+| Depends on Step | Step Performed by | Future step which depends on this |
+| --------------- | ----------------- | --------------------------------- |
+| Step 0          | OFT Deployer      | Step 2.2                          |
+| Step 1          | CoreSpot Deployer | Step 2.2                          |
 
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-0-core-spot-create)
 - [ ] Core spot deployer needs OFT address and deployed transaction hash
@@ -62,8 +71,11 @@ Block switching is not present in the default oft deploy script.
 | Action                 | Performed by      | Actionable with                           | Required for |
 | ---------------------- | ----------------- | ----------------------------------------- | ------------ |
 | Set Deployer Fee Share | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
-| Blocked by             | OFT Deployer      | Step 0                                    | Step 3       |
-| Blocked by             | CoreSpot Deployer | Step 2.1                                  | none         |
+
+| Depends on Step | Step Performed by | Future step which depends on this |
+| --------------- | ----------------- | --------------------------------- |
+| Step 0          | OFT Deployer      | none                              |
+| Step 2.1        | CoreSpot Deployer | none                              |
 
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-14-setdeployertradingfeeshare)
 - [ ] Trading fee share is usually 100% (default value) - this allocates the trading fees to the token deployer instead of burning it.
@@ -75,7 +87,10 @@ Block switching is not present in the default oft deploy script.
 | Action           | Performed by      | Actionable with                           | Required for |
 | ---------------- | ----------------- | ----------------------------------------- | ------------ |
 | Set User Genesis | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
-| Blocked by       | CoreSpot Deployer | Step 2.1                                  | Step 2.4     |
+
+| Depends on Step | Step Performed by | Future step which depends on this |
+| --------------- | ----------------- | --------------------------------- |
+| Step 2.1        | CoreSpot Deployer | Step 2.4                          |
 
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-24-usergenesis)
 - [ ] HyperCore balances are u64 - the max balance is `2.pow(64) - 1 = 18446744073709551615`
@@ -90,7 +105,10 @@ Block switching is not present in the default oft deploy script.
 | Action               | Performed by      | Actionable with                           | Required for |
 | -------------------- | ----------------- | ----------------------------------------- | ------------ |
 | Confirm User Genesis | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
-| Blocked by           | CoreSpot Deployer | Step 2.2                                  | Step 2.5     |
+
+| Depends on Step | Step Performed by | Future step which depends on this |
+| --------------- | ----------------- | --------------------------------- |
+| Step 2.3        | CoreSpot Deployer | Step 2.5                          |
 
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-34-genesis)
 - [ ] Locks in the user genesis step and is now immutable.
@@ -100,37 +118,54 @@ Block switching is not present in the default oft deploy script.
 | Action        | Performed by      | Actionable with                           | Required for |
 | ------------- | ----------------- | ----------------------------------------- | ------------ |
 | Register Spot | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
-| Blocked by    | CoreSpot Deployer | Step 2.4                                  | Step 3       |
+
+| Depends on Step | Step Performed by | Future step which depends on this |
+| --------------- | ----------------- | --------------------------------- |
+| Step 2.4        | CoreSpot Deployer | Step 3                            |
 
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-44-registerspot)
 - [ ] Only USDC is supported on HyperCore at the moment - the sdk defaults to USDC.
 - [ ] Make sure the asset bridge address on HyperCore has all the tokens minted in Step 2.3. Partial funding is not supported.
 
-## Step 3.1 : Create a request to connect the HyperCoreSpot to HyperEVM OFT
+## Step 3 : Connect the HyperCoreSpot to HyperEVM OFT
+
+### Step 3.1 : Create a request to connect the HyperCoreSpot to HyperEVM OFT
 
 | Action         | Performed by      | Actionable with                           | Required for |
 | -------------- | ----------------- | ----------------------------------------- | ------------ |
 | Create Request | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
 | Blocked by     | CoreSpot Deployer | Step 0, Step 2                            | Step 3.2     |
 
+| Depends on Step | Step Performed by | Future step which depends on this |
+| --------------- | ----------------- | --------------------------------- |
+| Step 0          | OFT Deployer      | Step 3.2                          |
+| Step 2          | CoreSpot Deployer | Step 3.2                          |
+
 - [ ] Make sure the core spot deployer has the oft address.
 
-## Step 3.2 : Accept the request to connect the HyperCoreSpot to HyperEVM OFT
+### Step 3.2 : Accept the request to connect the HyperCoreSpot to HyperEVM OFT
 
-| Action         | Performed by      | Actionable with                           | Required for |
-| -------------- | ----------------- | ----------------------------------------- | ------------ |
-| Accept Request | OFT Deployer      | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
-| Blocked by     | CoreSpot Deployer | Step 3.1                                  | Step 4       |
+| Action         | Performed by | Actionable with                           | Required for |
+| -------------- | ------------ | ----------------------------------------- | ------------ |
+| Accept Request | OFT Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
+
+| Depends on Step | Step Performed by | Future step which depends on this |
+| --------------- | ----------------- | --------------------------------- |
+| Step 3.1        | CoreSpot Deployer | Step 4                            |
 
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-0-core-spot-create)
 - [ ] Create a deployment file for the core spot before linking.
 
 ## Step 4 : Deploy the Composer
 
-| Action          | Performed by      | Actionable with                           | Required for |
-| --------------- | ----------------- | ----------------------------------------- | ------------ |
-| Deploy Composer | OFT Deployer      | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
-| Blocked by      | CoreSpot Deployer | Step 3                                    | none         |
+| Action          | Performed by | Actionable with                           | Required for |
+| --------------- | ------------ | ----------------------------------------- | ------------ |
+| Deploy Composer | OFT Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
+
+| Depends on Step | Step Performed by | Future step which depends on this |
+| --------------- | ----------------- | --------------------------------- |
+| Step 3.1        | CoreSpot Deployer | none                              |
+| Step 3.2        | OFT Deployer      | none                              |
 
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-22-finalizeevmcontract)
 - Deployer script in the oft repo will deploy the composer - it also handles block switching.
