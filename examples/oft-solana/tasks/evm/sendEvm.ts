@@ -6,7 +6,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { makeBytes32 } from '@layerzerolabs/devtools'
 import { createGetHreByEid } from '@layerzerolabs/devtools-evm-hardhat'
 import { createLogger } from '@layerzerolabs/io-devtools'
-import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
+import { ChainType, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
 
 import layerzeroConfig from '../../layerzero.config'
 import { SendResult } from '../common/types'
@@ -100,7 +100,7 @@ export async function sendEvm(
 
     const txHash = receipt.transactionHash
     // pick your explorer; here I use LayerZeroScan
-    const scanLink = getLayerZeroScanLink(txHash, dstEid === EndpointId.SOLANA_V2_TESTNET)
+    const scanLink = getLayerZeroScanLink(txHash, srcEid >= 40_000 && srcEid < 50_000)
 
     return { txHash, scanLink }
 }
