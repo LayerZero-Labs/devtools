@@ -24,9 +24,9 @@ exports[`flows/config.load createConfigLoadFlow when config file exports a funct
 Property 'good': Required]
 `;
 
-exports[`flows/config.load createConfigLoadFlow when config file exports a function when it is a synchronous function should reject if the function throws an error 1`] = `[Error: Got an exception while executing config funtion from file './myconfig.ts': Error: Oh not again]`;
+exports[`flows/config.load createConfigLoadFlow when config file exports a function when it is a synchronous function should reject if the function throws an error 1`] = `[Error: Got an exception while executing config function from file './myconfig.ts': Error: Oh not again]`;
 
-exports[`flows/config.load createConfigLoadFlow when config file exports a function when it is an asynchronous function should reject if the function rejects 1`] = `[Error: Got an exception while executing config funtion from file './myconfig.ts': Error: Y u do dis]`;
+exports[`flows/config.load createConfigLoadFlow when config file exports a function when it is an asynchronous function should reject if the function rejects 1`] = `[Error: Got an exception while executing config function from file './myconfig.ts': Error: Y u do dis]`;
 
 exports[`flows/config.load createConfigLoadFlow when config file exports a function when it is an asynchronous function should reject if the function resolves with an invalid config 1`] = `
 [Error: Config from file './myconfig.ts' is malformed. Please fix the following errors:

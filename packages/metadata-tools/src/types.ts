@@ -84,7 +84,7 @@ export interface IMetadata {
                     symbol: string
                     chainName: string
                     address: string
-                    programaticallyPegged?: boolean
+                    programmaticallyPegged?: boolean
                 }
             }
         }

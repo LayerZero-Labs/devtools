@@ -340,7 +340,7 @@ module oft::oft_fa {
 
     fun init_module(account: &signer) {
         let constructor_ref = &object::create_named_object(account, b"oft_fa");
-        // Create a fungible asset with empty paramters that be set to the correct values on initialize()
+        // Create a fungible asset with empty parameters that be set to the correct values on initialize()
         primary_fungible_store::create_primary_store_enabled_fungible_asset(
             constructor_ref,
             option::none(),

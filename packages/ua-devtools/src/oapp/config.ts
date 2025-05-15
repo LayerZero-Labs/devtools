@@ -151,13 +151,13 @@ export const configureReceiveLibraries: OAppConfigurator = withOAppLogger(
 
                 if (!isDefaultLibrary && currentReceiveLibrary === config.receiveLibraryConfig.receiveLibrary) {
                     logger.verbose(
-                        `Current recieveLibrary is not default and is already set to ${config.receiveLibraryConfig.receiveLibrary} for ${formatOmniVector({ from, to })}, skipping`
+                        `Current receiveLibrary is not default and is already set to ${config.receiveLibraryConfig.receiveLibrary} for ${formatOmniVector({ from, to })}, skipping`
                     )
                     return []
                 }
 
                 logger.verbose(
-                    `Setting recieveLibrary ${config.receiveLibraryConfig.receiveLibrary} for ${formatOmniVector({ from, to })}`
+                    `Setting receiveLibrary ${config.receiveLibraryConfig.receiveLibrary} for ${formatOmniVector({ from, to })}`
                 )
 
                 return [

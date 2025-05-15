@@ -306,7 +306,7 @@
 
 ### Patch Changes
 
-- 0783460: Allow users to specify whether the simulation accounts should be overriden
+- 0783460: Allow users to specify whether the simulation accounts should be overridden
 - Updated dependencies [0783460]
   - @layerzerolabs/devtools-evm-hardhat@0.3.22
 
