@@ -7,11 +7,12 @@ import { PublicKey } from '@solana/web3.js'
 import bs58 from 'bs58'
 
 import { createLogger } from '@layerzerolabs/io-devtools'
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { SendResult } from '../common/types'
+import { DebugLogger, KnownErrors } from '../common/utils'
 
 import { parseDecimalToUnits, silenceSolana429 } from './utils'
 
@@ -134,7 +135,7 @@ export async function sendSolana({
             minAmountLd: minAmount ? parseDecimalToUnits(minAmount, decimals) : amountUnits,
             options: Buffer.from(extraOptions ? extraOptions.toString() : ''),
             composeMsg: Buffer.from(composeMsg ? composeMsg.toString() : '0x'),
-            nativeFee,
+            nativeFee: nativeFee,
         },
         { oft: programId, token: tokenProgramId } // ← use override
     )
@@ -150,8 +151,17 @@ export async function sendSolana({
         computeUnitPriceScaleFactor,
         TransactionType.SendOFT
     )
-    const { signature } = await txB.sendAndConfirm(umi)
-    const txHash = bs58.encode(signature)
+    let txHash: string
+    try {
+        const { signature } = await txB.sendAndConfirm(umi)
+        txHash = bs58.encode(signature)
+    } catch (error) {
+        DebugLogger.printErrorAndFixSuggestion(
+            KnownErrors.ERROR_QUOTING_NATIVE_GAS_COST,
+            `For network: ${endpointIdToNetwork(srcEid)}, OFT: ${oftAddress}`
+        )
+        throw error
+    }
 
     const isTestnet = srcEid === EndpointId.SOLANA_V2_TESTNET
 

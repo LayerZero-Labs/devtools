@@ -1,17 +1,17 @@
 import bs58 from 'bs58'
-import { BigNumber } from 'ethers'
+import { BigNumber, ContractTransaction } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { makeBytes32 } from '@layerzerolabs/devtools'
 import { createGetHreByEid } from '@layerzerolabs/devtools-evm-hardhat'
 import { createLogger } from '@layerzerolabs/io-devtools'
-import { ChainType, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
+import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 
 import layerzeroConfig from '../../layerzero.config'
 import { SendResult } from '../common/types'
+import { DebugLogger, KnownErrors } from '../common/utils'
 import { getLayerZeroScanLink } from '../solana'
-
 const logger = createLogger()
 
 export interface EvmArgs {
@@ -91,11 +91,29 @@ export async function sendEvm(
 
     // 6️⃣ Quote (MessagingFee = { nativeFee, lzTokenFee })
     logger.info('Quoting the native gas cost for the send transaction...')
-    const msgFee = await oft.quoteSend(sendParam, false)
+    let msgFee: { nativeFee: BigNumber; lzTokenFee: BigNumber }
+    try {
+        msgFee = await oft.quoteSend(sendParam, false)
+    } catch (error) {
+        DebugLogger.printErrorAndFixSuggestion(
+            KnownErrors.ERROR_QUOTING_NATIVE_GAS_COST,
+            `For network: ${endpointIdToNetwork(srcEid)}, OFT: ${oftAddress}`
+        )
+        throw error
+    }
     logger.info('Sending the transaction...')
-    const tx = await oft.send(sendParam, msgFee, signer.address, {
-        value: msgFee.nativeFee,
-    })
+    let tx: ContractTransaction
+    try {
+        tx = await oft.send(sendParam, msgFee, signer.address, {
+            value: msgFee.nativeFee,
+        })
+    } catch (error) {
+        DebugLogger.printErrorAndFixSuggestion(
+            KnownErrors.ERROR_SENDING_TRANSACTION,
+            `For network: ${endpointIdToNetwork(srcEid)}, OFT: ${oftAddress}`
+        )
+        throw error
+    }
     const receipt = await tx.wait()
 
     const txHash = receipt.transactionHash

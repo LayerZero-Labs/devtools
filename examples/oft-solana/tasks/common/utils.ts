@@ -224,6 +224,8 @@ export enum KnownErrors {
     // e.g. If the user forgets to deploy the OFT Program, the variable name should be:
     // FIX_SUGGESTION_OFT_PROGRAM_NOT_DEPLOYED
     ULN_INIT_CONFIG_SKIPPED = 'ULN_INIT_CONFIG_SKIPPED',
+    ERROR_QUOTING_NATIVE_GAS_COST = 'ERROR_QUOTING_NATIVE_GAS_COST',
+    ERROR_SENDING_TRANSACTION = 'ERROR_SENDING_TRANSACTION',
 }
 
 export enum KnownWarnings {
@@ -247,8 +249,16 @@ interface ErrorFixInfo {
 
 export const ERRORS_FIXES_MAP: Record<KnownErrors, ErrorFixInfo> = {
     [KnownErrors.ULN_INIT_CONFIG_SKIPPED]: {
-        tip: 'Did you run `npx hardhat lz:oft:solana:init-config --oapp-config <LZ_CONFIG_FILE_NAME> --solana-eid <SOLANA_EID>` ?',
+        tip: 'Did you run `npx hardhat lz:oft:solana:init-config --oapp-config <LZ_CONFIG_FILE_NAME> ?',
         info: 'You must run lz:oft:solana:init-config once before you run lz:oapp:wire. If you have added new pathways, you must also run lz:oft:solana:init-config again.',
+    },
+    [KnownErrors.ERROR_QUOTING_NATIVE_GAS_COST]: {
+        tip: 'Have you run `npx hardhat lz:oapp:config:get --oapp-config <LZ_CONFIG_FILE_NAME>` and checked that you correctly configured the pathway?',
+        info: 'LayerZero pathways require that a default Endpoint, Message Library, and DVN configuration exists for messaging to work. See https://layerzeroscan.com/tools/defaults for more information.',
+    },
+    [KnownErrors.ERROR_SENDING_TRANSACTION]: {
+        tip: 'Have you correctly passed the quoteSend() result to the send() function?',
+        info: 'To quote the native gas cost needed to send a message, you must pass the result of quoteSend() to the send() function.',
     },
 }
 
