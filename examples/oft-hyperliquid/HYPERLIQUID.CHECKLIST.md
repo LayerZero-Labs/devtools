@@ -9,6 +9,8 @@ This document is an checklist for anyone deploying to hyperevm (and hypercore).
 | Path 1 | OFT Deployer | `LZ_ENABLE_EXPERIMENTAL_HYPERLIQUID_EXAMPLE=1 npx create-lz-oapp@latest` | HyperCore deployments     |
 | Path 2 | OFT Deployer | vanilla oft repo + `npx @layerzerolabs/hyperliquid-composer`             | Only HyperEVM deployments |
 
+- [ ] Activate your deployer account on hypercore without burning a nonce on hyperevm. Get someone to send at least `$1` in `USDC` or `HYPE` to your deployer account on HyperCore, or get funds on a burner wallet on HyperEVM, transfer it across, and then transfer it to the deployer account.
+
 ### Path 1 - With a new repo
 
 - [ ] Create a new hyperliquid example repo `LZ_ENABLE_EXPERIMENTAL_HYPERLIQUID_EXAMPLE=1 npx create-lz-oapp@latest`
