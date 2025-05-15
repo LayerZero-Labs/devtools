@@ -298,7 +298,7 @@ First, you need to create the Associated Token Account for your address.
 spl-token create-account <TOKEN_MINT>
 ```
 
-Then, you can mint. Remember this is in local decimals, so with local decimals of 9, you would need to pass in `--amount 1000000000` to mint 1 OFT.
+Then, you can mint. Note that the `spl-token` CLI expects the human-readable token amount and not the raw integer value for the `<AMOUNT>` param. This means, to mint 1 OFT, you would specify `1` as the amount. The `spl-token` handles the multiplication by `10^decimals` for you.
 
 ```bash
 spl-token mint <TOKEN_MINT> <AMOUNT> --multisig-signer ~/.config/solana/id.json --owner <MINT_AUTHORITY>
