@@ -34,8 +34,16 @@ export async function sendEvm(
     }
 
     const getHreByEid = createGetHreByEid(hre)
-    const srcEidHre = await getHreByEid(srcEid)
-
+    let srcEidHre: HardhatRuntimeEnvironment
+    try {
+        srcEidHre = await getHreByEid(srcEid)
+    } catch (error) {
+        DebugLogger.printErrorAndFixSuggestion(
+            KnownErrors.ERROR_GETTING_HRE,
+            `For network: ${endpointIdToNetwork(srcEid)}, OFT: ${oftAddress}`
+        )
+        throw error
+    }
     const signer = await srcEidHre.ethers.getNamedSigner('deployer')
 
     // 1️⃣ resolve the OFT wrapper address

@@ -226,6 +226,7 @@ export enum KnownErrors {
     ULN_INIT_CONFIG_SKIPPED = 'ULN_INIT_CONFIG_SKIPPED',
     ERROR_QUOTING_NATIVE_GAS_COST = 'ERROR_QUOTING_NATIVE_GAS_COST',
     ERROR_SENDING_TRANSACTION = 'ERROR_SENDING_TRANSACTION',
+    ERROR_GETTING_HRE = 'ERROR_GETTING_HARDHAT_RUNTIME_ENVIRONMENT_FOR_NETWORK',
 }
 
 export enum KnownWarnings {
@@ -259,6 +260,10 @@ export const ERRORS_FIXES_MAP: Record<KnownErrors, ErrorFixInfo> = {
     [KnownErrors.ERROR_SENDING_TRANSACTION]: {
         tip: 'Have you correctly passed the quoteSend() result to the send() function?',
         info: 'To quote the native gas cost needed to send a message, you must pass the result of quoteSend() to the send() function.',
+    },
+    [KnownErrors.ERROR_GETTING_HRE]: {
+        tip: 'Have you added the srcEid network to your `./hardhat.config.ts` file?',
+        info: 'If you loaded a custom OFT deployment from an EVM network, you must add the deployment srcEid to your `./hardhat.config.ts` file for the OFT to be found.',
     },
 }
 
