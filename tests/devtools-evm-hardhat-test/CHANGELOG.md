@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat-test
 
+## 0.3.12
+
+### Patch Changes
+
+- 37679bd: the test - validate-incorrect-wss-rpc is returning status 1 incorrectly on failed requests even though the output are null. patching this temporarily by doing an alternative test
+
 ## 0.3.11
 
 ### Patch Changes

@@ -40,7 +40,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ### Install Solana
 
 ```bash
-sh -c "$(curl -sSfL https://release.solana.com/v1.17.31/install)"
+sh -c "$(curl -sSfL https://release.anza.xyz/v1.17.31/install)"
 ```
 
 ### Install Anchor
@@ -135,7 +135,6 @@ pnpm compile
 Create `programId` keypair files by running:
 
 ```bash
-solana-keygen new -o target/deploy/endpoint-keypair.json --force
 solana-keygen new -o target/deploy/oft-keypair.json --force
 
 anchor keys sync
@@ -185,6 +184,8 @@ To deploy your contracts to your desired EVM chains, run the following command i
 npx hardhat lz:deploy
 ```
 
+When prompted for the deploy tag to use, input `MyEndpointV1OFTV2Mock`, which is a contract that is using OFTV2 on EndpointV1.
+
 More information about available CLI arguments can be found using the `--help` flag:
 
 ```bash
@@ -203,7 +204,7 @@ While for building, we must use Solana `v1.17.31`, for deploying, we will be usi
 First, we switch to Solana `v1.18.26` (remember to switch back to `v1.17.31` later)
 
 ```bash
-sh -c "$(curl -sSfL https://release.solana.com/v1.18.26/install)"
+sh -c "$(curl -sSfL https://release.anza.xyz/v1.18.26/install)"
 ```
 
 ##### (Recommended) Deploying with a priority fee
@@ -229,7 +230,7 @@ solana program deploy --program-id target/deploy/oft-keypair.json target/verifia
 :warning: After deploying, make sure to switch back to v1.17.31 after deploying. If you need to rebuild artifacts, you must use Solana CLI version `1.17.31` and Anchor version `0.29.0`
 
 ```bash
-sh -c "$(curl -sSfL https://release.solana.com/v1.17.31/install)"
+sh -c "$(curl -sSfL https://release.anza.xyz/v1.17.31/install)"
 ```
 
 #### Create the Solana OFT202 acounts
@@ -321,6 +322,12 @@ npx hardhat lz:oft:solana:send --amount 1000000000 --from-eid 40168 --to <EVM_AD
 
 Congratulations!
 
+## Deploying to Mainnet
+
+In EndpointV1, message libraries for a chain are set globally and not per pathway. This means, if you migrate one chain to ULN301, you must update all other existing chains in the mesh to ULN301 too.
+
+:warning: If you only partially migrate your mesh to ULN301, pathways will be broken and OFTs will not be transferrable between chains that are not using the same message library.
+
 ## Behind The Scenes
 
 Below is an expanded README section that describes not only the overall configuration and wiring between the V1 and V2 endpoints but also explains the purpose of the overridden tasks provided in the repository:
@@ -333,7 +340,7 @@ This example demonstrates how to establish cross-chain communication between a L
 
 - **Endpoints:**
 
-  - **SEPOLIA_TESTNET (V1):** Represented by the contract `MyLzApp`.
+  - **SEPOLIA_TESTNET (V1):** Represented by the contract `MyEndpointV1OFTV2Mock`.
   - **SOLANA_V2_TESTNET (V2):** Represented by the program `OFT202`.
 
 - **Connection Parameters:**  
@@ -342,7 +349,7 @@ This example demonstrates how to establish cross-chain communication between a L
   - **Executor & ULN Configurations:** These determine how messages are processed, including confirmation settings and DVN (Data Validation Node) requirements.
 - **Wiring Process:**  
   The wiring tasks filter connections by endpoint version:
-  - **V1 Endpoint Logic:** Custom configuration logic is applied for **SEPOLIA_TESTNET** to handle the specific requirements of a V1 LzApp.
+  - **V1 Endpoint Logic:** Custom configuration logic is applied for **SEPOLIA_TESTNET** to handle the specific requirements of a V1 MyEndpointV1OFTV2Mock.
   - **V2 Endpoint Logic:** The default logic is used for **SOLANA_V2_TESTNET**, ensuring that the V2 OApp receives the configuration it expects.
 
 ## Overridden Tasks and Their Purpose
@@ -386,7 +393,7 @@ The repository includes several custom tasks that extend or override the default
 3. **Deployment & Execution:**  
    When you run the provided deployment and wiring commands, the tasks work together to:
    - Automatically fetch the configuration settings.
-   - Adjust the deployed contracts so that a V1 LzApp (**SEPOLIA_TESTNET**) can communicate with a V2 OApp (**SOLANA_V2_TESTNET**).
+   - Adjust the deployed contracts so that a MyEndpointV1OFTV2Mock (**SEPOLIA_TESTNET**) can communicate with a Solana OFT202 (**SOLANA_V2_TESTNET**).
 
 By overriding these tasks, the example streamlines the complex process of ensuring compatibility between different LayerZero versions, allowing developers to focus on building omnichain solutions without being bogged down by the underlying cross-chain configuration details.
 

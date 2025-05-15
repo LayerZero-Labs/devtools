@@ -109,7 +109,7 @@ export async function coreSpotDeployment(args: any): Promise<void> {
             connected: coreSpot.evmContract ? true : false,
         }
 
-        logger.info('Populating userAndWei with the deployer and asset bridge address')
+        logger.info('Populating userAndWei with the asset bridge address')
 
         const existingTokenAndWei: { token: number; wei: string }[] = []
         const msg =
@@ -131,10 +131,6 @@ export async function coreSpotDeployment(args: any): Promise<void> {
 
         const userGenesis: UserGenesis = {
             userAndWei: [
-                {
-                    address: from,
-                    wei: '',
-                },
                 {
                     address: assetBridgeAddress,
                     wei: '',

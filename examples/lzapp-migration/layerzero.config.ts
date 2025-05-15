@@ -3,6 +3,7 @@ import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
 
 import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
+// Note:  Do not use address for EVM OmniPointHardhat contracts.  Contracts are loaded using hardhat-deploy.
 const sepoliaContract: OmniPointHardhat = {
     eid: EndpointId.SEPOLIA_TESTNET, /// EndpointV1
     contractName: 'MyEndpointV1OFTV2Mock', // Update this if trying out the other contracts
