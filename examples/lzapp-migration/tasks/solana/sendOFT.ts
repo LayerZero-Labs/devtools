@@ -1,6 +1,5 @@
 import { fetchToken, findAssociatedTokenPda } from '@metaplex-foundation/mpl-toolbox'
 import { publicKey, transactionBuilder } from '@metaplex-foundation/umi'
-import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
@@ -24,7 +23,6 @@ interface Args {
     to: string
     fromEid: EndpointId
     toEid: EndpointId
-    mint: string
     tokenProgram: string
     computeUnitPriceScaleFactor: number
 }
@@ -38,15 +36,7 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
     .addParam('tokenProgram', 'The Token Program public key', TOKEN_PROGRAM_ID.toBase58(), devtoolsTypes.string, true)
     .addParam('computeUnitPriceScaleFactor', 'The compute unit price scale factor', 4, devtoolsTypes.float, true)
     .setAction(
-        async ({
-            amount,
-            fromEid,
-            to,
-            toEid,
-            mint: mintStr,
-            tokenProgram: tokenProgramStr,
-            computeUnitPriceScaleFactor,
-        }: Args) => {
+        async ({ amount, fromEid, to, toEid, tokenProgram: tokenProgramStr, computeUnitPriceScaleFactor }: Args) => {
             const { connection, umi, umiWalletSigner } = await deriveConnection(fromEid)
 
             const solanaDeployment = getSolanaDeployment(fromEid)
@@ -54,17 +44,17 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
             const oftProgramId = publicKey(solanaDeployment.programId)
             const mint = publicKey(solanaDeployment.mint)
             const umiEscrowPublicKey = publicKey(solanaDeployment.escrow)
-            const tokenProgramId = tokenProgramStr ? publicKey(tokenProgramStr) : fromWeb3JsPublicKey(TOKEN_PROGRAM_ID)
+            const tokenProgramId = publicKey(tokenProgramStr) // tokenProgramStr is always defined due to the default value set via addParam
 
             const tokenAccount = findAssociatedTokenPda(umi, {
-                mint: publicKey(mintStr),
+                mint: publicKey(solanaDeployment.mint),
                 owner: umiWalletSigner.publicKey,
                 tokenProgramId,
             })
 
             if (!tokenAccount) {
                 throw new Error(
-                    `No token account found for mint ${mintStr} and owner ${umiWalletSigner.publicKey} in program ${tokenProgramId}`
+                    `No token account found for mint ${solanaDeployment.mint} and owner ${umiWalletSigner.publicKey} in program ${tokenProgramId}`
                 )
             }
 
