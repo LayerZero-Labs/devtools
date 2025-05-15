@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rm -rf artifacts cache out build",
     "compile": "$npm_execpath run compile:forge && $npm_execpath run compile:hardhat && $npm_execpath run compile:aptos",
-    "compile:aptos": "aptos move compile --dev --skip-attribute-checks --included-artifacts=none --skip-fetch-latest-git-deps",
+    "compile:aptos": "aptosup -s 6.0.1 && aptos move compile --dev --skip-attribute-checks --included-artifacts=none --skip-fetch-latest-git-deps",
     "compile:forge": "forge build",
     "compile:hardhat": "hardhat compile",
     "lint": "$npm_execpath run lint:js && $npm_execpath run lint:sol",
@@ -32,9 +32,8 @@
     "lz:sdk:move:transfer-oapp-owner": "ts-node scripts/cli.ts --vm move --op transfer-oapp-owner",
     "lz:sdk:move:transfer-object-owner": "ts-node scripts/cli.ts --vm move --op transfer-object-owner",
     "lz:sdk:move:wire": "ts-node scripts/cli.ts --vm move --op wire",
-    "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat && $npm_execpath run test:aptos:v3 && $npm_execpath run test:aptos:v6",
+    "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat && $npm_execpath run test:aptos:v6",
     "test:aptos": "aptos move test --dev --skip-fetch-latest-git-deps",
-    "test:aptos:v3": "aptosup -s 3.5.0 && aptos move test --dev --skip-fetch-latest-git-deps",
     "test:aptos:v6": "aptosup -s 6.0.1 && aptos move test --dev --skip-fetch-latest-git-deps",
     "test:forge": "forge test",
     "test:hardhat": "hardhat test"
