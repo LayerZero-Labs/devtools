@@ -100,7 +100,7 @@ async function main() {
     const srcRpcUrl = 'https://base-rpc.publicnode.com' // Base Mainnet RPC
     const srcOftContractAddress = '0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34' // USDe OFT address on Base
     const destEndpointId = 30108 // Aptos Mainnet endpoint ID
-    const aptosComposerAddress = '0x3ee478eec9694d427fcfbcf8209b66ed09879681533cc949a9865479c0e38eae'
+    const aptosComposerAddress = 'YOUR_COMPOSER_ADDRESS'
     const amountToSend = ethers.BigNumber.from('100000000000000000') // 0.1 USDe
     const minAmountToSwapOnDest = ethers.BigNumber.from('9000000000000000') // 0.009 USDe
     const customRefundAddress = undefined
@@ -108,7 +108,7 @@ async function main() {
     // This is the wallet we are sending the tokens to after the swap
     // If swap fails, composer.move contract will send the unswapped amount to this wallet
     // See composer.move implementation for more details
-    const aptosDestWalletAddress = '0x3ee478eec9694d427fcfbcf8209b66ed09879681533cc949a9865479c0e38eae'
+    const aptosDestWalletAddress = 'YOUR_APTOS_WALLET_ADDRESS'
 
     // The OFT contracdt ABI must be loaded here in order for the call to the OFT send function to work
     const abiPath = path.join(__dirname, 'abi.json')
