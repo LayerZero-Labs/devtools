@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-aptos-example
 
+## 1.0.6
+
+### Patch Changes
+
+- 57c42dd: Updating to support aptos out of the box.
+
 ## 1.0.5
 
 ### Patch Changes
