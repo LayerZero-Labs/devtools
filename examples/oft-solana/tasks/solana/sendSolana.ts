@@ -111,7 +111,7 @@ export async function sendSolana({
             amountLd: amountUnits,
             minAmountLd: minAmount ? parseDecimalToUnits(minAmount, decimals) : amountUnits,
             options: Buffer.from(extraOptions ? extraOptions.toString() : ''),
-            composeMsg: Buffer.from(composeMsg ? composeMsg.toString() : '0x'),
+            composeMsg: composeMsg ? Buffer.from(composeMsg.toString()) : undefined,
         },
         { oft: programId }, // ← use override
         [],
@@ -134,7 +134,7 @@ export async function sendSolana({
             amountLd: amountUnits,
             minAmountLd: minAmount ? parseDecimalToUnits(minAmount, decimals) : amountUnits,
             options: Buffer.from(extraOptions ? extraOptions.toString() : ''),
-            composeMsg: Buffer.from(composeMsg ? composeMsg.toString() : '0x'),
+            composeMsg: composeMsg ? Buffer.from(composeMsg.toString()) : undefined,
             nativeFee: nativeFee,
         },
         { oft: programId, token: tokenProgramId } // ← use override
