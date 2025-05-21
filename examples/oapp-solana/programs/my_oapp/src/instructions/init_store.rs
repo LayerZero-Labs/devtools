@@ -22,14 +22,6 @@ pub struct InitStore<'info> {
         bump
     )]
     pub lz_receive_types_accounts: Account<'info, LzReceiveTypesAccounts>,
-    #[account(
-        init,
-        payer = payer,
-        space = LzComposeTypesAccounts::SIZE,
-        seeds = [LZ_COMPOSE_TYPES_SEED, &store.key().to_bytes()],
-        bump
-    )]
-    pub lz_compose_types_accounts: Account<'info, LzComposeTypesAccounts>,
     pub system_program: Program<'info, System>,
 }
 
@@ -41,7 +33,6 @@ impl InitStore<'_> {
         ctx.accounts.store.string = "Nothing received yet.".to_string();
 
         ctx.accounts.lz_receive_types_accounts.store = ctx.accounts.store.key();
-        ctx.accounts.lz_compose_types_accounts.store = ctx.accounts.store.key();
 
         // calling endpoint cpi
         let register_params = RegisterOAppParams { delegate: ctx.accounts.store.admin };

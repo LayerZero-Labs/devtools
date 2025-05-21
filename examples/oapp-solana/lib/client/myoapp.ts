@@ -104,7 +104,6 @@ export class MyOApp {
                     payer,
                     store: oapp,
                     lzReceiveTypesAccounts: this.pda.lzReceiveTypesAccounts()[0],
-                    lzComposeTypesAccounts: this.pda.lzComposeTypesAccounts()[0],
 
                     // args
                     admin: admin,

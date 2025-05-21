@@ -6,25 +6,8 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
-import {
-    Context,
-    Option,
-    OptionOrNullable,
-    Pda,
-    PublicKey,
-    TransactionBuilder,
-    transactionBuilder,
-} from '@metaplex-foundation/umi'
-import {
-    Serializer,
-    bool,
-    bytes,
-    mapSerializer,
-    option,
-    string,
-    struct,
-    u32,
-} from '@metaplex-foundation/umi/serializers'
+import { Context, Pda, PublicKey, TransactionBuilder, transactionBuilder } from '@metaplex-foundation/umi'
+import { Serializer, bool, bytes, mapSerializer, string, struct, u32 } from '@metaplex-foundation/umi/serializers'
 import { ResolvedAccount, ResolvedAccountsWithIndices, getAccountMetasAndSigners } from '../shared'
 
 // Accounts.
@@ -41,7 +24,6 @@ export type QuoteSendInstructionData = {
     receiver: Uint8Array
     message: string
     options: Uint8Array
-    composeMsg: Option<Uint8Array>
     payInLzToken: boolean
 }
 
@@ -50,7 +32,6 @@ export type QuoteSendInstructionDataArgs = {
     receiver: Uint8Array
     message: string
     options: Uint8Array
-    composeMsg: OptionOrNullable<Uint8Array>
     payInLzToken: boolean
 }
 
@@ -66,7 +47,6 @@ export function getQuoteSendInstructionDataSerializer(): Serializer<
                 ['receiver', bytes({ size: 32 })],
                 ['message', string()],
                 ['options', bytes({ size: u32() })],
-                ['composeMsg', option(bytes({ size: u32() }))],
                 ['payInLzToken', bool()],
             ],
             { description: 'QuoteSendInstructionData' }
@@ -87,7 +67,7 @@ export function quoteSend(
     input: QuoteSendInstructionAccounts & QuoteSendInstructionArgs
 ): TransactionBuilder {
     // Program ID.
-    const programId = context.programs.getPublicKey('myoapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
+    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
 
     // Accounts.
     const resolvedAccounts = {

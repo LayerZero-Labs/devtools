@@ -23,7 +23,7 @@ pub struct Send<'info> {
 }
 impl<'info> Send<'info> {
     pub fn apply(ctx: &mut Context<Send>, params: &SendMessageParams) -> Result<()> {
-        let message = msg_codec::encode(&params.message, params.compose_msg.as_deref());
+        let message = msg_codec::encode(&params.message);
         let seeds: &[&[u8]] = &[STORE_SEED, &[ctx.accounts.store.bump]];
 
         // calling endpoint cpi
@@ -35,7 +35,7 @@ impl<'info> Send<'info> {
                 .accounts
                 .peer
                 .enforced_options
-                .combine_options(&params.compose_msg, &params.options)?,
+                .combine_options( &None::<Vec<u8>>, &params.options)?,
             native_fee: params.native_fee,
             lz_token_fee: params.lz_token_fee,
         };
@@ -55,7 +55,6 @@ pub struct SendMessageParams {
     pub dst_eid: u32,
     pub message: String,
     pub options: Vec<u8>,
-    pub compose_msg: Option<Vec<u8>>, // not currently used
     pub native_fee: u64,
     pub lz_token_fee: u64,
 }

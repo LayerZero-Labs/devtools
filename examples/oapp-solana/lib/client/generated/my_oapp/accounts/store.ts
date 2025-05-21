@@ -26,7 +26,6 @@ import {
     publicKey as publicKeySerializer,
     string,
     struct,
-    u64,
     u8,
 } from '@metaplex-foundation/umi/serializers'
 
@@ -35,7 +34,6 @@ export type Store = Account<StoreAccountData>
 export type StoreAccountData = {
     discriminator: Uint8Array
     admin: PublicKey
-    composedCount: bigint
     bump: number
     endpointProgram: PublicKey
     string: string
@@ -43,7 +41,6 @@ export type StoreAccountData = {
 
 export type StoreAccountDataArgs = {
     admin: PublicKey
-    composedCount: number | bigint
     bump: number
     endpointProgram: PublicKey
     string: string
@@ -55,7 +52,6 @@ export function getStoreAccountDataSerializer(): Serializer<StoreAccountDataArgs
             [
                 ['discriminator', bytes({ size: 8 })],
                 ['admin', publicKeySerializer()],
-                ['composedCount', u64()],
                 ['bump', u8()],
                 ['endpointProgram', publicKeySerializer()],
                 ['string', string()],
@@ -122,22 +118,20 @@ export async function safeFetchAllStore(
 }
 
 export function getStoreGpaBuilder(context: Pick<Context, 'rpc' | 'programs'>) {
-    const programId = context.programs.getPublicKey('myoapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
+    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
     return gpaBuilder(context, programId)
         .registerFields<{
             discriminator: Uint8Array
             admin: PublicKey
-            composedCount: number | bigint
             bump: number
             endpointProgram: PublicKey
             string: string
         }>({
             discriminator: [0, bytes({ size: 8 })],
             admin: [8, publicKeySerializer()],
-            composedCount: [40, u64()],
-            bump: [48, u8()],
-            endpointProgram: [49, publicKeySerializer()],
-            string: [81, string()],
+            bump: [40, u8()],
+            endpointProgram: [41, publicKeySerializer()],
+            string: [73, string()],
         })
         .deserializeUsing<Store>((account) => deserializeStore(account))
         .whereField('discriminator', new Uint8Array([130, 48, 247, 244, 182, 191, 30, 26]))

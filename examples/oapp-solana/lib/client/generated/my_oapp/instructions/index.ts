@@ -7,8 +7,6 @@
  */
 
 export * from './initStore'
-export * from './lzCompose'
-export * from './lzComposeTypes'
 export * from './lzReceive'
 export * from './lzReceiveTypes'
 export * from './quoteSend'

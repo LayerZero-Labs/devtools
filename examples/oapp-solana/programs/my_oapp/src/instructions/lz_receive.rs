@@ -47,8 +47,7 @@ impl LzReceive<'_> {
         let count = &mut ctx.accounts.store;
         count.string = string_value;
 
-        // TODO: handle compose_msg
-
         Ok(())
     }
 }
+

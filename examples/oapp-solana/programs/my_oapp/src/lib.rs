@@ -5,7 +5,7 @@ mod state;
 
 use anchor_lang::prelude::*;
 use instructions::*;
-use oapp::{endpoint::MessagingFee, endpoint_cpi::LzAccount, LzComposeParams, LzReceiveParams};
+use oapp::{endpoint::MessagingFee, endpoint_cpi::LzAccount, LzReceiveParams};
 use solana_helper::program_id_from_env;
 use state::*;
 
@@ -15,7 +15,6 @@ declare_id!(anchor_lang::solana_program::pubkey::Pubkey::new_from_array(program_
 )));
 
 const LZ_RECEIVE_TYPES_SEED: &[u8] = b"LzReceiveTypes";
-const LZ_COMPOSE_TYPES_SEED: &[u8] = b"LzComposeTypes";
 const STORE_SEED: &[u8] = b"Store";
 const PEER_SEED: &[u8] = b"Peer";
 
@@ -57,14 +56,4 @@ pub mod my_oapp {
         LzReceiveTypes::apply(&ctx, &params)
     }
 
-    pub fn lz_compose(mut ctx: Context<LzCompose>, params: LzComposeParams) -> Result<()> {
-        LzCompose::apply(&mut ctx, &params)
-    }
-
-    pub fn lz_compose_types(
-        ctx: Context<LzComposeTypes>,
-        params: LzComposeParams,
-    ) -> Result<Vec<LzAccount>> {
-        LzComposeTypes::apply(&ctx, &params)
-    }
 }

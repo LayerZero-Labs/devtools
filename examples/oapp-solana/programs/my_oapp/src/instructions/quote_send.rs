@@ -24,7 +24,7 @@ pub struct QuoteSend<'info> {
 }
 impl<'info> QuoteSend<'info> {
     pub fn apply(ctx: &Context<QuoteSend>, params: &QuoteSendParams) -> Result<MessagingFee> {
-        let message = msg_codec::encode(&params.message, params.compose_msg.as_deref());
+        let message = msg_codec::encode(&params.message);
 
         // calling endpoint cpi
         let quote_params = QuoteParams {
@@ -37,7 +37,7 @@ impl<'info> QuoteSend<'info> {
                 .accounts
                 .peer
                 .enforced_options
-                .combine_options(&params.compose_msg, &params.options)?,
+                .combine_options(&None::<Vec<u8>>,&params.options)?,
         };
         oapp::endpoint_cpi::quote(ENDPOINT_ID, ctx.remaining_accounts, quote_params)
     }
@@ -49,6 +49,5 @@ pub struct QuoteSendParams {
     pub receiver: [u8; 32],
     pub message: String,
     pub options: Vec<u8>,
-    pub compose_msg: Option<Vec<u8>>,
     pub pay_in_lz_token: bool,
 }

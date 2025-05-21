@@ -19,7 +19,6 @@ contract MyOApp is OApp, OAppOptionsType3 {
      * @notice Sends a message from the source chain to a destination chain.
      * @param _dstEid The endpoint ID of the destination chain.
      * @param _message The message string to be sent.
-     * @param _composeMsg Extra “compose” bytes appended after the string.
      * @param _options Additional options for message execution.
      * @dev Encodes the message as bytes and sends it using the `_lzSend` internal function.
      * @return receipt A `MessagingReceipt` struct containing details of the message sent.
@@ -27,16 +26,10 @@ contract MyOApp is OApp, OAppOptionsType3 {
     function send(
         uint32 _dstEid,
         string calldata _message,
-        bytes calldata _composeMsg,
         bytes calldata _options
     ) external payable returns (MessagingReceipt memory receipt) {
-        bytes memory _payload = abi.encodePacked(
-            abi.encode(uint256(bytes(_message).length)),
-            bytes(_message),
-            _composeMsg
-        );
-        uint8 msgType = _composeMsg.length > 0 ? StringMsgCodec.COMPOSED_TYPE : StringMsgCodec.VANILLA_TYPE;
-        bytes memory options = combineOptions(_dstEid, msgType, _options);
+        bytes memory _payload = abi.encodePacked(abi.encode(uint256(bytes(_message).length)), bytes(_message));
+        bytes memory options = combineOptions(_dstEid, StringMsgCodec.VANILLA_TYPE, _options);
         receipt = _lzSend(_dstEid, _payload, options, MessagingFee(msg.value, 0), payable(msg.sender));
     }
 
@@ -51,17 +44,11 @@ contract MyOApp is OApp, OAppOptionsType3 {
     function quote(
         uint32 _dstEid,
         string calldata _message,
-        bytes calldata _composeMsg,
         bytes calldata _options,
         bool _payInLzToken
     ) public view returns (MessagingFee memory fee) {
-        bytes memory payload = abi.encodePacked(
-            abi.encode(uint256(bytes(_message).length)),
-            bytes(_message),
-            _composeMsg
-        );
-        uint8 msgType = _composeMsg.length > 0 ? StringMsgCodec.COMPOSED_TYPE : StringMsgCodec.VANILLA_TYPE;
-        bytes memory options = combineOptions(_dstEid, msgType, _options);
+        bytes memory payload = abi.encodePacked(abi.encode(uint256(bytes(_message).length)), bytes(_message));
+        bytes memory options = combineOptions(_dstEid, StringMsgCodec.VANILLA_TYPE, _options);
         fee = _quote(_dstEid, payload, options, _payInLzToken);
     }
 
@@ -84,8 +71,7 @@ contract MyOApp is OApp, OAppOptionsType3 {
         address /*_executor*/,
         bytes calldata /*_extraData*/
     ) internal override {
-        (string memory stringValue, ) = StringMsgCodec.decode(payload);
+        string memory stringValue = StringMsgCodec.decode(payload);
         data = stringValue;
-        // TODO: process _composeMsg
     }
 }

@@ -6,25 +6,8 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
-import {
-    Context,
-    Option,
-    OptionOrNullable,
-    Pda,
-    PublicKey,
-    TransactionBuilder,
-    transactionBuilder,
-} from '@metaplex-foundation/umi'
-import {
-    Serializer,
-    bytes,
-    mapSerializer,
-    option,
-    string,
-    struct,
-    u32,
-    u64,
-} from '@metaplex-foundation/umi/serializers'
+import { Context, Pda, PublicKey, TransactionBuilder, transactionBuilder } from '@metaplex-foundation/umi'
+import { Serializer, bytes, mapSerializer, string, struct, u32, u64 } from '@metaplex-foundation/umi/serializers'
 import { ResolvedAccount, ResolvedAccountsWithIndices, getAccountMetasAndSigners } from '../shared'
 
 // Accounts.
@@ -40,7 +23,6 @@ export type SendInstructionData = {
     dstEid: number
     message: string
     options: Uint8Array
-    composeMsg: Option<Uint8Array>
     nativeFee: bigint
     lzTokenFee: bigint
 }
@@ -49,7 +31,6 @@ export type SendInstructionDataArgs = {
     dstEid: number
     message: string
     options: Uint8Array
-    composeMsg: OptionOrNullable<Uint8Array>
     nativeFee: number | bigint
     lzTokenFee: number | bigint
 }
@@ -62,7 +43,6 @@ export function getSendInstructionDataSerializer(): Serializer<SendInstructionDa
                 ['dstEid', u32()],
                 ['message', string()],
                 ['options', bytes({ size: u32() })],
-                ['composeMsg', option(bytes({ size: u32() }))],
                 ['nativeFee', u64()],
                 ['lzTokenFee', u64()],
             ],
@@ -84,7 +64,7 @@ export function send(
     input: SendInstructionAccounts & SendInstructionArgs
 ): TransactionBuilder {
     // Program ID.
-    const programId = context.programs.getPublicKey('myoapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
+    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
 
     // Accounts.
     const resolvedAccounts = {

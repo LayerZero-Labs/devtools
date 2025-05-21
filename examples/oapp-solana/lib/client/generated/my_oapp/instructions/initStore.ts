@@ -21,7 +21,6 @@ export type InitStoreInstructionAccounts = {
     payer?: Signer
     store: PublicKey | Pda
     lzReceiveTypesAccounts: PublicKey | Pda
-    lzComposeTypesAccounts: PublicKey | Pda
     systemProgram?: PublicKey | Pda
 }
 
@@ -66,7 +65,7 @@ export function initStore(
     input: InitStoreInstructionAccounts & InitStoreInstructionArgs
 ): TransactionBuilder {
     // Program ID.
-    const programId = context.programs.getPublicKey('myoapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
+    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
 
     // Accounts.
     const resolvedAccounts = {
@@ -85,13 +84,8 @@ export function initStore(
             isWritable: true as boolean,
             value: input.lzReceiveTypesAccounts ?? null,
         },
-        lzComposeTypesAccounts: {
-            index: 3,
-            isWritable: true as boolean,
-            value: input.lzComposeTypesAccounts ?? null,
-        },
         systemProgram: {
-            index: 4,
+            index: 3,
             isWritable: false as boolean,
             value: input.systemProgram ?? null,
         },

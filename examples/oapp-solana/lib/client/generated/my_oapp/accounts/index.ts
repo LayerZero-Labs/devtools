@@ -7,7 +7,6 @@
  */
 
 export * from './endpointSettings'
-export * from './lzComposeTypesAccounts'
 export * from './lzReceiveTypesAccounts'
 export * from './peerConfig'
 export * from './store'

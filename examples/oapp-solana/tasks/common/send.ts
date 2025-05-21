@@ -82,12 +82,11 @@ async function sendFromEvm(dstEid: number, message: string, contractName: string
 
     const options = Options.newOptions().toHex().toString() // leaving empty, relying on enforced options instead
 
-    const composeMsg = '0x'
-    const [nativeFee] = await myOApp.quote(dstEid, message, composeMsg, options, false)
+    const [nativeFee] = await myOApp.quote(dstEid, message, options, false)
 
     console.log('🔖 Native fee quoted:', nativeFee.toString())
 
-    const txResponse = await myOApp.send(dstEid, message, composeMsg, options, {
+    const txResponse = await myOApp.send(dstEid, message, options, {
         value: nativeFee,
     })
     const txReceipt = await txResponse.wait()
