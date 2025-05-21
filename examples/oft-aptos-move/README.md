@@ -140,16 +140,16 @@ const movementContract: OmniPointHardhat = {
 
 ## Build and Deploy
 
-To build the contracts without deploying them, run the following command:
+To build the Move contracts run the standard compile script:
 
 ```bash
-pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --oapp-type oft
+pnpm compile
 ```
 
 To build and deploy the contracts, run the following command:
 
 ```bash
-pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --move-deploy-script deploy-move/OFTInitParams.ts --oapp-type oft
+npx hardhat lz:oft:aptos:deploy --oapp-config move.layerzero.config.ts --address-name oft --move-deploy-script deploy-move/OFTInitParams.ts --oapp-type oft
 ```
 
 ## EVM Deployment
@@ -177,13 +177,13 @@ const oftMetadata = {
 Then run the following command to set the delegate:
 
 ```bash
-pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
+npx hardhat lz:oft:aptos:set-delegate --oapp-config move.layerzero.config.ts
 ```
 
 Then run the following command to initialize the oft:
 
 ```bash
-pnpm run lz:sdk:move:init-fa --oapp-config move.layerzero.config.ts --move-deploy-script deploy-move/OFTInitParams.ts
+npx hardhat lz:oft:aptos:init-fa --oapp-config move.layerzero.config.ts --move-deploy-script deploy-move/OFTInitParams.ts
 ```
 
 ## Wire
@@ -217,7 +217,7 @@ If you are wiring solana to move-vm, create a file in `deployments/solana-mainne
 ### To wire from EVM to Move-VM:
 
 ```bash
-pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts
+npx hardhat lz:sdk:evm:wire --oapp-config move.layerzero.config.ts
 ```
 
 Note: `--simulate <true>` and `--mnemonic-index <value>` are optional.
@@ -229,19 +229,19 @@ If `--only-calldata <true>` is specified, only the calldata is generated and not
 > **⚠️ Important Security Consideration:** When configuring your `move.layerzero.config.ts` file, pay careful attention to the `confirmations` parameter. This value determines the number of block confirmations to wait on Aptos before emitting the message from the source chain. The default value of `5` is for illustration purposes only. For production deployments, it is critical to select an appropriate confirmation value based on your security requirements and risk assessment. Default recommended values can be found at: https://layerzeroscan.com/tools/defaults
 
 ```bash
-pnpm run lz:sdk:move:wire --oapp-config move.layerzero.config.ts
+npx hardhat lz:oft:aptos:wire --oapp-config move.layerzero.config.ts
 ```
 
 ## Set Fee
 
 ```bash
-pnpm run lz:sdk:move:set-fee --oapp-config move.layerzero.config.ts --fee-bps 1000 --to-eid number
+npx hardhat lz:oft:aptos:set-fee --oapp-config move.layerzero.config.ts --fee-bps 1000 --to-eid number
 ```
 
 ## Set Rate Limit
 
 ```bash
-pnpm run lz:sdk:move:set-rate-limit --oapp-config move.layerzero.config.ts --rate-limit 10000 --window-seconds 60 --to-eid number
+npx hardhat lz:oft:aptos:set-rate-limit --oapp-config move.layerzero.config.ts --rate-limit 10000 --window-seconds 60 --to-eid number
 ```
 
 Rate limit limits how much is sent netted by the amount that is received. It is set on a per pathway basis.
@@ -251,7 +251,7 @@ Window is the number of seconds over which the capacity is restored. If the rate
 ## Unset Rate Limit
 
 ```bash
-pnpm run lz:sdk:move:unset-rate-limit --oapp-config move.layerzero.config.ts --to-eid number
+npx hardhat lz:oft:aptos:unset-rate-limit --oapp-config move.layerzero.config.ts --to-eid number
 ```
 
 ## Permanently Disable Blocklist
@@ -259,7 +259,7 @@ pnpm run lz:sdk:move:unset-rate-limit --oapp-config move.layerzero.config.ts --t
 > ⚠️ **Warning**: This will permanently disable the blocklist for the OFT. It is for OFTs that want to demonstrate to their holders that they will never use blocklisting abilities.
 
 ```bash
-pnpm run lz:sdk:move:permanently-disable-blocklist --oapp-config move.layerzero.config.ts
+npx hardhat lz:oft:aptos:permanently-disable-blocklist --oapp-config move.layerzero.config.ts
 ```
 
 ## Permanently Disable Freezing
@@ -267,7 +267,7 @@ pnpm run lz:sdk:move:permanently-disable-blocklist --oapp-config move.layerzero.
 > ⚠️ **Warning**: This will permanently disable the freezing for the OFT. It is for OFTs that want to demonstrate to their holders that they will never use the freezing ability.
 
 ```bash
-pnpm run lz:sdk:move:permanently-disable-freezing --oapp-config move.layerzero.config.ts
+npx hardhat lz:oft:aptos:permanently-disable-freezing --oapp-config move.layerzero.config.ts
 ```
 
 ### Token address
@@ -309,19 +309,19 @@ First ensure that the delegate you wish to transfer to is specified in the move.
 Then run the following command:
 
 ```bash
-pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
+npx hardhat lz:oft:aptos:set-delegate --oapp-config move.layerzero.config.ts
 ```
 
 To transfer the OApp owner, run the following command:
 
 ```bash
-pnpm run lz:sdk:move:transfer-oapp-owner --oapp-config move.layerzero.config.ts --new-owner <new-owner-address>
+npx hardhat lz:oft:aptos:transfer-oapp-owner --oapp-config move.layerzero.config.ts --new-owner <new-owner-address>
 ```
 
 To transfer the Move-VM object owner, run the following command:
 
 ```bash
-pnpm run lz:sdk:move:transfer-object-owner --oapp-config move.layerzero.config.ts --new-owner <new-owner-address>
+npx hardhat lz:oft:aptos:transfer-object-owner --oapp-config move.layerzero.config.ts --new-owner <new-owner-address>
 ```
 
 Note: The object owner has the upgrade authority for the Object.
@@ -345,13 +345,13 @@ public entry fun mint(
 Then run the deploy, init, and wire commands again on this new oft. To utilize the mint function, run the following command:
 
 ```bash
-pnpm run lz:sdk:move:mint-to-move-oft --oapp-config move.layerzero.config.ts --amount-ld 1000000000000000000 --to-address <your-move-account-address>
+npx hardhat lz:oft:aptos:mint --oapp-config move.layerzero.config.ts --amount-ld 1000000000000000000 --to-address <your-move-account-address>
 ```
 
 ## Send from Move VM
 
 ```bash
-pnpm run lz:sdk:move:send-from-move-oft \
+npx hardhat lz:oft:aptos:send \
   --oapp-config move.layerzero.config.ts \
   --amount-ld <your-amount-ld> \
   --min-amount-ld <your-min-amount-ld> \
