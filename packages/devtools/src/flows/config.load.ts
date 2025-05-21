@@ -78,7 +78,7 @@ export const createConfigLoadFlow =
             try {
                 rawConfigMaterialized = await rawConfig()
             } catch (error) {
-                throw new Error(`Got an exception while executing config funtion from file '${configPath}': ${error}`)
+                throw new Error(`Got an exception while executing config function from file '${configPath}': ${error}`)
             }
         } else {
             logger.verbose(`Using exported value from config file '${absolutePath}'`)

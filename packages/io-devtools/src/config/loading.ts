@@ -47,7 +47,7 @@ export const createConfigLoader =
             try {
                 rawConfigMaterialized = await rawConfig()
             } catch (error) {
-                throw new Error(`Got an exception while executing config funtion from file '${path}': ${error}`)
+                throw new Error(`Got an exception while executing config function from file '${path}': ${error}`)
             }
         } else {
             logger.verbose(`Using exported value from config file '${absolutePath}'`)

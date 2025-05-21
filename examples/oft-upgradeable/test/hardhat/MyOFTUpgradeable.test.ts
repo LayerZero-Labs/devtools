@@ -78,11 +78,11 @@ describe('MyOFTUpgradeable Test', () => {
         )
         // ensure the implementation address changed
         expect(myOFTUpgradeableImpl).to.not.equal(myOFTUpgradeableMockImpl)
-        const [intialBalance] = await myOFTUpgradeableMock.functions.balanceOf(ownerA.address)
+        const [initialBalance] = await myOFTUpgradeableMock.functions.balanceOf(ownerA.address)
         // ensure we can mint now
         await (await myOFTUpgradeableMock.functions.mint(ownerA.address, 100)).wait()
         const [finalBalance] = await myOFTUpgradeableMock.functions.balanceOf(ownerA.address)
-        expect(finalBalance.toNumber()).to.equal(intialBalance.add(100).toNumber())
+        expect(finalBalance.toNumber()).to.equal(initialBalance.add(100).toNumber())
 
         // Downgrade the contract to remove mint
         const myOFTUpgradeableAgain = await upgrades.upgradeProxy(myOFTUpgradeableMock.address, MyOFTUpgradeable, {
