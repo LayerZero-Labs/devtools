@@ -8,7 +8,6 @@
 
 export * from './enforcedOptions'
 export * from './lzAccount'
-export * from './lzComposeParams'
 export * from './lzReceiveParams'
 export * from './messagingFee'
 export * from './peerConfigParam'

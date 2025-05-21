@@ -40,7 +40,6 @@ const ENDPOINT_PROGRAM_ID: PublicKey = EndpointProgram.ENDPOINT_PROGRAM_ID
 
 export enum MessageType {
     VANILLA = 1,
-    COMPOSED_TYPE = 2,
 }
 
 export class OmniCounter {
@@ -97,7 +96,6 @@ export class OmniCounter {
                     payer,
                     count: oapp,
                     lzReceiveTypesAccounts: this.pda.lzReceiveTypesAccounts()[0],
-                    lzComposeTypesAccounts: this.pda.lzComposeTypesAccounts()[0],
 
                     // args
                     admin: admin,

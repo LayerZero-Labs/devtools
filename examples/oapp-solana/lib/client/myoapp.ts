@@ -41,7 +41,6 @@ const ENDPOINT_PROGRAM_ID: PublicKey = EndpointProgram.ENDPOINT_PROGRAM_ID
 
 export enum MessageType {
     VANILLA = 1,
-    COMPOSED_TYPE = 2,
 }
 
 export class MyOApp {
@@ -104,7 +103,6 @@ export class MyOApp {
                     payer,
                     store: oapp,
                     lzReceiveTypesAccounts: this.pda.lzReceiveTypesAccounts()[0],
-                    lzComposeTypesAccounts: this.pda.lzComposeTypesAccounts()[0],
 
                     // args
                     admin: admin,
@@ -121,12 +119,11 @@ export class MyOApp {
             dstEid: number
             message: string
             options: Uint8Array
-            composeMsg?: Uint8Array
         },
         remainingAccounts?: AccountMeta[],
         commitment: Commitment = 'confirmed'
     ): Promise<WrappedInstruction> {
-        const { dstEid, nativeFee, lzTokenFee, message, options, composeMsg } = params
+        const { dstEid, nativeFee, lzTokenFee, message, options } = params
         const msgLibProgram = await this.getSendLibraryProgram(rpc, payer, dstEid)
         const [oapp] = this.pda.oapp()
         const [peer] = this.pda.peer(dstEid)
@@ -160,7 +157,6 @@ export class MyOApp {
                     // args
                     dstEid,
                     message,
-                    composeMsg: composeMsg ?? null,
                     options,
                     nativeFee: nativeFee,
                     lzTokenFee: lzTokenFee ?? 0,
@@ -215,13 +211,12 @@ export class MyOApp {
             dstEid: number
             message: string
             options: Uint8Array
-            composeMsg?: Uint8Array
             payInLzToken: boolean
         },
         remainingAccounts?: AccountMeta[],
         commitment: Commitment = 'confirmed'
     ): Promise<EndpointProgram.types.MessagingFee> {
-        const { dstEid, message, options, payInLzToken, composeMsg } = params
+        const { dstEid, message, options, payInLzToken } = params
         const msgLibProgram = await this.getSendLibraryProgram(rpc, payer, dstEid)
         const [oapp] = this.pda.oapp()
 
@@ -254,7 +249,6 @@ export class MyOApp {
                     // args
                     dstEid,
                     message,
-                    composeMsg: composeMsg ?? null,
                     options,
                     payInLzToken,
                     receiver: packetPath.receiver,

@@ -21,7 +21,6 @@ export type InitStoreInstructionAccounts = {
     payer?: Signer
     store: PublicKey | Pda
     lzReceiveTypesAccounts: PublicKey | Pda
-    lzComposeTypesAccounts: PublicKey | Pda
     systemProgram?: PublicKey | Pda
 }
 
@@ -85,13 +84,8 @@ export function initStore(
             isWritable: true as boolean,
             value: input.lzReceiveTypesAccounts ?? null,
         },
-        lzComposeTypesAccounts: {
-            index: 3,
-            isWritable: true as boolean,
-            value: input.lzComposeTypesAccounts ?? null,
-        },
         systemProgram: {
-            index: 4,
+            index: 3,
             isWritable: false as boolean,
             value: input.systemProgram ?? null,
         },

@@ -1,5 +1,5 @@
 use crate::*;
-use oapp::endpoint_cpi::{get_accounts_for_clear, get_accounts_for_send_compose, LzAccount};
+use oapp::endpoint_cpi::{get_accounts_for_clear, LzAccount};
 use oapp::{endpoint::ID as ENDPOINT_ID, LzReceiveParams};
 
 /// LzReceiveTypes instruction provides a list of accounts that are used in the LzReceive
@@ -48,19 +48,7 @@ impl LzReceiveTypes<'_> {
         );
         accounts.extend(accounts_for_clear);
 
-        // if the message type is composed, we need to append the accounts for the endpoint::send_compose CPI.
-        let is_composed = msg_codec::msg_type(&params.message) == msg_codec::COMPOSED_TYPE;
-        if is_composed {
-            let accounts_for_composing = get_accounts_for_send_compose(
-                ENDPOINT_ID,
-                &store,
-                &store, // self
-                &params.guid,
-                0,
-                &params.message,
-            );
-            accounts.extend(accounts_for_composing);
-        }
+
 
         Ok(accounts)
     }

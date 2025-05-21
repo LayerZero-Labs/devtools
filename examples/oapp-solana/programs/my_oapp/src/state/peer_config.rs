@@ -23,20 +23,15 @@ pub struct EnforcedOptions {
 }
 
 impl EnforcedOptions {
-    pub fn get_enforced_options(&self, composed_msg: &Option<Vec<u8>>) -> Vec<u8> {
-        if composed_msg.is_none() {
-            self.send.clone()
-        } else {
-            self.send_and_call.clone()
-        }
+    pub fn get_enforced_options(&self) -> Vec<u8> {
+        self.send.clone()
     }
 
     pub fn combine_options(
         &self,
-        compose_msg: &Option<Vec<u8>>,
         extra_options: &Vec<u8>,
     ) -> Result<Vec<u8>> {
-        let enforced_options = self.get_enforced_options(compose_msg);
+        let enforced_options = self.get_enforced_options();
         oapp::options::combine_options(enforced_options, extra_options)
     }
 }
