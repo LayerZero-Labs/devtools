@@ -961,7 +961,7 @@ importers:
         specifier: ^2.3.39
         version: 2.3.44
       '@layerzerolabs/protocol-devtools':
-        specifier: workspace:^1.1.6
+        specifier: ^1.1.6
         version: link:../../packages/protocol-devtools
       '@layerzerolabs/protocol-devtools-solana':
         specifier: ~4.0.9

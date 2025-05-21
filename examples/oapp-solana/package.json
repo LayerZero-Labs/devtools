@@ -47,7 +47,7 @@
     "@layerzerolabs/metadata-tools": "^0.4.1",
     "@layerzerolabs/oapp-evm": "^0.3.2",
     "@layerzerolabs/prettier-config-next": "^2.3.39",
-    "@layerzerolabs/protocol-devtools": "workspace:^1.1.6",
+    "@layerzerolabs/protocol-devtools": "^1.1.6",
     "@layerzerolabs/protocol-devtools-solana": "~4.0.9",
     "@layerzerolabs/solhint-config": "^3.0.12",
     "@layerzerolabs/test-devtools-evm-foundry": "~6.0.3",

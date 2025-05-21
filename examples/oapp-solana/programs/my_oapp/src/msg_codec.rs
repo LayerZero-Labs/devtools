@@ -2,7 +2,7 @@
 pub const VANILLA_TYPE: u8 = 1;
 pub const COMPOSED_TYPE: u8 = 2;
 
-// Just like OFT, we don't need an explicity MSG_TYPE param
+// Just like OFT, we don't need an explicit MSG_TYPE param
 // Instead, we'll check whether there's data after the string ends
 pub const LENGTH_OFFSET: usize = 0;
 pub const STRING_OFFSET: usize = 32;
