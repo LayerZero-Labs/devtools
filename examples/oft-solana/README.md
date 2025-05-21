@@ -183,7 +183,7 @@ sh -c "$(curl -sSfL https://release.anza.xyz/v1.18.26/install)"
 
 ##### (Recommended) Deploying with a priority fee
 
-The `deploy` command will deploy with a priority fee. Read the section on ['Deploying Solana programs with a priority fee
+The `deploy` command will run with a priority fee. Read the section on ['Deploying Solana programs with a priority fee
 '](https://docs.layerzero.network/v2/developers/solana/technical-reference/solana-guidance#deploying-solana-programs-with-a-priority-fee) to learn more.
 
 ##### Run the deploy command
