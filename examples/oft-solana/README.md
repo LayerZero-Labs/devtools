@@ -326,19 +326,23 @@ For Solana -> Sepolia, you should pass in the options value into the script at [
 
 ### Send
 
-#### Send SOL -> Sepolia
+#### Send From Solana Devnet -> To Ethereum Sepolia
 
 ```bash
-npx hardhat lz:oft:solana:send --amount <AMOUNT> --from-eid 40168 --to <TO> --to-eid 40161
+npx hardhat lz:oft:send --src-eid 40168 --dst-eid 40161 --to <RECEIVER_BYTES20>  --amount <AMOUNT>
 ```
 
-#### Send Sepolia -> SOL
+#### Send From Ethereum Sepolia -> To Solana Devnet
 
 ```bash
-npx hardhat --network sepolia-testnet send --dst-eid 40168 --amount <AMOUNT> --to <TO>
+npx hardhat lz:oft:send --src-eid 40161 --dst-eid 40168 --to <RECEIVER_BASE58>  --amount <AMOUNT>
 ```
 
-:information_source: If you encounter an error such as `No Contract deployed with name`, ensure that the `tokenName` in the task defined in `tasks/evm/send.ts` matches the deployed contract name.
+For more information, run:
+
+```bash
+npx hardhat lz:oft:send --help
+```
 
 ### Set a new Mint Authority Multisig
 
