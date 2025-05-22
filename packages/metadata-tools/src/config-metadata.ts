@@ -1,6 +1,6 @@
 import type { OmniEdgeHardhat } from '@layerzerolabs/devtools-evm-hardhat'
 import type { OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
-import { IMetadata } from './types'
+import { BlockConfirmationsType, IMetadata } from './types'
 import { TwoWayConfig } from './types'
 import { BLOCKED_MESSAGE_LIB_INDICATOR, METADATA_URL, NIL_DVN_COUNT } from './constants'
 
@@ -164,19 +164,23 @@ export async function translatePathwayToConfig(
         BOptionalDVNs = DVNsToAddresses(optionalDVNs, BLZDeployment.chainKey, metadata)
     }
 
-    const AToBConfirmations: number =
-        typeof AToBConfirmationsDefinition === 'number' ? AToBConfirmationsDefinition : AToBConfirmationsDefinition[0]
-    const BToAConfirmations: number | undefined =
-        typeof BToAConfirmationsDefinition === 'number' ? BToAConfirmationsDefinition : BToAConfirmationsDefinition?.[0]
+    const AToBConfirmations: BlockConfirmationsType = ['bigint', 'number'].includes(typeof AToBConfirmationsDefinition)
+        ? AToBConfirmationsDefinition
+        : AToBConfirmationsDefinition[0]
+    const BToAConfirmations: BlockConfirmationsType | undefined = ['bigint', 'number'].includes(
+        typeof BToAConfirmationsDefinition
+    )
+        ? BToAConfirmationsDefinition
+        : BToAConfirmationsDefinition?.[0]
 
     const blockSendAToB: boolean = Boolean(
         AToBConfirmationsDefinition &&
-            typeof AToBConfirmationsDefinition !== 'number' &&
+            !['bigint', 'number'].includes(typeof AToBConfirmationsDefinition) &&
             AToBConfirmationsDefinition[1] === BLOCKED_MESSAGE_LIB_INDICATOR
     )
     const blockSendBToA: boolean = Boolean(
         BToAConfirmationsDefinition &&
-            typeof BToAConfirmationsDefinition !== 'number' &&
+            !['bigint', 'number'].includes(typeof BToAConfirmationsDefinition) &&
             BToAConfirmationsDefinition[1] === BLOCKED_MESSAGE_LIB_INDICATOR
     )
 

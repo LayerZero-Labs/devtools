@@ -2,14 +2,18 @@ import type { OmniPointHardhat } from '@layerzerolabs/devtools-evm-hardhat'
 import type { OAppEnforcedOption } from '@layerzerolabs/ua-devtools'
 import { BLOCKED_MESSAGE_LIB_INDICATOR } from './constants'
 
-export type CUSTOM_MESSAGE_LIBRARY_TYPE = typeof BLOCKED_MESSAGE_LIB_INDICATOR
+export type CustomMessageLibraryType = typeof BLOCKED_MESSAGE_LIB_INDICATOR
+export type BlockConfirmationsType = number | bigint
 
 // [AContract, BContract, [requiredDVNs, [optionalDVNs, threshold]], [AToBConfirmations, BToAConfirmations]], [enforcedOptionsAToB, enforcedOptionsBToA], customExecutor?]
 export type TwoWayConfig = [
     OmniPointHardhat, // AContract
     OmniPointHardhat, // BContract
     [string[], [string[], number] | []], // [requiredDVNs, [optionalDVNs, threshold]]
-    [number | [number, CUSTOM_MESSAGE_LIBRARY_TYPE], number | [number, CUSTOM_MESSAGE_LIBRARY_TYPE] | undefined], // [AToBConfirmations, BToAConfirmations]
+    [
+        BlockConfirmationsType | [BlockConfirmationsType, CustomMessageLibraryType],
+        BlockConfirmationsType | [BlockConfirmationsType, CustomMessageLibraryType] | undefined,
+    ], // [AToBConfirmations, BToAConfirmations]
     [OAppEnforcedOption[] | undefined, OAppEnforcedOption[] | undefined], // [enforcedOptionsAToB, enforcedOptionsBToA]
     string?, // customExecutor (optional)
 ]

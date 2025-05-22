@@ -10,7 +10,7 @@ import fujiMetadata from './data/fuji.json'
 import polygonMainnetMetadata from './data/polygon-mainnet.json'
 import solanaMainnetMetadata from './data/solana-mainnet.json'
 import solanaTestnetMetadata from './data/solana-testnet.json'
-import { BLOCKED_MESSAGE_LIB_INDICATOR, NIL_DVN_COUNT } from '@/constants'
+import { BLOCKED_MESSAGE_LIB_INDICATOR, NIL_CONFIRMATIONS, NIL_DVN_COUNT } from '@/constants'
 
 describe('config-metadata', () => {
     const metadata: IMetadata = {
@@ -400,6 +400,31 @@ describe('config-metadata', () => {
             expect(config[1]?.config?.receiveLibraryConfig?.receiveLibrary).toBe(
                 solanaTestnetMetadata.deployments?.find((d) => d.version === 2)?.blocked_messagelib?.address
             )
+        })
+
+        it('supports NIL_CONFIRMATIONS', async () => {
+            const avalancheContract = {
+                eid: 40106,
+                contractName: 'MyOFT',
+            }
+
+            const solanaContract = {
+                eid: 40168,
+                address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy',
+            }
+
+            const pathways: TwoWayConfig[] = [
+                [
+                    avalancheContract,
+                    solanaContract,
+                    [[], []],
+                    [NIL_CONFIRMATIONS, NIL_CONFIRMATIONS],
+                    [undefined, undefined],
+                ],
+            ]
+
+            const config = await generateConnectionsConfig(pathways)
+            expect(config).toMatchSnapshot()
         })
     })
 
