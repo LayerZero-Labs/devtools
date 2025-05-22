@@ -21,7 +21,7 @@ contract RescueDVN is Ownable {
     IReceiveUlnE2 public immutable verifyUln;
     IUltraLightNode301 public immutable commitUln;
 
-    /// @param _receiveUln  Address of deployed ReceiveUlnE2
+    /// @param _receiveUln  Address of this chain's deployed ReceiveUln301
     /// @param _localEid    EID of this chain (receive side)
     constructor(address _receiveUln, uint32 _localEid) {
         verifyUln = IReceiveUlnE2(_receiveUln);
