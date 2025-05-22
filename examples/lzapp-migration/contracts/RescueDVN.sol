@@ -21,14 +21,12 @@ contract RescueDVN is Ownable {
     IReceiveUlnE2 public immutable verifyUln;
     IUltraLightNode301 public immutable commitUln;
 
-
-
     /// @param _receiveUln  Address of deployed ReceiveUlnE2
     /// @param _localEid    EID of this chain (receive side)
     constructor(address _receiveUln, uint32 _localEid) {
         verifyUln = IReceiveUlnE2(_receiveUln);
         commitUln = IUltraLightNode301(_receiveUln);
-        localEid   = _localEid;
+        localEid = _localEid;
     }
 
     /**
@@ -43,10 +41,10 @@ contract RescueDVN is Ownable {
      */
     function verifyStuckSend(
         bytes memory _message,
-        uint64  _nonce,
-        uint32  _remoteEid,
+        uint64 _nonce,
+        uint32 _remoteEid,
         bytes32 _remoteOApp,
-        uint32  _localEid,
+        uint32 _localEid,
         address _localOApp
     ) external onlyOwner {
         // Convert local EVM address to bytes32 for GUID and header
@@ -74,16 +72,16 @@ contract RescueDVN is Ownable {
 
     function commitStuckSend(
         bytes memory _message,
-        uint64  _nonce,
-        uint32  _remoteEid,
+        uint64 _nonce,
+        uint32 _remoteEid,
         bytes32 _remoteOApp,
-        uint32  _localEid,
+        uint32 _localEid,
         address _localOApp,
         uint256 _gasLimit
     ) external onlyOwner {
         // Convert local EVM address to bytes32 for GUID and header
         bytes32 localOAppB32 = bytes32(uint256(uint160(_localOApp)));
-         /*
+        /*
          * 1. Rebuild ULN-301 GUID:
          *    keccak256(_nonce || _remoteEid || _remoteOApp || _localEid || localAppB32)
          * Using bytes32 for _remoteOApp means no assumption on address encoding.
@@ -100,29 +98,19 @@ contract RescueDVN is Ownable {
      * Works on arbitrary bytes32 sender/receiver values.
      */
     function _encodeHeader(
-        uint64  _nonce,
-        uint32  _srcEid,
+        uint64 _nonce,
+        uint32 _srcEid,
         bytes32 _sender,
-        uint32  _dstEid,
+        uint32 _dstEid,
         bytes32 _receiver
     ) internal pure returns (bytes memory) {
-        return abi.encodePacked(
-            PACKET_VERSION,
-            _nonce,
-            _srcEid,
-            _sender,
-            _dstEid,
-            _receiver
-        );
+        return abi.encodePacked(PACKET_VERSION, _nonce, _srcEid, _sender, _dstEid, _receiver);
     }
 
     /**
      * @dev Encodes payload portion (GUID + message) for ULN-301.
      */
-    function _encodePayload(
-        bytes32 _guid,
-        bytes memory _message
-    ) internal pure returns (bytes memory) {
+    function _encodePayload(bytes32 _guid, bytes memory _message) internal pure returns (bytes memory) {
         return abi.encodePacked(_guid, _message);
     }
 
@@ -133,15 +121,7 @@ contract RescueDVN is Ownable {
         uint32 _dstEid,
         bytes32 _receiver
     ) internal pure returns (bytes32) {
-        bytes32 guid = keccak256(
-            abi.encodePacked(
-                _nonce,
-                _srcEid,
-                _sender,
-                _dstEid,
-                _receiver
-            )
-        );
+        bytes32 guid = keccak256(abi.encodePacked(_nonce, _srcEid, _sender, _dstEid, _receiver));
         return guid;
     }
 }

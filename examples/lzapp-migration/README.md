@@ -335,18 +335,20 @@ The RescueDVN is a specialized Decentralized Verifier Network (DVN) designed to 
 ### Key Components
 
 #### 1. Contract Structure
+
 ```solidity
 contract RescueDVN is Ownable {
-    uint8 public constant PACKET_VERSION = 1;
-    uint32 public immutable localEid;
-    IReceiveUlnE2 public immutable verifyUln;
-    IUltraLightNode301 public immutable commitUln;
+  uint8 public constant PACKET_VERSION = 1;
+  uint32 public immutable localEid;
+  IReceiveUlnE2 public immutable verifyUln;
+  IUltraLightNode301 public immutable commitUln;
 }
 ```
 
 #### 2. Main Functions
 
 ##### `verifyStuckSend`
+
 ```solidity
 function verifyStuckSend(
     bytes memory _message,
@@ -357,11 +359,14 @@ function verifyStuckSend(
     address _localOApp
 ) external onlyOwner
 ```
+
 This function verifies a stuck message by:
+
 1. Rebuilding the ULN-301 GUID
 2. Calling the ULN verify function with a confirmation count of 1
 
 ##### `commitStuckSend`
+
 ```solidity
 function commitStuckSend(
     bytes memory _message,
@@ -373,7 +378,9 @@ function commitStuckSend(
     uint256 _gasLimit
 ) external onlyOwner
 ```
+
 This function commits the verification by:
+
 1. Rebuilding the ULN-301 GUID
 2. Encoding the full packet
 3. Calling commitVerification on the ULN
@@ -381,11 +388,13 @@ This function commits the verification by:
 ### Usage Flow
 
 #### 1. Deploy RescueDVN
+
 ```bash
 npx hardhat deploy --tags RescueDVN --network <network>
 ```
 
 #### 2. Configure ReceiveUln301
+
 For ReceiveUln301, you need to set both DVN and Executor configurations:
 
 ```bash
@@ -398,6 +407,7 @@ npx hardhat lz:lzapp:set-receive-config \
 ```
 
 For ReceiveUln302, only the DVN configuration is needed:
+
 ```bash
 npx hardhat lz:lzapp:set-receive-config \
   --contract-name MyEndpointV1OFTV2Mock \
@@ -407,6 +417,7 @@ npx hardhat lz:lzapp:set-receive-config \
 ```
 
 #### 3. Set Trusted Remote
+
 ```bash
 npx hardhat lz:lzapp:set-trusted-remote \
   --address <REMOTE_ADDRESS> \
@@ -416,6 +427,7 @@ npx hardhat lz:lzapp:set-trusted-remote \
 ```
 
 #### 4. Rescue Stuck Funds
+
 To rescue stuck funds, you will create a message with the same encoded-spec as your OApp's MsgCodec.
 
 You can then call `RescueDVN::verifyStuckSend` to verify that message, before having it committed and executed via `RescueDVN::commitStuckSend`.
@@ -423,6 +435,7 @@ You can then call `RescueDVN::verifyStuckSend` to verify that message, before ha
 For example, the tasks provided below automatically formats `AMOUNT` and `TO_ADDRESS` to the correct encoding expected by the `MyEndpointV1OFTV2Mock::lzReceive` implementation.
 
 ##### Verify and Commit
+
 ```bash
 npx hardhat lz:rescue:verify-stuck-send \
   --contract-name RescueDVN \
@@ -453,15 +466,18 @@ npx hardhat lz:rescue:commit-stuck-send \
 ### Important Notes
 
 1. **ReceiveUln301 vs ReceiveUln302**:
+
    - ReceiveUln301 requires both DVN and Executor configurations
    - ReceiveUln302 only requires DVN configuration as execution is permissionless
 
 2. **Security Considerations**:
+
    - The RescueDVN is controlled by the owner
    - It should only be used in emergency situations
    - The owner should be a trusted multisig or governance contract
 
 3. **Usage Context**:
+
    - This should only be used when funds are genuinely stuck
    - The RescueDVN acts as a trusted DVN that can verify any payload
    - It's particularly useful for recovering funds from failed OFT transfers
