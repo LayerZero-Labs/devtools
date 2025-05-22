@@ -130,10 +130,17 @@ Using such configuration will mean that your OApp doesn't require any DVN to alw
 
 Blocked Messaged Library is a library that can be used both on block messages on certain pathway. It might be useful for some scenarios eg. migration, or when you no longer need specific pathway to be operational.
 
-Simple Config supports setting Blocked Message Library by using following syntax (notice change in the place for block confirmations):
+Simple Config supports setting Blocked Message Library using three options:
+```typescript
+export const MSG_LIB_BLOCK_SEND_AND_RECEIVE = 'BLOCK_SEND_AND_RECEIVE'
+export const MSG_LIB_BLOCK_SEND_ONLY = 'BLOCK_SEND_ONLY'
+export const MSG_LIB_BLOCK_RECEIVE_ONLY = 'BLOCK_RECEIVE_ONLY'
+```
+
+Example of blocking both send and receive for pathway A to B:
 
 ```typescript
-import { generateConnectionsConfig, BLOCKED_MESSAGE_LIB_INDICATOR } from '@layerzerolabs/metadata-tools';
+import { generateConnectionsConfig, MSG_LIB_BLOCK_SEND_AND_RECEIVE } from '@layerzerolabs/metadata-tools';
 
 // ...
 
@@ -142,7 +149,7 @@ const pathways: TwoWayConfig[] = [
         ethereumContract,
         bscContract,
         [['LayerZero Labs'], []],
-        [[15, BLOCKED_MESSAGE_LIB_INDICATOR], 20], // BLOCKED_MESSAGE_LIB_INDICATOR
+        [[15, MSG_LIB_BLOCK_SEND_AND_RECEIVE], 20],
         [undefined, undefined],
     ],
 ]
@@ -150,7 +157,7 @@ const pathways: TwoWayConfig[] = [
 
 Using above configuration will set Blocked Message Library as Send Library on pathway from Chain A to B and as Receive Library for messages coming to chain B from A. This means that both Sending Messages from A to B will be blocked as well as receiving messages on B from A will be blocked.
 
-Blocked configuration in the above example has been set only for A to B, so it means that pathway B to A will operate normally. 
+Blocked configuration in the above example has been set only for A to B, so it means that pathway B to A will operate normally. You can however also use remaining: `MSG_LIB_BLOCK_SEND_ONLY` and `MSG_LIB_BLOCK_RECEIVE_ONLY` which will block messages only in respective direction.
 
 #### With custom Executor
 

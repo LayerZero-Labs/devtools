@@ -5,15 +5,23 @@ import {
     translatePathwayToConfig,
 } from '@/config-metadata'
 import { IMetadataDvns, IMetadataExecutors, IMetadata, TwoWayConfig } from '@/types'
+import {
+    MSG_LIB_BLOCK_RECEIVE_ONLY,
+    MSG_LIB_BLOCK_SEND_AND_RECEIVE,
+    MSG_LIB_BLOCK_SEND_ONLY,
+    NIL_CONFIRMATIONS,
+    NIL_DVN_COUNT,
+} from '@/constants'
 
 import fujiMetadata from './data/fuji.json'
 import polygonMainnetMetadata from './data/polygon-mainnet.json'
 import solanaMainnetMetadata from './data/solana-mainnet.json'
 import solanaTestnetMetadata from './data/solana-testnet.json'
-import { BLOCKED_MESSAGE_LIB_INDICATOR, NIL_CONFIRMATIONS, NIL_DVN_COUNT } from '@/constants'
+import dummyIncompleteMetadata from './data/dummy-incomplete.json'
 
 describe('config-metadata', () => {
     const metadata: IMetadata = {
+        dummy: dummyIncompleteMetadata,
         fuji: fujiMetadata,
         solana: solanaMainnetMetadata,
         polygon: polygonMainnetMetadata,
@@ -21,13 +29,6 @@ describe('config-metadata', () => {
     }
 
     describe('generateConnectionsConfig', () => {
-        const metadata: IMetadata = {
-            fuji: fujiMetadata,
-            solana: solanaMainnetMetadata,
-            polygon: polygonMainnetMetadata,
-            'solana-testnet': solanaTestnetMetadata,
-        }
-
         it('should allow for call without custom params', async () => {
             const avalancheContract = {
                 eid: 40106,
@@ -68,6 +69,7 @@ describe('config-metadata', () => {
             const config = await generateConnectionsConfig(pathways, { fetchMetadata: mockFetchMetadata })
             expect(config).toMatchSnapshot()
         })
+
         it('should allow for custom DVNs in the metadata', async () => {
             // extend the Solana DVNs with custom DVN(s)
             const solanaTestnetDVNsWithCustom: IMetadataDvns = {
@@ -329,7 +331,7 @@ describe('config-metadata', () => {
             expect(config).toMatchSnapshot()
         })
 
-        it('supports using block send library for A to B', async () => {
+        it('supports using block send and receive for A to B', async () => {
             const avalancheContract = {
                 eid: 40106,
                 contractName: 'MyOFT',
@@ -345,7 +347,7 @@ describe('config-metadata', () => {
                     avalancheContract,
                     solanaContract,
                     [['LayerZero Labs'], []],
-                    [[1, BLOCKED_MESSAGE_LIB_INDICATOR], 1],
+                    [[1, MSG_LIB_BLOCK_SEND_AND_RECEIVE], 1],
                     [undefined, undefined],
                 ],
             ]
@@ -361,7 +363,7 @@ describe('config-metadata', () => {
             )
         })
 
-        it('supports using block send library for both A to B and B to A', async () => {
+        it('supports using block send and receive for both A to B and B to A', async () => {
             const avalancheContract = {
                 eid: 40106,
                 contractName: 'MyOFT',
@@ -378,8 +380,8 @@ describe('config-metadata', () => {
                     solanaContract,
                     [['LayerZero Labs'], []],
                     [
-                        [1, BLOCKED_MESSAGE_LIB_INDICATOR],
-                        [1, BLOCKED_MESSAGE_LIB_INDICATOR],
+                        [1, MSG_LIB_BLOCK_SEND_AND_RECEIVE],
+                        [1, MSG_LIB_BLOCK_SEND_AND_RECEIVE],
                     ],
                     [undefined, undefined],
                 ],
@@ -399,6 +401,115 @@ describe('config-metadata', () => {
             )
             expect(config[1]?.config?.receiveLibraryConfig?.receiveLibrary).toBe(
                 solanaTestnetMetadata.deployments?.find((d) => d.version === 2)?.blocked_messagelib?.address
+            )
+        })
+
+        it('supports using block send only for A to B', async () => {
+            const avalancheContract = {
+                eid: 40106,
+                contractName: 'MyOFT',
+            }
+
+            const solanaContract = {
+                eid: 40168,
+                address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy',
+            }
+
+            const pathways: TwoWayConfig[] = [
+                [
+                    avalancheContract,
+                    solanaContract,
+                    [['LayerZero Labs'], []],
+                    [[1, MSG_LIB_BLOCK_SEND_ONLY], 1],
+                    [undefined, undefined],
+                ],
+            ]
+
+            const config = await generateConnectionsConfig(pathways)
+
+            expect(config[0]?.config?.sendLibrary).toBe(
+                fujiMetadata.deployments?.find((d) => d.version === 2)?.blockedMessageLib?.address
+            )
+            expect(config[1]?.config?.receiveLibraryConfig?.receiveLibrary).toBe(
+                solanaTestnetMetadata.deployments?.find((d) => d.version === 2)?.sendUln302?.address
+            )
+        })
+
+        it('supports using block receive only for A to B', async () => {
+            const avalancheContract = {
+                eid: 40106,
+                contractName: 'MyOFT',
+            }
+
+            const solanaContract = {
+                eid: 40168,
+                address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy',
+            }
+
+            const pathways: TwoWayConfig[] = [
+                [
+                    avalancheContract,
+                    solanaContract,
+                    [['LayerZero Labs'], []],
+                    [[1, MSG_LIB_BLOCK_RECEIVE_ONLY], 1],
+                    [undefined, undefined],
+                ],
+            ]
+
+            const config = await generateConnectionsConfig(pathways)
+
+            expect(config[0]?.config?.sendLibrary).toBe(
+                fujiMetadata.deployments?.find((d) => d.version === 2)?.sendUln302?.address
+            )
+            expect(config[0]?.config?.receiveLibraryConfig?.receiveLibrary).toBe(
+                fujiMetadata.deployments?.find((d) => d.version === 2)?.receiveUln302?.address
+            )
+            expect(config[1]?.config?.sendLibrary).toBe(
+                solanaTestnetMetadata.deployments?.find((d) => d.version === 2)?.sendUln302?.address
+            )
+            expect(config[1]?.config?.receiveLibraryConfig?.receiveLibrary).toBe(
+                solanaTestnetMetadata.deployments?.find((d) => d.version === 2)?.blocked_messagelib?.address
+            )
+        })
+
+        it('supports using blocking send only on A to B and B to A', async () => {
+            const avalancheContract = {
+                eid: 40106,
+                contractName: 'MyOFT',
+            }
+
+            const solanaContract = {
+                eid: 40168,
+                address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy',
+            }
+
+            const pathways: TwoWayConfig[] = [
+                [
+                    avalancheContract,
+                    solanaContract,
+                    [['LayerZero Labs'], []],
+                    [
+                        [1, MSG_LIB_BLOCK_SEND_ONLY],
+                        [1, MSG_LIB_BLOCK_SEND_ONLY],
+                    ],
+                    [undefined, undefined],
+                ],
+            ]
+
+            const config = await generateConnectionsConfig(pathways)
+
+            expect(config[0]?.config?.sendLibrary).toBe(
+                fujiMetadata.deployments?.find((d) => d.version === 2)?.blockedMessageLib?.address
+            )
+            expect(config[0]?.config?.receiveLibraryConfig?.receiveLibrary).toBe(
+                fujiMetadata.deployments?.find((d) => d.version === 2)?.receiveUln302?.address
+            )
+
+            expect(config[1]?.config?.sendLibrary).toBe(
+                solanaTestnetMetadata.deployments?.find((d) => d.version === 2)?.blocked_messagelib?.address
+            )
+            expect(config[1]?.config?.receiveLibraryConfig?.receiveLibrary).toBe(
+                solanaTestnetMetadata.deployments?.find((d) => d.version === 2)?.receiveUln302?.address
             )
         })
 
@@ -425,6 +536,36 @@ describe('config-metadata', () => {
 
             const config = await generateConnectionsConfig(pathways)
             expect(config).toMatchSnapshot()
+        })
+
+        it('should error when executor is missing', async () => {
+            const dummyContract = {
+                eid: 49999,
+                contractName: 'MyOFT',
+            }
+
+            const solanaContract = {
+                eid: 40168,
+                address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy',
+            }
+
+            const mockFetchMetadata = async () => metadata
+
+            await expect(
+                async () =>
+                    await generateConnectionsConfig(
+                        [[dummyContract, solanaContract, [['LayerZero Labs'], []], [1, 1], [undefined, undefined]]],
+                        { fetchMetadata: mockFetchMetadata }
+                    )
+            ).rejects.toThrow('Can\'t find executor for endpoint with eid: "49999".')
+
+            await expect(
+                async () =>
+                    await generateConnectionsConfig(
+                        [[solanaContract, dummyContract, [['LayerZero Labs'], []], [1, 1], [undefined, undefined]]],
+                        { fetchMetadata: mockFetchMetadata }
+                    )
+            ).rejects.toThrow('Can\'t find executor for endpoint with eid: "49999".')
         })
     })
 
