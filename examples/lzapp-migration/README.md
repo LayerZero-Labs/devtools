@@ -416,9 +416,13 @@ npx hardhat lz:lzapp:set-trusted-remote \
 ```
 
 #### 4. Rescue Stuck Funds
-There are two approaches to rescue stuck funds:
+To rescue stuck funds, you will create a message with the same encoded-spec as your OApp's MsgCodec.
 
-##### Option 1: Commit and Verify
+You can then call `RescueDVN::verifyStuckSend` to verify that message, before having it committed and executed via `RescueDVN::commitStuckSend`.
+
+For example, the tasks provided below automatically formats `AMOUNT` and `TO_ADDRESS` to the correct encoding expected by the `MyEndpointV1OFTV2Mock::lzReceive` implementation.
+
+##### Verify and Commit
 ```bash
 npx hardhat lz:rescue:verify-stuck-send \
   --contract-name RescueDVN \
@@ -443,20 +447,6 @@ npx hardhat lz:rescue:commit-stuck-send \
   --local-eid <LOCAL_EID> \
   --local-oapp <LOCAL_OAPP> \
   --gas-limit <GAS_LIMIT> \
-  --network <network>
-```
-
-##### Option 2: Verify Only
-```bash
-npx hardhat lz:rescue:verify-stuck-send \
-  --contract-name RescueDVN \
-  --remote-eid <REMOTE_EID> \
-  --remote-oapp <REMOTE_OAPP> \
-  --nonce <NONCE> \
-  --to-address <TO_ADDRESS> \
-  --amount-sd <AMOUNT> \
-  --local-eid <LOCAL_EID> \
-  --local-oapp <LOCAL_OAPP> \
   --network <network>
 ```
 
