@@ -87,6 +87,13 @@ contract RescueDVN is Ownable {
          * Using bytes32 for _remoteOApp means no assumption on address encoding.
          */
         bytes32 _guid = _encodeGuid(_nonce, _remoteEid, _remoteOApp, _localEid, localOAppB32);
+
+        /*
+         * 2. Call ULN commit:
+         *    - Header only includes version, nonce, EIDs, and raw bytes32 sender/receiver
+         *    - PayloadHash = keccak256(guid || message)
+         *    We pass gasLimit to specify execution gas on destination
+         */
         bytes memory encodedPacket = abi.encodePacked(
             _encodeHeader(_nonce, _remoteEid, _remoteOApp, _localEid, localOAppB32),
             _encodePayload(_guid, _message)
