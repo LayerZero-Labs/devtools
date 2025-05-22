@@ -183,11 +183,8 @@ sh -c "$(curl -sSfL https://release.anza.xyz/v1.18.26/install)"
 
 ##### (Recommended) Deploying with a priority fee
 
-This section applies if you are unable to land your deployment transaction due to network congestion.
-
-:information_source: [Priority Fees](https://solana.com/developers/guides/advanced/how-to-use-priority-fees) are Solana's mechanism to allow transactions to be prioritized during periods of network congestion. When the network is busy, transactions without priority fees might never be processed. It is then necessary to include priority fees, or wait until the network is less congested. Priority fees are calculated as follows: `priorityFee = compute budget * compute unit price`. We can make use of priority fees by attaching the `--with-compute-unit-price` flag to our `solana program deploy` command. Note that the flag takes in a value in micro lamports, where 1 micro lamport = 0.000001 lamport.
-
-You can run refer QuickNode's [Solana Priority Fee Tracker](https://www.quicknode.com/gas-tracker/solana) to know what value you'd need to pass into the `--with-compute-unit-price` flag.
+The `deploy` command will run with a priority fee. Read the section on ['Deploying Solana programs with a priority fee
+'](https://docs.layerzero.network/v2/developers/solana/technical-reference/solana-guidance#deploying-solana-programs-with-a-priority-fee) to learn more.
 
 ##### Run the deploy command
 
@@ -326,19 +323,23 @@ For Solana -> Sepolia, you should pass in the options value into the script at [
 
 ### Send
 
-#### Send SOL -> Sepolia
+#### Send From Solana Devnet -> To Ethereum Sepolia
 
 ```bash
-npx hardhat lz:oft:solana:send --amount <AMOUNT> --from-eid 40168 --to <TO> --to-eid 40161
+npx hardhat lz:oft:send --src-eid 40168 --dst-eid 40161 --to <RECEIVER_BYTES20>  --amount <AMOUNT>
 ```
 
-#### Send Sepolia -> SOL
+#### Send From Ethereum Sepolia -> To Solana Devnet
 
 ```bash
-npx hardhat --network sepolia-testnet send --dst-eid 40168 --amount <AMOUNT> --to <TO>
+npx hardhat lz:oft:send --src-eid 40161 --dst-eid 40168 --to <RECEIVER_BASE58>  --amount <AMOUNT>
 ```
 
-:information_source: If you encounter an error such as `No Contract deployed with name`, ensure that the `tokenName` in the task defined in `tasks/evm/send.ts` matches the deployed contract name.
+For more information, run:
+
+```bash
+npx hardhat lz:oft:send --help
+```
 
 ### Set a new Mint Authority Multisig
 

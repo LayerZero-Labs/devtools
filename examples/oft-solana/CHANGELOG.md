@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.8.0
+
+### Minor Changes
+
+- f5980f4: Normalized the send task so that EVM and Solana share identical send logic, along with logging
+
 ## 0.7.15
 
 ### Patch Changes

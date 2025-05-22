@@ -119,6 +119,7 @@ export interface Uln302UlnConfig {
     confirmations: bigint
     optionalDVNThreshold: number
     requiredDVNs: string[]
+    requiredDVNCount: number
     optionalDVNs: string[]
 }
 
@@ -130,6 +131,7 @@ export interface Uln302UlnUserConfig {
     confirmations?: bigint
     optionalDVNThreshold?: number
     requiredDVNs: string[]
+    requiredDVNCount?: number
     optionalDVNs?: string[]
 }
 
