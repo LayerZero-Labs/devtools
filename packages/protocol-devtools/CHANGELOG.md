@@ -1,5 +1,11 @@
 # @layerzerolabs/protocol-devtools
 
+## 1.1.7
+
+### Patch Changes
+
+- 3f5a715: allow optionalDVNs without requiredDVNs
+
 ## 1.1.6
 
 ### Patch Changes
