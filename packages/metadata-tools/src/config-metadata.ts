@@ -1,8 +1,18 @@
 import type { OmniEdgeHardhat } from '@layerzerolabs/devtools-evm-hardhat'
 import type { OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
-import { BlockConfirmationsType, IMetadata } from './types'
+import { BlockConfirmationsDefinition, BlockConfirmationsType, IMetadata } from './types'
 import { TwoWayConfig } from './types'
-import { BLOCKED_MESSAGE_LIB_INDICATOR, METADATA_URL, NIL_DVN_COUNT } from './constants'
+import {
+    METADATA_KEY_EVM_BLOCKED_MESSAGE,
+    METADATA_KEY_RECEIVE_LIBRARY,
+    METADATA_KEY_SEND_LIBRARY,
+    METADATA_KEY_SOLANA_BLOCKED_MESSAGE,
+    METADATA_URL,
+    MSG_LIB_BLOCK_RECEIVE_ONLY,
+    MSG_LIB_BLOCK_SEND_AND_RECEIVE,
+    MSG_LIB_BLOCK_SEND_ONLY,
+    NIL_DVN_COUNT,
+} from './constants'
 
 function getEndpointIdDeployment(eid: number, metadata: IMetadata) {
     const srcEidString = eid.toString()
@@ -74,6 +84,41 @@ function isSolanaDeployment(deployment: { chainKey: string; executor?: { pda?: s
     return deployment.chainKey.startsWith('solana')
 }
 
+// Helper to resolve library metadata key based on operation and chain
+function resolveLibraryMetadataKey(isSend: boolean, isBlocked: boolean, deployment: { chainKey: string }) {
+    if (isBlocked) {
+        return isSolanaDeployment(deployment) ? METADATA_KEY_SOLANA_BLOCKED_MESSAGE : METADATA_KEY_EVM_BLOCKED_MESSAGE
+    }
+    return isSend ? METADATA_KEY_SEND_LIBRARY : METADATA_KEY_RECEIVE_LIBRARY
+}
+
+// Helper to assert presence of a metadata key on a deployment
+function assertHasKey(deployment: Record<string, any>, key: string, eid: number) {
+    if (!deployment[key]) {
+        throw new Error(`Can't find ${key} for endpoint with eid: "${eid}".`)
+    }
+}
+
+function getExecutor(deployment: { chainKey: string; executor?: { pda?: string; address?: string } }, eid: number) {
+    const executor = isSolanaDeployment(deployment) ? deployment.executor?.pda : deployment.executor?.address
+
+    if (!executor) {
+        throw new Error(`Can't find executor for endpoint with eid: "${eid}".`)
+    }
+
+    return executor
+}
+
+function isBlocked(blockConfirmationsDefinition: BlockConfirmationsDefinition | undefined, isSend: boolean): boolean {
+    const keys = [MSG_LIB_BLOCK_SEND_AND_RECEIVE, isSend ? MSG_LIB_BLOCK_SEND_ONLY : MSG_LIB_BLOCK_RECEIVE_ONLY]
+
+    return Boolean(
+        blockConfirmationsDefinition &&
+            typeof blockConfirmationsDefinition === 'object' &&
+            keys.includes(blockConfirmationsDefinition[1])
+    )
+}
+
 export async function translatePathwayToConfig(
     pathway: TwoWayConfig,
     metadata: IMetadata
@@ -96,11 +141,7 @@ export async function translatePathwayToConfig(
     const ALZDeployment = getEndpointIdDeployment(AContract.eid, metadata)
     const BLZDeployment = getEndpointIdDeployment(BContract.eid, metadata)
 
-    const AExecutor = isSolanaDeployment(ALZDeployment) ? ALZDeployment.executor?.pda : ALZDeployment.executor?.address
-
-    if (!AExecutor) {
-        throw new Error(`Can't find executor for endpoint with eid: "${AContract.eid}".`)
-    }
+    const AExecutor = getExecutor(ALZDeployment, AContract.eid)
 
     const ARequiredDVNs = DVNsToAddresses(requiredDVNs, ALZDeployment.chainKey, metadata)
     const BRequiredDVNs = DVNsToAddresses(requiredDVNs, BLZDeployment.chainKey, metadata)
@@ -123,67 +164,25 @@ export async function translatePathwayToConfig(
         ? BToAConfirmationsDefinition
         : BToAConfirmationsDefinition?.[0]
 
-    const blockSendAToB: boolean = Boolean(
-        AToBConfirmationsDefinition &&
-            !['bigint', 'number'].includes(typeof AToBConfirmationsDefinition) &&
-            AToBConfirmationsDefinition[1] === BLOCKED_MESSAGE_LIB_INDICATOR
-    )
-    const blockSendBToA: boolean = Boolean(
-        BToAConfirmationsDefinition &&
-            !['bigint', 'number'].includes(typeof BToAConfirmationsDefinition) &&
-            BToAConfirmationsDefinition[1] === BLOCKED_MESSAGE_LIB_INDICATOR
-    )
+    const blockSendAToB = isBlocked(AToBConfirmationsDefinition, true)
+    const blockReceiveAToB = isBlocked(AToBConfirmationsDefinition, false)
+    const blockSendBToA = isBlocked(BToAConfirmationsDefinition, true)
+    const blockReceiveBToA = isBlocked(BToAConfirmationsDefinition, false)
 
-    const sendLibraryAToBMetadataKey = blockSendAToB
-        ? isSolanaDeployment(ALZDeployment)
-            ? 'blocked_messagelib'
-            : 'blockedMessageLib'
-        : 'sendUln302'
-    const sendLibraryBToAMetadataKey = blockSendBToA
-        ? isSolanaDeployment(BLZDeployment)
-            ? 'blocked_messagelib'
-            : 'blockedMessageLib'
-        : 'sendUln302'
+    const sendLibraryAToBMetadataKey = resolveLibraryMetadataKey(true, blockSendAToB, ALZDeployment)
+    const receiveLibraryAToBMetadataKey = resolveLibraryMetadataKey(false, blockReceiveAToB, BLZDeployment)
+    const sendLibraryBToAMetadataKey = resolveLibraryMetadataKey(true, blockSendBToA, BLZDeployment)
+    const receiveLibraryBToAMetadataKey = resolveLibraryMetadataKey(false, blockReceiveBToA, ALZDeployment)
 
-    const receiveLibraryBFromAMetadataKey = blockSendAToB
-        ? isSolanaDeployment(BLZDeployment)
-            ? 'blocked_messagelib'
-            : 'blockedMessageLib'
-        : 'receiveUln302'
-    const receiveLibraryAFromBMetadataKey = blockSendBToA
-        ? isSolanaDeployment(ALZDeployment)
-            ? 'blocked_messagelib'
-            : 'blockedMessageLib'
-        : 'receiveUln302'
-
-    if (!ALZDeployment[sendLibraryAToBMetadataKey]) {
-        throw new Error(`Can't find ${sendLibraryAToBMetadataKey} for endpoint with eid: "${AContract.eid}".`)
-    }
-
-    if (!ALZDeployment[receiveLibraryAFromBMetadataKey]) {
-        throw new Error(`Can't find ${receiveLibraryAFromBMetadataKey} for endpoint with eid: "${AContract.eid}".`)
-    }
-
-    if (!BLZDeployment[sendLibraryBToAMetadataKey]) {
-        throw new Error(`Can't find ${sendLibraryBToAMetadataKey} for endpoint with eid: "${BContract.eid}".`)
-    }
-
-    if (!BLZDeployment[receiveLibraryBFromAMetadataKey]) {
-        throw new Error(`Can't find ${receiveLibraryBFromAMetadataKey} for endpoint with eid: "${BContract.eid}".`)
-    }
-
-    if (!ALZDeployment.executor) {
-        throw new Error(`Can't find executor for endpoint with eid: "${AContract.eid}".`)
-    }
+    assertHasKey(ALZDeployment, sendLibraryAToBMetadataKey, AContract.eid)
+    assertHasKey(BLZDeployment, receiveLibraryAToBMetadataKey, BContract.eid)
+    assertHasKey(BLZDeployment, sendLibraryBToAMetadataKey, BContract.eid)
+    assertHasKey(ALZDeployment, receiveLibraryBToAMetadataKey, AContract.eid)
 
     const sendLibraryAToB = ALZDeployment[sendLibraryAToBMetadataKey].address
-    const receiveLibraryAFromB = ALZDeployment[receiveLibraryAFromBMetadataKey].address
+    const receiveLibraryAToB = BLZDeployment[receiveLibraryAToBMetadataKey].address
     const sendLibraryBToA = BLZDeployment[sendLibraryBToAMetadataKey].address
-    const receiveLibraryBFromA = BLZDeployment[receiveLibraryBFromAMetadataKey].address
-
-    if (!BLZDeployment.executor) {
-        throw new Error(`Can't find executor for endpoint with eid: "${BContract.eid}".`)
-    }
+    const receiveLibraryBToA = ALZDeployment[receiveLibraryBToAMetadataKey].address
 
     const AToBConfig: OmniEdgeHardhat<OAppEdgeConfig> = {
         from: AContract,
@@ -191,7 +190,7 @@ export async function translatePathwayToConfig(
         config: {
             sendLibrary: sendLibraryAToB,
             receiveLibraryConfig: {
-                receiveLibrary: receiveLibraryAFromB,
+                receiveLibrary: receiveLibraryBToA,
                 gracePeriod: BigInt(0),
             },
             sendConfig: {
@@ -217,7 +216,7 @@ export async function translatePathwayToConfig(
         config: {
             sendLibrary: sendLibraryBToA,
             receiveLibraryConfig: {
-                receiveLibrary: receiveLibraryBFromA,
+                receiveLibrary: receiveLibraryAToB,
                 gracePeriod: BigInt(0),
             },
             receiveConfig: {
@@ -233,13 +232,7 @@ export async function translatePathwayToConfig(
     }
 
     if (BToAConfirmations) {
-        const BExecutor = isSolanaDeployment(BLZDeployment)
-            ? BLZDeployment.executor?.pda
-            : BLZDeployment.executor?.address
-
-        if (!BExecutor) {
-            throw new Error(`Can't find executor for destination endpoint with eid: "${BContract.eid}".`)
-        }
+        const BExecutor = getExecutor(BLZDeployment, BContract.eid)
 
         AToBConfig.config.receiveConfig = {
             ulnConfig: {
