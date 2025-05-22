@@ -387,13 +387,19 @@ This function commits the verification by:
 
 ### Usage Flow
 
+To use the RescueDVN, you will need to modify the configuration for the local chain that you wish to reissue the funds on. If funds have been locked, this chain should be the same as the location where your OFT Adapter (EPV2) or ProxyOFT (EPV1) has been deployed on.
+
 #### 1. Deploy RescueDVN
+
+Deploy the RescueDVN to your blockchain of choice by running:
 
 ```bash
 npx hardhat deploy --tags RescueDVN --network <network>
 ```
 
 #### 2. Configure ReceiveUln301
+
+To use the RescueDVN, you will need to modify the ReceiveUln301 or ReceiveUln302 configuration.
 
 For ReceiveUln301, you need to set both DVN and Executor configurations:
 
@@ -418,6 +424,8 @@ npx hardhat lz:lzapp:set-receive-config \
 
 #### 3. Set Trusted Remote
 
+Next, `setTrustedRemote` or `setPeer` if your application has not already for this pathway.
+
 ```bash
 npx hardhat lz:lzapp:set-trusted-remote \
   --address <REMOTE_ADDRESS> \
@@ -425,6 +433,8 @@ npx hardhat lz:lzapp:set-trusted-remote \
   --remote-eid <REMOTE_EID> \
   --network <network>
 ```
+
+If you have already, your remote address and remote EID will be the Omnichain Application previously connected.
 
 #### 4. Rescue Stuck Funds
 
@@ -435,6 +445,16 @@ You can then call `RescueDVN::verifyStuckSend` to verify that message, before ha
 For example, the tasks provided below automatically formats `AMOUNT` and `TO_ADDRESS` to the correct encoding expected by the `MyEndpointV1OFTV2Mock::lzReceive` implementation.
 
 ##### Verify and Commit
+
+The following task will call `ReceiveUln301::verify` using the EndpointV1OFTV2 message encoding:
+
+`PT_SEND (uint8) || toAddress (bytes32) || amount (uint64)`
+
+Where:
+
+- PT_SEND = 0 (packet type for OFT send)
+- toAddress is the recipient address padded to 32 bytes if EVM, or hex-encoded base58 pubkey if Solana
+- amount is the transfer amount in shared decimals (check the source chain transaction logs or Tenderly call stack for "amountSD" to find the correct shared decimal amount)
 
 ```bash
 npx hardhat lz:rescue:verify-stuck-send \
@@ -449,6 +469,10 @@ npx hardhat lz:rescue:verify-stuck-send \
   --network <network>
 ```
 
+After the message has been verified by the RescueDVN, the message can then be committed and executed.
+
+If your configs were previously set correctly, you can now run:
+
 ```bash
 npx hardhat lz:rescue:commit-stuck-send \
   --contract-name RescueDVN \
@@ -462,6 +486,14 @@ npx hardhat lz:rescue:commit-stuck-send \
   --gas-limit <GAS_LIMIT> \
   --network <network>
 ```
+
+This will move the payload out of the Message Library and execute down to your application. When successful, you will see:
+
+1. A transaction receipt showing the commit was successful
+2. The balance minted to your specified to-address
+3. The message cleared from the Message Library
+
+You can verify the balance was received by checking the token balance of the to-address.
 
 ### Important Notes
 
