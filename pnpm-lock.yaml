@@ -105,7 +105,7 @@ importers:
         version: 3.0.66(@types/node@18.18.14)(chai@4.5.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@layerzerolabs/protocol-devtools':
         specifier: ^1.1.6
-        version: link:../../packages/protocol-devtools
+        version: 1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(zod@3.22.4)
       '@layerzerolabs/solidity-examples':
         specifier: ^1.1.0
         version: 1.1.0(@nomiclabs/hardhat-ethers@2.2.3)(@nomiclabs/hardhat-etherscan@3.1.8)(ethers@5.7.2)(ts-node@10.9.2)(typescript@5.5.3)
@@ -2126,10 +2126,10 @@ importers:
         version: 2.3.44
       '@layerzerolabs/protocol-devtools':
         specifier: ^1.1.6
-        version: link:../../packages/protocol-devtools
+        version: 1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.86)(zod@3.22.4)
       '@layerzerolabs/protocol-devtools-evm':
         specifier: ~3.0.7
-        version: link:../../packages/protocol-devtools-evm
+        version: 3.0.8(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/constants@5.7.0)(@ethersproject/contracts@5.7.0)(@ethersproject/providers@5.7.2)(@layerzerolabs/devtools-evm@packages+devtools-evm)(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.86)(@layerzerolabs/protocol-devtools@1.1.7)(zod@3.22.4)
       '@layerzerolabs/protocol-devtools-solana':
         specifier: ^4.0.9
         version: link:../../packages/protocol-devtools-solana
@@ -4131,7 +4131,7 @@ importers:
         version: 3.0.75
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.6
-        version: link:../protocol-devtools
+        version: 1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(zod@3.22.4)
       '@swc/core':
         specifier: ^1.4.0
         version: 1.4.0
@@ -4180,10 +4180,10 @@ importers:
         version: link:../omnicounter-devtools
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.6
-        version: link:../protocol-devtools
+        version: 1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(zod@3.22.4)
       '@layerzerolabs/protocol-devtools-evm':
         specifier: ~3.0.7
-        version: link:../protocol-devtools-evm
+        version: 3.0.8(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/constants@5.7.0)(@ethersproject/contracts@5.7.0)(@ethersproject/providers@5.7.2)(@layerzerolabs/devtools-evm@packages+devtools-evm)(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(@layerzerolabs/protocol-devtools@1.1.7)(zod@3.22.4)
       '@layerzerolabs/ua-devtools':
         specifier: ~3.0.6
         version: link:../ua-devtools
@@ -4337,7 +4337,7 @@ importers:
         version: 3.0.75
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.6
-        version: link:../protocol-devtools
+        version: 1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(zod@3.22.4)
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.6
         version: link:../test-devtools
@@ -4410,7 +4410,7 @@ importers:
         version: 3.0.38(@swc/core@1.4.0)(@types/node@18.18.14)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.6
-        version: link:../protocol-devtools
+        version: 1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(zod@3.22.4)
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.6
         version: link:../test-devtools
@@ -4700,10 +4700,10 @@ importers:
         version: 3.0.75
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.6
-        version: link:../protocol-devtools
+        version: 1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(zod@3.22.4)
       '@layerzerolabs/protocol-devtools-evm':
         specifier: ~3.0.7
-        version: link:../protocol-devtools-evm
+        version: 3.0.8(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/constants@5.7.0)(@ethersproject/contracts@5.7.0)(@ethersproject/providers@5.7.2)(@layerzerolabs/devtools-evm@packages+devtools-evm)(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(@layerzerolabs/protocol-devtools@1.1.7)(zod@3.22.4)
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.5.2
         version: link:../test-devtools-evm-hardhat
@@ -4788,7 +4788,7 @@ importers:
         version: 3.0.75
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.6
-        version: link:../protocol-devtools
+        version: 1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(zod@3.22.4)
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.6
         version: link:../test-devtools
@@ -4864,10 +4864,10 @@ importers:
         version: 3.0.75
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.6
-        version: link:../protocol-devtools
+        version: 1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(zod@3.22.4)
       '@layerzerolabs/protocol-devtools-evm':
         specifier: ~3.0.7
-        version: link:../protocol-devtools-evm
+        version: 3.0.8(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/constants@5.7.0)(@ethersproject/contracts@5.7.0)(@ethersproject/providers@5.7.2)(@layerzerolabs/devtools-evm@packages+devtools-evm)(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(@layerzerolabs/protocol-devtools@1.1.7)(zod@3.22.4)
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.6
         version: link:../test-devtools
@@ -4952,10 +4952,10 @@ importers:
         version: 3.0.75
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.6
-        version: link:../protocol-devtools
+        version: 1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(zod@3.22.4)
       '@layerzerolabs/protocol-devtools-evm':
         specifier: ~3.0.7
-        version: link:../protocol-devtools-evm
+        version: 3.0.8(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/constants@5.7.0)(@ethersproject/contracts@5.7.0)(@ethersproject/providers@5.7.2)(@layerzerolabs/devtools-evm@packages+devtools-evm)(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(@layerzerolabs/protocol-devtools@1.1.7)(zod@3.22.4)
       '@layerzerolabs/ua-devtools':
         specifier: ~3.0.6
         version: link:../ua-devtools
@@ -5037,7 +5037,7 @@ importers:
         version: 3.0.66(@swc/core@1.4.0)(@types/node@18.18.14)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.6
-        version: link:../protocol-devtools
+        version: 1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(zod@3.22.4)
       '@layerzerolabs/protocol-devtools-solana':
         specifier: ~4.0.9
         version: link:../protocol-devtools-solana
@@ -5220,10 +5220,10 @@ importers:
         version: link:../../packages/omnicounter-devtools-evm
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.6
-        version: link:../../packages/protocol-devtools
+        version: 1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(zod@3.22.4)
       '@layerzerolabs/protocol-devtools-evm':
         specifier: ~3.0.7
-        version: link:../../packages/protocol-devtools-evm
+        version: 3.0.8(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/constants@5.7.0)(@ethersproject/contracts@5.7.0)(@ethersproject/providers@5.7.2)(@layerzerolabs/devtools-evm@packages+devtools-evm)(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(@layerzerolabs/protocol-devtools@1.1.7)(zod@3.22.4)
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.5.2
         version: link:../../packages/test-devtools-evm-hardhat
@@ -5355,10 +5355,10 @@ importers:
         version: link:../../packages/omnicounter-devtools-evm
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.6
-        version: link:../../packages/protocol-devtools
+        version: 1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(zod@3.22.4)
       '@layerzerolabs/protocol-devtools-evm':
         specifier: ~3.0.7
-        version: link:../../packages/protocol-devtools-evm
+        version: 3.0.8(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/constants@5.7.0)(@ethersproject/contracts@5.7.0)(@ethersproject/providers@5.7.2)(@layerzerolabs/devtools-evm@packages+devtools-evm)(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(@layerzerolabs/protocol-devtools@1.1.7)(zod@3.22.4)
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.6
         version: link:../../packages/test-devtools
@@ -5586,10 +5586,10 @@ importers:
         version: 3.0.75
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.6
-        version: link:../../packages/protocol-devtools
+        version: 1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(zod@3.22.4)
       '@layerzerolabs/protocol-devtools-evm':
         specifier: ~3.0.7
-        version: link:../../packages/protocol-devtools-evm
+        version: 3.0.8(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/constants@5.7.0)(@ethersproject/contracts@5.7.0)(@ethersproject/providers@5.7.2)(@layerzerolabs/devtools-evm@packages+devtools-evm)(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(@layerzerolabs/protocol-devtools@1.1.7)(zod@3.22.4)
       '@layerzerolabs/ua-devtools':
         specifier: ~3.0.6
         version: link:../../packages/ua-devtools
@@ -5688,10 +5688,10 @@ importers:
         version: link:../../packages/omnicounter-devtools-evm
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.6
-        version: link:../../packages/protocol-devtools
+        version: 1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(zod@3.22.4)
       '@layerzerolabs/protocol-devtools-evm':
         specifier: ~3.0.7
-        version: link:../../packages/protocol-devtools-evm
+        version: 3.0.8(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/constants@5.7.0)(@ethersproject/contracts@5.7.0)(@ethersproject/providers@5.7.2)(@layerzerolabs/devtools-evm@packages+devtools-evm)(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(@layerzerolabs/protocol-devtools@1.1.7)(zod@3.22.4)
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.5.2
         version: link:../../packages/test-devtools-evm-hardhat
@@ -5832,10 +5832,10 @@ importers:
         version: link:../../packages/omnicounter-devtools-evm
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.6
-        version: link:../../packages/protocol-devtools
+        version: 1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(zod@3.22.4)
       '@layerzerolabs/protocol-devtools-evm':
         specifier: ~3.0.7
-        version: link:../../packages/protocol-devtools-evm
+        version: 3.0.8(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/constants@5.7.0)(@ethersproject/contracts@5.7.0)(@ethersproject/providers@5.7.2)(@layerzerolabs/devtools-evm@packages+devtools-evm)(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(@layerzerolabs/protocol-devtools@1.1.7)(zod@3.22.4)
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.5.2
         version: link:../../packages/test-devtools-evm-hardhat
@@ -10338,6 +10338,94 @@ packages:
       prettier: 3.2.5
       prettier-plugin-packagejson: 2.5.0(prettier@3.2.5)
       prettier-plugin-solidity: 1.3.1(prettier@3.2.5)
+    dev: true
+
+  /@layerzerolabs/protocol-devtools-evm@3.0.8(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/constants@5.7.0)(@ethersproject/contracts@5.7.0)(@ethersproject/providers@5.7.2)(@layerzerolabs/devtools-evm@packages+devtools-evm)(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(@layerzerolabs/protocol-devtools@1.1.7)(zod@3.22.4):
+    resolution: {integrity: sha512-G94mnKvXln/c/XsP0jGmGDFKqqaDst0Dkm3eoW6JHKx1gyoeSF9Fp4v1OuXm6ps2noGGTp9BLZCFoydZgJM11w==}
+    peerDependencies:
+      '@ethersproject/abstract-provider': ^5.7.0
+      '@ethersproject/abstract-signer': ^5.7.0
+      '@ethersproject/bignumber': ^5.7.0
+      '@ethersproject/constants': ^5.7.0
+      '@ethersproject/contracts': ^5.7.0
+      '@ethersproject/providers': ^5.7.0
+      '@layerzerolabs/devtools': ~0.4.8
+      '@layerzerolabs/devtools-evm': ~1.0.6
+      '@layerzerolabs/io-devtools': ~0.1.16
+      '@layerzerolabs/lz-definitions': ^3.0.75
+      '@layerzerolabs/protocol-devtools': ~1.1.7
+      zod: ^3.22.4
+    dependencies:
+      '@ethersproject/abstract-provider': 5.7.0
+      '@ethersproject/abstract-signer': 5.7.0
+      '@ethersproject/bignumber': 5.7.0
+      '@ethersproject/constants': 5.7.0
+      '@ethersproject/contracts': 5.7.0
+      '@ethersproject/providers': 5.7.2
+      '@layerzerolabs/devtools': link:packages/devtools
+      '@layerzerolabs/devtools-evm': link:packages/devtools-evm
+      '@layerzerolabs/io-devtools': link:packages/io-devtools
+      '@layerzerolabs/lz-definitions': 3.0.75
+      '@layerzerolabs/protocol-devtools': 1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(zod@3.22.4)
+      p-memoize: 4.0.4
+      zod: 3.22.4
+
+  /@layerzerolabs/protocol-devtools-evm@3.0.8(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/constants@5.7.0)(@ethersproject/contracts@5.7.0)(@ethersproject/providers@5.7.2)(@layerzerolabs/devtools-evm@packages+devtools-evm)(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.86)(@layerzerolabs/protocol-devtools@1.1.7)(zod@3.22.4):
+    resolution: {integrity: sha512-G94mnKvXln/c/XsP0jGmGDFKqqaDst0Dkm3eoW6JHKx1gyoeSF9Fp4v1OuXm6ps2noGGTp9BLZCFoydZgJM11w==}
+    peerDependencies:
+      '@ethersproject/abstract-provider': ^5.7.0
+      '@ethersproject/abstract-signer': ^5.7.0
+      '@ethersproject/bignumber': ^5.7.0
+      '@ethersproject/constants': ^5.7.0
+      '@ethersproject/contracts': ^5.7.0
+      '@ethersproject/providers': ^5.7.0
+      '@layerzerolabs/devtools': ~0.4.8
+      '@layerzerolabs/devtools-evm': ~1.0.6
+      '@layerzerolabs/io-devtools': ~0.1.16
+      '@layerzerolabs/lz-definitions': ^3.0.75
+      '@layerzerolabs/protocol-devtools': ~1.1.7
+      zod: ^3.22.4
+    dependencies:
+      '@ethersproject/abstract-provider': 5.7.0
+      '@ethersproject/abstract-signer': 5.7.0
+      '@ethersproject/bignumber': 5.7.0
+      '@ethersproject/constants': 5.7.0
+      '@ethersproject/contracts': 5.7.0
+      '@ethersproject/providers': 5.7.2
+      '@layerzerolabs/devtools': link:packages/devtools
+      '@layerzerolabs/devtools-evm': link:packages/devtools-evm
+      '@layerzerolabs/io-devtools': link:packages/io-devtools
+      '@layerzerolabs/lz-definitions': 3.0.86
+      '@layerzerolabs/protocol-devtools': 1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.86)(zod@3.22.4)
+      p-memoize: 4.0.4
+      zod: 3.22.4
+    dev: true
+
+  /@layerzerolabs/protocol-devtools@1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.75)(zod@3.22.4):
+    resolution: {integrity: sha512-hY1VqFhBmGHDDCcsc6y0gYWlPd7pMMHp2EmZ01lzFdTnbYkF6rwC23EhSnb+AlMBxGpBwyFaNYRGTOZQx78ytA==}
+    peerDependencies:
+      '@layerzerolabs/devtools': ~0.4.8
+      '@layerzerolabs/io-devtools': ~0.1.16
+      '@layerzerolabs/lz-definitions': ^3.0.75
+      zod: ^3.22.4
+    dependencies:
+      '@layerzerolabs/devtools': link:packages/devtools
+      '@layerzerolabs/io-devtools': link:packages/io-devtools
+      '@layerzerolabs/lz-definitions': 3.0.75
+      zod: 3.22.4
+
+  /@layerzerolabs/protocol-devtools@1.1.7(@layerzerolabs/devtools@packages+devtools)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@3.0.86)(zod@3.22.4):
+    resolution: {integrity: sha512-hY1VqFhBmGHDDCcsc6y0gYWlPd7pMMHp2EmZ01lzFdTnbYkF6rwC23EhSnb+AlMBxGpBwyFaNYRGTOZQx78ytA==}
+    peerDependencies:
+      '@layerzerolabs/devtools': ~0.4.8
+      '@layerzerolabs/io-devtools': ~0.1.16
+      '@layerzerolabs/lz-definitions': ^3.0.75
+      zod: ^3.22.4
+    dependencies:
+      '@layerzerolabs/devtools': link:packages/devtools
+      '@layerzerolabs/io-devtools': link:packages/io-devtools
+      '@layerzerolabs/lz-definitions': 3.0.86
+      zod: 3.22.4
     dev: true
 
   /@layerzerolabs/solhint-config@3.0.12(typescript@5.5.3):
@@ -20938,12 +21026,10 @@ packages:
       map-age-cleaner: 0.1.3
       mimic-fn: 3.1.0
       p-settle: 4.1.1
-    dev: false
 
   /p-reflect@2.1.0:
     resolution: {integrity: sha512-paHV8NUz8zDHu5lhr/ngGWQiW067DK/+IbJ+RfZ4k+s8y4EKyYCz8pGYWjxCg35eHztpJAt+NUgvN4L+GCbPlg==}
     engines: {node: '>=8'}
-    dev: false
 
   /p-settle@4.1.1:
     resolution: {integrity: sha512-6THGh13mt3gypcNMm0ADqVNCcYa3BK6DWsuJWFCuEKP1rpY+OKGp7gaZwVmLspmic01+fsg/fN57MfvDzZ/PuQ==}
@@ -20951,7 +21037,6 @@ packages:
     dependencies:
       p-limit: 2.3.0
       p-reflect: 2.1.0
-    dev: false
 
   /p-try@1.0.0:
     resolution: {integrity: sha512-U1etNYuMJoIz3ZXSrrySFjsXQTWOx2/jdi86L+2pRvph/qMKL6sbcCYdH23fqsbm8TH2Gn0OybpT4eSFlCVHww==}
