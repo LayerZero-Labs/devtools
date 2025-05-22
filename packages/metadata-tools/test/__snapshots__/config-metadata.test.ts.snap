@@ -449,7 +449,7 @@ exports[`config-metadata generateConnectionsConfig supports passing no required 
 ]
 `;
 
-exports[`config-metadata generateConnectionsConfig supports using block send library for A to B 1`] = `
+exports[`config-metadata generateConnectionsConfig supports using block send and receive for A to B 1`] = `
 [
   {
     "config": {
@@ -542,7 +542,7 @@ exports[`config-metadata generateConnectionsConfig supports using block send lib
 ]
 `;
 
-exports[`config-metadata generateConnectionsConfig supports using block send library for both A to B and B to A 1`] = `
+exports[`config-metadata generateConnectionsConfig supports using block send and receive for both A to B and B to A 1`] = `
 [
   {
     "config": {

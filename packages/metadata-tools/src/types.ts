@@ -1,20 +1,20 @@
 import type { OmniPointHardhat } from '@layerzerolabs/devtools-evm-hardhat'
 import type { OAppEnforcedOption } from '@layerzerolabs/ua-devtools'
+import { MSG_LIB_BLOCK_RECEIVE_ONLY, MSG_LIB_BLOCK_SEND_AND_RECEIVE, MSG_LIB_BLOCK_SEND_ONLY } from './constants'
 
-import { BLOCKED_MESSAGE_LIB_INDICATOR } from './constants'
-
-export type CustomMessageLibraryType = typeof BLOCKED_MESSAGE_LIB_INDICATOR
+export type CustomMessageLibraryType =
+    | typeof MSG_LIB_BLOCK_SEND_ONLY
+    | typeof MSG_LIB_BLOCK_RECEIVE_ONLY
+    | typeof MSG_LIB_BLOCK_SEND_AND_RECEIVE
 export type BlockConfirmationsType = number | bigint
+export type BlockConfirmationsDefinition = BlockConfirmationsType | [BlockConfirmationsType, CustomMessageLibraryType]
 
 // [AContract, BContract, [requiredDVNs, [optionalDVNs, threshold]], [AToBConfirmations, BToAConfirmations]], [enforcedOptionsAToB, enforcedOptionsBToA]
 export type TwoWayConfig = [
     OmniPointHardhat, // AContract
     OmniPointHardhat, // BContract
     [string[], [string[], number] | []], // [requiredDVNs, [optionalDVNs, threshold]]
-    [
-        BlockConfirmationsType | [BlockConfirmationsType, CustomMessageLibraryType],
-        BlockConfirmationsType | [BlockConfirmationsType, CustomMessageLibraryType] | undefined,
-    ], // [AToBConfirmations, BToAConfirmations]
+    [BlockConfirmationsDefinition, BlockConfirmationsDefinition | undefined], // [AToBConfirmations, BToAConfirmations]
     [OAppEnforcedOption[] | undefined, OAppEnforcedOption[] | undefined], // [enforcedOptionsAToB, enforcedOptionsBToA]
 ]
 
