@@ -19,7 +19,7 @@ const deploy: DeployFunction = async ({ getNamedAccounts, deployments, network }
 
     await deploy(contractName, {
         from: deployer,
-        args: [lzEndpointAddress, ethers.utils.parseUnits(amountInEther, 18), 6],
+        args: [lzEndpointAddress, ethers.utils.parseUnits(amountInEther, 18), 4],
         log: true,
         waitConfirmations: 1,
     })

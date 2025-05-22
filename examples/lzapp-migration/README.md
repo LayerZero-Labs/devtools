@@ -328,6 +328,160 @@ In EndpointV1, message libraries for a chain are set globally and not per pathwa
 
 :warning: If you only partially migrate your mesh to ULN301, pathways will be broken and OFTs will not be transferrable between chains that are not using the same message library.
 
+## RescueDVN: Recovering Stuck Funds
+
+The RescueDVN is a specialized Decentralized Verifier Network (DVN) designed to rescue funds that are stuck in cross-chain transfers, particularly for OFT (Omnichain Fungible Token) transfers. It works by acting as a trusted DVN that can verify and commit messages, allowing the recovery of funds that would otherwise be permanently stuck.
+
+### Key Components
+
+#### 1. Contract Structure
+```solidity
+contract RescueDVN is Ownable {
+    uint8 public constant PACKET_VERSION = 1;
+    uint32 public immutable localEid;
+    IReceiveUlnE2 public immutable verifyUln;
+    IUltraLightNode301 public immutable commitUln;
+}
+```
+
+#### 2. Main Functions
+
+##### `verifyStuckSend`
+```solidity
+function verifyStuckSend(
+    bytes memory _message,
+    uint64  _nonce,
+    uint32  _remoteEid,
+    bytes32 _remoteOApp,
+    uint32  _localEid,
+    address _localOApp
+) external onlyOwner
+```
+This function verifies a stuck message by:
+1. Rebuilding the ULN-301 GUID
+2. Calling the ULN verify function with a confirmation count of 1
+
+##### `commitStuckSend`
+```solidity
+function commitStuckSend(
+    bytes memory _message,
+    uint64  _nonce,
+    uint32  _remoteEid,
+    bytes32 _remoteOApp,
+    uint32  _localEid,
+    address _localOApp,
+    uint256 _gasLimit
+) external onlyOwner
+```
+This function commits the verification by:
+1. Rebuilding the ULN-301 GUID
+2. Encoding the full packet
+3. Calling commitVerification on the ULN
+
+### Usage Flow
+
+#### 1. Deploy RescueDVN
+```bash
+npx hardhat deploy --tags RescueDVN --network <network>
+```
+
+#### 2. Configure ReceiveUln301
+For ReceiveUln301, you need to set both DVN and Executor configurations:
+
+```bash
+npx hardhat lz:lzapp:set-receive-config \
+  --contract-name MyEndpointV1OFTV2Mock \
+  --dvn <RescueDVN_ADDRESS> \
+  --executor-address <RescueDVN_ADDRESS> \
+  --remote-eid <REMOTE_EID> \
+  --network <network>
+```
+
+For ReceiveUln302, only the DVN configuration is needed:
+```bash
+npx hardhat lz:lzapp:set-receive-config \
+  --contract-name MyEndpointV1OFTV2Mock \
+  --dvn <RescueDVN_ADDRESS> \
+  --remote-eid <REMOTE_EID> \
+  --network <network>
+```
+
+#### 3. Set Trusted Remote
+```bash
+npx hardhat lz:lzapp:set-trusted-remote \
+  --address <REMOTE_ADDRESS> \
+  --contract-name MyEndpointV1OFTV2Mock \
+  --remote-eid <REMOTE_EID> \
+  --network <network>
+```
+
+#### 4. Rescue Stuck Funds
+There are two approaches to rescue stuck funds:
+
+##### Option 1: Commit and Verify
+```bash
+npx hardhat lz:rescue:verify-stuck-send \
+  --contract-name RescueDVN \
+  --remote-eid <REMOTE_EID> \
+  --remote-oapp <REMOTE_OAPP> \
+  --nonce <NONCE> \
+  --to-address <TO_ADDRESS> \
+  --amount-sd <AMOUNT> \
+  --local-eid <LOCAL_EID> \
+  --local-oapp <LOCAL_OAPP> \
+  --network <network>
+```
+
+```bash
+npx hardhat lz:rescue:commit-stuck-send \
+  --contract-name RescueDVN \
+  --remote-eid <REMOTE_EID> \
+  --remote-oapp <REMOTE_OAPP> \
+  --nonce <NONCE> \
+  --to-address <TO_ADDRESS> \
+  --amount-sd <AMOUNT> \
+  --local-eid <LOCAL_EID> \
+  --local-oapp <LOCAL_OAPP> \
+  --gas-limit <GAS_LIMIT> \
+  --network <network>
+```
+
+##### Option 2: Verify Only
+```bash
+npx hardhat lz:rescue:verify-stuck-send \
+  --contract-name RescueDVN \
+  --remote-eid <REMOTE_EID> \
+  --remote-oapp <REMOTE_OAPP> \
+  --nonce <NONCE> \
+  --to-address <TO_ADDRESS> \
+  --amount-sd <AMOUNT> \
+  --local-eid <LOCAL_EID> \
+  --local-oapp <LOCAL_OAPP> \
+  --network <network>
+```
+
+### Important Notes
+
+1. **ReceiveUln301 vs ReceiveUln302**:
+   - ReceiveUln301 requires both DVN and Executor configurations
+   - ReceiveUln302 only requires DVN configuration as execution is permissionless
+
+2. **Security Considerations**:
+   - The RescueDVN is controlled by the owner
+   - It should only be used in emergency situations
+   - The owner should be a trusted multisig or governance contract
+
+3. **Usage Context**:
+   - This should only be used when funds are genuinely stuck
+   - The RescueDVN acts as a trusted DVN that can verify any payload
+   - It's particularly useful for recovering funds from failed OFT transfers
+
+4. **Parameter Requirements**:
+   - All addresses must be properly formatted (EVM addresses or base58 Solana)
+   - Nonce must match the original transaction
+   - Amount must be in shared decimals (amountSD)
+   - Gas limit should be sufficient for the commit operation
+
 ## Behind The Scenes
 
 Below is an expanded README section that describes not only the overall configuration and wiring between the V1 and V2 endpoints but also explains the purpose of the overridden tasks provided in the repository:

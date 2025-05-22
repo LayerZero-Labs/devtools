@@ -474,7 +474,7 @@ function encodeExecutorConfig(config: Uln302ExecutorConfig): string {
  * @param config Uln302UlnConfig object
  * @returns ABI-encoded string
  */
-function encodeUlnConfig(config: Uln302UlnConfig): string {
+export function encodeUlnConfig(config: Uln302UlnConfig): string {
     return ethers.utils.defaultAbiCoder.encode(
         [
             'tuple(uint64 confirmations, uint8 requiredDVNCount, uint8 optionalDVNCount, uint8 optionalDVNThreshold, address[] requiredDVNs, address[] optionalDVNs)',
