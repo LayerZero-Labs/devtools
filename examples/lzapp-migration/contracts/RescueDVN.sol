@@ -30,7 +30,9 @@ contract RescueDVN is Ownable {
     }
 
     /**
-     * @notice Manually proves a stuck OFT send so mint can execute.
+     * @notice Manually verifies a send message.
+     * @dev This is useful if you need to verify a message that was sent but failed to be received on the destination chain.
+     * @dev Enables passing arbitrary messages to your application, primarily for reverting state changes from stuck messages.
      * @dev Accepts all address fields as bytes32 to support non-EVM senders (e.g. Solana pubkeys).
      * @param _message      Raw message (e.g., v1 OFT send: [PT_SEND || receiver || amountSD])
      * @param _nonce        LayerZero channel nonce
@@ -70,6 +72,17 @@ contract RescueDVN is Ownable {
         );
     }
 
+    /**
+     * @notice Manually commits a stuck send message for execution.
+     * @dev Accepts all address fields as bytes32 to support non-EVM senders (e.g. Solana pubkeys).
+     * @param _message      Raw message (e.g., v1 OFT send: [PT_SEND || receiver || amountSD])
+     * @param _nonce        LayerZero channel nonce
+     * @param _remoteEid    Source chain EID
+     * @param _remoteOApp   Sender address on source chain as bytes32 (no casting)
+     * @param _localEid     Destination chain EID (should match contract's localEid)
+     * @param _localOApp    Receiver address on this chain (standard EVM address)
+     * @param _gasLimit     Gas limit for execution on destination chain
+     */
     function commitStuckSend(
         bytes memory _message,
         uint64 _nonce,
