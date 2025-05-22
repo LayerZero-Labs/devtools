@@ -108,6 +108,50 @@ const connections = await generateConnectionsConfig(pathways, { fetchMetadata: c
 
 In the above example, we extended the result of the default `fetchMetadata` with our own DVN entries - under the respective chains. We added a DVN with the `canonicalName` of `SuperCustomDVN` and id `super-custom-dvn`. The `canonicalName` and `id` can be arbitrary, but they must be consistent for all pathways that require that DVN. In our case, since we have a pathway between Fuji and Amoy, we extended the DVNs entry in both Fuji and Amoy.
 
+### Specifying only Optional DVNs
+
+Specifying only Optional DVNs and no Required DVNs is supported in Simple Config. For example this is how you can declare a config with no Required DVNs and only 2 (threshold) out of 3 Optional DVNs:
+
+```typescript
+const connections = await generateConnectionsConfig([
+    [
+      ethereumContract, // Chain A contract
+      bscContract, // Chain B contract
+      [[], [['LayerZero Labs', 'Horizen', 'P2P'], 2]], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
+      [15, 20], // [A to B confirmations, B to A confirmations]
+      [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain B enforcedOptions, Chain A enforcedOptions
+    ],
+]);
+```
+
+Using such configuration will mean that your OApp doesn't require any DVN to always verify - instead it's enough if 2 out of 3 DVNs will verify the message.
+
+### Using Blocked Message Library
+
+Blocked Messaged Library is a library that can be used both on block messages on certain pathway. It might be useful for some scenarios eg. migration, or when you no longer need specific pathway to be operational.
+
+Simple Config supports setting Blocked Message Library by using following syntax (notice change in the place for block confirmations):
+
+```typescript
+import { generateConnectionsConfig, BLOCKED_MESSAGE_LIB_INDICATOR } from '@layerzerolabs/metadata-tools';
+
+// ...
+
+const pathways: TwoWayConfig[] = [
+    [
+        ethereumContract,
+        bscContract,
+        [['LayerZero Labs'], []],
+        [[15, BLOCKED_MESSAGE_LIB_INDICATOR], 20], // BLOCKED_MESSAGE_LIB_INDICATOR
+        [undefined, undefined],
+    ],
+]
+```
+
+Using above configuration will set Blocked Message Library as Send Library on pathway from Chain A to B and as Receive Library for messages coming to chain B from A. This means that both Sending Messages from A to B will be blocked as well as receiving messages on B from A will be blocked.
+
+Blocked configuration in the above example has been set only for A to B, so it means that pathway B to A will operate normally. 
+
 #### With custom Executor
 
 To add a custom Executor with the name 'CustomExecutor' for your chains, you can extend the metadata similarly to DVNs:
