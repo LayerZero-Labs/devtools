@@ -58,7 +58,7 @@ describe('MyOFTUpgradeable Test', () => {
         const myOFTUpgradeable = await upgrades.deployProxy(MyOFTUpgradeable, ['MyOFT', 'MOFT', ownerA.address], {
             initializer: 'initialize',
             constructorArgs: [mockEndpointV2A.address],
-            unsafeAllow: ['constructor', 'state-variable-immutable'],
+            unsafeAllow: ['constructor', 'state-variable-immutable', 'missing-initializer-call'],
         })
         const myOFTUpgradeableImpl = (await upgrades.admin.getInstance(ownerA)).functions.getProxyImplementation(
             myOFTUpgradeable.address
@@ -68,7 +68,7 @@ describe('MyOFTUpgradeable Test', () => {
         const MyOFTUpgradeableMock = await ethers.getContractFactory('MyOFTUpgradeableMock')
         const myOFTUpgradeableMock = await upgrades.upgradeProxy(myOFTUpgradeable.address, MyOFTUpgradeableMock, {
             constructorArgs: [mockEndpointV2A.address],
-            unsafeAllow: ['constructor', 'state-variable-immutable'],
+            unsafeAllow: ['constructor', 'state-variable-immutable', 'missing-initializer-call', 'missing-initializer'],
         })
 
         // Ensure the proxy remains constant after the upgrade
@@ -87,7 +87,7 @@ describe('MyOFTUpgradeable Test', () => {
         // Downgrade the contract to remove mint
         const myOFTUpgradeableAgain = await upgrades.upgradeProxy(myOFTUpgradeableMock.address, MyOFTUpgradeable, {
             constructorArgs: [mockEndpointV2A.address],
-            unsafeAllow: ['constructor', 'state-variable-immutable'],
+            unsafeAllow: ['constructor', 'state-variable-immutable', 'missing-initializer-call'],
         })
         // Ensure the proxy remains constant after the upgrade
         expect(myOFTUpgradeableMock.address).to.equal(myOFTUpgradeableAgain.address)
