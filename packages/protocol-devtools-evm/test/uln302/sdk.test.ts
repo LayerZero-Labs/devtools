@@ -39,6 +39,7 @@ describe('uln302/sdk', () => {
                 optionalDVNThreshold: 1,
                 optionalDVNs: [AddressZero, AddressZero],
                 requiredDVNs: [AddressZero],
+                requiredDVNCount: 1,
             }
             const ulnConfigEncoded = ulnSdk.encodeUlnConfig(ulnConfig)
             expect(ulnConfigEncoded).toMatchSnapshot()
