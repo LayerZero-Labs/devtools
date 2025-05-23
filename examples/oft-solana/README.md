@@ -571,6 +571,55 @@ spl-token mint <TOKEN_MINT> <AMOUNT> --multisig-signer ~/.config/solana/id.json 
 
 :information_source: You can get the `<MINT_AUTHORITY>` address from [deployments/solana-testnet/OFT.json](deployments/solana-testnet/OFT.json).
 
+### Set Message Execution Options
+
+Refer to [Generating Execution Options](https://docs.layerzero.network/v2/developers/solana/gas-settings/options#generating-options) to learn how to build the options param for send transactions.
+
+Note that you will need to either enable `enforcedOptions` in [./layerzero.config.ts](./layerzero.config.ts) or pass in a value for `_options` when calling `send()`. Having neither will cause a revert when calling send().
+
+For this example, we have already included `enforcedOptions` by default in the `layerzero.config.ts`, which will take effect in the wiring step.
+
+#### (Optional) If specifying the `_options` value when calling `send()`
+
+It's only necessary to specify `_options` if you do not have `enforcedOptions`.
+
+For Sepolia -> Solana, you should pass in the options value into the script at [tasks/evm/send.ts](./tasks/evm/send.ts) as the value for `sendParam.extraOptions`.
+
+For Solana -> Sepolia, you should pass in the options value into the script at [tasks/solana/sendOFT.ts](./tasks/solana/sendOFT.ts) as the value for `options` for both in `quote` and `send`.
+
+### Send
+
+#### Send From Solana Devnet -> To Ethereum Sepolia
+
+```bash
+npx hardhat lz:oft:send --src-eid 40168 --dst-eid 40161 --to <RECEIVER_BYTES20> --amount <AMOUNT>
+```
+
+#### Send From Ethereum Sepolia -> To Solana Devnet
+
+```bash
+npx hardhat lz:oft:send --src-eid 40161 --dst-eid 40168 --to <RECEIVER_BASE58> --amount <AMOUNT>
+```
+
+For more information, run:
+
+```bash
+npx hardhat lz:oft:send --help
+```
+
+### Set a new Mint Authority Multisig
+
+If you are not happy with the deployer being a mint authority, you can create and set a new mint authority by running:
+
+```bash
+pnpm hardhat lz:oft:solana:setauthority --eid <SOLANA_EID> --mint <TOKEN_MINT> --program-id <PROGRAM_ID> --escrow <ESCROW> --additional-minters <MINTERS_CSV>
+```
+
+The `OFTStore` is automatically added as a mint authority to the newly created mint authority, and does not need to be
+included in the `--additional-minters` list.
+
+## Appendix
+
 ### Solana Program Verification
 
 Refer to [Verify the OFT Program](https://docs.layerzero.network/v2/developers/solana/oft/program#optional-verify-the-oft-program).
