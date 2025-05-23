@@ -43,7 +43,7 @@ impl LzReceive<'_> {
             },
         )?;
 
-        let string_value = msg_codec::decode(&params.message);
+        let string_value = msg_codec::decode(&params.message)?;
         let count = &mut ctx.accounts.store;
         count.string = string_value;
 

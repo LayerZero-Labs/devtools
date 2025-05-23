@@ -202,7 +202,7 @@ fn accept_nonce<'info>(
 ) -> Result<()> {
     let current_nonce = nonce_acc.max_received_nonce;
     if store_acc.ordered_nonce {
-        require!(nonce == current_nonce + 1, CounterError::InvalidNonce);
+        require!(nonce == current_nonce + 1, MyOAppError::InvalidNonce);
     }
     // update the max nonce anyway. once the ordered mode is turned on, missing early nonces will be rejected
     if nonce > current_nonce {
@@ -225,9 +225,8 @@ Amend `programs/counter/src/errors.rs` to include `InvalidNonce`:
 use anchor_lang::prelude::error_code;
 
 #[error_code]
-pub enum CounterError {
-    InvalidMessageType,
-    InvalidNonce,
+pub enum MyOAppError {
+    InvalidMessageType
 }
 
 ```

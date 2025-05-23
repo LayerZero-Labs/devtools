@@ -11,7 +11,7 @@ use state::*;
 
 declare_id!(anchor_lang::solana_program::pubkey::Pubkey::new_from_array(program_id_from_env!(
     "MYOAPP_ID",
-    "HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay"
+    "41NCdrEvXhQ4mZgyJkmqYxL6A1uEmnraGj31UJ6PsXd3"
 )));
 
 const LZ_RECEIVE_TYPES_SEED: &[u8] = b"LzReceiveTypes";
