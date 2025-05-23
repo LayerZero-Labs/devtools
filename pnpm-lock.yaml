@@ -4333,7 +4333,7 @@ importers:
         specifier: ^3.0.75
         version: 3.0.75
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.1.6
+        specifier: ~1.1.7
         version: link:../protocol-devtools
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.6

@@ -1,5 +1,13 @@
 # @layerzerolabs/protocol-devtools-evm
 
+## 3.0.8
+
+### Patch Changes
+
+- 3f5a715: allow optionalDVNs without requiredDVNs
+- Updated dependencies [3f5a715]
+  - @layerzerolabs/protocol-devtools@1.1.7
+
 ## 3.0.7
 
 ### Patch Changes
