@@ -24,7 +24,7 @@ import {
     OmniPoint,
 } from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import { makeZeroAddress, OmniSDK, Provider } from '@layerzerolabs/devtools-evm'
+import { addChecksum, makeZeroAddress, OmniSDK, Provider } from '@layerzerolabs/devtools-evm'
 import { Timeout } from '@layerzerolabs/protocol-devtools'
 import { Uln302 } from '@/uln302'
 import { Uln302SetExecutorConfig } from '@layerzerolabs/protocol-devtools'
@@ -33,6 +33,7 @@ import { ReceiveLibrarySchema } from './schema'
 import { abi } from '@layerzerolabs/lz-evm-sdk-v2/artifacts/contracts/EndpointV2.sol/EndpointV2.json'
 import { Contract } from '@ethersproject/contracts'
 import { UlnRead } from '@/ulnRead'
+import { BlockedUln302 } from '@/uln302/blockedSdk'
 
 const CONFIG_TYPE_EXECUTOR = 1
 const CONFIG_TYPE_ULN = 2
@@ -70,6 +71,10 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
                 this.point
             )}`
         )
+
+        if (await this.isBlockedLibrary(address)) {
+            return new BlockedUln302(this.contract.contract.provider as Provider, { eid: this.point.eid, address })
+        }
 
         return new Uln302(this.contract.contract.provider as Provider, { eid: this.point.eid, address })
     }
@@ -429,6 +434,10 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     @AsyncRetriable()
     isRegisteredLibrary(uln: OmniAddress): Promise<boolean> {
         return this.contract.contract.isRegisteredLibrary(uln)
+    }
+
+    async isBlockedLibrary(uln: OmniAddress): Promise<boolean> {
+        return (await this.contract.contract.blockedLibrary()) === addChecksum(uln)
     }
 
     async registerLibrary(uln: OmniAddress): Promise<OmniTransaction> {
