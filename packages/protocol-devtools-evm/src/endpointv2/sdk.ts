@@ -437,7 +437,14 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     }
 
     async isBlockedLibrary(uln: OmniAddress): Promise<boolean> {
-        return (await this.contract.contract.blockedLibrary()) === addChecksum(uln)
+        assert(!isZero(this.contract.contract.address), 'EndpointV2 can not be zero')
+
+        try {
+            return (await this.contract.contract.blockedLibrary()) === addChecksum(uln)
+        } catch (error) {
+            this.logger.error('Error calling EndpointV2.blockedLibrary()', error)
+            return false
+        }
     }
 
     async registerLibrary(uln: OmniAddress): Promise<OmniTransaction> {
