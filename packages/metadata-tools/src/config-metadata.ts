@@ -6,13 +6,13 @@ import {
     METADATA_KEY_EVM_BLOCKED_MESSAGE,
     METADATA_KEY_RECEIVE_LIBRARY,
     METADATA_KEY_SEND_LIBRARY,
-    METADATA_KEY_SOLANA_BLOCKED_MESSAGE,
     METADATA_URL,
     MSG_LIB_BLOCK_RECEIVE_ONLY,
     MSG_LIB_BLOCK_SEND_AND_RECEIVE,
     MSG_LIB_BLOCK_SEND_ONLY,
     NIL_DVN_COUNT,
 } from './constants'
+import { getAddress } from '@ethersproject/address'
 
 function getEndpointIdDeployment(eid: number, metadata: IMetadata) {
     const srcEidString = eid.toString()
@@ -140,7 +140,12 @@ function resolveExecutorForDeployment(
 // Helper to resolve library metadata key based on operation and chain
 function resolveLibraryMetadataKey(isSend: boolean, isBlocked: boolean, deployment: { chainKey: string }) {
     if (isBlocked) {
-        return isSolanaDeployment(deployment) ? METADATA_KEY_SOLANA_BLOCKED_MESSAGE : METADATA_KEY_EVM_BLOCKED_MESSAGE
+        if (isSolanaDeployment(deployment)) {
+            throw new Error('BlockedMessageLib is not currently supported by simple config generator on Solana')
+            // return METADATA_KEY_SOLANA_BLOCKED_MESSAGE // @TODO uncomment this when blocked message lib is supported on Solana
+        }
+
+        return METADATA_KEY_EVM_BLOCKED_MESSAGE
     }
     return isSend ? METADATA_KEY_SEND_LIBRARY : METADATA_KEY_RECEIVE_LIBRARY
 }
@@ -161,6 +166,9 @@ function isBlocked(blockConfirmationsDefinition: BlockConfirmationsDefinition | 
             keys.includes(blockConfirmationsDefinition[1])
     )
 }
+
+const getLibraryAddress = (deployment: any, metadataKey: string) =>
+    isSolanaDeployment(deployment) ? deployment[metadataKey].address : getAddress(deployment[metadataKey].address)
 
 export async function translatePathwayToConfig(
     pathway: TwoWayConfig,
@@ -223,10 +231,10 @@ export async function translatePathwayToConfig(
     assertHasKey(BLZDeployment, sendLibraryBToAMetadataKey, BContract.eid)
     assertHasKey(ALZDeployment, receiveLibraryBToAMetadataKey, AContract.eid)
 
-    const sendLibraryAToB = ALZDeployment[sendLibraryAToBMetadataKey].address
-    const receiveLibraryAToB = BLZDeployment[receiveLibraryAToBMetadataKey].address
-    const sendLibraryBToA = BLZDeployment[sendLibraryBToAMetadataKey].address
-    const receiveLibraryBToA = ALZDeployment[receiveLibraryBToAMetadataKey].address
+    const sendLibraryAToB = getLibraryAddress(ALZDeployment, sendLibraryAToBMetadataKey)
+    const receiveLibraryAToB = getLibraryAddress(BLZDeployment, receiveLibraryAToBMetadataKey)
+    const sendLibraryBToA = getLibraryAddress(BLZDeployment, sendLibraryBToAMetadataKey)
+    const receiveLibraryBToA = getLibraryAddress(ALZDeployment, receiveLibraryBToAMetadataKey)
 
     const AToBConfig: OmniEdgeHardhat<OAppEdgeConfig> = {
         from: AContract,
