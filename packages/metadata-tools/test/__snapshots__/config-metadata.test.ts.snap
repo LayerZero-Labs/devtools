@@ -484,15 +484,15 @@ exports[`config-metadata generateConnectionsConfig supports using block send and
           ],
         },
       },
-      "sendLibrary": "0x0c77d8d771ab35e2e184e7ce127f19ced31ff8c0",
+      "sendLibrary": "0x0C77d8d771aB35E2E184E7cE127f19CEd31FF8C0",
     },
     "from": {
       "contractName": "MyOFT",
       "eid": 40106,
     },
     "to": {
-      "address": "HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy",
-      "eid": 40168,
+      "contractName": "MyOFT",
+      "eid": 40267,
     },
   },
   {
@@ -505,17 +505,17 @@ exports[`config-metadata generateConnectionsConfig supports using block send and
           "optionalDVNs": [],
           "requiredDVNCount": 1,
           "requiredDVNs": [
-            "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
+            "0x55c175dd5b039331db251424538169d8495c18d1",
           ],
         },
       },
       "receiveLibraryConfig": {
         "gracePeriod": 0n,
-        "receiveLibrary": "2XrYqmhBMPJgDsb4SVbjV1PnJBprurd5bzRCkHwiFCJB",
+        "receiveLibrary": "0x0C77d8d771aB35E2E184E7cE127f19CEd31FF8C0",
       },
       "sendConfig": {
         "executorConfig": {
-          "executor": "AwrbHeCyniXaQhiJZkLhgWdUCteeWSGaSN1sTfLiY7xK",
+          "executor": "0x4Cf1B3Fa61465c2c907f82fC488B43223BA0CF93",
           "maxMessageSize": 10000,
         },
         "ulnConfig": {
@@ -524,15 +524,15 @@ exports[`config-metadata generateConnectionsConfig supports using block send and
           "optionalDVNs": [],
           "requiredDVNCount": 1,
           "requiredDVNs": [
-            "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
+            "0x55c175dd5b039331db251424538169d8495c18d1",
           ],
         },
       },
-      "sendLibrary": "7a4WjyR8VZ7yZz5XJAKm39BUGn5iT9CKcv2pmG9tdXVH",
+      "sendLibrary": "0x1d186C560281B8F1AF831957ED5047fD3AB902F9",
     },
     "from": {
-      "address": "HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy",
-      "eid": 40168,
+      "contractName": "MyOFT",
+      "eid": 40267,
     },
     "to": {
       "contractName": "MyOFT",
@@ -560,7 +560,7 @@ exports[`config-metadata generateConnectionsConfig supports using block send and
       },
       "receiveLibraryConfig": {
         "gracePeriod": 0n,
-        "receiveLibrary": "0x0c77d8d771ab35e2e184e7ce127f19ced31ff8c0",
+        "receiveLibrary": "0x0C77d8d771aB35E2E184E7cE127f19CEd31FF8C0",
       },
       "sendConfig": {
         "executorConfig": {
@@ -577,15 +577,15 @@ exports[`config-metadata generateConnectionsConfig supports using block send and
           ],
         },
       },
-      "sendLibrary": "0x0c77d8d771ab35e2e184e7ce127f19ced31ff8c0",
+      "sendLibrary": "0x0C77d8d771aB35E2E184E7cE127f19CEd31FF8C0",
     },
     "from": {
       "contractName": "MyOFT",
       "eid": 40106,
     },
     "to": {
-      "address": "HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy",
-      "eid": 40168,
+      "contractName": "MyOFT",
+      "eid": 40267,
     },
   },
   {
@@ -598,17 +598,17 @@ exports[`config-metadata generateConnectionsConfig supports using block send and
           "optionalDVNs": [],
           "requiredDVNCount": 1,
           "requiredDVNs": [
-            "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
+            "0x55c175dd5b039331db251424538169d8495c18d1",
           ],
         },
       },
       "receiveLibraryConfig": {
         "gracePeriod": 0n,
-        "receiveLibrary": "2XrYqmhBMPJgDsb4SVbjV1PnJBprurd5bzRCkHwiFCJB",
+        "receiveLibrary": "0x0C77d8d771aB35E2E184E7cE127f19CEd31FF8C0",
       },
       "sendConfig": {
         "executorConfig": {
-          "executor": "AwrbHeCyniXaQhiJZkLhgWdUCteeWSGaSN1sTfLiY7xK",
+          "executor": "0x4Cf1B3Fa61465c2c907f82fC488B43223BA0CF93",
           "maxMessageSize": 10000,
         },
         "ulnConfig": {
@@ -617,15 +617,15 @@ exports[`config-metadata generateConnectionsConfig supports using block send and
           "optionalDVNs": [],
           "requiredDVNCount": 1,
           "requiredDVNs": [
-            "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
+            "0x55c175dd5b039331db251424538169d8495c18d1",
           ],
         },
       },
-      "sendLibrary": "2XrYqmhBMPJgDsb4SVbjV1PnJBprurd5bzRCkHwiFCJB",
+      "sendLibrary": "0x0C77d8d771aB35E2E184E7cE127f19CEd31FF8C0",
     },
     "from": {
-      "address": "HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy",
-      "eid": 40168,
+      "contractName": "MyOFT",
+      "eid": 40267,
     },
     "to": {
       "contractName": "MyOFT",
