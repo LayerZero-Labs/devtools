@@ -63,6 +63,7 @@ npx @layerzerolabs/hyperliquid-composer hip-token   \
 npx @layerzerolabs/hyperliquid-composer spot-deploy-state \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
+    --deployer-address <0x> \
     [--log-level {info | verbose}]
 ```
 
