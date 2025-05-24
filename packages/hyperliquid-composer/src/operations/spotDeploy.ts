@@ -5,7 +5,9 @@ import inquirer from 'inquirer'
 import { getCoreSpotDeployment } from '../io'
 import { HyperliquidClient } from '../signer'
 import { MAX_HYPERCORE_SUPPLY, USDC_TOKEN_ID } from '../types'
-import type { SpotDeployAction } from '../types'
+import { getSpotDeployState } from './spotMeta'
+import type { SpotDeployAction, SpotDeployStates } from '../types'
+import { RegisterHyperliquidity } from '@/types/spotDeploy'
 
 export async function setTradingFeeShare(
     wallet: Wallet,
@@ -154,6 +156,85 @@ export async function setGenesis(wallet: Wallet, isTestnet: boolean, coreSpotTok
     logger.info('Setting genesis')
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
     const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, actionForGenesis)
+    return response
+}
+
+export async function setNoHyperliquidity(wallet: Wallet, isTestnet: boolean, tokenIndex: number, logLevel: string) {
+    const logger = createModuleLogger('setNoHyperliquidity', logLevel)
+
+    const deployStates = (await getSpotDeployState(wallet.address, isTestnet, logLevel)) as SpotDeployStates
+
+    const state = deployStates.states.find((state) => state.token === tokenIndex)
+    if (!state) {
+        logger.error(
+            `No in progress deployment state found for token ${tokenIndex}. This means your token is deployed.`
+        )
+        process.exit(1)
+    }
+
+    const spotIds = state.spots
+
+    logger.info(
+        `For information on valid input values, refer to: https://hyperliquid.gitbook.io/hyperliquid-docs/hyperliquid-improvement-proposals-hips/frontend-checks#hyperliquidity`
+    )
+    logger.info(`Available spot ids: ${spotIds}`)
+    const { spotId } = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'spotId',
+            message: `Enter the spot id that you would like to create a spot deployment for.`,
+        },
+    ])
+
+    if (!spotIds.includes(parseInt(spotId))) {
+        logger.error(`Invalid spot id: ${spotId}`)
+        process.exit(1)
+    }
+
+    const { startPx } = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'startPx',
+            message: 'Enter the starting price:',
+        },
+    ])
+
+    const { orderSz } = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'orderSz',
+            message: 'Enter the size of each order (float not wei):',
+        },
+    ])
+
+    const registerHyperliquidity: RegisterHyperliquidity = {
+        spot: parseInt(spotId),
+        startPx: startPx,
+        orderSz: orderSz,
+        nOrders: 0,
+    }
+
+    const { nSeededLevels } = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'nSeededLevels',
+            message: `Enter the number of levels the deployer wishes to seed with usdc instead of tokens (default 0) (optional):`,
+            default: '0',
+        },
+    ])
+
+    if (nSeededLevels !== '0') {
+        registerHyperliquidity.nSeededLevels = parseInt(nSeededLevels)
+    }
+
+    const actionForNoHyperliquidity: SpotDeployAction['action'] = {
+        type: 'spotDeploy',
+        registerHyperliquidity: registerHyperliquidity,
+    }
+
+    logger.info('Registering hyperliquidity')
+    const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, actionForNoHyperliquidity)
     return response
 }
 

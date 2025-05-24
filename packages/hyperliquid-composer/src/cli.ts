@@ -10,6 +10,7 @@ import {
     tradingFee,
     userGenesis,
     genesis,
+    createSpotDeployment,
     registerTradingSpot,
     spotDeployState,
 } from './commands'
@@ -117,6 +118,15 @@ program
     .action(genesis)
 
 program
+    .command('create-spot-deployment')
+    .description('Create a spot deployment without hyperliquidity')
+    .requiredOption('-idx, --token-index <token-index>', 'Token index')
+    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
+    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
+    .option('-pk, --private-key <0x>', 'Private key')
+    .action(createSpotDeployment)
+
+program
     .command('register-spot')
     .description('Register trading spot against USDC')
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
@@ -126,3 +136,6 @@ program
     .action(registerTradingSpot)
 
 program.parse()
+
+// 0xa3824bffc05178b1ed611117e5b900adcb189b94
+// 1170
