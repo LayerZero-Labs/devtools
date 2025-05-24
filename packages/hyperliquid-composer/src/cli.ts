@@ -11,6 +11,7 @@ import {
     userGenesis,
     genesis,
     registerTradingSpot,
+    spotDeployState,
 } from './commands'
 
 const program = new Command()
@@ -70,6 +71,15 @@ program
     .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
     .option('-l, --log-level <level>', 'Log level', LogLevel.info)
     .action(hipTokenInfo)
+
+program
+    .command('spot-deploy-state')
+    .description('Get the current deployment state of a hypercore token')
+    .requiredOption('-idx, --token-index <token-index>', 'Token index')
+    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
+    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
+    .option('-da, --deployer-address <0x>', 'Core spot deployer address (optional)')
+    .action(spotDeployState)
 
 program
     .command('trading-fee')
