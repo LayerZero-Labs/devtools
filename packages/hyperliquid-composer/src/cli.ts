@@ -76,7 +76,10 @@ program
 program
     .command('spot-deploy-state')
     .description('Get the current deployment state of a hypercore token')
-    .requiredOption('-idx, --token-index <token-index>', 'Token index')
+    .requiredOption(
+        '-idx, --token-index <token-index>',
+        'Filter on token index. To view all deployments, use "--log-level verbose"'
+    )
     .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
     .option('-l, --log-level <level>', 'Log level', LogLevel.info)
     .option('-da, --deployer-address <0x>', 'Core spot deployer address (optional)')
