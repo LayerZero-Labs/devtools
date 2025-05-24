@@ -57,6 +57,16 @@ npx @layerzerolabs/hyperliquid-composer hip-token   \
     [--log-level {info | verbose}]
 ```
 
+#### View a deployment state
+
+```bash
+npx @layerzerolabs/hyperliquid-composer spot-deploy-state \
+    --token-index <coreIndex> \
+    --network {testnet | mainnet} \
+    --deployer-address <0x> \
+    [--log-level {info | verbose}]
+```
+
 ### Switching Blocks (`evmUserModify`)
 
 PR : <https://github.com/LayerZero-Labs/devtools/pull/1417>
@@ -73,18 +83,7 @@ npx @layerzerolabs/hyperliquid-composer set-block \
 
 PR : <https://github.com/LayerZero-Labs/devtools/pull/1441>
 
-#### 1 `setDeployerTradingFeeShare`
-
-```bash
-npx @layerzerolabs/hyperliquid-composer trading-fee \
-    --token-index <coreIndex> \
-    --share <[0%,100%]> \
-    --network {testnet | mainnet} \
-    --private-key $PRIVATE_KEY_HYPERLIQUID \
-    [--log-level {info | verbose}]
-```
-
-#### 2 `userGenesis`
+#### 1 `userGenesis`
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer user-genesis \
@@ -95,7 +94,7 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
     [--log-level {info | verbose}]
 ```
 
-#### 3 `genesis`
+#### 2 `genesis`
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer set-genesis \
@@ -105,11 +104,32 @@ npx @layerzerolabs/hyperliquid-composer set-genesis \
     [--log-level {info | verbose}]
 ```
 
-#### 4 `registerSpot`
+#### 3 `registerSpot`
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer register-spot \
     --token-index <coreIndex> \
+    --network {testnet | mainnet} \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
+    [--log-level {info | verbose}]
+```
+
+#### 4 `createSpotDeployment`
+
+```bash
+npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
+    --token-index <coreIndex> \
+    --network {testnet | mainnet} \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
+    [--log-level {info | verbose}]
+```
+
+#### 5 `setDeployerTradingFeeShare`
+
+```bash
+npx @layerzerolabs/hyperliquid-composer trading-fee \
+    --token-index <coreIndex> \
+    --share <[0%,100%]> \
     --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
@@ -205,9 +225,13 @@ curl -X POST "https://api.hyperliquid-testnet.xyz/info" \
 This will return a json object with the current state of the spot deployment.
 (building a sdk wrapper around this is on our roadmap)
 
-### Step 0 `core-spot create`
+### Step 1/6 `Purchase the ticker`
 
-This will create a new file under `./deployments/hypercore-{testnet | mainnet}` with the name of the core spot token index. This is not a hyperliquid step but rather something to make the deployment process easier. It is crucial to the functioning of the token deployment after which it really is not needed.
+You will have to buy a ticker from the Hyperliquid UI - <https://app.hyperliquid.xyz/deploySpot>
+
+> ⚠️ note: Unless you buy the ticker you will not be able to deploy the Core Spot.
+
+After this we can use the `core-spot create` command to create a new file under `./deployments/hypercore-{testnet | mainnet}` with the name of the Core Spot token index. This is not a Hyperliquid step but rather something to make the deployment process easier. It is crucial to the functioning of the token deployment after which it really is not needed.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer core-spot \
@@ -218,29 +242,11 @@ npx @layerzerolabs/hyperliquid-composer core-spot \
     [--log-level {info | verbose}]
 ```
 
-### Step 1/4 `setDeployerTradingFeeShare`
-
-This is the step where you set the trading fee share for the deployer. It can be in the range of `[0%,100%]`.
-
-A deployer fee share <https://hyperliquid.gitbook.io/hyperliquid-docs/trading/fees> is claimed per transaction on HyperCore. Half of the base rate (50%) is allocated as the deployer fee share. The deployer can choose to forgo this fee share by setting the share to `0%`. This causes the deployer's fee share part to be burnt. If it were to be set to `100%`, the deployer would receive the full fee share part of the fee.
-
-> ⚠️ Note: The trading fee can be reset as long as the new share is lower than the previous share.
-> ⚠️ Note: This step can also be run after the core spot is deployed.
-
-```bash
-npx @layerzerolabs/hyperliquid-composer trading-fee \
-    --token-index <coreIndex> \
-    --share <[0%,100%]> \
-    --network {testnet | mainnet} \
-    --private-key $PRIVATE_KEY_HYPERLIQUID \
-    [--log-level {info | verbose}]
-```
-
-### Step 2/4 `userGenesis`
+### Step 2/6 `userGenesis`
 
 This is the part where you set the genesis balances for the deployer and the users. Since `HyperCore` tokens are of uint type `u64` the most tokens possible are `18446744073709551615`.
 
-You will have to edit the deployment created by `core-spot create` command that is under `./deployments/hypercore-{testnet | mainnet}` with the name of the core spot token index. It should be populated with the `deployer` and `asset bridge address` with both set to `0 wei`.
+You will have to edit the deployment created by `core-spot create` command that is under `./deployments/hypercore-{testnet | mainnet}` with the name of the Core Spot token index. It should be populated with the `deployer` and `asset bridge address` with both set to `0 wei`.
 
 You can then use the `user-genesis` command to set the genesis balances for the deployer and the users.
 
@@ -279,7 +285,7 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
 
 > ⚠️ Note: There is no limit to the number of time you can re-run this command.
 
-### Step 3/4 `genesis`
+### Step 3/6 `genesis`
 
 This is the step that registers the above genesis balances on `HyperCore`.
 
@@ -293,19 +299,20 @@ npx @layerzerolabs/hyperliquid-composer set-genesis \
     [--log-level {info | verbose}]
 ```
 
-### Step 4/4 `registerSpot`
+### Step 4/6 `registerSpot`
 
-This is the step that registers the core spot on `HyperCore` and creates a base-quote pair against `USDC`, which is the only supported quote token as of now.
+This is the step that registers the Core Spot on `HyperCore` and creates a base-quote pair against `USDC`, which is the only supported quote token as of now.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer register-spot \
-    --token-index <coreIndex> \
+    --token-index <CoreIndex> \
     --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
+    [--log-level {info | verbose}]
 ```
 
-Your core spot (that does not use hyperliquidity) has now been deployed and registered on `HyperCore`.
-The following command will return a json object with your newly deployed core spot token details.
+Your Core Spot (that does not use Hyperliquidity) has now been deployed and registered on `HyperCore`.
+The following command will return a json object with your newly deployed Core Spot token details.
 
 ```bash
 curl -X POST "https://api.hyperliquid.xyz/info" \
@@ -313,15 +320,61 @@ curl -X POST "https://api.hyperliquid.xyz/info" \
      -d '{ "type": "tokenDetails", "tokenId": "<YOUR_TOKEN_ID>"}'
 ```
 
+> ⚠️ Note: The next 2 commands can be executed at a later time. It is possible to go directly to the token linking step.
+
+### Step 5/6 `createSpotDeployment`
+
+This is the step that creates a spot deployment without hyperliquidity.
+
+You will be prompted for the following:
+
+- startPx - The starting price.
+- orderSz - The size of each order (float, not wei)
+- nSeededLevels - The number of levels the deployer wishes to seed with usdc instead of tokens.
+  > ⚠️ Note: You will not be prompted for nOrders as it is set to 0 because we do not support Hyperliquidity - <https://github.com/hyperliquid-dex/hyperliquid-python-sdk/blob/master/examples/spot_deploy.py#L97-L104>
+
+There are some tight range bounds on the input values that can be viewed at hyperliquid's [frontend checks](https://hyperliquid.gitbook.io/hyperliquid-docs/hyperliquid-improvement-proposals-hips/frontend-checks#hyperliquidity).
+
+> ⚠️ Note: The SDK does not enforce the frontend checks right now.
+> ⚠️ Note: This step can be executed after deployment
+
+```bash
+npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
+    --token-index <coreIndex> \
+    --network {testnet | mainnet} \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
+    [--log-level {info | verbose}]
+```
+
+> ⚠️ Note: `spot-deploy-state` should fail after completing this step.
+
+### Step 6/6 `setDeployerTradingFeeShare`
+
+This is the step where you set the trading fee share for the deployer. It can be in the range of `[0%,100%]`.
+
+A deployer fee share <https://hyperliquid.gitbook.io/hyperliquid-docs/trading/fees> is claimed per transaction on HyperCore. Half of the base rate (50%) is allocated as the deployer fee share. The deployer can choose to forgo this fee share by setting the share to `0%`. This causes the deployer's fee share part to be burnt. If it were to be set to `100%`, the deployer would receive the full fee share part of the fee.
+
+> ⚠️ Note: The trading fee can be reset as long as the new share is lower than the previous share.
+> ⚠️ Note: This step can also be run after the core spot is deployed.
+
+```bash
+npx @layerzerolabs/hyperliquid-composer trading-fee \
+    --token-index <coreIndex> \
+    --share <[0%,100%]> \
+    --network {testnet | mainnet} \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
+    [--log-level {info | verbose}]
+```
+
 ## Connect the OFT to the deployed Core Spot
 
 If you have run the above steps then you can use `--oapp-config` in the following commands. If not do not worry! Our SDK will prompt you for the OFT address and the OFT deployed transaction hash (we need the deployment nonce).
 
-In order to enable transfers between the OFT and the core spot, we need to connect the OFT to the core spot. This is done in two steps:
+In order to enable transfers between the OFT and the Core Spot, we need to connect the OFT to the Core Spot. This is done in two steps:
 
 ### Step 1/2 `requestEvmContract`
 
-This step is issued by the core spot deployer and populates in `HyperCore` that a request has been made for the mentioned Core Spot to be connected to the ERC20 deployed at the mentioned erc20 address.
+This step is issued by the Core Spot deployer and populates in `HyperCore` that a request has been made for the mentioned Core Spot to be connected to the ERC20 deployed at the mentioned ERC20 address.
 
 > ⚠️ Note: This step can be issued multiple times until the `finalizeEvmContract` step is issued.
 
@@ -336,7 +389,7 @@ npx @layerzerolabs/hyperliquid-composer request-evm-contract  \
 
 ### Step 2/2 `finalizeEvmContract`
 
-This step completes the connection between the OFT and the core spot. It pulls either hyperevm testnet or mainnet address from the layerzero config file based on the `eid` and the core spot information from the hypercore deployment.
+This step completes the connection between the OFT and the Core Spot. It pulls either HyperEVM testnet or mainnet address from the LayerZero config file based on the `eid` and the Core Spot information from the HyperCore deployment.
 
 > ⚠️ Note: This step is the final step and can only be issued once.
 
@@ -357,12 +410,4 @@ While the composer could have been deployed at any point in time due to its stat
 npx hardhat lz:deploy --tags MyHyperLiquidComposer
 ```
 
-## Sending tokens from x-network to HyperEVM/Core
-
-After populating your `.env` you can run the following script to send tokens across. Having the second argument `gas > 0` will send the tokens into `HyperCore`. Setting the third argument `value > 0` will also fund the user's address with `HYPE` tokens on `HyperCore`.
-
 > ⚠️ Note: You would need to fund the composer's address with HyperCore with at least $1 in USDC or HYPE so that it can perform L1WriteActions through it's address.
-
-```bash
-forge script script/SendScript.s.sol --private-key $PRIVATE_KEY --rpc-url $RPC_URL_BSC_TESTNET --sig "exec(uint256,uint128,uint128)" <oft-amount> <composer-gas> <composer-value> --broadcast
-```
