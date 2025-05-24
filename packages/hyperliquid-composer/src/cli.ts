@@ -139,3 +139,6 @@ program
     .action(registerTradingSpot)
 
 program.parse()
+
+// 0xa3824bffc05178b1ed611117e5b900adcb189b94
+// 1170
