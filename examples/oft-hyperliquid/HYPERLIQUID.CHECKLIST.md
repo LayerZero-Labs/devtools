@@ -122,6 +122,35 @@ Block switching is not present in the default oft deploy script.
 - Even though the default value is 100%, it is recommended that you set it
 - This can be run even after deployment and linking
 
+### Step 2.5 : Register Hyperliquidity
+
+| Action                  | Performed by      | Actionable with                           | Required for |
+| ----------------------- | ----------------- | ----------------------------------------- | ------------ |
+| Register Hyperliquidity | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
+| Blocked by              | OFT Deployer      | Step 0                                    | Step 6       |
+| Blocked by              | CoreSpot Deployer | Step 2.1                                  | none         |
+
+- [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-56-createspotdeployment)
+- [ ] `nOrders` MUST be set to 0 as we are not engaging with hyperliquidity
+- [ ] The other values are token owner choice (is usually non 0)
+- Step MUST be run even though we set `noHyperliquidity=true` in genesis
+- This can be run even after deployment and linking
+
+### Step 2.6 : Set deployer fee share
+
+| Action                 | Performed by      | Actionable with                           | Required for |
+| ---------------------- | ----------------- | ----------------------------------------- | ------------ |
+| Set Deployer Fee Share | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
+| Blocked by             | OFT Deployer      | Step 0                                    | Step 6       |
+| Blocked by             | CoreSpot Deployer | Step 2.1                                  | none         |
+
+- [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-14-setdeployertradingfeeshare)
+- [ ] Trading fee share is usually 100% (default value) - this allocates the trading fees to the token deployer instead of burning it.
+- [ ] Do not lose or burn your deployer address as it collects tokens.
+- [ ] Step can be re-run as long as the new fee% is lower than the current one.
+- Even though the default value is 100%, it is recommended that you set it
+- This can be run even after deployment and linking
+
 ## Step 3.1 : Create a request to connect the HyperCoreSpot to HyperEVM OFT
 
 | Action         | Performed by      | Actionable with                           | Required for |
