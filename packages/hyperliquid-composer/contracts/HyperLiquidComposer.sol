@@ -49,7 +49,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         /// @dev https://app.hyperliquid-testnet.xyz/explorer/token/0x7317beb7cceed72ef0b346074cc8e7ab
         hypeAsset = IHyperAsset({
             assetBridgeAddress: 0x2222222222222222222222222222222222222222,
-            coreIndexId: 1105,
+            coreIndexId: hypeIndexByChainId[block.chainid],
             /// @dev 18 is the number of decimals in the HYPE token on HyperEVM
             /// @dev 8 is the number of decimals in the HYPE Core Spot on HyperLiquid L1
             decimalDiff: 18 - 8
