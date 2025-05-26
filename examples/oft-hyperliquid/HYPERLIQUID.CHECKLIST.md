@@ -92,7 +92,7 @@ Block switching is not present in the default oft deploy script.
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-46-registerspot)
 - [ ] Only USDC is supported on HyperCore at the moment - the sdk defaults to USDC.
 - [ ] Make sure the asset bridge address on HyperCore has all the tokens minted in Step 2.3. Partial funding is not supported.
- 
+
 ### Step 2.5 : Register Hyperliquidity
 
 | Action                  | Performed by      | Actionable with                           | Required for |
@@ -102,7 +102,7 @@ Block switching is not present in the default oft deploy script.
 | Blocked by              | CoreSpot Deployer | Step 2.1                                  | none         |
 
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-56-createspotdeployment)
-- [ ] `nOrders` MUST be set to 0 as we are not engaging with hyperliquidity 
+- [ ] `nOrders` MUST be set to 0 as we are not engaging with hyperliquidity
 - [ ] The other values are token owner choice (is usually non 0)
 - Step MUST be run even though we set `noHyperliquidity=true` in genesis
 - This can be run even after deployment and linking
@@ -119,8 +119,8 @@ Block switching is not present in the default oft deploy script.
 - [ ] Trading fee share is usually 100% (default value) - this allocates the trading fees to the token deployer instead of burning it.
 - [ ] Do not lose or burn your deployer address as it collects tokens.
 - [ ] Step can be re-run as long as the new fee% is lower than the current one.
-- Even though the default value is 100%, it is recommended that you set it 
-- This can be run even after deployment and linking 
+- Even though the default value is 100%, it is recommended that you set it
+- This can be run even after deployment and linking
 
 ## Step 3.1 : Create a request to connect the HyperCoreSpot to HyperEVM OFT
 
