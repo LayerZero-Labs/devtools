@@ -34,6 +34,17 @@ interface IHyperLiquidComposerCore {
     function HLP_PRECOMPILE_WRITE() external view returns (address);
     function HLP_PRECOMPILE_READ_SPOT_BALANCE() external view returns (address);
 
+    function oftAsset() external view returns (address, uint64, int64);
+    function hypeAsset() external view returns (address, uint64, int64);
+
+    function HYPE_CHAIN_ID_TESTNET() external pure returns (uint256);
+    function HYPE_CHAIN_ID_MAINNET() external pure returns (uint256);
+
+    function HYPE_INDEX_TESTNET() external pure returns (uint64);
+    function HYPE_INDEX_MAINNET() external pure returns (uint64);
+
+    function hypeIndexByChainId(uint256 _chainId) external view returns (uint64);
+
     function validate_addresses_or_refund(
         bytes calldata _maybeReceiver,
         bytes32 _senderBytes32,
