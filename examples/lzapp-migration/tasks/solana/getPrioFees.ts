@@ -1,9 +1,8 @@
 import { task } from 'hardhat/config'
 
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
+import { getPrioritizationFees } from '@layerzerolabs/devtools-solana'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-
-import getPrioritizationFees from '../utils/getFee'
 
 import { deriveConnection } from './index'
 
