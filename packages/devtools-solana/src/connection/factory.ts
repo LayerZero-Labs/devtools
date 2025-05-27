@@ -41,3 +41,11 @@ export const createConnectionFactory = (
     urlFactory = defaultRpcUrlFactory,
     commitmentOrConfig?: Commitment | ConnectionConfig
 ): ConnectionFactory => pMemoize(async (eid) => new Connection(await urlFactory(eid), commitmentOrConfig))
+
+export const createSolanaConnectionFactory = () =>
+    createConnectionFactory(
+        createRpcUrlFactory({
+            [EndpointId.SOLANA_V2_MAINNET]: process.env.RPC_URL_SOLANA,
+            [EndpointId.SOLANA_V2_TESTNET]: process.env.RPC_URL_SOLANA_TESTNET,
+        })
+    )

@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-solana",
-  "version": "1.0.8",
+  "version": "1.1.0",
   "description": "Utilities for LayerZero Solana projects",
   "repository": {
     "type": "git",
@@ -39,6 +39,7 @@
   "dependencies": {
     "@safe-global/api-kit": "^1.3.0",
     "@safe-global/protocol-kit": "^1.3.0",
+    "@solana-developers/helpers": "^2.8.1",
     "ethers": "^5.7.2",
     "p-memoize": "~4.0.4"
   },
@@ -48,7 +49,7 @@
     "@layerzerolabs/lz-definitions": "^3.0.75",
     "@layerzerolabs/test-devtools": "~0.4.6",
     "@layerzerolabs/test-devtools-solana": "~0.0.5",
-    "@solana/web3.js": "~1.95.8",
+    "@solana/web3.js": "~1.98.0",
     "@sqds/multisig": "^2.1.3",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
