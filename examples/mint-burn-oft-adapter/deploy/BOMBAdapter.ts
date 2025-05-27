@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-const contractName = 'MyOFT'
+const contractName = 'BOMBAdapter'
 
 const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
@@ -33,18 +33,22 @@ const deploy: DeployFunction = async (hre) => {
     // }
     const endpointV2Deployment = await hre.deployments.get('EndpointV2')
 
-    // If the oftAdapter configuration is defined on a network that is deploying an OFT,
-    // the deployment will log a warning and skip the deployment
-    if (hre.network.config.oftAdapter != null) {
-        console.warn(`oftAdapter configuration found on OFT deployment, skipping OFT deployment`)
+    // The token address must be defined in hardhat.config.ts
+    // If the token address is not defined, the deployment will log a warning and skip the deployment
+    if (hre.network.config.oftAdapter == null) {
+        console.warn(`oftAdapter not configured on network config, skipping OFTWrapper deployment`)
+
         return
     }
+
+    // Get the BombMinterBurner deployment
+    const bombMinterBurnerDeployment = await hre.deployments.get('BOMBMinterBurner')
 
     const { address } = await deploy(contractName, {
         from: deployer,
         args: [
-            'MyOFT', // name
-            'MOFT', // symbol
+            hre.network.config.oftAdapter.tokenAddress, // token address
+            bombMinterBurnerDeployment.address, // BombMinterBurner address implementing IMintableBurnable
             endpointV2Deployment.address, // LayerZero's EndpointV2 address
             deployer, // owner
         ],
@@ -56,5 +60,6 @@ const deploy: DeployFunction = async (hre) => {
 }
 
 deploy.tags = [contractName]
+deploy.dependencies = ['BOMBMinterBurner']
 
 export default deploy

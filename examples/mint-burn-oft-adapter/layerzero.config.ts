@@ -1,75 +1,46 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
+import { generateConnectionsConfig } from '@layerzerolabs/metadata-tools'
+import { OAppEnforcedOption, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
-import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
-
-/**
- *  WARNING: ONLY 1 OFTAdapter should exist for a given global mesh.
- *  The token address for the adapter should be defined in hardhat.config. This will be used in deployment.
- *
- *  for example:
- *
- *    sepolia: {
- *         eid: EndpointId.SEPOLIA_V2_TESTNET,
- *         url: process.env.RPC_URL_SEPOLIA || 'https://rpc.sepolia.org/',
- *         accounts,
- *         oftAdapter: {
- *             tokenAddress: '0x0', // Set the token address for the OFT adapter
- *         },
- *     },
- */
+// Note:  Do not use address for EVM OmniPointHardhat contracts.  Contracts are loaded using hardhat-deploy.
+// If you do use an address, ensure artifacts exists.
 const sepoliaContract: OmniPointHardhat = {
     eid: EndpointId.SEPOLIA_V2_TESTNET,
-    contractName: 'MyMintBurnOFTAdapter',
+    contractName: 'BOMBAdapter',
 }
 
-const fujiContract: OmniPointHardhat = {
+const avalancheContract: OmniPointHardhat = {
     eid: EndpointId.AVALANCHE_V2_TESTNET,
-    contractName: 'MyOFT',
+    contractName: 'BOMBAdapter',
 }
 
-const amoyContract: OmniPointHardhat = {
-    eid: EndpointId.AMOY_V2_TESTNET,
-    contractName: 'MyOFT',
-}
+const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
+    {
+        msgType: 1,
+        optionType: ExecutorOptionType.LZ_RECEIVE,
+        gas: 80000,
+        value: 0,
+    },
+]
 
-const config: OAppOmniGraphHardhat = {
-    contracts: [
-        {
-            contract: fujiContract,
-        },
-        {
-            contract: sepoliaContract,
-        },
-        {
-            contract: amoyContract,
-        },
-    ],
-    connections: [
-        {
-            from: fujiContract,
-            to: sepoliaContract,
-        },
-        {
-            from: fujiContract,
-            to: amoyContract,
-        },
-        {
-            from: sepoliaContract,
-            to: fujiContract,
-        },
-        {
-            from: sepoliaContract,
-            to: amoyContract,
-        },
-        {
-            from: amoyContract,
-            to: sepoliaContract,
-        },
-        {
-            from: amoyContract,
-            to: fujiContract,
-        },
-    ],
-}
+// Learn about Message Execution Options: https://docs.layerzero.network/v2/developers/solana/oft/account#message-execution-options
+// Learn more about the Simple Config Generator - https://docs.layerzero.network/v2/developers/evm/technical-reference/simple-config
+export default async function () {
+    // note: pathways declared here are automatically bidirectional
+    // if you declare A,B there's no need to declare B,A
+    const connections = await generateConnectionsConfig([
+        [
+            sepoliaContract, // Chain A contract
+            avalancheContract, // Chain B contract
+            [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
+            [15, 15], // [A to B confirmations, B to A confirmations]
+            [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain B enforcedOptions, Chain A enforcedOptions
+        ],
+    ])
 
-export default config
+    return {
+        contracts: [{ contract: sepoliaContract }, { contract: avalancheContract }],
+        connections,
+    }
+}

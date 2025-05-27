@@ -56,16 +56,19 @@ const config: HardhatUserConfig = {
     networks: {
         'sepolia-testnet': {
             eid: EndpointId.SEPOLIA_V2_TESTNET,
-            url: process.env.RPC_URL_SEPOLIA || 'https://rpc.sepolia.org/',
+            url: process.env.RPC_URL_SEPOLIA || 'https://gateway.tenderly.co/public/sepolia',
             accounts,
             oftAdapter: {
-                tokenAddress: '0x0', // Set the token address for the OFT adapter
+                tokenAddress: '0xC3D4E9Ac47D7f37bB07C2f8355Bb4940DEA3bbC3', // Set the token address for the OFT adapter
             },
         },
         'avalanche-testnet': {
             eid: EndpointId.AVALANCHE_V2_TESTNET,
-            url: process.env.RPC_URL_FUJI || 'https://rpc.ankr.com/avalanche_fuji',
+            url: process.env.RPC_URL_FUJI || 'https://avalanche-fuji-c-chain-rpc.publicnode.com',
             accounts,
+            oftAdapter: {
+                tokenAddress: '0x94E61e63243BbB93CD0579bA42e1ee6157F28515',
+            },
         },
         'amoy-testnet': {
             eid: EndpointId.AMOY_V2_TESTNET,

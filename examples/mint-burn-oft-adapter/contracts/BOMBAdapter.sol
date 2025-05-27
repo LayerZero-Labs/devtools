@@ -15,7 +15,7 @@ import { IMintableBurnable } from "@layerzerolabs/oft-evm/contracts/interfaces/I
  * IF the 'innerToken' applies something like a transfer fee, the default will NOT work...
  * a pre/post balance check will need to be done to calculate the amountSentLD/amountReceivedLD.
  */
-contract MyMintBurnOFTAdapter is MintBurnOFTAdapter {
+contract BOMBAdapter is MintBurnOFTAdapter {
     constructor(
         address _token,
         IMintableBurnable _minterBurner,
