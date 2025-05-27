@@ -440,9 +440,9 @@ export async function getLibraryIndex(
 
         const endpointContract = new Contract(endpointDeployment.address, endpointDeployment.abi, signer)
 
-        const MAX_ITERATIONS = 6 // Adjust based on expected number of libraries
+        const MAX_ITERATIONS = await endpointContract.latestVersion() // Adjust based on expected number of libraries
 
-        for (let i = 0; i < MAX_ITERATIONS; i++) {
+        for (let i = 0; i <= MAX_ITERATIONS; i++) {
             const currentLibraryAddress = await endpointContract.libraryLookup(i)
             if (currentLibraryAddress === libraryAddress) {
                 return i
