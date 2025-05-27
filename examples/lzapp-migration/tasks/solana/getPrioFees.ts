@@ -26,7 +26,7 @@ task('lz:solana:get-priority-fees', 'Fetches prioritization fees from the Solana
         devtoolsTypes.string
     )
     .setAction(async ({ eid, address }: GetPrioFeesTaskArgs) => {
-        const { connection } = await deriveConnection(eid)
+        const { connection } = await deriveConnection(eid, true)
         const fees = await getPrioritizationFees(connection, address)
         console.log('Prioritization Fees:', fees)
     })
