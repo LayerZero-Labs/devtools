@@ -153,6 +153,22 @@ Block switching is not present in the default oft deploy script.
 - [ ] Make sure the Composer's address is activated on HyperCore (sending it at least $1 worth of `HYPE` or `USDC`).
 - Composer is re-deployable and independent of the oft and does not need to be linked with anything.
 
-## Step 6 : Listing on spot order books
+## Step 5 : Listing on spot order books
 
-## Step 7 : Listing on perp order books
+| Action            | Performed by      | Actionable with                           | Required for |
+| ----------------- | ----------------- | ----------------------------------------- | ------------ |
+| Spot Book Listing | Automatic         | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
+| Blocked by        | CoreSpot Deployer | Step 2                                    | none         |
+
+This is automatically completed when all steps in Step 2 are completed.
+
+## Step 6 : Listing on perp order books
+
+| Action            | Performed by      | Actionable with                           | Required for |
+| ----------------- | ----------------- | ----------------------------------------- | ------------ |
+| Perp Book Listing | Automatic         | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
+| Blocked by        | CoreSpot Deployer | Step 2                                    | none         |
+
+This is controlled by the hyperliquid community - [source](https://hyperliquid.gitbook.io/hyperliquid-docs/trading/perpetual-assets)
+
+> Hyperliquid currently supports trading of 100+ assets. Assets are added according to community input.
