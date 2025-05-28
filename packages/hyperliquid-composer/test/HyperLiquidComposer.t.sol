@@ -22,6 +22,10 @@ contract HyperLiquidComposerTest is Test {
     IHyperAsset public ALICE;
     IHyperAsset public HYPE;
     address public constant HL_LZ_ENDPOINT_V2 = 0xf9e1815F151024bDE4B7C10BAC10e8Ba9F6b53E1;
+
+    address public constant HL_LZ_ENDPOINT_V2_TESTNET = 0xf9e1815F151024bDE4B7C10BAC10e8Ba9F6b53E1;
+    address public constant HL_LZ_ENDPOINT_V2_MAINNET = 0x3A73033C0b1407574C76BdBAc67f126f6b4a9AA9;
+
     address public constant HLP_PRECOMPILE_WRITE = 0x3333333333333333333333333333333333333333;
     address public constant HLP_PRECOMPILE_READ_SPOT_BALANCE = 0x0000000000000000000000000000000000000801;
     // Ethereum Sepolia
@@ -90,6 +94,34 @@ contract HyperLiquidComposerTest is Test {
         assertEq(oftAsset.assetBridgeAddress, ALICE.assetBridgeAddress);
         assertEq(oftAsset.coreIndexId, ALICE.coreIndexId);
         assertEq(oftAsset.decimalDiff, ALICE.decimalDiff);
+    }
+
+    function test_hypeIndexByChainId_testnet() public {
+        vm.createSelectFork("https://rpc.hyperliquid-testnet.xyz/evm");
+
+        OFTMock oftTestnet = new OFTMock("test", "test", HL_LZ_ENDPOINT_V2_TESTNET, msg.sender);
+        HyperLiquidComposer hypeComposerTestnet = new HyperLiquidComposer(
+            HL_LZ_ENDPOINT_V2_TESTNET,
+            address(oftTestnet),
+            ALICE.coreIndexId,
+            ALICE.decimalDiff
+        );
+
+        assertEq(hypeComposerTestnet.hypeIndexByChainId(998), 1105);
+    }
+
+    function test_hypeIndexByChainId_mainnet() public {
+        vm.createSelectFork("https://rpc.hyperliquid.xyz/evm");
+
+        OFTMock oftMainnet = new OFTMock("test", "test", HL_LZ_ENDPOINT_V2_MAINNET, msg.sender);
+        HyperLiquidComposer hypeComposerMainnet = new HyperLiquidComposer(
+            HL_LZ_ENDPOINT_V2_MAINNET,
+            address(oftMainnet),
+            ALICE.coreIndexId,
+            ALICE.decimalDiff
+        );
+
+        assertEq(hypeComposerMainnet.hypeIndexByChainId(999), 150);
     }
 
     function test_SendSpot_no_FundAddress() public {
