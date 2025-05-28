@@ -317,6 +317,29 @@ Solana to Sepolia V1
 npx hardhat lz:oft:solana:send --amount 1000000000 --from-eid 40168 --to <EVM_ADDRESS> --to-eid 10161
 ```
 
+For more information on the unified send task across EVM and Solana, run:
+
+```bash
+npx hardhat lz:oft:send --help
+```
+
+### Set Message Execution Options
+
+For custom gas settings, enable `enforcedOptions` in `layerzero.config.ts` or pass an `_options` value when calling `send()`.
+
+When manually specifying options:
+
+- **EVM → Solana:** set `sendParam.extraOptions` in [tasks/evm/sendOFT.ts](./tasks/evm/sendOFT.ts)
+- **Solana → EVM:** use the `options` param in [tasks/solana/sendOFT.ts](./tasks/solana/sendOFT.ts)
+
+### Set a new Mint Authority
+
+If you do not want the deployer to remain mint authority, create and set a new authority:
+
+```bash
+pnpm hardhat lz:oft:solana:setauthority --eid <SOLANA_EID> --mint <TOKEN_MINT> --program-id <PROGRAM_ID> --escrow <ESCROW>
+```
+
 Congratulations!
 
 ## Deploying to Mainnet
@@ -405,3 +428,4 @@ By overriding these tasks, the example streamlines the complex process of ensuri
 For the Solana-related steps, you may also refer to the default [Solana OFT example README](https://github.com/LayerZero-Labs/devtools/tree/main/examples/oft-solana) which might have more elaboration on the Solana side.
 
 Refer to the [Solana Troubleshooting page on the LayerZero Docs](https://docs.layerzero.network/v2/developers/solana/troubleshooting/common-errors) to see how to solve common error when deploying Solana OFTs.
+
