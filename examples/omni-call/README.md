@@ -47,11 +47,11 @@ To send a message, you only need to call the `send` function of the `OmniCall` c
 
 ```solidity
 function send(
-    MessageType messageType,
-    uint32 dstEid,
-    Call calldata dstCall,
-    Transfer calldata dstTransfer,
-    uint128 dstGasLimit
+  MessageType messageType,
+  uint32 dstEid,
+  Call calldata dstCall,
+  Transfer calldata dstTransfer,
+  uint128 dstGasLimit
 ) external payable returns (MessagingReceipt memory receipt);
 ```
 
@@ -68,7 +68,6 @@ The `send` function returns a `MessagingReceipt` struct, which contains the foll
 1. `guid`: the GUID of the message.
 2. `nonce`: the nonce of the message.
 3. `fee`: the fee of the message.
-
 
 ## Examples
 
@@ -209,6 +208,7 @@ MessagingReceipt memory receipt = omniCall.send{ value: fee.nativeFee }(
 ```
 
 To do this using a hardhat task, you can use the following command:
+
 ```bash
 npx hardhat call --network <SOURCE_NETWORK> --message-type atomic --to-eid <DESTINATION_EID> --call-target <DESTINATION_ADDRESS> --call-value 0.000001 --call-calldata <ENCODED_FUNCTION_CALL> --transfer-to <DESTINATION_ADDRESS> --transfer-value 0.000001 --gas-limit <GAS_LIMIT> --ether
 ```
@@ -228,6 +228,3 @@ forge test
 ```
 
 :warning: `OmniCall` does not support Solana yet. :warning:
-
-
-
