@@ -47,6 +47,18 @@ export const getExamples = (): Example[] => {
             ref,
         },
         // ZK-Solc examples are feature flagged for the time being
+        ...(process.env.LZ_ENABLE_MIGRATION_EXAMPLE
+            ? [
+                  {
+                      id: 'lzapp-migration',
+                      label: 'EndpointV1 Migration',
+                      repository,
+                      directory: 'examples/lzapp-migration',
+                      ref,
+                  },
+              ]
+            : []),
+        // ZK-Solc examples are feature flagged for the time being
         ...(process.env.LZ_ENABLE_ZKSOLC_EXAMPLE
             ? [{ id: 'onft721-zksync', label: 'ONFT721 zksolc', repository, directory: 'examples/onft721-zksync', ref }]
             : []),
@@ -70,6 +82,18 @@ export const getExamples = (): Example[] => {
                       label: 'NativeOFTAdapter',
                       repository,
                       directory: 'examples/native-oft-adapter',
+                      ref,
+                  },
+              ]
+            : []),
+        // OFT Alt example is feature flagged for the time being
+        ...(process.env.LZ_ENABLE_ALT_EXAMPLE
+            ? [
+                  {
+                      id: 'oft-alt',
+                      label: 'OFTAlt',
+                      repository,
+                      directory: 'examples/oft-alt',
                       ref,
                   },
               ]
@@ -111,6 +135,61 @@ export const getExamples = (): Example[] => {
                   },
               ]
             : []),
+        ...(process.env.LZ_ENABLE_EXPERIMENTAL_INITIA_EXAMPLES
+            ? [
+                  {
+                      id: 'oft-initia',
+                      label: 'OFT (Initia)',
+                      repository,
+                      directory: 'examples/oft-initia',
+                      ref,
+                  },
+                  {
+                      id: 'oft-adapter-initia',
+                      label: 'OFT Adapter (Initia)',
+                      repository,
+                      directory: 'examples/oft-adapter-initia',
+                      ref,
+                  },
+              ]
+            : []),
+        // Move OFT examples are feature flagged for the time being
+        ...(process.env.LZ_ENABLE_EXPERIMENTAL_MOVE_VM_EXAMPLES
+            ? [
+                  {
+                      id: 'oft-aptos-move',
+                      label: 'OFT (Aptos Move)',
+                      repository,
+                      directory: 'examples/oft-aptos-move',
+                      ref,
+                  },
+                  {
+                      id: 'oft-adapter-aptos-move',
+                      label: 'OFT Adapter (Aptos Move)',
+                      repository,
+                      directory: 'examples/oft-adapter-aptos-move',
+                      ref,
+                  },
+                  {
+                      id: 'oapp-aptos-move',
+                      label: 'OApp (Aptos Move)',
+                      repository,
+                      directory: 'examples/oapp-aptos-move',
+                      ref,
+                  },
+              ]
+            : []),
+        ...(process.env.LZ_ENABLE_EXPERIMENTAL_HYPERLIQUID_EXAMPLE
+            ? [
+                  {
+                      id: 'oft-hyperliquid',
+                      label: 'OFT + Composer (Hyperliquid)',
+                      repository,
+                      directory: 'examples/oft-hyperliquid',
+                      ref,
+                  },
+              ]
+            : []),
     ]
 }
 
@@ -126,12 +205,6 @@ const PACKAGE_MANAGERS: PackageManager[] = [
         executable: 'npm',
         args: ['install'],
         label: 'npm',
-    },
-    {
-        id: 'yarn',
-        executable: 'yarn',
-        args: ['install'],
-        label: 'yarn',
     },
     {
         id: 'bun',

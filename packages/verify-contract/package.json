@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/verify-contract",
-  "version": "1.1.31",
+  "version": "1.1.33",
   "description": "Verify Solidity contracts on supported block explorers",
   "bugs": {
     "url": "https://github.com/LayerZero-Labs/devtools/issues"
@@ -27,11 +27,12 @@
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
     "start": "node ./cli.js",
-    "test": "jest"
+    "test": "$npm_execpath test:jest",
+    "test:jest": "jest"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
-    "@layerzerolabs/io-devtools": "~0.1.14",
+    "@layerzerolabs/io-devtools": "~0.1.16",
     "@solidity-parser/parser": "^0.16.1",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",

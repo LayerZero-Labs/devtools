@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/build-devtools",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "private": true,
   "description": "Utilities devtools build system",
   "repository": {
@@ -35,7 +35,8 @@
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
-    "test": "jest --ci --runInBand"
+    "test": "$npm_execpath test:jest",
+    "test:jest": "jest --ci --runInBand"
   },
   "devDependencies": {
     "@swc/core": "^1.4.0",

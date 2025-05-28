@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools-solana
 
+## 0.0.5
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.0.4
 
 ### Patch Changes

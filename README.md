@@ -68,7 +68,7 @@ To get started with the LayerZero Developer Tools, follow these steps:
 1. Clone the Repository
 
 ```
-git clone https://github.com/layerzerolabs/devtools.git
+git clone https://github.com/LayerZero-Labs/devtools.git
 cd devtools
 ```
 
@@ -181,5 +181,5 @@ Provide as much detail as possible, including steps to reproduce the issue.
 By utilizing the resources in this repository, you can focus on creating innovative omnichain solutions without worrying about the complexities of cross-chain communication.
 
 <p align="center">
-  Join our community on <a href="https://discord-layerzero.netlify.app/discord" style="color: #a77dff">Discord</a> | Follow us on <a href="https://x.com/LayerZero_Labs" style="color: #a77dff">X (formerly Twitter)</a>
+  Join our <a href="https://layerzero.network/community" style="color: #a77dff">community</a>! | Follow us on <a href="https://x.com/LayerZero_Labs" style="color: #a77dff">X (formerly Twitter)</a>
 </p>

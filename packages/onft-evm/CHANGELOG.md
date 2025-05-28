@@ -1,5 +1,29 @@
 # @layerzerolabs/onft-evm
 
+## 0.2.3
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+
+## 0.2.2
+
+### Patch Changes
+
+- e256387: Updating packages
+
+## 0.2.1
+
+### Patch Changes
+
+- 213a76b: Enable optimizer explicitly
+
+## 0.2.0
+
+### Minor Changes
+
+- a6c0af0: Added ONFT721Enumerable
+
 ## 0.1.0
 
 ### Minor Changes

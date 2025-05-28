@@ -120,6 +120,7 @@ export const getDefaultUlnConfig = (dvnAddress: string): Uln302UlnConfig => {
     return {
         confirmations: BigInt(1),
         requiredDVNs: [dvnAddress],
+        requiredDVNCount: 1,
         optionalDVNs: [],
         optionalDVNThreshold: 0,
     }

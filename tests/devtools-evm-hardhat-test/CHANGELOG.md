@@ -1,5 +1,57 @@
 # @layerzerolabs/devtools-evm-hardhat-test
 
+## 0.3.12
+
+### Patch Changes
+
+- 37679bd: the test - validate-incorrect-wss-rpc is returning status 1 incorrectly on failed requests even though the output are null. patching this temporarily by doing an alternative test
+
+## 0.3.11
+
+### Patch Changes
+
+- 13bdae7: In task lz:healthcheck:validate:rpcs:
+
+  - more descriptive logs
+  - flexible RPCs health check
+  - fix support of --stage param
+
+## 0.3.10
+
+### Patch Changes
+
+- ed9aed9: Percolate --skip-connections-from-eids by upgrading toolbox-hardhat across the project
+
+## 0.3.9
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+
+## 0.3.8
+
+### Patch Changes
+
+- c03791c: skip test that validates valid safe config
+
+## 0.3.7
+
+### Patch Changes
+
+- e256387: Updating packages
+
+## 0.3.6
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+
+## 0.3.5
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+
 ## 0.3.4
 
 ### Patch Changes

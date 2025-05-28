@@ -1,5 +1,27 @@
 # @layerzerolabs/oft-evm-upgradeable
 
+## 3.1.0
+
+### Minor Changes
+
+- 57d6abd: add oft fee upgradeable
+
+## 3.0.2
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+- Updated dependencies [8b6c422]
+  - @layerzerolabs/oapp-evm@0.3.2
+
+## 3.0.1
+
+### Patch Changes
+
+- e256387: Updating packages
+- Updated dependencies [e256387]
+  - @layerzerolabs/oapp-evm@0.3.1
+
 ## 3.0.0
 
 ### Patch Changes

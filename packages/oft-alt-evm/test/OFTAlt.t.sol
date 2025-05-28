@@ -6,7 +6,7 @@ import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/Opti
 import { OFTAltMock } from "./mocks/OFTAltMock.sol";
 import { OFTAdapterAltMock } from "./mocks/OFTAdapterAltMock.sol";
 
-import { MessagingFee, MessagingReceipt } from "../contracts/OFTAltCore.sol";
+import { MessagingFee, MessagingReceipt, OFTAltCore } from "../contracts/OFTAltCore.sol";
 import { ERC20Mock } from "@layerzerolabs/oft-evm/test/mocks/ERC20Mock.sol";
 
 import { OFTComposerMock } from "@layerzerolabs/oft-evm/test/mocks/OFTComposerMock.sol";
@@ -102,8 +102,6 @@ contract OFTAltTest is TestHelperOz5 {
             )
         );
 
-
-
         // config and wire the ofts
         address[] memory ofts = new address[](3);
         ofts[0] = address(aOFT);
@@ -192,6 +190,16 @@ contract OFTAltTest is TestHelperOz5 {
         assertEq(bOFT.balanceOf(userB), initialBalance + oftReceipt.amountReceivedLD);
     }
 
+    function test_revert_msg_value_not_zero() public {
+        uint256 msgValue = 1 ether;
+        vm.expectRevert(abi.encodeWithSelector(OFTAltCore.OFTAltCore__msg_value_not_zero.selector, msgValue));
+        aOFT.send{ value: msgValue }(
+            SendParam(B_EID, addressToBytes32(userB), 1 ether, 1 ether, "", "", ""),
+            MessagingFee(0, 0),
+            payable(address(this))
+        );
+    }
+
     function test_send_oft_compose_msg(uint256 tokensToSend) public virtual {
         vm.assume(tokensToSend > 0.001 ether && tokensToSend < 100 ether); // avoid reverting due to SlippageExceeded
 
@@ -224,7 +232,7 @@ contract OFTAltTest is TestHelperOz5 {
         vm.startPrank(userA);
         nativeTokenMock_A.mint(userA, quoteFee.nativeFee);
         IERC20(nativeTokenMock_A).approve(address(aOFT), quoteFee.nativeFee);
-        (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) = aOFT.send{ value: quoteFee.nativeFee }(
+        (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) = aOFT.send(
             sendParam,
             quoteFee,
             payable(address(this))
@@ -267,7 +275,8 @@ contract OFTAltTest is TestHelperOz5 {
             amountCreditLD,
             abi.encodePacked(addressToBytes32(msg.sender), composeMsg)
         );
-        (uint64 nonce_, uint32 srcEid_, uint256 amountCreditLD_, bytes32 composeFrom_, bytes memory composeMsg_) = this.decodeOFTComposeMsgCodec(message);
+        (uint64 nonce_, uint32 srcEid_, uint256 amountCreditLD_, bytes32 composeFrom_, bytes memory composeMsg_) = this
+            .decodeOFTComposeMsgCodec(message);
 
         assertEq(nonce_, nonce);
         assertEq(srcEid_, srcEid);
@@ -318,7 +327,10 @@ contract OFTAltTest is TestHelperOz5 {
     }
 
     function test_toLD(uint64 amountSD) public {
-        assertEq(amountSD * OFTAltMock(address(aOFT)).decimalConversionRate(), aOFT.asOFTAltMock().toLD(uint64(amountSD)));
+        assertEq(
+            amountSD * OFTAltMock(address(aOFT)).decimalConversionRate(),
+            aOFT.asOFTAltMock().toLD(uint64(amountSD))
+        );
     }
 
     function test_toSD(uint256 amountLD) public {

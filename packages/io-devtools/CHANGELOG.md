@@ -1,5 +1,17 @@
 # @layerzerolabs/io-devtools
 
+## 0.1.16
+
+### Patch Changes
+
+- e256387: Updating packages
+
+## 0.1.15
+
+### Patch Changes
+
+- 186442a: add "test:jest" script
+
 ## 0.1.14
 
 ### Patch Changes

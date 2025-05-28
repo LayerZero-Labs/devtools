@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/io-devtools",
-  "version": "0.1.14",
+  "version": "0.1.16",
   "description": "Utilities for working with I/O in LayerZero devtools",
   "repository": {
     "type": "git",
@@ -34,7 +34,8 @@
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
-    "test": "jest --ci"
+    "test": "$npm_execpath test:jest",
+    "test:jest": "jest --ci"
   },
   "dependencies": {
     "chalk": "^4.1.2",

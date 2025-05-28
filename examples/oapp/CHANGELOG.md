@@ -1,5 +1,41 @@
 # @layerzerolabs/oapp-example
 
+## 0.5.9
+
+### Patch Changes
+
+- d24cc34: examples/oapp: update to use simple config
+
+## 0.5.8
+
+### Patch Changes
+
+- ed9aed9: Percolate --skip-connections-from-eids by upgrading toolbox-hardhat across the project
+
+## 0.5.7
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+
+## 0.5.6
+
+### Patch Changes
+
+- e256387: Updating packages
+
+## 0.5.5
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+
+## 0.5.4
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+
 ## 0.5.3
 
 ### Patch Changes

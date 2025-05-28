@@ -7,11 +7,13 @@ runs:
     #
     # This step will speed up workflow runs that don't touch the whole codebase
     # (or the ones that don't touch the codebase at all)
+
+    # We build architecture specific caches for turbo builds as there can be differences in the build artifacts between architectures
     - name: Cache turbo build setup
       uses: actions/cache@v4
       with:
         path: node_modules/.cache/turbo
-        key: ${{ runner.os }}-turbo-${{ github.ref_name }}-${{ github.sha }}
+        key: ${{ runner.os }}-${{ runner.arch }}-turbo-${{ github.ref_name }}-${{ github.sha }}
         # The hierarchy of restoring the cache goes as follows:
         #
         # - First we try to match an existing cache from the same branch
@@ -19,19 +21,21 @@ runs:
         # - Then we try to match a cache from the default branch
         # - Then we try to match any cache
         restore-keys: |
-          ${{ runner.os }}-turbo-${{ github.ref_name }}-
-          ${{ runner.os }}-turbo-${{ github.base_ref }}-
-          ${{ runner.os }}-turbo-${{ github.event.repository.default_branch }}-
-          ${{ runner.os }}-turbo-
+          ${{ runner.os }}-${{ runner.arch }}-turbo-${{ github.ref_name }}-
+          ${{ runner.os }}-${{ runner.arch }}-turbo-${{ github.base_ref }}-
+          ${{ runner.os }}-${{ runner.arch }}-turbo-${{ github.event.repository.default_branch }}-
+          ${{ runner.os }}-${{ runner.arch }}-turbo-
 
     # Cache hardhat compilers
     #
     # This step will speed up workflow runs that use hardhat compilation
+
+    # We build architecture specific caches for hardhat compilers as there can be differences in the build artifacts between architectures
     - name: Cache hardhat compilers
       uses: actions/cache@v4
       with:
         path: .cache/hardhat
-        key: ${{ runner.os }}-hardhat-${{ github.ref_name }}-${{ github.sha }}
+        key: ${{ runner.os }}-${{ runner.arch }}-hardhat-${{ github.ref_name }}-${{ github.sha }}
         # The hierarchy of restoring the cache goes as follows:
         #
         # - First we try to match an existing cache from the same branch
@@ -39,7 +43,7 @@ runs:
         # - Then we try to match a cache from the default branch
         # - Then we try to match any cache
         restore-keys: |
-          ${{ runner.os }}-hardhat-${{ github.ref_name }}-
-          ${{ runner.os }}-hardhat-${{ github.base_ref }}-
-          ${{ runner.os }}-hardhat-${{ github.event.repository.default_branch }}-
-          ${{ runner.os }}-hardhat-
+          ${{ runner.os }}-${{ runner.arch }}-hardhat-${{ github.ref_name }}-
+          ${{ runner.os }}-${{ runner.arch }}-hardhat-${{ github.base_ref }}-
+          ${{ runner.os }}-${{ runner.arch }}-hardhat-${{ github.event.repository.default_branch }}-
+          ${{ runner.os }}-${{ runner.arch }}-hardhat-

@@ -1,5 +1,52 @@
 # @layerzerolabs/devtools
 
+## 0.4.10
+
+### Patch Changes
+
+- c93f7f5: Clarify missing contract error message
+
+## 0.4.9
+
+### Patch Changes
+
+- dc86373: Add the ability to filter out connections from specified EndpointIds
+
+## 0.4.8
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+
+## 0.4.7
+
+### Patch Changes
+
+- 22bb6c4: Adding optional metadata property to OmniTransaction to improve logging
+
+## 0.4.6
+
+### Patch Changes
+
+- e256387: Updating packages
+- Updated dependencies [e256387]
+  - @layerzerolabs/io-devtools@0.1.16
+
+## 0.4.5
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+- 186442a: add "test:jest" script
+- Updated dependencies [186442a]
+  - @layerzerolabs/io-devtools@0.1.15
+
+## 0.4.4
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+
 ## 0.4.3
 
 ### Patch Changes

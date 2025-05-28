@@ -1,5 +1,29 @@
 # @layerzerolabs/test-devtools-evm-foundry
 
+## 6.0.3
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+- Updated dependencies [8b6c422]
+  - @layerzerolabs/oapp-evm@0.3.2
+  - @layerzerolabs/oft-evm@3.1.3
+
+## 6.0.2
+
+### Patch Changes
+
+- e256387: Updating packages
+- Updated dependencies [e256387]
+  - @layerzerolabs/oapp-evm@0.3.1
+  - @layerzerolabs/oft-evm@3.1.2
+
+## 6.0.1
+
+### Patch Changes
+
+- 213a76b: Enable optimizer explicitly
+
 ## 6.0.0
 
 ### Patch Changes

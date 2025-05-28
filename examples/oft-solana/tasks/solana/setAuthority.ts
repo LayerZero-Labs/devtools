@@ -11,7 +11,7 @@ import { OftPDA } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { checkMultisigSigners, createMintAuthorityMultisig } from './multisig'
 
-import { deriveConnection, getExplorerTxLink } from './index'
+import { TransactionType, addComputeUnitInstructions, deriveConnection, getExplorerTxLink } from './index'
 
 interface SetAuthorityTaskArgs {
     /**
@@ -50,6 +50,8 @@ interface SetAuthorityTaskArgs {
      * using this flag, as it is not reversible.
      */
     onlyOftStore: boolean
+
+    computeUnitPriceScaleFactor: number
 }
 
 /**
@@ -87,7 +89,7 @@ const getAuthorityTypeString = (authorityType: AuthorityType) => {
 // * Set Freeze Authority
 // Note:  Only supports SPL Token Standard.
 task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and set the mint/freeze authority')
-    .addParam('eid', 'Solana mainnet or testnet eid', undefined, devtoolsTypes.eid)
+    .addParam('eid', 'Solana mainnet (30168) or testnet (40168) eid', undefined, devtoolsTypes.eid)
     .addParam('mint', 'The Token Mint public key')
     .addParam('programId', 'The OFT Program id')
     .addParam('escrow', 'The OFT Escrow public key')
@@ -104,6 +106,7 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
         TOKEN_PROGRAM_ID.toBase58(),
         devtoolsTypes.string
     )
+    .addParam('computeUnitPriceScaleFactor', 'The compute unit price scale factor', 4, devtoolsTypes.float, true)
     .setAction(
         async ({
             eid,
@@ -113,6 +116,7 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
             tokenProgram: tokenProgramStr,
             additionalMinters: additionalMintersAsStrings,
             onlyOftStore,
+            computeUnitPriceScaleFactor,
         }: SetAuthorityTaskArgs) => {
             const { connection, umi, umiWalletKeyPair, umiWalletSigner } = await deriveConnection(eid)
             const oftStorePda = getOftStore(programIdStr, escrowStr)
@@ -131,10 +135,13 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
             const mint = new PublicKey(mintStr)
             const newMintAuthority = await createMintAuthorityMultisig(
                 connection,
-                toWeb3JsKeypair(umiWalletSigner),
+                umi,
+                eid,
+                umiWalletSigner,
                 new PublicKey(oftStorePda.toString()),
                 new PublicKey(tokenProgram.toString()),
-                additionalMinters
+                additionalMinters,
+                computeUnitPriceScaleFactor
             )
             console.log(`New Mint Authority: ${newMintAuthority.toBase58()}`)
             const signers = await checkMultisigSigners(connection, newMintAuthority, [
@@ -176,13 +183,21 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
                     })) as unknown as AccountMeta[],
                     data: ix.data,
                 }
-                const { signature } = await transactionBuilder()
-                    .add({
-                        instruction: umiInstruction,
-                        signers: [umiWalletSigner], // Include all required signers here
-                        bytesCreatedOnChain: 0,
-                    })
-                    .sendAndConfirm(umi)
+                let txBuilder = transactionBuilder().add({
+                    instruction: umiInstruction,
+                    signers: [umiWalletSigner], // Include all required signers here
+                    bytesCreatedOnChain: 0,
+                })
+                txBuilder = await addComputeUnitInstructions(
+                    connection,
+                    umi,
+                    eid,
+                    txBuilder,
+                    umiWalletSigner,
+                    computeUnitPriceScaleFactor,
+                    TransactionType.SetAuthority
+                )
+                const { signature } = await txBuilder.sendAndConfirm(umi)
                 console.log(
                     `SetAuthorityTx(${getAuthorityTypeString(authorityType)}): ${getExplorerTxLink(bs58.encode(signature), eid == EndpointId.SOLANA_V2_TESTNET)}`
                 )

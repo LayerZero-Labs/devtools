@@ -1,5 +1,33 @@
 # @layerzerolabs/oft-evm
 
+## 3.1.4
+
+### Patch Changes
+
+- f8c0f9f: make test_quoteOFT virtual so it can be overridden in the fee variant
+
+## 3.1.3
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+- Updated dependencies [8b6c422]
+  - @layerzerolabs/oapp-evm@0.3.2
+
+## 3.1.2
+
+### Patch Changes
+
+- e256387: Updating packages
+- Updated dependencies [e256387]
+  - @layerzerolabs/oapp-evm@0.3.1
+
+## 3.1.1
+
+### Patch Changes
+
+- a09c401: Better default NativeOFT.quoteOFT method
+
 ## 3.1.0
 
 ### Minor Changes

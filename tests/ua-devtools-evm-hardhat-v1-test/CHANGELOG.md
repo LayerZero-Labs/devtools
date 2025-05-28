@@ -1,5 +1,42 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-v1-test
 
+## 0.3.9
+
+### Patch Changes
+
+- 8817095: Add the ability to filter out connections from specified EndpointIds
+
+## 0.3.8
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+
+## 0.3.7
+
+### Patch Changes
+
+- e256387: Updating packages
+
+## 0.3.6
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+- 186442a: add "test:jest" script
+
+## 0.3.5
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+
+## 0.3.4
+
+### Patch Changes
+
+- d1d51ef: Bump ua-devtools-evm-hardhat dependency to 6.0.6+
+
 ## 0.3.3
 
 ### Patch Changes

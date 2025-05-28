@@ -228,6 +228,38 @@ exports[`omnigraph/format formatEid should format 337 correctly 1`] = `"BL4_MAIN
 
 exports[`omnigraph/format formatEid should format 338 correctly 1`] = `"BL5_MAINNET"`;
 
+exports[`omnigraph/format formatEid should format 339 correctly 1`] = `"INK_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 340 correctly 1`] = `"SONEIUM_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 341 correctly 1`] = `"SPACE_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 342 correctly 1`] = `"GLUE_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 359 correctly 1`] = `"CRONOSEVM_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 360 correctly 1`] = `"CRONOSZKEVM_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 361 correctly 1`] = `"GOAT_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 362 correctly 1`] = `"BERA_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 363 correctly 1`] = `"BAHAMUT_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 364 correctly 1`] = `"STORY_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 365 correctly 1`] = `"XDC_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 366 correctly 1`] = `"CONCRETE_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 367 correctly 1`] = `"HYPERLIQUID_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 368 correctly 1`] = `"NIBIRUBURNED_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 369 correctly 1`] = `"NIBIRU_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 370 correctly 1`] = `"PLUMEPHOENIX_MAINNET"`;
+
 exports[`omnigraph/format formatEid should format 420 correctly 1`] = `"TRON_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 10102 correctly 1`] = `"BSC_TESTNET"`;
@@ -516,7 +548,7 @@ exports[`omnigraph/format formatEid should format 10330 correctly 1`] = `"BLE_TE
 
 exports[`omnigraph/format formatEid should format 10331 correctly 1`] = `"BL2_TESTNET"`;
 
-exports[`omnigraph/format formatEid should format 10332 correctly 1`] = `"HYPERLIQUID_TESTNET"`;
+exports[`omnigraph/format formatEid should format 10332 correctly 1`] = `"HYPERLIQUIDBURNED_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 10333 correctly 1`] = `"UNICHAIN_TESTNET"`;
 
@@ -554,7 +586,7 @@ exports[`omnigraph/format formatEid should format 10350 correctly 1`] = `"ROOTST
 
 exports[`omnigraph/format formatEid should format 10351 correctly 1`] = `"FLOW_TESTNET"`;
 
-exports[`omnigraph/format formatEid should format 10352 correctly 1`] = `"NIBIRU_TESTNET"`;
+exports[`omnigraph/format formatEid should format 10352 correctly 1`] = `"NIBIRUBURNED_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 10353 correctly 1`] = `"SWELL_TESTNET"`;
 
@@ -567,6 +599,16 @@ exports[`omnigraph/format formatEid should format 10356 correctly 1`] = `"GOAT_T
 exports[`omnigraph/format formatEid should format 10357 correctly 1`] = `"BL6_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 10358 correctly 1`] = `"INK_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10359 correctly 1`] = `"CRONOSEVM_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10360 correctly 1`] = `"CRONOSZKEVM_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10361 correctly 1`] = `"STABLEDEVNET_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10362 correctly 1`] = `"HYPERLIQUID_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10369 correctly 1`] = `"NIBIRU_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 10420 correctly 1`] = `"TRON_TESTNET"`;
 
@@ -824,7 +866,39 @@ exports[`omnigraph/format formatEid should format 30337 correctly 1`] = `"BL4_V2
 
 exports[`omnigraph/format formatEid should format 30338 correctly 1`] = `"BL5_V2_MAINNET"`;
 
+exports[`omnigraph/format formatEid should format 30339 correctly 1`] = `"INK_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30340 correctly 1`] = `"SONEIUM_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30341 correctly 1`] = `"SPACE_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30342 correctly 1`] = `"GLUE_V2_MAINNET"`;
+
 exports[`omnigraph/format formatEid should format 30343 correctly 1`] = `"TON_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30359 correctly 1`] = `"CRONOSEVM_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30360 correctly 1`] = `"CRONOSZKEVM_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30361 correctly 1`] = `"GOAT_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30362 correctly 1`] = `"BERA_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30363 correctly 1`] = `"BAHAMUT_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30364 correctly 1`] = `"STORY_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30365 correctly 1`] = `"XDC_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30366 correctly 1`] = `"CONCRETE_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30367 correctly 1`] = `"HYPERLIQUID_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30368 correctly 1`] = `"NIBIRUBURNED_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30369 correctly 1`] = `"NIBIRU_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30370 correctly 1`] = `"PLUMEPHOENIX_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30420 correctly 1`] = `"TRON_V2_MAINNET"`;
 
@@ -1114,7 +1188,7 @@ exports[`omnigraph/format formatEid should format 40330 correctly 1`] = `"BLE_V2
 
 exports[`omnigraph/format formatEid should format 40331 correctly 1`] = `"BL2_V2_TESTNET"`;
 
-exports[`omnigraph/format formatEid should format 40332 correctly 1`] = `"HYPERLIQUID_V2_TESTNET"`;
+exports[`omnigraph/format formatEid should format 40332 correctly 1`] = `"HYPERLIQUIDBURNED_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40333 correctly 1`] = `"UNICHAIN_V2_TESTNET"`;
 
@@ -1154,7 +1228,7 @@ exports[`omnigraph/format formatEid should format 40350 correctly 1`] = `"ROOTST
 
 exports[`omnigraph/format formatEid should format 40351 correctly 1`] = `"FLOW_V2_TESTNET"`;
 
-exports[`omnigraph/format formatEid should format 40352 correctly 1`] = `"NIBIRU_V2_TESTNET"`;
+exports[`omnigraph/format formatEid should format 40352 correctly 1`] = `"NIBIRUBURNED_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40353 correctly 1`] = `"SWELL_V2_TESTNET"`;
 
@@ -1167,6 +1241,16 @@ exports[`omnigraph/format formatEid should format 40356 correctly 1`] = `"GOAT_V
 exports[`omnigraph/format formatEid should format 40357 correctly 1`] = `"BL6_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40358 correctly 1`] = `"INK_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40359 correctly 1`] = `"CRONOSEVM_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40360 correctly 1`] = `"CRONOSZKEVM_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40361 correctly 1`] = `"STABLEDEVNET_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40362 correctly 1`] = `"HYPERLIQUID_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40369 correctly 1`] = `"NIBIRU_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40420 correctly 1`] = `"TRON_V2_TESTNET"`;
 
@@ -1182,11 +1266,11 @@ exports[`omnigraph/format formatEid should format 50121 correctly 1`] = `"ETHERE
 
 exports[`omnigraph/format formatEid should format 50132 correctly 1`] = `"OPTIMISM_V2_SANDBOX"`;
 
-exports[`omnigraph/format formatEid should format 50143 correctly 1`] = `"ARBITRUM_V2_SANDBOX"`;
-
 exports[`omnigraph/format formatEid should format 50151 correctly 1`] = `"METIS_V2_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 50168 correctly 1`] = `"SOLANA_V2_SANDBOX"`;
+
+exports[`omnigraph/format formatEid should format 50231 correctly 1`] = `"ARBITRUM_V2_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 50325 correctly 1`] = `"MOVEMENT_V2_SANDBOX"`;
 

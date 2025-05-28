@@ -1,5 +1,59 @@
 # @layerzerolabs/protocol-devtools-evm
 
+## 3.0.8
+
+### Patch Changes
+
+- 3f5a715: allow optionalDVNs without requiredDVNs
+- Updated dependencies [3f5a715]
+  - @layerzerolabs/protocol-devtools@1.1.7
+
+## 3.0.7
+
+### Patch Changes
+
+- 24311f8: Minor bug fixes
+- 8b6c422: Bump monorepo dependencies to latest patch version
+- Updated dependencies [24311f8]
+- Updated dependencies [8b6c422]
+  - @layerzerolabs/devtools-evm@1.0.6
+  - @layerzerolabs/protocol-devtools@1.1.6
+  - @layerzerolabs/devtools@0.4.8
+
+## 3.0.6
+
+### Patch Changes
+
+- e256387: Updating packages
+- Updated dependencies [e256387]
+  - @layerzerolabs/devtools@0.4.6
+  - @layerzerolabs/devtools-evm@1.0.5
+  - @layerzerolabs/io-devtools@0.1.16
+  - @layerzerolabs/protocol-devtools@1.1.5
+
+## 3.0.5
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+- 186442a: add "test:jest" script
+- Updated dependencies [af91805]
+- Updated dependencies [186442a]
+  - @layerzerolabs/protocol-devtools@1.1.4
+  - @layerzerolabs/devtools-evm@1.0.4
+  - @layerzerolabs/devtools@0.4.5
+  - @layerzerolabs/io-devtools@0.1.15
+
+## 3.0.4
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+- Updated dependencies [ce03876]
+  - @layerzerolabs/protocol-devtools@1.1.3
+  - @layerzerolabs/devtools-evm@1.0.3
+  - @layerzerolabs/devtools@0.4.4
+
 ## 3.0.3
 
 ### Patch Changes

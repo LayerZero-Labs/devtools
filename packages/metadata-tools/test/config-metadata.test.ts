@@ -1,7 +1,8 @@
-import { DVNsToAddresses, translatePathwayToConfig } from '@/config-metadata'
-import { IMetadata } from '@/types'
+import { DVNsToAddresses, generateConnectionsConfig, translatePathwayToConfig } from '@/config-metadata'
+import { IMetadataDvns, IMetadata, TwoWayConfig } from '@/types'
 
 import fujiMetadata from './data/fuji.json'
+import polygonMainnetMetadata from './data/polygon-mainnet.json'
 import solanaMainnetMetadata from './data/solana-mainnet.json'
 import solanaTestnetMetadata from './data/solana-testnet.json'
 
@@ -9,8 +10,114 @@ describe('config-metadata', () => {
     const metadata: IMetadata = {
         fuji: fujiMetadata,
         solana: solanaMainnetMetadata,
+        polygon: polygonMainnetMetadata,
         'solana-testnet': solanaTestnetMetadata,
     }
+
+    describe('generateConnectionsConfig', () => {
+        const metadata: IMetadata = {
+            fuji: fujiMetadata,
+            solana: solanaMainnetMetadata,
+            polygon: polygonMainnetMetadata,
+            'solana-testnet': solanaTestnetMetadata,
+        }
+
+        it('should allow for call without custom params', async () => {
+            const avalancheContract = {
+                eid: 40106,
+                contractName: 'MyOFT',
+            }
+
+            const solanaContract = {
+                eid: 40168,
+                address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy',
+            }
+
+            // This array is your TwoWayConfig[]
+            const pathways: TwoWayConfig[] = [
+                [avalancheContract, solanaContract, [['LayerZero Labs'], []], [1, 1], [undefined, undefined]],
+            ]
+
+            const config = await generateConnectionsConfig(pathways)
+            expect(config).toMatchSnapshot()
+        })
+
+        it('should generate the connections config for a given set of pathways', async () => {
+            const avalancheContract = {
+                eid: 40106,
+                contractName: 'MyOFT',
+            }
+
+            const solanaContract = {
+                eid: 40168,
+                address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy',
+            }
+
+            // This array is your TwoWayConfig[]
+            const pathways: TwoWayConfig[] = [
+                [avalancheContract, solanaContract, [['LayerZero Labs'], []], [1, 1], [undefined, undefined]],
+            ]
+
+            const mockFetchMetadata = async () => metadata
+
+            const config = await generateConnectionsConfig(pathways, { fetchMetadata: mockFetchMetadata })
+            expect(config).toMatchSnapshot()
+        })
+        it('should allow for custom DVNs in the metadata', async () => {
+            // extend the Solana DVNs with custom DVN(s)
+            const solanaTestnetDVNsWithCustom: IMetadataDvns = {
+                ...metadata['solana-testnet']!.dvns,
+                '29EKzmCscUg8mf4f5uskwMqvu2SXM8hKF1gWi1cCBoKT': {
+                    version: 2,
+                    canonicalName: 'SuperCustomDVN',
+                    id: 'super-custom-dvn',
+                },
+            }
+            // extend the Fuji DVNs with custom DVN
+            const fujiDVNsWithCustom: IMetadataDvns = {
+                ...metadata.fuji!.dvns,
+                '0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467': {
+                    version: 2,
+                    canonicalName: 'SuperCustomDVN',
+                    id: 'super-custom-dvn',
+                },
+            }
+            const customFetchMetadata = async (): Promise<IMetadata> => {
+                return {
+                    ...metadata,
+                    'solana-testnet': {
+                        ...metadata['solana-testnet']!,
+                        dvns: solanaTestnetDVNsWithCustom,
+                    },
+                    fuji: {
+                        ...metadata.fuji!,
+                        dvns: fujiDVNsWithCustom,
+                    },
+                }
+            }
+
+            const avalancheContract = { eid: 40106, contractName: 'MyOFT' }
+            const solanaContract = { eid: 40168, address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy' }
+
+            // A pathway referencing the newly injected "P2P" DVN
+            const pathways: TwoWayConfig[] = [
+                [
+                    avalancheContract,
+                    solanaContract,
+                    [
+                        ['SuperCustomDVN'], // required DVNs
+                        [], // optional DVNs + threshold
+                    ],
+                    [1, 1],
+                    [undefined, undefined],
+                ],
+            ]
+
+            // Generate config using our custom fetchMetadata
+            const config = await generateConnectionsConfig(pathways, { fetchMetadata: customFetchMetadata })
+            expect(config).toMatchSnapshot()
+        })
+    })
 
     describe('translatePathwayToConfig', () => {
         it('should be able to translate a pathway to a config', async () => {
@@ -102,6 +209,24 @@ describe('config-metadata', () => {
         it('should handle duplicate DVN names', () => {
             expect(() => DVNsToAddresses(['LayerZero Labs', 'LayerZero Labs'], 'fuji', metadata)).toThrow(
                 `Duplicate DVN name found: "LayerZero Labs".`
+            )
+        })
+
+        it('correctly takes into account the version of the DVN', () => {
+            expect(DVNsToAddresses(['Polyhedra'], 'polygon', metadata)).toStrictEqual([
+                '0x8ddf05f9a5c488b4973897e278b58895bf87cb24',
+            ])
+        })
+
+        it('should ignore deprecated DVNs incase of multiple DVNs', () => {
+            expect(DVNsToAddresses(['Bitgo'], 'fuji', metadata)).toStrictEqual([
+                '0xa1d84e5576299acda9ffed53195eadbe60d48e83',
+            ])
+        })
+
+        it('should throw error if all DVNs are deprecated', () => {
+            expect(() => DVNsToAddresses(['Deprec'], 'fuji', metadata)).toThrow(
+                `Can't find DVN: "Deprec" on chainKey: "fuji". Double check you're using valid DVN canonical name (not an address).`
             )
         })
     })

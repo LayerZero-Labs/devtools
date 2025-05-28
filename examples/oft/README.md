@@ -17,7 +17,7 @@ href="https://docs.layerzero.network/v2/developers/evm/technical-reference/dvn-a
 
 <p align="center">Template project for getting started with LayerZero's <code>OFT</code> contract standard.</p>
 
-<p align="left>
+<p align="left">
 
 - [So What is an Omnichain Fungible Token?](#so-what-is-an-omnichain-fungible-token)
 - [Available Helpers in this Repo](#layerzero-hardhat-helper-tasks)
@@ -374,15 +374,112 @@ By following these steps, you can focus more on creating innovative omnichain so
 
 <br></br>
 
+## Estimating `lzReceive` and `lzCompose` Gas Usage
+
+This guide explains how to use the `pnpm` commands to estimate gas usage for LayerZero's `lzReceive` and `lzCompose` functions. These commands wrap Foundry scripts for easier invocation and allow you to pass the required arguments dynamically.
+
+### Available Commands
+
+1. **`gas:lzReceive`**
+
+   This command profiles the `lzReceive` function for estimating gas usage across multiple runs.
+
+   ```json
+   "gas:lzReceive": "forge script scripts/GasProfiler.s.sol:GasProfilerScript --via-ir --sig 'run_lzReceive(string,address,uint32,address,uint32,address,bytes,uint256,uint256)'"
+   ```
+
+2. **`gas:lzCompose`**
+
+   This command profiles the `lzCompose` function for estimating gas usage across multiple runs.
+
+   ```json
+   "gas:lzCompose": "forge script scripts/GasProfiler.s.sol:GasProfilerScript --via-ir --sig 'run_lzCompose(string,address,uint32,address,uint32,address,address,bytes,uint256,uint256)'"
+   ```
+
+### Usage Examples
+
+#### `lzReceive`
+
+To estimate the gas for the `lzReceive` function:
+
+```bash
+pnpm gas:lzReceive
+  <rpcUrl> \
+  <endpointAddress> \
+  <srcEid> \
+  <sender> \
+  <dstEid> \
+  <receiver> \
+  <message> \
+  <msg.value> \
+  <numOfRuns>
+
+pnpm gas:lzCompose <RPC_URL> <DST_ENDPOINT_ADDRESS> <srcEid> <SenderOApp> <dstEid> <ReceiverOApp> <composer> <composeMsg> <msg.value> <numOfRuns>
+```
+
+Where:
+
+- `rpcUrl`: The RPC URL for the target blockchain (e.g., Optimism, Arbitrum, etc.).
+- `endpointAddress`: The deployed LayerZero EndpointV2 contract address.
+- `srcEid`: The source endpoint ID (uint32).
+- `sender`: The sender's address (OApp).
+- `dstEid`: The destination endpoint ID (uint32).
+- `receiver`: The address intended to receive the message (OApp).
+- `message`: The message payload as a `bytes` array.
+- `msg.value`: The amount of Ether sent with the message (in wei).
+- `numOfRuns`: The number of test runs to execute.
+
+#### `lzCompose`
+
+To estimate the gas for the `lzCompose` function:
+
+```bash
+pnpm gas:lzCompose
+  <rpcUrl> \
+  <endpointAddress> \
+  <srcEid> \
+  <sender> \
+  <dstEid> \
+  <receiver> \
+  <composer> \
+  <composeMsg> \
+  <msg.value> \
+  <numOfRuns>
+```
+
+Where:
+
+- `rpcUrl`: The RPC URL for the target blockchain (e.g., Optimism, Arbitrum, etc.).
+- `endpointAddress`: The deployed LayerZero EndpointV2 contract address.
+- `srcEid`: The source endpoint ID (uint32).
+- `sender`: The originating OApp address.
+- `dstEid`: The destination endpoint ID (uint32).
+- `receiver`: The address intended to receive the message (OApp).
+- `composer`: The LayerZero Composer contract address.
+- `composeMsg`: The compose message payload as a `bytes` array.
+- `msgValue`: The amount of Ether sent with the message (in wei).
+- `numOfRuns`: The number of test runs to execute.
+
+### Notes
+
+- Modify `numOfRuns` based on the level of accuracy or performance you require for gas profiling.
+- Log outputs will provide metrics such as the **average**, **median**, **minimum**, and **maximum** gas usage across all successful runs.
+
+This approach simplifies repetitive tasks and ensures consistent testing across various configurations.
+
 ## Connecting Contracts
 
-### Ethereum Configurations
+This example uses the [Simple Config Generator](https://docs.layerzero.network/v2/developers/evm/technical-reference/simple-config), which is recommended over manual configuration.
 
-Fill out your `layerzero.config.ts` with the contracts you want to connect. You can generate the default config file for your declared hardhat networks by running:
+### Generate [LZ Config](https://docs.layerzero.network/v2/concepts/glossary#lz-config) file based on hardhat.config.ts
+
+Fill out your `layerzero.config.ts` with the contracts you want to connect. You can generate the default [LZ Config](https://docs.layerzero.network/v2/concepts/glossary#lz-config) file for your declared hardhat networks (in `hardhat.config.ts`) by running:
 
 ```bash
 npx hardhat lz:oapp:config:init --contract-name [YOUR_CONTRACT_NAME] --oapp-config [CONFIG_NAME]
 ```
+
+### Customize values in the LZ Config
 
 > [!NOTE]
 > You may need to change the contract name if you're deploying multiple OApp contracts on different chains (e.g., OFT and OFT Adapter).
@@ -390,18 +487,32 @@ npx hardhat lz:oapp:config:init --contract-name [YOUR_CONTRACT_NAME] --oapp-conf
 <br>
 
 ```typescript
-const ethereumContract: OmniPointHardhat = {
-  eid: EndpointId.ETHEREUM_V2_MAINNET,
+const optimismContract: OmniPointHardhat = {
+  eid: EndpointId.OPTSEP_V2_TESTNET,
   contractName: "MyOFTAdapter",
 };
 
-const arbitrumContract: OmniPointHardhat = {
-  eid: EndpointId.ARBITRUM_V2_MAINNET,
+const avalancheContract: OmniPointHardhat = {
+  eid: EndpointId.AVALANCHE_V2_TESTNET,
   contractName: "MyOFT",
 };
 ```
 
-Then define the pathway you want to create from and to each contract:
+### Apply configurations
+
+After applying the desired settings, run:
+
+```bash
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts
+```
+
+Congratulations! Your contracts are now wired and can begin sending messages to each other.
+
+### Manual Configuration
+
+This section only applies if you would like to configure manually instead of using the Simple Config Generator.
+
+Define the pathway you want to create from and to each contract:
 
 ```typescript
 connections: [
@@ -517,12 +628,6 @@ connections: [
 ];
 ```
 
-To set these config settings, run:
-
-```bash
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts
-```
-
 <p align="center">
-  Join our community on <a href="https://discord-layerzero.netlify.app/discord" style="color: #a77dff">Discord</a> | Follow us on <a href="https://twitter.com/LayerZero_Labs" style="color: #a77dff">Twitter</a>
+  Join our <a href="https://layerzero.network/community" style="color: #a77dff">community</a>! | Follow us on <a href="https://x.com/LayerZero_Labs" style="color: #a77dff">X (formerly Twitter)</a>
 </p>

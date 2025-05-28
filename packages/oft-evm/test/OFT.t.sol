@@ -57,7 +57,6 @@ contract OFTTest is TestHelperOz5 {
     string internal constant E_MINTABLE_TOKEN_NAME = "eMintableToken";
     string internal constant E_MINTABLE_TOKEN_SYMBOL = "eToken";
 
-
     OFT internal aOFT;
     OFT internal bOFT;
     OFTAdapter internal cOFTAdapter;
@@ -118,7 +117,12 @@ contract OFTTest is TestHelperOz5 {
         eMintBurnOFTAdapter = MintBurnOFTAdapterMock(
             _deployOApp(
                 type(MintBurnOFTAdapterMock).creationCode,
-                abi.encode(address(eMintBurnERC20Mock), address(eMinterBurnerMock), address(endpoints[E_EID]), address(this))
+                abi.encode(
+                    address(eMintBurnERC20Mock),
+                    address(eMinterBurnerMock),
+                    address(endpoints[E_EID]),
+                    address(this)
+                )
             )
         );
         eMinterBurnerMock.setOperator(address(eMintBurnOFTAdapter), true);
@@ -488,7 +492,7 @@ contract OFTTest is TestHelperOz5 {
         vm.expectRevert(
             abi.encodeWithSelector(NativeOFTAdapter.IncorrectMessageValue.selector, fee.nativeFee, correctMsgValue)
         );
-        dNativeOFTAdapter.asNativeOFTAdapterMock().send{ value: fee.nativeFee}(sendParam, fee, userD);
+        dNativeOFTAdapter.asNativeOFTAdapterMock().send{ value: fee.nativeFee }(sendParam, fee, userD);
 
         // expect sending wrapped native to succeed if the amount to be sent and the fee are both included in msg.value
         vm.prank(userD);
@@ -497,14 +501,14 @@ contract OFTTest is TestHelperOz5 {
         assertEq(userD.balance, initialNativeBalance - correctMsgValue);
         assertEq(address(dNativeOFTAdapter).balance, amountToSendLD);
 
-        // expect sending wrapped native to fail if extra msg.value is provided 
+        // expect sending wrapped native to fail if extra msg.value is provided
         // i.e msg.value > amount to be sent (with dust removed) + fee
         uint256 extraMsgValue = correctMsgValue + 1;
         vm.prank(userD);
         vm.expectRevert(
             abi.encodeWithSelector(NativeOFTAdapter.IncorrectMessageValue.selector, extraMsgValue, correctMsgValue)
         );
-        dNativeOFTAdapter.asNativeOFTAdapterMock().send{ value: extraMsgValue}(sendParam, fee, userD);
+        dNativeOFTAdapter.asNativeOFTAdapterMock().send{ value: extraMsgValue }(sendParam, fee, userD);
     }
 
     function test_set_minter_burner_operator() public {
@@ -524,7 +528,7 @@ contract OFTTest is TestHelperOz5 {
         vm.expectRevert();
         eMinterBurnerMock.burn(attacker, initialBalance);
     }
-    
+
     function test_mint_burn_oft_adapter_debit() public virtual {
         uint256 amountToSendLD = 1 ether;
         uint256 minAmountToCreditLD = 1 ether;
@@ -777,23 +781,25 @@ contract OFTTest is TestHelperOz5 {
         (message, ) = aOFT.asOFTMock().buildMsgAndOptions(sendParam, amountToCreditLD);
     }
 
-    function test_quoteOFT(uint256 _amountToSendLD) public {
+    function test_quoteOFT(uint256 _amountToSendLD) public virtual {
         bytes32 to = addressToBytes32(userA);
         uint256 minAmountToCreditLD = aOFT.asOFTMock().removeDust(_amountToSendLD);
-        SendParam memory sendParam = SendParam(
-            B_EID,
-            to,
-            _amountToSendLD,
-            minAmountToCreditLD,
-            "",
-            "",
-            ""
+        SendParam memory sendParam = SendParam(B_EID, to, _amountToSendLD, minAmountToCreditLD, "", "", "");
+        (OFTLimit memory oftLimit, OFTFeeDetail[] memory oftFeeDetails, OFTReceipt memory oftReceipt) = aOFT.quoteOFT(
+            sendParam
         );
-        (OFTLimit memory oftLimit, OFTFeeDetail[] memory oftFeeDetails, OFTReceipt memory oftReceipt) = aOFT.quoteOFT(sendParam);
         assertEq(0, oftLimit.minAmountLD);
         assertEq(IERC20(aOFT.token()).totalSupply(), oftLimit.maxAmountLD);
         assertEq(0, oftFeeDetails.length);
         assertEq(minAmountToCreditLD, oftReceipt.amountSentLD);
         assertEq(minAmountToCreditLD, oftReceipt.amountReceivedLD);
+
+        // Test native
+        sendParam = SendParam(A_EID, to, _amountToSendLD, minAmountToCreditLD, "", "", "");
+        (oftLimit, oftFeeDetails, oftReceipt) = dNativeOFTAdapter.quoteOFT(sendParam);
+        assertEq(0, oftLimit.minAmountLD);
+        assertEq(type(uint256).max, oftLimit.maxAmountLD);
+        assertEq(0, oftFeeDetails.length);
+        assertEq(minAmountToCreditLD, oftReceipt.amountSentLD);
     }
 }

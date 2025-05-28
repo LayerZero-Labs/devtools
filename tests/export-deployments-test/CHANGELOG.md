@@ -1,5 +1,23 @@
 # @layerzerolabs/export-deployments-test
 
+## 0.3.5
+
+### Patch Changes
+
+- ed9aed9: Percolate --skip-connections-from-eids by upgrading toolbox-hardhat across the project
+
+## 0.3.4
+
+### Patch Changes
+
+- e256387: Updating packages
+
+## 0.3.3
+
+### Patch Changes
+
+- 186442a: add "test:jest" script
+
 ## 0.3.2
 
 ### Patch Changes

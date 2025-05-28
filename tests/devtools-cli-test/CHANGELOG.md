@@ -1,5 +1,42 @@
 # @layerzerolabs/devtools-cli-test
 
+## 0.4.9
+
+### Patch Changes
+
+- 8817095: Add the ability to filter out connections from specified EndpointIds
+
+## 0.4.8
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+
+## 0.4.7
+
+### Patch Changes
+
+- e256387: Updating packages
+
+## 0.4.6
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+- 186442a: add "test:jest" script
+
+## 0.4.5
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+
+## 0.4.4
+
+### Patch Changes
+
+- d1d51ef: Bump ua-devtools-evm-hardhat dependency to 6.0.6+
+
 ## 0.4.3
 
 ### Patch Changes

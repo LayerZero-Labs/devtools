@@ -1,10 +1,11 @@
-import { Keypair, PublicKey } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 import { subtask, task } from 'hardhat/config'
 
 import { firstFactory } from '@layerzerolabs/devtools'
-import { SUBTASK_LZ_SIGN_AND_SEND, inheritTask, types } from '@layerzerolabs/devtools-evm-hardhat'
+import { SUBTASK_LZ_SIGN_AND_SEND, types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { setTransactionSizeBuffer } from '@layerzerolabs/devtools-solana'
 import { type LogLevel, createLogger } from '@layerzerolabs/io-devtools'
+import { ChainType, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
 import { type IOApp, type OAppConfigurator, type OAppOmniGraph, configureOwnable } from '@layerzerolabs/ua-devtools'
 import {
     SUBTASK_LZ_OAPP_WIRE_CONFIGURE,
@@ -12,10 +13,19 @@ import {
     TASK_LZ_OAPP_WIRE,
     TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP,
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
-import { initOFTAccounts } from '@layerzerolabs/ua-devtools-solana'
 
-import { keyPair, publicKey } from './types'
-import { createSdkFactory, createSolanaConnectionFactory, createSolanaSignerFactory } from './utils'
+import { getSolanaDeployment, useWeb3Js } from '../solana'
+import { findSolanaEndpointIdInGraph } from '../solana/utils'
+
+import { publicKey as publicKeyType } from './types'
+import {
+    DebugLogger,
+    KnownErrors,
+    createSdkFactory,
+    createSolanaConnectionFactory,
+    createSolanaSignerFactory,
+    getSolanaUlnConfigPDAs,
+} from './utils'
 
 import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/tasks'
 
@@ -24,9 +34,9 @@ import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/ta
  */
 interface Args {
     logLevel: LogLevel
-    solanaProgramId: PublicKey
-    solanaSecretKey?: Keypair
     multisigKey?: PublicKey
+    isSolanaInitConfig: boolean // For internal use only. This helps us to control which code runs depdending on whether the task ran is wire or init-config
+    oappConfig: string
     internalConfigurator?: OAppConfigurator
 }
 
@@ -34,24 +44,14 @@ interface Args {
  * We extend the default wiring task to add functionality required by Solana
  */
 task(TASK_LZ_OAPP_WIRE)
-    // The first thing we add is the solana secret key, used to create a signer
-    //
-    // This secret key will also be used as the user account, required to use the OFT SDK
-    .addParam(
-        'solanaSecretKey',
-        'Secret key of the user account that will be used to send transactions',
-        undefined,
-        keyPair,
-        true
-    )
-    .addParam('solanaProgramId', 'The OFT program ID to use', undefined, publicKey, true)
-    .addParam('multisigKey', 'The MultiSig key', undefined, publicKey, true)
+    .addParam('multisigKey', 'The MultiSig key', undefined, publicKeyType, true)
     // We use this argument to get around the fact that we want to both override the task action for the wiring task
     // and wrap this task with custom configurators
     //
     // By default, this argument will be left empty and the default OApp configurator will be used.
     // The tasks that are using custom configurators will override this argument with the configurator of their choice
-    .addParam('internalConfigurator', 'FOR INTERNAL USE ONLY', undefined, types.fn, true)
+    .addParam('internalConfigurator', 'FOR INTERNAL USE ONLY', undefined, devtoolsTypes.fn, true)
+    .addParam('isSolanaInitConfig', 'FOR INTERNAL USE ONLY', undefined, devtoolsTypes.boolean, true)
     .setAction(async (args: Args, hre, runSuper) => {
         const logger = createLogger(args.logLevel)
 
@@ -70,21 +70,19 @@ task(TASK_LZ_OAPP_WIRE)
         //
         //
 
-        if (args.solanaSecretKey == null) {
-            logger.warn(
-                `Missing --solana-secret-key CLI argument. A random keypair will be generated and interaction with solana programs will not be possible`
-            )
-        }
+        // construct the user's keypair via the SOLANA_PRIVATE_KEY env var
+        const keypair = (await useWeb3Js()).web3JsKeypair // note: this can be replaced with getSolanaKeypair() if we are okay to export that
+        const userAccount = keypair.publicKey
 
-        // The first step is to create the user Keypair from the secret passed in
-        const wallet = args.solanaSecretKey ?? Keypair.generate()
-        const userAccount = wallet.publicKey
+        const solanaEid = await findSolanaEndpointIdInGraph(hre, args.oappConfig)
+        const solanaDeployment = getSolanaDeployment(solanaEid)
 
         // Then we grab the programId from the args
-        const programId = args.solanaProgramId
+        const programId = new PublicKey(solanaDeployment.programId)
 
+        // TODO: refactor to instead use a function such as verifySolanaDeployment that also checks for oftStore key
         if (!programId) {
-            logger.error('Missing --solana-program-id CLI argument')
+            logger.error('Missing programId in solana deployment')
             return
         }
 
@@ -106,7 +104,7 @@ task(TASK_LZ_OAPP_WIRE)
         const sdkFactory = createSdkFactory(userAccount, programId, connectionFactory)
 
         // We'll also need a signer factory
-        const solanaSignerFactory = createSolanaSignerFactory(wallet, connectionFactory, args.multisigKey)
+        const solanaSignerFactory = createSolanaSignerFactory(keypair, connectionFactory, args.multisigKey)
 
         //
         //
@@ -122,12 +120,58 @@ task(TASK_LZ_OAPP_WIRE)
         subtask(
             SUBTASK_LZ_OAPP_WIRE_CONFIGURE,
             'Configure OFT',
-            (args: SubtaskConfigureTaskArgs<OAppOmniGraph, IOApp>, hre, runSuper) =>
-                runSuper({
-                    ...args,
-                    configurator: configurator ?? args.configurator,
+            async (subtaskArgs: SubtaskConfigureTaskArgs<OAppOmniGraph, IOApp>, _hre, runSuper) => {
+                // start of pre-wiring checks. we only do this when the current task is wire. if the current task is init-config, we shouldn't run this.
+                if (!args.isSolanaInitConfig) {
+                    logger.debug('Running pre-wiring checks...')
+                    const { graph } = subtaskArgs
+                    for (const connection of graph.connections) {
+                        // check if from Solana Endpoint
+                        if (endpointIdToChainType(connection.vector.from.eid) === ChainType.SOLANA) {
+                            if (connection.config?.sendLibrary) {
+                                // if from Solana Endpoint, ensure the PeerConfig account was already initialized
+                                const solanaConnection = await connectionFactory(connection.vector.from.eid)
+
+                                const [sendConfig, receiveConfig] = await getSolanaUlnConfigPDAs(
+                                    connection.vector.to.eid,
+                                    solanaConnection,
+                                    new PublicKey(connection.config.sendLibrary),
+                                    new PublicKey(solanaDeployment.oftStore)
+                                )
+
+                                if (sendConfig == null) {
+                                    DebugLogger.printErrorAndFixSuggestion(
+                                        KnownErrors.ULN_INIT_CONFIG_SKIPPED,
+                                        `SendConfig on ${connection.vector.from.eid} not initialized for remote ${connection.vector.to.eid}.`
+                                    )
+                                }
+
+                                if (receiveConfig == null) {
+                                    DebugLogger.printErrorAndFixSuggestion(
+                                        KnownErrors.ULN_INIT_CONFIG_SKIPPED,
+                                        `ReceiveConfig on ${connection.vector.from.eid} not initialized for remote ${connection.vector.to.eid}.`
+                                    )
+                                }
+
+                                if (sendConfig == null || receiveConfig == null) {
+                                    throw new Error('SendConfig or ReceiveConfig not initialized. ')
+                                }
+                            } else {
+                                logger.debug(
+                                    `No sendLibrary found in connection config for ${connection.vector.from.eid} -> ${connection.vector.to.eid}`
+                                )
+                            }
+                        }
+                    }
+                    // end of pre-wiring checks
+                }
+
+                return runSuper({
+                    ...subtaskArgs,
+                    configurator: configurator ?? subtaskArgs.configurator,
                     sdkFactory,
                 })
+            }
         )
 
         // We'll also need to override the default implementation of the signAndSend subtask
@@ -153,32 +197,7 @@ task(TASK_LZ_OAPP_WIRE)
 // The two tasks are identical and the only drawback of this approach is the fact
 // that the logs will say "Wiring OApp" instead of "Transferring ownership"
 task(TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP)
-    // The first thing we add is the solana secret key, used to create a signer
-    //
-    // This secret key will also be used as the user account, required to use the OFT SDK
-    .addParam(
-        'solanaSecretKey',
-        'Secret key of the user account that will be used to send transactions',
-        undefined,
-        keyPair,
-        true
-    )
-    // The next (optional) parameter is the OFT program ID
-    //
-    // Only pass this if you deployed a new OFT program, if you are using the default
-    // LayerZero OFT program you can omit this
-    .addParam('solanaProgramId', 'The OFT program ID to use', undefined, publicKey, true)
-    .addParam('multisigKey', 'The MultiSig key', undefined, publicKey, true)
+    .addParam('multisigKey', 'The MultiSig key', undefined, publicKeyType, true)
     .setAction(async (args: Args, hre) => {
         return hre.run(TASK_LZ_OAPP_WIRE, { ...args, internalConfigurator: configureOwnable })
     })
-
-// We'll create clones of the wire task and only override the configurator argument
-const wireLikeTask = inheritTask(TASK_LZ_OAPP_WIRE)
-
-// This task will use the `initOFTAccounts` configurator that initializes the Solana accounts
-wireLikeTask('lz:oapp:init:solana')
-    .setDescription('Initialize OFT accounts for Solana')
-    .setAction(async (args: Args, hre) =>
-        hre.run(TASK_LZ_OAPP_WIRE, { ...args, internalConfigurator: initOFTAccounts })
-    )

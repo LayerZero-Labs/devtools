@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-evm-test",
-  "version": "0.3.2",
+  "version": "0.3.6",
   "private": true,
   "description": "Integration tests for ua-devtools-evm-hardhat for V2",
   "repository": {
@@ -14,7 +14,8 @@
     "compile": "$npm_execpath hardhat compile",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
-    "test": "jest --ci"
+    "test": "$npm_execpath test:jest",
+    "test:jest": "jest --ci"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
@@ -22,10 +23,10 @@
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
-    "@layerzerolabs/devtools": "~0.4.3",
-    "@layerzerolabs/devtools-evm": "~1.0.2",
-    "@layerzerolabs/lz-definitions": "^3.0.27",
-    "@layerzerolabs/test-devtools": "~0.4.2",
+    "@layerzerolabs/devtools": "~0.4.8",
+    "@layerzerolabs/devtools-evm": "~1.0.6",
+    "@layerzerolabs/lz-definitions": "^3.0.75",
+    "@layerzerolabs/test-devtools": "~0.4.6",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@swc/core": "^1.4.0",

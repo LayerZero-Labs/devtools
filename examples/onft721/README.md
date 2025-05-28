@@ -16,6 +16,16 @@
 
 <p align="center">Template project for getting started with LayerZero's <code>ONFT721</code> contract development.</p>
 
+### ONFT721Adapter additional setup:
+
+- In your `hardhat.config.ts` file, add the following configuration to the network you want to deploy the ONFT721Adapter to:
+  ```typescript
+  // Replace `0x0` with the address of the ERC721 token you want to adapt to the ONFT721 functionality.
+  onft721Adapter: {
+      tokenAddress: '0x0',
+  }
+  ```
+
 ## 1) Developing Contracts
 
 #### Installing dependencies
@@ -101,10 +111,18 @@ More information about available CLI arguments can be found using the `--help` f
 npx hardhat lz:deploy --help
 ```
 
+## 3) Connecting Contracts
+
+Wire your deployed contracts by running:
+
+```bash
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts
+```
+
 By following these steps, you can focus more on creating innovative omnichain solutions and less on the complexities of cross-chain communication.
 
 <br></br>
 
 <p align="center">
-  Join our community on <a href="https://discord-layerzero.netlify.app/discord" style="color: #a77dff">Discord</a> | Follow us on <a href="https://twitter.com/LayerZero_Labs" style="color: #a77dff">Twitter</a>
+  Join our <a href="https://layerzero.network/community" style="color: #a77dff">community</a>! | Follow us on <a href="https://x.com/LayerZero_Labs" style="color: #a77dff">X (formerly Twitter)</a>
 </p>

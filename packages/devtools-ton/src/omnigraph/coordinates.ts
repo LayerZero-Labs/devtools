@@ -1,22 +1,36 @@
-import { TonClient } from '@ton/ton'
+import { TonClient, TonClient3 } from '@ton/ton'
 import pMemoize from 'p-memoize'
 
 import { formatEid, OmniPoint, type RpcUrlFactory } from '@layerzerolabs/devtools'
 import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
 
-import { TonClientFactory } from './types'
+import { TonApiFactory, TonClientFactory } from './types'
+import { TonClient3Factory } from './types'
 
 export const isOmniPointOnTon = ({ eid }: OmniPoint): boolean => endpointIdToChainType(eid) === ChainType.TON
 
-export const defaultRpcUrlFactory: RpcUrlFactory = (eid) => {
-    switch (eid) {
-        case EndpointId.TON_V2_MAINNET:
-            return 'https://toncenter.com/api/v2/'
-        case EndpointId.TON_V2_TESTNET:
-            return 'https://testnet.toncenter.com/api/v2/'
-    }
+const V2_SUBPATH = '/api/v2/jsonRPC'
+const V3_SUBPATH = '/api/v3'
 
-    throw new Error(`Could not find a default TON RPC URL for eid ${eid} (${formatEid(eid)})`)
+const baseUrlByEid = {
+    [EndpointId.TON_V2_MAINNET]: 'https://toncenter.com',
+    [EndpointId.TON_V2_TESTNET]: 'https://testnet.toncenter.com',
+}
+
+const getRpcUrl = (eid, clientVersion: 'v2' | 'v3') => {
+    const baseUrl = baseUrlByEid[eid]
+    if (!baseUrl) {
+        throw new Error(`Could not find a default TON RPC URL for eid ${eid} (${formatEid(eid)})`)
+    }
+    return `${baseUrlByEid[eid]}${clientVersion === 'v2' ? V2_SUBPATH : V3_SUBPATH}`
+}
+
+export const defaultRpcUrlFactory: RpcUrlFactory = (eid) => {
+    return getRpcUrl(eid, 'v2')
+}
+
+export const defaultRpcUrl3Factory: RpcUrlFactory = (eid) => {
+    return getRpcUrl(eid, 'v3')
 }
 
 /**
@@ -38,5 +52,26 @@ export const createRpcUrlFactory =
     (eid) =>
         overrides[eid] ?? defaultRpcUrlFactory(eid)
 
-export const createTonClientFactory = (urlFactory: RpcUrlFactory = defaultRpcUrlFactory): TonClientFactory =>
-    pMemoize(async (eid) => new TonClient({ endpoint: await urlFactory(eid) }))
+export const createTonClientFactory = (
+    urlFactory: RpcUrlFactory = defaultRpcUrlFactory,
+    apiKeyFactory?: TonApiFactory
+): TonClientFactory =>
+    pMemoize(
+        async (eid) =>
+            new TonClient({
+                endpoint: await urlFactory(eid),
+                ...(apiKeyFactory ? { apiKey: await apiKeyFactory(eid) } : {}),
+            })
+    )
+
+export const createTonClient3Factory = (
+    urlFactory: RpcUrlFactory = defaultRpcUrl3Factory,
+    apiKeyFactory?: TonApiFactory
+): TonClient3Factory =>
+    pMemoize(
+        async (eid) =>
+            new TonClient3({
+                endpoint: await urlFactory(eid),
+                ...(apiKeyFactory ? { apiKey: await apiKeyFactory(eid) } : {}),
+            })
+    )

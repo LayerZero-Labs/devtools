@@ -1,5 +1,63 @@
 # @layerzerolabs/test-setup-devtools-evm-hardhat
 
+## 6.0.6
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+- Updated dependencies [24311f8]
+- Updated dependencies [8b6c422]
+  - @layerzerolabs/devtools-evm-hardhat@2.0.8
+  - @layerzerolabs/devtools-evm@1.0.6
+  - @layerzerolabs/protocol-devtools-evm@3.0.7
+  - @layerzerolabs/protocol-devtools@1.1.6
+  - @layerzerolabs/ua-devtools-evm@5.0.7
+  - @layerzerolabs/ua-devtools@3.0.6
+  - @layerzerolabs/devtools@0.4.8
+
+## 6.0.5
+
+### Patch Changes
+
+- e256387: Updating packages
+- Updated dependencies [e256387]
+  - @layerzerolabs/devtools@0.4.6
+  - @layerzerolabs/devtools-evm@1.0.5
+  - @layerzerolabs/devtools-evm-hardhat@2.0.7
+  - @layerzerolabs/protocol-devtools@1.1.5
+  - @layerzerolabs/protocol-devtools-evm@3.0.6
+  - @layerzerolabs/ua-devtools@3.0.5
+  - @layerzerolabs/ua-devtools-evm@5.0.6
+
+## 6.0.4
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+- Updated dependencies [af91805]
+- Updated dependencies [186442a]
+  - @layerzerolabs/protocol-devtools-evm@3.0.5
+  - @layerzerolabs/devtools-evm-hardhat@2.0.6
+  - @layerzerolabs/protocol-devtools@1.1.4
+  - @layerzerolabs/ua-devtools-evm@5.0.5
+  - @layerzerolabs/devtools-evm@1.0.4
+  - @layerzerolabs/ua-devtools@3.0.4
+  - @layerzerolabs/devtools@0.4.5
+
+## 6.0.3
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+- Updated dependencies [ce03876]
+  - @layerzerolabs/protocol-devtools-evm@3.0.4
+  - @layerzerolabs/devtools-evm-hardhat@2.0.5
+  - @layerzerolabs/protocol-devtools@1.1.3
+  - @layerzerolabs/ua-devtools-evm@5.0.4
+  - @layerzerolabs/devtools-evm@1.0.3
+  - @layerzerolabs/ua-devtools@3.0.3
+  - @layerzerolabs/devtools@0.4.4
+
 ## 6.0.2
 
 ### Patch Changes

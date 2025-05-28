@@ -1,5 +1,63 @@
 # create-lz-oapp
 
+## 0.7.3
+
+### Patch Changes
+
+- b8d9c72: LZ_ENABLE_EXPERIMENTAL_HYPERLIQUID_EXAMPLE for examples/oft-hyperliquid
+
+## 0.7.2
+
+### Patch Changes
+
+- adding support for initia chain and cleanup
+
+## 0.7.1
+
+### Patch Changes
+
+- c31fec8: experiemental tag on move-vm examples"
+
+## 0.7.0
+
+### Minor Changes
+
+- 24311f8: adding initia and move example
+
+### Patch Changes
+
+- 24311f8: Minor bug fixes
+
+## 0.6.0
+
+### Minor Changes
+
+- 54e88f6: disable Yarn
+
+## 0.5.1
+
+### Patch Changes
+
+- e256387: Updating packages
+
+## 0.5.0
+
+### Minor Changes
+
+- e60d40b: Added lzapp migration example
+
+## 0.4.2
+
+### Patch Changes
+
+- 186442a: add "test:jest" script
+
+## 0.4.1
+
+### Patch Changes
+
+- 1d1272b: Add mint-burn-oft-adapter
+
 ## 0.4.0
 
 ### Minor Changes

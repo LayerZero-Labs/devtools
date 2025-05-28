@@ -1,5 +1,71 @@
 # @layerzerolabs/protocol-devtools-solana
 
+## 5.0.0
+
+### Patch Changes
+
+- Updated dependencies [9fe27ff]
+  - @layerzerolabs/devtools-solana@1.1.0
+
+## 4.0.9
+
+### Patch Changes
+
+- 8b6c422: Bump monorepo dependencies to latest patch version
+- Updated dependencies [8b6c422]
+  - @layerzerolabs/protocol-devtools@1.1.6
+  - @layerzerolabs/devtools-solana@1.0.8
+  - @layerzerolabs/ua-devtools@3.0.6
+  - @layerzerolabs/devtools@0.4.8
+
+## 4.0.8
+
+### Patch Changes
+
+- e256387: Updating packages
+- Updated dependencies [e256387]
+  - @layerzerolabs/devtools@0.4.6
+  - @layerzerolabs/devtools-solana@1.0.7
+  - @layerzerolabs/io-devtools@0.1.16
+  - @layerzerolabs/protocol-devtools@1.1.5
+  - @layerzerolabs/ua-devtools@3.0.5
+
+## 4.0.7
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+- Updated dependencies [af91805]
+- Updated dependencies [186442a]
+  - @layerzerolabs/protocol-devtools@1.1.4
+  - @layerzerolabs/devtools-solana@1.0.6
+  - @layerzerolabs/ua-devtools@3.0.4
+  - @layerzerolabs/devtools@0.4.5
+  - @layerzerolabs/io-devtools@0.1.15
+
+## 4.0.6
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+- Updated dependencies [ce03876]
+  - @layerzerolabs/protocol-devtools@1.1.3
+  - @layerzerolabs/devtools-solana@1.0.5
+  - @layerzerolabs/ua-devtools@3.0.3
+  - @layerzerolabs/devtools@0.4.4
+
+## 4.0.5
+
+### Patch Changes
+
+- 51c4086: Fix setSendConfig and setReceiveConfig for squads multisig
+
+## 4.0.4
+
+### Patch Changes
+
+- 40e6338: Fix squads client to use correct delegate
+
 ## 4.0.3
 
 ### Patch Changes

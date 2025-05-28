@@ -1,5 +1,59 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 2.0.9
+
+### Patch Changes
+
+- 13bdae7: In task lz:healthcheck:validate:rpcs:
+
+  - more descriptive logs
+  - flexible RPCs health check
+  - fix support of --stage param
+
+## 2.0.8
+
+### Patch Changes
+
+- 24311f8: Minor bug fixes
+- 8b6c422: Bump monorepo dependencies to latest patch version
+- Updated dependencies [24311f8]
+- Updated dependencies [8b6c422]
+  - @layerzerolabs/devtools-evm@1.0.6
+  - @layerzerolabs/devtools@0.4.8
+
+## 2.0.7
+
+### Patch Changes
+
+- e256387: Updating packages
+- Updated dependencies [e256387]
+  - @layerzerolabs/devtools@0.4.6
+  - @layerzerolabs/devtools-evm@1.0.5
+  - @layerzerolabs/export-deployments@0.0.16
+  - @layerzerolabs/io-devtools@0.1.16
+
+## 2.0.6
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+- 186442a: add "test:jest" script
+- Updated dependencies [af91805]
+- Updated dependencies [186442a]
+  - @layerzerolabs/devtools-evm@1.0.4
+  - @layerzerolabs/devtools@0.4.5
+  - @layerzerolabs/export-deployments@0.0.15
+  - @layerzerolabs/io-devtools@0.1.15
+
+## 2.0.5
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+- Updated dependencies [ce03876]
+  - @layerzerolabs/devtools-evm@1.0.3
+  - @layerzerolabs/devtools@0.4.4
+
 ## 2.0.4
 
 ### Patch Changes

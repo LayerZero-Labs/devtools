@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ua-devtools",
-  "version": "3.0.2",
+  "version": "3.0.6",
   "description": "Utilities for working with LayerZero contracts",
   "repository": {
     "type": "git",
@@ -28,15 +28,16 @@
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
-    "test": "jest --ci"
+    "test": "$npm_execpath test:jest",
+    "test:jest": "jest --ci"
   },
   "devDependencies": {
-    "@layerzerolabs/devtools": "~0.4.3",
-    "@layerzerolabs/io-devtools": "~0.1.14",
-    "@layerzerolabs/lz-definitions": "^3.0.27",
-    "@layerzerolabs/lz-v2-utilities": "^3.0.12",
-    "@layerzerolabs/protocol-devtools": "~1.1.2",
-    "@layerzerolabs/test-devtools": "~0.4.2",
+    "@layerzerolabs/devtools": "~0.4.8",
+    "@layerzerolabs/io-devtools": "~0.1.16",
+    "@layerzerolabs/lz-definitions": "^3.0.75",
+    "@layerzerolabs/lz-v2-utilities": "^3.0.75",
+    "@layerzerolabs/protocol-devtools": "~1.1.6",
+    "@layerzerolabs/test-devtools": "~0.4.6",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.12",
@@ -49,11 +50,11 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "@layerzerolabs/devtools": "~0.4.3",
-    "@layerzerolabs/io-devtools": "~0.1.14",
-    "@layerzerolabs/lz-definitions": "^3.0.27",
-    "@layerzerolabs/lz-v2-utilities": "^3.0.12",
-    "@layerzerolabs/protocol-devtools": "~1.1.2",
+    "@layerzerolabs/devtools": "~0.4.8",
+    "@layerzerolabs/io-devtools": "~0.1.16",
+    "@layerzerolabs/lz-definitions": "^3.0.75",
+    "@layerzerolabs/lz-v2-utilities": "^3.0.75",
+    "@layerzerolabs/protocol-devtools": "~1.1.6",
     "zod": "^3.22.4"
   },
   "publishConfig": {
