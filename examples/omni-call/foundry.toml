@@ -27,6 +27,8 @@ remappings = [
     '@openzeppelin/=node_modules/@openzeppelin/',
     'solidity-bytes-utils/=node_modules/solidity-bytes-utils/',
 ]
+optimizer = true
+optimizer_runs = 20_000
 
 [rpc_endpoints]
 amoy = "${POLYGON_AMOY_RPC}"
