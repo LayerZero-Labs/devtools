@@ -6,11 +6,10 @@ import { AptosEndpointV2 } from './aptosEndpointV2'
 
 export function createAptosOAppFactory() {
     return async function (point: OmniPoint): Promise<IOApp> {
-        // Only handle Aptos endpoints
-        if (endpointIdToChainType(point.eid) !== ChainType.APTOS) {
-            throw new Error(`Aptos SDK factory can only create SDKs for Aptos networks. Received EID ${point.eid}`)
+        const supportedChaintypes = [ChainType.APTOS, ChainType.INITIA]
+        if (!supportedChaintypes.includes(endpointIdToChainType(point.eid))) {
+            throw new Error(`Aptos SDK factory can only create SDKs for Aptos networks. Received EID ${point.eid}.`)
         }
-
         return {
             point,
             async getOwner(): Promise<OmniAddress | undefined> {
@@ -20,11 +19,7 @@ export function createAptosOAppFactory() {
                 return false
             },
             async setOwner(owner: OmniAddress): Promise<OmniTransaction> {
-                return {
-                    point,
-                    data: '0x00',
-                    description: 'Set owner for Aptos OApp (stub)',
-                }
+                return {} as OmniTransaction
             },
             async getEndpointSDK() {
                 return new AptosEndpointV2(point)
@@ -36,21 +31,13 @@ export function createAptosOAppFactory() {
                 return false
             },
             async setPeer(eid: EndpointId, peer: OmniAddress | null | undefined): Promise<OmniTransaction> {
-                return {
-                    point,
-                    data: '0x00',
-                    description: `Set peer for EID ${eid} to ${peer} (Aptos stub)`,
-                }
+                return {} as OmniTransaction
             },
             async getDelegate(): Promise<OmniAddress | undefined> {
                 return undefined
             },
             async setDelegate(address: OmniAddress): Promise<OmniTransaction> {
-                return {
-                    point,
-                    data: '0x00',
-                    description: `Set delegate to ${address} (Aptos stub)`,
-                }
+                return {} as OmniTransaction
             },
             async isDelegate(): Promise<boolean> {
                 return false
@@ -59,32 +46,16 @@ export function createAptosOAppFactory() {
                 return {}
             },
             async setEnforcedOptions(enforcedOptions: OAppEnforcedOptionParam[]): Promise<OmniTransaction> {
-                return {
-                    point,
-                    data: '0x00',
-                    description: 'Set enforced options (Aptos stub)',
-                }
+                // Implement the method to return a valid OmniTransaction
+                return {} as OmniTransaction
             },
             async getCallerBpsCap(): Promise<bigint | undefined> {
                 return BigInt(0)
             },
             async setCallerBpsCap(callerBpsCap: bigint): Promise<OmniTransaction | undefined> {
-                return {
-                    point,
-                    data: '0x00',
-                    description: `Set caller BPS cap to ${callerBpsCap} (Aptos stub)`,
-                }
+                // Implement the method to return a valid OmniTransaction or undefined
+                return {} as OmniTransaction
             },
-            async sendConfigIsInitialized(eid: EndpointId): Promise<boolean> {
-                return false
-            },
-            async initConfig(eid: EndpointId): Promise<OmniTransaction | undefined> {
-                return {
-                    point,
-                    data: '0x00',
-                    description: `Initialize config for EID ${eid} (Aptos stub)`,
-                }
-            },
-        } as any
+        }
     }
 }

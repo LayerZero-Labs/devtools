@@ -9,9 +9,13 @@ import { ChainType, EndpointId, endpointIdToChainType, getNetworkForChainId } fr
 import { EndpointV2 } from '@layerzerolabs/protocol-devtools-solana'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
-import { TASK_LZ_OAPP_CONFIG_GET, getReceiveConfig, getSendConfig } from '@layerzerolabs/ua-devtools-evm-hardhat'
-
-import { getLzConfig } from '../solana/utils'
+import {
+    OAppOmniGraphHardhatSchema,
+    SUBTASK_LZ_OAPP_CONFIG_LOAD,
+    type SubtaskLoadConfigTaskArgs,
+    TASK_LZ_OAPP_CONFIG_GET,
+} from '@layerzerolabs/ua-devtools-evm-hardhat'
+import { getReceiveConfig, getSendConfig } from '@layerzerolabs/ua-devtools-evm-hardhat'
 
 import { getSolanaReceiveConfig, getSolanaSendConfig } from './taskHelper'
 import { createSolanaConnectionFactory } from './utils'
@@ -36,7 +40,7 @@ const isMoveVM = (point: OmniPoint) =>
  */
 const getNetworkName = (eid: EndpointId) => {
     const { chainName, env } = getNetworkForChainId(eid)
-    const hardhatUnsupportedEids = [
+    const hardhatUnsupportedEids: EndpointId[] = [
         EndpointId.SOLANA_V2_TESTNET,
         EndpointId.SOLANA_V2_MAINNET,
         EndpointId.APTOS_V2_MAINNET,
@@ -50,7 +54,7 @@ const getNetworkName = (eid: EndpointId) => {
     if (hardhatUnsupportedEids.includes(eid)) {
         return `${chainName}-${env}`
     } else {
-        return getNetworkNameForEid(eid)
+        return getNetworkNameForEid(eid as any)
     }
 }
 
@@ -58,7 +62,15 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }, h
     setDefaultLogLevel(logLevel)
     const logger = createLogger(logLevel)
 
-    const graph: OAppOmniGraph = await getLzConfig(oappConfig)
+    // const hardhatGraph = await getLzConfig(oappConfig)
+    // const transformer = createOmniGraphHardhatTransformer<OAppNodeConfig | undefined, OAppEdgeConfig | undefined>()
+    // const graph: OAppOmniGraph = await transformer(hardhatGraph)
+
+    const graph: OAppOmniGraph = await hre.run(SUBTASK_LZ_OAPP_CONFIG_LOAD, {
+        configPath: oappConfig,
+        schema: OAppOmniGraphHardhatSchema,
+        task: TASK_LZ_OAPP_CONFIG_GET,
+    } satisfies SubtaskLoadConfigTaskArgs)
 
     const evmSdkFactory = createOAppFactory(createConnectedContractFactory())
     const configs: Record<string, Record<string, unknown>> = {}
