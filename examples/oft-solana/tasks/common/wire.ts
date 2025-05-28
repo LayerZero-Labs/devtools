@@ -17,6 +17,7 @@ import {
 import { getSolanaDeployment, useWeb3Js } from '../solana'
 import { findSolanaEndpointIdInGraph } from '../solana/utils'
 
+import { createAptosSignerFactory } from './aptosSignerFactory'
 import { publicKey as publicKeyType } from './types'
 import {
     DebugLogger,
@@ -85,7 +86,6 @@ task(TASK_LZ_OAPP_WIRE)
             logger.error('Missing programId in solana deployment')
             return
         }
-
         const configurator = args.internalConfigurator
 
         //
@@ -105,6 +105,7 @@ task(TASK_LZ_OAPP_WIRE)
 
         // We'll also need a signer factory
         const solanaSignerFactory = createSolanaSignerFactory(keypair, connectionFactory, args.multisigKey)
+        const aptosSignerFactory = createAptosSignerFactory()
 
         //
         //
@@ -182,7 +183,7 @@ task(TASK_LZ_OAPP_WIRE)
         subtask(SUBTASK_LZ_SIGN_AND_SEND, 'Sign OFT transactions', (args: SignAndSendTaskArgs, _hre, runSuper) =>
             runSuper({
                 ...args,
-                createSigner: firstFactory(solanaSignerFactory, args.createSigner),
+                createSigner: firstFactory(aptosSignerFactory, solanaSignerFactory, args.createSigner),
             })
         )
 

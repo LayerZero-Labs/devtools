@@ -1,15 +1,12 @@
+import path from 'path'
+
 import { Connection, PublicKey } from '@solana/web3.js'
 import { backOff } from 'exponential-backoff'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
+import { importDefault } from '@layerzerolabs/io-devtools'
 import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
-import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
-import {
-    OAppOmniGraphHardhatSchema,
-    SUBTASK_LZ_OAPP_CONFIG_LOAD,
-    SubtaskLoadConfigTaskArgs,
-    TASK_LZ_OAPP_CONFIG_GET,
-} from '@layerzerolabs/ua-devtools-evm-hardhat'
+import { OAppOmniGraphHardhat } from '@layerzerolabs/ua-devtools'
 
 /**
  * Assert that the account is initialized on the Solana blockchain.  Due to eventual consistency, there is a race
@@ -41,13 +38,9 @@ export const findSolanaEndpointIdInGraph = async (
 ): Promise<EndpointId> => {
     if (!oappConfig) throw new Error('Missing oappConfig')
 
-    let graph: OAppOmniGraph
+    let graph: OAppOmniGraphHardhat
     try {
-        graph = await hre.run(SUBTASK_LZ_OAPP_CONFIG_LOAD, {
-            configPath: oappConfig,
-            schema: OAppOmniGraphHardhatSchema,
-            task: TASK_LZ_OAPP_CONFIG_GET,
-        } satisfies SubtaskLoadConfigTaskArgs)
+        graph = await getLzConfig(oappConfig)
     } catch (error) {
         if (error instanceof Error) {
             throw new Error(`Failed to load OApp configuration: ${error.message}`)
@@ -67,11 +60,18 @@ export const findSolanaEndpointIdInGraph = async (
         }
     }
 
-    for (const { vector } of graph.connections) {
+    for (const vector of graph.connections) {
         checkSolanaEndpoint(vector.from.eid)
         checkSolanaEndpoint(vector.to.eid)
         if (solanaEid) return solanaEid
     }
 
     throw new Error('No Solana Endpoint ID found. Ensure your OApp configuration includes a valid Solana endpoint.')
+}
+
+export async function getLzConfig(configPath: string): Promise<OAppOmniGraphHardhat> {
+    const lzConfigPath = path.resolve(path.join(process.cwd(), configPath))
+    const lzConfigFile = await importDefault(lzConfigPath)
+    const lzConfig = lzConfigFile as OAppOmniGraphHardhat
+    return lzConfig
 }

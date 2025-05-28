@@ -24,6 +24,8 @@ import { IOApp } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { createOFTFactory } from '@layerzerolabs/ua-devtools-solana'
 
+import { createAptosOAppFactory } from './aptosSdkFactory'
+
 export const createSolanaConnectionFactory = () =>
     createConnectionFactory(
         createRpcUrlFactory({
@@ -41,7 +43,8 @@ export const createSdkFactory = (
     //
     // We do this by using the firstFactory helper function that is provided by the devtools package.
     // This function will try to execute the factories one by one and return the first one that succeeds.
-    const evmSdkfactory = createOAppFactory(createConnectedContractFactory())
+    const evmSdkFactory = createOAppFactory(createConnectedContractFactory())
+    const aptosSdkFactory = createAptosOAppFactory()
     const solanaSdkFactory = createOFTFactory(
         // The first parameter to createOFTFactory is a user account factory
         //
@@ -68,7 +71,7 @@ export const createSdkFactory = (
     //
     // We do this by using the firstFactory helper function that is provided by the devtools package.
     // This function will try to execute the factories one by one and return the first one that succeeds.
-    return firstFactory<[OmniPoint], IOApp>(evmSdkfactory, solanaSdkFactory)
+    return firstFactory<[OmniPoint], IOApp>(aptosSdkFactory, evmSdkFactory, solanaSdkFactory)
 }
 
 export const createSolanaSignerFactory = (
