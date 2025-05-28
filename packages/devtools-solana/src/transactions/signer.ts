@@ -7,6 +7,8 @@ import {
     type OmniTransactionResponse,
     OmniPoint,
     OmniSignerBase,
+    type OmniSignerFactory,
+    formatEid,
 } from '@layerzerolabs/devtools'
 import {
     ConfirmOptions,
@@ -19,9 +21,11 @@ import {
     TransactionMessage,
     VersionedTransaction,
 } from '@solana/web3.js'
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import assert from 'assert'
+import { EndpointId, ChainType, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
 import { deserializeTransactionMessage, serializeTransactionBuffer } from './serde'
 import { createModuleLogger, type Logger } from '@layerzerolabs/io-devtools'
+import type { ConnectionFactory } from '../connection'
 
 export class OmniSignerSolana extends OmniSignerBase implements OmniSigner {
     constructor(
@@ -198,5 +202,21 @@ export class OmniSignerSolanaSquads extends OmniSignerBase implements OmniSigner
                 transactionHash,
             }),
         }
+    }
+}
+
+export const createSolanaSignerFactory = (
+    wallet: Keypair,
+    connectionFactory: ConnectionFactory,
+    multisigKey?: PublicKey
+): OmniSignerFactory<OmniSigner<OmniTransactionResponse<OmniTransactionReceipt>>> => {
+    return async (eid: EndpointId) => {
+        assert(
+            endpointIdToChainType(eid) === ChainType.SOLANA,
+            `Solana signer factory can only create signers for Solana networks. Received ${formatEid(eid)}`
+        )
+        return multisigKey
+            ? new OmniSignerSolanaSquads(eid, await connectionFactory(eid), multisigKey, wallet)
+            : new OmniSignerSolana(eid, await connectionFactory(eid), wallet)
     }
 }

@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-solana
 
+## 1.1.0
+
+### Minor Changes
+
+- 9fe27ff: add new helper functions for connection/keypair
+
 ## 1.0.8
 
 ### Patch Changes

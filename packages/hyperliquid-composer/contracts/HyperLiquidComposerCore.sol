@@ -28,6 +28,17 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     address public constant HLP_PRECOMPILE_WRITE = 0x3333333333333333333333333333333333333333;
     address public constant HLP_PRECOMPILE_READ_SPOT_BALANCE = 0x0000000000000000000000000000000000000801;
 
+    // https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm#mainnet
+    uint256 public constant HYPE_CHAIN_ID_TESTNET = 998;
+    uint256 public constant HYPE_CHAIN_ID_MAINNET = 999;
+
+    // https://app.hyperliquid-testnet.xyz/explorer/token/0x7317beb7cceed72ef0b346074cc8e7ab
+    uint64 public constant HYPE_INDEX_TESTNET = 1105;
+    // https://app.hyperliquid.xyz/explorer/token/0x0d01dc56dcaaca66ad901c959b4011ec
+    uint64 public constant HYPE_INDEX_MAINNET = 150;
+
+    mapping(uint256 => uint64) public hypeIndexByChainId;
+
     address public immutable endpoint;
 
     IOFT public immutable oft;
@@ -47,6 +58,9 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
         // _oft address is validated by it returning token()
         oft = IOFT(_oft);
         token = IERC20(oft.token());
+
+        hypeIndexByChainId[HYPE_CHAIN_ID_TESTNET] = HYPE_INDEX_TESTNET;
+        hypeIndexByChainId[HYPE_CHAIN_ID_MAINNET] = HYPE_INDEX_MAINNET;
     }
 
     function validate_message(bytes calldata _composeMessage) external pure returns (uint256, bytes32, bytes memory) {

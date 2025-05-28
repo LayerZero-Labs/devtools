@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/protocol-devtools-solana",
-  "version": "4.0.9",
+  "version": "5.0.0",
   "description": "Utilities for LayerZero Solana protocol programs",
   "repository": {
     "type": "git",
@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@layerzerolabs/devtools": "~0.4.8",
-    "@layerzerolabs/devtools-solana": "~1.0.8",
+    "@layerzerolabs/devtools-solana": "~1.1.0",
     "@layerzerolabs/io-devtools": "~0.1.16",
     "@layerzerolabs/lz-definitions": "^3.0.75",
     "@layerzerolabs/lz-solana-sdk-v2": "^3.0.0",
@@ -71,7 +71,7 @@
   },
   "peerDependencies": {
     "@layerzerolabs/devtools": "~0.4.8",
-    "@layerzerolabs/devtools-solana": "~1.0.8",
+    "@layerzerolabs/devtools-solana": "~1.1.0",
     "@layerzerolabs/io-devtools": "~0.1.16",
     "@layerzerolabs/lz-definitions": "^3.0.75",
     "@layerzerolabs/lz-solana-sdk-v2": "^3.0.0",
