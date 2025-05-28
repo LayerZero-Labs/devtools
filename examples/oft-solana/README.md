@@ -192,6 +192,13 @@ The `deploy` command will run with a priority fee. Read the section on ['Deployi
 solana program deploy --program-id target/deploy/oft-keypair.json target/verifiable/oft.so -u devnet --with-compute-unit-price <COMPUTE_UNIT_PRICE_IN_MICRO_LAMPORTS>
 ```
 
+Alternatively, run the Hardhat task which also records the program ID:
+
+```bash
+pnpm hardhat lz:oft:solana:deploy --eid 40168 --program-keypair target/deploy/oft-keypair.json --program-binary target/verifiable/oft.so -- -u devnet --with-compute-unit-price <COMPUTE_UNIT_PRICE_IN_MICRO_LAMPORTS>
+```
+Any parameters after `--` are passed directly to `solana program deploy`.
+
 :information_source: the `-u` flag specifies the RPC URL that should be used. The options are `mainnet-beta, devnet, testnet, localhost`, which also have their respective shorthands: `-um, -ud, -ut, -ul`
 
 :warning: If the deployment is slow, it could be that the network is congested and you might need to increase the priority fee.
