@@ -3,7 +3,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 
-import { EvmArgs, sendEvm } from '../evm/sendEvm'
+import { EvmArgs, sendEvm } from '../evm/v1/sendEvm'
 import { SolanaArgs, sendSolana } from '../solana/sendSolana'
 
 import { SendResult } from './types'
