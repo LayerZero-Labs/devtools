@@ -305,16 +305,18 @@ npx hardhat --network sepolia-testnet lz:lzapp:set-min-dst-gas --dst-eid 40168
 
 ### Calling Send
 
+:information_source: Note that for sends, the amount is expected to be in human-readable form (conversion to the raw units via decimals is done by the script)
+
 Sepolia V1 to Solana
 
 ```bash
-npx hardhat --network sepolia-testnet lz:oft-v1:send --dst-eid 40168 --amount 1000000000000000000 --to <SOLANA_ADDRESS>
+npx hardhat --network sepolia-testnet lz:oft:send --src-eid 10161 --dst-eid 40168 --amount 1 --to <SOLANA_ADDRESS>
 ```
 
 Solana to Sepolia V1
 
 ```bash
-npx hardhat lz:oft:solana:send --amount 1000000000 --from-eid 40168 --to <EVM_ADDRESS> --to-eid 10161
+npx hardhat lz:oft:send --amount 1 --src-eid 40168 --to <EVM_ADDRESS> --dst-eid 10161
 ```
 
 For more information on the unified send task across EVM and Solana, run:

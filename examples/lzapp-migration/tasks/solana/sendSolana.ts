@@ -1,85 +1,171 @@
-import { fetchToken, findAssociatedTokenPda } from '@metaplex-foundation/mpl-toolbox'
-import { publicKey } from '@metaplex-foundation/umi'
+// tasks/solana/sendOFT.ts
+import { fetchMint, fetchToken, findAssociatedTokenPda } from '@metaplex-foundation/mpl-toolbox'
+import { publicKey, transactionBuilder } from '@metaplex-foundation/umi'
+import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { PublicKey } from '@solana/web3.js'
 import bs58 from 'bs58'
 
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { createLogger } from '@layerzerolabs/io-devtools'
+import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { SendResult } from '../common/types'
-import { DebugLogger } from '../common/utils'
+import { DebugLogger, KnownErrors } from '../common/utils'
 
-import { deriveConnection, getLayerZeroScanLink, getSolanaDeployment } from './index'
+import { parseDecimalToUnits, silenceSolana429 } from './utils'
+
+import {
+    TransactionType,
+    addComputeUnitInstructions,
+    deriveConnection,
+    getAddressLookupTable,
+    getLayerZeroScanLink,
+    getSolanaDeployment,
+} from './index'
+
+const logger = createLogger()
 
 export interface SolanaArgs {
     amount: string
     to: string
     srcEid: EndpointId
     dstEid: EndpointId
+    minAmount?: string
+    extraOptions?: string
+    composeMsg?: string
     oftAddress?: string
     oftProgramId?: string
     tokenProgram?: string
+    computeUnitPriceScaleFactor?: number
 }
 
-export async function sendSolana(args: SolanaArgs): Promise<SendResult> {
-    const { amount, to, srcEid, dstEid, oftAddress, oftProgramId, tokenProgram } = args
+export async function sendSolana({
+    amount,
+    to,
+    srcEid,
+    dstEid,
+    oftAddress,
+    oftProgramId,
+    tokenProgram: tokenProgramStr,
+    computeUnitPriceScaleFactor = 4,
+    minAmount,
+    extraOptions,
+    composeMsg,
+}: SolanaArgs): Promise<SendResult> {
+    // 1️⃣ RPC + UMI
     const { connection, umi, umiWalletSigner } = await deriveConnection(srcEid)
+    silenceSolana429(connection)
+    // 2️⃣ Pick your OFT program ID (override or from deployment)
+    const programId = oftProgramId
+        ? publicKey(oftProgramId)
+        : publicKey(
+              (() => {
+                  try {
+                      return getSolanaDeployment(srcEid).programId
+                  } catch (error) {
+                      logger.error(`No Program ID found for ${srcEid}: ${error}`)
+                      throw error
+                  }
+              })()
+          )
 
-    const deployment = getSolanaDeployment(srcEid)
-    const programId = publicKey(oftProgramId ?? deployment.programId)
-    const storePda = publicKey(oftAddress ?? deployment.oftStore)
-    const store = await oft.accounts.fetchOFTStore(umi, storePda)
-    const tokenProgramId = publicKey(tokenProgram ?? TOKEN_PROGRAM_ID.toBase58())
+    // 3️⃣ Decide your store PDA (override or from your on‐disk deployment)
+    const storePda = oftAddress ? publicKey(oftAddress) : publicKey(getSolanaDeployment(srcEid).oftStore)
+    const oftStoreInfo = await oft.accounts.fetchOFTStore(umi, storePda)
+    const mintPk = new PublicKey(oftStoreInfo.tokenMint)
+    const escrowPk = new PublicKey(oftStoreInfo.tokenEscrow)
 
+    // 5️⃣ Attach token account & check balance
+    const tokenProgramId = tokenProgramStr ? publicKey(tokenProgramStr) : fromWeb3JsPublicKey(TOKEN_PROGRAM_ID)
     const tokenAccount = findAssociatedTokenPda(umi, {
-        mint: publicKey(store.tokenMint),
+        mint: fromWeb3JsPublicKey(mintPk),
         owner: umiWalletSigner.publicKey,
         tokenProgramId,
     })
+    if (!tokenAccount) throw new Error(`No token account for mint ${mintPk}`)
     const balance = (await fetchToken(umi, tokenAccount)).amount
-    const amountBn = BigInt(amount)
-    if (amountBn === 0n || amountBn > balance) throw new Error('Insufficient balance')
 
+    // 6️⃣ Normalize human→base units
+    const decimals = (await fetchMint(umi, fromWeb3JsPublicKey(mintPk))).decimals
+    const amountUnits = parseDecimalToUnits(amount, decimals)
+    if (amountUnits === 0n || amountUnits > balance) {
+        throw new Error(`Insufficient balance (need ${amountUnits}, have ${balance})`)
+    }
+
+    // 7️⃣ Quote (use our overridden `programId`)
+    logger.info('Quoting the native gas cost for the send transaction...')
     const recipient = addressToBytes32(to)
     const { nativeFee } = await oft.quote(
         umi.rpc,
         {
             payer: umiWalletSigner.publicKey,
-            tokenMint: publicKey(store.tokenMint),
-            tokenEscrow: publicKey(store.tokenEscrow),
+            tokenMint: fromWeb3JsPublicKey(mintPk),
+            tokenEscrow: fromWeb3JsPublicKey(escrowPk),
         },
         {
             payInLzToken: false,
             to: Buffer.from(recipient),
-            dstEid,
-            amountLd: amountBn,
-            minAmountLd: amountBn,
-            options: Buffer.from(''),
+            dstEid: dstEid,
+            amountLd: amountUnits,
+            minAmountLd: minAmount ? parseDecimalToUnits(minAmount, decimals) : amountUnits,
+            options: Buffer.from(extraOptions ? extraOptions.toString() : ''),
+            composeMsg: composeMsg ? Buffer.from(composeMsg.toString()) : undefined,
         },
-        { oft: programId }
+        { oft: programId }, // ← use override
+        [],
+        (await getAddressLookupTable(connection, umi, srcEid)).lookupTableAddress
     )
+
+    // 8️⃣ Send (again passing `programId`)
+    logger.info('Sending the transaction...')
     const ix = await oft.send(
         umi.rpc,
         {
             payer: umiWalletSigner,
-            tokenMint: publicKey(store.tokenMint),
-            tokenEscrow: publicKey(store.tokenEscrow),
+            tokenMint: fromWeb3JsPublicKey(mintPk),
+            tokenEscrow: fromWeb3JsPublicKey(escrowPk),
             tokenSource: tokenAccount[0],
         },
         {
             to: Buffer.from(recipient),
-            dstEid,
-            amountLd: amountBn,
-            minAmountLd: amountBn,
-            options: Buffer.from(''),
-            nativeFee,
+            dstEid: dstEid,
+            amountLd: amountUnits,
+            minAmountLd: minAmount ? parseDecimalToUnits(minAmount, decimals) : amountUnits,
+            options: Buffer.from(extraOptions ? extraOptions.toString() : ''),
+            composeMsg: composeMsg ? Buffer.from(composeMsg.toString()) : undefined,
+            nativeFee: nativeFee,
         },
-        { oft: programId, token: tokenProgramId }
+        { oft: programId, token: tokenProgramId } // ← use override
     )
-    const { signature } = await umi.sendAndConfirm(ix)
-    const txHash = bs58.encode(signature)
-    const scanLink = getLayerZeroScanLink(txHash, srcEid === EndpointId.SOLANA_V2_TESTNET)
-    DebugLogger.keyValue('txHash', txHash)
+
+    // 9️⃣ Compute units & submit
+    let txB = transactionBuilder().add([ix])
+    txB = await addComputeUnitInstructions(
+        connection,
+        umi,
+        srcEid,
+        txB,
+        umiWalletSigner,
+        computeUnitPriceScaleFactor,
+        TransactionType.SendOFT
+    )
+    let txHash: string
+    try {
+        const { signature } = await txB.sendAndConfirm(umi)
+        txHash = bs58.encode(signature)
+    } catch (error) {
+        DebugLogger.printErrorAndFixSuggestion(
+            KnownErrors.ERROR_QUOTING_NATIVE_GAS_COST,
+            `For network: ${endpointIdToNetwork(srcEid)}, OFT: ${oftAddress}`
+        )
+        throw error
+    }
+
+    const isTestnet = srcEid === EndpointId.SOLANA_V2_TESTNET
+
+    const scanLink = getLayerZeroScanLink(txHash, isTestnet)
+
     return { txHash, scanLink }
 }
