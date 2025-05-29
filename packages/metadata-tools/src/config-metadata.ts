@@ -2,6 +2,7 @@ import type { OmniEdgeHardhat } from '@layerzerolabs/devtools-evm-hardhat'
 import type { OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
 import { IMetadata } from './types'
 import { TwoWayConfig } from './types'
+import fs from 'fs/promises'
 import { METADATA_URL } from './constants'
 
 function getEndpointIdDeployment(eid: number, metadata: IMetadata) {
@@ -115,29 +116,35 @@ export async function translatePathwayToConfig(
         destinationOptionalDVNs = DVNsToAddresses(optionalDVNs, destinationLZDeployment.chainKey, metadata)
     }
 
-    if (!sourceLZDeployment.sendUln302 || !sourceLZDeployment.receiveUln302 || !sourceLZDeployment.executor) {
-        throw new Error(
-            `Can't find sendUln302, receiveUln302 or executor for source endpoint with eid: "${sourceContract.eid}".`
-        )
+    function getUlnLibraries(deployment: any, eid: number) {
+        const send = deployment.sendUln302?.address || deployment.sendUln301?.address
+        const receive = deployment.receiveUln302?.address || deployment.receiveUln301?.address
+        if (!send || !receive) {
+            throw new Error(
+                `Can't find sendUln302/sendUln301 or receiveUln302/receiveUln301 for endpoint with eid: "${eid}".`
+            )
+        }
+        return { send, receive }
     }
 
-    if (
-        !destinationLZDeployment.sendUln302 ||
-        !destinationLZDeployment.receiveUln302 ||
-        !destinationLZDeployment.executor
-    ) {
-        throw new Error(
-            `Can't find sendUln302, receiveUln302 or executor for destination endpoint with eid: "${destinationContract.eid}".`
-        )
+    if (!sourceLZDeployment.executor) {
+        throw new Error(`Can't find executor for source endpoint with eid: "${sourceContract.eid}".`)
     }
+
+    if (!destinationLZDeployment.executor) {
+        throw new Error(`Can't find executor for destination endpoint with eid: "${destinationContract.eid}".`)
+    }
+
+    const sourceLibraries = getUlnLibraries(sourceLZDeployment, sourceContract.eid)
+    const destinationLibraries = getUlnLibraries(destinationLZDeployment, destinationContract.eid)
 
     const sourceToDestinationConfig: OmniEdgeHardhat<OAppEdgeConfig> = {
         from: sourceContract,
         to: destinationContract,
         config: {
-            sendLibrary: sourceLZDeployment.sendUln302.address,
+            sendLibrary: sourceLibraries.send,
             receiveLibraryConfig: {
-                receiveLibrary: sourceLZDeployment.receiveUln302.address,
+                receiveLibrary: sourceLibraries.receive,
                 gracePeriod: BigInt(0),
             },
             sendConfig: {
@@ -160,9 +167,9 @@ export async function translatePathwayToConfig(
         from: destinationContract,
         to: sourceContract,
         config: {
-            sendLibrary: destinationLZDeployment.sendUln302.address,
+            sendLibrary: destinationLibraries.send,
             receiveLibraryConfig: {
-                receiveLibrary: destinationLZDeployment.receiveUln302.address,
+                receiveLibrary: destinationLibraries.receive,
                 gracePeriod: BigInt(0),
             },
             receiveConfig: {
@@ -218,6 +225,12 @@ export async function translatePathwayToConfig(
 
 // allow for a custom metadataUrl
 export async function defaultFetchMetadata(metadataUrl = METADATA_URL): Promise<IMetadata> {
+    if (metadataUrl.startsWith('file://')) {
+        const url = new URL(metadataUrl)
+        const data = await fs.readFile(url, 'utf8')
+        return JSON.parse(data) as IMetadata
+    }
+
     return (await fetch(metadataUrl).then((res) => res.json())) as IMetadata
 }
 
