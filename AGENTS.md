@@ -157,10 +157,10 @@ Generates and stages a changeset for versioning & changelog.
 
 ## 8. Directory-Specific Overrides
 
-Codex will apply the most specific `CODEX.md` under:
+Codex will apply the most specific `AGENTS.md` under:
 
-* `examples/CODEX.md`
-* `packages/CODEX.md`
-* `tests/CODEX.md`
+* `examples/AGENTS.md`
+* `packages/AGENTS.md`
+* `tests/AGENTS.md`
 
-Each directory's CODEX.md provides platform-specific guidelines while maintaining consistency with this root configuration.
+Each sub-directory's AGENTS.md provides platform-specific guidelines while maintaining consistency with this root configuration.
