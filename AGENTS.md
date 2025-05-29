@@ -34,16 +34,28 @@ notifications:
 
 3. **Offline Metadata**
 
-   * Snapshot LayerZero metadata:
+   * Snapshot LayerZero metadata during setup:
      ```bash
-     # in setup script:
-     curl -sSL https://metadata.layerzero-api.com/v1/metadata \
-         -o cache/metadata/metadata.json
+     # In setup script
+     mkdir -p cache/metadata
+     curl -sSL https://metadata.layerzero-api.com/v1/metadata/deployments \
+         -o cache/metadata/deployments.json
+     curl -sSL https://metadata.layerzero-api.com/v1/metadata/dvns \
+         -o cache/metadata/dvns.json
+     curl -sSL https://metadata.layerzero-api.com/v1/metadata/defaultConfig \
+         -o cache/metadata/defaultConfig.json
      ```
-   * During code-mode, agents must read from `cache/metadata/metadata.json` instead of contacting the live URL.
-   * This ensures that:
-     * Setup grabs the freshest metadata while we still have internet
-     * Code-mode can run completely offline by loading from the local JSON snapshot
+
+   * During code-mode, agents must read from local cache instead of live URLs:
+
+     * `cache/metadata/deployments.json`: Contains all LayerZero on-chain deployment addresses for every chain (Endpoints, Message Libraries, etc.)
+     * `cache/metadata/dvns.json`: Contains DVN (Decentralized Verifier Network) records with contract addresses and endpoint IDs
+     * `cache/metadata/defaultConfig.json`: Contains default cross-chain configuration settings between Endpoints
+
+   * Benefits:
+     * Setup captures latest metadata during internet access
+     * Code-mode runs fully offline using local JSON snapshots
+     * Provides reference data for metadata-tools package and LayerZero configurations
 
 ---
 
