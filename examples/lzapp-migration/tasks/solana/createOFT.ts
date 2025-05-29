@@ -112,6 +112,11 @@ interface CreateOFTTaskArgs {
     uri: string
 
     computeUnitPriceScaleFactor: number
+
+    /**
+     * The freeze authority address (only supported in onlyOftStore mode).
+     */
+    freezeAuthority?: string
 }
 
 // Define a Hardhat task for creating OFT on Solana
@@ -122,11 +127,11 @@ interface CreateOFTTaskArgs {
 // Note:  Only supports SPL Token Standard.
 task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store account')
     .addOptionalParam('amount', 'The initial supply to mint on solana', undefined, devtoolsTypes.int)
-    .addParam('eid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid)
+    .addParam('eid', 'Solana mainnet (30168) or testnet (40168)', undefined, devtoolsTypes.eid)
     .addOptionalParam('localDecimals', 'Token local decimals (default=9)', DEFAULT_LOCAL_DECIMALS, devtoolsTypes.int)
     .addOptionalParam('sharedDecimals', 'OFT shared decimals (default=6)', DEFAULT_SHARED_DECIMALS, devtoolsTypes.int)
     .addParam('name', 'Token Name', 'MockOFT', devtoolsTypes.string)
-    .addParam('mint', 'The Token mint public key (used for MABA only)', '', devtoolsTypes.string)
+    .addOptionalParam('mint', 'The Token mint public key (used for MABA only)', undefined, devtoolsTypes.string)
     .addParam('programId', 'The OFT Program id')
     .addParam('sellerFeeBasisPoints', 'Seller fee basis points', 0, devtoolsTypes.int)
     .addParam('symbol', 'Token Symbol', 'MOFT', devtoolsTypes.string)
@@ -145,6 +150,13 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
         devtoolsTypes.string
     )
     .addParam('uri', 'URI for token metadata', '', devtoolsTypes.string)
+    .addParam(
+        'freezeAuthority',
+        'The Freeze Authority address (only in onlyOftStore mode)',
+        '',
+        devtoolsTypes.string,
+        true
+    )
     .addParam('computeUnitPriceScaleFactor', 'The compute unit price scale factor', 4, devtoolsTypes.float, true)
     .setAction(
         async ({
@@ -162,6 +174,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             onlyOftStore,
             tokenProgram: tokenProgramStr,
             uri,
+            freezeAuthority: freezeAuthorityStr,
             computeUnitPriceScaleFactor,
         }: CreateOFTTaskArgs) => {
             const isMABA = !!mintStr // the difference between MABA and OFT Adapter is that MABA uses mint/burn mechanism whereas OFT Adapter uses lock/unlock mechanism
@@ -177,24 +190,37 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             const tokenProgramId = publicKey(tokenProgramStr)
             const { connection, umi, umiWalletKeyPair, umiWalletSigner } = await deriveConnection(eid)
             const { programId, lockBox, escrowPK, oftStorePda, eddsa } = deriveKeys(programIdStr)
+
+            const additionalMinters = additionalMintersAsStrings?.map((minter) => new PublicKey(minter)) ?? []
+
+            // BOF: Validate combination of parameters
             if (!additionalMintersAsStrings) {
                 if (!onlyOftStore) {
                     throw new Error(
-                        'If you want to proceed with only the OFT Store having the ability to mint, please specify --only-oft-store true. Note that this also means the Freeze Authority will be immediately renounced.'
+                        'If you want to proceed with only the OFT Store having the ability to mint, please specify --only-oft-store true. Note that this also means the Freeze Authority will be immediately renounced, unless --freeze-authority is specified.'
                     )
                 }
             }
 
+            if (freezeAuthorityStr && !onlyOftStore) {
+                throw new Error('`--freeze-authority` is only supported in `--only-oft-store true` mode')
+            }
+
+            if (onlyOftStore && additionalMintersAsStrings && additionalMintersAsStrings?.length > 0) {
+                throw new Error(
+                    'Cannot set both --only-oft-store and --additional-minters; these options are mutually exclusive.'
+                )
+            }
+
             if (onlyOftStore) {
                 const continueWithOnlyOftStore = await promptToContinue(
-                    'You have chosen `--only-oft-store true`. This means that only the OFT Store will be able to mint new tokens and that the Freeze Authority will be immediately renounced.  Continue?'
+                    `You have chosen \`--only-oft-store true\`. This means that only the OFT Store will be able to mint new tokens${freezeAuthorityStr ? '' : ' and that the Freeze Authority will be immediately renounced'}.  Continue?`
                 )
                 if (!continueWithOnlyOftStore) {
                     return
                 }
             }
-
-            const additionalMinters = additionalMintersAsStrings?.map((minter) => new PublicKey(minter)) ?? []
+            // EOF: Validate combination of parameters
 
             let mintAuthorityPublicKey: PublicKey = toWeb3JsPublicKey(oftStorePda) // we default to the OFT Store as the Mint Authority when there are no additional minters
 
@@ -216,6 +242,24 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                     ...additionalMinters,
                 ])
             }
+
+            // BOF: determine freeze authority
+            // important: this must be placed after multisig creation
+            let freezeAuthority: PublicKey | null = null
+            if (freezeAuthorityStr && onlyOftStore) {
+                freezeAuthority = new PublicKey(freezeAuthorityStr) // will error if invalid
+                const continueFreezeAuthority = await promptToContinue(
+                    `Freeze Authority will be set to ${freezeAuthority.toBase58()}. Continue?`
+                )
+                if (!continueFreezeAuthority) {
+                    return
+                }
+            } else {
+                // onlyOftStore mode: if freezeAuthority is not provided, we set it to null
+                // additional minters mode: set freezeAuthority to mintAuthorityPublicKey (SPL Multisig)
+                freezeAuthority = onlyOftStore ? null : mintAuthorityPublicKey
+            }
+            // EOF: determine freeze authority
 
             const mint = isMABA
                 ? createNoopSigner(publicKey(mintStr))
@@ -306,7 +350,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                         setAuthority(umi, {
                             owned: mint.publicKey,
                             owner: umiWalletSigner,
-                            newAuthority: onlyOftStore ? null : fromWeb3JsPublicKey(mintAuthorityPublicKey),
+                            newAuthority: freezeAuthority ? fromWeb3JsPublicKey(freezeAuthority) : null,
                             authorityType: AuthorityType.FreezeAccount,
                         })
                     )
