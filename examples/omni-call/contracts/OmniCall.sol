@@ -103,15 +103,13 @@ contract OmniCall is OApp {
 
     /**
      * @dev Internal function override to handle incoming messages from another chain.
-     * @dev _origin A struct containing information about the message sender.
-     * @dev _guid A unique global packet identifier for the message.
      * @param payload The encoded message payload being received.
      *
      * @dev The following params are unused in the current implementation of the OApp.
+     * @dev _origin A struct containing information about the message sender.
+     * @dev _guid A unique global packet identifier for the message.
      * @dev _executor The address of the Executor responsible for processing the message.
      * @dev _extraData Arbitrary data appended by the Executor to the message.
-     *
-     * Decodes the received payload and processes it as per the business logic defined in the function.
      */
     function _lzReceive(
         Origin calldata /*_origin*/,
