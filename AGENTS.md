@@ -32,6 +32,19 @@ notifications:
    * Only run builds & tests against prepared caches.
    * No additional `apt-get` or registry downloads allowed.
 
+3. **Offline Metadata**
+
+   * Snapshot LayerZero metadata:
+     ```bash
+     # in setup script:
+     curl -sSL https://metadata.layerzero-api.com/v1/metadata \
+         -o cache/metadata/metadata.json
+     ```
+   * During code-mode, agents must read from `cache/metadata/metadata.json` instead of contacting the live URL.
+   * This ensures that:
+     * Setup grabs the freshest metadata while we still have internet
+     * Code-mode can run completely offline by loading from the local JSON snapshot
+
 ---
 
 ## 3. Repo Structure Overview
