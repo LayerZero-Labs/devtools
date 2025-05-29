@@ -171,6 +171,17 @@ task(TASK_LZ_OAPP_WIRE)
                     ...subtaskArgs,
                     configurator: configurator ?? subtaskArgs.configurator,
                     sdkFactory,
+                    graph: {
+                        ...subtaskArgs.graph,
+                        contracts: subtaskArgs.graph.contracts.filter((contract) => {
+                            const chainType = endpointIdToChainType(contract.point.eid)
+                            return chainType !== ChainType.APTOS && chainType !== ChainType.INITIA
+                        }),
+                        connections: subtaskArgs.graph.connections.filter((connection) => {
+                            const fromChainType = endpointIdToChainType(connection.vector.from.eid)
+                            return fromChainType !== ChainType.APTOS && fromChainType !== ChainType.INITIA
+                        }),
+                    },
                 })
             }
         )

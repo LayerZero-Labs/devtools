@@ -10,6 +10,13 @@ export function createAptosOAppFactory() {
         if (!supportedChaintypes.includes(endpointIdToChainType(point.eid))) {
             throw new Error(`Aptos SDK factory can only create SDKs for Aptos networks. Received EID ${point.eid}.`)
         }
+
+        const createStubTransaction = (description: string): OmniTransaction => ({
+            point,
+            data: `0x`,
+            description: `[APTOS STUB] ${description}`,
+        })
+
         return {
             point,
             async getOwner(): Promise<OmniAddress | undefined> {
@@ -19,7 +26,7 @@ export function createAptosOAppFactory() {
                 return false
             },
             async setOwner(owner: OmniAddress): Promise<OmniTransaction> {
-                return {} as OmniTransaction
+                return createStubTransaction(`setOwner(${owner})`)
             },
             async getEndpointSDK() {
                 return new AptosEndpointV2(point)
@@ -31,13 +38,13 @@ export function createAptosOAppFactory() {
                 return false
             },
             async setPeer(eid: EndpointId, peer: OmniAddress | null | undefined): Promise<OmniTransaction> {
-                return {} as OmniTransaction
+                return createStubTransaction(`setPeer(${eid}, ${peer})`)
             },
             async getDelegate(): Promise<OmniAddress | undefined> {
                 return undefined
             },
             async setDelegate(address: OmniAddress): Promise<OmniTransaction> {
-                return {} as OmniTransaction
+                return createStubTransaction(`setDelegate(${address})`)
             },
             async isDelegate(): Promise<boolean> {
                 return false
@@ -46,15 +53,13 @@ export function createAptosOAppFactory() {
                 return {}
             },
             async setEnforcedOptions(enforcedOptions: OAppEnforcedOptionParam[]): Promise<OmniTransaction> {
-                // Implement the method to return a valid OmniTransaction
-                return {} as OmniTransaction
+                return createStubTransaction(`setEnforcedOptions(${enforcedOptions.length} options)`)
             },
             async getCallerBpsCap(): Promise<bigint | undefined> {
                 return BigInt(0)
             },
             async setCallerBpsCap(callerBpsCap: bigint): Promise<OmniTransaction | undefined> {
-                // Implement the method to return a valid OmniTransaction or undefined
-                return {} as OmniTransaction
+                return createStubTransaction(`setCallerBpsCap(${callerBpsCap})`)
             },
         }
     }
