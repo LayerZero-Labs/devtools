@@ -1,5 +1,13 @@
 # @layerzerolabs/lzapp-migration-example
 
+## 0.1.5
+
+### Patch Changes
+
+- Updated dependencies [9fe27ff]
+  - @layerzerolabs/devtools-solana@1.1.0
+  - @layerzerolabs/ua-devtools-solana@5.0.0
+
 ## 0.1.4
 
 ### Patch Changes
