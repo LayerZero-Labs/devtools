@@ -11,6 +11,8 @@ import { IOApp } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { createOFTFactory } from '@layerzerolabs/ua-devtools-solana'
 
+import { createAptosOAppFactory } from './aptosSdkFactory'
+
 export { createSolanaConnectionFactory }
 const logger = createLogger()
 
@@ -71,7 +73,7 @@ export const createSdkFactory = (
     //
     // We do this by using the firstFactory helper function that is provided by the devtools package.
     // This function will try to execute the factories one by one and return the first one that succeeds.
-    return firstFactory<[OmniPoint], IOApp>(evmSdkfactory, solanaSdkFactory)
+    return firstFactory<[OmniPoint], IOApp>(aptosSdkFactory, evmSdkFactory, solanaSdkFactory)
 }
 
 export { createSolanaSignerFactory }
