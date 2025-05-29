@@ -42,11 +42,14 @@ notifications:
 │   ├── oapp/       ← LayerZero OApp examples
 │   ├── oft/        ← OFT implementation examples
 │   └── onft/       ← ONFT implementation examples
+|   └── .../
 ├── packages/        ← reusable libraries & plugins
 │   ├── devtools/   ← core devtools package
-│   ├── oft/        ← OFT implementations
-│   └── onft/       ← ONFT implementations
+│   ├── oft-evm/        ← OFT implementations
+│   └── onft-evm/       ← ONFT implementations
+│   └── .../ 
 ├── tests/           ← integration & helper suites
+|    └── .../
 ├── .gitignore
 ├── turbo.json       ← Turbo Pipeline config
 ├── package.json     ← monorepo root
@@ -101,7 +104,7 @@ notifications:
 
 ## 6. Versioning & Changesets
 
-After modifying any package under `packages/`:
+After modifying any packages under `examples/`, `packages/`, or `tests/`:
 
 ```bash
 pnpm changeset
@@ -129,7 +132,7 @@ Generates and stages a changeset for versioning & changelog.
 
 ## 8. Directory-Specific Overrides
 
-Codex will apply the most specific CODEX.md under:
+Codex will apply the most specific `CODEX.md` under:
 
 * `examples/CODEX.md`
 * `packages/CODEX.md`
