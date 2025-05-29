@@ -10,7 +10,7 @@ import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzer
 
 import layerzeroConfig from '../../layerzero.config'
 import { SendResult } from '../common/types'
-import { DebugLogger, KnownErrors } from '../common/utils'
+import { DebugLogger, KnownErrors } from '@layerzerolabs/io-devtools'
 import { getLayerZeroScanLink } from '../solana'
 const logger = createLogger()
 

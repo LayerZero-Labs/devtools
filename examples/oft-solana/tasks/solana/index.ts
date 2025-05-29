@@ -34,7 +34,8 @@ import { promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { OftPDA } from '@layerzerolabs/oft-v2-solana-sdk'
 
-import { DebugLogger, KnownWarnings, createSolanaConnectionFactory } from '../common/utils'
+import { createSolanaConnectionFactory } from '../common/utils'
+import { DebugLogger, KnownWarnings } from '@layerzerolabs/io-devtools'
 import getFee from '../utils/getFee'
 
 const LOOKUP_TABLE_ADDRESS: Partial<Record<EndpointId, PublicKey>> = {
