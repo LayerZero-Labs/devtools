@@ -24,12 +24,12 @@ import {
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { createWeb3JsEddsa } from '@metaplex-foundation/umi-eddsa-web3js'
 import { toWeb3JsInstruction, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
-import { AddressLookupTableAccount, Connection, Keypair } from '@solana/web3.js'
+import { AddressLookupTableAccount, Connection } from '@solana/web3.js'
 import { getSimulationComputeUnits } from '@solana-developers/helpers'
-import bs58 from 'bs58'
 import { backOff } from 'exponential-backoff'
 
 import { formatEid } from '@layerzerolabs/devtools'
+import { getSolanaKeypair } from '@layerzerolabs/devtools-solana'
 import { promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { OftPDA } from '@layerzerolabs/oft-v2-solana-sdk'
@@ -42,29 +42,16 @@ const LOOKUP_TABLE_ADDRESS: Partial<Record<EndpointId, PublicKey>> = {
     [EndpointId.SOLANA_V2_TESTNET]: publicKey('9thqPdbR27A1yLWw2spwJLySemiGMXxPnEvfmXVk4KuK'),
 }
 
-const getFromEnv = (key: string): string => {
-    const value = process.env[key]
-    if (!value) {
-        throw new Error(`${key} is not defined in the environment variables.`)
-    }
-    return value
-}
-
-/**
- * Extracts the SOLANA_PRIVATE_KEY from the environment.  This is purposely not exported for encapsulation purposes.
- */
-const getSolanaPrivateKeyFromEnv = () => getFromEnv('SOLANA_PRIVATE_KEY')
-
 /**
  * Derive common connection and UMI objects for a given endpoint ID.
  * @param eid {EndpointId}
  */
 export const deriveConnection = async (eid: EndpointId, readOnly = false) => {
-    const privateKey = readOnly ? bs58.encode(Keypair.generate().secretKey) : getSolanaPrivateKeyFromEnv()
+    const keypair = await getSolanaKeypair(readOnly)
     const connectionFactory = createSolanaConnectionFactory()
     const connection = await connectionFactory(eid)
     const umi = createUmi(connection.rpcEndpoint).use(mplToolbox())
-    const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(privateKey))
+    const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(keypair.secretKey)
     const umiWalletSigner = createSignerFromKeypair(umi, umiWalletKeyPair)
     umi.use(signerIdentity(umiWalletSigner))
     return {
@@ -75,10 +62,8 @@ export const deriveConnection = async (eid: EndpointId, readOnly = false) => {
     }
 }
 
-export const useWeb3Js = () => {
-    const privateKey = getSolanaPrivateKeyFromEnv()
-    const secretKeyBytes = bs58.decode(privateKey)
-    const keypair = Keypair.fromSecretKey(secretKeyBytes)
+export const useWeb3Js = async () => {
+    const keypair = await getSolanaKeypair()
     return {
         web3JsKeypair: keypair,
     }
