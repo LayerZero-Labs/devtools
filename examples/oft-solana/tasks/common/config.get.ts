@@ -30,29 +30,41 @@ interface TaskArgs {
  * @param point {OmniPoint}
  */
 const isSolana = (point: OmniPoint) => endpointIdToChainType(point.eid) === ChainType.SOLANA
+const isMoveVM = (point: OmniPoint) =>
+    endpointIdToChainType(point.eid) === ChainType.APTOS || endpointIdToChainType(point.eid) === ChainType.INITIA
 
 /**
  * Helper function to get the hardhat.config.ts network name for a given endpoint id, or use the convention of
  * networkName-environment for Solana.
  * @param eid {EndpointId}
  */
-const getEid = (eid: EndpointId) => {
-    switch (eid) {
-        // In the case of solana-testnet and solana-mainnet, we'll use the convention of networkName-environment
-        case EndpointId.SOLANA_V2_TESTNET:
-        case EndpointId.SOLANA_V2_MAINNET: {
-            const { chainName, env } = getNetworkForChainId(eid)
-            return `${chainName}-${env}`
-        }
-        default:
-            // For all other chains, we'll use the network name from hardhat.config.ts
-            return getNetworkNameForEid(eid)
+const getNetworkName = (eid: EndpointId) => {
+    const { chainName, env } = getNetworkForChainId(eid)
+    const hardhatUnsupportedEids: EndpointId[] = [
+        EndpointId.SOLANA_V2_TESTNET,
+        EndpointId.SOLANA_V2_MAINNET,
+        EndpointId.APTOS_V2_MAINNET,
+        EndpointId.APTOS_V2_TESTNET,
+        EndpointId.MOVEMENT_V2_MAINNET,
+        EndpointId.MOVEMENT_V2_TESTNET,
+        EndpointId.INITIA_V2_MAINNET,
+        EndpointId.INITIA_V2_TESTNET,
+    ]
+
+    if (hardhatUnsupportedEids.includes(eid)) {
+        return `${chainName}-${env}`
+    } else {
+        return getNetworkNameForEid(eid as any)
     }
 }
 
 const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }, hre) => {
     setDefaultLogLevel(logLevel)
     const logger = createLogger(logLevel)
+
+    // const hardhatGraph = await getLzConfig(oappConfig)
+    // const transformer = createOmniGraphHardhatTransformer<OAppNodeConfig | undefined, OAppEdgeConfig | undefined>()
+    // const graph: OAppOmniGraph = await transformer(hardhatGraph)
 
     const graph: OAppOmniGraph = await hre.run(SUBTASK_LZ_OAPP_CONFIG_LOAD, {
         configPath: oappConfig,
@@ -65,7 +77,7 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }, h
 
     // Iterate over the graph of connections not from Solana
     const tasks = graph.connections
-        .filter(({ vector: { from } }) => !isSolana(from))
+        .filter(({ vector: { from } }) => !isSolana(from) && !isMoveVM(from))
         .map(({ vector: { from, to } }) => async () => {
             const endpointV2Sdk = await (await evmSdkFactory(from)).getEndpointSDK()
 
@@ -87,8 +99,8 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }, h
             const [sendOAppLibrary, sendOAppUlnConfig, sendOAppExecutorConfig] = sendOAppConfig ?? []
             const [receiveOAppLibrary, receiveOAppUlnConfig] = receiveOAppConfig ?? []
 
-            const localNetworkName = getEid(from.eid)
-            const remoteNetworkName = getEid(to.eid)
+            const localNetworkName = getNetworkName(from.eid)
+            const remoteNetworkName = getNetworkName(to.eid)
 
             // Update the global state
             configs[localNetworkName] = {
@@ -152,8 +164,8 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }, h
             const [sendOAppLibrary, sendOAppUlnConfig, sendOAppExecutorConfig] = sendOAppConfig ?? []
             const [receiveOAppLibrary, receiveOAppUlnConfig] = receiveOAppConfig ?? []
 
-            const localNetworkName = getEid(from.eid)
-            const remoteNetworkName = getEid(to.eid)
+            const localNetworkName = getNetworkName(from.eid)
+            const remoteNetworkName = getNetworkName(to.eid)
 
             // Update the global state
             configs[localNetworkName] = {

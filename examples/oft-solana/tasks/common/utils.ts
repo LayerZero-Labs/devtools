@@ -11,6 +11,8 @@ import { IOApp } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { createOFTFactory } from '@layerzerolabs/ua-devtools-solana'
 
+import { createAptosOAppFactory } from './aptosSdkFactory'
+
 export { createSolanaConnectionFactory }
 const logger = createLogger()
 
@@ -40,7 +42,11 @@ export const createSdkFactory = (
     connectionFactory = createSolanaConnectionFactory()
 ) => {
     // To create a EVM/Solana SDK factory we need to merge the EVM and the Solana factories into one
+    //
+    // We do this by using the firstFactory helper function that is provided by the devtools package.
+    // This function will try to execute the factories one by one and return the first one that succeeds.
     const evmSdkFactory = createOAppFactory(createConnectedContractFactory())
+    const aptosSdkFactory = createAptosOAppFactory()
     const solanaSdkFactory = createOFTFactory(
         // The first parameter to createOFTFactory is a user account factory
         //
@@ -64,8 +70,24 @@ export const createSdkFactory = (
     )
 
     // the return value is an SDK factory that receives an OmniPoint and returns an SDK
-    return async (point: OmniPoint): Promise<IOApp> =>
-        endpointIdToChainType(point.eid) === ChainType.SOLANA ? solanaSdkFactory(point) : evmSdkFactory(point)
+    // return async (point: OmniPoint): Promise<IOApp> =>
+    //     endpointIdToChainType(point.eid) === ChainType.SOLANA ? solanaSdkFactory(point) : evmSdkFactory(point)
+
+    return async (point: OmniPoint): Promise<IOApp> => {
+        if (endpointIdToChainType(point.eid) === ChainType.SOLANA) {
+            return solanaSdkFactory(point)
+        } else if (endpointIdToChainType(point.eid) === ChainType.EVM) {
+            return evmSdkFactory(point)
+        } else if (
+            endpointIdToChainType(point.eid) === ChainType.APTOS ||
+            endpointIdToChainType(point.eid) === ChainType.INITIA
+        ) {
+            return aptosSdkFactory(point)
+        } else {
+            logger.error(`Unsupported chain type for EID ${point.eid}`)
+            throw new Error(`Unsupported chain type for EID ${point.eid}`)
+        }
+    }
 }
 
 export { createSolanaSignerFactory }
