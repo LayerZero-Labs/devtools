@@ -326,13 +326,13 @@ For Solana -> Sepolia, you should pass in the options value into the script at [
 #### Send From Solana Devnet -> To Ethereum Sepolia
 
 ```bash
-npx hardhat lz:oft:send --src-eid 40168 --dst-eid 40161 --to <RECEIVER_BYTES20>  --amount <AMOUNT>
+npx hardhat lz:oft:send --src-eid 40168 --dst-eid 40161 --to <RECEIVER_BYTES20> --amount <AMOUNT>
 ```
 
 #### Send From Ethereum Sepolia -> To Solana Devnet
 
 ```bash
-npx hardhat lz:oft:send --src-eid 40161 --dst-eid 40168 --to <RECEIVER_BASE58>  --amount <AMOUNT>
+npx hardhat lz:oft:send --src-eid 40161 --dst-eid 40168 --to <RECEIVER_BASE58> --amount <AMOUNT>
 ```
 
 For more information, run:

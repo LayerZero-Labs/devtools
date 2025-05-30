@@ -106,7 +106,7 @@ export const configureSendLibraries: OAppConfigurator = withOAppLogger(
                 const isDefaultLibrary = await endpointSdk.isDefaultSendLibrary(from.address, to.eid)
                 const currentSendLibrary = await endpointSdk.getSendLibrary(from.address, to.eid)
 
-                if (!isDefaultLibrary && currentSendLibrary === config.sendLibrary) {
+                if (!isDefaultLibrary && currentSendLibrary?.toLowerCase() === config.sendLibrary.toLowerCase()) {
                     logger.verbose(
                         `Current sendLibrary is not default library and is already set to ${config.sendLibrary} for ${formatOmniVector({ from, to })}, skipping`
                     )

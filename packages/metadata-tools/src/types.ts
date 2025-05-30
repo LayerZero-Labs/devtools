@@ -1,13 +1,21 @@
 import type { OmniPointHardhat } from '@layerzerolabs/devtools-evm-hardhat'
 import type { OAppEnforcedOption } from '@layerzerolabs/ua-devtools'
+import { MSG_LIB_BLOCK_RECEIVE_ONLY, MSG_LIB_BLOCK_SEND_AND_RECEIVE, MSG_LIB_BLOCK_SEND_ONLY } from './constants'
 
-// [srcContract, dstContract, [requiredDVNs, [optionalDVNs, threshold]], [srcToDstConfirmations, dstToSrcConfirmations]], [enforcedOptionsSrcToDst, enforcedOptionsDstToSrc]
+export type CustomMessageLibraryType =
+    | typeof MSG_LIB_BLOCK_SEND_ONLY
+    | typeof MSG_LIB_BLOCK_RECEIVE_ONLY
+    | typeof MSG_LIB_BLOCK_SEND_AND_RECEIVE
+export type BlockConfirmationsType = number | bigint
+export type BlockConfirmationsDefinition = BlockConfirmationsType | [BlockConfirmationsType, CustomMessageLibraryType]
+
+// [AContract, BContract, [requiredDVNs, [optionalDVNs, threshold]], [AToBConfirmations, BToAConfirmations]], [enforcedOptionsAToB, enforcedOptionsBToA]
 export type TwoWayConfig = [
-    OmniPointHardhat, // srcContract
-    OmniPointHardhat, // dstContract
+    OmniPointHardhat, // AContract
+    OmniPointHardhat, // BContract
     [string[], [string[], number] | []], // [requiredDVNs, [optionalDVNs, threshold]]
-    [number, number | undefined], // [srcToDstConfirmations, dstToSrcConfirmations]
-    [OAppEnforcedOption[] | undefined, OAppEnforcedOption[] | undefined], // [enforcedOptionsSrcToDst, enforcedOptionsDstToSrc]
+    [BlockConfirmationsDefinition, BlockConfirmationsDefinition | undefined], // [AToBConfirmations, BToAConfirmations]
+    [OAppEnforcedOption[] | undefined, OAppEnforcedOption[] | undefined], // [enforcedOptionsAToB, enforcedOptionsBToA]
 ]
 
 export interface IMetadataDvns {
@@ -40,6 +48,7 @@ export interface IMetadata {
             deadDVN?: { address: string }
             endpointV2?: { address: string }
             sendUln302?: { address: string }
+            blockedMessageLib?: { address: string }
             lzExecutor?: { address: string }
             sendUln301?: { address: string }
             receiveUln301?: { address: string }

@@ -548,6 +548,10 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         throw new TypeError(`isRegisteredLibrary() not implemented on Solana Endpoint SDK`)
     }
 
+    async isBlockedLibrary(_uln: OmniAddress): Promise<boolean> {
+        throw new TypeError(`isBlockedLibrary() not implemented on Solana Endpoint SDK`)
+    }
+
     async registerLibrary(): Promise<OmniTransaction> {
         throw new TypeError(`registerLibrary() not implemented on Solana Endpoint SDK`)
     }
