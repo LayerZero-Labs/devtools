@@ -19,14 +19,13 @@ export const RecordList: React.FC<{ data: RecordData[]; columns?: number }> = ({
 
 export const Record: React.FC<{ data: RecordData; columns?: number }> = ({
   data = {},
-  columns = process.stdout.columns ?? 80,
+  columns: _columns = process.stdout.columns ?? 80,
 }) => {
   const padding = 1;
   const labels = Object.keys(data);
   const labelLengths = labels.map(({ length }) => length);
   const maxLabelLength = Math.max(1, ...labelLengths);
   const labelColumnWidth = maxLabelLength + 2 * padding;
-  const valueColumnWidth = Math.max(10, columns - labelColumnWidth);
 
   return (
     <Box
@@ -44,13 +43,11 @@ export const Record: React.FC<{ data: RecordData; columns?: number }> = ({
               </Text>
             </Box>
 
-            <Box width={valueColumnWidth}>
+            <Box>
               {value == null ? (
-                <Text wrap="wrap" color="gray">
-                  -
-                </Text>
+                <Text color="gray">-</Text>
               ) : (
-                <Text wrap="wrap">{String(value)}</Text>
+                <Text>{String(value)}</Text>
               )}
             </Box>
           </Box>
