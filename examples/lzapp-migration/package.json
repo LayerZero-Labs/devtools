@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/lzapp-migration-example",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -26,7 +26,7 @@
     "@layerzerolabs/devtools-evm-hardhat": "^2.0.8",
     "@layerzerolabs/devtools-solana": "^1.1.0",
     "@layerzerolabs/export-deployments": "^0.0.16",
-    "@layerzerolabs/io-devtools": "^0.1.16",
+    "@layerzerolabs/io-devtools": "^0.1.17",
     "@layerzerolabs/lz-evm-sdk-v1": "^3.0.49",
     "@layerzerolabs/oft-v2-solana-sdk": "^3.0.64",
     "@layerzerolabs/protocol-devtools": "^1.1.6",
