@@ -30,12 +30,12 @@ import bs58 from 'bs58'
 import { backOff } from 'exponential-backoff'
 
 import { formatEid } from '@layerzerolabs/devtools'
+import { getPrioritizationFees } from '@layerzerolabs/devtools-solana'
 import { promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { OftPDA } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { createSolanaConnectionFactory } from '../common/utils'
-import getFee from '../utils/getFee'
 
 const LOOKUP_TABLE_ADDRESS: Partial<Record<EndpointId, PublicKey>> = {
     [EndpointId.SOLANA_V2_MAINNET]: publicKey('AokBxha6VMLLgf97B5VYHEtqztamWmYERBmmFvjuTzJB'),
@@ -218,7 +218,7 @@ export const getComputeUnitPriceAndLimit = async (
     lookupTableAccount: AddressLookupTableAccount,
     transactionType: TransactionType
 ) => {
-    const { averageFeeExcludingZeros } = await getFee(connection)
+    const { averageFeeExcludingZeros } = await getPrioritizationFees(connection)
     const priorityFee = Math.round(averageFeeExcludingZeros)
     const computeUnitPrice = BigInt(priorityFee)
 

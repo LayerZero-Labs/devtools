@@ -18,7 +18,7 @@ importers:
     dependencies:
       '@layerzerolabs/hyperliquid-composer':
         specifier: link:/workspaces/devtools-hyperliquid-main/packages/hyperliquid-composer
-        version: link:../../../workspaces/devtools-hyperliquid-main/packages/hyperliquid-composer
+        version: link:../../../../../../workspaces/devtools-hyperliquid-main/packages/hyperliquid-composer
     devDependencies:
       '@changesets/cli':
         specifier: ^2.27.1
@@ -3571,6 +3571,9 @@ importers:
       bn.js:
         specifier: ^5.2.0
         version: 5.2.1
+      exponential-backoff:
+        specifier: ~3.1.1
+        version: 3.1.1
       fast-check:
         specifier: ^3.15.1
         version: 3.15.1
