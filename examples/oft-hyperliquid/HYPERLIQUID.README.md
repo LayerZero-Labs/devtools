@@ -324,18 +324,15 @@ curl -X POST "https://api.hyperliquid.xyz/info" \
 
 ### Step 5/6 `createSpotDeployment`
 
-This is the step that creates a spot deployment without hyperliquidity.
+This is the step that creates a spot deployment without hyperliquidity. This step is meant for tokens deployed with Hyperliquidity but is also required for tokens deployed without Hyperliquidity to be listed on Spot trading, as such the values for `startPx` and `orderSz` are not required as they are set by the market. The value for `nOrders` however MUST be 0 as we do not support Hyperliquidity - <https://github.com/hyperliquid-dex/hyperliquid-python-sdk/blob/master/examples/spot_deploy.py#L97-L104>
 
-You will be prompted for the following:
+You will NOT be prompted for the following and instead the values will be set to 0:
 
-- startPx - The starting price.
-- orderSz - The size of each order (float, not wei)
-- nSeededLevels - The number of levels the deployer wishes to seed with usdc instead of tokens.
-  > ⚠️ Note: You will not be prompted for nOrders as it is set to 0 because we do not support Hyperliquidity - <https://github.com/hyperliquid-dex/hyperliquid-python-sdk/blob/master/examples/spot_deploy.py#L97-L104>
+- startPx - The starting price. (0)
+- orderSz - The size of each order (float, not wei) (0)
+- nOrders - The number of orders the deployer wishes to seed with usdc instead of tokens. (0)
+- nSeededLevels - The number of levels the deployer wishes to seed with usdc instead of tokens. (0)
 
-There are some tight range bounds on the input values that can be viewed at hyperliquid's [frontend checks](https://hyperliquid.gitbook.io/hyperliquid-docs/hyperliquid-improvement-proposals-hips/frontend-checks#hyperliquidity).
-
-> ⚠️ Note: The SDK does not enforce the frontend checks right now.
 > ⚠️ Note: This step can be executed after deployment
 
 ```bash

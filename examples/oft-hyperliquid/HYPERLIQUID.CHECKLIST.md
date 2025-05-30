@@ -15,7 +15,7 @@ This document is an checklist for anyone deploying to hyperevm (and hypercore).
   - This comes with the composer and composer deploy script.
   - Deploy scripts perform block switching operations.
   - Composer can be deployed after the core spot is deployed (Step 4). It will not work until the two are linked.
-- Composer has default error handling mentioned [here](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#make-changes-to-the-underlying-oft-if-you-want-to)
+- Composer has default error handling mentioned [in the docs](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#make-changes-to-the-underlying-oft-if-you-want-to)
 
 ### Path 2 - Existing repo with OFT
 
@@ -70,7 +70,7 @@ Block switching is not present in the default oft deploy script.
 - [ ] Re-runnable until the next step is executed.
 - [ ] UserGenesis transactions stack : If you set the balance of address X to `18446744073709551615` and then set the balance of address Y to `18446744073709551615` after removing X from the json, the net effect is that both X and Y will have `18446744073709551615` tokens.
 - You can either mint the entire amount to the asset bridge address (default) or the deployer address.
-- If you want to read more about the asset bridge address - [here](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#make-changes-to-the-underlying-oft-if-you-want-to)
+- You can read more about the asset bridge address - [in the docs](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#make-changes-to-the-underlying-oft-if-you-want-to)
 
 ### Step 2.3 - Confirm the user genesis
 
@@ -102,8 +102,6 @@ Block switching is not present in the default oft deploy script.
 | Blocked by              | CoreSpot Deployer | Step 2.1                                  | none         |
 
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-56-createspotdeployment)
-- [ ] `nOrders` MUST be set to 0 as we are not engaging with hyperliquidity
-- [ ] The other values are token owner choice (is usually non 0)
 - Step MUST be run even though we set `noHyperliquidity=true` in genesis
 - This can be run even after deployment and linking
 
