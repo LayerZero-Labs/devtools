@@ -70,8 +70,24 @@ export const createSdkFactory = (
     )
 
     // the return value is an SDK factory that receives an OmniPoint and returns an SDK
-    return async (point: OmniPoint): Promise<IOApp> =>
-        endpointIdToChainType(point.eid) === ChainType.SOLANA ? solanaSdkFactory(point) : evmSdkFactory(point)
+    // return async (point: OmniPoint): Promise<IOApp> =>
+    //     endpointIdToChainType(point.eid) === ChainType.SOLANA ? solanaSdkFactory(point) : evmSdkFactory(point)
+
+    return async (point: OmniPoint): Promise<IOApp> => {
+        if (endpointIdToChainType(point.eid) === ChainType.SOLANA) {
+            return solanaSdkFactory(point)
+        } else if (endpointIdToChainType(point.eid) === ChainType.EVM) {
+            return evmSdkFactory(point)
+        } else if (
+            endpointIdToChainType(point.eid) === ChainType.APTOS ||
+            endpointIdToChainType(point.eid) === ChainType.INITIA
+        ) {
+            return aptosSdkFactory(point)
+        } else {
+            logger.error(`Unsupported chain type for EID ${point.eid}`)
+            throw new Error(`Unsupported chain type for EID ${point.eid}`)
+        }
+    }
 }
 
 export { createSolanaSignerFactory }
