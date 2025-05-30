@@ -192,7 +192,7 @@ export async function setNoHyperliquidity(wallet: Wallet, isTestnet: boolean, to
     }
 
     logger.info(
-        'Values for startPx, orderSz, and nOrders are expected to be 0. This is because the pricing is determined by the market as we do not support hyperliquidity, which is what these values are used for.'
+        'The following values will be set: startPx as 1, orderSz as 0, and nOrders as 0. This is because the pricing is determined by the market as we do not support hyperliquidity, which is what these values are used for.'
     )
 
     const registerHyperliquidity: RegisterHyperliquidity = {
