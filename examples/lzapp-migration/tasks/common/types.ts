@@ -17,3 +17,8 @@ export const publicKey: CLIArgumentType<PublicKey> = {
     },
     validate() {},
 }
+
+export interface SendResult {
+    txHash: string
+    scanLink: string
+}
