@@ -197,7 +197,7 @@ export async function setNoHyperliquidity(wallet: Wallet, isTestnet: boolean, to
 
     const registerHyperliquidity: RegisterHyperliquidity = {
         spot: parseInt(spotId),
-        startPx: '0',
+        startPx: '1',
         orderSz: '0',
         nOrders: 0,
     }
