@@ -1,0 +1,60 @@
+{
+  "name": "@layerzerolabs/devtools-tronbox",
+  "version": "0.1.0",
+  "description": "Developer utilities for Tronbox wiring",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LayerZero-Labs/devtools.git",
+    "directory": "packages/devtools-tronbox"
+  },
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prebuild": "tsc -noEmit",
+    "build": "$npm_execpath tsup --clean",
+    "clean": "rm -rf dist",
+    "dev": "$npm_execpath tsup --watch",
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
+    "test": "jest --ci"
+  },
+  "dependencies": {
+    "p-memoize": "~4.0.4",
+    "tronweb": "^5.3.0"
+  },
+  "devDependencies": {
+    "@layerzerolabs/devtools": "~0.4.8",
+    "@layerzerolabs/io-devtools": "~0.1.16",
+    "@layerzerolabs/lz-definitions": "^3.0.75",
+    "@swc/core": "^1.4.0",
+    "@swc/jest": "^0.2.36",
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
+    "ts-node": "^10.9.2",
+    "tslib": "~2.6.2",
+    "tsup": "~8.0.1",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "@layerzerolabs/devtools": "~0.4.8",
+    "@layerzerolabs/io-devtools": "~0.1.16",
+    "@layerzerolabs/lz-definitions": "^3.0.75",
+    "tronweb": "^5.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@layerzerolabs/oft-tronbox-example",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {},
+  "devDependencies": {
+    "@layerzerolabs/devtools": "~0.4.8",
+    "@layerzerolabs/devtools-tronbox": "workspace:*",
+    "@layerzerolabs/ua-devtools": "~3.0.6",
+    "tronweb": "^5.3.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
