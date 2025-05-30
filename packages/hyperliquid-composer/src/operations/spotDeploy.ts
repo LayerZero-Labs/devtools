@@ -191,40 +191,15 @@ export async function setNoHyperliquidity(wallet: Wallet, isTestnet: boolean, to
         process.exit(1)
     }
 
-    const { startPx } = await inquirer.prompt([
-        {
-            type: 'input',
-            name: 'startPx',
-            message: 'Enter the starting price:',
-        },
-    ])
-
-    const { orderSz } = await inquirer.prompt([
-        {
-            type: 'input',
-            name: 'orderSz',
-            message: 'Enter the size of each order (float not wei):',
-        },
-    ])
+    logger.info(
+        'Values for startPx, orderSz, and nOrders are expected to be 0. This is because the pricing is determined by the market as we do not support hyperliquidity, which is what these values are used for.'
+    )
 
     const registerHyperliquidity: RegisterHyperliquidity = {
         spot: parseInt(spotId),
-        startPx: startPx,
-        orderSz: orderSz,
+        startPx: '0',
+        orderSz: '0',
         nOrders: 0,
-    }
-
-    const { nSeededLevels } = await inquirer.prompt([
-        {
-            type: 'input',
-            name: 'nSeededLevels',
-            message: `Enter the number of levels the deployer wishes to seed with usdc instead of tokens (default 0) (optional):`,
-            default: '0',
-        },
-    ])
-
-    if (nSeededLevels !== '0') {
-        registerHyperliquidity.nSeededLevels = parseInt(nSeededLevels)
     }
 
     const actionForNoHyperliquidity: SpotDeployAction['action'] = {
