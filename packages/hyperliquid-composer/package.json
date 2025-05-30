@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/hyperliquid-composer",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "LayerZero Labs reference EVM OmniChain Fungible Token (OFT) implementation for Hyperliquid",
   "keywords": [
     "LayerZero",
@@ -64,7 +64,7 @@
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
-    "@layerzerolabs/io-devtools": "^0.1.16",
+    "@layerzerolabs/io-devtools": "^0.1.17",
     "@layerzerolabs/lz-definitions": "^3.0.81",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",

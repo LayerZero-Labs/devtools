@@ -1,5 +1,11 @@
 # @layerzerolabs/io-devtools
 
+## 0.1.17
+
+### Patch Changes
+
+- eb6d163: refactor logger helpers; export `DebugLogger` from `io-devtools`; update example imports
+
 ## 0.1.16
 
 ### Patch Changes

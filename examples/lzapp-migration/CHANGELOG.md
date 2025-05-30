@@ -1,5 +1,18 @@
 # @layerzerolabs/lzapp-migration-example
 
+## 0.2.0
+
+### Minor Changes
+
+- 1596719: fix(solana examples): fix bug where evm contract object is treated as solana
+- 27cdcb4: feat(solana examples): support freeze authority param for createOFT script
+
+### Patch Changes
+
+- ec4967c: fix bug where library lookup for uln301 msg libs fail
+- Updated dependencies [eb6d163]
+  - @layerzerolabs/io-devtools@0.1.17
+
 ## 0.1.5
 
 ### Patch Changes
