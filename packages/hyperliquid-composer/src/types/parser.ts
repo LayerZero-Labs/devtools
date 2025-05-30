@@ -67,3 +67,32 @@ export interface SpotInfo {
     nonCirculatingUserBalances: SpotInfoBalance[]
     futureEmissions: string
 }
+
+export interface DeployState {
+    token: number
+    spec: {
+        name: string
+        szDecimals: number
+        weiDecimals: number
+    }
+    fullName: string | null
+    spots: number[]
+    maxSupply: number
+    hyperliquidityGenesisBalance: string
+    totalGenesisBalanceWei: string
+    userGenesisBalances: [string, string][]
+    existingTokenGenesisBalances: [number, string][]
+}
+
+export interface GasAuction {
+    startTimeSeconds: number
+    durationSeconds: number
+    startGas: string
+    currentGas: string | null
+    endGas: string
+}
+
+export interface SpotDeployStates {
+    states: DeployState[]
+    gasAuction: GasAuction
+}
