@@ -1,5 +1,11 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 0.0.10
+
+### Patch Changes
+
+- 8ebe612: fix: select HYPE token index by chainId - 150 for mainnet and 1150 for testnet
+
 ## 0.0.9
 
 ### Patch Changes
