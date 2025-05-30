@@ -18,7 +18,7 @@ importers:
     dependencies:
       '@layerzerolabs/hyperliquid-composer':
         specifier: link:/workspaces/devtools-hyperliquid-main/packages/hyperliquid-composer
-        version: link:../../../workspaces/devtools-hyperliquid-main/packages/hyperliquid-composer
+        version: link:../../../../../../workspaces/devtools-hyperliquid-main/packages/hyperliquid-composer
     devDependencies:
       '@changesets/cli':
         specifier: ^2.27.1
@@ -4778,6 +4778,9 @@ importers:
       '@layerzerolabs/devtools':
         specifier: ~0.4.8
         version: link:../devtools
+      '@layerzerolabs/devtools-solana':
+        specifier: ^1.1.0
+        version: link:../devtools-solana
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.16
         version: link:../io-devtools
