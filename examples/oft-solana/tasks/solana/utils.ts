@@ -3,7 +3,13 @@ import { backOff } from 'exponential-backoff'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
-import { OAppOmniGraphHardhat } from '@layerzerolabs/ua-devtools'
+import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
+import {
+    OAppOmniGraphHardhatSchema,
+    SUBTASK_LZ_OAPP_CONFIG_LOAD,
+    SubtaskLoadConfigTaskArgs,
+    TASK_LZ_OAPP_CONFIG_GET,
+} from '@layerzerolabs/ua-devtools-evm-hardhat'
 
 /**
  * Assert that the account is initialized on the Solana blockchain.  Due to eventual consistency, there is a race
@@ -35,9 +41,13 @@ export const findSolanaEndpointIdInGraph = async (
 ): Promise<EndpointId> => {
     if (!oappConfig) throw new Error('Missing oappConfig')
 
-    let graph: OAppOmniGraphHardhat
+    let graph: OAppOmniGraph
     try {
-        graph = await getLzConfig(oappConfig)
+        graph = await hre.run(SUBTASK_LZ_OAPP_CONFIG_LOAD, {
+            configPath: oappConfig,
+            schema: OAppOmniGraphHardhatSchema,
+            task: TASK_LZ_OAPP_CONFIG_GET,
+        } satisfies SubtaskLoadConfigTaskArgs)
     } catch (error) {
         if (error instanceof Error) {
             throw new Error(`Failed to load OApp configuration: ${error.message}`)
@@ -57,7 +67,7 @@ export const findSolanaEndpointIdInGraph = async (
         }
     }
 
-    for (const vector of graph.connections) {
+    for (const { vector } of graph.connections) {
         checkSolanaEndpoint(vector.from.eid)
         checkSolanaEndpoint(vector.to.eid)
         if (solanaEid) return solanaEid
