@@ -1,25 +1,10 @@
 import React from "react";
 import { render } from "ink";
+import { Logo } from "./components/logo";
 import { Record, RecordList, type RecordData } from "./components/record";
 import { Table, type TableRow } from "./components/table";
 
-export const printLogo = () => {
-  const logo = `
-    ╭─────────────────────────────────────────╮
-    │       ▓▓▓ LayerZero DevTools ▓▓▓        │
-    │  ═══════════════════════════════════    │
-    │          /*\\                            │
-    │         /* *\\     BUILD ANYTHING        │
-    │         ('v')                           │
-    │        //-=-\\\\    ▶ OMNICHAIN           │
-    │        (\\_=_/)                          │
-    │         ^^ ^^                           │
-    │  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  │
-    ╰─────────────────────────────────────────╯
-`;
-
-  console.log(logo);
-};
+export const printLogo = () => render(<Logo />).unmount();
 
 /**
  * Renders a horizontal table with rows labeled by object properties:
