@@ -5,6 +5,8 @@ import { OmniPoint } from '@layerzerolabs/devtools'
 import { createConnectedContractFactory, types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { createLogger } from '@layerzerolabs/io-devtools'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
+import ReceiveUln302 from '@layerzerolabs/lz-evm-sdk-v2/deployments/tron-mainnet/ReceiveUln302.json'
+import SendUln302 from '@layerzerolabs/lz-evm-sdk-v2/deployments/tron-mainnet/SendUln302.json'
 import { Timeout } from '@layerzerolabs/protocol-devtools'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
@@ -16,8 +18,6 @@ import {
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { OAppOmniGraphHardhatSchema } from '@layerzerolabs/ua-devtools-evm-hardhat'
 
-import ReceiveUln302 from '../../node_modules/@layerzerolabs/toolbox-hardhat/node_modules/@layerzerolabs/lz-evm-sdk-v2/deployments/tron-mainnet/ReceiveUln302.json'
-import SendUln302 from '../../node_modules/@layerzerolabs/toolbox-hardhat/node_modules/@layerzerolabs/lz-evm-sdk-v2/deployments/tron-mainnet/SendUln302.json'
 import wireTron from '../tron/wire'
 
 import { getTronReceiveConfig, getTronSendConfig, initTronWeb } from './taskHelper'

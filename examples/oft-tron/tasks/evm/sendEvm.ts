@@ -11,8 +11,10 @@ import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzer
 import layerzeroConfig from '../../layerzero.config'
 import { SendResult } from '../common/types'
 import { DebugLogger, KnownErrors } from '../common/utils'
-import { getLayerZeroScanLink } from '../solana'
 const logger = createLogger()
+
+export const getLayerZeroScanLink = (hash: string, isTestnet = false) =>
+    isTestnet ? `https://testnet.layerzeroscan.com/tx/${hash}` : `https://layerzeroscan.com/tx/${hash}`
 
 export interface EvmArgs {
     srcEid: number

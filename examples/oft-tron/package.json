@@ -79,8 +79,8 @@
     "prettier": "^3.2.5",
     "solhint": "^4.1.1",
     "solidity-bytes-utils": "^0.8.2",
-    "tronbox": "^2.7.0",
-    "tronweb": "^5.3.0",
+    "tronbox": "^2.7.25",
+    "tronweb": "^5.3.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.4"
   },

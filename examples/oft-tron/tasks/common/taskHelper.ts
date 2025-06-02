@@ -2,14 +2,17 @@ import { TronWeb } from 'tronweb'
 
 import { OmniAddress } from '@layerzerolabs/devtools'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
+import ReceiveUln302Mainnet from '@layerzerolabs/lz-evm-sdk-v2/deployments/tron-mainnet/ReceiveUln302.json'
+import SendUln302Mainnet from '@layerzerolabs/lz-evm-sdk-v2/deployments/tron-mainnet/SendUln302.json'
+import ReceiveUln302Testnet from '@layerzerolabs/lz-evm-sdk-v2/deployments/tron-testnet/ReceiveUln302.json'
+import SendUln302Testnet from '@layerzerolabs/lz-evm-sdk-v2/deployments/tron-testnet/SendUln302.json'
 import { Timeout, Uln302ConfigType, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 
-import ReceiveUln302 from '../../node_modules/@layerzerolabs/toolbox-hardhat/node_modules/@layerzerolabs/lz-evm-sdk-v2/deployments/tron-mainnet/ReceiveUln302.json'
-import SendUln302 from '../../node_modules/@layerzerolabs/toolbox-hardhat/node_modules/@layerzerolabs/lz-evm-sdk-v2/deployments/tron-mainnet/SendUln302.json'
-
-// Tron ULN program addresses from LayerZero SDK deployments
-const SEND_ULN_ADDRESS = SendUln302.address
-const RECEIVE_ULN_ADDRESS = ReceiveUln302.address
+// Tron ULN addresses from LayerZero SDK deployments
+const SEND_ULN_ADDRESS_MAINNET = SendUln302Mainnet.address
+const RECEIVE_ULN_ADDRESS_MAINNET = ReceiveUln302Mainnet.address
+const SEND_ULN_ADDRESS_TESTNET = SendUln302Testnet.address
+const RECEIVE_ULN_ADDRESS_TESTNET = ReceiveUln302Testnet.address
 
 /**
  * Initialize TronWeb instance
@@ -40,12 +43,18 @@ export function initTronWeb(network: string, privateKey: string): TronWeb {
  * @param tronWeb {TronWeb} TronWeb instance
  * @param remoteEid {EndpointId} remote eid
  * @param address {OmniAddress} address of the OApp
+ * @param isTestnet {boolean} whether to use testnet addresses
  */
 export async function getTronReceiveConfig(
     tronWeb: TronWeb,
     remoteEid: EndpointId,
-    address: OmniAddress
+    address: OmniAddress,
+    isTestnet: boolean
 ): Promise<[OmniAddress, Uln302UlnConfig, Timeout] | undefined> {
+    const ReceiveUln302 = isTestnet ? ReceiveUln302Testnet : ReceiveUln302Mainnet
+    const RECEIVE_ULN_ADDRESS = isTestnet ? RECEIVE_ULN_ADDRESS_TESTNET : RECEIVE_ULN_ADDRESS_MAINNET
+    const SEND_ULN_ADDRESS = isTestnet ? SEND_ULN_ADDRESS_TESTNET : SEND_ULN_ADDRESS_MAINNET
+
     // Get the ReceiveUln302 contract instance
     const receiveUln = await tronWeb.contract(ReceiveUln302.abi, RECEIVE_ULN_ADDRESS)
 
@@ -67,12 +76,18 @@ export async function getTronReceiveConfig(
  * @param tronWeb {TronWeb} TronWeb instance
  * @param eid {EndpointId} remote eid
  * @param address {OmniAddress} address of the OApp
+ * @param isTestnet {boolean} whether to use testnet addresses
  */
 export async function getTronSendConfig(
     tronWeb: TronWeb,
     eid: EndpointId,
-    address: OmniAddress
+    address: OmniAddress,
+    isTestnet: boolean
 ): Promise<[OmniAddress, Uln302UlnConfig, Uln302ExecutorConfig] | undefined> {
+    const SendUln302 = isTestnet ? SendUln302Testnet : SendUln302Mainnet
+    const SEND_ULN_ADDRESS = isTestnet ? SEND_ULN_ADDRESS_TESTNET : SEND_ULN_ADDRESS_MAINNET
+    const RECEIVE_ULN_ADDRESS = isTestnet ? RECEIVE_ULN_ADDRESS_TESTNET : RECEIVE_ULN_ADDRESS_MAINNET
+
     // Get the SendUln302 contract instance
     const sendUln = await tronWeb.contract(SendUln302.abi, SEND_ULN_ADDRESS)
 
