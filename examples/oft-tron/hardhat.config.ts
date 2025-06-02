@@ -74,6 +74,10 @@ const config: HardhatUserConfig = {
             default: 0, // wallet address of index[0], of the mnemonic in .env
         },
     },
+    layerZero: {
+        deploymentSourcePackages: ['@layerzerolabs/lz-evm-sdk-v2', '@layerzerolabs/test-devtools-evm-hardhat'],
+        artifactSourcePackages: ['@layerzerolabs/lz-evm-sdk-v2', '@layerzerolabs/test-devtools-evm-hardhat'],
+    },
 }
 
 export default config

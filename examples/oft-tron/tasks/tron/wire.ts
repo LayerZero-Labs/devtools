@@ -1,10 +1,17 @@
-import { task } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { OmniPoint } from '@layerzerolabs/devtools'
-import { createConnectedContractFactory, types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
+import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import { createLogger } from '@layerzerolabs/io-devtools'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
+import OApp from '@layerzerolabs/lz-evm-sdk-v2/artifacts-tron/contracts/oapp/OApp.sol/OApp.json'
+import OAppOptionsType3 from '@layerzerolabs/lz-evm-sdk-v2/artifacts-tron/contracts/oapp/libs/OAppOptionsType3.sol/OAppOptionsType3.json'
+import EndpointV2Mainnet from '@layerzerolabs/lz-evm-sdk-v2/deployments/tron-mainnet/EndpointV2.json'
+import ReceiveUln302Mainnet from '@layerzerolabs/lz-evm-sdk-v2/deployments/tron-mainnet/ReceiveUln302.json'
+import SendUln302Mainnet from '@layerzerolabs/lz-evm-sdk-v2/deployments/tron-mainnet/SendUln302.json'
+import EndpointV2Testnet from '@layerzerolabs/lz-evm-sdk-v2/deployments/tron-testnet/EndpointV2.json'
+import ReceiveUln302Testnet from '@layerzerolabs/lz-evm-sdk-v2/deployments/tron-testnet/ReceiveUln302.json'
+import SendUln302Testnet from '@layerzerolabs/lz-evm-sdk-v2/deployments/tron-testnet/SendUln302.json'
 import { Timeout } from '@layerzerolabs/protocol-devtools'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
@@ -12,62 +19,30 @@ import {
     SUBTASK_LZ_OAPP_CONFIG_LOAD,
     type SubtaskLoadConfigTaskArgs,
     TASK_LZ_OAPP_CONFIG_GET,
-    TASK_LZ_OAPP_WIRE,
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { OAppOmniGraphHardhatSchema } from '@layerzerolabs/ua-devtools-evm-hardhat'
 
-import ReceiveUln302 from '../../node_modules/@layerzerolabs/toolbox-hardhat/node_modules/@layerzerolabs/lz-evm-sdk-v2/deployments/tron-mainnet/ReceiveUln302.json'
-import SendUln302 from '../../node_modules/@layerzerolabs/toolbox-hardhat/node_modules/@layerzerolabs/lz-evm-sdk-v2/deployments/tron-mainnet/SendUln302.json'
-import wireTron from '../tron/wire'
+import { getTronReceiveConfig, getTronSendConfig, initTronWeb } from '../common/taskHelper'
+import { findTronEndpointIdInGraph } from '../common/utils'
 
-import { getTronReceiveConfig, getTronSendConfig, initTronWeb } from './taskHelper'
-import { findTronEndpointIdInGraph } from './utils'
+// Import deployment artifacts from LayerZero SDK
 
 const logger = createLogger()
 
-// Tron ULN program addresses from LayerZero SDK deployments
-const SEND_ULN_ADDRESS = SendUln302.address
-const RECEIVE_ULN_ADDRESS = ReceiveUln302.address
+// Configuration types
+const EXECUTOR_CONFIG_TYPE = 1
+const ULN_CONFIG_TYPE = 2
 
 interface Args {
     oappConfig: string
-    tronPrivateKey?: string
-    skipConnectionsFromEids?: EndpointId[]
+    privateKey: string
 }
 
-/**
- * Extend the default wire task to support Tron endpoints using TronWeb.
- */
-task(TASK_LZ_OAPP_WIRE)
-    .addOptionalParam('tronPrivateKey', 'Private key for Tron wiring', undefined, devtoolsTypes.string)
-    .setAction(async (args: Args, hre, runSuper) => {
-        let tronEid: EndpointId | undefined
-        try {
-            tronEid = await findTronEndpointIdInGraph(hre, args.oappConfig)
-        } catch {
-            // configuration may not reference Tron
-        }
-
-        if (tronEid) {
-            logger.info('Detected Tron endpoint, wiring via TronWeb')
-            await wireTron(
-                {
-                    oappConfig: args.oappConfig,
-                    privateKey: args.tronPrivateKey ?? process.env.PRIVATE_KEY ?? '',
-                },
-                hre
-            )
-            args.skipConnectionsFromEids = [...(args.skipConnectionsFromEids ?? []), tronEid]
-        }
-
-        return runSuper(args)
-    })
-
-export default async function (args: Args, hre: HardhatRuntimeEnvironment) {
-    const { oappConfig, tronPrivateKey, skipConnectionsFromEids } = args
+export default async function wireTron(args: Args, hre: HardhatRuntimeEnvironment) {
+    const { oappConfig, privateKey } = args
 
     if (!oappConfig) throw new Error('Missing oappConfig')
-    if (!tronPrivateKey && !process.env.PRIVATE_KEY) throw new Error('Missing tronPrivateKey or PRIVATE_KEY')
+    if (!privateKey) throw new Error('Missing privateKey')
 
     let graph: OAppOmniGraph
     try {
@@ -86,12 +61,15 @@ export default async function (args: Args, hre: HardhatRuntimeEnvironment) {
 
     // Find Tron endpoint ID in the graph
     const tronEid = await findTronEndpointIdInGraph(hre, oappConfig)
+    const isMainnet = tronEid === EndpointId.TRON_V2_MAINNET
+
+    // Get the correct deployment artifacts based on network
+    const endpointV2 = isMainnet ? EndpointV2Mainnet : EndpointV2Testnet
+    const sendUln302 = isMainnet ? SendUln302Mainnet : SendUln302Testnet
+    const receiveUln302 = isMainnet ? ReceiveUln302Mainnet : ReceiveUln302Testnet
 
     // Initialize TronWeb
-    const tronWeb = initTronWeb(
-        tronEid === EndpointId.TRON_V2_MAINNET ? 'mainnet' : 'testnet',
-        tronPrivateKey ?? process.env.PRIVATE_KEY ?? ''
-    )
+    const tronWeb = initTronWeb(isMainnet ? 'mainnet' : 'testnet', privateKey)
 
     // Create SDK factory for EVM chains
     const evmSdkFactory = createOAppFactory(createConnectedContractFactory())
@@ -106,19 +84,14 @@ export default async function (args: Args, hre: HardhatRuntimeEnvironment) {
             // For Tron connections, we'll handle the wiring manually
             if (fromIsTron) {
                 // Get the OApp contract instance
-                const oapp = await tronWeb.contract(SendUln302.abi, from.address)
-                const endpoint = await tronWeb.contract(SendUln302.abi, await oapp.endpoint().call())
+                const oappContract = await tronWeb.contract(OApp.abi, from.address)
+                const endpoint = await tronWeb.contract(endpointV2.abi, endpointV2.address)
 
                 // Initialize send library if not already initialized
                 const sendConfig = await getTronSendConfig(tronWeb, to.eid, from.address)
                 if (!sendConfig) {
                     logger.verbose(`Initializing send library for ${from.eid} -> ${to.eid}`)
-                    const data = endpoint.interface.encodeFunctionData('setSendLibrary', [
-                        from.address,
-                        to.eid,
-                        SEND_ULN_ADDRESS,
-                    ])
-                    await endpoint.setSendLibrary(from.address, to.eid, SEND_ULN_ADDRESS).send()
+                    await endpoint.setSendLibrary(from.address, to.eid, sendUln302.address).send()
 
                     // Set ULN config if provided
                     if (sendConfig?.[1]) {
@@ -126,15 +99,11 @@ export default async function (args: Args, hre: HardhatRuntimeEnvironment) {
                         const ulnConfig = [
                             {
                                 eid: to.eid,
-                                ulnConfig: sendConfig[1],
+                                configType: ULN_CONFIG_TYPE,
+                                config: sendConfig[1],
                             },
                         ]
-                        const configData = endpoint.interface.encodeFunctionData('setConfig', [
-                            from.address,
-                            SEND_ULN_ADDRESS,
-                            ulnConfig,
-                        ])
-                        await endpoint.setConfig(from.address, SEND_ULN_ADDRESS, ulnConfig).send()
+                        await endpoint.setConfig(from.address, sendUln302.address, ulnConfig).send()
                     }
 
                     // Set executor config if provided
@@ -143,48 +112,37 @@ export default async function (args: Args, hre: HardhatRuntimeEnvironment) {
                         const executorConfig = [
                             {
                                 eid: to.eid,
-                                executorConfig: sendConfig[2],
+                                configType: EXECUTOR_CONFIG_TYPE,
+                                config: sendConfig[2],
                             },
                         ]
-                        const configData = endpoint.interface.encodeFunctionData('setConfig', [
-                            from.address,
-                            SEND_ULN_ADDRESS,
-                            executorConfig,
-                        ])
-                        await endpoint.setConfig(from.address, SEND_ULN_ADDRESS, executorConfig).send()
+                        await endpoint.setConfig(from.address, sendUln302.address, executorConfig).send()
                     }
                 }
 
                 // Set peer address
                 logger.verbose(`Setting peer address for ${from.eid} -> ${to.eid}`)
-                const peerData = oapp.interface.encodeFunctionData('setPeer', [to.eid, to.address])
-                await oapp.setPeer(to.eid, to.address).send()
+                await oappContract.setPeer(to.eid, to.address).send()
 
                 // Set enforced options if provided in the config
                 const enforcedOptions = (vector as any).config?.enforcedOptions
                 if (enforcedOptions) {
                     logger.verbose(`Setting enforced options for ${from.eid} -> ${to.eid}`)
-                    const optionsData = oapp.interface.encodeFunctionData('setEnforcedOptions', [enforcedOptions])
-                    await oapp.setEnforcedOptions(enforcedOptions).send()
+                    const optionsContract = await tronWeb.contract(OAppOptionsType3.abi, from.address)
+                    await optionsContract.setEnforcedOptions(enforcedOptions).send()
                 }
             }
 
             if (toIsTron) {
                 // Get the OApp contract instance
-                const oapp = await tronWeb.contract(ReceiveUln302.abi, to.address)
-                const endpoint = await tronWeb.contract(ReceiveUln302.abi, await oapp.endpoint().call())
+                const oappContract = await tronWeb.contract(OApp.abi, to.address)
+                const endpoint = await tronWeb.contract(endpointV2.abi, endpointV2.address)
 
                 // Initialize receive library if not already initialized
                 const receiveConfig = await getTronReceiveConfig(tronWeb, from.eid, to.address)
                 if (!receiveConfig) {
                     logger.verbose(`Initializing receive library for ${to.eid} <- ${from.eid}`)
-                    const data = endpoint.interface.encodeFunctionData('setReceiveLibrary', [
-                        to.address,
-                        from.eid,
-                        RECEIVE_ULN_ADDRESS,
-                        BigInt(0), // grace period
-                    ])
-                    await endpoint.setReceiveLibrary(to.address, from.eid, RECEIVE_ULN_ADDRESS, BigInt(0)).send()
+                    await endpoint.setReceiveLibrary(to.address, from.eid, receiveUln302.address, BigInt(0)).send()
 
                     // Set ULN config if provided
                     if (receiveConfig?.[1]) {
@@ -192,44 +150,33 @@ export default async function (args: Args, hre: HardhatRuntimeEnvironment) {
                         const ulnConfig = [
                             {
                                 eid: from.eid,
-                                ulnConfig: receiveConfig[1],
+                                configType: ULN_CONFIG_TYPE,
+                                config: receiveConfig[1],
                             },
                         ]
-                        const configData = endpoint.interface.encodeFunctionData('setConfig', [
-                            to.address,
-                            RECEIVE_ULN_ADDRESS,
-                            ulnConfig,
-                        ])
-                        await endpoint.setConfig(to.address, RECEIVE_ULN_ADDRESS, ulnConfig).send()
+                        await endpoint.setConfig(to.address, receiveUln302.address, ulnConfig).send()
                     }
 
                     // Set timeout config if provided
                     if (receiveConfig?.[2]) {
                         const timeout = receiveConfig[2] as Timeout
                         logger.verbose(`Setting timeout config for ${to.eid} <- ${from.eid}`)
-                        const timeoutData = endpoint.interface.encodeFunctionData('setReceiveLibraryTimeout', [
-                            to.address,
-                            from.eid,
-                            RECEIVE_ULN_ADDRESS,
-                            timeout.expiry,
-                        ])
                         await endpoint
-                            .setReceiveLibraryTimeout(to.address, from.eid, RECEIVE_ULN_ADDRESS, timeout.expiry)
+                            .setReceiveLibraryTimeout(to.address, from.eid, receiveUln302.address, timeout.expiry)
                             .send()
                     }
                 }
 
                 // Set peer address
                 logger.verbose(`Setting peer address for ${to.eid} <- ${from.eid}`)
-                const peerData = oapp.interface.encodeFunctionData('setPeer', [from.eid, from.address])
-                await oapp.setPeer(from.eid, from.address).send()
+                await oappContract.setPeer(from.eid, from.address).send()
 
                 // Set enforced options if provided in the config
                 const enforcedOptions = (vector as any).config?.enforcedOptions
                 if (enforcedOptions) {
                     logger.verbose(`Setting enforced options for ${to.eid} <- ${from.eid}`)
-                    const optionsData = oapp.interface.encodeFunctionData('setEnforcedOptions', [enforcedOptions])
-                    await oapp.setEnforcedOptions(enforcedOptions).send()
+                    const optionsContract = await tronWeb.contract(OAppOptionsType3.abi, to.address)
+                    await optionsContract.setEnforcedOptions(enforcedOptions).send()
                 }
             }
         } else {

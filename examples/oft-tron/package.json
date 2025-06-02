@@ -20,6 +20,9 @@
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1"
   },
+  "dependencies": {
+    "@layerzerolabs/lz-evm-sdk-v2": "^3.0.99"
+  },
   "devDependencies": {
     "@ethersproject/bytes": "^5.7.0",
     "@layerzerolabs/devtools": "~0.4.8",

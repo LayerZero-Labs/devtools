@@ -1,13 +1,15 @@
 import { task, types } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
-import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
+import { createLogger } from '@layerzerolabs/io-devtools'
+import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 
 import { EvmArgs, sendEvm } from '../evm/sendEvm'
-import { SolanaArgs, sendSolana } from '../solana/sendSolana'
+import { TronArgs, sendTron } from '../tron/sendTron'
 
 import { SendResult } from './types'
-import { DebugLogger, KnownOutputs, KnownWarnings, getBlockExplorerLink } from './utils'
+
+const logger = createLogger()
 
 interface MasterArgs {
     srcEid: number
@@ -55,41 +57,25 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
     .addOptionalParam('tokenProgram', 'Solana Token Program pubkey', undefined, types.string)
     .addOptionalParam('computeUnitPriceScaleFactor', 'Solana compute unit price scale factor', 4, types.float)
     .setAction(async (args: MasterArgs, hre: HardhatRuntimeEnvironment) => {
-        const chainType = endpointIdToChainType(args.srcEid)
         let result: SendResult
 
         if (args.oftAddress || args.oftProgramId) {
-            DebugLogger.printWarning(
-                KnownWarnings.USING_OVERRIDE_OFT,
-                `For network: ${endpointIdToNetwork(args.srcEid)}, OFT: ${args.oftAddress + (args.oftProgramId ? `, OFT program: ${args.oftProgramId}` : '')}`
+            logger.warn(
+                `Using override OFT for network: ${endpointIdToNetwork(args.srcEid)}, OFT: ${args.oftAddress + (args.oftProgramId ? `, OFT program: ${args.oftProgramId}` : '')}`
             )
         }
 
         // route to the correct function based on the chain type
-        if (chainType === ChainType.EVM) {
-            result = await sendEvm(args as EvmArgs, hre)
-        } else if (chainType === ChainType.SOLANA) {
-            result = await sendSolana(args as SolanaArgs)
+        if (args.srcEid === EndpointId.TRON_V2_MAINNET || args.srcEid === EndpointId.TRON_V2_TESTNET) {
+            result = await sendTron(args as TronArgs)
         } else {
-            throw new Error(`The chain type ${chainType} is not implemented in sendOFT for this example`)
+            result = await sendEvm(args as EvmArgs, hre)
         }
 
-        DebugLogger.printLayerZeroOutput(
-            KnownOutputs.SENT_VIA_OFT,
+        logger.info(
             `Successfully sent ${args.amount} tokens from ${endpointIdToNetwork(args.srcEid)} to ${endpointIdToNetwork(args.dstEid)}`
         )
-        // print the explorer link for the srcEid from metadata
-        const explorerLink = await getBlockExplorerLink(args.srcEid, result.txHash)
-        // if explorer link is available, print the tx hash link
-        if (explorerLink) {
-            DebugLogger.printLayerZeroOutput(
-                KnownOutputs.TX_HASH,
-                `Explorer link for source chain ${endpointIdToNetwork(args.srcEid)}: ${explorerLink}`
-            )
-        }
-        // print the LayerZero Scan link from metadata
-        DebugLogger.printLayerZeroOutput(
-            KnownOutputs.EXPLORER_LINK,
-            `LayerZero Scan link for tracking all cross-chain transaction details: ${result.scanLink}`
-        )
+
+        // print the LayerZero Scan link
+        logger.info(`LayerZero Scan link for tracking all cross-chain transaction details: ${result.scanLink}`)
     })
