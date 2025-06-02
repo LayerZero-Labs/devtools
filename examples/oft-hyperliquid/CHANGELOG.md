@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 0.0.7
+
+### Patch Changes
+
+- e633f6d: patch: skip fork tests when forking testnet fails
+
 ## 0.0.6
 
 ### Patch Changes

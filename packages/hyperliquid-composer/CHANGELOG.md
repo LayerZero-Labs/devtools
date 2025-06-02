@@ -1,5 +1,11 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 0.0.12
+
+### Patch Changes
+
+- e633f6d: patch: skip fork tests when forking testnet fails
+
 ## 0.0.11
 
 ### Patch Changes
