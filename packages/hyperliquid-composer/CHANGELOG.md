@@ -1,5 +1,11 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 0.0.11
+
+### Patch Changes
+
+- 4416064: wrapper for viewing deployment state "spotDeployState" and adding in missing step to deploy the token on the spot order book
+
 ## 0.0.10
 
 ### Patch Changes

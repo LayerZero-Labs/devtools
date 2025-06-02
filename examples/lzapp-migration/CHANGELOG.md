@@ -1,5 +1,20 @@
 # @layerzerolabs/lzapp-migration-example
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [bb62f09]
+  - @layerzerolabs/io-devtools@0.2.0
+  - @layerzerolabs/devtools@1.0.0
+  - @layerzerolabs/devtools-evm-hardhat@3.0.0
+  - @layerzerolabs/devtools-solana@2.0.0
+  - @layerzerolabs/protocol-devtools@2.0.0
+  - @layerzerolabs/ua-devtools@4.0.0
+  - @layerzerolabs/ua-devtools-evm@6.0.0
+  - @layerzerolabs/ua-devtools-evm-hardhat@7.0.0
+  - @layerzerolabs/ua-devtools-solana@6.0.0
+
 ## 0.2.0
 
 ### Minor Changes
