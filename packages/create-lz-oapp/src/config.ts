@@ -135,6 +135,17 @@ export const getExamples = (): Example[] => {
                   },
               ]
             : []),
+        ...(process.env.LZ_ENABLE_SOLANA_OAPP_EXAMPLE
+            ? [
+                  {
+                      id: 'oapp-solana',
+                      label: 'OApp (Solana)',
+                      repository,
+                      directory: 'examples/oapp-solana',
+                      ref,
+                  },
+              ]
+            : []),
         ...(process.env.LZ_ENABLE_EXPERIMENTAL_INITIA_EXAMPLES
             ? [
                   {
