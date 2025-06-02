@@ -15,10 +15,6 @@ overrides:
 importers:
 
   .:
-    dependencies:
-      '@layerzerolabs/hyperliquid-composer':
-        specifier: link:/workspaces/devtools-hyperliquid-main/packages/hyperliquid-composer
-        version: link:../../../workspaces/devtools-hyperliquid-main/packages/hyperliquid-composer
     devDependencies:
       '@changesets/cli':
         specifier: ^2.27.1
@@ -1498,14 +1494,14 @@ importers:
         specifier: ^3.0.12
         version: 3.0.86
       '@layerzerolabs/oapp-alt-evm':
-        specifier: ^0.0.1
-        version: 0.0.1(@layerzerolabs/lz-evm-messagelib-v2@3.0.86)(@layerzerolabs/lz-evm-protocol-v2@3.0.86)(@layerzerolabs/lz-evm-v1-0.7@3.0.86)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)
+        specifier: ^0.0.3
+        version: link:../../packages/oapp-alt-evm
       '@layerzerolabs/oapp-evm':
         specifier: ^0.3.0
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-alt-evm':
-        specifier: ^0.0.1
-        version: 0.0.1(@layerzerolabs/lz-evm-messagelib-v2@3.0.86)(@layerzerolabs/lz-evm-protocol-v2@3.0.86)(@layerzerolabs/lz-evm-v1-0.7@3.0.86)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)
+        specifier: ^0.0.3
+        version: link:../../packages/oft-alt-evm
       '@layerzerolabs/oft-evm':
         specifier: ^3.0.0
         version: link:../../packages/oft-evm
@@ -1964,8 +1960,8 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~5.1.0
-        version: 5.1.0(@layerzerolabs/lz-evm-messagelib-v2@3.0.75)(@layerzerolabs/lz-evm-protocol-v2@3.0.75)(@layerzerolabs/lz-evm-v1-0.7@3.0.75)(@layerzerolabs/oapp-evm@packages+oapp-evm)(@layerzerolabs/oft-evm@packages+oft-evm)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)
+        specifier: ~6.0.0
+        version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.9
         version: link:../../packages/toolbox-foundry
@@ -10173,42 +10169,6 @@ packages:
       '@layerzerolabs/lz-definitions': 3.0.75
     dev: true
 
-  /@layerzerolabs/oapp-alt-evm@0.0.1(@layerzerolabs/lz-evm-messagelib-v2@3.0.86)(@layerzerolabs/lz-evm-protocol-v2@3.0.86)(@layerzerolabs/lz-evm-v1-0.7@3.0.86)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0):
-    resolution: {integrity: sha512-FjvrsMX+h7yWIlk6dxdAgcllJ1uo1U+MmBPQ2JaHAUwjK/ugSdaRmJoKTdlU/uIdO0FjfGZnMohj1dR2rBLJ7g==}
-    peerDependencies:
-      '@layerzerolabs/lz-evm-messagelib-v2': ^3.0.12
-      '@layerzerolabs/lz-evm-protocol-v2': ^3.0.12
-      '@layerzerolabs/lz-evm-v1-0.7': ^3.0.12
-      '@openzeppelin/contracts': ^4.8.1 || ^5.0.0
-      '@openzeppelin/contracts-upgradeable': ^4.8.1 || ^5.0.0
-    dependencies:
-      '@layerzerolabs/lz-evm-messagelib-v2': 3.0.86(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.86)(@layerzerolabs/lz-evm-v1-0.7@3.0.86)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-protocol-v2': 3.0.86(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-v1-0.7': 3.0.86(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
-      '@openzeppelin/contracts': 5.1.0
-      '@openzeppelin/contracts-upgradeable': 5.1.0(@openzeppelin/contracts@5.1.0)
-      ethers: 5.7.2
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-    dev: true
-
-  /@layerzerolabs/oft-alt-evm@0.0.1(@layerzerolabs/lz-evm-messagelib-v2@3.0.86)(@layerzerolabs/lz-evm-protocol-v2@3.0.86)(@layerzerolabs/lz-evm-v1-0.7@3.0.86)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0):
-    resolution: {integrity: sha512-XnaDontc97DYj4PjhhUiOxiWRudnLE6XudVlH1MCEyTpb2wo/8r9JEfGHf6EqiElK4kOnqEkpzRIWcV51UVwZg==}
-    peerDependencies:
-      '@layerzerolabs/lz-evm-messagelib-v2': ^3.0.12
-      '@layerzerolabs/lz-evm-protocol-v2': ^3.0.12
-      '@layerzerolabs/lz-evm-v1-0.7': ^3.0.12
-      '@openzeppelin/contracts': ^4.8.1 || ^5.0.0
-      '@openzeppelin/contracts-upgradeable': ^4.8.1 || ^5.0.0
-    dependencies:
-      '@layerzerolabs/lz-evm-messagelib-v2': 3.0.86(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.86)(@layerzerolabs/lz-evm-v1-0.7@3.0.86)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-protocol-v2': 3.0.86(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-v1-0.7': 3.0.86(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
-      '@openzeppelin/contracts': 5.1.0
-      '@openzeppelin/contracts-upgradeable': 5.1.0(@openzeppelin/contracts@5.1.0)
-    dev: true
-
   /@layerzerolabs/oft-v2-solana-sdk@3.0.38(@swc/core@1.4.0)(@types/node@18.18.14)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
     resolution: {integrity: sha512-P06/a5+ixph0u1AQkDZ0P0oFaIAdfGPl/UezMfWXUpiWLth428RT0rrMR6qI7z6X1uxqlUFNIotz2ET1fyFcpQ==}
     dependencies:
@@ -10379,26 +10339,6 @@ packages:
       - typescript
       - utf-8-validate
     dev: false
-
-  /@layerzerolabs/test-devtools-evm-foundry@5.1.0(@layerzerolabs/lz-evm-messagelib-v2@3.0.75)(@layerzerolabs/lz-evm-protocol-v2@3.0.75)(@layerzerolabs/lz-evm-v1-0.7@3.0.75)(@layerzerolabs/oapp-evm@packages+oapp-evm)(@layerzerolabs/oft-evm@packages+oft-evm)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0):
-    resolution: {integrity: sha512-LDfBMeb5VQRMRXadpNgUe5Knib5FdCQ24S2o+kWMS/qPS6ZbPGe7fnhFPhcifautuhMS8i9Rk7cMjoAxRGFdfQ==}
-    peerDependencies:
-      '@layerzerolabs/lz-evm-messagelib-v2': ^3.0.12
-      '@layerzerolabs/lz-evm-protocol-v2': ^3.0.12
-      '@layerzerolabs/lz-evm-v1-0.7': ^3.0.12
-      '@layerzerolabs/oapp-evm': ^0.3.0
-      '@layerzerolabs/oft-evm': ^3.0.0
-      '@openzeppelin/contracts': ^4.9.5 || ^5.0.0
-      '@openzeppelin/contracts-upgradeable': ^4.9.5 || ^5.0.0
-    dependencies:
-      '@layerzerolabs/lz-evm-messagelib-v2': 3.0.75(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.75)(@layerzerolabs/lz-evm-v1-0.7@3.0.75)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-protocol-v2': 3.0.75(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-v1-0.7': 3.0.75(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
-      '@layerzerolabs/oapp-evm': link:packages/oapp-evm
-      '@layerzerolabs/oft-evm': link:packages/oft-evm
-      '@openzeppelin/contracts': 5.1.0
-      '@openzeppelin/contracts-upgradeable': 5.1.0(@openzeppelin/contracts@5.1.0)
-    dev: true
 
   /@layerzerolabs/ton@15.2.0-rc.3(@jest/globals@29.7.0)(@layerzerolabs/ton@15.2.0-rc.3)(@ton/core@0.59.0)(@ton/crypto@3.3.0)(@types/node@18.18.14)(chai@4.5.0)(typescript@5.5.3):
     resolution: {integrity: sha512-Aq7htcWn31DxSYs8l0sJcQ76uAJRPy50lg6M2G+qNLSXpO01sPcUSb8oK/TmCKo+S+rDIFWUNKFjT0B/rll1YQ==}
