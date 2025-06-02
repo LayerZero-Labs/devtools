@@ -50,6 +50,8 @@ export const wire = new Command('wire')
             dryRun = false,
             tsConfig: tsConfigPath,
         }: Args) => {
+            printLogo()
+
             // We'll set the global logging level to get as much info as needed
             setDefaultLogLevel(logLevel)
 
