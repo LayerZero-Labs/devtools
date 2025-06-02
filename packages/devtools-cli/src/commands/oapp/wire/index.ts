@@ -1,5 +1,5 @@
 import { Command } from 'commander'
-import { printRecords } from '@layerzerolabs/io-devtools/swag'
+import { printLogo, printRecords } from '@layerzerolabs/io-devtools/swag'
 import {
     createConfigLoader,
     createLogger,
