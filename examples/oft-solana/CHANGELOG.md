@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.10.0
+
+### Minor Changes
+
+- bb62f09: Moved logging info to io-devtools package
+
 ## 0.9.0
 
 ### Minor Changes

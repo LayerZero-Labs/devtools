@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 0.0.6
+
+### Patch Changes
+
+- 4416064: wrapper for viewing deployment state "spotDeployState" and adding in missing step to deploy the token on the spot order book
+
 ## 0.0.5
 
 ### Patch Changes

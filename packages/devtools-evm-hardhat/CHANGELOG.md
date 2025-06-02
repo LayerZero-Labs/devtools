@@ -1,5 +1,14 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 3.0.0
+
+### Patch Changes
+
+- Updated dependencies [bb62f09]
+  - @layerzerolabs/io-devtools@0.2.0
+  - @layerzerolabs/devtools@1.0.0
+  - @layerzerolabs/devtools-evm@2.0.0
+
 ## 2.0.9
 
 ### Patch Changes
