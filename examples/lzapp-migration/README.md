@@ -140,7 +140,6 @@ anchor keys sync -p oft
 
 The above command will generate a keypair for the OFT program in your workspace if it doesn't yet exist, and also automatically update `Anchor.toml` to use the generated keypair's public key. The default path for the program's keypair will be `target/deploy/oft-keypair.json`.
 
-
 View the program ID's based on the generated keypairs:
 
 ```
