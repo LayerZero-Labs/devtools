@@ -1,3 +1,4 @@
+/* eslint-disable import/order */
 // Get the environment configuration from .env file
 //
 // To make use of automatic environment setup:
@@ -12,11 +13,8 @@ import 'hardhat-deploy-ethers'
 import 'hardhat-contract-sizer'
 import '@nomiclabs/hardhat-ethers'
 import '@layerzerolabs/toolbox-hardhat'
-
 import { HardhatUserConfig, HttpNetworkAccountsUserConfig } from 'hardhat/types'
-
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-
 import './tasks/index'
 
 // Set your preferred authentication method
