@@ -1,5 +1,12 @@
 # @layerzerolabs/omnicounter-devtools
 
+## 4.0.0
+
+### Patch Changes
+
+- @layerzerolabs/devtools@1.0.0
+- @layerzerolabs/protocol-devtools@2.0.0
+
 ## 3.0.6
 
 ### Patch Changes

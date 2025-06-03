@@ -31,7 +31,11 @@ contract HyperLiquidComposerRevertTest is Test {
     uint64 public constant AMOUNT_TO_SEND = 1e18;
 
     function setUp() public {
-        vm.createSelectFork("https://rpc.hyperliquid-testnet.xyz/evm");
+        // Skip test if fork fails
+        try vm.createSelectFork("https://rpc.hyperliquid-testnet.xyz/evm") {} catch {
+            console.log("Forking testnet https://rpc.hyperliquid-testnet.xyz/evm failed");
+            vm.skip(true);
+        }
 
         ALICE = IHyperAsset({
             assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1231),

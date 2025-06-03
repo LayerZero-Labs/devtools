@@ -1,10 +1,10 @@
 import { Connection, PublicKey } from '@solana/web3.js'
 
-import { OmniPoint, firstFactory } from '@layerzerolabs/devtools'
+import { OmniPoint } from '@layerzerolabs/devtools'
 import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import { createSolanaConnectionFactory, createSolanaSignerFactory } from '@layerzerolabs/devtools-solana'
 import { createLogger } from '@layerzerolabs/io-devtools'
-import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
+import { ChainType, EndpointId, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { UlnProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { IOApp } from '@layerzerolabs/ua-devtools'
@@ -40,10 +40,7 @@ export const createSdkFactory = (
     connectionFactory = createSolanaConnectionFactory()
 ) => {
     // To create a EVM/Solana SDK factory we need to merge the EVM and the Solana factories into one
-    //
-    // We do this by using the firstFactory helper function that is provided by the devtools package.
-    // This function will try to execute the factories one by one and return the first one that succeeds.
-    const evmSdkfactory = createOAppFactory(createConnectedContractFactory())
+    const evmSdkFactory = createOAppFactory(createConnectedContractFactory())
     const solanaSdkFactory = createOFTFactory(
         // The first parameter to createOFTFactory is a user account factory
         //
@@ -66,11 +63,9 @@ export const createSdkFactory = (
         connectionFactory
     )
 
-    // We now "merge" the two SDK factories into one.
-    //
-    // We do this by using the firstFactory helper function that is provided by the devtools package.
-    // This function will try to execute the factories one by one and return the first one that succeeds.
-    return firstFactory<[OmniPoint], IOApp>(evmSdkfactory, solanaSdkFactory)
+    // the return value is an SDK factory that receives an OmniPoint and returns an SDK
+    return async (point: OmniPoint): Promise<IOApp> =>
+        endpointIdToChainType(point.eid) === ChainType.SOLANA ? solanaSdkFactory(point) : evmSdkFactory(point)
 }
 
 export { createSolanaSignerFactory }

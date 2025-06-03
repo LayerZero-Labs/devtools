@@ -1,9 +1,9 @@
 import { createModuleLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 
 import { getERC20abi, getHyperEVMOAppDeployment, writeCoreSpotDeployment } from '@/io'
-import { getSpotMeta, getHipTokenInfo } from '@/operations'
+import { getSpotMeta, getHipTokenInfo, getSpotDeployState } from '@/operations'
 import { toAssetBridgeAddress } from '@/types'
-import type { CoreSpotDeployment, CoreSpotMetaData, SpotInfo, TxData, UserGenesis } from '@/types'
+import type { CoreSpotDeployment, CoreSpotMetaData, SpotDeployStates, SpotInfo, TxData, UserGenesis } from '@/types'
 import { ethers } from 'ethers'
 import { RPC_URLS } from '@/types'
 
@@ -165,4 +165,39 @@ export async function hipTokenInfo(args: any): Promise<void> {
     const coreSpotInfo: SpotInfo = await getHipTokenInfo(null, isTestnet, args.logLevel, coreSpot.tokenId)
 
     logger.info(JSON.stringify(coreSpotInfo, null, 2))
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function spotDeployState(args: any): Promise<void> {
+    setDefaultLogLevel(args.logLevel)
+    const logger = createModuleLogger('get-deploy-state', args.logLevel)
+
+    const tokenIndex = args.tokenIndex
+    const network = args.network
+
+    const isTestnet = network === 'testnet'
+    let deployerAddress: string
+    if (args.deployAddress) {
+        deployerAddress = args.deployAddress
+    } else {
+        const coreSpot: CoreSpotMetaData = await getSpotMeta(null, isTestnet, args.logLevel, tokenIndex)
+        const coreSpotInfo: SpotInfo = await getHipTokenInfo(null, isTestnet, args.logLevel, coreSpot.tokenId)
+        deployerAddress = coreSpotInfo.deployer
+        logger.info(
+            `Using deployer address: ${deployerAddress} for token ${coreSpotInfo.name} with index ${tokenIndex}`
+        )
+    }
+
+    const deployState = (await getSpotDeployState(deployerAddress, isTestnet, args.logLevel)) as SpotDeployStates
+    logger.verbose(`All deployment states for ${deployerAddress}: ${JSON.stringify(deployState, null, 2)}`)
+
+    // iterate through deployState and print out the one with the same "token" as tokenIndex
+    const state = deployState.states.find((state) => state.token === parseInt(tokenIndex))
+    if (!state) {
+        logger.error(
+            `No in progress deployment state found for token ${tokenIndex}. This means your token is deployed.`
+        )
+        process.exit(1)
+    }
+    logger.info(JSON.stringify(state, null, 2))
 }

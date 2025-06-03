@@ -1,5 +1,22 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.10.0
+
+### Minor Changes
+
+- bb62f09: Moved logging info to io-devtools package
+
+## 0.9.0
+
+### Minor Changes
+
+- 1596719: fix(solana examples): fix bug where evm contract object is treated as solana
+- 27cdcb4: feat(solana examples): support freeze authority param for createOFT script
+
+### Patch Changes
+
+- eb6d163: refactor logger helpers; export `DebugLogger` from `io-devtools`; update example imports
+
 ## 0.8.0
 
 ### Minor Changes
