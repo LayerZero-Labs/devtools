@@ -185,7 +185,7 @@ describe(`command oapp wire`, () => {
             const setup = setupPathFixture('valid.setup.ts')
 
             const result = runWire(['--oapp-config', oappConfig, '--setup', setup])
-            expect(result.stderr).toMatch(/error|failed/i)
+            expect(result.stdout).toMatch(/error|failed/i)
             expect(result.status).not.toBe(0)
         })
     })
