@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.11.0
+
+### Minor Changes
+
+- f228dfe: refactor(solana): internalize account checker and priority fee getter
+
 ## 0.10.0
 
 ### Minor Changes

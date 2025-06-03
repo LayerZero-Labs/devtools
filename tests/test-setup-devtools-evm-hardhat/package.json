@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/test-setup-devtools-evm-hardhat",
-  "version": "7.0.0",
+  "version": "8.0.0",
   "private": true,
   "description": "Test setup utilities for hardhat E2E tests",
   "repository": {
@@ -33,7 +33,7 @@
     "@ethersproject/providers": "^5.7.2",
     "@layerzerolabs/devtools": "~1.0.0",
     "@layerzerolabs/devtools-evm": "~2.0.0",
-    "@layerzerolabs/devtools-evm-hardhat": "~3.0.0",
+    "@layerzerolabs/devtools-evm-hardhat": "~3.1.0",
     "@layerzerolabs/io-devtools": "~0.2.0",
     "@layerzerolabs/lz-definitions": "^3.0.75",
     "@layerzerolabs/protocol-devtools": "~2.0.0",
@@ -53,7 +53,7 @@
     "@ethersproject/providers": "^5.7.2",
     "@layerzerolabs/devtools": "~1.0.0",
     "@layerzerolabs/devtools-evm": "~2.0.0",
-    "@layerzerolabs/devtools-evm-hardhat": "~3.0.0",
+    "@layerzerolabs/devtools-evm-hardhat": "~3.1.0",
     "@layerzerolabs/lz-definitions": "^3.0.75",
     "@layerzerolabs/protocol-devtools": "~2.0.0",
     "@layerzerolabs/protocol-devtools-evm": "~4.0.0",

@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-solana
 
+## 2.1.0
+
+### Minor Changes
+
+- f228dfe: refactor(solana): internalize account checker and priority fee getter
+
 ## 2.0.0
 
 ### Patch Changes

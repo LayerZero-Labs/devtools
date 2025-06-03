@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 3.1.0
+
+### Minor Changes
+
+- f228dfe: refactor(solana): internalize account checker and priority fee getter
+
 ## 3.0.0
 
 ### Patch Changes
