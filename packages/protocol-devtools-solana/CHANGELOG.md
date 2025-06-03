@@ -1,5 +1,12 @@
 # @layerzerolabs/protocol-devtools-solana
 
+## 7.0.0
+
+### Patch Changes
+
+- Updated dependencies [f228dfe]
+  - @layerzerolabs/devtools-solana@2.1.0
+
 ## 6.0.0
 
 ### Patch Changes

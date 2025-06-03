@@ -1,5 +1,12 @@
 # @layerzerolabs/test-setup-devtools-evm-hardhat
 
+## 8.0.0
+
+### Patch Changes
+
+- Updated dependencies [f228dfe]
+  - @layerzerolabs/devtools-evm-hardhat@3.1.0
+
 ## 7.0.0
 
 ### Patch Changes

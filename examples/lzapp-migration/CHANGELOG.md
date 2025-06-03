@@ -1,5 +1,19 @@
 # @layerzerolabs/lzapp-migration-example
 
+## 0.3.0
+
+### Minor Changes
+
+- f228dfe: refactor(solana): internalize account checker and priority fee getter
+
+### Patch Changes
+
+- Updated dependencies [f228dfe]
+  - @layerzerolabs/devtools-evm-hardhat@3.1.0
+  - @layerzerolabs/devtools-solana@2.1.0
+  - @layerzerolabs/ua-devtools-evm-hardhat@8.0.0
+  - @layerzerolabs/ua-devtools-solana@7.0.0
+
 ## 0.2.1
 
 ### Patch Changes
