@@ -12,7 +12,7 @@ const sepoliaContract: OmniPointHardhat = {
 
 const shastaContract: OmniPointHardhat = {
     eid: EndpointId.TRON_V2_TESTNET,
-    address: '',
+    address: '4100eb6e9d6500a1c2497d1c54f07b12699b406424',
 }
 
 const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [

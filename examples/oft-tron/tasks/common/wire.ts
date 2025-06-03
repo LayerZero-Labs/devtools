@@ -110,7 +110,12 @@ export default async function (args: Args, hre: HardhatRuntimeEnvironment) {
                 const endpoint = await tronWeb.contract(SendUln302.abi, await oapp.endpoint().call())
 
                 // Initialize send library if not already initialized
-                const sendConfig = await getTronSendConfig(tronWeb, to.eid, from.address)
+                const sendConfig = await getTronSendConfig(
+                    tronWeb,
+                    to.eid,
+                    from.address,
+                    tronEid === EndpointId.TRON_V2_TESTNET
+                )
                 if (!sendConfig) {
                     logger.verbose(`Initializing send library for ${from.eid} -> ${to.eid}`)
                     const data = endpoint.interface.encodeFunctionData('setSendLibrary', [
@@ -175,7 +180,12 @@ export default async function (args: Args, hre: HardhatRuntimeEnvironment) {
                 const endpoint = await tronWeb.contract(ReceiveUln302.abi, await oapp.endpoint().call())
 
                 // Initialize receive library if not already initialized
-                const receiveConfig = await getTronReceiveConfig(tronWeb, from.eid, to.address)
+                const receiveConfig = await getTronReceiveConfig(
+                    tronWeb,
+                    from.eid,
+                    to.address,
+                    tronEid === EndpointId.TRON_V2_TESTNET
+                )
                 if (!receiveConfig) {
                     logger.verbose(`Initializing receive library for ${to.eid} <- ${from.eid}`)
                     const data = endpoint.interface.encodeFunctionData('setReceiveLibrary', [

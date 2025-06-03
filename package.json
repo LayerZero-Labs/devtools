@@ -42,7 +42,8 @@
     "rustbn.js": "^0.3.0"
   },
   "dependencies": {
-    "@layerzerolabs/hyperliquid-composer": "link:/workspaces/devtools-hyperliquid-main/packages/hyperliquid-composer"
+    "@layerzerolabs/hyperliquid-composer": "link:/workspaces/devtools-hyperliquid-main/packages/hyperliquid-composer",
+    "@layerzerolabs/io-devtools": "link:/Users/krak/Documents/codebase/devtools/packages/io-devtools"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",

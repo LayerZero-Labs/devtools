@@ -11,6 +11,8 @@ typechain-types
 cache
 artifacts
 
+# Tronbox build files
+build/
 
 # LayerZero specific files
 .layerzero

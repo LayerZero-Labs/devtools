@@ -1,10 +1,10 @@
-import bs58 from 'bs58'
 import { parseUnits } from 'ethers/lib/utils'
 
-import { makeBytes32 } from '@layerzerolabs/devtools'
-import { createLogger } from '@layerzerolabs/io-devtools'
+import { DebugLogger, KnownErrors, createLogger } from '@layerzerolabs/io-devtools'
 import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
+import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 
+import layerzeroConfig from '../../layerzero.config'
 import { initTronWeb } from '../common/taskHelper'
 import { SendResult } from '../common/types'
 
@@ -42,7 +42,18 @@ export async function sendTron({
 
     // Load the OFT contract ABI
     const ioftArtifact = require('@layerzerolabs/oft-evm/artifacts/contracts/interfaces/IOFT.sol/IOFT.json')
-    const oft = await tronWeb.contract(ioftArtifact.abi, oftAddress)
+    let wrapperAddress: string
+    if (oftAddress) {
+        wrapperAddress = oftAddress
+    } else {
+        const { contracts } = typeof layerzeroConfig === 'function' ? await layerzeroConfig() : layerzeroConfig
+        const wrapper = contracts.find((c: { contract: { eid: number } }) => c.contract.eid === srcEid)
+        if (!wrapper) throw new Error(`No config for EID ${srcEid}`)
+        wrapperAddress = wrapper.contract.contractName
+            ? (await tronWeb.trx.getContract(wrapper.contract.contractName)).address
+            : wrapper.contract.address!
+    }
+    const oft = await tronWeb.contract(ioftArtifact.abi, wrapperAddress)
 
     // Get the underlying token address and decimals
     const underlying = await oft.token().call()
@@ -57,10 +68,10 @@ export async function sendTron({
     let toBytes: string
     if (isSolana) {
         // Base58→32-byte buffer
-        toBytes = makeBytes32(bs58.decode(to))
+        toBytes = addressToBytes32(to).toString()
     } else {
         // hex string → Uint8Array → zero-pad to 32 bytes
-        toBytes = makeBytes32(to)
+        toBytes = addressToBytes32(to).toString()
     }
 
     // Build sendParam
@@ -80,7 +91,10 @@ export async function sendTron({
     try {
         msgFee = await oft.quoteSend(sendParam, false).call()
     } catch (error) {
-        logger.error(`Error quoting native gas cost for network: ${endpointIdToNetwork(srcEid)}, OFT: ${oftAddress}`)
+        DebugLogger.printErrorAndFixSuggestion(
+            KnownErrors.ERROR_QUOTING_NATIVE_GAS_COST,
+            `For network: ${endpointIdToNetwork(srcEid)}, OFT: ${wrapperAddress}`
+        )
         throw error
     }
 
@@ -89,12 +103,15 @@ export async function sendTron({
     let tx
     try {
         tx = await oft
-            .send(sendParam, msgFee, tronWeb.address.toHex(), {
+            .send(sendParam, msgFee, tronWeb.defaultAddress.hex, {
                 value: msgFee.nativeFee,
             })
             .send()
     } catch (error) {
-        logger.error(`Error sending transaction for network: ${endpointIdToNetwork(srcEid)}, OFT: ${oftAddress}`)
+        DebugLogger.printErrorAndFixSuggestion(
+            KnownErrors.ERROR_SENDING_TRANSACTION,
+            `For network: ${endpointIdToNetwork(srcEid)}, OFT: ${wrapperAddress}`
+        )
         throw error
     }
 

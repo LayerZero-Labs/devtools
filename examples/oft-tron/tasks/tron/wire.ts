@@ -44,13 +44,17 @@ export default async function wireTron(args: Args, hre: HardhatRuntimeEnvironmen
     if (!oappConfig) throw new Error('Missing oappConfig')
     if (!privateKey) throw new Error('Missing privateKey')
 
+    logger.info('Starting Tron wiring process...')
+
     let graph: OAppOmniGraph
     try {
+        logger.info('Loading OApp configuration...')
         graph = await hre.run(SUBTASK_LZ_OAPP_CONFIG_LOAD, {
             configPath: oappConfig,
             schema: OAppOmniGraphHardhatSchema,
             task: TASK_LZ_OAPP_CONFIG_GET,
         } satisfies SubtaskLoadConfigTaskArgs)
+        logger.info('OApp configuration loaded successfully')
     } catch (error) {
         if (error instanceof Error) {
             throw new Error(`Failed to load OApp configuration: ${error.message}`)
@@ -60,8 +64,10 @@ export default async function wireTron(args: Args, hre: HardhatRuntimeEnvironmen
     }
 
     // Find Tron endpoint ID in the graph
+    logger.info('Finding Tron endpoint ID in the graph...')
     const tronEid = await findTronEndpointIdInGraph(hre, oappConfig)
     const isMainnet = tronEid === EndpointId.TRON_V2_MAINNET
+    logger.info(`Using ${isMainnet ? 'mainnet' : 'testnet'} configuration`)
 
     // Get the correct deployment artifacts based on network
     const endpointV2 = isMainnet ? EndpointV2Mainnet : EndpointV2Testnet
@@ -69,133 +75,260 @@ export default async function wireTron(args: Args, hre: HardhatRuntimeEnvironmen
     const receiveUln302 = isMainnet ? ReceiveUln302Mainnet : ReceiveUln302Testnet
 
     // Initialize TronWeb
-    const tronWeb = initTronWeb(isMainnet ? 'mainnet' : 'testnet', privateKey)
+    logger.info('Initializing TronWeb...')
+    const tronWeb = await initTronWeb(isMainnet ? 'mainnet' : 'testnet', privateKey)
+    logger.info('TronWeb initialized successfully')
 
     // Create SDK factory for EVM chains
     const evmSdkFactory = createOAppFactory(createConnectedContractFactory())
 
     // Wire the OApp
+    logger.info('Starting to wire OApp connections...')
     for (const { vector } of graph.connections) {
         const { from, to } = vector
         const fromIsTron = isTron(from)
         const toIsTron = isTron(to)
 
+        logger.info(
+            `Processing connection: ${from.eid} -> ${to.eid} (fromIsTron: ${fromIsTron}, toIsTron: ${toIsTron})`
+        )
+
         if (fromIsTron || toIsTron) {
             // For Tron connections, we'll handle the wiring manually
             if (fromIsTron) {
-                // Get the OApp contract instance
-                const oappContract = await tronWeb.contract(OApp.abi, from.address)
-                const endpoint = await tronWeb.contract(endpointV2.abi, endpointV2.address)
+                logger.info(`Setting up Tron sender (${from.eid} -> ${to.eid})...`)
+                try {
+                    // Get the OApp contract instance
+                    logger.info('Getting OApp contract instance...')
+                    const oappContract = await tronWeb.contract(OApp.abi, from.address)
+                    const endpoint = await tronWeb.contract(endpointV2.abi, endpointV2.address)
 
-                // Initialize send library if not already initialized
-                const sendConfig = await getTronSendConfig(tronWeb, to.eid, from.address)
-                if (!sendConfig) {
-                    logger.verbose(`Initializing send library for ${from.eid} -> ${to.eid}`)
-                    await endpoint.setSendLibrary(from.address, to.eid, sendUln302.address).send()
+                    // Initialize send library if not already initialized
+                    logger.info('Getting send config...')
+                    const sendConfig = await getTronSendConfig(tronWeb, to.eid, from.address, isMainnet)
+                    logger.info('Send config retrieved:', sendConfig)
 
-                    // Set ULN config if provided
-                    if (sendConfig?.[1]) {
-                        logger.verbose(`Setting ULN config for ${from.eid} -> ${to.eid}`)
-                        const ulnConfig = [
-                            {
-                                eid: to.eid,
-                                configType: ULN_CONFIG_TYPE,
-                                config: sendConfig[1],
-                            },
-                        ]
-                        await endpoint.setConfig(from.address, sendUln302.address, ulnConfig).send()
+                    if (!sendConfig) {
+                        logger.info(`Initializing send library for ${from.eid} -> ${to.eid}`)
+                        await endpoint.setSendLibrary(from.address, to.eid, sendUln302.address).send()
+
+                        // Set ULN config if provided
+                        if (sendConfig?.[1]) {
+                            logger.info(`Setting ULN config for ${from.eid} -> ${to.eid}`)
+                            const ulnConfig = [
+                                {
+                                    eid: to.eid,
+                                    configType: ULN_CONFIG_TYPE,
+                                    config: sendConfig[1],
+                                },
+                            ]
+                            await endpoint.setConfig(from.address, sendUln302.address, ulnConfig).send()
+                        }
+
+                        // Set executor config if provided
+                        if (sendConfig?.[2]) {
+                            logger.info(`Setting executor config for ${from.eid} -> ${to.eid}`)
+                            const executorConfig = [
+                                {
+                                    eid: to.eid,
+                                    configType: EXECUTOR_CONFIG_TYPE,
+                                    config: sendConfig[2],
+                                },
+                            ]
+                            await endpoint.setConfig(from.address, sendUln302.address, executorConfig).send()
+                        }
                     }
 
-                    // Set executor config if provided
-                    if (sendConfig?.[2]) {
-                        logger.verbose(`Setting executor config for ${from.eid} -> ${to.eid}`)
-                        const executorConfig = [
-                            {
-                                eid: to.eid,
-                                configType: EXECUTOR_CONFIG_TYPE,
-                                config: sendConfig[2],
-                            },
-                        ]
-                        await endpoint.setConfig(from.address, sendUln302.address, executorConfig).send()
+                    // Set peer address
+                    logger.info(`Setting peer address for ${from.eid} -> ${to.eid}`)
+                    await oappContract.setPeer(to.eid, to.address).send()
+
+                    // Set enforced options if provided in the config
+                    const enforcedOptions = (vector as any).config?.enforcedOptions
+                    if (enforcedOptions) {
+                        logger.info(`Setting enforced options for ${from.eid} -> ${to.eid}`)
+                        const optionsContract = await tronWeb.contract(OAppOptionsType3.abi, from.address)
+                        await optionsContract.setEnforcedOptions(enforcedOptions).send()
                     }
-                }
-
-                // Set peer address
-                logger.verbose(`Setting peer address for ${from.eid} -> ${to.eid}`)
-                await oappContract.setPeer(to.eid, to.address).send()
-
-                // Set enforced options if provided in the config
-                const enforcedOptions = (vector as any).config?.enforcedOptions
-                if (enforcedOptions) {
-                    logger.verbose(`Setting enforced options for ${from.eid} -> ${to.eid}`)
-                    const optionsContract = await tronWeb.contract(OAppOptionsType3.abi, from.address)
-                    await optionsContract.setEnforcedOptions(enforcedOptions).send()
+                } catch (error) {
+                    logger.error(
+                        `Error in Tron sender setup: ${error instanceof Error ? error.message : 'Unknown error'}`
+                    )
+                    throw error
                 }
             }
 
             if (toIsTron) {
-                // Get the OApp contract instance
-                const oappContract = await tronWeb.contract(OApp.abi, to.address)
-                const endpoint = await tronWeb.contract(endpointV2.abi, endpointV2.address)
+                logger.info(`Setting up Tron receiver (${to.eid} <- ${from.eid})...`)
+                try {
+                    // Get the OApp contract instance
+                    logger.info('Getting OApp contract instance...')
+                    logger.info('OApp ABI:', JSON.stringify(OApp.abi, null, 2))
+                    const oappContract = await tronWeb.contract(OApp.abi, to.address)
+                    if (!oappContract) {
+                        throw new Error(`Failed to create OApp contract instance at ${to.address}`)
+                    }
+                    logger.info('OApp contract methods:', Object.keys(oappContract))
 
-                // Initialize receive library if not already initialized
-                const receiveConfig = await getTronReceiveConfig(tronWeb, from.eid, to.address)
-                if (!receiveConfig) {
-                    logger.verbose(`Initializing receive library for ${to.eid} <- ${from.eid}`)
-                    await endpoint.setReceiveLibrary(to.address, from.eid, receiveUln302.address, BigInt(0)).send()
+                    logger.info('Getting Endpoint contract instance...')
+                    logger.info('Endpoint ABI:', JSON.stringify(endpointV2.abi, null, 2))
+                    const endpoint = await tronWeb.contract(endpointV2.abi, endpointV2.address)
+                    if (!endpoint) {
+                        throw new Error(`Failed to create Endpoint contract instance at ${endpointV2.address}`)
+                    }
+                    logger.info('Endpoint contract methods:', Object.keys(endpoint))
 
-                    // Set ULN config if provided
-                    if (receiveConfig?.[1]) {
-                        logger.verbose(`Setting ULN config for ${to.eid} <- ${from.eid}`)
-                        const ulnConfig = [
-                            {
+                    // Initialize receive library if not already initialized
+                    logger.info('Getting receive config...')
+                    const receiveConfig = await getTronReceiveConfig(tronWeb, from.eid, to.address, isMainnet)
+                    logger.info('Receive config retrieved:', receiveConfig)
+
+                    if (!receiveConfig) {
+                        logger.info(`Initializing receive library for ${to.eid} <- ${from.eid}`)
+                        logger.info('Calling setReceiveLibrary with params:', {
+                            receiver: to.address,
+                            remoteEid: from.eid,
+                            library: receiveUln302.address,
+                            timeout: 0,
+                        })
+
+                        try {
+                            // Try different ways to call setReceiveLibrary
+                            // Method 1: Direct call
+                            try {
+                                await endpoint
+                                    .setReceiveLibrary(to.address, from.eid, receiveUln302.address, BigInt(0))
+                                    .send()
+                                logger.info('Direct call to setReceiveLibrary successful')
+                            } catch (error) {
+                                logger.error('Direct call to setReceiveLibrary failed:', error)
+
+                                // Method 2: Using contract.methods
+                                try {
+                                    await endpoint.methods
+                                        .setReceiveLibrary(to.address, from.eid, receiveUln302.address, 0)
+                                        .send()
+                                    logger.info('Contract.methods call to setReceiveLibrary successful')
+                                } catch (error) {
+                                    logger.error('Contract.methods call to setReceiveLibrary failed:', error)
+                                    throw error
+                                }
+                            }
+
+                            // Set ULN config if provided
+                            if (receiveConfig?.[1]) {
+                                logger.info(`Setting ULN config for ${to.eid} <- ${from.eid}`)
+                                const ulnConfig = [
+                                    {
+                                        eid: from.eid,
+                                        configType: ULN_CONFIG_TYPE,
+                                        config: receiveConfig[1],
+                                    },
+                                ]
+                                await endpoint.setConfig(to.address, receiveUln302.address, ulnConfig).send()
+                            }
+
+                            // Set timeout config if provided
+                            if (receiveConfig?.[2]) {
+                                const timeout = receiveConfig[2] as Timeout
+                                logger.info(`Setting timeout config for ${to.eid} <- ${from.eid}`)
+                                await endpoint
+                                    .setReceiveLibraryTimeout(
+                                        to.address,
+                                        from.eid,
+                                        receiveUln302.address,
+                                        timeout.expiry
+                                    )
+                                    .send()
+                            }
+                        } catch (error) {
+                            logger.error('Error in contract calls:', {
+                                error: error instanceof Error ? error.message : 'Unknown error',
+                                stack: error instanceof Error ? error.stack : undefined,
+                                contract: 'Endpoint',
+                                method: 'setReceiveLibrary',
+                                params: {
+                                    receiver: to.address,
+                                    remoteEid: from.eid,
+                                    library: receiveUln302.address,
+                                    timeout: 0,
+                                },
+                            })
+                            throw error
+                        }
+                    }
+
+                    // Set peer address
+                    logger.info(`Setting peer address for ${to.eid} <- ${from.eid}`)
+                    try {
+                        await oappContract.setPeer(from.eid, from.address).send()
+                        logger.info('Successfully set peer address')
+                    } catch (error) {
+                        logger.error('Error setting peer address:', {
+                            error: error instanceof Error ? error.message : 'Unknown error',
+                            stack: error instanceof Error ? error.stack : undefined,
+                            contract: 'OApp',
+                            method: 'setPeer',
+                            params: {
                                 eid: from.eid,
-                                configType: ULN_CONFIG_TYPE,
-                                config: receiveConfig[1],
+                                peer: from.address,
                             },
-                        ]
-                        await endpoint.setConfig(to.address, receiveUln302.address, ulnConfig).send()
+                        })
+                        throw error
                     }
 
-                    // Set timeout config if provided
-                    if (receiveConfig?.[2]) {
-                        const timeout = receiveConfig[2] as Timeout
-                        logger.verbose(`Setting timeout config for ${to.eid} <- ${from.eid}`)
-                        await endpoint
-                            .setReceiveLibraryTimeout(to.address, from.eid, receiveUln302.address, timeout.expiry)
-                            .send()
+                    // Set enforced options if provided in the config
+                    const enforcedOptions = (vector as any).config?.enforcedOptions
+                    if (enforcedOptions) {
+                        logger.info(`Setting enforced options for ${to.eid} <- ${from.eid}`)
+                        try {
+                            const optionsContract = await tronWeb.contract(OAppOptionsType3.abi, to.address)
+                            await optionsContract.setEnforcedOptions(enforcedOptions).send()
+                            logger.info('Successfully set enforced options')
+                        } catch (error) {
+                            logger.error('Error setting enforced options:', {
+                                error: error instanceof Error ? error.message : 'Unknown error',
+                                stack: error instanceof Error ? error.stack : undefined,
+                                contract: 'OAppOptionsType3',
+                                method: 'setEnforcedOptions',
+                                params: enforcedOptions,
+                            })
+                            throw error
+                        }
                     }
-                }
-
-                // Set peer address
-                logger.verbose(`Setting peer address for ${to.eid} <- ${from.eid}`)
-                await oappContract.setPeer(from.eid, from.address).send()
-
-                // Set enforced options if provided in the config
-                const enforcedOptions = (vector as any).config?.enforcedOptions
-                if (enforcedOptions) {
-                    logger.verbose(`Setting enforced options for ${to.eid} <- ${from.eid}`)
-                    const optionsContract = await tronWeb.contract(OAppOptionsType3.abi, to.address)
-                    await optionsContract.setEnforcedOptions(enforcedOptions).send()
+                } catch (error) {
+                    logger.error(
+                        `Error in Tron receiver setup: ${error instanceof Error ? error.message : 'Unknown error'}`
+                    )
+                    throw error
                 }
             }
         } else {
             // For EVM connections, use the SDK
-            const fromSdk = await evmSdkFactory(from)
-            const toSdk = await evmSdkFactory(to)
+            logger.info(`Setting up EVM connection (${from.eid} <-> ${to.eid})...`)
+            try {
+                const fromSdk = await evmSdkFactory(from)
+                const toSdk = await evmSdkFactory(to)
 
-            // Set peer addresses
-            await fromSdk.setPeer(to.eid, to.address)
-            await toSdk.setPeer(from.eid, from.address)
+                // Set peer addresses
+                await fromSdk.setPeer(to.eid, to.address)
+                await toSdk.setPeer(from.eid, from.address)
 
-            // Set enforced options if provided in the config
-            const enforcedOptions = (vector as any).config?.enforcedOptions
-            if (enforcedOptions) {
-                await fromSdk.setEnforcedOptions(enforcedOptions)
-                await toSdk.setEnforcedOptions(enforcedOptions)
+                // Set enforced options if provided in the config
+                const enforcedOptions = (vector as any).config?.enforcedOptions
+                if (enforcedOptions) {
+                    await fromSdk.setEnforcedOptions(enforcedOptions)
+                    await toSdk.setEnforcedOptions(enforcedOptions)
+                }
+            } catch (error) {
+                logger.error(
+                    `Error in EVM connection setup: ${error instanceof Error ? error.message : 'Unknown error'}`
+                )
+                throw error
             }
         }
     }
+    logger.info('OApp wiring completed successfully')
 }
 
 function isTron(point: OmniPoint): boolean {

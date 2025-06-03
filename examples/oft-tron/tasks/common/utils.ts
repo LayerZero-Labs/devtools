@@ -1,8 +1,6 @@
-import { Connection, PublicKey } from '@solana/web3.js'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
-import { UlnProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import {
@@ -53,20 +51,6 @@ export function decodeLzReceiveOptions(hex: string): string {
     } catch (e) {
         return `Invalid options (${hex.slice(0, 12)}...)`
     }
-}
-
-export async function getSolanaUlnConfigPDAs(
-    remote: EndpointId,
-    connection: Connection,
-    ulnAddress: PublicKey,
-    oftStore: PublicKey
-) {
-    const uln = new UlnProgram.Uln(new PublicKey(ulnAddress))
-    const sendConfig = uln.getSendConfigState(connection, new PublicKey(oftStore), remote)
-
-    const receiveConfig = uln.getReceiveConfigState(connection, new PublicKey(oftStore), remote)
-
-    return await Promise.all([sendConfig, receiveConfig])
 }
 
 /**

@@ -14,6 +14,11 @@
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
     },
+    "./stdio": {
+      "types": "./dist/stdio/index.d.ts",
+      "require": "./dist/stdio/index.js",
+      "import": "./dist/stdio/index.mjs"
+    },
     "./*": {
       "types": "./dist/*/index.d.ts",
       "require": "./dist/*/index.js",
