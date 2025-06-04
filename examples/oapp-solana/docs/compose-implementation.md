@@ -86,8 +86,8 @@ Handle compose_msg in `lz_receive`:
 
 ```rust
     let string_value = msg_codec::decode(&params.message);
-    let count = &mut ctx.accounts.store;
-    count.string = string_value;
+    let store = &mut ctx.accounts.store;
+    store.string = string_value;
 
 +   // TODO: handle compose_msg
 

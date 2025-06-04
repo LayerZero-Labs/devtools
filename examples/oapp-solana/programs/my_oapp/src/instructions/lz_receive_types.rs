@@ -24,7 +24,7 @@ impl LzReceiveTypes<'_> {
     ) -> Result<Vec<LzAccount>> {
         // There are two accounts that are used in the LzReceive instruction,
         // except those accounts for endpoint program.
-        // The first account is the count account, that is the fixed one.
+        // The first account is the store account, that is the fixed one.
         let store = ctx.accounts.store.key();
 
         // The second account is the peer account, we find it by the params.src_eid.
