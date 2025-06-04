@@ -1,5 +1,12 @@
 # @layerzerolabs/devtools
 
+## 1.0.0
+
+### Patch Changes
+
+- Updated dependencies [bb62f09]
+  - @layerzerolabs/io-devtools@0.2.0
+
 ## 0.4.10
 
 ### Patch Changes
