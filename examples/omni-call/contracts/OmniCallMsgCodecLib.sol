@@ -62,6 +62,12 @@ library OmniCallMsgCodecLib {
     uint256 internal constant MINIMAL_LENGTH_CALL = 36;
     uint256 internal constant MINIMAL_LENGTH_CALL_AND_TRANSFER = 72;
 
+    uint8 internal constant FIRST_ADDRESS_START_INDEX = 1;
+    uint8 internal constant FIRST_ADDRESS_END_INDEX = 21;
+    uint8 internal constant FIRST_VALUE_END_INDEX = 37;
+    uint8 internal constant SECOND_ADDRESS_END_INDEX = 57;
+    uint8 internal constant SECOND_VALUE_END_INDEX = 73;
+
     /// -----------------------------------------------------------------------
     /// Functions
     /// -----------------------------------------------------------------------
@@ -78,7 +84,7 @@ library OmniCallMsgCodecLib {
         Call calldata dstCall,
         Transfer calldata dstTransfer
     ) internal pure returns (bytes memory) {
-        if (!(messageType < MAX_MESSAGE_TYPE_VALUE)) {
+        if (messageType >= MAX_MESSAGE_TYPE_VALUE) {
             revert LZ_OmniCallMsgCodecLib__InvalidMessageType();
         }
 
@@ -124,19 +130,19 @@ library OmniCallMsgCodecLib {
                 revert LZ_OmniCallMsgCodecLib__InvalidDataLength(messageType, data.length);
             }
 
-            target = address(uint160(bytes20(data[1:21])));
-            value = uint128(bytes16(data[21:37]));
-            callData = data[37:];
+            target = address(uint160(bytes20(data[FIRST_ADDRESS_START_INDEX:FIRST_ADDRESS_END_INDEX])));
+            value = uint128(bytes16(data[FIRST_ADDRESS_END_INDEX:FIRST_VALUE_END_INDEX]));
+            callData = data[FIRST_VALUE_END_INDEX:];
         } else if (messageType == CALL_AND_TRANSFER_TYPE) {
             if (data.length < MINIMAL_LENGTH_CALL_AND_TRANSFER) {
                 revert LZ_OmniCallMsgCodecLib__InvalidDataLength(messageType, data.length);
             }
 
-            to = address(uint160(bytes20(data[1:21])));
-            transferValue = uint128(bytes16(data[21:37]));
-            target = address(uint160(bytes20(data[37:57])));
-            value = uint128(bytes16(data[57:73]));
-            callData = data[73:];
+            to = address(uint160(bytes20(data[FIRST_ADDRESS_START_INDEX:FIRST_ADDRESS_END_INDEX])));
+            transferValue = uint128(bytes16(data[FIRST_ADDRESS_END_INDEX:FIRST_VALUE_END_INDEX]));
+            target = address(uint160(bytes20(data[FIRST_VALUE_END_INDEX:SECOND_ADDRESS_END_INDEX])));
+            value = uint128(bytes16(data[SECOND_ADDRESS_END_INDEX:SECOND_VALUE_END_INDEX]));
+            callData = data[SECOND_VALUE_END_INDEX:];
         } else {
             revert LZ_OmniCallMsgCodecLib__InvalidMessageType();
         }
@@ -148,7 +154,7 @@ library OmniCallMsgCodecLib {
      * @return - bool - True if the message type is a call type, false otherwise.
      */
     function isCallType(bytes calldata data) internal pure returns (bool) {
-        return uint8(data[0]) == CALL_TYPE && !(data.length < MINIMAL_LENGTH_CALL);
+        return uint8(data[0]) == CALL_TYPE && data.length >= MINIMAL_LENGTH_CALL;
     }
 
     /**
@@ -157,6 +163,6 @@ library OmniCallMsgCodecLib {
      * @return - bool - True if the message type is a call and transfer type, false otherwise.
      */
     function isCallAndTransferType(bytes calldata data) internal pure returns (bool) {
-        return uint8(data[0]) == CALL_AND_TRANSFER_TYPE && !(data.length < MINIMAL_LENGTH_CALL_AND_TRANSFER);
+        return uint8(data[0]) == CALL_AND_TRANSFER_TYPE && data.length >= MINIMAL_LENGTH_CALL_AND_TRANSFER;
     }
 }

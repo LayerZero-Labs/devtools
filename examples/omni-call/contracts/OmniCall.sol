@@ -8,6 +8,9 @@ pragma solidity 0.8.22;
 //  ==========  External imports    ==========
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+
+//  ==========  LayerZero imports    ==========
+
 import { OApp, MessagingFee, Origin, OAppReceiver } from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
 import { MessagingReceipt } from "@layerzerolabs/oapp-evm/contracts/oapp/OAppSender.sol";
 import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
@@ -15,6 +18,7 @@ import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/Opti
 //  ==========  Internal imports    ==========
 
 import { OmniCallMsgCodecLib, Call, Transfer } from "./OmniCallMsgCodecLib.sol";
+import { IOmniCall } from "./interfaces/IOmniCall.sol";
 
 /// -----------------------------------------------------------------------
 /// Contract
@@ -26,25 +30,12 @@ import { OmniCallMsgCodecLib, Call, Transfer } from "./OmniCallMsgCodecLib.sol";
  * @notice Generic contract that handles cross-chain communication
  * without the need to set-up security stack and messaging options.
  */
-contract OmniCall is OApp {
+contract OmniCall is IOmniCall, OApp {
     /// -----------------------------------------------------------------------
     /// Libraries
     /// -----------------------------------------------------------------------
 
     using OptionsBuilder for bytes;
-
-    /// -----------------------------------------------------------------------
-    /// Custom errors
-    /// -----------------------------------------------------------------------
-
-    /// @dev Error for when a zero gas limit is passed as a parameter.
-    error LZ_OmniCall__ZeroGasLimit();
-
-    /// @dev Error for when a call target is the endpoint.
-    error LZ_OmniCall__InvalidTarget();
-
-    /// @dev Error for when a call has no calldata and non-zero value.
-    error LZ_OmniCall__InvalidCall();
 
     /// -----------------------------------------------------------------------
     /// State variables
@@ -68,23 +59,14 @@ contract OmniCall is OApp {
     /// State-change public/external functions
     /// -----------------------------------------------------------------------
 
-    /**
-     * @notice Sends a message and/or transfers gas tokens.
-     * @notice UNSAFE: there is the possibility the transaction will revert on the destination chain.
-     * To avoid that, be sure to provide correct `dstGasLimit`.
-     * @param messageType: type of message to be sent;
-     * @param dstEid: endpoint ID of the destination chain;
-     * @param dstCall: destination call;
-     * @param dstTransfer: destination transfer;
-     * @param dstGasLimit: gas limit for destination call/transfer.
-     */
+    /// @inheritdoc IOmniCall
     function send(
         uint8 messageType,
         uint32 dstEid,
         Call calldata dstCall,
         Transfer calldata dstTransfer,
         uint128 dstGasLimit
-    ) external payable returns (MessagingReceipt memory receipt) {
+    ) external payable override(IOmniCall) returns (MessagingReceipt memory receipt) {
         (MessagingFee memory fee, bytes memory options) = _quoteWithOptions(
             messageType,
             dstEid,
@@ -146,40 +128,28 @@ contract OmniCall is OApp {
      * @param target: call target address;
      * @param value: value to be sent with the call;
      * @param callData: call calldata.
-     * @return - bool - whether or not the call has been successful.
-     * @return - bytes - the call result.
      */
-    function _call(address target, uint256 value, bytes memory callData) internal returns (bool, bytes memory) {
+    function _call(address target, uint256 value, bytes memory callData) internal {
         (bool success, bytes memory result) = target.call{ value: value }(callData);
         if (!success) {
             assembly {
                 revert(add(result, 32), mload(result))
             }
         }
-
-        return (success, result);
     }
 
     /// -----------------------------------------------------------------------
     /// View public/external functions
     /// -----------------------------------------------------------------------
 
-    /**
-     * @notice Quotes the fee of the desired cross-chain message.
-     * @param messageType: type of message to be sent;
-     * @param dstEid: endpoint ID of the destination chain;
-     * @param dstCall: destination call;
-     * @param dstTransfer: destination transfer;
-     * @param dstGasLimit: gas limit for destination call/transfer.
-     * @return fee - MessagingFee - struct with fee in native and lz token.
-     */
+    /// @inheritdoc IOmniCall
     function quote(
         uint8 messageType,
         uint32 dstEid,
         Call calldata dstCall,
         Transfer calldata dstTransfer,
         uint128 dstGasLimit
-    ) public view returns (MessagingFee memory fee) {
+    ) external view override(IOmniCall) returns (MessagingFee memory fee) {
         (fee, ) = _quoteWithOptions(messageType, dstEid, dstCall, dstTransfer, dstGasLimit);
     }
 

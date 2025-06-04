@@ -13,7 +13,7 @@ import { EndpointV2 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/T
 
 //  ==========  Internal imports    ==========
 
-import { OmniCall, MessagingFee, MessagingReceipt, Origin } from "../../contracts/OmniCall.sol";
+import { OmniCall, MessagingFee, MessagingReceipt, Origin, IOmniCall } from "../../contracts/OmniCall.sol";
 import { OmniCallMsgCodecLib, Call, Transfer } from "../../contracts/OmniCallMsgCodecLib.sol";
 import { ERC20Mock } from "./ERC20Mock.sol";
 import { OmniCallFixture } from "./OmniCallFixture.sol";
@@ -402,7 +402,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
         verifyPacketsWithReceiveRevertAssertion(
             dstEid,
             addressToBytes32(address(dstOmniCall)),
-            abi.encodeWithSelector(OmniCall.LZ_OmniCall__InvalidTarget.selector)
+            abi.encodeWithSelector(IOmniCall.LZ_OmniCall__InvalidTarget.selector)
         );
     }
 
@@ -469,14 +469,12 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
     //  ==========  _call  ==========
 
     function testCallInternalSuccess() public {
-        (bool success, bytes memory returnData) = fixture.callInternal(
+        fixture.callInternal(
             address(token),
             uint256(0),
             abi.encodeWithSignature("mint(address,uint256)", dstAddress, 1)
         );
 
-        assertTrue(success);
-        assertEq(returnData, "");
         assertEq(token.balanceOf(dstAddress), 1);
     }
 
@@ -548,7 +546,7 @@ contract OmniCallTest is TestHelperOz5WithRevertAssertions {
     }
 
     function testQuoteWithOptionsRevertsIfZeroGasLimit() public {
-        vm.expectRevert(OmniCall.LZ_OmniCall__ZeroGasLimit.selector);
+        vm.expectRevert(IOmniCall.LZ_OmniCall__ZeroGasLimit.selector);
         fixture.quoteWithOptionsInternal(
             OmniCallMsgCodecLib.TRANSFER_TYPE,
             dstEid,
