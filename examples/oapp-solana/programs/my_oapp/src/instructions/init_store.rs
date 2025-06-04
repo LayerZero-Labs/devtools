@@ -25,6 +25,7 @@ pub struct InitStore<'info> {
     pub system_program: Program<'info, System>,
 }
 
+// This example init_store method can be called by anyone, and can only be called once. Modify it accordingly if for your use case it should be access controlled or callable multiple times based on some param value.
 impl InitStore<'_> {
     pub fn apply(ctx: &mut Context<InitStore>, params: &InitStoreParams) -> Result<()> {
         ctx.accounts.store.admin = params.admin;

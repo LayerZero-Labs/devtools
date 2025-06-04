@@ -220,6 +220,8 @@ npx hardhat lz:oapp:solana:create --eid 40168 --program-id <PROGRAM_ID>
 
 :information_source: The address of this account (and **not** the OApp program ID) is what will be used as the OApp address in the context of cross-chain messaging.
 
+:information_source: The example `init_store` method being called by this task can be called by anyone, and can only be called once. Modify it accordingly if for your use case it should be access controlled or callable multiple times based on some param value.
+
 ##### Deploy the EVM OApp
 
 To deploy your Solidity contracts to your desired EVM blockchain(s), run the following command in your project's folder:
