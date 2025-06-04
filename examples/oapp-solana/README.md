@@ -52,7 +52,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 sh -c "$(curl -sSfL https://release.anza.xyz/v1.17.31/install)"
 ```
 
-If this is your first time installing the Solana CLI, run the following to [generate a keypair](https://solana.com/docs/intro/installation#create-wallet) at the default keypair path:
+If this is your first time installing the Solana CLI, run the following to [generate a keypair](https://solana.com/docs/intro/installation#create-wallet) at the default keypair path (`~/.config/solana/id.json`):
 
 ```bash
 solana-keygen new
@@ -72,6 +72,8 @@ cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 anchor-cli
 LZ_ENABLE_SOLANA_OAPP_EXAMPLE=1 npx create-lz-oapp@latest
 ```
 
+The CLI will also automatically run pnpm install for you.
+
 Make sure you select the **OApp (Solana)** example from the dropdown:
 
 ```bash
@@ -87,14 +89,6 @@ Make sure you select the **OApp (Solana)** example from the dropdown:
 
 ## Developing Contracts
 
-#### Installing dependencies
-
-We recommend using `pnpm` as a package manager.
-
-```bash
-pnpm install
-```
-
 #### Compiling your contracts
 
 To compile the Solidity OApp contract and build the Solana OApp program, run:
@@ -102,16 +96,6 @@ To compile the Solidity OApp contract and build the Solana OApp program, run:
 ```bash
 pnpm compile
 ```
-
-#### Running tests
-
-The `test` command will execute the hardhat and forge tests:
-
-```bash
-pnpm test
-```
-
-To run the anchor tests, you can run `test:anchor`.
 
 #### Get Devnet SOL
 
@@ -128,6 +112,8 @@ Copy the example `.env` file:
 ```bash
 cp .env.example .env
 ```
+
+and fill up the values.
 
 ##### EVM Private Key
 
@@ -157,7 +143,7 @@ Also set the `RPC_URL_SOLANA_TESTNET` value. Note that while the naming used her
 
 ### Prepare the OApp Program ID
 
-Create `programId` keypair files by running:
+Create the MyOApp `programId` keypair file by running:
 
 ```bash
 solana-keygen new -o target/deploy/my_oapp-keypair.json
@@ -173,22 +159,22 @@ anchor keys list
 to view the generated programId (public keys). The output should look something like this:
 
 ```
-my_oapp: <OFT_PROGRAM_ID>
+my_oapp: <OAPP_PROGRAM_ID>
 ```
 
 Copy the OApp's program ID, which you will use in the build step.
 
-### Building and Deploying the Solana OFT Program
+### Building and Deploying the Solana MyOApp Program
 
 Ensure you have Docker running before running the build command.
 
-#### Build the Solana OFT program
+#### Build the Solana MyOApp program
 
 ```bash
 anchor build -v -e MYOAPP_ID=<OAPP_PROGRAM_ID>
 ```
 
-Where `<MYOAPP_ID>` is replaced with your OApp Program ID copied from the previous step.
+Where `<OAPP_PROGRAM_ID>` is replaced with your OApp Program ID copied from the previous step.
 
 #### Deploy the Solana OApp
 
@@ -205,7 +191,7 @@ sh -c "$(curl -sSfL https://release.anza.xyz/v1.18.26/install)"
 ##### Run the deploy command
 
 ```bash
-solana program deploy --program-id target/deploy/oft-keypair.json target/verifiable/oft.so -u devnet --with-compute-unit-price <COMPUTE_UNIT_PRICE_IN_MICRO_LAMPORTS>
+solana program deploy --program-id target/deploy/my_oapp-keypair.json target/verifiable/my_oapp.so -u devnet --with-compute-unit-price <COMPUTE_UNIT_PRICE_IN_MICRO_LAMPORTS>
 ```
 
 :information_source: `--with-compute-unit-price` takes in the microlamport value applied per compute unit. This is how we can attach a [priority fee](https://solana.com/vi/developers/guides/advanced/how-to-use-priority-fees) to our deployment.
@@ -229,7 +215,7 @@ Solana programs require accounts to be initialized before state can be written.
 Run the following to init the OApp store account:
 
 ```bash
-pnpm hardhat lz:oapp:solana:create --eid 40168 --program-id <PROGRAM_ID>
+npx hardhat lz:oapp:solana:create --eid 40168 --program-id <PROGRAM_ID>
 ```
 
 :information_source: The address of this account (and **not** the OApp program ID) is what will be used as the OApp address in the context of cross-chain messaging.
@@ -283,7 +269,7 @@ With your OApps wired, you can now send a message.
 Send from Solana Devnet (40168) to Optimism Sepolia (40232) :
 
 ```bash
-npx hardhat lz:oapp:send --from-eid 40168 --dst-eid 40232 --message "Hello from Solana Devnet" && \
+npx hardhat lz:oapp:send --from-eid 40168 --dst-eid 40232 --message "Hello from Solana Devnet"
 ```
 
 Send from Optimism Sepolia (40232) to Solana Devnet (40168) :
@@ -297,6 +283,14 @@ npx hardhat --network optimism-testnet lz:oapp:send --from-eid 40232 --dst-eid 4
 <br>
 
 Congratulations, you have now successfully set up an EVM <> Solana OApp.
+
+### Running tests
+
+The `test` command will execute the hardhat and forge tests:
+
+```bash
+pnpm test
+```
 
 <br></br>
 
