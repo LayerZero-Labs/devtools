@@ -25,6 +25,9 @@ pub struct InitStore<'info> {
     pub system_program: Program<'info, System>,
 }
 
+// NOTE: This example init_store may be front-run. It can be called by anyone, and can only be called once.
+// The first caller will be able to set the admin and endpoint program for the store. If front-runned, the program will need to be redeployed and re-initialized with the correct parameters.
+// You should modify this instruction accordingly for your use case with the appropriate access control and checks.
 impl InitStore<'_> {
     pub fn apply(ctx: &mut Context<InitStore>, params: &InitStoreParams) -> Result<()> {
         ctx.accounts.store.admin = params.admin;
