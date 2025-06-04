@@ -25,21 +25,21 @@ export default async function () {
             sepoliaContract, // Chain A contract
             fujiContract, // Chain B contract
             [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
-            [1, 1], // [A to B confirmations, B to A confirmations]
+            [2, 4], // [A to B confirmations, B to A confirmations]
             [undefined, undefined], // Chain B enforcedOptions, Chain A enforcedOptions
         ],
         [
             sepoliaContract, // Chain A contract
             amoyContract, // Chain B contract
             [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
-            [1, 1], // [A to B confirmations, B to A confirmations]
+            [2, 1], // [A to B confirmations, B to A confirmations]
             [undefined, undefined], // Chain B enforcedOptions, Chain A enforcedOptions
         ],
         [
             fujiContract, // Chain A contract
             amoyContract, // Chain B contract
             [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
-            [1, 1], // [A to B confirmations, B to A confirmations]
+            [4, 1], // [A to B confirmations, B to A confirmations]
             [undefined, undefined], // Chain B enforcedOptions, Chain A enforcedOptions
         ],
     ])
