@@ -190,6 +190,17 @@ export const getExamples = (): Example[] => {
                   },
               ]
             : []),
+        ...(process.env.LZ_ENABLE_EXPERIMENTAL_OMNI_CALL_EXAMPLE
+            ? [
+                  {
+                      id: 'omni-call',
+                      label: 'EVM OmniCall',
+                      repository,
+                      directory: 'examples/omni-call',
+                      ref,
+                  },
+              ]
+            : []),
     ]
 }
 
