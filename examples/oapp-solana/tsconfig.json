@@ -6,7 +6,6 @@
     "tasks",
     "hardhat.config.ts",
     "lib/client",
-    "lib/devtools-counter",
     "lib/config.ts",
     "lib/factory.ts",
     "lib/sdk.ts"

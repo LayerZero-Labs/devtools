@@ -6,7 +6,7 @@ The following is an example of how ordered execution can be implemented in the M
 
 ### 1. State Structures
 
-In `programs/counter/src/state/store.rs`, amend the `Store` struct to include an `ordered_nonce` boolean field.
+In `programs/my_oapp/src/state/store.rs`, amend the `Store` struct to include an `ordered_nonce` boolean field.
 
 ```rust
 pub struct Store {
@@ -15,7 +15,7 @@ pub struct Store {
 }
 ```
 
-Modify `programs/counter/src/instructions/init_store.rs` to accept `ordered_nonce` in the params:
+Modify `programs/my_oapp/src/instructions/init_store.rs` to accept `ordered_nonce` in the params:
 
 ```rust
 #[derive(Clone, AnchorSerialize, AnchorDeserialize)]
@@ -36,7 +36,7 @@ ctx.accounts.store.string = "Nothing received yet.".to_string(); // existing lin
 //...
 ```
 
-Create a file at `programs/counter/src/state/nonce.rs` with the following contents to define the Nonce account structure:
+Create a file at `programs/my_oapp/src/state/nonce.rs` with the following contents to define the Nonce account structure:
 
 ```rust
 use crate::*;
@@ -53,7 +53,7 @@ impl Nonce {
 }
 ```
 
-Add the struct into `programs/counter/src/state/mod.rs`:
+Add the struct into `programs/my_oapp/src/state/mod.rs`:
 
 ```rust
 //...
@@ -63,7 +63,7 @@ pub use nonce::*;
 //...
 ```
 
-Declare the `NONCE_SEED` variable in `programs/counter/src/lib.rs`:
+Declare the `NONCE_SEED` variable in `programs/my_oapp/src/lib.rs`:
 
 ```rust
 const NONCE_SEED: &[u8] = b"Nonce";
@@ -71,7 +71,7 @@ const NONCE_SEED: &[u8] = b"Nonce";
 
 ### 2. NextNonce Implementation
 
-Create a file for the NextNonce instruction at `programs/counter/src/instructions/next_nonce.rs` with the following contents:
+Create a file for the NextNonce instruction at `programs/my_oapp/src/instructions/next_nonce.rs` with the following contents:
 
 ```rust
 use crate::*;
@@ -109,7 +109,7 @@ pub struct NextNonceParams {
 }
 ```
 
-Add the instruction into `programs/counter/src/instructions/mod.rs`
+Add the instruction into `programs/my_oapp/src/instructions/mod.rs`
 
 ```rust
 // ...
@@ -119,7 +119,7 @@ pub use next_nonce::*;
 // ...
 ```
 
-Register the instruction handler in `programs/counter/src/lib.rs`:
+Register the instruction handler in `programs/my_oapp/src/lib.rs`:
 
 ```rust
 // existing methods
@@ -131,7 +131,7 @@ pub fn next_nonce(ctx: Context<NextNonce>, params: NextNonceParams) -> Result<u6
 
 ### 3. Message Receiving Logic
 
-Amend `programs/counter/src/instructions/lz_receive.rs` to the following:
+Amend `programs/my_oapp/src/instructions/lz_receive.rs` to the following:
 
 ```rust
 use crate::*;
@@ -219,7 +219,7 @@ Changes:
 - Include `nonce_account` in the accounts list
 - Call `accept_nonce` before committing the change
 
-Amend `programs/counter/src/errors.rs` to include `InvalidNonce`:
+Amend `programs/my_oapp/src/errors.rs` to include `InvalidNonce`:
 
 ```rust
 use anchor_lang::prelude::error_code;
@@ -233,7 +233,7 @@ pub enum MyOAppError {
 
 ### 4. Account Derivation in Type instruction
 
-Amend `programs/counter/src/instructions/lz_receive_types.rs` to the following:
+Amend `programs/my_oapp/src/instructions/lz_receive_types.rs` to the following:
 
 ```rust
 use crate::*;
@@ -320,7 +320,7 @@ Changes:
 
 ### 5. Enable skipping of `inbound_nonce` when needed:
 
-Create the instruction at `programs/counter/src/instructions/skip_inbound_nonce.rs`:
+Create the instruction at `programs/my_oapp/src/instructions/skip_inbound_nonce.rs`:
 
 ```rust
 use oapp::endpoint::{instructions::SkipParams, ID as ENDPOINT_ID};
@@ -377,7 +377,7 @@ pub struct SkipInboundNonceParams {
 }
 ```
 
-Add the instruction into `programs/counter/src/instructions/mod.rs`:
+Add the instruction into `programs/my_oapp/src/instructions/mod.rs`:
 
 ```rust
 //...
@@ -387,7 +387,7 @@ pub use skip_inbound_nonce::*;
 //...
 ```
 
-Register the instruction handler in `programs/counter/src/lib.rs`:
+Register the instruction handler in `programs/my_oapp/src/lib.rs`:
 
 ```rust
 //...
@@ -402,7 +402,7 @@ pub fn skip_inbound_nonce(
 
 ### 6. Allow for toggling of ordered execution
 
-Create the instruction definition at `programs/counter/src/instructions/set_ordered_nonce.rs`:
+Create the instruction definition at `programs/my_oapp/src/instructions/set_ordered_nonce.rs`:
 
 ```rust
 use crate::*;
@@ -429,7 +429,7 @@ pub struct SetOrderedNonceParams {
 }
 ```
 
-Add the instruction into `programs/counter/src/instructions/mod.rs`:
+Add the instruction into `programs/my_oapp/src/instructions/mod.rs`:
 
 ```rust
 //...
@@ -439,7 +439,7 @@ pub use set_ordered_nonce::*;
 //...
 ```
 
-Register the instruction handler in `programs/counter/src/lib.rs`;
+Register the instruction handler in `programs/my_oapp/src/lib.rs`;
 
 ```rust
 pub fn set_ordered_nonce(
@@ -514,7 +514,7 @@ const options = Options.newOptions()
   .toBytes();
 ```
 
-In `lib/client/omnicounter.ts`, add in `orderedNonce` as a param like so:
+In `lib/client/myoapp.ts`, add in `orderedNonce` as a param like so:
 
 ```typescript
 // note: orderedNonce added as a second param
@@ -541,7 +541,7 @@ initStore(payer: Signer, admin: PublicKey, orderedNonce: boolean): WrappedInstru
 }
 ```
 
-Also in ``lib/client/omnicounter.ts`, add:
+Also in ``lib/client/myoapp.ts`, add:
 
 ```typescript
 setOrderedNonce(admin: Signer, orderedNonce: boolean): WrappedInstruction {
@@ -561,7 +561,7 @@ In `tasks/solana/oappCreate.ts`, add `orderedNonce` value when calling `initStor
 ```typescript
 let orderedNonce = true;
 const txBuilder = transactionBuilder().add(
-  counter.initStore(umiWalletSigner, umiWalletSigner.publicKey, orderedNonce),
+  myoappInstance.initStore(umiWalletSigner, umiWalletSigner.publicKey, orderedNonce),
 );
 ```
 

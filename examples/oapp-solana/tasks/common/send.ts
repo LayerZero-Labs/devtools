@@ -36,11 +36,11 @@ async function sendFromSolana(fromEid: number, dstEid: number, message: string, 
     const solanaDeployment = getSolanaDeployment(solanaEid)
     const { connection, umi, umiWalletSigner } = await deriveConnection(solanaEid)
 
-    const counter: myoapp.MyOApp = new myoapp.MyOApp(publicKey(solanaDeployment.programId))
+    const myoappInstance: myoapp.MyOApp = new myoapp.MyOApp(publicKey(solanaDeployment.programId))
 
     const options = Options.newOptions().toBytes() // leaving empty, relying on enforced options instead
 
-    const { nativeFee } = await counter.quote(umi.rpc, umiWalletSigner.publicKey, {
+    const { nativeFee } = await myoappInstance.quote(umi.rpc, umiWalletSigner.publicKey, {
         dstEid,
         message,
         options,
@@ -50,7 +50,7 @@ async function sendFromSolana(fromEid: number, dstEid: number, message: string, 
     console.log('🔖 Native fee quoted:', nativeFee.toString())
 
     let txBuilder = transactionBuilder().add(
-        await counter.send(umi.rpc, umiWalletSigner.publicKey, {
+        await myoappInstance.send(umi.rpc, umiWalletSigner.publicKey, {
             dstEid,
             message,
             options,

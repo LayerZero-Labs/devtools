@@ -1,5 +1,3 @@
-// TODO: create this in devtools/packages/ua-devtools-solana/src/counter/config.ts
-
 import {
     type CreateTransactionsFromOmniEdges,
     OmniPoint,
@@ -16,8 +14,8 @@ import { CustomOAppSDK } from './sdk'
 
 import type { IOApp, OAppConfigurator, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 
-const createCounterLogger = () => createModuleLogger('Counter')
-const withCounterLogger = createWithAsyncLogger(createCounterLogger)
+const createMyOAppLogger = () => createModuleLogger('MyOApp')
+const withMyOAppLogger = createWithAsyncLogger(createMyOAppLogger)
 
 /**
  * Helper function that checks whether a vector originates from a Solana network
@@ -37,7 +35,7 @@ const isVectorFromSolana = (vector: OmniVector): boolean => isOmniPointOnSolana(
 const onlyEdgesFromSolana = (
     createTransactions: CreateTransactionsFromOmniEdges<OAppOmniGraph, CustomOAppSDK>
 ): CreateTransactionsFromOmniEdges<OAppOmniGraph, IOApp> => {
-    const logger = createCounterLogger()
+    const logger = createMyOAppLogger()
 
     return (edge, sdk, graph, createSdk) => {
         if (!isVectorFromSolana(edge.vector)) {
@@ -55,8 +53,8 @@ const onlyEdgesFromSolana = (
 
 export const initConfig: OAppConfigurator = createConfigureEdges(
     onlyEdgesFromSolana(
-        withCounterLogger(async ({ vector: { to } }, sdk) => {
-            const logger = createCounterLogger()
+        withMyOAppLogger(async ({ vector: { to } }, sdk) => {
+            const logger = createMyOAppLogger()
             if (typeof sdk.sendConfigIsInitialized !== 'function') {
                 return (
                     logger.warn(`Could not find sendConfigIsInitialized() method on OAppWrapperSDK SDK, skipping`),
