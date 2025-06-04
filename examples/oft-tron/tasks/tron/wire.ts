@@ -33,6 +33,14 @@ const logger = createLogger()
 const EXECUTOR_CONFIG_TYPE = 1
 const ULN_CONFIG_TYPE = 2
 
+// Convert a hex address to Tron base58 if needed
+function toBase58(tronWeb: any, addr: string): string {
+    if (addr.startsWith('T')) return addr
+    const clean = addr.startsWith('0x') ? addr.slice(2) : addr
+    const tronHex = clean.startsWith('41') ? clean : `41${clean}`
+    return tronWeb.address.fromHex(tronHex)
+}
+
 interface Args {
     oappConfig: string
     privateKey: string
@@ -98,10 +106,14 @@ export default async function wireTron(args: Args, hre: HardhatRuntimeEnvironmen
             if (fromIsTron) {
                 logger.info(`Setting up Tron sender (${from.eid} -> ${to.eid})...`)
                 try {
+                    const oappAddr = toBase58(tronWeb, from.address)
+                    const endpointAddr = toBase58(tronWeb, endpointV2.address)
+                    const sendLibAddr = toBase58(tronWeb, sendUln302.address)
+
                     // Get the OApp contract instance
                     logger.info('Getting OApp contract instance...')
-                    const oappContract = await tronWeb.contract(OApp.abi, from.address)
-                    const endpoint = await tronWeb.contract(endpointV2.abi, endpointV2.address)
+                    const oappContract = await tronWeb.contract(OApp.abi, oappAddr)
+                    const endpoint = await tronWeb.contract(endpointV2.abi, endpointAddr)
 
                     // Initialize send library if not already initialized
                     logger.info('Getting send config...')
@@ -110,7 +122,7 @@ export default async function wireTron(args: Args, hre: HardhatRuntimeEnvironmen
 
                     if (!sendConfig) {
                         logger.info(`Initializing send library for ${from.eid} -> ${to.eid}`)
-                        await endpoint.setSendLibrary(from.address, to.eid, sendUln302.address).send()
+                        await endpoint.setSendLibrary(oappAddr, to.eid, sendLibAddr).send()
 
                         // Set ULN config if provided
                         if (sendConfig?.[1]) {
@@ -122,7 +134,7 @@ export default async function wireTron(args: Args, hre: HardhatRuntimeEnvironmen
                                     config: sendConfig[1],
                                 },
                             ]
-                            await endpoint.setConfig(from.address, sendUln302.address, ulnConfig).send()
+                            await endpoint.setConfig(oappAddr, sendLibAddr, ulnConfig).send()
                         }
 
                         // Set executor config if provided
@@ -135,19 +147,19 @@ export default async function wireTron(args: Args, hre: HardhatRuntimeEnvironmen
                                     config: sendConfig[2],
                                 },
                             ]
-                            await endpoint.setConfig(from.address, sendUln302.address, executorConfig).send()
+                            await endpoint.setConfig(oappAddr, sendLibAddr, executorConfig).send()
                         }
                     }
 
                     // Set peer address
                     logger.info(`Setting peer address for ${from.eid} -> ${to.eid}`)
-                    await oappContract.setPeer(to.eid, to.address).send()
+                    await oappContract.setPeer(to.eid, toBase58(tronWeb, to.address)).send()
 
                     // Set enforced options if provided in the config
                     const enforcedOptions = (vector as any).config?.enforcedOptions
                     if (enforcedOptions) {
                         logger.info(`Setting enforced options for ${from.eid} -> ${to.eid}`)
-                        const optionsContract = await tronWeb.contract(OAppOptionsType3.abi, from.address)
+                        const optionsContract = await tronWeb.contract(OAppOptionsType3.abi, oappAddr)
                         await optionsContract.setEnforcedOptions(enforcedOptions).send()
                     }
                 } catch (error) {
@@ -164,7 +176,11 @@ export default async function wireTron(args: Args, hre: HardhatRuntimeEnvironmen
                     // Get the OApp contract instance
                     logger.info('Getting OApp contract instance...')
                     logger.info('OApp ABI:', JSON.stringify(OApp.abi, null, 2))
-                    const oappContract = await tronWeb.contract(OApp.abi, to.address)
+                    const oappAddr = toBase58(tronWeb, to.address)
+                    const endpointAddr = toBase58(tronWeb, endpointV2.address)
+                    const recvLibAddr = toBase58(tronWeb, receiveUln302.address)
+
+                    const oappContract = await tronWeb.contract(OApp.abi, oappAddr)
                     if (!oappContract) {
                         throw new Error(`Failed to create OApp contract instance at ${to.address}`)
                     }
@@ -172,7 +188,7 @@ export default async function wireTron(args: Args, hre: HardhatRuntimeEnvironmen
 
                     logger.info('Getting Endpoint contract instance...')
                     logger.info('Endpoint ABI:', JSON.stringify(endpointV2.abi, null, 2))
-                    const endpoint = await tronWeb.contract(endpointV2.abi, endpointV2.address)
+                    const endpoint = await tronWeb.contract(endpointV2.abi, endpointAddr)
                     if (!endpoint) {
                         throw new Error(`Failed to create Endpoint contract instance at ${endpointV2.address}`)
                     }
@@ -186,9 +202,9 @@ export default async function wireTron(args: Args, hre: HardhatRuntimeEnvironmen
                     if (!receiveConfig) {
                         logger.info(`Initializing receive library for ${to.eid} <- ${from.eid}`)
                         logger.info('Calling setReceiveLibrary with params:', {
-                            receiver: to.address,
+                            receiver: oappAddr,
                             remoteEid: from.eid,
-                            library: receiveUln302.address,
+                            library: recvLibAddr,
                             timeout: 0,
                         })
 
@@ -196,18 +212,14 @@ export default async function wireTron(args: Args, hre: HardhatRuntimeEnvironmen
                             // Try different ways to call setReceiveLibrary
                             // Method 1: Direct call
                             try {
-                                await endpoint
-                                    .setReceiveLibrary(to.address, from.eid, receiveUln302.address, BigInt(0))
-                                    .send()
+                                await endpoint.setReceiveLibrary(oappAddr, from.eid, recvLibAddr, BigInt(0)).send()
                                 logger.info('Direct call to setReceiveLibrary successful')
                             } catch (error) {
                                 logger.error('Direct call to setReceiveLibrary failed:', error)
 
                                 // Method 2: Using contract.methods
                                 try {
-                                    await endpoint.methods
-                                        .setReceiveLibrary(to.address, from.eid, receiveUln302.address, 0)
-                                        .send()
+                                    await endpoint.methods.setReceiveLibrary(oappAddr, from.eid, recvLibAddr, 0).send()
                                     logger.info('Contract.methods call to setReceiveLibrary successful')
                                 } catch (error) {
                                     logger.error('Contract.methods call to setReceiveLibrary failed:', error)
@@ -225,7 +237,7 @@ export default async function wireTron(args: Args, hre: HardhatRuntimeEnvironmen
                                         config: receiveConfig[1],
                                     },
                                 ]
-                                await endpoint.setConfig(to.address, receiveUln302.address, ulnConfig).send()
+                                await endpoint.setConfig(oappAddr, recvLibAddr, ulnConfig).send()
                             }
 
                             // Set timeout config if provided
@@ -233,12 +245,7 @@ export default async function wireTron(args: Args, hre: HardhatRuntimeEnvironmen
                                 const timeout = receiveConfig[2] as Timeout
                                 logger.info(`Setting timeout config for ${to.eid} <- ${from.eid}`)
                                 await endpoint
-                                    .setReceiveLibraryTimeout(
-                                        to.address,
-                                        from.eid,
-                                        receiveUln302.address,
-                                        timeout.expiry
-                                    )
+                                    .setReceiveLibraryTimeout(oappAddr, from.eid, recvLibAddr, timeout.expiry)
                                     .send()
                             }
                         } catch (error) {
@@ -248,9 +255,9 @@ export default async function wireTron(args: Args, hre: HardhatRuntimeEnvironmen
                                 contract: 'Endpoint',
                                 method: 'setReceiveLibrary',
                                 params: {
-                                    receiver: to.address,
+                                    receiver: oappAddr,
                                     remoteEid: from.eid,
-                                    library: receiveUln302.address,
+                                    library: recvLibAddr,
                                     timeout: 0,
                                 },
                             })
@@ -261,7 +268,7 @@ export default async function wireTron(args: Args, hre: HardhatRuntimeEnvironmen
                     // Set peer address
                     logger.info(`Setting peer address for ${to.eid} <- ${from.eid}`)
                     try {
-                        await oappContract.setPeer(from.eid, from.address).send()
+                        await oappContract.setPeer(from.eid, toBase58(tronWeb, from.address)).send()
                         logger.info('Successfully set peer address')
                     } catch (error) {
                         logger.error('Error setting peer address:', {
@@ -271,7 +278,7 @@ export default async function wireTron(args: Args, hre: HardhatRuntimeEnvironmen
                             method: 'setPeer',
                             params: {
                                 eid: from.eid,
-                                peer: from.address,
+                                peer: toBase58(tronWeb, from.address),
                             },
                         })
                         throw error
@@ -282,7 +289,7 @@ export default async function wireTron(args: Args, hre: HardhatRuntimeEnvironmen
                     if (enforcedOptions) {
                         logger.info(`Setting enforced options for ${to.eid} <- ${from.eid}`)
                         try {
-                            const optionsContract = await tronWeb.contract(OAppOptionsType3.abi, to.address)
+                            const optionsContract = await tronWeb.contract(OAppOptionsType3.abi, oappAddr)
                             await optionsContract.setEnforcedOptions(enforcedOptions).send()
                             logger.info('Successfully set enforced options')
                         } catch (error) {
