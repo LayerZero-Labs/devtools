@@ -280,6 +280,10 @@ npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts
 
 With a squads multisig, you can simply append the `--multisig-key` flag to the end of the above command.
 
+### Wiring Solana to Aptos
+
+For Wiring Solana to Aptos please refer to the instructions in `docs/Aptos.md`.
+
 ### Mint OFT on Solana
 
 This is only relevant for **OFT**. If you opted to include the `--amount` flag in the create step, that means you already have minted some Solana OFT and you can skip this section.
