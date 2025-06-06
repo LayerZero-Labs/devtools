@@ -67,9 +67,6 @@ export const createSdkFactory = (
     )
 
     // the return value is an SDK factory that receives an OmniPoint and returns an SDK
-    // return async (point: OmniPoint): Promise<IOApp> =>
-    //     endpointIdToChainType(point.eid) === ChainType.SOLANA ? solanaSdkFactory(point) : evmSdkFactory(point)
-
     return async (point: OmniPoint): Promise<IOApp> => {
         if (endpointIdToChainType(point.eid) === ChainType.SOLANA) {
             return solanaSdkFactory(point)
