@@ -42,9 +42,6 @@ export const createSdkFactory = (
     connectionFactory = createSolanaConnectionFactory()
 ) => {
     // To create a EVM/Solana SDK factory we need to merge the EVM and the Solana factories into one
-    //
-    // We do this by using the firstFactory helper function that is provided by the devtools package.
-    // This function will try to execute the factories one by one and return the first one that succeeds.
     const evmSdkFactory = createOAppFactory(createConnectedContractFactory())
     const aptosSdkFactory = createAptosOAppFactory()
     const solanaSdkFactory = createOFTFactory(
