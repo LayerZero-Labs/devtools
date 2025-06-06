@@ -6,7 +6,7 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
 import bs58 from 'bs58'
 
-import { createLogger } from '@layerzerolabs/io-devtools'
+import { createLogger, promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
@@ -92,6 +92,23 @@ export async function sendSolana({
     const amountUnits = parseDecimalToUnits(amount, decimals)
     if (amountUnits === 0n || amountUnits > balance) {
         throw new Error(`Insufficient balance (need ${amountUnits}, have ${balance})`)
+    }
+
+    if (!extraOptions) {
+        try {
+            const enforced = await oft.getEnforcedOptions(umi.rpc, storePda, dstEid, programId)
+            const enforcedBytes = composeMsg ? enforced.sendAndCall : enforced.send
+            if (!enforcedBytes || enforcedBytes.length === 0) {
+                const proceed = await promptToContinue(
+                    'No extra options were included and OFT has no set enforced options. Your quote / send will most likely fail. Continue ?'
+                )
+                if (!proceed) {
+                    throw new Error('Aborted due to missing options')
+                }
+            }
+        } catch (error) {
+            logger.debug(`Failed to check enforced options: ${error}`)
+        }
     }
 
     // 7️⃣ Quote (use our overridden `programId`)
