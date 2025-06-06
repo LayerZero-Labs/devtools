@@ -11,7 +11,7 @@ import { IOApp } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { createOFTFactory } from '@layerzerolabs/ua-devtools-solana'
 
-import { createAptosOAppFactory } from './aptosSdkFactory'
+import { createAptosOAppFactory } from '../aptos'
 
 export { createSolanaConnectionFactory }
 const logger = createLogger()

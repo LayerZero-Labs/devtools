@@ -14,10 +14,10 @@ import {
     TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP,
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
 
+import { createAptosSignerFactory } from '../aptos'
 import { getSolanaDeployment, useWeb3Js } from '../solana'
 import { findSolanaEndpointIdInGraph } from '../solana/utils'
 
-import { createAptosSignerFactory } from './aptosSignerFactory'
 import { publicKey as publicKeyType } from './types'
 import {
     DebugLogger,
