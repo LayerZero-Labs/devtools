@@ -39,6 +39,8 @@ contract MyOApp is OApp, OAppOptionsType3 {
         bool _payInLzToken
     ) public view returns (MessagingFee memory fee) {
         bytes memory _message = abi.encode(_string);
+        // combineOptions (from OAppOptionsType3) merges enforced options set by the contract owner
+        // with any additional execution options provided by the caller
         fee = _quote(_dstEid, _message, combineOptions(_dstEid, SEND, _options), _payInLzToken);
     }
 
@@ -66,9 +68,12 @@ contract MyOApp is OApp, OAppOptionsType3 {
         // 3. Call OAppSender._lzSend to package and dispatch the cross-chain message
         //    - _dstEid:   remote chain's Endpoint ID
         //    - _message:  ABI-encoded string
-        //    - _options:  encoded gas settings for destination (e.g., ExecutorLzReceiveOption)
+        //    - _options:  combined execution options (enforced + caller-provided)
         //    - MessagingFee(msg.value, 0): pay all gas as native token; no ZRO
         //    - payable(msg.sender): refund excess gas to caller
+        //
+        //    combineOptions (from OAppOptionsType3) merges enforced options set by the contract owner
+        //    with any additional execution options provided by the caller
         _lzSend(
             _dstEid,
             _message,
