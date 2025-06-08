@@ -15,11 +15,7 @@ contract MyOApp is OApp, OAppOptionsType3 {
     /// @notice Initialize with Endpoint V2 and owner address
     /// @param _endpoint The local chain's LayerZero Endpoint V2 address
     /// @param _owner    The address permitted to configure this OApp
-    constructor(address _endpoint, address _owner)
-        OApp(_endpoint, _owner)
-        Ownable(_owner)
-    {}
-
+    constructor(address _endpoint, address _owner) OApp(_endpoint, _owner) Ownable(_owner) {}
 
     // ──────────────────────────────────────────────────────────────────────────────
     // 0. (Optional) Quote business logic
@@ -37,15 +33,14 @@ contract MyOApp is OApp, OAppOptionsType3 {
      * @return fee A `MessagingFee` struct containing the calculated gas fee in either the native token or ZRO token.
      */
     function quoteSendString(
-        uint32       _dstEid,
+        uint32 _dstEid,
         string calldata _string,
-        bytes     calldata _options,
+        bytes calldata _options,
         bool _payInLzToken
     ) public view returns (MessagingFee memory fee) {
         bytes memory _message = abi.encode(_string);
         fee = _quote(_dstEid, _message, combineOptions(_dstEid, SEND, _options), _payInLzToken);
     }
-        
 
     // ──────────────────────────────────────────────────────────────────────────────
     // 1. Send business logic
@@ -58,14 +53,7 @@ contract MyOApp is OApp, OAppOptionsType3 {
     /// @param _dstEid   Destination Endpoint ID (uint32)
     /// @param _string  The string to send
     /// @param _options  Execution options for gas on the destination (bytes)
-    function sendString(
-        uint32       _dstEid,
-        string calldata _string,
-        bytes     calldata _options
-    )
-        external
-        payable
-    {
+    function sendString(uint32 _dstEid, string calldata _string, bytes calldata _options) external payable {
         // 1. (Optional) Update any local state here.
         //    e.g., record that a message was "sent":
         //    sentCount += 1;
@@ -106,15 +94,12 @@ contract MyOApp is OApp, OAppOptionsType3 {
     /// @dev   _executor  Executor address that delivered the message
     /// @dev   _extraData Additional data from the Executor (unused here)
     function _lzReceive(
-        Origin calldata    /*_origin*/,
-        bytes32            /*_guid*/,
-        bytes     calldata _message,
-        address            /*_executor*/,
-        bytes     calldata /*_extraData*/
-    )
-        internal
-        override
-    {
+        Origin calldata /*_origin*/,
+        bytes32 /*_guid*/,
+        bytes calldata _message,
+        address /*_executor*/,
+        bytes calldata /*_extraData*/
+    ) internal override {
         // 1. Decode the incoming bytes into a string
         //    You can use abi.decode, abi.decodePacked, or directly splice bytes
         //    if you know the format of your data structures
