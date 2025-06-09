@@ -24,8 +24,11 @@ export interface EvmArgs {
 }
 
 const PT_SEND = 0
-const GAS_LIMIT = 200_000 // Gas limit for the executor
-const MSG_VALUE_FOR_SOLANA = 2_500_000
+const GAS_LIMIT_SOLANA = 200_000 // Gas limit for the executor when sending to Solana
+const MSG_VALUE_SOLANA = 2_500_000 // For why this is necessary, see: https://docs.layerzero.network/v2/developers/solana/oft/account#setting-enforced-options-inbound-to-solana
+
+const GAS_LIMIT_DEFAULT = 80_000 // Gas limit for the executor when sending to EVM / Aptos
+const MSG_VALUE_DEFAULT = 0 // No msg.value needed for EVM / Aptos
 
 export async function sendEvm(
     { srcEid, dstEid, amount, to, oftAddress }: EvmArgs,
@@ -79,17 +82,6 @@ export async function sendEvm(
     // 5️⃣ normalize the user-supplied amount
     const amountUnits: BigNumber = parseUnits(amount, decimals)
 
-    // Decide how to encode `to` based on target chain:
-    const dstChain = endpointIdToChainType(dstEid)
-    let toBytes: string
-    if (dstChain === ChainType.SOLANA) {
-        // Base58→32-byte buffer
-        toBytes = makeBytes32(bs58.decode(to))
-    } else {
-        // hex string → Uint8Array → zero-pad to 32 bytes
-        toBytes = makeBytes32(to)
-    }
-
     const minDstGas: BigNumber = await oft.minDstGasLookup(dstEid, PT_SEND) // 0 = send, 1 = send_and_call
 
     assert(
@@ -97,7 +89,34 @@ export async function sendEvm(
         "minDstGas must be a non-0 value to bypass gas assertion part of EndpointV1. Ensure you have called 'npx hardhat lz:epv1:set-min-dst-gas' for the destination eid"
     )
 
-    const MSG_VALUE = MSG_VALUE_FOR_SOLANA // msg.value for the lzReceive() function on destination in wei
+    // Decide how to configure chain-specific values and encode `to`
+    const dstChain = endpointIdToChainType(dstEid)
+    let toBytes: string
+    let MSG_VALUE: number
+    let GAS_LIMIT: number
+
+    if (dstChain === ChainType.SOLANA) {
+        // 1️⃣ Validate & encode Base58 → 32-byte buffer
+        try {
+            toBytes = makeBytes32(bs58.decode(to))
+        } catch {
+            throw new Error(`Invalid Solana address: not valid Base58`)
+        }
+        // 2️⃣ Solana-specific fee settings
+        MSG_VALUE = MSG_VALUE_SOLANA
+        GAS_LIMIT = GAS_LIMIT_SOLANA
+    } else {
+        // 1️⃣ Validate & encode hex (EVM, Move, Hyperliquid, etc.) → 32-byte buffer
+        if (!/^0x[0-9a-fA-F]{40}$/.test(to)) {
+            throw new Error(`Invalid address: expected 0x-prefixed 40 hex chars`)
+        }
+        toBytes = makeBytes32(to)
+        // 2️⃣ Non-Solana fee settings
+        MSG_VALUE = MSG_VALUE_DEFAULT
+        GAS_LIMIT = GAS_LIMIT_DEFAULT
+    }
+
+    // 6️⃣ send
     const _options = Options.newOptions().addExecutorLzReceiveOption(GAS_LIMIT, MSG_VALUE)
     const adapterParams: BytesLike = _options.toBytes()
 
