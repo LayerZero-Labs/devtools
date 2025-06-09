@@ -4,6 +4,9 @@ logs
 pnpm-debug.log*
 pnpm-error.log*
 
+# Ignore deployments in examples folder when testing
+examples/deployments
+
 # Dependency directories
 node_modules/
 

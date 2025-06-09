@@ -109,31 +109,28 @@ Also set the `RPC_URL_SOLANA_TESTNET` value. Note that while the naming used her
 
 ### Prepare the OFT Program ID
 
-Create `programId` keypair files by running:
+Create the OFT `programId` keypair by running:
 
 ```bash
-solana-keygen new -o target/deploy/endpoint-keypair.json --force
-solana-keygen new -o target/deploy/oft-keypair.json --force
-
-anchor keys sync
+anchor keys sync -p oft
 ```
 
-:warning: `--force` flag overwrites the existing keys with the ones you generate.
+The above command will generate a keypair for the OFT program in your workspace if it doesn't yet exist, and also automatically update `Anchor.toml` to use the generated keypair's public key. The default path for the program's keypair will be `target/deploy/oft-keypair.json`.
 
-Run
+View the program ID's based on the generated keypairs:
 
 ```
 anchor keys list
 ```
 
-to view the generated programIds (public keys). The output should look something like this:
+You will see an output such as:
 
-```
-endpoint: <ENDPOINT_PROGRAM_ID>
-oft: <OFT_PROGRAM_ID>
+```bash
+endpoint: H3SKp4cL5rpzJDntDa2umKE9AHkGiyss1W8BNDndhHWp
+oft: DLZdefiak8Ur82eWp3Fii59RiCRZn3SjNCmweCdhf1DD
 ```
 
-Copy the OFT's program ID, which you will use in the build step.
+Copy the `oft` program ID value for use in the build step later.
 
 ### Building and Deploying the Solana OFT Program
 

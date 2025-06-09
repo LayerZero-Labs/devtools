@@ -1,5 +1,23 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 0.0.12
+
+### Patch Changes
+
+- e633f6d: patch: skip fork tests when forking testnet fails
+
+## 0.0.11
+
+### Patch Changes
+
+- 4416064: wrapper for viewing deployment state "spotDeployState" and adding in missing step to deploy the token on the spot order book
+
+## 0.0.10
+
+### Patch Changes
+
+- 8ebe612: fix: select HYPE token index by chainId - 150 for mainnet and 1150 for testnet
+
 ## 0.0.9
 
 ### Patch Changes
