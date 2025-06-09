@@ -8,8 +8,8 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import { IHyperAsset } from "../contracts/interfaces/IHyperLiquidComposerCore.sol";
-import { IHyperLiquidWritePrecompile } from "../contracts/interfaces/IHyperLiquidWritePrecompile.sol";
 import { IHYPEPrecompile } from "../contracts/interfaces/IHYPEPrecompile.sol";
+import { ICoreWriter } from "../contracts/interfaces/ICoreWriter.sol";
 
 import { HyperLiquidComposerCodec } from "../contracts/library/HyperLiquidComposerCodec.sol";
 
@@ -147,14 +147,11 @@ contract HyperLiquidComposerTest is Test {
         vm.expectEmit(address(oft));
         emit IERC20.Transfer(address(hyperLiquidComposer), ALICE.assetBridgeAddress, AMOUNT_TO_SEND);
 
-        // Expect the SpotSend event to be emitted
-        vm.expectEmit(hyperLiquidComposer.HLP_PRECOMPILE_WRITE());
-        emit IHyperLiquidWritePrecompile.SpotSend(
-            address(hyperLiquidComposer),
-            userB,
-            ALICE.coreIndexId,
-            uint64(AMOUNT_TO_SEND / 10 ** uint64(ALICE.decimalDiff))
-        );
+        uint64 coreAmount = hyperLiquidComposer.quoteHyperCoreAmount(AMOUNT_TO_SEND, true).core;
+        bytes memory action = abi.encodePacked(userB, ALICE.coreIndexId, coreAmount);
+        bytes memory payload = abi.encodePacked(abi.encodePacked(hyperLiquidComposer.SPOT_SEND_HEADER(), action));
+        vm.expectEmit(HLP_PRECOMPILE_WRITE);
+        emit ICoreWriter.RawAction(address(hyperLiquidComposer), payload);
 
         uint256 balanceBefore = oft.balanceOf(userB);
 
@@ -188,14 +185,11 @@ contract HyperLiquidComposerTest is Test {
         vm.expectEmit(address(oft));
         emit IERC20.Transfer(address(hyperLiquidComposer), ALICE.assetBridgeAddress, AMOUNT_TO_SEND);
 
-        // Expect the SpotSend event to be emitted - this is for the ALICE asset bridge
-        vm.expectEmit(hyperLiquidComposer.HLP_PRECOMPILE_WRITE());
-        emit IHyperLiquidWritePrecompile.SpotSend(
-            address(hyperLiquidComposer),
-            userB,
-            ALICE.coreIndexId,
-            uint64(AMOUNT_TO_SEND / 10 ** uint64(ALICE.decimalDiff))
-        );
+        uint64 coreAmount = hyperLiquidComposer.quoteHyperCoreAmount(AMOUNT_TO_SEND, true).core;
+        bytes memory action = abi.encodePacked(userB, ALICE.coreIndexId, coreAmount);
+        bytes memory payload = abi.encodePacked(abi.encodePacked(hyperLiquidComposer.SPOT_SEND_HEADER(), action));
+        vm.expectEmit(HLP_PRECOMPILE_WRITE);
+        emit ICoreWriter.RawAction(address(hyperLiquidComposer), payload);
 
         uint256 balanceBeforeBridge = HYPE.assetBridgeAddress.balance;
         uint256 balanceBeforeUserB = userB.balance;

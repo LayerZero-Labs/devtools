@@ -8,8 +8,8 @@ import { IOAppComposer } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces
 
 import { HyperLiquidComposerCodec } from "./library/HyperLiquidComposerCodec.sol";
 
-import { IHyperLiquidWritePrecompile } from "./interfaces/IHyperLiquidWritePrecompile.sol";
 import { IHyperLiquidComposerErrors } from "./interfaces/IHyperLiquidComposerErrors.sol";
+import { ICoreWriter } from "./interfaces/ICoreWriter.sol";
 
 import { HyperLiquidComposerCore, IHyperAsset, IHyperAssetAmount } from "./HyperLiquidComposerCore.sol";
 
@@ -160,8 +160,10 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
             /// Transfers the tokens to the composer address on HyperCore
             token.safeTransfer(oftAsset.assetBridgeAddress, amounts.evm);
 
+            bytes memory action = abi.encodePacked(_receiver, oftAsset.coreIndexId, amounts.core);
+            bytes memory payload = abi.encodePacked(abi.encodePacked(SPOT_SEND_HEADER, action));
             /// Transfers tokens from the composer address on HyperCore to the _receiver
-            IHyperLiquidWritePrecompile(HLP_PRECOMPILE_WRITE).sendSpot(_receiver, oftAsset.coreIndexId, amounts.core);
+            ICoreWriter(HLP_PRECOMPILE_WRITE).sendRawAction(payload);
         }
         /// Transfers any leftover dust to the _receiver on HyperEVM
         if (amounts.dust > 0) {
@@ -193,8 +195,10 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
             revert IHyperLiquidComposerErrors.HyperLiquidComposer_FailedToSend_HYPE(_amount);
         }
 
+        bytes memory action = abi.encodePacked(_receiver, hypeAsset.coreIndexId, amounts.core);
+        bytes memory payload = abi.encodePacked(abi.encodePacked(SPOT_SEND_HEADER, action));
         /// Transfers HYPE tokens from the composer address on HyperCore to the _receiver via the SpotSend precompile
-        IHyperLiquidWritePrecompile(HLP_PRECOMPILE_WRITE).sendSpot(_receiver, hypeAsset.coreIndexId, amounts.core);
+        ICoreWriter(HLP_PRECOMPILE_WRITE).sendRawAction(payload);
 
         /// @dev Tries transferring any leftover dust to the _receiver on HyperEVM
         /// @dev If the transfer fails, we try refunding it to the executor and if that fails then we refund the tx.origin as to not have any dust locked in the contract

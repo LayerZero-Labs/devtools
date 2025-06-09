@@ -35,6 +35,7 @@ interface IHyperLiquidComposerCore {
     function token() external view returns (IERC20);
     function HLP_PRECOMPILE_WRITE() external view returns (address);
     function HLP_PRECOMPILE_READ_SPOT_BALANCE() external view returns (address);
+    function SPOT_SEND_HEADER() external view returns (bytes memory);
 
     function oftAsset() external view returns (address, uint64, int64);
     function hypeAsset() external view returns (address, uint64, int64);
