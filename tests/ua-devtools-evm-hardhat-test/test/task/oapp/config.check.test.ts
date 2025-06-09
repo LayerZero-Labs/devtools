@@ -18,6 +18,34 @@ describe(`task ${TASK_LZ_OAPP_PEERS_GET}`, () => {
         return path
     }
 
+    // Helper function to filter out logo output from console.log calls
+    const filterLogoOutput = (calls: any[][]) => {
+        return calls.filter((call) => {
+            const output = call[0]
+            if (typeof output !== 'string') {
+                return true
+            }
+
+            // Filter out logo-related output by checking for logo box characters and LayerZero branding
+            const isLogoOutput =
+                output.includes('╭') ||
+                output.includes('╰') ||
+                (output.includes('│') &&
+                    (output.includes('▓▓▓ LayerZero DevTools ▓▓▓') ||
+                        output.includes('BUILD ANYTHING') ||
+                        output.includes('OMNICHAIN') ||
+                        output.includes('/*\\') ||
+                        output.includes("('v')") ||
+                        output.includes('//-=-\\\\') ||
+                        output.includes('(\\_=_/)') ||
+                        output.includes('^^ ^^') ||
+                        output.includes('═══════════════════════════════════') ||
+                        output.includes('▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓')))
+
+            return !isLogoOutput
+        })
+    }
+
     beforeAll(async () => {
         await deployContract('EndpointV2')
         await setupDefaultEndpointV2()
@@ -29,14 +57,14 @@ describe(`task ${TASK_LZ_OAPP_PEERS_GET}`, () => {
     })
 
     afterEach(() => {
-        consoleSpy.mockRestore()
+        consoleSpy?.mockRestore()
     })
 
     it('should show no chains are connected with two networks', async () => {
         const oappConfig = configPathFixture('valid.config.connected.js')
         consoleSpy.mockClear()
         await hre.run(TASK_LZ_OAPP_PEERS_GET, { oappConfig })
-        expect(consoleSpy.mock.calls).toMatchSnapshot()
+        expect(filterLogoOutput(consoleSpy.mock.calls)).toMatchSnapshot()
     })
 
     it('should show all chains are connected after running wire with two networks', async () => {
@@ -44,7 +72,7 @@ describe(`task ${TASK_LZ_OAPP_PEERS_GET}`, () => {
         await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
         consoleSpy.mockClear()
         await hre.run(TASK_LZ_OAPP_PEERS_GET, { oappConfig })
-        expect(consoleSpy.mock.calls).toMatchSnapshot()
+        expect(filterLogoOutput(consoleSpy.mock.calls)).toMatchSnapshot()
     })
 
     it('should show all chains are connected after running wire with three networks', async () => {
@@ -52,14 +80,14 @@ describe(`task ${TASK_LZ_OAPP_PEERS_GET}`, () => {
         await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
         consoleSpy.mockClear()
         await hre.run(TASK_LZ_OAPP_PEERS_GET, { oappConfig })
-        expect(consoleSpy.mock.calls).toMatchSnapshot()
+        expect(filterLogoOutput(consoleSpy.mock.calls)).toMatchSnapshot()
     })
 
     it('should show all chains are connected expect one after running wire with three networks', async () => {
         const oappConfig = configPathFixture('valid.multi.network.config.missing.connection.js')
         await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
         await hre.run(TASK_LZ_OAPP_PEERS_GET, { oappConfig })
-        expect(consoleSpy.mock.calls).toMatchSnapshot()
+        expect(filterLogoOutput(consoleSpy.mock.calls)).toMatchSnapshot()
     })
 
     it('should show all chains are not connected expect one after running wire with three networks', async () => {
@@ -68,7 +96,7 @@ describe(`task ${TASK_LZ_OAPP_PEERS_GET}`, () => {
         consoleSpy.mockClear()
 
         await hre.run(TASK_LZ_OAPP_PEERS_GET, { oappConfig })
-        expect(consoleSpy.mock.calls).toMatchSnapshot()
+        expect(filterLogoOutput(consoleSpy.mock.calls)).toMatchSnapshot()
     })
 
     it('should show enforced options for one pathway', async () => {
@@ -76,7 +104,7 @@ describe(`task ${TASK_LZ_OAPP_PEERS_GET}`, () => {
         await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
         consoleSpy.mockClear()
         await hre.run(TASK_LZ_OAPP_ENFORCED_OPTS_GET, { oappConfig })
-        expect(consoleSpy.mock.calls).toMatchSnapshot()
+        expect(filterLogoOutput(consoleSpy.mock.calls)).toMatchSnapshot()
     })
 
     it('should show a standard lzReceive setting for all pathways', async () => {
@@ -84,7 +112,7 @@ describe(`task ${TASK_LZ_OAPP_PEERS_GET}`, () => {
         await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
         consoleSpy.mockClear()
         await hre.run(TASK_LZ_OAPP_ENFORCED_OPTS_GET, { oappConfig })
-        expect(consoleSpy.mock.calls).toMatchSnapshot()
+        expect(filterLogoOutput(consoleSpy.mock.calls)).toMatchSnapshot()
     })
 
     it('should show different combined enforced options for all pathways', async () => {
@@ -92,6 +120,6 @@ describe(`task ${TASK_LZ_OAPP_PEERS_GET}`, () => {
         await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
         consoleSpy.mockClear()
         await hre.run(TASK_LZ_OAPP_ENFORCED_OPTS_GET, { oappConfig })
-        expect(consoleSpy.mock.calls).toMatchSnapshot()
+        expect(filterLogoOutput(consoleSpy.mock.calls)).toMatchSnapshot()
     })
 })
