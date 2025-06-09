@@ -26,7 +26,7 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
 
     bytes public constant SPOT_SEND_HEADER = hex"1600";
 
-    address public constant HLP_PRECOMPILE_WRITE = 0x3333333333333333333333333333333333333333;
+    address public constant HLP_CORE_WRITER = 0x3333333333333333333333333333333333333333;
     address public constant HLP_PRECOMPILE_READ_SPOT_BALANCE = 0x0000000000000000000000000000000000000801;
 
     // https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm#mainnet

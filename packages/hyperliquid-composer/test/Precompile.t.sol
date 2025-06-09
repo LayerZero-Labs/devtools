@@ -24,7 +24,7 @@ contract PrecompileTest is Test {
     TypeConversionTest public typeConversionTest;
 
     address public constant HL_LZ_ENDPOINT_V2 = 0xf9e1815F151024bDE4B7C10BAC10e8Ba9F6b53E1;
-    address public constant HLP_PRECOMPILE_WRITE = 0x3333333333333333333333333333333333333333;
+    address public constant HLP_CORE_WRITER = 0x3333333333333333333333333333333333333333;
     address public constant HLP_PRECOMPILE_READ_SPOT_BALANCE = 0x0000000000000000000000000000000000000801;
     uint64 public constant AMOUNT_TO_SEND = 1e18;
     uint64 public constant AMOUNT_TO_FUND = 100 gwei;

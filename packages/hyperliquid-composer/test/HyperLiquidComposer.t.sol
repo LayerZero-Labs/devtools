@@ -26,7 +26,7 @@ contract HyperLiquidComposerTest is Test {
     address public constant HL_LZ_ENDPOINT_V2_TESTNET = 0xf9e1815F151024bDE4B7C10BAC10e8Ba9F6b53E1;
     address public constant HL_LZ_ENDPOINT_V2_MAINNET = 0x3A73033C0b1407574C76BdBAc67f126f6b4a9AA9;
 
-    address public constant HLP_PRECOMPILE_WRITE = 0x3333333333333333333333333333333333333333;
+    address public constant HLP_CORE_WRITER = 0x3333333333333333333333333333333333333333;
     address public constant HLP_PRECOMPILE_READ_SPOT_BALANCE = 0x0000000000000000000000000000000000000801;
     // Ethereum Sepolia
     uint32 public constant SRC_EID = 40161;
@@ -150,7 +150,7 @@ contract HyperLiquidComposerTest is Test {
         uint64 coreAmount = hyperLiquidComposer.quoteHyperCoreAmount(AMOUNT_TO_SEND, true).core;
         bytes memory action = abi.encodePacked(userB, ALICE.coreIndexId, coreAmount);
         bytes memory payload = abi.encodePacked(abi.encodePacked(hyperLiquidComposer.SPOT_SEND_HEADER(), action));
-        vm.expectEmit(HLP_PRECOMPILE_WRITE);
+        vm.expectEmit(HLP_CORE_WRITER);
         emit ICoreWriter.RawAction(address(hyperLiquidComposer), payload);
 
         uint256 balanceBefore = oft.balanceOf(userB);
@@ -188,7 +188,7 @@ contract HyperLiquidComposerTest is Test {
         uint64 coreAmount = hyperLiquidComposer.quoteHyperCoreAmount(AMOUNT_TO_SEND, true).core;
         bytes memory action = abi.encodePacked(userB, ALICE.coreIndexId, coreAmount);
         bytes memory payload = abi.encodePacked(abi.encodePacked(hyperLiquidComposer.SPOT_SEND_HEADER(), action));
-        vm.expectEmit(HLP_PRECOMPILE_WRITE);
+        vm.expectEmit(HLP_CORE_WRITER);
         emit ICoreWriter.RawAction(address(hyperLiquidComposer), payload);
 
         uint256 balanceBeforeBridge = HYPE.assetBridgeAddress.balance;

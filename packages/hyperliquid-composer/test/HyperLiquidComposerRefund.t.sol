@@ -21,7 +21,7 @@ contract HyperLiquidComposerRefundTest is Test {
     IHyperAsset public ALICE;
     IHyperAsset public HYPE;
     address public constant HL_LZ_ENDPOINT_V2 = 0xf9e1815F151024bDE4B7C10BAC10e8Ba9F6b53E1;
-    address public constant HLP_PRECOMPILE_WRITE = 0x3333333333333333333333333333333333333333;
+    address public constant HLP_CORE_WRITER = 0x3333333333333333333333333333333333333333;
     address public constant HLP_PRECOMPILE_READ_SPOT_BALANCE = 0x0000000000000000000000000000000000000801;
 
     // Ethereum Sepolia

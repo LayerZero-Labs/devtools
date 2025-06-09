@@ -163,7 +163,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
             bytes memory action = abi.encodePacked(_receiver, oftAsset.coreIndexId, amounts.core);
             bytes memory payload = abi.encodePacked(abi.encodePacked(SPOT_SEND_HEADER, action));
             /// Transfers tokens from the composer address on HyperCore to the _receiver
-            ICoreWriter(HLP_PRECOMPILE_WRITE).sendRawAction(payload);
+            ICoreWriter(HLP_CORE_WRITER).sendRawAction(payload);
         }
         /// Transfers any leftover dust to the _receiver on HyperEVM
         if (amounts.dust > 0) {
@@ -198,7 +198,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         bytes memory action = abi.encodePacked(_receiver, hypeAsset.coreIndexId, amounts.core);
         bytes memory payload = abi.encodePacked(abi.encodePacked(SPOT_SEND_HEADER, action));
         /// Transfers HYPE tokens from the composer address on HyperCore to the _receiver via the SpotSend precompile
-        ICoreWriter(HLP_PRECOMPILE_WRITE).sendRawAction(payload);
+        ICoreWriter(HLP_CORE_WRITER).sendRawAction(payload);
 
         /// @dev Tries transferring any leftover dust to the _receiver on HyperEVM
         /// @dev If the transfer fails, we try refunding it to the executor and if that fails then we refund the tx.origin as to not have any dust locked in the contract
