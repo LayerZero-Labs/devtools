@@ -3,13 +3,10 @@ import { PublicKey } from '@solana/web3.js'
 import { OmniPoint } from '@layerzerolabs/devtools'
 import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import { createSolanaConnectionFactory, createSolanaSignerFactory } from '@layerzerolabs/devtools-solana'
-import { createLogger } from '@layerzerolabs/io-devtools'
 import { ChainType, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
 import { IOApp } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { createOFTFactory } from '@layerzerolabs/ua-devtools-solana'
-
-const logger = createLogger()
 
 export { createSolanaConnectionFactory }
 
