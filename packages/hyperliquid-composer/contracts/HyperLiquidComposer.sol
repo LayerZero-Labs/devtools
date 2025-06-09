@@ -120,10 +120,17 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
 
         /// @dev If the message is being sent with a value, we fund the address on HyperCore
         if (msg.value > 0) {
-            _fundAddressOnHyperCore(receiver, msg.value, _executor);
+            try this.fundAddressOnHyperCore(receiver, msg.value, _executor) {} catch (bytes memory _err) {
+                this.refundNativeTokens{ value: msg.value }(receiver);
+                bytes memory errMsg = completeRefund(_err, _executor);
+                emit ErrorMessage(errMsg);
+            }
         }
 
-        _sendAssetToHyperCore(receiver, amountLD);
+        try this.sendAssetToHyperCore(receiver, amountLD) {} catch (bytes memory _err) {
+            this.refundERC20(receiver, amountLD);
+            emit ErrorSpot_FailedToSend(receiver, oftAsset.coreIndexId, amountLD, _err);
+        }
     }
 
     /// @notice Transfers the asset to the _receiver on HyperCore through the SpotSend precompile
@@ -140,7 +147,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
     ///
     /// @param _receiver The address of the receiver
     /// @param _amountLD The amount of tokens to send
-    function _sendAssetToHyperCore(address _receiver, uint256 _amountLD) internal virtual {
+    function sendAssetToHyperCore(address _receiver, uint256 _amountLD) external virtual {
         /// @dev Computes the tokens to send to HyperCore, dust (refund amount), and the swap amount.
         /// @dev It also takes into account the maximum transferable amount at any given time.
         /// @dev This is done by reading from HLP_PRECOMPILE_READ_SPOT_BALANCE the tokens on the HyperCore side of the asset bridge
@@ -172,7 +179,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
     ///
     /// @param _receiver The address of the receiver
     /// @param _amount The amount of HYPE tokens to send
-    function _fundAddressOnHyperCore(address _receiver, uint256 _amount, address _executor) internal virtual {
+    function fundAddressOnHyperCore(address _receiver, uint256 _amount, address _executor) external virtual {
         /// @dev Computes the tokens to send to HyperCore, dust (refund amount), and the swap amount.
         /// @dev It also takes into account the maximum transferable amount at any given time.
         /// @dev This is done by reading from HLP_PRECOMPILE_READ_SPOT_BALANCE the tokens on the HyperCore side of the asset bridge

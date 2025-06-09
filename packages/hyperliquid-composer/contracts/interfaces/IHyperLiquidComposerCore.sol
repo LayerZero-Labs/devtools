@@ -22,6 +22,8 @@ interface IHyperLiquidComposerCore {
     event ErrorERC20_Refund(address refundTo, uint256 refundAmount);
     // 0x0b0fd82e
     event ErrorHYPE_Refund(address refundTo, uint256 refundAmount);
+    // 0x293d98c5
+    event ErrorSpot_FailedToSend(address to, uint64 tokenId, uint256 amount, bytes errorMessage);
     // 0x612baef0
     event ErrorMessage(bytes reason);
 
