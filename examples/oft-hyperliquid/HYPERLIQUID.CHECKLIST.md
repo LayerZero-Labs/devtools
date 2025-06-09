@@ -104,6 +104,7 @@ Block switching is not present in the default oft deploy script.
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-56-createspotdeployment)
 - Step MUST be run even though we set `noHyperliquidity=true` in genesis
 - This can be run even after deployment and linking
+- [ ] Run this step only before market makers are ready to provide liquidity. Otherwise users can trade your token at arbitrary prices.
 
 ### Step 2.6 : Set deployer fee share
 

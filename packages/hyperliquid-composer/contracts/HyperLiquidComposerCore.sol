@@ -6,7 +6,6 @@ import { SafeERC20, IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/Saf
 
 import { HyperLiquidComposerCodec } from "./library/HyperLiquidComposerCodec.sol";
 import { IHyperLiquidComposerErrors, ErrorMessagePayload } from "./interfaces/IHyperLiquidComposerErrors.sol";
-import { IHyperLiquidWritePrecompile } from "./interfaces/IHyperLiquidWritePrecompile.sol";
 import { IHyperLiquidReadPrecompile } from "./interfaces/IHyperLiquidReadPrecompile.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 import { IHyperLiquidComposerCore, IHyperAsset, IHyperAssetAmount } from "./interfaces/IHyperLiquidComposerCore.sol";
@@ -25,7 +24,11 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
         _;
     }
 
-    address public constant HLP_PRECOMPILE_WRITE = 0x3333333333333333333333333333333333333333;
+    bytes public constant CORE_WRITER_VERSION = hex"01";
+    bytes public constant SPOT_SEND_ACTION_ID = hex"000006";
+    bytes public constant SPOT_SEND_HEADER = abi.encodePacked(CORE_WRITER_VERSION, SPOT_SEND_ACTION_ID); // 0x01000006
+
+    address public constant HLP_CORE_WRITER = 0x3333333333333333333333333333333333333333;
     address public constant HLP_PRECOMPILE_READ_SPOT_BALANCE = 0x0000000000000000000000000000000000000801;
 
     // https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm#mainnet

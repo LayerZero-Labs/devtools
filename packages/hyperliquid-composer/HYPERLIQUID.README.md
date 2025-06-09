@@ -118,7 +118,7 @@ The system contracts are:
 and `L1ActionPrecompiles`
 
 - `0x0000000000000000000000000000000000000000` is one of the many `L1Read` precompiles.
-- `0x3333333333333333333333333333333333333333` is the `L1WritePrecompile` and is used to send transactions to HyperCore.
+- `0x3333333333333333333333333333333333333333` is the `CoreWriter` and is used to send transactions to HyperCore.
 
 More `L1ActionPrecompiles` found [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/interacting-with-hypercore).
 
@@ -229,7 +229,7 @@ struct SendParam {
 }
 ```
 
-Now that the token is with the `Composer` on HyperCore it then performs a `L1WritePrecompile` transaction to `0x33...333` (the `L1WritePrecompile` address) telling it to perform a `spot transfer` of the tokens from it's address to the `receiver`.
+Now that the token is with the `Composer` on HyperCore it then performs a `CoreWriter` transaction to `0x33...333` (the `CoreWriter` address) telling it to perform a `spot transfer` of the tokens from it's address to the `receiver`.
 
 It must be noted that due to the token decimal difference between the `EVM::ERC20` and `HyperCore::HIP1` the tokens you see on `HyperCore` would be different with the wei decimal different (`HIP1.decimals()` - `ERC20.decimals()` in range `[-2,18]`). But when converting them back from `HyperCore` to `HyperEVM` the token decimals gets restored.
 
@@ -284,11 +284,16 @@ function _sendAssetToHyperCore(
 
   if (amounts.evm > 0) {
     token.safeTransfer(oftAsset.assetBridgeAddress, amounts.evm);
-    IHyperLiquidWritePrecompile(HLP_PRECOMPILE_WRITE).sendSpot(
+    bytes memory action = abi.encodePacked(
       _receiver,
       oftAsset.coreIndexId,
       amounts.core
     );
+    bytes memory payload = abi.encodePacked(
+      abi.encodePacked(hex"1600", action) // 1600 is the [version][actionId][actionBytes] - https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/interacting-with-hypercore#action-encoding-details
+    );
+    /// Transfers tokens from the composer address on HyperCore to the _receiver
+    ICoreWriter(HLP_PRECOMPILE_WRITE).sendRawAction(payload);
   }
   if (amounts.dust > 0) {
     token.safeTransfer(_receiver, amounts.dust);
