@@ -1,5 +1,11 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 0.0.13
+
+### Patch Changes
+
+- 9c0c90c: using CoreWriter instead of WritePrecompile
+
 ## 0.0.12
 
 ### Patch Changes
