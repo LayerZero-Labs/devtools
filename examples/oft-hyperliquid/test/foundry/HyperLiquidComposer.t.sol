@@ -122,8 +122,8 @@ contract HyperLiquidComposerTest is Test {
         emit IERC20.Transfer(address(hyperLiquidComposer), ALICE.assetBridgeAddress, AMOUNT_TO_SEND);
 
         uint64 coreAmount = hyperLiquidComposer.quoteHyperCoreAmount(AMOUNT_TO_SEND, true).core;
-        bytes memory action = abi.encodePacked(userB, ALICE.coreIndexId, coreAmount);
-        bytes memory payload = abi.encodePacked(abi.encodePacked(hyperLiquidComposer.SPOT_SEND_HEADER(), action));
+        bytes memory action = abi.encode(userB, ALICE.coreIndexId, coreAmount);
+        bytes memory payload = abi.encodePacked(hyperLiquidComposer.SPOT_SEND_HEADER(), action);
         vm.expectEmit(HLP_CORE_WRITER);
         emit ICoreWriter.RawAction(address(hyperLiquidComposer), payload);
 
@@ -160,8 +160,8 @@ contract HyperLiquidComposerTest is Test {
         emit IERC20.Transfer(address(hyperLiquidComposer), ALICE.assetBridgeAddress, AMOUNT_TO_SEND);
 
         uint64 coreAmount = hyperLiquidComposer.quoteHyperCoreAmount(AMOUNT_TO_SEND, true).core;
-        bytes memory action = abi.encodePacked(userB, ALICE.coreIndexId, coreAmount);
-        bytes memory payload = abi.encodePacked(abi.encodePacked(hyperLiquidComposer.SPOT_SEND_HEADER(), action));
+        bytes memory action = abi.encode(userB, ALICE.coreIndexId, coreAmount);
+        bytes memory payload = abi.encodePacked(hyperLiquidComposer.SPOT_SEND_HEADER(), action);
         vm.expectEmit(HLP_CORE_WRITER);
         emit ICoreWriter.RawAction(address(hyperLiquidComposer), payload);
 

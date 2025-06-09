@@ -24,7 +24,9 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
         _;
     }
 
-    bytes public constant SPOT_SEND_HEADER = hex"1600";
+    bytes public constant CORE_WRITER_VERSION = hex"01";
+    bytes public constant SPOT_SEND_ACTION_ID = hex"000006";
+    bytes public constant SPOT_SEND_HEADER = abi.encodePacked(CORE_WRITER_VERSION, SPOT_SEND_ACTION_ID); // 0x01000006
 
     address public constant HLP_CORE_WRITER = 0x3333333333333333333333333333333333333333;
     address public constant HLP_PRECOMPILE_READ_SPOT_BALANCE = 0x0000000000000000000000000000000000000801;

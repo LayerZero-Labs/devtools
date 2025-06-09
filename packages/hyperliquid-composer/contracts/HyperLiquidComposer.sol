@@ -160,8 +160,8 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
             /// Transfers the tokens to the composer address on HyperCore
             token.safeTransfer(oftAsset.assetBridgeAddress, amounts.evm);
 
-            bytes memory action = abi.encodePacked(_receiver, oftAsset.coreIndexId, amounts.core);
-            bytes memory payload = abi.encodePacked(abi.encodePacked(SPOT_SEND_HEADER, action));
+            bytes memory action = abi.encode(_receiver, oftAsset.coreIndexId, amounts.core);
+            bytes memory payload = abi.encodePacked(SPOT_SEND_HEADER, action);
             /// Transfers tokens from the composer address on HyperCore to the _receiver
             ICoreWriter(HLP_CORE_WRITER).sendRawAction(payload);
         }
@@ -195,8 +195,8 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
             revert IHyperLiquidComposerErrors.HyperLiquidComposer_FailedToSend_HYPE(_amount);
         }
 
-        bytes memory action = abi.encodePacked(_receiver, hypeAsset.coreIndexId, amounts.core);
-        bytes memory payload = abi.encodePacked(abi.encodePacked(SPOT_SEND_HEADER, action));
+        bytes memory action = abi.encode(_receiver, hypeAsset.coreIndexId, amounts.core);
+        bytes memory payload = abi.encodePacked(SPOT_SEND_HEADER, action);
         /// Transfers HYPE tokens from the composer address on HyperCore to the _receiver via the SpotSend precompile
         ICoreWriter(HLP_CORE_WRITER).sendRawAction(payload);
 
