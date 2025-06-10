@@ -113,10 +113,23 @@ export const getExamples = (): Example[] => {
         // OApp Read examples are feature flagged for the time being
         ...(process.env.LZ_ENABLE_READ_EXAMPLE
             ? [
-                  { id: 'oapp-read', label: 'OAppRead', repository, directory: 'examples/oapp-read', ref },
+                  {
+                      id: 'oapp-read',
+                      label: 'lzRead View/Pure Functions Example',
+                      repository,
+                      directory: 'examples/oapp-read',
+                      ref,
+                  },
+                  {
+                      id: 'view-pure-read',
+                      label: 'lzRead Public Variables Example',
+                      repository,
+                      directory: 'examples/view-pure-read',
+                      ref,
+                  },
                   {
                       id: 'uniswap-read',
-                      label: 'UniswapV3 Quote',
+                      label: 'lzRead UniswapV3 Quote',
                       repository,
                       directory: 'examples/uniswap-read',
                       ref,
