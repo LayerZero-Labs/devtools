@@ -50,7 +50,6 @@
     "@types/chai": "^4.3.11",
     "@types/mocha": "^10.0.6",
     "@types/node": "~18.18.14",
-    "bs58": "^5.0.0",
     "chai": "^4.4.1",
     "concurrently": "~9.1.0",
     "dotenv": "^16.4.1",

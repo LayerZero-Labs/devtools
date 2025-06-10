@@ -1,12 +1,11 @@
-import bs58 from 'bs58'
 import { BigNumber, ContractTransaction } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
-import { makeBytes32 } from '@layerzerolabs/devtools'
 import { createGetHreByEid } from '@layerzerolabs/devtools-evm-hardhat'
 import { createLogger } from '@layerzerolabs/io-devtools'
 import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
+import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 
 import layerzeroConfig from '../layerzero.config'
 
@@ -76,16 +75,8 @@ export async function sendEvm(
     // 5️⃣ normalize the user-supplied amount
     const amountUnits: BigNumber = parseUnits(amount, decimals)
 
-    // Decide how to encode `to` based on target chain:
-    const dstChain = endpointIdToChainType(dstEid)
-    let toBytes: string
-    if (dstChain === ChainType.SOLANA) {
-        // Base58→32-byte buffer
-        toBytes = makeBytes32(bs58.decode(to))
-    } else {
-        // hex string → Uint8Array → zero-pad to 32 bytes
-        toBytes = makeBytes32(to)
-    }
+    // hex string → Uint8Array → zero-pad to 32 bytes
+    const toBytes = addressToBytes32(to).toString()
 
     // 6️⃣ build sendParam and dispatch
     const sendParam = {
