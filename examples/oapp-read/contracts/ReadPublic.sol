@@ -13,7 +13,7 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 /// @title IExampleContract
 /// @notice Interface for the ExampleContract's `data()` function.
 interface IExampleContract {
-    function data() external view returns (uint256);
+    function data() public view returns (uint256);
 }
 
 /// @title ReadPublic
