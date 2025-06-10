@@ -147,7 +147,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
     ///
     /// @param _receiver The address of the receiver
     /// @param _amountLD The amount of tokens to send
-    function sendAssetToHyperCore(address _receiver, uint256 _amountLD) external virtual {
+    function sendAssetToHyperCore(address _receiver, uint256 _amountLD) external virtual onlyComposer {
         /// @dev Computes the tokens to send to HyperCore, dust (refund amount), and the swap amount.
         /// @dev It also takes into account the maximum transferable amount at any given time.
         /// @dev This is done by reading from HLP_PRECOMPILE_READ_SPOT_BALANCE the tokens on the HyperCore side of the asset bridge
@@ -181,7 +181,11 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
     ///
     /// @param _receiver The address of the receiver
     /// @param _amount The amount of HYPE tokens to send
-    function fundAddressOnHyperCore(address _receiver, uint256 _amount, address _executor) external virtual {
+    function fundAddressOnHyperCore(
+        address _receiver,
+        uint256 _amount,
+        address _executor
+    ) external virtual onlyComposer {
         /// @dev Computes the tokens to send to HyperCore, dust (refund amount), and the swap amount.
         /// @dev It also takes into account the maximum transferable amount at any given time.
         /// @dev This is done by reading from HLP_PRECOMPILE_READ_SPOT_BALANCE the tokens on the HyperCore side of the asset bridge
