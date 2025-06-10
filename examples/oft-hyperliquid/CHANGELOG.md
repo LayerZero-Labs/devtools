@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 0.0.8
+
+### Patch Changes
+
+- 9c0c90c: using CoreWriter instead of WritePrecompile
+
 ## 0.0.7
 
 ### Patch Changes
