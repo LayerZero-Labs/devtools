@@ -4,7 +4,7 @@ We first start this document by talking about Hyperliquid, its quirks and the ch
 
 ## Hyperliquid Networks
 
-Hyperliquid has 2 “chains” - an `EVM` named `HyperEVM` and a `L1` called `HyperCore`.
+Hyperliquid consists of - an `EVM` named `HyperEVM` and a `L1` called `HyperCore`. These networks function together under the same `HyperBFT` consensus to act as a singular network.
 
 HyperCore, or Core, is a high-performance Layer 1 which manages the Hyperliquid exchange’s on-chain perpetual futures and spot order books with one-block finality. ​
 
@@ -15,8 +15,6 @@ The `EVM` has precompiles that let you interact with `HyperCore`. The `HyperCore
 You can interact with `HyperEVM` via traditional `eth_` rpc calls - full list [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/evm/json-rpc).
 
 `HyperCore` however takes in a domain specific calls named `L1 actions` or `actions` - full list [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/exchange-endpoint).
-
-Note: archival nodes are NOT available on `HyperEVM`.
 
 `HyperEVM` and `HyperCore` have their own block explorers. A list of explorers is [here](https://hyperliquid-co.gitbook.io/community-docs/community-and-projects/ecosystem-projects/tools). I personally use hypurrscan for `HyperCore` - <https://testnet.hypurrscan.io/> and for `HyperEVM` I use purrsec - <https://testnet.purrsec.com/>.
 
@@ -88,7 +86,7 @@ You can use the same account on `HyperEVM` and `HyperCore`, this is because `Hyp
 
 Since `HyperEVM` and `HyperCore` are seperate entities they have their own blocks. `Hyperliquid` interleaves the EVM and Core blocks in order of which they are created.
 
-`HyperEVM` has 2 blocks - "small blocks" that are designed for increased throughput and therefore have a quick block time and have a lower max gas limit - 2 seconds and 2M gas (this is the default) - these blocks are meant for transactions that update state and not really for deploying. While you can deploy contracts that consume lower than 2M gas (out OFTs are larger than 2M) you would need "big blocks" that are allow for a larger max gas (30M gas) at the tradeoff of there only being 1 block per minute. Every "big blocks" only has 1 transaction.
+`HyperEVM` has 2 blocks - "small blocks" that are designed for increased throughput and therefore have a quick block time and have a lower max gas limit - 1 second and 2M gas (this is the default) - these blocks are meant for transactions that update state and not really for deploying. While you can deploy contracts that consume lower than 2M gas (out OFTs are larger than 2M) you would need "big blocks" that are allow for a larger max gas (30M gas) at the tradeoff of there only being 1 block per minute. Every "big blocks" only has 1 transaction.
 
 They are both EVM blocks and you can toggle between them by sending an L1 action of type `evmUserModify` which is what [this block toggler does](https://hyperevm-block-toggle.vercel.app/)
 
@@ -106,7 +104,7 @@ You can also use `bigBlockGasPrice` instead of `gasPrice` in your transactions.
 [Core]-[Core]-[EVM-small]-[Core]-[Core]-[EVM-small]-[Core]-[EVM-large]-[Core]-[EVM-small]
 ```
 
-## Precompiles
+## Precompiles and System Contracts
 
 There are 2 ways in which Hyperliquid uses precompiles - "System Contracts" and "L1ActionPrecompiles"
 
@@ -114,17 +112,17 @@ The system contracts are:
 
 - `0x2222222222222222222222222222222222222222` is the system contract address for the `HYPE` token
 - `0x200000000000000000000000000000000000abcd` is the system contract address for a created Core Spot token
+- `0x3333333333333333333333333333333333333333` is the `CoreWriter` and is used to send transactions to HyperCore.
 
 and `L1ActionPrecompiles`
 
 - `0x0000000000000000000000000000000000000000` is one of the many `L1Read` precompiles.
-- `0x3333333333333333333333333333333333333333` is the `L1WritePrecompile` and is used to send transactions to HyperCore.
 
 More `L1ActionPrecompiles` found [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/interacting-with-hypercore).
 
-`L1Read` reads from the last produced `HyperCore` block at the time of EVM-transaction execution. Similarly `L1Write` writes to the first produced `HyperCore` block after the production of the EVM-block.
+`L1Read` reads from the last produced `HyperCore` block at the time of EVM-transaction execution. Similarly `CoreWriter` writes to the first produced `HyperCore` block after the production of the EVM-block. This is available on both Testnet and Mainnet.
 
-Note: the `L1Read` and `L1Write` precompiles are enabled only on Testnet. We have no timeline from the Hyperliquid team regarding a mainnet launch, although they have updated their mainnet node to support them.
+> Note: The `CoreWriter` precompiles are enabled only on Testnet. There is no publicly available timeline for a mainnet rollout, although the mainnet node software includes support for these precompiles.
 
 ## Token Standards
 
@@ -194,8 +192,7 @@ HyperEVM can send state to HyperCore through `events` at certain `precompile` ad
 Spot assets can be sent from HyperEVM to HyperCore and vice versa. They are called `Core Spot` and `EVM Spot`.
 These are done by sending an `ERC20::transfer` with asset bridge address as the recipient.
 
-The event emitted is `Transfer(address from, address to, uint256 value)` => `Transfer(_from, assetBridgeAddress, value);`
-And this is picked up by the Hyperliquid team running the backend. (we do not have move information about this it is closed source and owned by the Hyperliquid team)
+The event emitted is `Transfer(address from, address to, uint256 value)` => `Transfer(_from, assetBridgeAddress, value);` which is processed by supporting infrastructure on the Hyperliquid blockchain.
 
 Note: The transaction MUST be sent to the `assetBridgeAddress`. Transfers to any other address is an address-address transfer within HyperEVM/HyperCore. For a cross-chain transfer you need to to:
 
@@ -229,7 +226,7 @@ struct SendParam {
 }
 ```
 
-Now that the token is with the `Composer` on HyperCore it then performs a `L1WritePrecompile` transaction to `0x33...333` (the `L1WritePrecompile` address) telling it to perform a `spot transfer` of the tokens from it's address to the `receiver`.
+Now that the token is with the `Composer` on HyperCore it then performs a `CoreWriter` transaction to `0x33...333` (the `CoreWriter` address) telling it to perform a `spot transfer` of the tokens from it's address to the `receiver`.
 
 It must be noted that due to the token decimal difference between the `EVM::ERC20` and `HyperCore::HIP1` the tokens you see on `HyperCore` would be different with the wei decimal different (`HIP1.decimals()` - `ERC20.decimals()` in range `[-2,18]`). But when converting them back from `HyperCore` to `HyperEVM` the token decimals gets restored.
 
@@ -284,11 +281,16 @@ function _sendAssetToHyperCore(
 
   if (amounts.evm > 0) {
     token.safeTransfer(oftAsset.assetBridgeAddress, amounts.evm);
-    IHyperLiquidWritePrecompile(HLP_PRECOMPILE_WRITE).sendSpot(
+    bytes memory action = abi.encodePacked(
       _receiver,
       oftAsset.coreIndexId,
       amounts.core
     );
+    bytes memory payload = abi.encodePacked(
+      abi.encodePacked(hex"1600", action) // 1600 is the [version][actionId][actionBytes] - https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/interacting-with-hypercore#action-encoding-details
+    );
+    /// Transfers tokens from the composer address on HyperCore to the _receiver
+    ICoreWriter(HLP_CORE_WRITER).sendRawAction(payload);
   }
   if (amounts.dust > 0) {
     token.safeTransfer(_receiver, amounts.dust);
@@ -690,7 +692,7 @@ While the composer could have been deployed at any point in time due to its stat
 npx hardhat lz:deploy --tags MyHyperLiquidComposer
 ```
 
-> ⚠️ Note: You would need to fund the composer's address with HyperCore with at least $1 in USDC or HYPE so that it can perform L1WriteActions through it's address.
+> ⚠️ Note: You would need to fund the composer's address with HyperCore with at least $1 in USDC or HYPE so that it can perform CoreWriter actions through it's address.
 
 ## Sending tokens from x-network to HyperEVM/Core
 

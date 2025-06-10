@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-initia-example
 
+## 0.0.6
+
+### Patch Changes
+
+- ba7754d: Bump package versions
+
 ## 0.0.5
 
 ### Patch Changes

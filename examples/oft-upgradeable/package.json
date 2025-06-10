@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
-    "@layerzerolabs/devtools-evm-hardhat": "^2.0.8",
+    "@layerzerolabs/devtools-evm-hardhat": "^3.0.0",
     "@layerzerolabs/eslint-config-next": "~2.3.39",
     "@layerzerolabs/lz-definitions": "^3.0.75",
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.75",
@@ -38,7 +38,7 @@
     "@layerzerolabs/solhint-config": "^3.0.12",
     "@layerzerolabs/test-devtools-evm-foundry": "~6.0.3",
     "@layerzerolabs/toolbox-foundry": "~0.1.12",
-    "@layerzerolabs/toolbox-hardhat": "~0.6.9",
+    "@layerzerolabs/toolbox-hardhat": "~0.6.10",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@nomiclabs/hardhat-waffle": "^2.0.6",
     "@openzeppelin/contracts": "^5.0.2",
