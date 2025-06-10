@@ -7,7 +7,7 @@ import { createLogger } from '@layerzerolabs/io-devtools'
 import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 
-import layerzeroConfig from '../layerzero.config'
+import layerzeroConfig from '../layerzero.config-test'
 
 import { SendResult } from './types'
 import { DebugLogger, KnownErrors, getLayerZeroScanLink } from './utils'
