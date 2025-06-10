@@ -1,15 +1,12 @@
-import assert from 'assert'
-
 import { mplToolbox } from '@metaplex-foundation/mpl-toolbox'
 import { createSignerFromKeypair, publicKey, signerIdentity } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { fromWeb3JsKeypair, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
-import { Keypair, PublicKey, sendAndConfirmTransaction } from '@solana/web3.js'
-import bs58 from 'bs58'
+import { PublicKey, sendAndConfirmTransaction } from '@solana/web3.js'
 import { task } from 'hardhat/config'
 
 import { types } from '@layerzerolabs/devtools-evm-hardhat'
-import { deserializeTransactionMessage } from '@layerzerolabs/devtools-solana'
+import { deserializeTransactionMessage, getSolanaKeypair } from '@layerzerolabs/devtools-solana'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OftPDA, oft202 } from '@layerzerolabs/oft-v2-solana-sdk'
 import { createOFTFactory } from '@layerzerolabs/ua-devtools-solana'
@@ -38,10 +35,7 @@ task(
     .addParam('capacity', 'The capacity of the rate limit', undefined, types.bigint)
     .addParam('refillPerSecond', 'The refill rate of the rate limit', undefined, types.bigint)
     .setAction(async (taskArgs: Args, hre) => {
-        const privateKey = process.env.SOLANA_PRIVATE_KEY
-        assert(!!privateKey, 'SOLANA_PRIVATE_KEY is not defined in the environment variables.')
-
-        const keypair = Keypair.fromSecretKey(bs58.decode(privateKey))
+        const keypair = await getSolanaKeypair()
         const umiKeypair = fromWeb3JsKeypair(keypair)
 
         const connectionFactory = createSolanaConnectionFactory()
