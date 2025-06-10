@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 0.0.9
+
+### Patch Changes
+
+- 9578746: docs update + onlyComposer on internal -> external transformation
+
 ## 0.0.8
 
 ### Patch Changes

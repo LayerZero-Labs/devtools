@@ -1,5 +1,11 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 0.0.14
+
+### Patch Changes
+
+- 9578746: docs update + onlyComposer on internal -> external transformation
+
 ## 0.0.13
 
 ### Patch Changes
