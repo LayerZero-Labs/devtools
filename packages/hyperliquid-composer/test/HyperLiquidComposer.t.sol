@@ -101,7 +101,10 @@ contract HyperLiquidComposerTest is Test {
     }
 
     function test_hypeIndexByChainId_testnet() public {
-        vm.createSelectFork("https://rpc.hyperliquid-testnet.xyz/evm");
+        try vm.createSelectFork("https://rpc.hyperliquid-testnet.xyz/evm") {} catch {
+            console.log("Forking testnet https://rpc.hyperliquid-testnet.xyz/evm failed");
+            vm.skip(true);
+        }
 
         OFTMock oftTestnet = new OFTMock("test", "test", HL_LZ_ENDPOINT_V2_TESTNET, msg.sender);
         HyperLiquidComposer hypeComposerTestnet = new HyperLiquidComposer(
@@ -115,7 +118,10 @@ contract HyperLiquidComposerTest is Test {
     }
 
     function test_hypeIndexByChainId_mainnet() public {
-        vm.createSelectFork("https://rpc.hyperliquid.xyz/evm");
+        try vm.createSelectFork("https://rpc.hyperliquid.xyz/evm") {} catch {
+            console.log("Forking mainnet https://rpc.hyperliquid.xyz/evm failed");
+            vm.skip(true);
+        }
 
         OFTMock oftMainnet = new OFTMock("test", "test", HL_LZ_ENDPOINT_V2_MAINNET, msg.sender);
         HyperLiquidComposer hypeComposerMainnet = new HyperLiquidComposer(
