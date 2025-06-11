@@ -1,5 +1,11 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 0.0.15
+
+### Patch Changes
+
+- a2e444f: try catch forking hyperliquid mainnet and testnet rpcs
+
 ## 0.0.14
 
 ### Patch Changes
