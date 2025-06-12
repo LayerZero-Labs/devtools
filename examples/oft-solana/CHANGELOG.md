@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.11.1
+
+### Patch Changes
+
+- 5542063: Adding ability to wire Solana to Aptos
+
 ## 0.11.0
 
 ### Minor Changes
