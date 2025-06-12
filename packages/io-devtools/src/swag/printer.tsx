@@ -1,10 +1,25 @@
 import React from "react";
 import { render } from "ink";
-import { Logo } from "./components/logo";
 import { Record, RecordList, type RecordData } from "./components/record";
 import { Table, type TableRow } from "./components/table";
 
-export const printLogo = () => render(<Logo />).unmount();
+export const printLogo = () => {
+  const logo = `
+    ╭─────────────────────────────────────────╮
+    │       ▓▓▓ LayerZero DevTools ▓▓▓        │
+    │  ═══════════════════════════════════    │
+    │          /*\\                            │
+    │         /* *\\     BUILD ANYTHING        │
+    │         ('v')                           │
+    │        //-=-\\\\    ▶ OMNICHAIN           │
+    │        (\\_=_/)                          │
+    │         ^^ ^^                           │
+    │  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  │
+    ╰─────────────────────────────────────────╯
+`;
+
+  console.log(logo);
+};
 
 /**
  * Renders a horizontal table with rows labeled by object properties:
@@ -33,11 +48,16 @@ export const printRecord = (data: RecordData): void =>
  *
  * @see {@link printRecord}
  *
- * @param {TableRow} data Array of rows
+ * @param {RecordData[]} data Array of rows
  * @returns {void}
  */
-export const printRecords = (data: RecordData[]): void =>
-  render(<RecordList data={data} />).unmount();
+export const printRecords = (data: RecordData[]): void => {
+  const instance = render(<RecordList data={data} />, {
+    // Prevent clearing the terminal to preserve history
+    debug: true,
+  });
+  instance.unmount();
+};
 
 /**
  * Renders a standard, vertical table without any row labels:
