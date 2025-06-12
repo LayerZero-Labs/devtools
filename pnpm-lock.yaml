@@ -4251,6 +4251,39 @@ importers:
         specifier: ^6.0.1
         version: 6.0.1
 
+  packages/ovault-composer:
+    devDependencies:
+      '@layerzerolabs/lz-evm-messagelib-v2':
+        specifier: ^3.0.75
+        version: 3.0.86(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.86)(@layerzerolabs/lz-evm-v1-0.7@3.0.86)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-protocol-v2':
+        specifier: ^3.0.75
+        version: 3.0.86(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-v1-0.7':
+        specifier: ^3.0.75
+        version: 3.0.86(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
+      '@layerzerolabs/oapp-evm':
+        specifier: ^0.3.2
+        version: link:../oapp-evm
+      '@layerzerolabs/oft-evm':
+        specifier: ^3.1.4
+        version: link:../oft-evm
+      '@layerzerolabs/test-devtools-evm-foundry':
+        specifier: ~6.0.3
+        version: link:../test-devtools-evm-foundry
+      '@layerzerolabs/toolbox-foundry':
+        specifier: ^0.1.12
+        version: link:../toolbox-foundry
+      '@openzeppelin/contracts':
+        specifier: ^5.0.2
+        version: 5.1.0
+      '@openzeppelin/contracts-upgradeable':
+        specifier: ^5.0.2
+        version: 5.1.0(@openzeppelin/contracts@5.1.0)
+      rimraf:
+        specifier: ^5.0.5
+        version: 5.0.9
+
   packages/protocol-devtools:
     devDependencies:
       '@layerzerolabs/devtools':
@@ -21778,6 +21811,7 @@ packages:
 
   /rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
     dependencies:
       glob: 7.2.3
