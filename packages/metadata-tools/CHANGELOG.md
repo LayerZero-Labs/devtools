@@ -1,5 +1,19 @@
 # @layerzerolabs/metadata-tools
 
+## 2.0.0
+
+### Patch Changes
+
+- Updated dependencies [f228dfe]
+  - @layerzerolabs/devtools-evm-hardhat@3.1.0
+
+## 1.0.0
+
+### Patch Changes
+
+- @layerzerolabs/devtools-evm-hardhat@3.0.0
+- @layerzerolabs/ua-devtools@4.0.0
+
 ## 0.4.1
 
 ### Patch Changes

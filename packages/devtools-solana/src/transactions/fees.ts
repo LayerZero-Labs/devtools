@@ -1,8 +1,5 @@
 import { Connection, PublicKey } from '@solana/web3.js'
 
-// TODO: merge this into tasks/solana/utils
-
-// Define interfaces for more explicit typing
 interface PrioritizationFeeObject {
     slot: number
     prioritizationFee: number
@@ -12,7 +9,13 @@ interface Config {
     lockedWritableAccounts: PublicKey[]
 }
 
-const getPrioritizationFees = async (
+/**
+ * Returns recent prioritization fees for transactions writing to a given
+ * account, along with some simple statistics.
+ *
+ * If no `programId` is provided, a zeroed public key is used instead.
+ */
+export const getPrioritizationFees = async (
     connection: Connection,
     programId?: string // TODO: change to array of addresses / public keys to match lockedWritableAccounts' type
 ): Promise<{
@@ -64,8 +67,8 @@ const getPrioritizationFees = async (
             const midIndex = Math.floor(sortedFees.length / 2)
             medianFee =
                 sortedFees.length % 2 !== 0
-                    ? sortedFees[midIndex]
-                    : Math.floor((sortedFees[midIndex - 1] + sortedFees[midIndex]) / 2)
+                    ? sortedFees[midIndex]!
+                    : Math.floor((sortedFees[midIndex - 1]! + sortedFees[midIndex]!) / 2)
         }
         return { averageFeeIncludingZeros, averageFeeExcludingZeros, medianFee }
     } catch (error) {
@@ -73,5 +76,3 @@ const getPrioritizationFees = async (
         return { averageFeeIncludingZeros: 0, averageFeeExcludingZeros: 0, medianFee: 0 }
     }
 }
-
-export default getPrioritizationFees

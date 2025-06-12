@@ -1,5 +1,35 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 0.0.15
+
+### Patch Changes
+
+- a2e444f: try catch forking hyperliquid mainnet and testnet rpcs
+
+## 0.0.14
+
+### Patch Changes
+
+- 9578746: docs update + onlyComposer on internal -> external transformation
+
+## 0.0.13
+
+### Patch Changes
+
+- 9c0c90c: using CoreWriter instead of WritePrecompile
+
+## 0.0.12
+
+### Patch Changes
+
+- e633f6d: patch: skip fork tests when forking testnet fails
+
+## 0.0.11
+
+### Patch Changes
+
+- 4416064: wrapper for viewing deployment state "spotDeployState" and adding in missing step to deploy the token on the spot order book
+
 ## 0.0.10
 
 ### Patch Changes
