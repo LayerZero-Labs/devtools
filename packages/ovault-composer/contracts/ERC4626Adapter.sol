@@ -8,43 +8,6 @@ import { IERC20, IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/ERC2
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
 
-/**
- * @dev Implementation of the ERC-4626 "Tokenized Vault Standard" as defined in
- * https://eips.ethereum.org/EIPS/eip-4626[ERC-4626].
- *
- * This extension allows the minting and burning of "shares" (represented using the ERC-20 inheritance) in exchange for
- * underlying "assets" through standardized {deposit}, {mint}, {redeem} and {burn} workflows. This contract extends
- * the ERC-20 standard. Any additional extensions included along it would affect the "shares" token represented by this
- * contract and not the "assets" token which is an independent contract.
- *
- * [CAUTION]
- * ====
- * In empty (or nearly empty) ERC-4626 vaults, deposits are at high risk of being stolen through frontrunning
- * with a "donation" to the vault that inflates the price of a share. This is variously known as a donation or inflation
- * attack and is essentially a problem of slippage. Vault deployers can protect against this attack by making an initial
- * deposit of a non-trivial amount of the asset, such that price manipulation becomes infeasible. Withdrawals may
- * similarly be affected by slippage. Users can protect against this attack as well as unexpected slippage in general by
- * verifying the amount received is as expected, using a wrapper that performs these checks such as
- * https://github.com/fei-protocol/ERC4626#erc4626router-and-base[ERC4626Router].
- *
- * Since v4.9, this implementation introduces configurable virtual assets and shares to help developers mitigate that risk.
- * The `_decimalsOffset()` corresponds to an offset in the decimal representation between the underlying asset's decimals
- * and the vault decimals. This offset also determines the rate of virtual shares to virtual assets in the vault, which
- * itself determines the initial exchange rate. While not fully preventing the attack, analysis shows that the default
- * offset (0) makes it non-profitable even if an attacker is able to capture value from multiple user deposits, as a result
- * of the value being captured by the virtual shares (out of the attacker's donation) matching the attacker's expected gains.
- * With a larger offset, the attack becomes orders of magnitude more expensive than it is profitable. More details about the
- * underlying math can be found xref:erc4626.adoc#inflation-attack[here].
- *
- * The drawback of this approach is that the virtual shares do capture (a very small) part of the value being accrued
- * to the vault. Also, if the vault experiences losses, the users try to exit the vault, the virtual shares and assets
- * will cause the first user to exit to experience reduced losses in detriment to the last users that will experience
- * bigger losses. Developers willing to revert back to the pre-v4.9 behavior just need to override the
- * `_convertToShares` and `_convertToAssets` functions.
- *
- * To learn more, check out our xref:ROOT:erc4626.adoc[ERC-4626 guide].
- * ====
- */
 contract ERC4626Adapter is IERC4626Adapter {
     using Math for uint256;
     using SafeERC20 for IERC20;
@@ -102,6 +65,7 @@ contract ERC4626Adapter is IERC4626Adapter {
         return address(_asset);
     }
 
+    /** @notice NEW FUNCTION */
     function share() public view virtual returns (address) {
         return address(_share);
     }
@@ -171,7 +135,7 @@ contract ERC4626Adapter is IERC4626Adapter {
         return _convertToAssets(shares, Math.Rounding.Floor);
     }
 
-    /** @dev See {IERC4626-deposit}. */
+    /** @dev See {IERC4626-deposit}. + CHANGED syntax */
     function deposit(uint256 assets, address receiver) public virtual returns (uint256) {
         uint256 maxAssets = maxDeposit(receiver);
         if (assets > maxAssets) {
@@ -179,13 +143,13 @@ contract ERC4626Adapter is IERC4626Adapter {
         }
 
         uint256 shares = previewDeposit(assets);
-        /// @dev msgSender() -> msg.sender
+        /// @dev CHANGED: msgSender() -> msg.sender
         _deposit(msg.sender, receiver, assets, shares);
 
         return shares;
     }
 
-    /** @dev See {IERC4626-mint}. */
+    /** @dev See {IERC4626-mint}. + CHANGED syntax */
     function mint(uint256 shares, address receiver) public virtual returns (uint256) {
         uint256 maxShares = maxMint(receiver);
         if (shares > maxShares) {
@@ -193,13 +157,13 @@ contract ERC4626Adapter is IERC4626Adapter {
         }
 
         uint256 assets = previewMint(shares);
-        /// @dev msgSender() -> msg.sender
+        /// @dev CHANGED: msgSender() -> msg.sender
         _deposit(msg.sender, receiver, assets, shares);
 
         return assets;
     }
 
-    /** @dev See {IERC4626-withdraw}. */
+    /** @dev See {IERC4626-withdraw}. + CHANGED syntax */
     function withdraw(uint256 assets, address receiver, address owner) public virtual returns (uint256) {
         uint256 maxAssets = maxWithdraw(owner);
         if (assets > maxAssets) {
@@ -207,13 +171,13 @@ contract ERC4626Adapter is IERC4626Adapter {
         }
 
         uint256 shares = previewWithdraw(assets);
-        /// @dev msgSender() -> msg.sender
+        /// @dev CHANGED: msgSender() -> msg.sender
         _withdraw(msg.sender, receiver, owner, assets, shares);
 
         return shares;
     }
 
-    /** @dev See {IERC4626-redeem}. */
+    /** @dev See {IERC4626-redeem}. + CHANGED syntax    */
     function redeem(uint256 shares, address receiver, address owner) public virtual returns (uint256) {
         uint256 maxShares = maxRedeem(owner);
         if (shares > maxShares) {
@@ -221,7 +185,7 @@ contract ERC4626Adapter is IERC4626Adapter {
         }
 
         uint256 assets = previewRedeem(shares);
-        /// @dev msgSender() -> msg.sender
+        /// @dev CHANGED: msgSender() -> msg.sender
         _withdraw(msg.sender, receiver, owner, assets, shares);
 
         return assets;
@@ -229,7 +193,7 @@ contract ERC4626Adapter is IERC4626Adapter {
 
     /**
      * @dev Internal conversion function (from assets to shares) with support for rounding direction.
-     * @dev Solmate implementation: https://github.com/transmissions11/solmate/blob/main/src/tokens/ERC4626.sol#L124-L128
+     * @dev CHANGED: Solmate implementation: https://github.com/transmissions11/solmate/blob/main/src/tokens/ERC4626.sol#L124-L128
      * @dev With support for varying decimals offset.
      */
     function _convertToShares(uint256 assets, Math.Rounding rounding) internal view virtual returns (uint256) {
@@ -239,7 +203,7 @@ contract ERC4626Adapter is IERC4626Adapter {
 
     /**
      * @dev Internal conversion function (from shares to assets) with support for rounding direction.
-     * @dev Solmate implementation: https://github.com/transmissions11/solmate/blob/main/src/tokens/ERC4626.sol#L130-L134
+     * @dev CHANGED: Solmate implementation: https://github.com/transmissions11/solmate/blob/main/src/tokens/ERC4626.sol#L130-L134
      * @dev With support for varying decimals offset.
      */
     function _convertToAssets(uint256 shares, Math.Rounding rounding) internal view virtual returns (uint256) {
@@ -258,8 +222,8 @@ contract ERC4626Adapter is IERC4626Adapter {
         // Conclusion: we need to do the transfer before we mint so that any reentrancy would happen before the
         // assets are transferred and before the shares are minted, which is a valid state.
         // slither-disable-next-line reentrancy-no-eth
-        SafeERC20.safeTransferFrom(_asset, caller, address(this), assets);
-        /// @dev Needs the share ERC20 to have the mint function.
+        _asset.safeTransferFrom(caller, address(this), assets);
+        /// @dev CHANGED: Needs the share ERC20 to have the mint function.
         _share.mint(receiver, shares);
 
         emit Deposit(caller, receiver, assets, shares);
@@ -267,6 +231,7 @@ contract ERC4626Adapter is IERC4626Adapter {
 
     /**
      * @dev Withdraw/redeem common workflow.
+     * @dev CHANGED
      */
     function _withdraw(
         address caller,
@@ -290,7 +255,7 @@ contract ERC4626Adapter is IERC4626Adapter {
 
         /// @dev Needs the share ERC20 to have the burn function.
         _share.burn(owner, shares);
-        SafeERC20.safeTransfer(_asset, receiver, assets);
+        _asset.safeTransfer(receiver, assets);
 
         emit Withdraw(caller, receiver, owner, assets, shares);
     }

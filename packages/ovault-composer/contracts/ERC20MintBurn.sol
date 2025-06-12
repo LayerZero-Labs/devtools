@@ -14,14 +14,17 @@ contract ERC20MintBurn is IERC20MintBurnExtension, ERC20, Ownable {
 
     function setMinter(address _minter, uint256 _amount) external onlyOwner {
         approvedMinters[_minter] = _amount;
+        emit MinterSet(_minter, _amount);
     }
 
     function setBurner(address _burner, uint256 _amount) external onlyOwner {
         approvedBurners[_burner] = _amount;
+        emit BurnerSet(_burner, _amount);
     }
 
     function setSpender(address _spender) external onlyOwner {
         approvedSpender = _spender;
+        emit SpenderSet(_spender);
     }
 
     function mint(address _to, uint256 _amount) external {
