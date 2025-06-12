@@ -1,21 +1,20 @@
 {
-  "name": "@layerzerolabs/ovault-evm",
+  "name": "@layerzerolabs/ovault-composer",
   "version": "0.0.1",
-  "description": "LayerZero Labs reference EVM OVault implementation",
+  "description": "LayerZero Labs reference EVM OVault composer implementation",
   "keywords": [
     "LayerZero",
-    "OFT",
     "OVault",
+    "ERC4626",
+    "Composer",
     "OmniChain",
-    "Fungible",
-    "Token",
     "EndpointV2",
     "EVM"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LayerZero-Labs/devtools.git",
-    "directory": "packages/ovault-evm"
+    "directory": "packages/ovault-composer"
   },
   "license": "MIT",
   "exports": {
@@ -26,14 +25,6 @@
     }
   },
   "files": [
-    "artifacts/Fee.sol/Fee.json",
-    "artifacts/IFee.sol/IFee.json",
-    "artifacts/IOFT.sol/IOFT.json",
-    "artifacts/OFTComposeMsgCodec.sol/OFTComposeMsgCodec.json",
-    "artifacts/OFTMsgCodec.sol/OFTMsgCodec.json",
-    "artifacts/OFT.sol/OFT.json",
-    "artifacts/OFTAdapter.sol/OFTAdapter.json",
-    "artifacts/OFTCore.sol/OFTCore.json",
     "contracts/**/*",
     "test/**/*"
   ],
@@ -49,6 +40,7 @@
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.75",
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.75",
     "@layerzerolabs/oapp-evm": "^0.3.2",
+    "@layerzerolabs/oft-evm": "^3.1.4",
     "@layerzerolabs/test-devtools-evm-foundry": "~6.0.3",
     "@layerzerolabs/toolbox-foundry": "^0.1.12",
     "@openzeppelin/contracts": "^5.0.2",
