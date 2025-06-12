@@ -61,21 +61,24 @@ describe('MyOApp Test', function () {
     })
 
     // A test case to verify message sending functionality
-    it('should send a message to each destination OApp', async function () {
-        // Assert initial state of data in both MyOApp instances
-        expect(await myOAppA.data()).to.equal('Nothing received yet.')
-        expect(await myOAppB.data()).to.equal('Nothing received yet.')
+    it('should send a string message to each destination OApp', async function () {
+        // Assert initial state of lastMessage in both MyOApp instances
+        expect(await myOAppA.lastMessage()).to.equal('')
+        expect(await myOAppB.lastMessage()).to.equal('')
+
         const options = Options.newOptions().addExecutorLzReceiveOption(200000, 0).toHex().toString()
+        const message = 'Test message.'
 
         // Define native fee and quote for the message send operation
         let nativeFee = 0
-        ;[nativeFee] = await myOAppA.quote(eidB, 'Test message.', options, false)
+        const messagingFee = await myOAppA.quoteSendString(eidB, message, options, false)
+        nativeFee = messagingFee.nativeFee
 
-        // Execute send operation from myOAppA
-        await myOAppA.send(eidB, 'Test message.', options, { value: nativeFee.toString() })
+        // Execute sendString operation from myOAppA
+        await myOAppA.sendString(eidB, message, options, { value: nativeFee.toString() })
 
-        // Assert the resulting state of data in both MyOApp instances
-        expect(await myOAppA.data()).to.equal('Nothing received yet.')
-        expect(await myOAppB.data()).to.equal('Test message.')
+        // Assert the resulting state of lastMessage in both MyOApp instances
+        expect(await myOAppA.lastMessage()).to.equal('')
+        expect(await myOAppB.lastMessage()).to.equal('Test message.')
     })
 })
