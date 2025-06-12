@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-read-example
 
+## 0.3.0
+
+### Minor Changes
+
+- dc69b83: Adds deploy scripts, send scripts, and better config to lzRead example
+
 ## 0.2.9
 
 ### Patch Changes
