@@ -20,7 +20,7 @@ export type ConfigLoadFlow<TOmniGraph = OmniGraph> = (args: ConfigLoadFlowArgs) 
  * The schema is responsible for any transformations that need to be done to turn the raw config into an `OmniGraph`
  * (e.g. transforming from hardhat-specific format).
  *
- * The config file can be in one of the supoorted formats:
+ * The config file can be in one of the supported formats:
  *
  * - JS
  * - TS
