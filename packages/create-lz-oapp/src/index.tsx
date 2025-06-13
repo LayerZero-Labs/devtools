@@ -17,9 +17,11 @@ import {
   createPackageManagerOption,
   destinationOption,
   logLevelOption,
+  branchOption,
 } from "./options";
 import type { Config, Example, PackageManager } from "./types";
 import { DefaultErrorMessage } from "./components/error";
+import { getExamples } from "./config";
 
 interface Args {
   ci?: boolean;
@@ -27,54 +29,62 @@ interface Args {
   example?: Example;
   logLevel?: LogLevel;
   packageManager: PackageManager;
+  branch?: string;
 }
 
-new Command("create-lz-oapp")
-  .description("Create LayerZero OApp with one command")
-  .version(version)
-  .addOption(ciOption)
-  .addOption(destinationOption)
-  .addOption(createExampleOption())
-  .addOption(logLevelOption)
-  .addOption(createPackageManagerOption())
-  .action(async (args: Args) => {
-    printLogo();
+const createCommand = async () => {
+  const examples = await getExamples();
 
-    // We'll provide a CI mode - a non-interctaive mode in which all input is taken
-    // from the CLI arguments and if something is missing, an error is thrown
-    const { ci, logLevel = "info" } = args;
+  return new Command("create-lz-oapp")
+    .description("Create LayerZero OApp with one command")
+    .version(version)
+    .addOption(ciOption)
+    .addOption(destinationOption)
+    .addOption(createExampleOption(examples))
+    .addOption(logLevelOption)
+    .addOption(createPackageManagerOption())
+    .addOption(branchOption)
+    .addOption(logLevelOption)
+    .action(async (args: Args) => {
+      printLogo();
 
-    // We'll set a default log level for any loggers created past this point
-    setDefaultLogLevel(logLevel);
+      // We'll provide a CI mode - a non-interctaive mode in which all input is taken
+      // from the CLI arguments and if something is missing, an error is thrown
+      const { ci, logLevel } = args;
 
-    // First we get the config
-    const config = ci
-      ? // In CI mode, we'll validate what we got from the arguments
-        ensureConfigForCIMode(args)
-      : // In interactive mode we'll ask for the config, using the arguments as defaults
-        await promptForConfig(args);
-    render(<ConfigSummary value={config} />).unmount();
+      // We'll set a default log level for any loggers created past this point
+      setDefaultLogLevel(logLevel ?? "info");
 
-    // Then we confirm with the user
-    const continuePlease = ci
-      ? // In CI mode we continue automatically, no questions asked
-        true
-      : // In interactive mode we'll confirm with the user
-        await promptToContinue();
-    if (!continuePlease) {
-      return;
-    }
+      // First we get the config
+      const config = ci
+        ? // In CI mode, we'll validate what we got from the arguments
+          ensureConfigForCIMode(args)
+        : // In interactive mode we'll ask for the config, using the arguments as defaults
+          await promptForConfig(args);
+      render(<ConfigSummary value={config} />).unmount();
 
-    // Then the last step is to show the setup flow
-    const setup = render(<Setup config={config} />);
+      // Then we confirm with the user
+      const continuePlease = ci
+        ? // In CI mode we continue automatically, no questions asked
+          true
+        : // In interactive mode we'll confirm with the user
+          await promptToContinue();
+      if (!continuePlease) {
+        return;
+      }
 
-    // And wait for it to exit
-    await setup.waitUntilExit();
-  })
-  .configureOutput({
-    outputError: handleError,
-  })
-  .parseAsync();
+      // Then the last step is to show the setup flow
+      const setup = render(<Setup config={config} />);
+
+      // And wait for it to exit
+      await setup.waitUntilExit();
+    })
+    .configureOutput({
+      outputError: handleError,
+    });
+};
+
+createCommand().then((command) => command.parseAsync());
 
 /**
  * Helper utility for pretty printing any erros we might encounter
@@ -100,6 +110,7 @@ function ensureConfigForCIMode({
   destination,
   example,
   packageManager,
+  branch,
 }: Partial<Config>): Config {
   if (destination == null) {
     render(
@@ -125,5 +136,5 @@ function ensureConfigForCIMode({
     process.exit(1);
   }
 
-  return { destination, example, packageManager };
+  return { destination, example, packageManager, branch };
 }
