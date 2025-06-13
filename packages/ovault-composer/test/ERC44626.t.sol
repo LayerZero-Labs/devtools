@@ -34,13 +34,13 @@ contract ERC4626AdapterTest is Test {
         share.setSpender(address(vault));
     }
 
-    function test_invariantMetadata() public view {
+    function test_erc4626_invariantMetadata() public view {
         assertEq(vault.name(), SHARE_NAME);
         assertEq(vault.symbol(), SHARE_SYMBOL);
         assertEq(vault.decimals(), 18);
     }
 
-    function test_Metadata(string calldata name, string calldata symbol) public {
+    function test_erc4626_Metadata(string calldata name, string calldata symbol) public {
         address shareAddress = address(new MockERC20MintBurn(name, symbol));
         MockERC4626Adapter vlt = new MockERC4626Adapter(address(asset), shareAddress);
         assertEq(vlt.name(), name);
@@ -49,7 +49,7 @@ contract ERC4626AdapterTest is Test {
         assertEq(address(vlt.share()), shareAddress);
     }
 
-    function testFuzz_SingleDepositWithdraw(uint128 amount) public {
+    function testFuzz_erc4626_SingleDepositWithdraw(uint128 amount) public {
         if (amount == 0) amount = 1;
 
         uint256 aliceassetAmount = amount;
@@ -93,7 +93,7 @@ contract ERC4626AdapterTest is Test {
         assertEq(asset.balanceOf(alice), alicePreDepositBal);
     }
 
-    function testFuzz_SingleMintRedeem(uint128 amount) public {
+    function testFuzz_erc4626_SingleMintRedeem(uint128 amount) public {
         if (amount == 0) amount = 1;
 
         uint256 aliceShareAmount = amount;
@@ -130,7 +130,7 @@ contract ERC4626AdapterTest is Test {
         assertEq(asset.balanceOf(alice), alicePreDepositBal);
     }
 
-    function testMultipleMintDepositRedeemWithdraw() public {
+    function test_erc4626_MultipleMintDepositRedeemWithdraw() public {
         // Scenario:
         // A = Alice, B = Bob
         //  ________________________________________________________
@@ -346,7 +346,7 @@ contract ERC4626AdapterTest is Test {
         assertEq(asset.balanceOf(address(vault)), 0);
     }
 
-    function test_FailDepositWithNotEnoughApproval() public {
+    function test_erc4626_FailDepositWithNotEnoughApproval() public {
         asset.mint(address(this), 0.5e18);
         asset.approve(address(vault), 0.5e18);
         assertEq(asset.allowance(address(this), address(vault)), 0.5e18);
@@ -357,7 +357,7 @@ contract ERC4626AdapterTest is Test {
         vault.deposit(1e18, address(this));
     }
 
-    function test_FailWithdrawExceedsMaxWithdraw() public {
+    function test_erc4626_FailWithdrawExceedsMaxWithdraw() public {
         asset.mint(address(this), 0.5e18);
         asset.approve(address(vault), 0.5e18);
 
@@ -369,7 +369,7 @@ contract ERC4626AdapterTest is Test {
         vault.withdraw(1e18, address(this), address(this));
     }
 
-    function test_FailRedeemWithNotEnoughShareAmount() public {
+    function test_erc4626_FailRedeemWithNotEnoughShareAmount() public {
         asset.mint(address(this), 0.5e18);
         asset.approve(address(vault), 0.5e18);
 
@@ -381,35 +381,35 @@ contract ERC4626AdapterTest is Test {
         vault.redeem(1e18, address(this), address(this));
     }
 
-    function test_FailWithdrawWithNoassetAmount() public {
+    function test_erc4626_FailWithdrawWithNoassetAmount() public {
         vm.expectRevert(
             abi.encodeWithSelector(IERC4626Adapter.ERC4626ExceededMaxWithdraw.selector, address(this), 1e18, 0)
         );
         vault.withdraw(1e18, address(this), address(this));
     }
 
-    function test_FailRedeemWithNoShareAmount() public {
+    function test_erc4626_FailRedeemWithNoShareAmount() public {
         vm.expectRevert(
             abi.encodeWithSelector(IERC4626Adapter.ERC4626ExceededMaxRedeem.selector, address(this), 1e18, 0)
         );
         vault.redeem(1e18, address(this), address(this));
     }
 
-    function test_FailDepositWithNoApproval() public {
+    function test_erc4626_FailDepositWithNoApproval() public {
         vm.expectRevert(
             abi.encodeWithSelector(IERC20Errors.ERC20InsufficientAllowance.selector, address(vault), 0, 1e18)
         );
         vault.deposit(1e18, address(this));
     }
 
-    function test_FailMintWithNoApproval() public {
+    function test_erc4626_FailMintWithNoApproval() public {
         vm.expectRevert(
             abi.encodeWithSelector(IERC20Errors.ERC20InsufficientAllowance.selector, address(vault), 0, 1e18)
         );
         vault.mint(1e18, address(this));
     }
 
-    function test_MintZero() public {
+    function test_erc4626_MintZero() public {
         vault.mint(0, address(this));
 
         assertEq(vault.balanceOf(address(this)), 0);
@@ -418,7 +418,7 @@ contract ERC4626AdapterTest is Test {
         assertEq(vault.totalAssets(), 0);
     }
 
-    function test_WithdrawZero() public {
+    function test_erc4626_WithdrawZero() public {
         vault.withdraw(0, address(this), address(this));
 
         assertEq(vault.balanceOf(address(this)), 0);
