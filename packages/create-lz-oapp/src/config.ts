@@ -1,7 +1,40 @@
 import type { Example, PackageManager } from '@/types'
 import { isPackageManagerAvailable } from './utilities/installation'
+import { execSync } from 'child_process'
+import { join } from 'path'
+import { tmpdir } from 'os'
+import { importDefault, createModuleLogger } from '@layerzerolabs/io-devtools'
+import examples from './examples.json'
 
-export const getExamples = (): Example[] => {
+// Github URLs can start with either /tree/ or /blob/
+// This function extracts the ref name from the URL
+// Ex: https://github.com/LayerZero-Labs/devtools/tree/omni-call-example -> omni-call-example
+const extractBranchFromUrl = (url: string): string => {
+    if (url.includes('/tree/')) {
+        const parts = url.split('/tree/')
+        if (parts.length >= 2) {
+            const ref = parts[1]
+            if (ref) {
+                return ref
+            }
+        }
+    }
+
+    if (url.includes('/blob/')) {
+        const parts = url.split('/blob/')
+        if (parts.length >= 2) {
+            const ref = parts[1]
+            if (ref) {
+                return ref
+            }
+        }
+    }
+
+    return url
+}
+
+export const getExamples = async (branch?: string, logLevel = 'info'): Promise<Example[]> => {
+    const logger = createModuleLogger('create-lz-oapp', logLevel)
     /**
      * To enable example development in a custom repository
      * we open the repository URL field to be taken from the environment
@@ -10,200 +43,65 @@ export const getExamples = (): Example[] => {
 
     /**
      * To enable example development in a custom branch,
-     * we open up the ref field to be taken from the environment
+     * we open up the ref field to be taken from the environment or CLI args
      *
      * `LAYERZERO_EXAMPLES_REPOSITORY_REF` can then be set to something like `#develop` or `#my-custom-branch`
      * to take the examples from a tag, a branch or a commit hash
      */
-    const ref = process.env.LAYERZERO_EXAMPLES_REPOSITORY_REF || ''
+    const ref = branch ? extractBranchFromUrl(branch) : process.env.LAYERZERO_EXAMPLES_REPOSITORY_REF || 'main'
+    logger.verbose(`Using repository: ${repository} and ref: ${ref}`)
 
-    return [
-        {
-            id: 'oapp',
-            label: 'OApp',
-            repository,
-            directory: 'examples/oapp',
-            ref,
-        },
-        {
-            id: 'oft',
-            label: 'OFT',
-            repository,
-            directory: 'examples/oft',
-            ref,
-        },
-        {
-            id: 'oft-adapter',
-            label: 'OFTAdapter',
-            repository,
-            directory: 'examples/oft-adapter',
-            ref,
-        },
-        {
-            id: 'onft721',
-            label: 'ONFT721',
-            repository,
-            directory: 'examples/onft721',
-            ref,
-        },
-        // ZK-Solc examples are feature flagged for the time being
-        ...(process.env.LZ_ENABLE_MIGRATION_EXAMPLE
-            ? [
-                  {
-                      id: 'lzapp-migration',
-                      label: 'EndpointV1 Migration',
-                      repository,
-                      directory: 'examples/lzapp-migration',
-                      ref,
-                  },
-              ]
-            : []),
-        // ZK-Solc examples are feature flagged for the time being
-        ...(process.env.LZ_ENABLE_ZKSOLC_EXAMPLE
-            ? [{ id: 'onft721-zksync', label: 'ONFT721 zksolc', repository, directory: 'examples/onft721-zksync', ref }]
-            : []),
-        // Upgradeable contract examples are feature flagged for the time being
-        ...(process.env.LZ_ENABLE_UPGRADEABLE_EXAMPLE
-            ? [
-                  {
-                      id: 'oft-upgradeable',
-                      label: 'UpgradeableOFT',
-                      repository,
-                      directory: 'examples/oft-upgradeable',
-                      ref,
-                  },
-              ]
-            : []),
-        // Native OFT Adapter example is feature flagged for the time being
-        ...(process.env.LZ_ENABLE_NATIVE_EXAMPLE
-            ? [
-                  {
-                      id: 'native-oft-adapter',
-                      label: 'NativeOFTAdapter',
-                      repository,
-                      directory: 'examples/native-oft-adapter',
-                      ref,
-                  },
-              ]
-            : []),
-        // OFT Alt example is feature flagged for the time being
-        ...(process.env.LZ_ENABLE_ALT_EXAMPLE
-            ? [
-                  {
-                      id: 'oft-alt',
-                      label: 'OFTAlt',
-                      repository,
-                      directory: 'examples/oft-alt',
-                      ref,
-                  },
-              ]
-            : []),
-        // Mint Burn OFT Adapter example is feature flagged for the time being
-        ...(process.env.LZ_ENABLE_MINTBURN_EXAMPLE
-            ? [
-                  {
-                      id: 'mint-burn-oft-adapter',
-                      label: 'MintBurnOFTAdapter',
-                      repository,
-                      directory: 'examples/mint-burn-oft-adapter',
-                      ref,
-                  },
-              ]
-            : []),
-        // OApp Read examples are feature flagged for the time being
-        ...(process.env.LZ_ENABLE_READ_EXAMPLE
-            ? [
-                  {
-                      id: 'oapp-read',
-                      label: 'lzRead View/Pure Functions Example',
-                      repository,
-                      directory: 'examples/oapp-read',
-                      ref,
-                  },
-                  {
-                      id: 'view-pure-read',
-                      label: 'lzRead Public Variables Example',
-                      repository,
-                      directory: 'examples/view-pure-read',
-                      ref,
-                  },
-                  {
-                      id: 'uniswap-read',
-                      label: 'lzRead UniswapV3 Quote',
-                      repository,
-                      directory: 'examples/uniswap-read',
-                      ref,
-                  },
-              ]
-            : []),
-        // The Solana OFT example is feature flagged for the time being
-        ...(process.env.LZ_ENABLE_SOLANA_OFT_EXAMPLE
-            ? [
-                  {
-                      id: 'oft-solana',
-                      label: 'OFT (Solana)',
-                      repository,
-                      directory: 'examples/oft-solana',
-                      ref,
-                  },
-              ]
-            : []),
-        ...(process.env.LZ_ENABLE_EXPERIMENTAL_INITIA_EXAMPLES
-            ? [
-                  {
-                      id: 'oft-initia',
-                      label: 'OFT (Initia)',
-                      repository,
-                      directory: 'examples/oft-initia',
-                      ref,
-                  },
-                  {
-                      id: 'oft-adapter-initia',
-                      label: 'OFT Adapter (Initia)',
-                      repository,
-                      directory: 'examples/oft-adapter-initia',
-                      ref,
-                  },
-              ]
-            : []),
-        // Move OFT examples are feature flagged for the time being
-        ...(process.env.LZ_ENABLE_EXPERIMENTAL_MOVE_VM_EXAMPLES
-            ? [
-                  {
-                      id: 'oft-aptos-move',
-                      label: 'OFT (Aptos Move)',
-                      repository,
-                      directory: 'examples/oft-aptos-move',
-                      ref,
-                  },
-                  {
-                      id: 'oft-adapter-aptos-move',
-                      label: 'OFT Adapter (Aptos Move)',
-                      repository,
-                      directory: 'examples/oft-adapter-aptos-move',
-                      ref,
-                  },
-                  {
-                      id: 'oapp-aptos-move',
-                      label: 'OApp (Aptos Move)',
-                      repository,
-                      directory: 'examples/oapp-aptos-move',
-                      ref,
-                  },
-              ]
-            : []),
-        ...(process.env.LZ_ENABLE_EXPERIMENTAL_HYPERLIQUID_EXAMPLE
-            ? [
-                  {
-                      id: 'oft-hyperliquid',
-                      label: 'OFT + Composer (Hyperliquid)',
-                      repository,
-                      directory: 'examples/oft-hyperliquid',
-                      ref,
-                  },
-              ]
-            : []),
-    ]
+    let oapp_examples: Example[] = []
+
+    // If we're using a specific branch, fetch the config from that branch
+    if (ref !== 'main') {
+        try {
+            // Create a temporary directory
+            const tempDir = join(tmpdir(), `lz-oapp-${Date.now()}`)
+            logger.info(`Cloning repository: ${repository} and ref: ${ref}`)
+            execSync(`git clone --depth 1 --branch ${ref} ${repository} ${tempDir}`)
+
+            const configPath = join(tempDir, 'packages/create-lz-oapp/src/examples.json')
+
+            const configData = (await importDefault(configPath)) as { examples: Example[] }
+            oapp_examples = configData.examples.map((example) => ({
+                ...example,
+                ref: ref, // Override the ref with the one from the CLI args which is branch specific
+            }))
+
+            logger.info(`Cleaning up temporary directory: ${tempDir}`)
+
+            execSync(`rm -rf ${tempDir}`)
+        } catch (error) {
+            logger.warn(`Failed to fetch config from branch ${ref}, falling back to local config:`, error)
+        }
+    } else {
+        oapp_examples = examples.examples.map((example) => ({
+            ...example,
+            repository: example.repository || repository,
+        }))
+    }
+
+    logger.debug(JSON.stringify(oapp_examples, null, 2))
+
+    // Filter the examples based on the experimental keys
+    // Acceptable flags are 'true' or '1'
+    const filteredExamples = oapp_examples.filter((example) => {
+        if (!example.experimental) {
+            return true
+        }
+        return example.experimental.some((key) => {
+            const value = process.env[key]
+            if (value === undefined) {
+                return false
+            }
+            return value === 'true' || value === '1'
+        })
+    })
+
+    logger.verbose(`Filtered examples: ${JSON.stringify(filteredExamples, null, 2)}`)
+
+    return filteredExamples
 }
 
 const PACKAGE_MANAGERS: PackageManager[] = [
