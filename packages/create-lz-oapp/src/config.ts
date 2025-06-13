@@ -85,7 +85,7 @@ export const getExamples = async (branch?: string, logLevel = 'info'): Promise<E
     logger.debug(JSON.stringify(oapp_examples, null, 2))
 
     // Filter the examples based on the experimental keys
-    // Acceptable flags are 'true' or '1'
+    // Acceptable flags are 'true', '1', or 'yes'
     const filteredExamples = oapp_examples.filter((example) => {
         if (!example.experimental) {
             return true
@@ -95,7 +95,7 @@ export const getExamples = async (branch?: string, logLevel = 'info'): Promise<E
             if (value === undefined) {
                 return false
             }
-            return value === 'true' || value === '1'
+            return value === 'true' || value === '1' || value === 'yes'
         })
     })
 
