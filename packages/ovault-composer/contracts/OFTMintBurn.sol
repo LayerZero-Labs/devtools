@@ -1,18 +1,23 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity >=0.8.0;
 
-import { IERC20MintBurnExtension } from "./interfaces/IERC20MintBurnExtension.sol";
-import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import { OFT } from "@layerzerolabs/oft-evm/contracts/OFT.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+import { IERC20MintBurnExtension } from "./interfaces/IERC20MintBurnExtension.sol";
 
-contract ERC20MintBurn is IERC20MintBurnExtension, ERC20, Ownable {
+contract OFTMintBurn is OFT, IERC20MintBurnExtension {
     mapping(address => uint256) public approvedMinters;
     mapping(address => uint256) public approvedBurners;
     address public approvedSpender;
 
     bool public constant ERC4626AdapterCompliant = true;
 
-    constructor(string memory _name, string memory _symbol) ERC20(_name, _symbol) Ownable(msg.sender) {}
+    constructor(
+        string memory _name,
+        string memory _symbol,
+        address _lzEndpoint,
+        address _delegate
+    ) OFT(_name, _symbol, _lzEndpoint, _delegate) Ownable(_delegate) {}
 
     function setMinter(address _minter, uint256 _amount) external onlyOwner {
         approvedMinters[_minter] = _amount;

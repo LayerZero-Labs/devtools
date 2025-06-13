@@ -5,51 +5,57 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IERC20Errors } from "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
 import { IERC4626Adapter } from "../contracts/interfaces/IERC4626Adapter.sol";
 
-import { MockERC20 } from "./utils/mocks/MockERC20.sol";
-import { MockERC20MintBurn } from "./utils/mocks/MockERC20MintBurn.sol";
-import { MockERC4626Adapter } from "./utils/mocks/MockERC4626Adapter.sol";
+import { MockOFT } from "./utils/mocks/MockOFT.sol";
+import { MockOFTMintBurn } from "./utils/mocks/MockOFTMintBurn.sol";
+import { MockOVault } from "./utils/mocks/MockOVault.sol";
 import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
-import { Test, console } from "forge-std/Test.sol";
 
-// @dev Exact replica of solamate test : https://github.com/transmissions11/solmate/blob/main/src/test/ERC4626.t.sol
-contract ERC4626AdapterTest is Test {
+import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
+import { console } from "forge-std/console.sol";
+
+contract OVaultTest is TestHelperOz5 {
     using Math for uint256;
 
-    MockERC20 asset;
-    MockERC20MintBurn share;
-    MockERC4626Adapter vault;
+    MockOFT asset;
+    MockOFTMintBurn share;
+    MockOVault vault;
 
     string public constant ASSET_NAME = "Mock Token";
     string public constant ASSET_SYMBOL = "TKN";
     string public constant SHARE_NAME = "Mock Share";
     string public constant SHARE_SYMBOL = "SHARE";
 
-    function setUp() public {
-        asset = new MockERC20(ASSET_NAME, ASSET_SYMBOL);
-        share = new MockERC20MintBurn(SHARE_NAME, SHARE_SYMBOL);
-        vault = new MockERC4626Adapter(address(asset), address(share));
+    uint32 internal constant A_EID = 1;
+
+    function setUp() public override {
+        super.setUp();
+        setUpEndpoints(1, LibraryType.UltraLightNode);
+
+        asset = new MockOFT(ASSET_NAME, ASSET_SYMBOL, address(endpoints[A_EID]), address(this));
+        share = new MockOFTMintBurn(SHARE_NAME, SHARE_SYMBOL, address(endpoints[A_EID]), address(this));
+        vault = new MockOVault(asset, share);
 
         share.setMinter(address(vault), type(uint256).max);
         share.setBurner(address(vault), type(uint256).max);
         share.setSpender(address(vault));
     }
 
-    function test_erc4626_invariantMetadata() public view {
+    function test_ovault_invariantMetadata() public view {
         assertEq(vault.name(), SHARE_NAME);
         assertEq(vault.symbol(), SHARE_SYMBOL);
         assertEq(vault.decimals(), 18);
     }
 
-    function test_erc4626_Metadata(string calldata name, string calldata symbol) public {
-        address shareAddress = address(new MockERC20MintBurn(name, symbol));
-        MockERC4626Adapter vlt = new MockERC4626Adapter(address(asset), shareAddress);
+    function test_ovault_Metadata(string calldata name, string calldata symbol) public {
+        MockOFTMintBurn newShare = new MockOFTMintBurn(name, symbol, address(endpoints[A_EID]), address(this));
+        MockOVault vlt = new MockOVault(asset, newShare);
         assertEq(vlt.name(), name);
         assertEq(vlt.symbol(), symbol);
         assertEq(address(vlt.asset()), address(asset));
-        assertEq(address(vlt.share()), shareAddress);
+        assertEq(address(vlt.share()), address(newShare));
     }
 
-    function testFuzz_erc4626_SingleDepositWithdraw(uint128 amount) public {
+    function testFuzz_ovault_SingleDepositWithdraw(uint128 amount) public {
         if (amount == 0) amount = 1;
 
         uint256 aliceassetAmount = amount;
@@ -93,7 +99,7 @@ contract ERC4626AdapterTest is Test {
         assertEq(asset.balanceOf(alice), alicePreDepositBal);
     }
 
-    function testFuzz_erc4626_SingleMintRedeem(uint128 amount) public {
+    function testFuzz_ovault_SingleMintRedeem(uint128 amount) public {
         if (amount == 0) amount = 1;
 
         uint256 aliceShareAmount = amount;
@@ -130,7 +136,7 @@ contract ERC4626AdapterTest is Test {
         assertEq(asset.balanceOf(alice), alicePreDepositBal);
     }
 
-    function test_erc4626_MultipleMintDepositRedeemWithdraw() public {
+    function test_ovault_MultipleMintDepositRedeemWithdraw() public {
         // Scenario:
         // A = Alice, B = Bob
         //  ________________________________________________________
@@ -346,7 +352,7 @@ contract ERC4626AdapterTest is Test {
         assertEq(asset.balanceOf(address(vault)), 0);
     }
 
-    function test_erc4626_FailDepositWithNotEnoughApproval() public {
+    function test_ovault_FailDepositWithNotEnoughApproval() public {
         asset.mint(address(this), 0.5e18);
         asset.approve(address(vault), 0.5e18);
         assertEq(asset.allowance(address(this), address(vault)), 0.5e18);
@@ -357,7 +363,7 @@ contract ERC4626AdapterTest is Test {
         vault.deposit(1e18, address(this));
     }
 
-    function test_erc4626_FailWithdrawExceedsMaxWithdraw() public {
+    function test_ovault_FailWithdrawExceedsMaxWithdraw() public {
         asset.mint(address(this), 0.5e18);
         asset.approve(address(vault), 0.5e18);
 
@@ -369,7 +375,7 @@ contract ERC4626AdapterTest is Test {
         vault.withdraw(1e18, address(this), address(this));
     }
 
-    function test_erc4626_FailRedeemWithNotEnoughShareAmount() public {
+    function test_ovault_FailRedeemWithNotEnoughShareAmount() public {
         asset.mint(address(this), 0.5e18);
         asset.approve(address(vault), 0.5e18);
 
@@ -381,35 +387,35 @@ contract ERC4626AdapterTest is Test {
         vault.redeem(1e18, address(this), address(this));
     }
 
-    function test_erc4626_FailWithdrawWithNoassetAmount() public {
+    function test_ovault_FailWithdrawWithNoassetAmount() public {
         vm.expectRevert(
             abi.encodeWithSelector(IERC4626Adapter.ERC4626ExceededMaxWithdraw.selector, address(this), 1e18, 0)
         );
         vault.withdraw(1e18, address(this), address(this));
     }
 
-    function test_erc4626_FailRedeemWithNoShareAmount() public {
+    function test_ovault_FailRedeemWithNoShareAmount() public {
         vm.expectRevert(
             abi.encodeWithSelector(IERC4626Adapter.ERC4626ExceededMaxRedeem.selector, address(this), 1e18, 0)
         );
         vault.redeem(1e18, address(this), address(this));
     }
 
-    function test_erc4626_FailDepositWithNoApproval() public {
+    function test_ovault_FailDepositWithNoApproval() public {
         vm.expectRevert(
             abi.encodeWithSelector(IERC20Errors.ERC20InsufficientAllowance.selector, address(vault), 0, 1e18)
         );
         vault.deposit(1e18, address(this));
     }
 
-    function test_erc4626_FailMintWithNoApproval() public {
+    function test_ovault_FailMintWithNoApproval() public {
         vm.expectRevert(
             abi.encodeWithSelector(IERC20Errors.ERC20InsufficientAllowance.selector, address(vault), 0, 1e18)
         );
         vault.mint(1e18, address(this));
     }
 
-    function test_erc4626_MintZero() public {
+    function test_ovault_MintZero() public {
         vault.mint(0, address(this));
 
         assertEq(vault.balanceOf(address(this)), 0);
@@ -418,7 +424,7 @@ contract ERC4626AdapterTest is Test {
         assertEq(vault.totalAssets(), 0);
     }
 
-    function test_erc4626_WithdrawZero() public {
+    function test_ovault_WithdrawZero() public {
         vault.withdraw(0, address(this), address(this));
 
         assertEq(vault.balanceOf(address(this)), 0);
@@ -427,7 +433,7 @@ contract ERC4626AdapterTest is Test {
         assertEq(vault.totalAssets(), 0);
     }
 
-    function test_VaultInteractionsForSomeoneElse() public {
+    function test_ovault_VaultInteractionsForSomeoneElse() public {
         // init 2 users with a 1e18 balance
         address alice = address(0xABCD);
         address bob = address(0xDCBA);
