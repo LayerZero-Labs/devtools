@@ -10,6 +10,8 @@ contract ERC20MintBurn is IERC20MintBurnExtension, ERC20, Ownable {
     mapping(address => uint256) public approvedBurners;
     address public approvedSpender;
 
+    bool public constant ERC4626AdapterCompliant = true;
+
     constructor(string memory _name, string memory _symbol) ERC20(_name, _symbol) Ownable(msg.sender) {}
 
     function setMinter(address _minter, uint256 _amount) external onlyOwner {
