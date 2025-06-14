@@ -1,9 +1,6 @@
 # We'll setup an empty testing directory for this script and store its location in this variable
 PROJECTS_DIRECTORY=
 
-# Path to the local create-lz-oapp CLI
-CREATE_LZ_OAPP_CLI="/workspaces/devtools/packages/create-lz-oapp/cli.js"
-
 # This will be run at the start of this testing suite,
 # similar to beforeAll() in jest
 setup() {
@@ -16,11 +13,6 @@ setup() {
     echo "create-lz-oapp:repository   $LAYERZERO_EXAMPLES_REPOSITORY_URL" 1>&2
     echo "create-lz-oapp:ref          $LAYERZERO_EXAMPLES_REPOSITORY_REF" 1>&2
 
-    # Build the local create-lz-oapp package
-    cd /workspaces/devtools/packages/create-lz-oapp
-    pnpm build
-    cd - > /dev/null
-
     # Setup a directory for all the projects created by this test
     PROJECTS_DIRECTORY=$(mktemp -d)
 }
@@ -30,11 +22,11 @@ teardown() {
 }
 
 @test "should output version" {
-    node $CREATE_LZ_OAPP_CLI --version
+    npx --yes create-lz-oapp --version
 }
 
 @test "should fail if --destination is missing in CI mode" {
-    run node $CREATE_LZ_OAPP_CLI --ci --example oft
+    run npx --yes create-lz-oapp --ci --example oft
 
     assert_failure
     assert_output --partial "Missing argument: --destination must be specified in CI mode"
@@ -44,7 +36,7 @@ teardown() {
     local DESTINATION="$PROJECTS_DIRECTORY/existing"
     mkdir -p "$DESTINATION"
 
-    run node $CREATE_LZ_OAPP_CLI --ci --example oft --destination $DESTINATION
+    run npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION
 
     assert_failure
     assert_output --regexp "Directory '.*?' already exists"
@@ -54,7 +46,7 @@ teardown() {
     local DESTINATION="$PROJECTS_DIRECTORY/file.json"
     touch $DESTINATION
 
-    run node $CREATE_LZ_OAPP_CLI --ci --example oft --destination $DESTINATION
+    run npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION
     assert_failure
     assert_output --regexp "File '.*?' already exists"
 }
@@ -62,7 +54,7 @@ teardown() {
 @test "should fail if --example is missing in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/unused"
 
-    run node $CREATE_LZ_OAPP_CLI --ci --destination $DESTINATION
+    run npx --yes create-lz-oapp --ci --destination $DESTINATION
 
     assert_failure
     assert_output --partial "Missing argument: --example must be specified in CI mode"
@@ -72,7 +64,7 @@ teardown() {
 @test "should fail if --example is not valid in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/unused"
 
-    run node $CREATE_LZ_OAPP_CLI --ci --destination $DESTINATION --example wat
+    run npx --yes create-lz-oapp --ci --destination $DESTINATION --example wat
 
     assert_failure
     assert [ ! -d $DESTINATION ]
@@ -81,7 +73,7 @@ teardown() {
 @test "should fail if --package-manager is not valid in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/unused"
 
-    run node $CREATE_LZ_OAPP_CLI --ci --destination $DESTINATION --example oft --package-manager wroom
+    run npx --yes create-lz-oapp --ci --destination $DESTINATION --example oft --package-manager wroom
 
     assert_failure
     assert_output --partial "manager wroom not found"
@@ -92,7 +84,7 @@ teardown() {
     local DESTINATION="$PROJECTS_DIRECTORY/branch-test"
 
     # Test with a simple branch name
-    node $CREATE_LZ_OAPP_CLI --ci --example oft --destination $DESTINATION --package-manager pnpm --branch main
+    npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm --branch main
     assert [ -d $DESTINATION ]
     
     # Clean up for next test
@@ -103,7 +95,7 @@ teardown() {
     local DESTINATION="$PROJECTS_DIRECTORY/github-url-test"
 
     # Test with a GitHub URL containing /tree/
-    node $CREATE_LZ_OAPP_CLI --ci --example oft --destination $DESTINATION --package-manager pnpm --branch "https://github.com/LayerZero-Labs/devtools/tree/main"
+    npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm --branch "https://github.com/LayerZero-Labs/devtools/tree/main"
     assert [ -d $DESTINATION ]
     
     # Clean up for next test
@@ -114,7 +106,7 @@ teardown() {
     local DESTINATION="$PROJECTS_DIRECTORY/complex-branch-test"
 
     # Test with a GitHub URL containing a complex branch path
-    node $CREATE_LZ_OAPP_CLI --ci --example oft --destination $DESTINATION --package-manager pnpm --branch "https://github.com/LayerZero-Labs/devtools/tree/test/omnicall-new-createlzoapp"
+    npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm --branch "https://github.com/LayerZero-Labs/devtools/tree/test/omnicall-new-createlzoapp"
     assert [ -d $DESTINATION ]
     
     # Clean up for next test
@@ -127,7 +119,7 @@ teardown() {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp"
     local MNEMONIC="test test test test test test test test test test test junk"
 
-    node $CREATE_LZ_OAPP_CLI --ci --example oapp --destination $DESTINATION --package-manager pnpm
+    npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
 
     MNEMONIC=$MNEMONIC run pnpm hardhat lz:deploy --ci
@@ -143,7 +135,7 @@ teardown() {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft"
     local MNEMONIC="test test test test test test test test test test test junk"
 
-    node $CREATE_LZ_OAPP_CLI --ci --example oft --destination $DESTINATION --package-manager pnpm
+    npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
 
     MNEMONIC=$MNEMONIC run pnpm hardhat lz:deploy --ci
@@ -156,7 +148,7 @@ teardown() {
 @test "should work with pnpm & oapp example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp"
 
-    node $CREATE_LZ_OAPP_CLI --ci --example oapp --destination $DESTINATION --package-manager pnpm
+    npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -167,7 +159,7 @@ teardown() {
 @test "should work with pnpm & oft example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft"
 
-    node $CREATE_LZ_OAPP_CLI --ci --example oft --destination $DESTINATION --package-manager pnpm
+    npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -178,7 +170,7 @@ teardown() {
 @test "should work with pnpm & onft721 example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-onft721"
 
-    node $CREATE_LZ_OAPP_CLI --ci --example onft721 --destination $DESTINATION --package-manager pnpm
+    npx --yes create-lz-oapp --ci --example onft721 --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -189,7 +181,7 @@ teardown() {
 @test "should work with pnpm & oft-adapter example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft-adapter"
 
-    node $CREATE_LZ_OAPP_CLI --ci --example oft-adapter --destination $DESTINATION --package-manager pnpm
+    npx --yes create-lz-oapp --ci --example oft-adapter --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -200,7 +192,7 @@ teardown() {
 @test "should work with pnpm & native-oft-adapter example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-native-oft-adapter"
 
-    LZ_ENABLE_NATIVE_EXAMPLE=1 node $CREATE_LZ_OAPP_CLI --ci --example native-oft-adapter --destination $DESTINATION --package-manager pnpm
+    LZ_ENABLE_NATIVE_EXAMPLE=1 npx --yes create-lz-oapp --ci --example native-oft-adapter --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -211,7 +203,7 @@ teardown() {
 @test "should work with pnpm & mint-burn-oft-adapter example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-mint-burn-oft-adapter"
 
-    LZ_ENABLE_MINTBURN_EXAMPLE=1 node $CREATE_LZ_OAPP_CLI --ci --example mint-burn-oft-adapter --destination $DESTINATION --package-manager pnpm
+    LZ_ENABLE_MINTBURN_EXAMPLE=1 npx --yes create-lz-oapp --ci --example mint-burn-oft-adapter --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -222,7 +214,7 @@ teardown() {
 @test "should work with pnpm & oft solana example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft-solana"
 
-    LZ_ENABLE_SOLANA_OFT_EXAMPLE=1 node $CREATE_LZ_OAPP_CLI --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
+    LZ_ENABLE_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -231,7 +223,7 @@ teardown() {
 @test "should work with pnpm & oapp read example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp-read"
 
-    LZ_ENABLE_READ_EXAMPLE=1 node $CREATE_LZ_OAPP_CLI --ci --example oapp-read --destination $DESTINATION --package-manager pnpm
+    LZ_ENABLE_READ_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oapp-read --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -240,7 +232,7 @@ teardown() {
 @test "should work with experimental flag set to 'yes'" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-experimental-yes"
 
-    LZ_ENABLE_SOLANA_OFT_EXAMPLE=yes node $CREATE_LZ_OAPP_CLI --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
+    LZ_ENABLE_SOLANA_OFT_EXAMPLE=yes npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -249,7 +241,7 @@ teardown() {
 @test "should work with experimental flag set to 'true'" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-experimental-true"
 
-    LZ_ENABLE_SOLANA_OFT_EXAMPLE=true node $CREATE_LZ_OAPP_CLI --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
+    LZ_ENABLE_SOLANA_OFT_EXAMPLE=true npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -258,7 +250,7 @@ teardown() {
 @test "should work with experimental flag set to '1'" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-experimental-one"
 
-    LZ_ENABLE_SOLANA_OFT_EXAMPLE=1 node $CREATE_LZ_OAPP_CLI --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
+    LZ_ENABLE_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -267,7 +259,7 @@ teardown() {
 @test "should work with branch option and experimental flags" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-branch-experimental"
 
-    LZ_ENABLE_READ_EXAMPLE=yes node $CREATE_LZ_OAPP_CLI --ci --example oapp-read --destination $DESTINATION --package-manager pnpm --branch main
+    LZ_ENABLE_READ_EXAMPLE=yes npx --yes create-lz-oapp --ci --example oapp-read --destination $DESTINATION --package-manager pnpm --branch main
     cd "$DESTINATION"
     pnpm compile
     pnpm test

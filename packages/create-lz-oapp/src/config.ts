@@ -39,7 +39,7 @@ export const getExamples = async (branch?: string, logLevel = 'info'): Promise<E
      * To enable example development in a custom repository
      * we open the repository URL field to be taken from the environment
      */
-    const repository = process.env.LAYERZERO_EXAMPLES_REPOSITORY_URL || 'https://github.com/LayerZero-Labs/devtools.git'
+    const repository = 'https://github.com/LayerZero-Labs/devtools.git'
 
     /**
      * To enable example development in a custom branch,
