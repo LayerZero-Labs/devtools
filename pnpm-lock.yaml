@@ -15,6 +15,10 @@ overrides:
 importers:
 
   .:
+    dependencies:
+      create-lz-oapp:
+        specifier: link:/workspaces/devtools/packages/create-lz-oapp
+        version: link:packages/create-lz-oapp
     devDependencies:
       '@changesets/cli':
         specifier: ^2.27.1

@@ -1,5 +1,3 @@
-
-
 # We'll setup an empty testing directory for this script and store its location in this variable
 PROJECTS_DIRECTORY=
 
@@ -80,6 +78,39 @@ teardown() {
     assert_failure
     assert_output --partial "manager wroom not found"
     assert [ ! -d $DESTINATION ]
+}
+
+@test "should accept --branch option in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/branch-test"
+
+    # Test with a simple branch name
+    npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm --branch main
+    assert [ -d $DESTINATION ]
+    
+    # Clean up for next test
+    rm -rf $DESTINATION
+}
+
+@test "should accept GitHub URL with --branch option in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/github-url-test"
+
+    # Test with a GitHub URL containing /tree/
+    npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm --branch "https://github.com/LayerZero-Labs/devtools/tree/main"
+    assert [ -d $DESTINATION ]
+    
+    # Clean up for next test
+    rm -rf $DESTINATION
+}
+
+@test "should accept GitHub URL with complex branch path in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/complex-branch-test"
+
+    # Test with a GitHub URL containing a complex branch path
+    npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm --branch "https://github.com/LayerZero-Labs/devtools/tree/test/omnicall-new-createlzoapp"
+    assert [ -d $DESTINATION ]
+    
+    # Clean up for next test
+    rm -rf $DESTINATION
 }
 
 # This test is a bit ridiculous because it basically checks that we error out
@@ -193,6 +224,42 @@ teardown() {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp-read"
 
     LZ_ENABLE_READ_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oapp-read --destination $DESTINATION --package-manager pnpm
+    cd "$DESTINATION"
+    pnpm compile
+    pnpm test
+}
+
+@test "should work with experimental flag set to 'yes'" {
+    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-experimental-yes"
+
+    LZ_ENABLE_SOLANA_OFT_EXAMPLE=yes npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
+    cd "$DESTINATION"
+    pnpm compile
+    pnpm test
+}
+
+@test "should work with experimental flag set to 'true'" {
+    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-experimental-true"
+
+    LZ_ENABLE_SOLANA_OFT_EXAMPLE=true npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
+    cd "$DESTINATION"
+    pnpm compile
+    pnpm test
+}
+
+@test "should work with experimental flag set to '1'" {
+    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-experimental-one"
+
+    LZ_ENABLE_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
+    cd "$DESTINATION"
+    pnpm compile
+    pnpm test
+}
+
+@test "should work with branch option and experimental flags" {
+    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-branch-experimental"
+
+    LZ_ENABLE_READ_EXAMPLE=yes npx --yes create-lz-oapp --ci --example oapp-read --destination $DESTINATION --package-manager pnpm --branch main
     cd "$DESTINATION"
     pnpm compile
     pnpm test
