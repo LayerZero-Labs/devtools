@@ -13,6 +13,11 @@ setup() {
     load "../lib/bats-support/load.bash"
     load "../lib/bats-assert/load.bash"
 
+    echo $CURRENT_DIR
+    echo $WORKSPACE_ROOT
+    echo $CREATE_LZ_OAPP
+    
+
     # Setup a directory for all the projects created by this test
     PROJECTS_DIRECTORY=$(mktemp -d)
 }
