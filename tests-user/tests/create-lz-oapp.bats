@@ -6,6 +6,11 @@ CURRENT_DIR="$(pwd)"
 WORKSPACE_ROOT="${CURRENT_DIR%/devtools/*}/devtools"
 CREATE_LZ_OAPP="$WORKSPACE_ROOT/packages/create-lz-oapp/cli.js"
 
+# Runs once before setup() so that we dont build it everytime
+setup_file() {
+    pnpm turbo build --filter create-lz-oapp
+}
+
 # This will be run at the start of this testing suite,
 # similar to beforeAll() in jest
 setup() {
@@ -16,7 +21,6 @@ setup() {
     echo $CURRENT_DIR
     echo $WORKSPACE_ROOT
     echo $CREATE_LZ_OAPP
-    
 
     # Setup a directory for all the projects created by this test
     PROJECTS_DIRECTORY=$(mktemp -d)
