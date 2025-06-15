@@ -4,6 +4,11 @@ PROJECTS_DIRECTORY=
 # Find devtools root by walking up from current directory until we hit devtools/
 CREATE_LZ_OAPP="../packages/create-lz-oapp/cli.js"
 echo "pwd: $(pwd)"
+echo "ls"
+ls
+echo "ls: ../"
+ls "../"
+echo "ls: ../packages/create-lz-oapp"
 ls "../packages/create-lz-oapp"
 
 # This will be run at the start of this testing suite,
