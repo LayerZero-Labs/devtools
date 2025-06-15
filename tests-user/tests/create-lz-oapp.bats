@@ -1,8 +1,10 @@
 # We'll setup an empty testing directory for this script and store its location in this variable
 PROJECTS_DIRECTORY=
 
-# "path to devtools root"+"path to cli.js"
-CREATE_LZ_OAPP="$(git rev-parse --show-toplevel)/packages/create-lz-oapp/cli.js"
+# Find devtools root by walking up from current directory until we hit devtools/
+CURRENT_DIR="$(pwd)"
+WORKSPACE_ROOT="${CURRENT_DIR%/devtools/*}/devtools"
+CREATE_LZ_OAPP="$WORKSPACE_ROOT/packages/create-lz-oapp/cli.js"
 
 # This will be run at the start of this testing suite,
 # similar to beforeAll() in jest
