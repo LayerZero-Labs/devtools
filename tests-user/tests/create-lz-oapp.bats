@@ -8,7 +8,11 @@ CREATE_LZ_OAPP="$WORKSPACE_ROOT/packages/create-lz-oapp/cli.js"
 
 # Runs once before setup() so that we dont build it everytime
 setup_file() {
-    pnpm turbo build --filter create-lz-oapp
+    if [[ "$CI" == "true" ]]; then
+        pushd "$WORKSPACE_ROOT"
+        pnpm turbo build --filter create-lz-oapp
+        popd
+    fi
 }
 
 # This will be run at the start of this testing suite,
@@ -17,10 +21,6 @@ setup() {
     # Load bats-assert and bats-support
     load "../lib/bats-support/load.bash"
     load "../lib/bats-assert/load.bash"
-
-    echo $CURRENT_DIR
-    echo $WORKSPACE_ROOT
-    echo $CREATE_LZ_OAPP
 
     # Setup a directory for all the projects created by this test
     PROJECTS_DIRECTORY=$(mktemp -d)
