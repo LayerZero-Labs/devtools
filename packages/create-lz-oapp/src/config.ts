@@ -39,16 +39,18 @@ export const getExamples = async (branch?: string, logLevel = 'info'): Promise<E
      * To enable example development in a custom repository
      * we open the repository URL field to be taken from the environment
      */
-    const repository = process.env.LAYERZERO_EXAMPLES_REPOSITORY_URL || 'https://github.com/LayerZero-Labs/devtools.git'
+    const repository = 'https://github.com/LayerZero-Labs/devtools.git'
 
     /**
      * To enable example development in a custom branch,
      * we open up the ref field to be taken from the environment or CLI args
      *
-     * `LAYERZERO_EXAMPLES_REPOSITORY_REF` can then be set to something like `#develop` or `#my-custom-branch`
-     * to take the examples from a tag, a branch or a commit hash
+     * to take the examples from a tag, a branch or a commit hash, you can use the branch parameter
+     * Ex: npx create-lz-oapp --branch 'your-branch-name'
+     * or
+     * Ex: EXPERIMENTAL_TAG=1 npx create-lz-oapp --branch 'your-branch-name'
      */
-    const ref = branch ? extractBranchFromUrl(branch) : process.env.LAYERZERO_EXAMPLES_REPOSITORY_REF || 'main'
+    const ref = branch ? extractBranchFromUrl(branch) : 'main'
     logger.verbose(`Using repository: ${repository} and ref: ${ref}`)
 
     let oapp_examples: Example[] = []
