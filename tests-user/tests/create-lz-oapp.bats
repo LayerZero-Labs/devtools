@@ -5,7 +5,9 @@ PROJECTS_DIRECTORY=
 CURRENT_DIR="$(pwd)"
 WORKSPACE_ROOT="${CURRENT_DIR%/devtools/*}/devtools"
 CREATE_LZ_OAPP="$WORKSPACE_ROOT/packages/create-lz-oapp/cli.js"
-
+echo "CI : $CI"
+echo "WORKSPACE_ROOT: $WORKSPACE_ROOT"
+echo "CREATE_LZ_OAPP: $CREATE_LZ_OAPP"
 # Runs once before setup() so that we dont build it everytime
 setup_file() {
     if [[ "$CI" == "true" ]]; then
