@@ -127,7 +127,7 @@ services:
         echo "create-lz-oapp:ref          $${LAYERZERO_EXAMPLES_REPOSITORY_REF}"
 
         # Now we run the user tests
-        cd /app/devtools/tests-user/
+        cd tests-user/
         ./lib/bats-core/bin/bats --verbose-run --recursive tests/create-lz-oapp.bats
     volumes:
       # If we want to clone from github.com, we'll need its public keys added to our SSH config

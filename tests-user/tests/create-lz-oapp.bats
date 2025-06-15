@@ -2,12 +2,8 @@
 PROJECTS_DIRECTORY=
 
 # Find devtools root by walking up from current directory until we hit devtools/
-CURRENT_DIR="$(pwd)"
-WORKSPACE_ROOT="${CURRENT_DIR%/devtools/*}/devtools"
-CREATE_LZ_OAPP="$WORKSPACE_ROOT/packages/create-lz-oapp/cli.js"
+CREATE_LZ_OAPP="../packages/create-lz-oapp/cli.js"
 
-echo $CURRENT_DIR
-echo $WORKSPACE_ROOT
 echo $CREATE_LZ_OAPP
 
 # This will be run at the start of this testing suite,
