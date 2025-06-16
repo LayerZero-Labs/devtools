@@ -8,7 +8,7 @@ import { IERC20, IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/ERC2
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
 
-contract ERC4626Adapter is IERC4626Adapter {
+contract ERC4626Adapter is IERC4626Adapter, IERC20 {
     using Math for uint256;
     using SafeERC20 for IERC20;
     using SafeERC20 for IERC20MintBurnExtension;
@@ -70,14 +70,39 @@ contract ERC4626Adapter is IERC4626Adapter {
         return address(_share);
     }
 
-    /// @dev Adding to match EIP-4626 Specification
+    /// @dev Adding to proxy the share token's approve function
+    function approve(address spender, uint256 value) public virtual returns (bool) {
+        _share.approve(msg.sender, spender, value);
+        return true;
+    }
+
+    /// @dev Adding to proxy the share token's balance of an owner
+    function balanceOf(address owner) public view virtual returns (uint256) {
+        return IERC20(share()).balanceOf(owner);
+    }
+
+    /// @dev Adding to proxy the share token's total supply
     function totalSupply() public view virtual returns (uint256) {
         return IERC20(share()).totalSupply();
     }
 
-    /// @dev Adding to match EIP-4626 Specification
-    function balanceOf(address owner) public view virtual returns (uint256) {
-        return IERC20(share()).balanceOf(owner);
+    /// @dev Adding to proxy the share token's transfer function
+    function transfer(address to, uint256 value) public virtual returns (bool) {
+        address owner = msg.sender;
+        IERC20MintBurnExtension(share()).transfer(owner, to, value);
+        return true;
+    }
+
+    /// @dev Adding to proxy the share token's transferFrom function
+    function transferFrom(address from, address to, uint256 value) public virtual returns (bool) {
+        _share.spendAllowance(from, msg.sender, value);
+        IERC20MintBurnExtension(share()).transfer(from, to, value);
+        return true;
+    }
+
+    /// @dev Adding to proxy the share token's allowance function
+    function allowance(address owner, address spender) public view virtual returns (uint256) {
+        return IERC20(share()).allowance(owner, spender);
     }
 
     /** @dev See {IERC4626-totalAssets}. */
