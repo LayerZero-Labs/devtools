@@ -259,10 +259,11 @@ contract OmniRead is IOmniRead, OAppRead {
         OmniReadRequest[] memory readRequests
     ) internal view returns (OmniReadRequest[] memory) {
         for (uint256 i = readRequests.length; i > 0; ) {
-            readRequests[i - 1].blockNumOrTimestamp = readRequests[i - 1].blockNumOrTimestamp == 0 &&
-                readRequests[i - 1].isBlockNum
-                ? uint64(block.number)
-                : uint64(block.timestamp);
+            if (readRequests[i - 1].blockNumOrTimestamp == 0) {
+                readRequests[i - 1].blockNumOrTimestamp = readRequests[i - 1].isBlockNum
+                    ? uint64(block.number)
+                    : uint64(block.timestamp);
+            }
 
             unchecked {
                 --i;
