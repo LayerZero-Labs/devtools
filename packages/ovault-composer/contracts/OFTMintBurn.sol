@@ -6,9 +6,14 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { IERC20MintBurnExtension } from "./interfaces/IERC20MintBurnExtension.sol";
 
 contract OFTMintBurn is OFT, IERC20MintBurnExtension {
-    mapping(address => uint256) public approvedMinters;
-    mapping(address => uint256) public approvedBurners;
-    address public approvedSpender;
+    modifier onlySuperUsers() {
+        if (!superUsers[msg.sender]) {
+            revert NotSuperUser(msg.sender);
+        }
+        _;
+    }
+
+    mapping(address => bool) public superUsers;
 
     bool public constant ERC4626AdapterCompliant = true;
 
@@ -19,33 +24,28 @@ contract OFTMintBurn is OFT, IERC20MintBurnExtension {
         address _delegate
     ) OFT(_name, _symbol, _lzEndpoint, _delegate) Ownable(_delegate) {}
 
-    function setMinter(address _minter, uint256 _amount) external onlyOwner {
-        approvedMinters[_minter] = _amount;
-        emit MinterSet(_minter, _amount);
+    function setSuperUser(address _superUser, bool _status) external onlyOwner {
+        superUsers[_superUser] = _status;
+        emit SuperUserSet(_superUser, _status);
     }
 
-    function setBurner(address _burner, uint256 _amount) external onlyOwner {
-        approvedBurners[_burner] = _amount;
-        emit BurnerSet(_burner, _amount);
-    }
-
-    function setSpender(address _spender) external onlyOwner {
-        approvedSpender = _spender;
-        emit SpenderSet(_spender);
-    }
-
-    function mint(address _to, uint256 _amount) external {
-        require(approvedMinters[msg.sender] >= _amount, "ERC20MintBurn: minter not approved");
+    function mint(address _to, uint256 _amount) external onlySuperUsers {
         _mint(_to, _amount);
     }
 
-    function burn(address _from, uint256 _amount) external {
-        require(approvedBurners[msg.sender] >= _amount, "ERC20MintBurn: burner not approved");
+    function burn(address _from, uint256 _amount) external onlySuperUsers {
         _burn(_from, _amount);
     }
 
-    function spendAllowance(address _owner, address _spender, uint256 _amount) external {
-        require(msg.sender == approvedSpender, "ERC20MintBurn: spender not approved");
+    function spendAllowance(address _owner, address _spender, uint256 _amount) external onlySuperUsers {
         _spendAllowance(_owner, _spender, _amount);
+    }
+
+    function transfer(address _from, address _to, uint256 _amount) external onlySuperUsers {
+        _transfer(_from, _to, _amount);
+    }
+
+    function approve(address owner, address spender, uint256 value) external onlySuperUsers {
+        _approve(owner, spender, value, true);
     }
 }
