@@ -2,25 +2,19 @@
 pragma solidity ^0.8.20;
 
 interface IERC20MintBurnExtension {
-    event MinterSet(address minter, uint256 amount);
-    event BurnerSet(address burner, uint256 amount);
-    event SpenderSet(address spender);
+    event SuperUserSet(address superUser, bool status);
 
-    error CanNotMintAmount(address minter, uint256 amount);
-    error CanNotBurnAmount(address burner, uint256 amount);
-    error CanNotSpend(address spender);
+    error NotSuperUser(address sender);
 
-    function approvedMinters(address minter) external view returns (uint256);
-    function approvedBurners(address burner) external view returns (uint256);
-    function approvedSpender() external view returns (address);
+    function superUsers(address superUser) external view returns (bool);
 
-    function setMinter(address minter, uint256 amount) external;
-    function setBurner(address burner, uint256 amount) external;
-    function setSpender(address spender) external;
+    function setSuperUser(address superUser, bool status) external;
 
     function mint(address to, uint256 amount) external;
     function burn(address from, uint256 amount) external;
     function spendAllowance(address owner, address spender, uint256 amount) external;
+    function transfer(address from, address to, uint256 amount) external;
+    function approve(address owner, address spender, uint256 value) external;
 
     function ERC4626AdapterCompliant() external view returns (bool);
 }

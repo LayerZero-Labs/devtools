@@ -51,24 +51,6 @@ interface IERC4626Adapter is IERC20Metadata {
     function share() external view returns (address assetTokenAddress);
 
     /**
-     * @dev Returns the total amount of the share token that is “managed” by Vault.
-     *
-     * - SHOULD include any compounding that occurs from yield.
-     * - MUST be inclusive of any fees that are charged against assets in the Vault.
-     * - MUST NOT revert.
-     * - Added to match EIP-4626 Specification
-     */
-    function totalSupply() external view returns (uint256 totalManagedShares);
-
-    /**
-     * @dev Returns the amount of shares that the Vault holds for an address.
-     *
-     * - MUST NOT revert.
-     * - Added to match EIP-4626 Specification
-     */
-    function balanceOf(address owner) external view returns (uint256 shares);
-
-    /**
      * @dev Returns the total amount of the underlying asset that is “managed” by Vault.
      *
      * - SHOULD include any compounding that occurs from yield.

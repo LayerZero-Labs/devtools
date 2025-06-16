@@ -35,9 +35,7 @@ contract OVaultTest is TestHelperOz5 {
         share = new MockOFTMintBurn(SHARE_NAME, SHARE_SYMBOL, address(endpoints[A_EID]), address(this));
         vault = new MockOVault(asset, share);
 
-        share.setMinter(address(vault), type(uint256).max);
-        share.setBurner(address(vault), type(uint256).max);
-        share.setSpender(address(vault));
+        share.setSuperUser(address(vault), true);
     }
 
     function test_ovault_invariantMetadata() public view {

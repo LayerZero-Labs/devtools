@@ -29,9 +29,7 @@ contract ERC4626AdapterTest is Test {
         share = new MockERC20MintBurn(SHARE_NAME, SHARE_SYMBOL);
         vault = new MockERC4626Adapter(address(asset), address(share));
 
-        share.setMinter(address(vault), type(uint256).max);
-        share.setBurner(address(vault), type(uint256).max);
-        share.setSpender(address(vault));
+        share.setSuperUser(address(vault), true);
     }
 
     function test_erc4626_invariantMetadata() public view {
