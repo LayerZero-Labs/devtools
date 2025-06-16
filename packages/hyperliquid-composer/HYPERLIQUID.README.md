@@ -4,7 +4,7 @@ We first start this document by talking about Hyperliquid, its quirks and the ch
 
 ## Hyperliquid Networks
 
-Hyperliquid has 2 “chains” - an `EVM` named `HyperEVM` and a `L1` called `HyperCore`.
+Hyperliquid consists of - an `EVM` named `HyperEVM` and a `L1` called `HyperCore`. These networks function together under the same `HyperBFT` consensus to act as a singular network.
 
 HyperCore, or Core, is a high-performance Layer 1 which manages the Hyperliquid exchange’s on-chain perpetual futures and spot order books with one-block finality. ​
 
@@ -15,8 +15,6 @@ The `EVM` has precompiles that let you interact with `HyperCore`. The `HyperCore
 You can interact with `HyperEVM` via traditional `eth_` rpc calls - full list [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/evm/json-rpc).
 
 `HyperCore` however takes in a domain specific calls named `L1 actions` or `actions` - full list [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/exchange-endpoint).
-
-Note: archival nodes are NOT available on `HyperEVM`.
 
 `HyperEVM` and `HyperCore` have their own block explorers. A list of explorers is [here](https://hyperliquid-co.gitbook.io/community-docs/community-and-projects/ecosystem-projects/tools). I personally use hypurrscan for `HyperCore` - <https://testnet.hypurrscan.io/> and for `HyperEVM` I use purrsec - <https://testnet.purrsec.com/>.
 
@@ -33,7 +31,21 @@ curl -X POST https://api.hyperliquid-testnet.xyz/info \
 This will give you the spot meta data for HyperCore. (this is an example)
 
 ```json
-{"universe": [{"name": "ALICE", "szDecimals": 0, "weiDecimals": 6, "index": 1231, "tokenId": "0x503e1e612424896ec6e7a02c7350c963", "isCanonical": false, "evmContract": null, "fullName": null, "deployerTradingFeeShare": "1.0"}]}
+{
+  "universe": [
+    {
+      "name": "ALICE",
+      "szDecimals": 0,
+      "weiDecimals": 6,
+      "index": 1231,
+      "tokenId": "0x503e1e612424896ec6e7a02c7350c963",
+      "isCanonical": false,
+      "evmContract": null,
+      "fullName": null,
+      "deployerTradingFeeShare": "1.0"
+    }
+  ]
+}
 ```
 
 The `tokenId` is the address of the token on HyperCore.
@@ -45,22 +57,24 @@ The `deployerTradingFeeShare` is the fee share for the deployer of the token.
 An action as defined by Hyperliquid is a transaction that is sent to the `HyperCore` - as it updates state on the `HyperCore` it needs to be a signed transaction from the wallet of the action sender.
 
 You need to use `ethers-v6` to sign actions - <https://docs.ethers.org/v6/api/providers/#Signer-signTypedData>
+
 ```bash
 # add ethers-v6 to your project as an alias for ethers@^6.13.5
 pnpm add ethers-v6@npm:ethers@^6.13.5
 ```
 
 ```ts
-import { Wallet } from 'ethers' // ethers-v5 wallet
-import { Wallet as ethersV6Wallet } from 'ethers-v6' // ethers-v6 wallet
+import { Wallet } from "ethers"; // ethers-v5 wallet
+import { Wallet as ethersV6Wallet } from "ethers-v6"; // ethers-v6 wallet
 
-const signerv6 = new ethersV6Wallet(wallet.privateKey) // where wallet is an ethers.Wallet from ethers-v5
-const signature = await signerv6.signTypedData(domain, types, message)
+const signerv6 = new ethersV6Wallet(wallet.privateKey); // where wallet is an ethers.Wallet from ethers-v5
+const signature = await signerv6.signTypedData(domain, types, message);
 ```
 
 This is because in ethers-v5 EIP-712 signing is not stable. - <https://docs.ethers.org/v5/api/signer/#Signer-signTypedData>
+
 > Experimental feature (this method name will change)
-> This is still an experimental feature. If using it, please specify the exact version of ethers you are using (e.g. spcify "5.0.18", not "^5.0.18") as the method name will be renamed from _signTypedData to signTypedData once it has been used in the field a bit.
+> This is still an experimental feature. If using it, please specify the exact version of ethers you are using (e.g. spcify "5.0.18", not "^5.0.18") as the method name will be renamed from \_signTypedData to signTypedData once it has been used in the field a bit.
 
 You can use the official `Hyperliquid Python SDK` linked [here](https://github.com/hyperliquid-dex/hyperliquid-python-sdk) to interact with HyperCore. We also built an in-house minimal typescript SDK that focuses on switching blocks, deploying the HyperCore token, and connecting the HyperCore token to a HyperEVM ERC20 (oft).
 
@@ -70,43 +84,45 @@ You can use the same account on `HyperEVM` and `HyperCore`, this is because `Hyp
 
 ## Multi Block Architecture
 
-Since `HyperEVM` and `HyperCore` are seperate entities they have their own blocks. `Hyperliquid` interleaves the EVM and Core blocks in order of which they are created. 
+Since `HyperEVM` and `HyperCore` are seperate entities they have their own blocks. `Hyperliquid` interleaves the EVM and Core blocks in order of which they are created.
 
-`HyperEVM` has 2 blocks - "small blocks" that are designed for increased throughput and therefore have a quick block time and have a lower max gas limit - 2 seconds and 2M gas (this is the default) - these blocks are meant for transactions that update state and not really for deploying. While you can deploy contracts that consume lower than 2M gas (out OFTs are larger than 2M) you would need "big blocks" that are allow for a larger max gas (30M gas) at the tradeoff of there only being 1 block per minute. Every "big blocks" only has 1 transaction.
+`HyperEVM` has 2 blocks - "small blocks" that are designed for increased throughput and therefore have a quick block time and have a lower max gas limit - 1 second and 2M gas (this is the default) - these blocks are meant for transactions that update state and not really for deploying. While you can deploy contracts that consume lower than 2M gas (out OFTs are larger than 2M) you would need "big blocks" that are allow for a larger max gas (30M gas) at the tradeoff of there only being 1 block per minute. Every "big blocks" only has 1 transaction.
 
 They are both EVM blocks and you can toggle between them by sending an L1 action of type `evmUserModify` which is what [this block toggler does](https://hyperevm-block-toggle.vercel.app/)
 
 ```json
-{"type": "evmUserModify", "usingBigBlocks": true}
+{ "type": "evmUserModify", "usingBigBlocks": true }
 ```
 
 You can also use `bigBlockGasPrice` instead of `gasPrice` in your transactions.
 
 > ⚠️ Note: This flags the user as using big blocks and all subsequent transactions on HyperEVM will be of type big block. You can also toggle this flag on and off.
 
-`HyperCore` has its own blocks which results in 3 blocks.  As Core and EVM blocks are produced at differing speeds with HyperCore creating more than HyperEVM the blocks created are not `[EVM]-[Core]-[EVM]` but rather something like:
+`HyperCore` has its own blocks which results in 3 blocks. As Core and EVM blocks are produced at differing speeds with HyperCore creating more than HyperEVM the blocks created are not `[EVM]-[Core]-[EVM]` but rather something like:
 
 ```txt
 [Core]-[Core]-[EVM-small]-[Core]-[Core]-[EVM-small]-[Core]-[EVM-large]-[Core]-[EVM-small]
 ```
 
-## Precompiles
+## Precompiles and System Contracts
 
 There are 2 ways in which Hyperliquid uses precompiles - "System Contracts" and "L1ActionPrecompiles"
 
 The system contracts are:
+
 - `0x2222222222222222222222222222222222222222` is the system contract address for the `HYPE` token
 - `0x200000000000000000000000000000000000abcd` is the system contract address for a created Core Spot token
+- `0x3333333333333333333333333333333333333333` is the `CoreWriter` and is used to send transactions to HyperCore.
 
 and `L1ActionPrecompiles`
+
 - `0x0000000000000000000000000000000000000000` is one of the many `L1Read` precompiles.
-- `0x3333333333333333333333333333333333333333` is the `L1WritePrecompile` and is used to send transactions to HyperCore.
 
 More `L1ActionPrecompiles` found [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/interacting-with-hypercore).
 
-`L1Read` reads from the last produced `HyperCore` block at the time of EVM-transaction execution. Similarly `L1Write` writes to the first produced `HyperCore` block after the production of the EVM-block.
+`L1Read` reads from the last produced `HyperCore` block at the time of EVM-transaction execution. Similarly `CoreWriter` writes to the first produced `HyperCore` block after the production of the EVM-block. This is available on both Testnet and Mainnet.
 
-Note: the `L1Read` and `L1Write` precompiles are enabled only on Testnet. We have no timeline from the Hyperliquid team regarding a mainnet launch, although they have updated their mainnet node to support them.
+> Note: The `CoreWriter` precompiles are enabled only on Testnet. There is no publicly available timeline for a mainnet rollout, although the mainnet node software includes support for these precompiles.
 
 ## Token Standards
 
@@ -160,11 +176,11 @@ Homework to the reader:
 
 1. Based on the above understanding of the asset bridge address can you figure out why `Hyperliquidity` breaks the bridge? (hint: it messes with collaterization)
 2. If you engage with partial funding and let's say you start with 100 Core tokens at your deployer address and you have intiated the bridge with:
-    a) 30 Core tokens
-    b) 70 Core tokens
-    And these initial tokens are consumed by the users on HyperEVM. Is there a way you can fund the bridge on HyperCore with your remaining tokens?
-    (hint 1: only one of them can)
-    (hint 2: try failing the transaction on purpose)
+   a) 30 Core tokens
+   b) 70 Core tokens
+   And these initial tokens are consumed by the users on HyperEVM. Is there a way you can fund the bridge on HyperCore with your remaining tokens?
+   (hint 1: only one of them can)
+   (hint 2: try failing the transaction on purpose)
 
 ## HyperEVM <> HyperCore Communication
 
@@ -176,8 +192,7 @@ HyperEVM can send state to HyperCore through `events` at certain `precompile` ad
 Spot assets can be sent from HyperEVM to HyperCore and vice versa. They are called `Core Spot` and `EVM Spot`.
 These are done by sending an `ERC20::transfer` with asset bridge address as the recipient.
 
-The event emitted is `Transfer(address from, address to, uint256 value)` => `Transfer(_from, assetBridgeAddress, value);`
-And this is picked up by the Hyperliquid team running the backend. (we do not have move information about this it is closed source and owned by the Hyperliquid team)
+The event emitted is `Transfer(address from, address to, uint256 value)` => `Transfer(_from, assetBridgeAddress, value);` which is processed by supporting infrastructure on the Hyperliquid blockchain.
 
 Note: The transaction MUST be sent to the `assetBridgeAddress`. Transfers to any other address is an address-address transfer within HyperEVM/HyperCore. For a cross-chain transfer you need to to:
 
@@ -201,17 +216,17 @@ That particular `Transfer` event is what Hyperliquid L1 nodes/relayers listen to
 
 ```solidity
 struct SendParam {
-    uint32 dstEid;
-    bytes32 to; // OFT address (so that the OFT can execute the `compose` call)
-    uint256 amountLD;
-    uint256 minAmountLD;
-    bytes extraOptions;
-    bytes composeMsg; // token receiver address (msg.sender if you want your address to receive the token)
-    bytes oftCmd;
+  uint32 dstEid;
+  bytes32 to; // OFT address (so that the OFT can execute the `compose` call)
+  uint256 amountLD;
+  uint256 minAmountLD;
+  bytes extraOptions;
+  bytes composeMsg; // token receiver address (msg.sender if you want your address to receive the token)
+  bytes oftCmd;
 }
 ```
 
-Now that the token is with the `Composer` on HyperCore it then performs a `L1WritePrecompile` transaction to `0x33...333` (the `L1WritePrecompile` address) telling it to perform a `spot transfer` of the tokens from it's address to the `receiver`.
+Now that the token is with the `Composer` on HyperCore it then performs a `CoreWriter` transaction to `0x33...333` (the `CoreWriter` address) telling it to perform a `spot transfer` of the tokens from it's address to the `receiver`.
 
 It must be noted that due to the token decimal difference between the `EVM::ERC20` and `HyperCore::HIP1` the tokens you see on `HyperCore` would be different with the wei decimal different (`HIP1.decimals()` - `ERC20.decimals()` in range `[-2,18]`). But when converting them back from `HyperCore` to `HyperEVM` the token decimals gets restored.
 
@@ -258,16 +273,28 @@ oft::transfer(_receiver_, amounts.dust);
 As a result the invariant of `amounts.dust + amounts.evm = _amount` and `amounts.evm = 10.pow(decimalDiff) * amounts.core` are always satisfied.
 
 ```solidity
-function _sendAssetToHyperCore(address _receiver, uint256 _amountLD) internal virtual {
-    IHyperAssetAmount memory amounts = quoteHyperCoreAmount(_amountLD, true);
+function _sendAssetToHyperCore(
+  address _receiver,
+  uint256 _amountLD
+) internal virtual {
+  IHyperAssetAmount memory amounts = quoteHyperCoreAmount(_amountLD, true);
 
-    if (amounts.evm > 0) {
-        token.safeTransfer(oftAsset.assetBridgeAddress, amounts.evm);
-       IHyperLiquidWritePrecompile(HLP_PRECOMPILE_WRITE).sendSpot(_receiver, oftAsset.coreIndexId, amounts.core);
-    }
-    if (amounts.dust > 0) {
-        token.safeTransfer(_receiver, amounts.dust);
-    }
+  if (amounts.evm > 0) {
+    token.safeTransfer(oftAsset.assetBridgeAddress, amounts.evm);
+    bytes memory action = abi.encodePacked(
+      _receiver,
+      oftAsset.coreIndexId,
+      amounts.core
+    );
+    bytes memory payload = abi.encodePacked(
+      abi.encodePacked(hex"1600", action) // 1600 is the [version][actionId][actionBytes] - https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/interacting-with-hypercore#action-encoding-details
+    );
+    /// Transfers tokens from the composer address on HyperCore to the _receiver
+    ICoreWriter(HLP_CORE_WRITER).sendRawAction(payload);
+  }
+  if (amounts.dust > 0) {
+    token.safeTransfer(_receiver, amounts.dust);
+  }
 }
 ```
 
@@ -290,8 +317,8 @@ npx @layerzerolabs/hyperliquid-composer to-bridge --token-index <coreIndex>
 #### List Core Spot metadata
 
 ```bash
-npx @layerzerolabs/hyperliquid-composer core-spot \ 
-    --action get \  
+npx @layerzerolabs/hyperliquid-composer core-spot \
+    --action get \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
@@ -317,6 +344,16 @@ npx @layerzerolabs/hyperliquid-composer hip-token   \
     [--log-level {info | verbose}]
 ```
 
+#### View a deployment state
+
+```bash
+npx @layerzerolabs/hyperliquid-composer spot-deploy-state \
+    --token-index <coreIndex> \
+    --network {testnet | mainnet} \
+    --deployer-address <0x> \
+    [--log-level {info | verbose}]
+```
+
 ### Switching Blocks (`evmUserModify`)
 
 PR : <https://github.com/LayerZero-Labs/devtools/pull/1417>
@@ -324,7 +361,7 @@ PR : <https://github.com/LayerZero-Labs/devtools/pull/1417>
 ```bash
 npx @layerzerolabs/hyperliquid-composer set-block \
     --size {small | big} \
-    --network {testnet | mainnet} \ 
+    --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY \
     [--log-level {info | verbose}]
 ```
@@ -348,10 +385,10 @@ npx @layerzerolabs/hyperliquid-composer trading-fee \
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer user-genesis \
-    --token-index <coreIndex> \ 
+    --token-index <coreIndex> \
     [--action  {* | userAndWei | existingTokenAndWei | blacklistUsers}]
-    --network {testnet | mainnet} \ 
-    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --network {testnet | mainnet} \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -361,17 +398,27 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
 npx @layerzerolabs/hyperliquid-composer set-genesis \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
-    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
-#### 4 `registerSpot`
+#### 4 `createSpotDeployment`
+
+```bash
+npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
+    --token-index <coreIndex> \
+    --network {testnet | mainnet} \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
+    [--log-level {info | verbose}]
+```
+
+#### 5 `registerSpot`
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer register-spot \
     --token-index <coreIndex> \
-    --network {testnet | mainnet} \ 
-    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --network {testnet | mainnet} \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -445,7 +492,7 @@ Wire the OFTs together with the standard layerzero wire command (or any other wa
 npx hardhat lz:oapp:wire --oapp-config <layerzero.config.ts>
 ```
 
- Test the OFTs qith `quoteSend()` or by sending a test lzTransaction across the networks.
+Test the OFTs qith `quoteSend()` or by sending a test lzTransaction across the networks.
 
 ## Deploy the Core Spot
 
@@ -463,9 +510,13 @@ curl -X POST "https://api.hyperliquid-testnet.xyz/info" \
 This will return a json object with the current state of the spot deployment.
 (building a SDK wrapper around this is on our roadmap)
 
-### Step 0 `core-spot create`
+### Step 1/6 `Purchase the ticker`
 
-This will create a new file under `./deployments/hypercore-{testnet | mainnet}` with the name of the Core Spot token index. This is not a Hyperliquid step but rather something to make the deployment process easier. It is crucial to the functioning of the token deployment after which it really is not needed.
+You will have to buy a ticker from the Hyperliquid UI - <https://app.hyperliquid.xyz/deploySpot>
+
+> ⚠️ note: Unless you buy the ticker you will not be able to deploy the Core Spot.
+
+After this we can use the `core-spot create` command to create a new file under `./deployments/hypercore-{testnet | mainnet}` with the name of the Core Spot token index. This is not a Hyperliquid step but rather something to make the deployment process easier. It is crucial to the functioning of the token deployment after which it really is not needed.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer core-spot \
@@ -476,25 +527,7 @@ npx @layerzerolabs/hyperliquid-composer core-spot \
     [--log-level {info | verbose}]
 ```
 
-### Step 1/4 `setDeployerTradingFeeShare`
-
-This is the step where you set the trading fee share for the deployer. It can be in the range of `[0%,100%]`.
-
-A deployer fee share <https://hyperliquid.gitbook.io/hyperliquid-docs/trading/fees> is claimed per transaction on HyperCore. Half of the base rate (50%) is allocated as the deployer fee share. The deployer can choose to forgo this fee share by setting the share to `0%`. This causes the deployer's fee share part to be burnt. If it were to be set to `100%`, the deployer would receive the full fee share part of the fee.
-
-> ⚠️ Note: The trading fee can be reset as long as the new share is lower than the previous share.
-> ⚠️ Note: This step can also be run after the core spot is deployed.
-
-```bash
-npx @layerzerolabs/hyperliquid-composer trading-fee \
-    --token-index <coreIndex> \
-    --share <[0%,100%]> \
-    --network {testnet | mainnet} \
-    --private-key $PRIVATE_KEY_HYPERLIQUID \
-    [--log-level {info | verbose}]
-```
-
-### Step 2/4 `userGenesis`
+### Step 2/6 `userGenesis`
 
 This is the part where you set the genesis balances for the deployer and the users. Since `HyperCore` tokens are of uint type `u64` the most tokens possible are `18446744073709551615`.
 
@@ -530,35 +563,37 @@ Error deploying spot: missing token max_supply
 npx @layerzerolabs/hyperliquid-composer user-genesis \
     --token-index <coreIndex> \
     [--action  {* | userAndWei | existingTokenAndWei | blacklistUsers}]
-    --network {testnet | mainnet} \ 
-    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --network {testnet | mainnet} \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
 > ⚠️ Note: There is no limit to the number of time you can re-run this command.
 
-### Step 3/4 `genesis`
+### Step 3/6 `genesis`
 
 This is the step that registers the above genesis balances on `HyperCore`.
+
 > ⚠️ Note: This is irreversible.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer set-genesis \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
-    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
-### Step 4/4 `registerSpot`
+### Step 4/6 `registerSpot`
 
 This is the step that registers the Core Spot on `HyperCore` and creates a base-quote pair against `USDC`, which is the only supported quote token as of now.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer register-spot \
     --token-index <CoreIndex> \
-    --network {testnet | mainnet} \ 
-    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --network {testnet | mainnet} \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
+    [--log-level {info | verbose}]
 ```
 
 Your Core Spot (that does not use Hyperliquidity) has now been deployed and registered on `HyperCore`.
@@ -570,6 +605,49 @@ curl -X POST "https://api.hyperliquid.xyz/info" \
      -d '{ "type": "tokenDetails", "tokenId": "<YOUR_TOKEN_ID>"}'
 ```
 
+> ⚠️ Note: The next 2 commands can be executed at a later time. It is possible to go directly to the token linking step.
+
+### Step 5/6 `createSpotDeployment`
+
+This is the step that creates a spot deployment without hyperliquidity. This step is meant for tokens deployed with Hyperliquidity but is also required for tokens deployed without Hyperliquidity to be listed on Spot trading, as such the values for `startPx` and `orderSz` are not required as they are set by the market and the value set does not matter. The value for `nOrders` however MUST be 0 as we do not support Hyperliquidity - <https://github.com/hyperliquid-dex/hyperliquid-python-sdk/blob/master/examples/spot_deploy.py#L97-L104>
+
+You will NOT be prompted for the following and instead the values will be set to 0:
+
+- startPx - The starting price. (1)
+- orderSz - The size of each order (float, not wei) (0)
+- nOrders - The number of orders the deployer wishes to seed with usdc instead of tokens. (0)
+- nSeededLevels - The number of levels the deployer wishes to seed with usdc instead of tokens. (0)
+
+> ⚠️ Note: This step can be executed after deployment
+
+```bash
+npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
+    --token-index <coreIndex> \
+    --network {testnet | mainnet} \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
+    [--log-level {info | verbose}]
+```
+
+> ⚠️ Note: `spot-deploy-state` should fail after completing this step.
+
+### Step 6/6 `setDeployerTradingFeeShare`
+
+This is the step where you set the trading fee share for the deployer. It can be in the range of `[0%,100%]`.
+
+A deployer fee share <https://hyperliquid.gitbook.io/hyperliquid-docs/trading/fees> is claimed per transaction on HyperCore. Half of the base rate (50%) is allocated as the deployer fee share. The deployer can choose to forgo this fee share by setting the share to `0%`. This causes the deployer's fee share part to be burnt. If it were to be set to `100%`, the deployer would receive the full fee share part of the fee.
+
+> ⚠️ Note: The trading fee can be reset as long as the new share is lower than the previous share.
+> ⚠️ Note: This step can also be run after the core spot is deployed.
+
+```bash
+npx @layerzerolabs/hyperliquid-composer trading-fee \
+    --token-index <coreIndex> \
+    --share <[0%,100%]> \
+    --network {testnet | mainnet} \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
+    [--log-level {info | verbose}]
+```
+
 ## Connect the OFT to the deployed Core Spot
 
 If you have run the above steps then you can use `--oapp-config` in the following commands. If not do not worry! Our SDK will prompt you for the OFT address and the OFT deployed transaction hash (we need the deployment nonce).
@@ -579,6 +657,7 @@ In order to enable transfers between the OFT and the Core Spot, we need to conne
 ### Step 1/2 `requestEvmContract`
 
 This step is issued by the Core Spot deployer and populates in `HyperCore` that a request has been made for the mentioned Core Spot to be connected to the ERC20 deployed at the mentioned ERC20 address.
+
 > ⚠️ Note: This step can be issued multiple times until the `finalizeEvmContract` step is issued.
 
 ```bash
@@ -593,6 +672,7 @@ npx @layerzerolabs/hyperliquid-composer request-evm-contract  \
 ### Step 2/2 `finalizeEvmContract`
 
 This step completes the connection between the OFT and the Core Spot. It pulls either HyperEVM testnet or mainnet address from the LayerZero config file based on the `eid` and the Core Spot information from the HyperCore deployment.
+
 > ⚠️ Note: This step is the final step and can only be issued once.
 
 ```bash
@@ -612,7 +692,7 @@ While the composer could have been deployed at any point in time due to its stat
 npx hardhat lz:deploy --tags MyHyperLiquidComposer
 ```
 
-> ⚠️ Note: You would need to fund the composer's address with HyperCore with at least $1 in USDC or HYPE so that it can perform L1WriteActions through it's address. 
+> ⚠️ Note: You would need to fund the composer's address with HyperCore with at least $1 in USDC or HYPE so that it can perform CoreWriter actions through it's address.
 
 ## Sending tokens from x-network to HyperEVM/Core
 

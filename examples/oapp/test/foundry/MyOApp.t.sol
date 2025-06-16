@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 // MyOApp imports
-import { MyOApp } from "../../contracts/MyOApp.sol";
+import { MyOApp, MessagingFee } from "../../contracts/MyOApp.sol";
 
 // OApp imports
 import { IOAppOptionsType3, EnforcedOptionParam } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
@@ -53,5 +53,21 @@ contract MyOAppTest is TestHelperOz5 {
 
         assertEq(address(aOApp.endpoint()), address(endpoints[aEid]));
         assertEq(address(bOApp.endpoint()), address(endpoints[bEid]));
+    }
+
+    function test_send_string() public {
+        bytes memory options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
+        string memory message = "Hello, World!";
+        MessagingFee memory fee = aOApp.quoteSendString(bEid, message, options, false);
+
+        assertEq(aOApp.lastMessage(), "");
+        assertEq(bOApp.lastMessage(), "");
+
+        vm.prank(userA);
+        aOApp.sendString{ value: fee.nativeFee }(bEid, message, options);
+        verifyPackets(bEid, addressToBytes32(address(bOApp)));
+
+        assertEq(aOApp.lastMessage(), "");
+        assertEq(bOApp.lastMessage(), message);
     }
 }

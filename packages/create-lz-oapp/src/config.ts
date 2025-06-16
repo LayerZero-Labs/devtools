@@ -113,10 +113,23 @@ export const getExamples = (): Example[] => {
         // OApp Read examples are feature flagged for the time being
         ...(process.env.LZ_ENABLE_READ_EXAMPLE
             ? [
-                  { id: 'oapp-read', label: 'OAppRead', repository, directory: 'examples/oapp-read', ref },
+                  {
+                      id: 'oapp-read',
+                      label: 'lzRead View/Pure Functions Example',
+                      repository,
+                      directory: 'examples/oapp-read',
+                      ref,
+                  },
+                  {
+                      id: 'view-pure-read',
+                      label: 'lzRead Public Variables Example',
+                      repository,
+                      directory: 'examples/view-pure-read',
+                      ref,
+                  },
                   {
                       id: 'uniswap-read',
-                      label: 'UniswapV3 Quote',
+                      label: 'lzRead UniswapV3 Quote',
                       repository,
                       directory: 'examples/uniswap-read',
                       ref,
@@ -197,6 +210,17 @@ export const getExamples = (): Example[] => {
                       label: 'OFT + Composer (Hyperliquid)',
                       repository,
                       directory: 'examples/oft-hyperliquid',
+                      ref,
+                  },
+              ]
+            : []),
+        ...(process.env.LZ_ENABLE_EXPERIMENTAL_OMNI_CALL_EXAMPLE
+            ? [
+                  {
+                      id: 'omni-call',
+                      label: 'EVM OmniCall',
+                      repository,
+                      directory: 'examples/omni-call',
                       ref,
                   },
               ]

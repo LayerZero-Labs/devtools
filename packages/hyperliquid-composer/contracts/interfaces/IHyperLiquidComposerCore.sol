@@ -22,6 +22,8 @@ interface IHyperLiquidComposerCore {
     event ErrorERC20_Refund(address refundTo, uint256 refundAmount);
     // 0x0b0fd82e
     event ErrorHYPE_Refund(address refundTo, uint256 refundAmount);
+    // 0x293d98c5
+    event ErrorSpot_FailedToSend(address to, uint64 tokenId, uint256 amount, bytes errorMessage);
     // 0x612baef0
     event ErrorMessage(bytes reason);
 
@@ -31,8 +33,22 @@ interface IHyperLiquidComposerCore {
     function endpoint() external view returns (address);
     function oft() external view returns (IOFT);
     function token() external view returns (IERC20);
-    function HLP_PRECOMPILE_WRITE() external view returns (address);
+    function HLP_CORE_WRITER() external view returns (address);
     function HLP_PRECOMPILE_READ_SPOT_BALANCE() external view returns (address);
+    function CORE_WRITER_VERSION() external view returns (bytes memory);
+    function SPOT_SEND_ACTION_ID() external view returns (bytes memory);
+    function SPOT_SEND_HEADER() external view returns (bytes memory);
+
+    function oftAsset() external view returns (address, uint64, int64);
+    function hypeAsset() external view returns (address, uint64, int64);
+
+    function HYPE_CHAIN_ID_TESTNET() external pure returns (uint256);
+    function HYPE_CHAIN_ID_MAINNET() external pure returns (uint256);
+
+    function HYPE_INDEX_TESTNET() external pure returns (uint64);
+    function HYPE_INDEX_MAINNET() external pure returns (uint64);
+
+    function hypeIndexByChainId(uint256 _chainId) external view returns (uint64);
 
     function validate_addresses_or_refund(
         bytes calldata _maybeReceiver,

@@ -1,34 +1,14 @@
-import assert from 'assert'
+import { PublicKey } from '@solana/web3.js'
 
-import { Keypair, PublicKey } from '@solana/web3.js'
-
-import {
-    OmniPoint,
-    OmniSigner,
-    OmniTransactionReceipt,
-    OmniTransactionResponse,
-    firstFactory,
-    formatEid,
-} from '@layerzerolabs/devtools'
+import { OmniPoint } from '@layerzerolabs/devtools'
 import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
-import {
-    OmniSignerSolana,
-    OmniSignerSolanaSquads,
-    createConnectionFactory,
-    createRpcUrlFactory,
-} from '@layerzerolabs/devtools-solana'
-import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
+import { createSolanaConnectionFactory, createSolanaSignerFactory } from '@layerzerolabs/devtools-solana'
+import { ChainType, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
 import { IOApp } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { createOFTFactory } from '@layerzerolabs/ua-devtools-solana'
 
-export const createSolanaConnectionFactory = () =>
-    createConnectionFactory(
-        createRpcUrlFactory({
-            [EndpointId.SOLANA_V2_MAINNET]: process.env.RPC_URL_SOLANA,
-            [EndpointId.SOLANA_V2_TESTNET]: process.env.RPC_URL_SOLANA_TESTNET,
-        })
-    )
+export { createSolanaConnectionFactory }
 
 export const createSdkFactory = (
     userAccount: PublicKey,
@@ -36,10 +16,7 @@ export const createSdkFactory = (
     connectionFactory = createSolanaConnectionFactory()
 ) => {
     // To create a EVM/Solana SDK factory we need to merge the EVM and the Solana factories into one
-    //
-    // We do this by using the firstFactory helper function that is provided by the devtools package.
-    // This function will try to execute the factories one by one and return the first one that succeeds.
-    const evmSdkfactory = createOAppFactory(createConnectedContractFactory())
+    const evmSdkFactory = createOAppFactory(createConnectedContractFactory())
     const solanaSdkFactory = createOFTFactory(
         // The first parameter to createOFTFactory is a user account factory
         //
@@ -62,26 +39,9 @@ export const createSdkFactory = (
         connectionFactory
     )
 
-    // We now "merge" the two SDK factories into one.
-    //
-    // We do this by using the firstFactory helper function that is provided by the devtools package.
-    // This function will try to execute the factories one by one and return the first one that succeeds.
-    return firstFactory<[OmniPoint], IOApp>(evmSdkfactory, solanaSdkFactory)
+    // the return value is an SDK factory that receives an OmniPoint and returns an SDK
+    return async (point: OmniPoint): Promise<IOApp> =>
+        endpointIdToChainType(point.eid) === ChainType.SOLANA ? solanaSdkFactory(point) : evmSdkFactory(point)
 }
 
-export const createSolanaSignerFactory = (
-    wallet: Keypair,
-    connectionFactory = createSolanaConnectionFactory(),
-    multisigKey?: PublicKey
-) => {
-    return async (eid: EndpointId): Promise<OmniSigner<OmniTransactionResponse<OmniTransactionReceipt>>> => {
-        assert(
-            endpointIdToChainType(eid) === ChainType.SOLANA,
-            `Solana signer factory can only create signers for Solana networks. Received ${formatEid(eid)}`
-        )
-
-        return multisigKey
-            ? new OmniSignerSolanaSquads(eid, await connectionFactory(eid), multisigKey, wallet)
-            : new OmniSignerSolana(eid, await connectionFactory(eid), wallet)
-    }
-}
+export { createSolanaSignerFactory }

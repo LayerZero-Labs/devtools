@@ -8,8 +8,8 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import { IHyperAsset } from "../contracts/interfaces/IHyperLiquidComposerCore.sol";
-import { IHyperLiquidWritePrecompile } from "../contracts/interfaces/IHyperLiquidWritePrecompile.sol";
 import { IHYPEPrecompile } from "../contracts/interfaces/IHYPEPrecompile.sol";
+import { ICoreWriter } from "../contracts/interfaces/ICoreWriter.sol";
 
 import { HyperLiquidComposerCodec } from "../contracts/library/HyperLiquidComposerCodec.sol";
 
@@ -22,7 +22,11 @@ contract HyperLiquidComposerTest is Test {
     IHyperAsset public ALICE;
     IHyperAsset public HYPE;
     address public constant HL_LZ_ENDPOINT_V2 = 0xf9e1815F151024bDE4B7C10BAC10e8Ba9F6b53E1;
-    address public constant HLP_PRECOMPILE_WRITE = 0x3333333333333333333333333333333333333333;
+
+    address public constant HL_LZ_ENDPOINT_V2_TESTNET = 0xf9e1815F151024bDE4B7C10BAC10e8Ba9F6b53E1;
+    address public constant HL_LZ_ENDPOINT_V2_MAINNET = 0x3A73033C0b1407574C76BdBAc67f126f6b4a9AA9;
+
+    address public constant HLP_CORE_WRITER = 0x3333333333333333333333333333333333333333;
     address public constant HLP_PRECOMPILE_READ_SPOT_BALANCE = 0x0000000000000000000000000000000000000801;
     // Ethereum Sepolia
     uint32 public constant SRC_EID = 40161;
@@ -40,7 +44,11 @@ contract HyperLiquidComposerTest is Test {
     uint64 public constant DUST = 1 wei;
 
     function setUp() public {
-        vm.createSelectFork("https://rpc.hyperliquid-testnet.xyz/evm");
+        // Skip test if fork fails
+        try vm.createSelectFork("https://rpc.hyperliquid-testnet.xyz/evm") {} catch {
+            console.log("Forking testnet https://rpc.hyperliquid-testnet.xyz/evm failed");
+            vm.skip(true);
+        }
 
         ALICE = IHyperAsset({
             assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1231),
@@ -92,6 +100,40 @@ contract HyperLiquidComposerTest is Test {
         assertEq(oftAsset.decimalDiff, ALICE.decimalDiff);
     }
 
+    function test_hypeIndexByChainId_testnet() public {
+        try vm.createSelectFork("https://rpc.hyperliquid-testnet.xyz/evm") {} catch {
+            console.log("Forking testnet https://rpc.hyperliquid-testnet.xyz/evm failed");
+            vm.skip(true);
+        }
+
+        OFTMock oftTestnet = new OFTMock("test", "test", HL_LZ_ENDPOINT_V2_TESTNET, msg.sender);
+        HyperLiquidComposer hypeComposerTestnet = new HyperLiquidComposer(
+            HL_LZ_ENDPOINT_V2_TESTNET,
+            address(oftTestnet),
+            ALICE.coreIndexId,
+            ALICE.decimalDiff
+        );
+
+        assertEq(hypeComposerTestnet.hypeIndexByChainId(998), 1105);
+    }
+
+    function test_hypeIndexByChainId_mainnet() public {
+        try vm.createSelectFork("https://rpc.hyperliquid.xyz/evm") {} catch {
+            console.log("Forking mainnet https://rpc.hyperliquid.xyz/evm failed");
+            vm.skip(true);
+        }
+
+        OFTMock oftMainnet = new OFTMock("test", "test", HL_LZ_ENDPOINT_V2_MAINNET, msg.sender);
+        HyperLiquidComposer hypeComposerMainnet = new HyperLiquidComposer(
+            HL_LZ_ENDPOINT_V2_MAINNET,
+            address(oftMainnet),
+            ALICE.coreIndexId,
+            ALICE.decimalDiff
+        );
+
+        assertEq(hypeComposerMainnet.hypeIndexByChainId(999), 150);
+    }
+
     function test_SendSpot_no_FundAddress() public {
         bytes memory composeMsg = abi.encodePacked(userB);
 
@@ -111,14 +153,11 @@ contract HyperLiquidComposerTest is Test {
         vm.expectEmit(address(oft));
         emit IERC20.Transfer(address(hyperLiquidComposer), ALICE.assetBridgeAddress, AMOUNT_TO_SEND);
 
-        // Expect the SpotSend event to be emitted
-        vm.expectEmit(hyperLiquidComposer.HLP_PRECOMPILE_WRITE());
-        emit IHyperLiquidWritePrecompile.SpotSend(
-            address(hyperLiquidComposer),
-            userB,
-            ALICE.coreIndexId,
-            uint64(AMOUNT_TO_SEND / 10 ** uint64(ALICE.decimalDiff))
-        );
+        uint64 coreAmount = hyperLiquidComposer.quoteHyperCoreAmount(AMOUNT_TO_SEND, true).core;
+        bytes memory action = abi.encode(userB, ALICE.coreIndexId, coreAmount);
+        bytes memory payload = abi.encodePacked(hyperLiquidComposer.SPOT_SEND_HEADER(), action);
+        vm.expectEmit(HLP_CORE_WRITER);
+        emit ICoreWriter.RawAction(address(hyperLiquidComposer), payload);
 
         uint256 balanceBefore = oft.balanceOf(userB);
 
@@ -152,14 +191,11 @@ contract HyperLiquidComposerTest is Test {
         vm.expectEmit(address(oft));
         emit IERC20.Transfer(address(hyperLiquidComposer), ALICE.assetBridgeAddress, AMOUNT_TO_SEND);
 
-        // Expect the SpotSend event to be emitted - this is for the ALICE asset bridge
-        vm.expectEmit(hyperLiquidComposer.HLP_PRECOMPILE_WRITE());
-        emit IHyperLiquidWritePrecompile.SpotSend(
-            address(hyperLiquidComposer),
-            userB,
-            ALICE.coreIndexId,
-            uint64(AMOUNT_TO_SEND / 10 ** uint64(ALICE.decimalDiff))
-        );
+        uint64 coreAmount = hyperLiquidComposer.quoteHyperCoreAmount(AMOUNT_TO_SEND, true).core;
+        bytes memory action = abi.encode(userB, ALICE.coreIndexId, coreAmount);
+        bytes memory payload = abi.encodePacked(hyperLiquidComposer.SPOT_SEND_HEADER(), action);
+        vm.expectEmit(HLP_CORE_WRITER);
+        emit ICoreWriter.RawAction(address(hyperLiquidComposer), payload);
 
         uint256 balanceBeforeBridge = HYPE.assetBridgeAddress.balance;
         uint256 balanceBeforeUserB = userB.balance;

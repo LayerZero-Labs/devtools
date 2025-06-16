@@ -2,6 +2,20 @@
   "abi": [
     {
       "type": "function",
+      "name": "CORE_WRITER_VERSION",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "HLP_CORE_WRITER",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
       "name": "HLP_PRECOMPILE_READ_SPOT_BALANCE",
       "inputs": [],
       "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
@@ -9,9 +23,44 @@
     },
     {
       "type": "function",
-      "name": "HLP_PRECOMPILE_WRITE",
+      "name": "HYPE_CHAIN_ID_MAINNET",
       "inputs": [],
-      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "HYPE_CHAIN_ID_TESTNET",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "HYPE_INDEX_MAINNET",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "uint64", "internalType": "uint64" }],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "HYPE_INDEX_TESTNET",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "uint64", "internalType": "uint64" }],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "SPOT_SEND_ACTION_ID",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "SPOT_SEND_HEADER",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
       "stateMutability": "view"
     },
     {
@@ -85,10 +134,41 @@
     },
     {
       "type": "function",
+      "name": "hypeAsset",
+      "inputs": [],
+      "outputs": [
+        { "name": "", "type": "address", "internalType": "address" },
+        { "name": "", "type": "uint64", "internalType": "uint64" },
+        { "name": "", "type": "int64", "internalType": "int64" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "hypeIndexByChainId",
+      "inputs": [
+        { "name": "_chainId", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [{ "name": "", "type": "uint64", "internalType": "uint64" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
       "name": "oft",
       "inputs": [],
       "outputs": [
         { "name": "", "type": "address", "internalType": "contract IOFT" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "oftAsset",
+      "inputs": [],
+      "outputs": [
+        { "name": "", "type": "address", "internalType": "address" },
+        { "name": "", "type": "uint64", "internalType": "uint64" },
+        { "name": "", "type": "int64", "internalType": "int64" }
       ],
       "stateMutability": "view"
     },
@@ -205,6 +285,37 @@
     },
     {
       "type": "event",
+      "name": "ErrorSpot_FailedToSend",
+      "inputs": [
+        {
+          "name": "to",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "tokenId",
+          "type": "uint64",
+          "indexed": false,
+          "internalType": "uint64"
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "errorMessage",
+          "type": "bytes",
+          "indexed": false,
+          "internalType": "bytes"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
       "name": "ExcessHYPE_Refund",
       "inputs": [
         {
@@ -226,19 +337,29 @@
   "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
   "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
   "methodIdentifiers": {
+    "CORE_WRITER_VERSION()": "22dbe29c",
+    "HLP_CORE_WRITER()": "7ecd9ac3",
     "HLP_PRECOMPILE_READ_SPOT_BALANCE()": "ba872679",
-    "HLP_PRECOMPILE_WRITE()": "dd850075",
+    "HYPE_CHAIN_ID_MAINNET()": "5b9a2373",
+    "HYPE_CHAIN_ID_TESTNET()": "20d9af9a",
+    "HYPE_INDEX_MAINNET()": "d00b1ad5",
+    "HYPE_INDEX_TESTNET()": "bc963bc7",
+    "SPOT_SEND_ACTION_ID()": "0d1995e0",
+    "SPOT_SEND_HEADER()": "1f8164d9",
     "balanceOfHyperCore(address,uint64)": "81e8dcb4",
     "endpoint()": "5e280f11",
     "getHypeAsset()": "aae12e46",
     "getOFTAsset()": "2d0e315c",
+    "hypeAsset()": "f6e6b240",
+    "hypeIndexByChainId(uint256)": "4bd162df",
     "oft()": "9b5215f6",
+    "oftAsset()": "765008a1",
     "quoteHyperCoreAmount(uint256,bool)": "f9716faf",
     "refundNativeTokens(address)": "8483bc00",
     "token()": "fc0c546a",
     "validate_addresses_or_refund(bytes,bytes32,uint256)": "5241b496"
   },
-  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"refundTo\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"refundAmount\",\"type\":\"uint256\"}],\"name\":\"ErrorERC20_Refund\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"refundTo\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"refundAmount\",\"type\":\"uint256\"}],\"name\":\"ErrorHYPE_Refund\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"reason\",\"type\":\"bytes\"}],\"name\":\"ErrorMessage\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"refundTo\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"refundAmount\",\"type\":\"uint256\"}],\"name\":\"ExcessHYPE_Refund\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"HLP_PRECOMPILE_READ_SPOT_BALANCE\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"HLP_PRECOMPILE_WRITE\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"_tokenId\",\"type\":\"uint64\"}],\"name\":\"balanceOfHyperCore\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"endpoint\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getHypeAsset\",\"outputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"assetBridgeAddress\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"coreIndexId\",\"type\":\"uint64\"},{\"internalType\":\"int64\",\"name\":\"decimalDiff\",\"type\":\"int64\"}],\"internalType\":\"struct IHyperAsset\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getOFTAsset\",\"outputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"assetBridgeAddress\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"coreIndexId\",\"type\":\"uint64\"},{\"internalType\":\"int64\",\"name\":\"decimalDiff\",\"type\":\"int64\"}],\"internalType\":\"struct IHyperAsset\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"oft\",\"outputs\":[{\"internalType\":\"contract IOFT\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"_isOFT\",\"type\":\"bool\"}],\"name\":\"quoteHyperCoreAmount\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"evm\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"dust\",\"type\":\"uint256\"},{\"internalType\":\"uint64\",\"name\":\"core\",\"type\":\"uint64\"}],\"internalType\":\"struct IHyperAssetAmount\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"refundAddress\",\"type\":\"address\"}],\"name\":\"refundNativeTokens\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"token\",\"outputs\":[{\"internalType\":\"contract IERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_maybeReceiver\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"_senderBytes32\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_amountLD\",\"type\":\"uint256\"}],\"name\":\"validate_addresses_or_refund\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interfaces/IHyperLiquidComposerCore.sol\":\"IHyperLiquidComposerCore\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":hardhat/=node_modules/hardhat/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/interfaces/IHyperLiquidComposerCore.sol\":{\"keccak256\":\"0xe364053a87f1c63708bebfcfe918e9d8bdc66456d43a35c9763a2d8da6e130f8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8057f2b3cf899e179eca595fc7def5f5ac59fd92774150dc6c192e5a9b125e1a\",\"dweb:/ipfs/QmfWRQbitmNkRpE2pGoW3K4SbQWrx1cpu2ocj4eNH8Pr8q\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol\":{\"keccak256\":\"0xfaca7205d4211ee9208a7e59171e2301731f3d2a20c49b4a839821871f5fdd49\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f254bc60ac26687b5320a43a556e30777b0745abf7cd64d5f4720d9b1d1f7fdf\",\"dweb:/ipfs/QmRSJEZVgxaC3L2DdE6s8P5qkYfM3V5JMeseeFJJqGR4xz\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol\":{\"keccak256\":\"0xf7f941bee89ea6369950fe54e8ac476ae6478b958b20fc0e8a83e8ff1364eac3\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bacc29fd3866af71e59cb0bdc1cf82c882a4a7f4e2652fd413c9f12649762083\",\"dweb:/ipfs/QmZh2toLnrQDWaNYhS5K4NoW7Vxd2GdZx9KA77vKEDLAqs\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol\":{\"keccak256\":\"0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b\",\"dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol\":{\"keccak256\":\"0x0878f64dffebf58c4165569416372f40860fab546b88cd926eba0d5cb6d8d972\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7e1b245d58221d16d8b5e0f01ef3e289a24a7df1ace3b94239e4d5b954ad5927\",\"dweb:/ipfs/Qmappsgp7PCY9rSSNE9Cdn4BTRX591WfCSEgq2HxhA3z6S\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol\":{\"keccak256\":\"0x85bc7090134529ec474866dc4bb1c48692d518c756eb0a961c82574829c51901\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b18b23a1643fc6636c4ad9d9023e2e6ca2d3c2a4a046482d4655bff09950598d\",\"dweb:/ipfs/Qma6G5SqiovwrMPfgqTrRngK1HWW373Wkf9c6YP2NhXpPk\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol\":{\"keccak256\":\"0xff0c546c2813dae3e440882f46b377375f7461b0714efd80bd3f0c6e5cb8da4e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5173fc9143bea314b159ca5a9adb5626659ef763bc598e27de5fa46efe3291a6\",\"dweb:/ipfs/QmSLFeMFPmVeGxT4sxRPW28ictjAS22M8rLeYRu9TXkA6D\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/OAppCore.sol\":{\"keccak256\":\"0x13a9c2d1d2c1f086b8624f2e84c4a4702212daae36f701d92bb915b535cbe4cc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://606515dd9193551bd2c94ac8c304f3776fafcc70e544ebf441f334658b2fd5f0\",\"dweb:/ipfs/QmZ88ey7DdZqV5taAoebabvszX5kdPMSrQCAmTteVdDtcH\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/OAppSender.sol\":{\"keccak256\":\"0x518cf4adca601923ed4baa6619846a253ea32b8d8775f8bc1faa3dfac7f67c20\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d42b471418efadcc3577ef3fa9f8f504e8bed7db90c3b0c862038d8b29529eb2\",\"dweb:/ipfs/QmZETDQiJN4U92fmLKo8T9ZbdDf7BNBUUvo9H7M7GqAyFU\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol\":{\"keccak256\":\"0xe5014c411acb2b59dd74ae74a1bab02cf32d94a41a548a5ab553d64aeeb55dae\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://29dfb7bc121002fc7e7931c34eb17af0ae0f0127dcc3199511c83a58a917160d\",\"dweb:/ipfs/QmPdq1wcRRBdUP169LHCLoLuPRunN9eR71TQN42FjGpowx\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol\":{\"keccak256\":\"0x40e49f2de74506e1da5dcaed53a39853f691647f4ceb0fccc8f49a68d3f47c58\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4a1deb2a6a3eb1fb83936c9578469142bff470295f403d7d07d955a76be3adbd\",\"dweb:/ipfs/QmS9bjSfBaE4YhQ1PCQ1TknbEPbNfRXzBK9E7SaPGyiZEv\"]},\"node_modules/@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol\":{\"keccak256\":\"0x7ba6bb62fba7ee83451cfb0e727ddeef0e96b4388bd4e9ff0fc6ce103e1101c8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://cfbd447f2e8a730bd46a14c3c3e6a0b2bf7446145579603a9793ba5ac1dd38b4\",\"dweb:/ipfs/QmZ4nx4iGrFmBHvYFgki5TXFdCHz4Co38hgdgwpRaM7NLs\"]},\"node_modules/@openzeppelin/contracts/access/Ownable.sol\":{\"keccak256\":\"0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8ed324d3920bb545059d66ab97d43e43ee85fd3bd52e03e401f020afb0b120f6\",\"dweb:/ipfs/QmfEckWLmZkDDcoWrkEvMWhms66xwTLff9DDhegYpvHo1a\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC1363.sol\":{\"keccak256\":\"0x9b6b3e7803bc5f2f8cd7ad57db8ac1def61a9930a5a3107df4882e028a9605d7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://da62d6be1f5c6edf577f0cb45666a8aa9c2086a4bac87d95d65f02e2f4c36a4b\",\"dweb:/ipfs/QmNkpvBpoCMvX8JwAFNSc5XxJ2q5BXJpL5L1txb4QkqVFF\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC165.sol\":{\"keccak256\":\"0xde7e9fd9aee8d4f40772f96bb3b58836cbc6dfc0227014a061947f8821ea9724\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://11fea9f8bc98949ac6709f0c1699db7430d2948137aa94d5a9e95a91f61a710a\",\"dweb:/ipfs/QmQdfRXxQjwP6yn3DVo1GHPpriKNcFghSPi94Z1oKEFUNS\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC20.sol\":{\"keccak256\":\"0xce41876e78d1badc0512229b4d14e4daf83bc1003d7f83978d18e0e56f965b9c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a2608291cb038b388d80b79a06b6118a42f7894ff67b7da10ec0dbbf5b2973ba\",\"dweb:/ipfs/QmWohqcBLbcxmA4eGPhZDXe5RYMMEEpFq22nfkaUMvTfw1\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0xe06a3f08a987af6ad2e1c1e774405d4fe08f1694b67517438b467cecf0da0ef7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://df6f0c459663c9858b6cba2cda1d14a7d05a985bed6d2de72bd8e78c25ee79db\",\"dweb:/ipfs/QmeTTxZ7qVk9rjEv2R4CpCwdf8UMCcRqDNMvzNxHc3Fnn9\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\":{\"keccak256\":\"0xca2ae13e0610f6a99238dd00b97bd786bc92732dae6d6b9d61f573ec51018310\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://75f8c71ce0c91c40dd5f249ace0b7d8270f8f1767231bcf71490f7157d6ba862\",\"dweb:/ipfs/QmYXgxeDyFHvz3JsXxLEYN6GNUR44ThHeFj5XkpkgMoG4w\"]},\"node_modules/@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0x9d8da059267bac779a2dbbb9a26c2acf00ca83085e105d62d5d4ef96054a47f5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c78e2aa4313323cecd1ef12a8d6265b96beee1a199923abf55d9a2a9e291ad23\",\"dweb:/ipfs/QmUTs2KStXucZezzFo3EYeqYu47utu56qrF7jj1Gue65vb\"]},\"node_modules/@openzeppelin/contracts/utils/Context.sol\":{\"keccak256\":\"0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6a708e8a5bdb1011c2c381c9a5cfd8a9a956d7d0a9dc1bd8bcdaf52f76ef2f12\",\"dweb:/ipfs/Qmax9WHBnVsZP46ZxEMNRQpLQnrdE4dK8LehML1Py8FowF\"]},\"node_modules/@openzeppelin/contracts/utils/Errors.sol\":{\"keccak256\":\"0x6afa713bfd42cf0f7656efa91201007ac465e42049d7de1d50753a373648c123\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ba1d02f4847670a1b83dec9f7d37f0b0418d6043447b69f3a29a5f9efc547fcf\",\"dweb:/ipfs/QmQ7iH2keLNUKgq2xSWcRmuBE5eZ3F5whYAkAGzCNNoEWB\"]},\"node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol\":{\"keccak256\":\"0x79796192ec90263f21b464d5bc90b777a525971d3de8232be80d9c4f9fb353b8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f6fda447a62815e8064f47eff0dd1cf58d9207ad69b5d32280f8d7ed1d1e4621\",\"dweb:/ipfs/QmfDRc7pxfaXB2Dh9np5Uf29Na3pQ7tafRS684wd3GLjVL\"]}},\"version\":1}",
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"refundTo\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"refundAmount\",\"type\":\"uint256\"}],\"name\":\"ErrorERC20_Refund\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"refundTo\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"refundAmount\",\"type\":\"uint256\"}],\"name\":\"ErrorHYPE_Refund\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"reason\",\"type\":\"bytes\"}],\"name\":\"ErrorMessage\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"tokenId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"errorMessage\",\"type\":\"bytes\"}],\"name\":\"ErrorSpot_FailedToSend\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"refundTo\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"refundAmount\",\"type\":\"uint256\"}],\"name\":\"ExcessHYPE_Refund\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"CORE_WRITER_VERSION\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"HLP_CORE_WRITER\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"HLP_PRECOMPILE_READ_SPOT_BALANCE\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"HYPE_CHAIN_ID_MAINNET\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"HYPE_CHAIN_ID_TESTNET\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"HYPE_INDEX_MAINNET\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"HYPE_INDEX_TESTNET\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SPOT_SEND_ACTION_ID\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SPOT_SEND_HEADER\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"_tokenId\",\"type\":\"uint64\"}],\"name\":\"balanceOfHyperCore\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"endpoint\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getHypeAsset\",\"outputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"assetBridgeAddress\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"coreIndexId\",\"type\":\"uint64\"},{\"internalType\":\"int64\",\"name\":\"decimalDiff\",\"type\":\"int64\"}],\"internalType\":\"struct IHyperAsset\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getOFTAsset\",\"outputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"assetBridgeAddress\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"coreIndexId\",\"type\":\"uint64\"},{\"internalType\":\"int64\",\"name\":\"decimalDiff\",\"type\":\"int64\"}],\"internalType\":\"struct IHyperAsset\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"hypeAsset\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"},{\"internalType\":\"int64\",\"name\":\"\",\"type\":\"int64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_chainId\",\"type\":\"uint256\"}],\"name\":\"hypeIndexByChainId\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"oft\",\"outputs\":[{\"internalType\":\"contract IOFT\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"oftAsset\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"},{\"internalType\":\"int64\",\"name\":\"\",\"type\":\"int64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"_isOFT\",\"type\":\"bool\"}],\"name\":\"quoteHyperCoreAmount\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"evm\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"dust\",\"type\":\"uint256\"},{\"internalType\":\"uint64\",\"name\":\"core\",\"type\":\"uint64\"}],\"internalType\":\"struct IHyperAssetAmount\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"refundAddress\",\"type\":\"address\"}],\"name\":\"refundNativeTokens\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"token\",\"outputs\":[{\"internalType\":\"contract IERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_maybeReceiver\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"_senderBytes32\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_amountLD\",\"type\":\"uint256\"}],\"name\":\"validate_addresses_or_refund\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interfaces/IHyperLiquidComposerCore.sol\":\"IHyperLiquidComposerCore\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":hardhat/=node_modules/hardhat/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/interfaces/IHyperLiquidComposerCore.sol\":{\"keccak256\":\"0x33755a174cead02c8cb31ff8fa5ed9c72594c41538e7a4c84ee50e93fa0900d9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0a20aa9d707e340b63d7aadb47354cd70d11b958113f10b0042dab4a29dd4640\",\"dweb:/ipfs/QmWnyLZrAQVSBsFBsePQakpRs9VJ5yVCSrV1gF8QQpH3TC\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol\":{\"keccak256\":\"0xfaca7205d4211ee9208a7e59171e2301731f3d2a20c49b4a839821871f5fdd49\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f254bc60ac26687b5320a43a556e30777b0745abf7cd64d5f4720d9b1d1f7fdf\",\"dweb:/ipfs/QmRSJEZVgxaC3L2DdE6s8P5qkYfM3V5JMeseeFJJqGR4xz\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol\":{\"keccak256\":\"0xf7f941bee89ea6369950fe54e8ac476ae6478b958b20fc0e8a83e8ff1364eac3\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bacc29fd3866af71e59cb0bdc1cf82c882a4a7f4e2652fd413c9f12649762083\",\"dweb:/ipfs/QmZh2toLnrQDWaNYhS5K4NoW7Vxd2GdZx9KA77vKEDLAqs\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol\":{\"keccak256\":\"0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b\",\"dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol\":{\"keccak256\":\"0x0878f64dffebf58c4165569416372f40860fab546b88cd926eba0d5cb6d8d972\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7e1b245d58221d16d8b5e0f01ef3e289a24a7df1ace3b94239e4d5b954ad5927\",\"dweb:/ipfs/Qmappsgp7PCY9rSSNE9Cdn4BTRX591WfCSEgq2HxhA3z6S\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol\":{\"keccak256\":\"0x85bc7090134529ec474866dc4bb1c48692d518c756eb0a961c82574829c51901\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b18b23a1643fc6636c4ad9d9023e2e6ca2d3c2a4a046482d4655bff09950598d\",\"dweb:/ipfs/Qma6G5SqiovwrMPfgqTrRngK1HWW373Wkf9c6YP2NhXpPk\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol\":{\"keccak256\":\"0xff0c546c2813dae3e440882f46b377375f7461b0714efd80bd3f0c6e5cb8da4e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5173fc9143bea314b159ca5a9adb5626659ef763bc598e27de5fa46efe3291a6\",\"dweb:/ipfs/QmSLFeMFPmVeGxT4sxRPW28ictjAS22M8rLeYRu9TXkA6D\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/OAppCore.sol\":{\"keccak256\":\"0x13a9c2d1d2c1f086b8624f2e84c4a4702212daae36f701d92bb915b535cbe4cc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://606515dd9193551bd2c94ac8c304f3776fafcc70e544ebf441f334658b2fd5f0\",\"dweb:/ipfs/QmZ88ey7DdZqV5taAoebabvszX5kdPMSrQCAmTteVdDtcH\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/OAppSender.sol\":{\"keccak256\":\"0x518cf4adca601923ed4baa6619846a253ea32b8d8775f8bc1faa3dfac7f67c20\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d42b471418efadcc3577ef3fa9f8f504e8bed7db90c3b0c862038d8b29529eb2\",\"dweb:/ipfs/QmZETDQiJN4U92fmLKo8T9ZbdDf7BNBUUvo9H7M7GqAyFU\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol\":{\"keccak256\":\"0xe5014c411acb2b59dd74ae74a1bab02cf32d94a41a548a5ab553d64aeeb55dae\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://29dfb7bc121002fc7e7931c34eb17af0ae0f0127dcc3199511c83a58a917160d\",\"dweb:/ipfs/QmPdq1wcRRBdUP169LHCLoLuPRunN9eR71TQN42FjGpowx\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol\":{\"keccak256\":\"0x40e49f2de74506e1da5dcaed53a39853f691647f4ceb0fccc8f49a68d3f47c58\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4a1deb2a6a3eb1fb83936c9578469142bff470295f403d7d07d955a76be3adbd\",\"dweb:/ipfs/QmS9bjSfBaE4YhQ1PCQ1TknbEPbNfRXzBK9E7SaPGyiZEv\"]},\"node_modules/@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol\":{\"keccak256\":\"0x7ba6bb62fba7ee83451cfb0e727ddeef0e96b4388bd4e9ff0fc6ce103e1101c8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://cfbd447f2e8a730bd46a14c3c3e6a0b2bf7446145579603a9793ba5ac1dd38b4\",\"dweb:/ipfs/QmZ4nx4iGrFmBHvYFgki5TXFdCHz4Co38hgdgwpRaM7NLs\"]},\"node_modules/@openzeppelin/contracts/access/Ownable.sol\":{\"keccak256\":\"0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8ed324d3920bb545059d66ab97d43e43ee85fd3bd52e03e401f020afb0b120f6\",\"dweb:/ipfs/QmfEckWLmZkDDcoWrkEvMWhms66xwTLff9DDhegYpvHo1a\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC1363.sol\":{\"keccak256\":\"0x9b6b3e7803bc5f2f8cd7ad57db8ac1def61a9930a5a3107df4882e028a9605d7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://da62d6be1f5c6edf577f0cb45666a8aa9c2086a4bac87d95d65f02e2f4c36a4b\",\"dweb:/ipfs/QmNkpvBpoCMvX8JwAFNSc5XxJ2q5BXJpL5L1txb4QkqVFF\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC165.sol\":{\"keccak256\":\"0xde7e9fd9aee8d4f40772f96bb3b58836cbc6dfc0227014a061947f8821ea9724\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://11fea9f8bc98949ac6709f0c1699db7430d2948137aa94d5a9e95a91f61a710a\",\"dweb:/ipfs/QmQdfRXxQjwP6yn3DVo1GHPpriKNcFghSPi94Z1oKEFUNS\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC20.sol\":{\"keccak256\":\"0xce41876e78d1badc0512229b4d14e4daf83bc1003d7f83978d18e0e56f965b9c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a2608291cb038b388d80b79a06b6118a42f7894ff67b7da10ec0dbbf5b2973ba\",\"dweb:/ipfs/QmWohqcBLbcxmA4eGPhZDXe5RYMMEEpFq22nfkaUMvTfw1\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0xe06a3f08a987af6ad2e1c1e774405d4fe08f1694b67517438b467cecf0da0ef7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://df6f0c459663c9858b6cba2cda1d14a7d05a985bed6d2de72bd8e78c25ee79db\",\"dweb:/ipfs/QmeTTxZ7qVk9rjEv2R4CpCwdf8UMCcRqDNMvzNxHc3Fnn9\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\":{\"keccak256\":\"0xca2ae13e0610f6a99238dd00b97bd786bc92732dae6d6b9d61f573ec51018310\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://75f8c71ce0c91c40dd5f249ace0b7d8270f8f1767231bcf71490f7157d6ba862\",\"dweb:/ipfs/QmYXgxeDyFHvz3JsXxLEYN6GNUR44ThHeFj5XkpkgMoG4w\"]},\"node_modules/@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0x9d8da059267bac779a2dbbb9a26c2acf00ca83085e105d62d5d4ef96054a47f5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c78e2aa4313323cecd1ef12a8d6265b96beee1a199923abf55d9a2a9e291ad23\",\"dweb:/ipfs/QmUTs2KStXucZezzFo3EYeqYu47utu56qrF7jj1Gue65vb\"]},\"node_modules/@openzeppelin/contracts/utils/Context.sol\":{\"keccak256\":\"0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6a708e8a5bdb1011c2c381c9a5cfd8a9a956d7d0a9dc1bd8bcdaf52f76ef2f12\",\"dweb:/ipfs/Qmax9WHBnVsZP46ZxEMNRQpLQnrdE4dK8LehML1Py8FowF\"]},\"node_modules/@openzeppelin/contracts/utils/Errors.sol\":{\"keccak256\":\"0x6afa713bfd42cf0f7656efa91201007ac465e42049d7de1d50753a373648c123\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ba1d02f4847670a1b83dec9f7d37f0b0418d6043447b69f3a29a5f9efc547fcf\",\"dweb:/ipfs/QmQ7iH2keLNUKgq2xSWcRmuBE5eZ3F5whYAkAGzCNNoEWB\"]},\"node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol\":{\"keccak256\":\"0x79796192ec90263f21b464d5bc90b777a525971d3de8232be80d9c4f9fb353b8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f6fda447a62815e8064f47eff0dd1cf58d9207ad69b5d32280f8d7ed1d1e4621\",\"dweb:/ipfs/QmfDRc7pxfaXB2Dh9np5Uf29Na3pQ7tafRS684wd3GLjVL\"]}},\"version\":1}",
   "metadata": {
     "compiler": { "version": "0.8.22+commit.4fc1097e" },
     "language": "Solidity",
@@ -299,6 +420,37 @@
           "inputs": [
             {
               "internalType": "address",
+              "name": "to",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint64",
+              "name": "tokenId",
+              "type": "uint64",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes",
+              "name": "errorMessage",
+              "type": "bytes",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "ErrorSpot_FailedToSend",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
               "name": "refundTo",
               "type": "address",
               "indexed": false
@@ -318,7 +470,14 @@
           "inputs": [],
           "stateMutability": "view",
           "type": "function",
-          "name": "HLP_PRECOMPILE_READ_SPOT_BALANCE",
+          "name": "CORE_WRITER_VERSION",
+          "outputs": [{ "internalType": "bytes", "name": "", "type": "bytes" }]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "HLP_CORE_WRITER",
           "outputs": [
             { "internalType": "address", "name": "", "type": "address" }
           ]
@@ -327,10 +486,60 @@
           "inputs": [],
           "stateMutability": "view",
           "type": "function",
-          "name": "HLP_PRECOMPILE_WRITE",
+          "name": "HLP_PRECOMPILE_READ_SPOT_BALANCE",
           "outputs": [
             { "internalType": "address", "name": "", "type": "address" }
           ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "HYPE_CHAIN_ID_MAINNET",
+          "outputs": [
+            { "internalType": "uint256", "name": "", "type": "uint256" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "HYPE_CHAIN_ID_TESTNET",
+          "outputs": [
+            { "internalType": "uint256", "name": "", "type": "uint256" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "HYPE_INDEX_MAINNET",
+          "outputs": [
+            { "internalType": "uint64", "name": "", "type": "uint64" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "HYPE_INDEX_TESTNET",
+          "outputs": [
+            { "internalType": "uint64", "name": "", "type": "uint64" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "SPOT_SEND_ACTION_ID",
+          "outputs": [{ "internalType": "bytes", "name": "", "type": "bytes" }]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "SPOT_SEND_HEADER",
+          "outputs": [{ "internalType": "bytes", "name": "", "type": "bytes" }]
         },
         {
           "inputs": [
@@ -417,9 +626,42 @@
           "inputs": [],
           "stateMutability": "view",
           "type": "function",
+          "name": "hypeAsset",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" },
+            { "internalType": "uint64", "name": "", "type": "uint64" },
+            { "internalType": "int64", "name": "", "type": "int64" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "uint256", "name": "_chainId", "type": "uint256" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "hypeIndexByChainId",
+          "outputs": [
+            { "internalType": "uint64", "name": "", "type": "uint64" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
           "name": "oft",
           "outputs": [
             { "internalType": "contract IOFT", "name": "", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "oftAsset",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" },
+            { "internalType": "uint64", "name": "", "type": "uint64" },
+            { "internalType": "int64", "name": "", "type": "int64" }
           ]
         },
         {
@@ -520,10 +762,10 @@
     },
     "sources": {
       "contracts/interfaces/IHyperLiquidComposerCore.sol": {
-        "keccak256": "0xe364053a87f1c63708bebfcfe918e9d8bdc66456d43a35c9763a2d8da6e130f8",
+        "keccak256": "0x33755a174cead02c8cb31ff8fa5ed9c72594c41538e7a4c84ee50e93fa0900d9",
         "urls": [
-          "bzz-raw://8057f2b3cf899e179eca595fc7def5f5ac59fd92774150dc6c192e5a9b125e1a",
-          "dweb:/ipfs/QmfWRQbitmNkRpE2pGoW3K4SbQWrx1cpu2ocj4eNH8Pr8q"
+          "bzz-raw://0a20aa9d707e340b63d7aadb47354cd70d11b958113f10b0042dab4a29dd4640",
+          "dweb:/ipfs/QmWnyLZrAQVSBsFBsePQakpRs9VJ5yVCSrV1gF8QQpH3TC"
         ],
         "license": "MIT"
       },
@@ -698,5 +940,5 @@
     },
     "version": 1
   },
-  "id": 3
+  "id": 4
 }
