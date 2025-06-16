@@ -561,7 +561,11 @@ In `tasks/solana/oappCreate.ts`, add `orderedNonce` value when calling `initStor
 ```typescript
 let orderedNonce = true;
 const txBuilder = transactionBuilder().add(
-  myoappInstance.initStore(umiWalletSigner, umiWalletSigner.publicKey, orderedNonce),
+  myoappInstance.initStore(
+    umiWalletSigner,
+    umiWalletSigner.publicKey,
+    orderedNonce,
+  ),
 );
 ```
 
