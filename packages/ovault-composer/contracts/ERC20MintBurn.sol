@@ -32,12 +32,12 @@ contract ERC20MintBurn is IERC20MintBurnExtension, ERC20, Ownable {
         _burn(_from, _amount);
     }
 
-    function spendAllowance(address _owner, address _spender, uint256 _amount) external onlySuperUsers {
-        _spendAllowance(_owner, _spender, _amount);
-    }
-
     function transfer(address _from, address _to, uint256 _amount) external onlySuperUsers {
         _transfer(_from, _to, _amount);
+    }
+
+    function spendAllowance(address _owner, address _spender, uint256 _amount) external onlySuperUsers {
+        _spendAllowance(_owner, _spender, _amount);
     }
 
     function approve(address owner, address spender, uint256 value) external onlySuperUsers {

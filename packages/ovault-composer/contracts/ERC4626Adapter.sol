@@ -70,20 +70,14 @@ contract ERC4626Adapter is IERC4626Adapter, IERC20 {
         return address(_share);
     }
 
-    /// @dev Adding to proxy the share token's approve function
-    function approve(address spender, uint256 value) public virtual returns (bool) {
-        _share.approve(msg.sender, spender, value);
-        return true;
+    /// @dev Adding to proxy the share token's total supply
+    function totalSupply() public view virtual returns (uint256) {
+        return IERC20(share()).totalSupply();
     }
 
     /// @dev Adding to proxy the share token's balance of an owner
     function balanceOf(address owner) public view virtual returns (uint256) {
         return IERC20(share()).balanceOf(owner);
-    }
-
-    /// @dev Adding to proxy the share token's total supply
-    function totalSupply() public view virtual returns (uint256) {
-        return IERC20(share()).totalSupply();
     }
 
     /// @dev Adding to proxy the share token's transfer function
@@ -93,16 +87,22 @@ contract ERC4626Adapter is IERC4626Adapter, IERC20 {
         return true;
     }
 
+    /// @dev Adding to proxy the share token's allowance function
+    function allowance(address owner, address spender) public view virtual returns (uint256) {
+        return IERC20(share()).allowance(owner, spender);
+    }
+
+    /// @dev Adding to proxy the share token's approve function
+    function approve(address spender, uint256 value) public virtual returns (bool) {
+        _share.approve(msg.sender, spender, value);
+        return true;
+    }
+
     /// @dev Adding to proxy the share token's transferFrom function
     function transferFrom(address from, address to, uint256 value) public virtual returns (bool) {
         _share.spendAllowance(from, msg.sender, value);
         IERC20MintBurnExtension(share()).transfer(from, to, value);
         return true;
-    }
-
-    /// @dev Adding to proxy the share token's allowance function
-    function allowance(address owner, address spender) public view virtual returns (uint256) {
-        return IERC20(share()).allowance(owner, spender);
     }
 
     /** @dev See {IERC4626-totalAssets}. */
