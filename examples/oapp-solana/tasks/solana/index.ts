@@ -36,8 +36,6 @@ import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { MyOApp } from '../../lib/client/myoapp'
 import { DebugLogger, KnownErrors, createSolanaConnectionFactory } from '../common/utils'
 
-// import { getPrioritizationFees } from './utils'
-
 const LOOKUP_TABLE_ADDRESS: Partial<Record<EndpointId, PublicKey>> = {
     [EndpointId.SOLANA_V2_MAINNET]: publicKey('AokBxha6VMLLgf97B5VYHEtqztamWmYERBmmFvjuTzJB'),
     [EndpointId.SOLANA_V2_TESTNET]: publicKey('9thqPdbR27A1yLWw2spwJLySemiGMXxPnEvfmXVk4KuK'),
