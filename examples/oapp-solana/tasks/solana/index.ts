@@ -29,13 +29,14 @@ import { getKeypairFromEnvironment, getKeypairFromFile, getSimulationComputeUnit
 import { backOff } from 'exponential-backoff'
 
 import { formatEid } from '@layerzerolabs/devtools'
+import { getPrioritizationFees } from '@layerzerolabs/devtools-solana'
 import { createLogger, promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 
 import { MyOApp } from '../../lib/client/myoapp'
 import { DebugLogger, KnownErrors, createSolanaConnectionFactory } from '../common/utils'
 
-import { getPrioritizationFees } from './utils'
+// import { getPrioritizationFees } from './utils'
 
 const LOOKUP_TABLE_ADDRESS: Partial<Record<EndpointId, PublicKey>> = {
     [EndpointId.SOLANA_V2_MAINNET]: publicKey('AokBxha6VMLLgf97B5VYHEtqztamWmYERBmmFvjuTzJB'),
