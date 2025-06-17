@@ -33,7 +33,7 @@
   "devDependencies": {
     "@babel/core": "^7.23.9",
     "@coral-xyz/anchor": "^0.29.0",
-    "@layerzerolabs/devtools": "~0.4.8",
+    "@layerzerolabs/devtools": "~1.0.0",
     "@layerzerolabs/devtools-evm-hardhat": "^2.0.9",
     "@layerzerolabs/devtools-solana": "~2.1.0",
     "@layerzerolabs/eslint-config-next": "~2.3.39",
