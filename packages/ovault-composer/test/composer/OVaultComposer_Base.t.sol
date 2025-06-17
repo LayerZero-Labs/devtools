@@ -23,14 +23,21 @@ import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contract
 contract OVaultComposerBaseTest is TestHelperOz5 {
     using OptionsBuilder for bytes;
 
+    uint8 subMeshSize = 3;
+
     uint32 public constant ETH_EID = 1;
     uint32 public constant ARB_EID = 2;
+    uint32 public constant POL_EID = 3;
+    uint32 public constant BAD_EID = 101;
 
     MockOFT public assetOFT_arb;
     MockOFTMintBurn public shareOFT_arb;
 
     MockOFT public assetOFT_eth;
     MockOFT public shareOFT_eth;
+
+    MockOFT public assetOFT_pol;
+    MockOFT public shareOFT_pol;
 
     MockOVault public oVault_arb;
     OVaultComposer public OVaultComposerArb;
@@ -47,7 +54,7 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
 
     function setUp() public virtual override {
         super.setUp();
-        setUpEndpoints(2, LibraryType.UltraLightNode);
+        setUpEndpoints(subMeshSize, LibraryType.UltraLightNode);
 
         arbEndpoint = address(endpoints[ARB_EID]);
 
@@ -55,6 +62,8 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
         assetOFT_arb = new MockOFT("arbERC20", "arbERC20", address(endpoints[ARB_EID]), address(this));
         assetOFT_eth = new MockOFT("ethERC20", "ethERC20", address(endpoints[ETH_EID]), address(this));
         shareOFT_eth = new MockOFT("ethERC20", "ethERC20", address(endpoints[ETH_EID]), address(this));
+        assetOFT_pol = new MockOFT("polERC20", "polERC20", address(endpoints[POL_EID]), address(this));
+        shareOFT_pol = new MockOFT("polERC20", "polERC20", address(endpoints[POL_EID]), address(this));
 
         /// @dev Deploy the Asset OFT Mint Burn
         shareOFT_arb = new MockOFTMintBurn("arbERC20", "arbERC20", address(endpoints[ARB_EID]), address(this));
@@ -70,14 +79,16 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
         vm.label(address(OVaultComposerArb), "OVaultComposer::arb");
 
         // config and wire the ofts
-        address[] memory nativeMeshOFTs = new address[](2);
+        address[] memory nativeMeshOFTs = new address[](subMeshSize);
         nativeMeshOFTs[0] = address(assetOFT_eth);
         nativeMeshOFTs[1] = address(assetOFT_arb);
+        nativeMeshOFTs[2] = address(assetOFT_pol);
         this.wireOApps(nativeMeshOFTs);
 
-        address[] memory usdt0OFTs = new address[](2);
-        usdt0OFTs[0] = address(shareOFT_arb);
-        usdt0OFTs[1] = address(shareOFT_eth);
+        address[] memory usdt0OFTs = new address[](subMeshSize);
+        usdt0OFTs[0] = address(shareOFT_eth);
+        usdt0OFTs[1] = address(shareOFT_arb);
+        usdt0OFTs[2] = address(shareOFT_pol);
         this.wireOApps(usdt0OFTs);
 
         deal(arbExecutor, INITIAL_BALANCE);
@@ -97,6 +108,20 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
             _srcEid,
             _amount,
             abi.encodePacked(addressToBytes32(_msgSender), abi.encode(_sendParam))
+        );
+    }
+
+    function _createComposePayload(
+        uint32 _srcEid,
+        bytes memory _composeMsg,
+        uint256 _amount,
+        address _msgSender
+    ) internal pure returns (bytes memory composeMsg) {
+        composeMsg = OFTComposeMsgCodec.encode(
+            0,
+            _srcEid,
+            _amount,
+            abi.encodePacked(addressToBytes32(_msgSender), _composeMsg)
         );
     }
 
