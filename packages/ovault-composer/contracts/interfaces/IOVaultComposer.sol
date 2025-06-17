@@ -18,6 +18,7 @@ interface IOVaultComposer is IOAppComposer {
     event SendFailed(bytes32 indexed guid, address indexed oft);
     event Refunded(bytes32 indexed guid, address indexed oft);
     event Retried(bytes32 indexed guid, address indexed oft);
+    event GenericError(bytes32 indexed guid, address indexed oft, bytes errMsg);
 
     /// ========================== Error Messages =====================================
     error InvalidAdapterMesh();

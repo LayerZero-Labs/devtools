@@ -85,7 +85,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             /// @dev In the case of a failed decode we store the failed message and emit an event.
             /// @dev This message can only be refunded back to the source chain.
             failedMessages[_guid] = FailedMessage(address(0), _refundOFT, refundSendParam);
-            emit DecodeFailed(_guid, oft, sendParamEncoded);
+            emit DecodeFailed(_guid, _refundOFT, sendParamEncoded);
             return;
         }
 
@@ -93,9 +93,10 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         /// @dev If the composer is deployed with `OPTIMISTICALLY_CONVERT_TOKENS` set to FALSE then we will early exit and the user can only go back to the source chain as they have the source token.
         if (!OPTIMISTICALLY_CONVERT_TOKENS) {
             /// @dev This quoteSend catches issues like: invalid peer or dvn config, etc.
-            try IOFT(oft).quoteSend(sendParam, false) {} catch {
+            try IOFT(oft).quoteSend(sendParam, false) {} catch (bytes memory errMsg) {
                 /// @dev When erroring out we want to NOT make a swap and the user can only go back to the source chain.
                 failedMessages[_guid] = FailedMessage(address(0), _refundOFT, refundSendParam);
+                emit GenericError(_guid, oft, errMsg);
                 return;
             }
         }
