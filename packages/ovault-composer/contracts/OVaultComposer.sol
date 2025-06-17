@@ -16,6 +16,7 @@ import { IERC4626Adapter } from "./interfaces/IERC4626Adapter.sol";
 
 contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     using OFTComposeMsgCodec for bytes;
+    using OFTComposeMsgCodec for bytes32;
 
     address public immutable ASSET_OFT;
     address public immutable SHARE_OFT;
@@ -151,7 +152,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     function refund(bytes32 _guid, bytes calldata _extraOptions) external payable nonReentrant {
         FailedMessage memory failedMessage = failedMessages[_guid];
         SendParam memory refundSendParam = failedMessage.sendParam;
-        if (failedMessage.refundOFT == address(0)) revert InvalidSendParam(refundSendParam);
+        if (failedMessage.refundOFT == address(0)) revert CanNotRefund(_guid);
 
         refundSendParam.extraOptions = _extraOptions;
 
@@ -164,7 +165,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     /// @dev Probabilistically possible if the OFT.send() fails - ex: invalid peer
     function retry(bytes32 _guid, bytes calldata _extraOptions) external payable nonReentrant {
         FailedMessage memory failedMessage = failedMessages[_guid];
-        if (failedMessage.oft == address(0)) revert InvalidSendParam(failedMessage.sendParam);
+        if (failedMessage.oft == address(0)) revert CanNotRetry(_guid);
 
         SendParam memory sendParam = failedMessage.sendParam;
 
@@ -173,6 +174,19 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         delete failedMessages[_guid];
         _send(failedMessage.oft, sendParam);
         emit Retried(_guid, failedMessage.oft);
+    }
+
+    function withdrawToRecipient(bytes32 _guid) external {
+        FailedMessage memory failedMessage = failedMessages[_guid];
+        if (failedMessage.oft == address(0)) revert CanNotWithdraw(_guid);
+
+        SendParam memory sendParam = failedMessage.sendParam;
+        address receiver = sendParam.to.bytes32ToAddress();
+
+        IERC20(failedMessage.oft).transfer(receiver, sendParam.amountLD);
+
+        delete failedMessages[_guid];
+        emit RecipientWithdrawn(_guid, failedMessage.oft);
     }
 
     function _send(address _oft, SendParam memory _sendParam) internal {

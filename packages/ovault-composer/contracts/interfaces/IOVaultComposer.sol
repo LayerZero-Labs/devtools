@@ -19,6 +19,7 @@ interface IOVaultComposer is IOAppComposer {
     event Refunded(bytes32 indexed guid, address indexed oft);
     event Retried(bytes32 indexed guid, address indexed oft);
     event GenericError(bytes32 indexed guid, address indexed oft, bytes errMsg);
+    event RecipientWithdrawn(bytes32 indexed guid, address indexed oft);
 
     /// ========================== Error Messages =====================================
     error InvalidAdapterMesh();
@@ -29,7 +30,9 @@ interface IOVaultComposer is IOAppComposer {
     error OnlyOFT(address oft);
     error OnlyAsset(address asset);
     error OnlyShare(address share);
-    error InvalidSendParam(SendParam sendParam);
+    error CanNotRefund(bytes32 guid);
+    error CanNotRetry(bytes32 guid);
+    error CanNotWithdraw(bytes32 guid);
     error NotEnoughTargetTokens(uint256 amountLD, uint256 minAmountLD);
 
     /// ========================== GLOBAL VARIABLE FUNCTIONS =====================================
@@ -43,6 +46,7 @@ interface IOVaultComposer is IOAppComposer {
 
     function refund(bytes32 guid, bytes memory extraOptions) external payable;
     function retry(bytes32 guid, bytes memory extraOptions) external payable;
+    function withdrawToRecipient(bytes32 guid) external;
     function send(address _oft, SendParam memory _sendParam) external payable;
 
     receive() external payable;
