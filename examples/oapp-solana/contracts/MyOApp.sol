@@ -18,17 +18,17 @@ contract MyOApp is OApp, OAppOptionsType3 {
     /**
      * @notice Sends a message from the source chain to a destination chain.
      * @param _dstEid The endpoint ID of the destination chain.
-     * @param _message The message string to be sent.
+     * @param _string The message string to be sent.
      * @param _options Additional options for message execution.
      * @dev Encodes the message as bytes and sends it using the `_lzSend` internal function.
      * @return receipt A `MessagingReceipt` struct containing details of the message sent.
      */
     function send(
         uint32 _dstEid,
-        string calldata _message,
+        string calldata _string,
         bytes calldata _options
     ) external payable returns (MessagingReceipt memory receipt) {
-        bytes memory _payload = abi.encodePacked(abi.encode(uint256(bytes(_message).length)), bytes(_message));
+        bytes memory _payload = abi.encodePacked(abi.encode(uint256(bytes(_string).length)), bytes(_string));
         bytes memory options = combineOptions(_dstEid, StringMsgCodec.VANILLA_TYPE, _options);
         receipt = _lzSend(_dstEid, _payload, options, MessagingFee(msg.value, 0), payable(msg.sender));
     }
