@@ -45,7 +45,7 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         assetOFT_arb.mint(address(OVaultComposerArb), TOKENS_TO_SEND);
 
         SendParam memory internalSendParam = SendParam(
-            ETH_EID,
+            POL_EID,
             addressToBytes32(userA),
             TOKENS_TO_SEND,
             0,
@@ -81,5 +81,30 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
 
         assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(oVault_arb)), TOKENS_TO_SEND);
         assertEq(shareOFT_arb.totalSupply(), 0);
+    }
+
+    function test_lzCompose_fail_invalid_payload() public {
+        bytes32 guid = _randomGUID();
+        deal(address(assetOFT_arb), address(OVaultComposerArb), TOKENS_TO_SEND);
+
+        bytes memory invalidPayload = bytes("0x1234");
+
+        bytes memory composeMsg = _createComposePayload(ETH_EID, invalidPayload, TOKENS_TO_SEND, userA);
+
+        vm.expectEmit(true, true, true, true, address(OVaultComposerArb));
+        emit IOVaultComposer.DecodeFailed(guid, address(assetOFT_arb), invalidPayload);
+
+        vm.prank(arbEndpoint);
+        OVaultComposerArb.lzCompose{ value: 1 ether }(address(assetOFT_arb), guid, composeMsg, arbExecutor, "");
+
+        (address oft, address refundOFT, SendParam memory sendParam) = OVaultComposerArb.failedMessages(guid);
+
+        assertEq(refundOFT, address(assetOFT_arb), "refundOFT should be assetOFT_arb");
+        assertEq(oft, address(0), "retry oft should be 0 - not possible");
+        assertEq(sendParam.dstEid, ETH_EID, "retry dstEid should be ETH_EID");
+        assertEq(sendParam.to, addressToBytes32(userA), "retry to should be userA");
+        assertEq(sendParam.amountLD, TOKENS_TO_SEND, "retry amountLD should be TOKENS_TO_SEND");
+        assertEq(sendParam.minAmountLD, 0, "retry minAmountLD should be 0");
+        assertEq(sendParam.extraOptions, "", "retry extraOptions should be empty");
     }
 }
