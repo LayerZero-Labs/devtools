@@ -297,4 +297,47 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         assertEq(refundSendParam.minAmountLD, 0, "refund minAmountLD should be 0");
         assertEq(refundSendParam.extraOptions, bytes(""), "refund extraOptions should be empty");
     }
+
+    function test_lzCompose_slippage_retry_with_swap() public {
+        bytes32 guid = _randomGUID();
+        assetOFT_arb.mint(address(OVaultComposerArb), TOKENS_TO_SEND);
+
+        SendParam memory internalSendParam = SendParam(
+            POL_EID,
+            addressToBytes32(userB),
+            TOKENS_TO_SEND,
+            TOKENS_TO_SEND * 2,
+            OPTIONS_LZRECEIVE_2M,
+            "",
+            ""
+        );
+
+        bytes memory composePayload = abi.encode(internalSendParam);
+        bytes memory composeMsg = _createComposePayload(ETH_EID, composePayload, TOKENS_TO_SEND, userA);
+
+        vm.expectEmit(true, true, true, true, address(OVaultComposerArb));
+        bytes memory errMsg = abi.encodeWithSelector(
+            IOVaultComposer.NotEnoughTargetTokens.selector,
+            TOKENS_TO_SEND,
+            TOKENS_TO_SEND * 2
+        );
+        emit IOVaultComposer.GenericError(guid, address(shareOFT_arb), errMsg);
+
+        vm.prank(arbEndpoint);
+        OVaultComposerArb.lzCompose{ value: 1 ether }(address(assetOFT_arb), guid, composeMsg, arbExecutor, "");
+
+        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.CanRetryWithSwap));
+
+        assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
+        assertEq(shareOFT_arb.totalSupply(), 0);
+
+        (uint256 mintShares, uint256 mintAssets) = _setTradeRatioAssetToShare(1, 2);
+
+        OVaultComposerArb.retryWithSwap{ value: 1 ether }(guid, OPTIONS_LZRECEIVE_2M);
+
+        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.NotFound));
+
+        assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(oVault_arb)), mintAssets + TOKENS_TO_SEND);
+        assertEq(shareOFT_arb.totalSupply(), shareOFT_arb.balanceOf(address(0xbeef)), mintShares);
+    }
 }
