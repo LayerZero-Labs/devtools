@@ -10,7 +10,7 @@ import { IOFT, SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/
 import { IOAppCore } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
-import { IOVaultComposer, FailedMessage } from "./interfaces/IOVaultComposer.sol";
+import { IOVaultComposer, FailedMessage, FailedState } from "./interfaces/IOVaultComposer.sol";
 import { IOVault } from "./interfaces/IOVault.sol";
 import { IERC4626Adapter } from "./interfaces/IERC4626Adapter.sol";
 
@@ -23,8 +23,6 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     address public immutable OVAULT;
     address public immutable ENDPOINT;
 
-    bool public immutable OPTIMISTICALLY_CONVERT_TOKENS;
-
     /// @notice There are 3 states a failed message can be in:
     /// @notice 1. Failed upon entering the composer - FailedMessage.oft == address(0) && FailedMessage.refundOFT == address(0)
     /// @notice 2. Failed to decode the message - FailedMessage.oft == address(0) && FailedMessage.refundOFT != address(0)
@@ -35,7 +33,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     /// @dev State 3 can be refunded back to the source chain or retried with more gas
     mapping(bytes32 guid => FailedMessage) public failedMessages;
 
-    constructor(address _ovault, bool _optimisticallyConvertTokens) {
+    constructor(address _ovault) {
         address share = IERC4626Adapter(_ovault).share();
         address asset = IERC4626Adapter(_ovault).asset();
         if (!IERC20MintBurnExtension(share).ERC4626AdapterCompliant()) {
@@ -50,8 +48,6 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         // Approve the adapter to spend the share tokens held by this contract
         IERC20(share).approve(OVAULT, type(uint256).max);
         IERC20(asset).approve(OVAULT, type(uint256).max);
-
-        OPTIMISTICALLY_CONVERT_TOKENS = _optimisticallyConvertTokens;
     }
 
     function lzCompose(
@@ -70,10 +66,10 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         /// @dev Extracted from the _message header. Will always be part of the _message since it is created by lzReceive
         uint256 amount = OFTComposeMsgCodec.amountLD(_message);
         bytes memory sendParamEncoded = OFTComposeMsgCodec.composeMsg(_message);
-        SendParam memory refundSendParam;
 
-        refundSendParam.dstEid = OFTComposeMsgCodec.srcEid(_message); // srcEid
-        refundSendParam.to = OFTComposeMsgCodec.composeFrom(_message); // srcSender
+        SendParam memory refundSendParam;
+        refundSendParam.dstEid = OFTComposeMsgCodec.srcEid(_message);
+        refundSendParam.to = OFTComposeMsgCodec.composeFrom(_message);
         refundSendParam.amountLD = amount;
 
         SendParam memory sendParam;
@@ -82,29 +78,29 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         try this.decodeSendParam(sendParamEncoded) returns (SendParam memory sendParamDecoded) {
             /// @dev In the case of a valid decode we have the raw SendParam to be forwarded to the target OFT (oft)
             sendParam = sendParamDecoded;
+            sendParam.amountLD = 0;
         } catch {
             /// @dev In the case of a failed decode we store the failed message and emit an event.
             /// @dev This message can only be refunded back to the source chain.
-            failedMessages[_guid] = FailedMessage(address(0), _refundOFT, refundSendParam);
+            failedMessages[_guid] = FailedMessage(address(0), sendParam, _refundOFT, refundSendParam);
             emit DecodeFailed(_guid, _refundOFT, sendParamEncoded);
             return;
         }
 
-        /// @dev If the composer is deployed with `OPTIMISTICALLY_CONVERT_TOKENS` set to TRUE then we will ALWAYS make the vault trade and if it errors our on OApp config the user can only retry and go ahead to the target chain since they have the target token.
-        /// @dev If the composer is deployed with `OPTIMISTICALLY_CONVERT_TOKENS` set to FALSE then we will early exit and the user can only go back to the source chain as they have the source token.
-        if (!OPTIMISTICALLY_CONVERT_TOKENS) {
-            /// @dev This quoteSend catches issues like: invalid peer or dvn config, etc.
-            try IOFT(oft).quoteSend(sendParam, false) {} catch (bytes memory errMsg) {
-                /// @dev When erroring out we want to NOT make a swap and the user can only go back to the source chain.
-                failedMessages[_guid] = FailedMessage(address(0), _refundOFT, refundSendParam);
-                emit GenericError(_guid, oft, errMsg);
-                return;
-            }
+        /// @dev Try to early catch issues surrounding LayerZero config. This quoteSend catches issues like: invalid peer, dvn config, etc.
+        try this.validateTargetOFTConfig(oft, sendParam) {} catch (bytes memory errMsg) {
+            /// @dev When erroring out we want to NOT make a swap and the user can only go back to the source chain.
+            failedMessages[_guid] = FailedMessage(address(0), sendParam, _refundOFT, refundSendParam);
+            emit GenericError(_guid, oft, errMsg);
+            return;
         }
 
-        try this.executeOVaultAction(_refundOFT, amount, sendParam.minAmountLD) {} catch {
-            failedMessages[_guid] = FailedMessage(address(0), _refundOFT, refundSendParam);
-            emit SlippageEncountered(amount, sendParam.minAmountLD);
+        /// @dev Try to execute the action on the target OFT. If we hit an issue then it rolls back the storage changes.
+        try this.executeOVaultAction(_refundOFT, amount, sendParam) returns (uint256 vaultAmount) {
+            sendParam.amountLD = vaultAmount;
+        } catch (bytes memory errMsg) {
+            failedMessages[_guid] = FailedMessage(oft, sendParam, _refundOFT, refundSendParam);
+            emit GenericError(_guid, oft, errMsg);
             return;
         }
 
@@ -114,7 +110,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         } catch {
             /// @dev A failed send can happen due to not enough msg.value
             /// @dev Since we have the target tokens in the composer, we can retry with more gas.
-            failedMessages[_guid] = FailedMessage(oft, address(0), sendParam);
+            failedMessages[_guid] = FailedMessage(oft, sendParam, address(0), refundSendParam);
             emit SendFailed(_guid, oft);
             return;
         }
@@ -125,24 +121,34 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         sendParam = abi.decode(sendParamBytes, (SendParam));
     }
 
-    function executeOVaultAction(address _oft, uint256 _amount, uint256 _minAmountLD) external nonReentrant {
+    function executeOVaultAction(
+        address _oft,
+        uint256 _amount,
+        SendParam calldata _sendParam
+    ) external nonReentrant returns (uint256 vaultAmount) {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
-        uint256 vaultAmount;
         if (_oft == ASSET_OFT) {
             vaultAmount = IERC4626Adapter(OVAULT).deposit(_amount, address(this));
         } else {
             vaultAmount = IERC4626Adapter(OVAULT).redeem(_amount, address(this), address(this));
         }
 
-        if (vaultAmount < _minAmountLD) {
+        if (vaultAmount < _sendParam.minAmountLD) {
             /// @dev Will rollback on this function's storage changes (trade does not happen)
-            revert NotEnoughTargetTokens(vaultAmount, _minAmountLD);
+            revert NotEnoughTargetTokens(vaultAmount, _sendParam.minAmountLD);
         }
     }
 
+    function validateTargetOFTConfig(address _oft, SendParam memory _sendParam) external view {
+        _sendParam.amountLD = 1e18;
+        _sendParam.minAmountLD = 0;
+
+        IOFT(_oft).quoteSend(_sendParam, false);
+    }
+
     /// @dev External call for try...catch logic in lzCompose()
-    function send(address _oft, SendParam memory _sendParam) external payable nonReentrant {
+    function send(address _oft, SendParam calldata _sendParam) external payable nonReentrant {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
         _send(_oft, _sendParam);
     }
@@ -176,21 +182,34 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         emit Retried(_guid, failedMessage.oft);
     }
 
-    function withdrawToRecipient(bytes32 _guid) external {
-        FailedMessage memory failedMessage = failedMessages[_guid];
-        if (failedMessage.oft == address(0)) revert CanNotWithdraw(_guid);
-
-        SendParam memory sendParam = failedMessage.sendParam;
-        address receiver = sendParam.to.bytes32ToAddress();
-
-        IERC20(failedMessage.oft).transfer(receiver, sendParam.amountLD);
-
-        delete failedMessages[_guid];
-        emit RecipientWithdrawn(_guid, failedMessage.oft);
-    }
+    function retryWithSwap(bytes32 _guid, bytes calldata _extraOptions) external payable nonReentrant {}
 
     function _send(address _oft, SendParam memory _sendParam) internal {
         IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), tx.origin);
+    }
+
+    function failedGuidState(bytes32 _guid) external view returns (FailedState) {
+        FailedMessage memory failedMessage = failedMessages[_guid];
+
+        if (failedMessage.refundOFT == address(0) && failedMessage.oft == address(0)) {
+            return FailedState.NotFound;
+        }
+        if (failedMessage.refundOFT != address(0) && failedMessage.oft == address(0)) {
+            return FailedState.CanOnlyRefund;
+        }
+        if (failedMessage.refundOFT == address(0) && failedMessage.oft != address(0)) {
+            return FailedState.CanOnlyRetry;
+        }
+
+        return FailedState.CanRetryWithSwap;
+    }
+
+    function _previewOVaultAction(address _oft, uint256 _amount) internal view returns (uint256 vaultAmount) {
+        if (_oft == ASSET_OFT) {
+            vaultAmount = IERC4626Adapter(OVAULT).previewDeposit(_amount);
+        } else {
+            vaultAmount = IERC4626Adapter(OVAULT).previewRedeem(_amount);
+        }
     }
 
     receive() external payable {}

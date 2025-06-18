@@ -6,20 +6,26 @@ import { IOFT, SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/
 
 struct FailedMessage {
     address oft;
-    address refundOFT;
     SendParam sendParam;
+    address refundOFT;
+    SendParam refundSendParam;
+}
+
+enum FailedState {
+    NotFound,
+    CanOnlyRefund,
+    CanRetryWithSwap,
+    CanOnlyRetry
 }
 
 interface IOVaultComposer is IOAppComposer {
     /// ========================== EVENTS =====================================
     event DecodeFailed(bytes32 indexed guid, address indexed oft, bytes message);
-    event SlippageEncountered(uint256 amountLD, uint256 minAmountLD);
     event Sent(bytes32 indexed guid, address indexed oft);
     event SendFailed(bytes32 indexed guid, address indexed oft);
     event Refunded(bytes32 indexed guid, address indexed oft);
     event Retried(bytes32 indexed guid, address indexed oft);
     event GenericError(bytes32 indexed guid, address indexed oft, bytes errMsg);
-    event RecipientWithdrawn(bytes32 indexed guid, address indexed oft);
 
     /// ========================== Error Messages =====================================
     error InvalidAdapterMesh();
@@ -39,15 +45,22 @@ interface IOVaultComposer is IOAppComposer {
     function ASSET_OFT() external view returns (address);
     function SHARE_OFT() external view returns (address);
     function ENDPOINT() external view returns (address);
-    function OPTIMISTICALLY_CONVERT_TOKENS() external view returns (bool);
 
     /// ========================== FUNCTIONS =====================================
-    function executeOVaultAction(address _oft, uint256 _amount, uint256 _minAmountLD) external;
+    function executeOVaultAction(
+        address _oft,
+        uint256 _amount,
+        SendParam calldata _sendParam
+    ) external returns (uint256 vaultAmount);
+
+    function validateTargetOFTConfig(address _oft, SendParam memory _sendParam) external view;
 
     function refund(bytes32 guid, bytes memory extraOptions) external payable;
     function retry(bytes32 guid, bytes memory extraOptions) external payable;
-    function withdrawToRecipient(bytes32 guid) external;
-    function send(address _oft, SendParam memory _sendParam) external payable;
+    function retryWithSwap(bytes32 guid, bytes memory extraOptions) external payable;
+    function send(address _oft, SendParam calldata _sendParam) external payable;
+
+    function failedGuidState(bytes32 guid) external view returns (FailedState);
 
     receive() external payable;
 }
