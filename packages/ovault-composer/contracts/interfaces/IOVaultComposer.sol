@@ -22,6 +22,7 @@ interface IOVaultComposer is IOAppComposer {
     /// ========================== EVENTS =====================================
     event DecodeFailed(bytes32 indexed guid, address indexed oft, bytes message);
     event Sent(bytes32 indexed guid, address indexed oft);
+    event SentOnHub(address indexed receiver, address indexed oft, uint256 amountLD);
     event SendFailed(bytes32 indexed guid, address indexed oft);
     event Refunded(bytes32 indexed guid, address indexed oft);
     event Retried(bytes32 indexed guid, address indexed oft);
