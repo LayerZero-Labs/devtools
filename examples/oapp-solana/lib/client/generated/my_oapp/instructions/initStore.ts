@@ -65,7 +65,7 @@ export function initStore(
     input: InitStoreInstructionAccounts & InitStoreInstructionArgs
 ): TransactionBuilder {
     // Program ID.
-    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
+    const programId = context.programs.getPublicKey('myoapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
 
     // Accounts.
     const resolvedAccounts = {

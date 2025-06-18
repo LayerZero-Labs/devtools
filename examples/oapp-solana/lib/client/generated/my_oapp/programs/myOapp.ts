@@ -14,7 +14,7 @@ export const MY_OAPP_PROGRAM_ID =
 
 export function createMyOappProgram(): Program {
     return {
-        name: 'myOapp',
+        name: 'myoapp',
         publicKey: MY_OAPP_PROGRAM_ID,
         getErrorFromCode(code: number, cause?: Error) {
             return getMyOappErrorFromCode(code, this, cause)
@@ -32,9 +32,9 @@ export function getMyOappProgram<T extends Program = Program>(
     context: Pick<Context, 'programs'>,
     clusterFilter?: ClusterFilter
 ): T {
-    return context.programs.get<T>('myOapp', clusterFilter)
+    return context.programs.get<T>('myoapp', clusterFilter)
 }
 
 export function getMyOappProgramId(context: Pick<Context, 'programs'>, clusterFilter?: ClusterFilter): PublicKey {
-    return context.programs.getPublicKey('myOapp', MY_OAPP_PROGRAM_ID, clusterFilter)
+    return context.programs.getPublicKey('myoapp', MY_OAPP_PROGRAM_ID, clusterFilter)
 }
