@@ -23,14 +23,6 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     address public immutable OVAULT;
     address public immutable ENDPOINT;
 
-    /// @notice There are 3 states a failed message can be in:
-    /// @notice 1. Failed upon entering the composer - FailedMessage.oft == address(0) && FailedMessage.refundOFT == address(0)
-    /// @notice 2. Failed to decode the message - FailedMessage.oft == address(0) && FailedMessage.refundOFT != address(0)
-    /// @notice 3. Failed to send the message to the target OFT - FailedMessage.oft != address(0) && FailedMessage.refundOFT != address(0)
-    ///
-    /// @dev State 1 needs lzCompose() to be re-executed
-    /// @dev State 2 can only be refunded back to the source chain
-    /// @dev State 3 can be refunded back to the source chain or retried with more gas
     mapping(bytes32 guid => FailedMessage) public failedMessages;
 
     constructor(address _ovault) {
