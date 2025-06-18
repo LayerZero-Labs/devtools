@@ -132,6 +132,10 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
 
     /// @dev Dirty swapping amountLD and minAmountLD to 1e18 and 0 to avoid Slippage issue on the target OFT quoteSend()
     function validateTargetOFTConfig(address _oft, SendParam memory _sendParam) external view {
+        if (COMPOSER_EID == _sendParam.dstEid) {
+            return;
+        }
+
         _sendParam.amountLD = 1e18;
         _sendParam.minAmountLD = 0;
 
@@ -141,7 +145,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     /// @dev External call for try...catch logic in lzCompose()
     function send(address _oft, SendParam calldata _sendParam) external payable nonReentrant {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
-        if (_sendParam.dstEid != COMPOSER_EID) {
+        if (_sendParam.dstEid == COMPOSER_EID) {
             address _receiver = _sendParam.to.bytes32ToAddress();
             uint256 _amountLD = _sendParam.amountLD;
             IERC20 token = IERC20(IOFT(_oft).token());

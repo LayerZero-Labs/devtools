@@ -87,6 +87,51 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         assertEq(shareOFT_arb.totalSupply(), 0);
     }
 
+    function test_lzCompose_pass_on_hub() public {
+        bytes32 guid = _randomGUID();
+        assetOFT_arb.mint(address(OVaultComposerArb), TOKENS_TO_SEND);
+
+        SendParam memory internalSendParam = SendParam(
+            OVaultComposerArb.COMPOSER_EID(),
+            addressToBytes32(userA),
+            TOKENS_TO_SEND,
+            0,
+            OPTIONS_LZRECEIVE_2M,
+            "",
+            ""
+        );
+
+        bytes memory composeMsg = _createComposePayload(ETH_EID, internalSendParam, TOKENS_TO_SEND, userA);
+
+        vm.expectEmit(true, true, true, true, address(assetOFT_arb));
+        emit IERC20.Transfer(address(OVaultComposerArb), address(oVault_arb), TOKENS_TO_SEND);
+
+        vm.expectEmit(true, true, true, true, address(shareOFT_arb));
+        emit IERC20.Transfer(address(0), address(OVaultComposerArb), TOKENS_TO_SEND);
+
+        vm.expectEmit(true, true, true, true, address(oVault_arb));
+        emit IERC4626Adapter.Deposit(
+            address(OVaultComposerArb),
+            address(OVaultComposerArb),
+            TOKENS_TO_SEND,
+            TOKENS_TO_SEND
+        );
+
+        vm.expectEmit(true, true, true, true, address(OVaultComposerArb));
+        emit IOVaultComposer.SentOnHub(userA, address(shareOFT_arb), TOKENS_TO_SEND);
+
+        assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
+        assertEq(shareOFT_arb.totalSupply(), 0);
+
+        vm.prank(arbEndpoint);
+        OVaultComposerArb.lzCompose{ value: 1 ether }(address(assetOFT_arb), guid, composeMsg, arbExecutor, "");
+
+        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.NotFound));
+
+        assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(oVault_arb)), TOKENS_TO_SEND);
+        assertEq(shareOFT_arb.totalSupply(), shareOFT_arb.balanceOf(address(userA)), TOKENS_TO_SEND);
+    }
+
     function test_lzCompose_fail_invalid_payload() public {
         bytes32 guid = _randomGUID();
         assetOFT_arb.mint(address(OVaultComposerArb), TOKENS_TO_SEND);
