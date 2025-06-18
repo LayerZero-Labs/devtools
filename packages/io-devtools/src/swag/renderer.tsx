@@ -1,5 +1,6 @@
 import React from "react";
 import { ProgressBar, ProgressBarProps } from "./components/progress";
+import { PenguinSpinner, PenguinSpinnerProps } from "./components/penguin";
 
 /**
  * Creates a ProgressBar React node.
@@ -22,6 +23,16 @@ import { ProgressBar, ProgressBarProps } from "./components/progress";
 export const createProgressBar = (
   props: ProgressBarProps = {},
 ): React.ReactElement<ProgressBarProps> => <ProgressBar {...props} />;
+
+/**
+ * Creates a PenguinSpinner React node for showing transaction signing progress.
+ *
+ * @param {PenguinSpinnerProps} props
+ * @returns {React.ReactElement<PenguinSpinnerProps>}
+ */
+export const createPenguinSpinner = (
+  props: PenguinSpinnerProps = {},
+): React.ReactElement<PenguinSpinnerProps> => <PenguinSpinner {...props} />;
 
 /**
  * Re-export the render from ink so that we can use it without importing directly from ink
