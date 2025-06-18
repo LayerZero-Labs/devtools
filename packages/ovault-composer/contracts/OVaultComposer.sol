@@ -121,25 +121,21 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         sendParam = abi.decode(sendParamBytes, (SendParam));
     }
 
+    /// @dev External call for try...catch logic in lzCompose()
     function executeOVaultAction(
         address _oft,
         uint256 _amount,
         SendParam calldata _sendParam
     ) external nonReentrant returns (uint256 vaultAmount) {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
-
-        if (_oft == ASSET_OFT) {
-            vaultAmount = IERC4626Adapter(OVAULT).deposit(_amount, address(this));
-        } else {
-            vaultAmount = IERC4626Adapter(OVAULT).redeem(_amount, address(this), address(this));
-        }
-
+        vaultAmount = _executeOVaultAction(_oft, _amount);
         if (vaultAmount < _sendParam.minAmountLD) {
             /// @dev Will rollback on this function's storage changes (trade does not happen)
             revert NotEnoughTargetTokens(vaultAmount, _sendParam.minAmountLD);
         }
     }
 
+    /// @dev Dirty swapping amountLD and minAmountLD to 1e18 and 0 to avoid Slippage issue on the target OFT quoteSend()
     function validateTargetOFTConfig(address _oft, SendParam memory _sendParam) external view {
         _sendParam.amountLD = 1e18;
         _sendParam.minAmountLD = 0;
@@ -182,6 +178,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         emit Retried(_guid, failedMessage.oft);
     }
 
+    /// @dev Retry mechanism for transactions that failed due to slippage. This can revert.
     function retryWithSwap(bytes32 _guid, bytes calldata _extraOptions) external payable {
         FailedMessage memory failedMessage = failedMessages[_guid];
         if (failedGuidState(_guid) != FailedState.CanRetryWithSwap) revert CanNotRetry(_guid);
@@ -191,38 +188,27 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
 
         uint256 amountLd = failedMessage.refundSendParam.amountLD;
 
-        try this.executeOVaultAction(failedMessage.refundOFT, amountLd, sendParam) returns (uint256 vaultAmount) {
-            sendParam.amountLD = vaultAmount;
-            delete failedMessages[_guid];
-        } catch (bytes memory errMsg) {
-            failedMessages[_guid] = FailedMessage(
-                failedMessage.oft,
-                sendParam,
-                address(0),
-                failedMessage.refundSendParam
-            );
-            emit GenericError(_guid, failedMessage.oft, errMsg);
-            return;
-        }
+        delete failedMessages[_guid];
+        sendParam.amountLD = _executeOVaultAction(failedMessage.refundOFT, amountLd);
 
-        try this.send{ value: msg.value }(failedMessage.oft, sendParam) {
-            emit Sent(_guid, failedMessage.oft);
-        } catch {
-            failedMessages[_guid] = FailedMessage(
-                failedMessage.oft,
-                sendParam,
-                address(0),
-                failedMessage.refundSendParam
-            );
-            emit SendFailed(_guid, failedMessage.oft);
-            return;
-        }
+        _send(failedMessage.oft, sendParam);
+        emit Sent(_guid, failedMessage.oft);
     }
 
+    /// @dev Internal function to send the message to the target OFT
     function _send(address _oft, SendParam memory _sendParam) internal {
         IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), tx.origin);
     }
 
+    function _executeOVaultAction(address _oft, uint256 _amount) internal returns (uint256 vaultAmount) {
+        if (_oft == ASSET_OFT) {
+            vaultAmount = IERC4626Adapter(OVAULT).deposit(_amount, address(this));
+        } else {
+            vaultAmount = IERC4626Adapter(OVAULT).redeem(_amount, address(this), address(this));
+        }
+    }
+
+    /// @dev Helper to view the state of a failed message
     function failedGuidState(bytes32 _guid) public view returns (FailedState) {
         FailedMessage memory failedMessage = failedMessages[_guid];
 
@@ -238,14 +224,5 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
 
         return FailedState.CanRetryWithSwap;
     }
-
-    function _previewOVaultAction(address _oft, uint256 _amount) internal view returns (uint256 vaultAmount) {
-        if (_oft == ASSET_OFT) {
-            vaultAmount = IERC4626Adapter(OVAULT).previewDeposit(_amount);
-        } else {
-            vaultAmount = IERC4626Adapter(OVAULT).previewRedeem(_amount);
-        }
-    }
-
     receive() external payable {}
 }
