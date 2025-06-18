@@ -69,7 +69,7 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
         shareOFT_arb = new MockOFTMintBurn("arbERC20", "arbERC20", address(endpoints[ARB_EID]), address(this));
 
         oVault_arb = new MockOVault(assetOFT_arb, shareOFT_arb);
-        OVaultComposerArb = new OVaultComposer(address(oVault_arb), true);
+        OVaultComposerArb = new OVaultComposer(address(oVault_arb));
 
         vm.label(address(assetOFT_arb), "AssetOFT::arb");
         vm.label(address(shareOFT_arb), "ShareOFT::arb");
@@ -132,5 +132,21 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
     function assertEq(uint256 term1, uint256 term2, uint256 term3) internal pure {
         assertEq(term1, term2, "term1 != term2");
         assertEq(term1, term3, "term1 != term3");
+    }
+
+    function assertEmpty(SendParam memory _sendParam) internal pure {
+        assertEq(_sendParam.dstEid, 0, "dstEid should be empty");
+        assertEq(_sendParam.to, bytes32(0), "to should be empty");
+        assertEq(_sendParam.amountLD, 0, "amountLD should be empty");
+        assertEq(_sendParam.minAmountLD, 0, "minAmountLD should be empty");
+        assertEq(_sendParam.extraOptions, bytes(""), "extraOptions should be empty");
+    }
+
+    function assertEq(SendParam memory _term1, SendParam memory _term2) internal pure {
+        assertEq(_term1.dstEid, _term2.dstEid, "dstEid should be equal");
+        assertEq(_term1.to, _term2.to, "to should be equal");
+        assertEq(_term1.amountLD, _term2.amountLD, "amountLD should be equal");
+        assertEq(_term1.minAmountLD, _term2.minAmountLD, "minAmountLD should be equal");
+        assertEq(_term1.extraOptions, _term2.extraOptions, "extraOptions should be equal");
     }
 }

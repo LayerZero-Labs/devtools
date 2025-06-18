@@ -7,11 +7,14 @@ import { SendParam } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol"
 
 import { OVaultComposerBaseTest } from "./OVaultComposer_Base.t.sol";
 
-import { IOVaultComposer } from "../../contracts/interfaces/IOVaultComposer.sol";
+import { IOVaultComposer, FailedState } from "../../contracts/interfaces/IOVaultComposer.sol";
+import { OVaultComposer } from "../../contracts/OVaultComposer.sol";
 
 import { console } from "forge-std/console.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IERC4626Adapter } from "../../contracts/interfaces/IERC4626Adapter.sol";
+import { IOFT } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
+import { IOAppCore } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol";
 
 contract OVaultComposerUnitTest is OVaultComposerBaseTest {
     using OptionsBuilder for bytes;
@@ -24,7 +27,6 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         assertEq(OVaultComposerArb.OVAULT(), address(oVault_arb));
         assertEq(OVaultComposerArb.SHARE_OFT(), address(shareOFT_arb));
         assertEq(OVaultComposerArb.ASSET_OFT(), address(assetOFT_arb));
-        assertEq(OVaultComposerArb.OPTIMISTICALLY_CONVERT_TOKENS(), true);
     }
 
     function test_onlyEndpoint() public {
@@ -79,13 +81,15 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         vm.prank(arbEndpoint);
         OVaultComposerArb.lzCompose{ value: 1 ether }(address(assetOFT_arb), guid, composeMsg, arbExecutor, "");
 
+        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.NotFound));
+
         assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(oVault_arb)), TOKENS_TO_SEND);
         assertEq(shareOFT_arb.totalSupply(), 0);
     }
 
     function test_lzCompose_fail_invalid_payload() public {
         bytes32 guid = _randomGUID();
-        deal(address(assetOFT_arb), address(OVaultComposerArb), TOKENS_TO_SEND);
+        assetOFT_arb.mint(address(OVaultComposerArb), TOKENS_TO_SEND);
 
         bytes memory invalidPayload = bytes("0x1234");
 
@@ -97,14 +101,200 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         vm.prank(arbEndpoint);
         OVaultComposerArb.lzCompose{ value: 1 ether }(address(assetOFT_arb), guid, composeMsg, arbExecutor, "");
 
-        (address oft, address refundOFT, SendParam memory sendParam) = OVaultComposerArb.failedMessages(guid);
+        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.CanOnlyRefund));
+
+        (
+            address oft,
+            SendParam memory sendParam,
+            address refundOFT,
+            SendParam memory refundSendParam
+        ) = OVaultComposerArb.failedMessages(guid);
 
         assertEq(refundOFT, address(assetOFT_arb), "refundOFT should be assetOFT_arb");
         assertEq(oft, address(0), "retry oft should be 0 - not possible");
-        assertEq(sendParam.dstEid, ETH_EID, "retry dstEid should be ETH_EID");
-        assertEq(sendParam.to, addressToBytes32(userA), "retry to should be userA");
+        assertEq(refundSendParam.dstEid, ETH_EID, "refund dstEid should be ETH_EID");
+        assertEq(refundSendParam.to, addressToBytes32(userA), "refund to should be userA");
+        assertEq(refundSendParam.amountLD, TOKENS_TO_SEND, "refund amountLD should be TOKENS_TO_SEND");
+        assertEq(refundSendParam.minAmountLD, 0, "refund minAmountLD should be 0");
+        assertEq(refundSendParam.extraOptions, "", "refund extraOptions should be empty");
+
+        assertEmpty(sendParam);
+    }
+
+    function test_lzCompose_quoteSend_fail() public {
+        bytes32 guid = _randomGUID();
+        assetOFT_arb.mint(address(OVaultComposerArb), TOKENS_TO_SEND);
+
+        SendParam memory internalSendParam = SendParam(
+            BAD_EID,
+            addressToBytes32(userB),
+            TOKENS_TO_SEND,
+            0,
+            OPTIONS_LZRECEIVE_2M,
+            "",
+            ""
+        );
+
+        bytes memory composePayload = abi.encode(internalSendParam);
+        bytes memory composeMsg = _createComposePayload(ETH_EID, composePayload, TOKENS_TO_SEND, userA);
+
+        bytes memory errMsg = abi.encodeWithSelector(IOAppCore.NoPeer.selector, BAD_EID);
+        vm.expectEmit(address(OVaultComposerArb));
+        emit IOVaultComposer.GenericError(guid, address(shareOFT_arb), errMsg);
+
+        assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
+        assertEq(shareOFT_arb.totalSupply(), 0);
+
+        vm.prank(arbEndpoint);
+        OVaultComposerArb.lzCompose{ value: 1 ether }(address(assetOFT_arb), guid, composeMsg, arbExecutor, "");
+
+        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.CanOnlyRefund));
+
+        assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
+        assertEq(shareOFT_arb.totalSupply(), 0);
+
+        (
+            address oft,
+            SendParam memory sendParam,
+            address refundOFT,
+            SendParam memory refundSendParam
+        ) = OVaultComposerArb.failedMessages(guid);
+
+        assertEq(refundOFT, address(assetOFT_arb), "refundOFT should be assetOFT_arb");
+        assertEq(oft, address(0), "retry oft should be 0 - not possible");
+
+        assertEq(refundSendParam.dstEid, ETH_EID, "refund dstEid should be ETH_EID");
+        assertEq(refundSendParam.to, addressToBytes32(userA), "refund to should be userA");
+        assertEq(refundSendParam.amountLD, TOKENS_TO_SEND, "refund amountLD should be TOKENS_TO_SEND");
+        assertEq(refundSendParam.minAmountLD, 0, "refund minAmountLD should be 0");
+        assertEq(refundSendParam.extraOptions, bytes(""), "refund extraOptions should be empty");
+
+        SendParam memory expectedSendParam = internalSendParam;
+        expectedSendParam.amountLD = 0;
+
+        assertEq(sendParam, expectedSendParam);
+    }
+
+    function test_lzCompose_slippage_on_target_token() public {
+        bytes32 guid = _randomGUID();
+        assetOFT_arb.mint(address(OVaultComposerArb), TOKENS_TO_SEND);
+
+        SendParam memory internalSendParam = SendParam(
+            POL_EID,
+            addressToBytes32(userB),
+            TOKENS_TO_SEND,
+            TOKENS_TO_SEND + 1,
+            OPTIONS_LZRECEIVE_2M,
+            "",
+            ""
+        );
+
+        bytes memory composePayload = abi.encode(internalSendParam);
+        bytes memory composeMsg = _createComposePayload(ETH_EID, composePayload, TOKENS_TO_SEND, userA);
+
+        vm.expectEmit(true, true, true, true, address(OVaultComposerArb));
+        bytes memory errMsg = abi.encodeWithSelector(
+            IOVaultComposer.NotEnoughTargetTokens.selector,
+            TOKENS_TO_SEND,
+            TOKENS_TO_SEND + 1
+        );
+        emit IOVaultComposer.GenericError(guid, address(shareOFT_arb), errMsg);
+
+        assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
+        assertEq(shareOFT_arb.totalSupply(), 0);
+
+        vm.prank(arbEndpoint);
+        OVaultComposerArb.lzCompose{ value: 1 ether }(address(assetOFT_arb), guid, composeMsg, arbExecutor, "");
+
+        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.CanRetryWithSwap));
+
+        assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
+        assertEq(shareOFT_arb.totalSupply(), 0);
+
+        (
+            address oft,
+            SendParam memory sendParam,
+            address refundOFT,
+            SendParam memory refundSendParam
+        ) = OVaultComposerArb.failedMessages(guid);
+
+        assertEq(refundOFT, address(assetOFT_arb), "refundOFT should be assetOFT_arb");
+        assertEq(oft, address(shareOFT_arb), "retry oft should be shareOFT_arb");
+
+        assertEq(refundSendParam.dstEid, ETH_EID, "refund dstEid should be ETH_EID");
+        assertEq(refundSendParam.to, addressToBytes32(userA), "refund to should be userA");
+        assertEq(refundSendParam.amountLD, TOKENS_TO_SEND, "refund amountLD should be TOKENS_TO_SEND");
+        assertEq(refundSendParam.minAmountLD, 0, "refund minAmountLD should be TOKENS_TO_SEND + 1");
+        assertEq(refundSendParam.extraOptions, bytes(""), "refund extraOptions should be empty");
+
+        SendParam memory expectedSendParam = internalSendParam;
+        expectedSendParam.amountLD = 0;
+
+        assertEq(sendParam, expectedSendParam);
+    }
+
+    function test_lzCompose_fail_insufficient_fee_amount() public {
+        bytes32 guid = _randomGUID();
+        assetOFT_arb.mint(address(OVaultComposerArb), TOKENS_TO_SEND);
+
+        SendParam memory internalSendParam = SendParam(
+            POL_EID,
+            addressToBytes32(userB),
+            TOKENS_TO_SEND,
+            0,
+            OPTIONS_LZRECEIVE_2M,
+            "",
+            ""
+        );
+
+        bytes memory composeMsg = _createComposePayload(ETH_EID, internalSendParam, TOKENS_TO_SEND, userA);
+
+        vm.expectEmit(true, true, true, true, address(assetOFT_arb));
+        emit IERC20.Transfer(address(OVaultComposerArb), address(oVault_arb), TOKENS_TO_SEND);
+
+        vm.expectEmit(true, true, true, true, address(shareOFT_arb));
+        emit IERC20.Transfer(address(0), address(OVaultComposerArb), TOKENS_TO_SEND);
+
+        vm.expectEmit(true, true, true, true, address(oVault_arb));
+        emit IERC4626Adapter.Deposit(
+            address(OVaultComposerArb),
+            address(OVaultComposerArb),
+            TOKENS_TO_SEND,
+            TOKENS_TO_SEND
+        );
+
+        vm.expectEmit(true, true, true, true, address(OVaultComposerArb));
+        emit IOVaultComposer.SendFailed(guid, address(shareOFT_arb));
+
+        assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
+        assertEq(shareOFT_arb.totalSupply(), 0);
+
+        vm.prank(arbEndpoint);
+        OVaultComposerArb.lzCompose(address(assetOFT_arb), guid, composeMsg, arbExecutor, "");
+        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.CanOnlyRetry));
+
+        assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(oVault_arb)), TOKENS_TO_SEND);
+        assertEq(shareOFT_arb.totalSupply(), shareOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
+
+        (
+            address oft,
+            SendParam memory sendParam,
+            address refundOFT,
+            SendParam memory refundSendParam
+        ) = OVaultComposerArb.failedMessages(guid);
+
+        assertEq(refundOFT, address(0), "refundOFT should be 0 - not possible");
+        assertEq(oft, address(shareOFT_arb), "retry oft should be shareOFT_arb");
+        assertEq(sendParam.dstEid, POL_EID, "retry dstEid should be POL_EID");
+        assertEq(sendParam.to, addressToBytes32(userB), "retry to should be userB");
         assertEq(sendParam.amountLD, TOKENS_TO_SEND, "retry amountLD should be TOKENS_TO_SEND");
         assertEq(sendParam.minAmountLD, 0, "retry minAmountLD should be 0");
-        assertEq(sendParam.extraOptions, "", "retry extraOptions should be empty");
+        assertEq(sendParam.extraOptions, OPTIONS_LZRECEIVE_2M, "retry extraOptions should be OPTIONS_LZRECEIVE_2M");
+
+        assertEq(refundSendParam.dstEid, ETH_EID, "refund dstEid should be ETH_EID");
+        assertEq(refundSendParam.to, addressToBytes32(userA), "refund to should be userA");
+        assertEq(refundSendParam.amountLD, TOKENS_TO_SEND, "refund amountLD should be TOKENS_TO_SEND");
+        assertEq(refundSendParam.minAmountLD, 0, "refund minAmountLD should be 0");
+        assertEq(refundSendParam.extraOptions, bytes(""), "refund extraOptions should be empty");
     }
 }
