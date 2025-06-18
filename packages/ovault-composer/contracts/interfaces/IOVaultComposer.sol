@@ -14,8 +14,8 @@ struct FailedMessage {
 enum FailedState {
     NotFound,
     CanOnlyRefund,
-    CanRetryWithSwap,
-    CanOnlyRetry
+    CanOnlyRetry,
+    CanRetryWithSwap
 }
 
 interface IOVaultComposer is IOAppComposer {
