@@ -158,7 +158,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     function refund(bytes32 _guid, bytes calldata _extraOptions) external payable nonReentrant {
         FailedMessage memory failedMessage = failedMessages[_guid];
         SendParam memory refundSendParam = failedMessage.sendParam;
-        if (failedMessage.refundOFT == address(0)) revert CanNotRefund(_guid);
+        if (failedGuidState(_guid) != FailedState.CanOnlyRefund) revert CanNotRefund(_guid);
 
         refundSendParam.extraOptions = _extraOptions;
 
@@ -171,7 +171,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     /// @dev Probabilistically possible if the OFT.send() fails - ex: invalid peer
     function retry(bytes32 _guid, bytes calldata _extraOptions) external payable nonReentrant {
         FailedMessage memory failedMessage = failedMessages[_guid];
-        if (failedMessage.oft == address(0)) revert CanNotRetry(_guid);
+        if (failedGuidState(_guid) != FailedState.CanOnlyRetry) revert CanNotRetry(_guid);
 
         SendParam memory sendParam = failedMessage.sendParam;
 
@@ -182,13 +182,48 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         emit Retried(_guid, failedMessage.oft);
     }
 
-    function retryWithSwap(bytes32 _guid, bytes calldata _extraOptions) external payable nonReentrant {}
+    function retryWithSwap(bytes32 _guid, bytes calldata _extraOptions) external payable {
+        FailedMessage memory failedMessage = failedMessages[_guid];
+        if (failedGuidState(_guid) != FailedState.CanRetryWithSwap) revert CanNotRetry(_guid);
+
+        SendParam memory sendParam = failedMessage.sendParam;
+        sendParam.extraOptions = _extraOptions;
+
+        uint256 amountLd = failedMessage.refundSendParam.amountLD;
+
+        try this.executeOVaultAction(failedMessage.refundOFT, amountLd, sendParam) returns (uint256 vaultAmount) {
+            sendParam.amountLD = vaultAmount;
+            delete failedMessages[_guid];
+        } catch (bytes memory errMsg) {
+            failedMessages[_guid] = FailedMessage(
+                failedMessage.oft,
+                sendParam,
+                address(0),
+                failedMessage.refundSendParam
+            );
+            emit GenericError(_guid, failedMessage.oft, errMsg);
+            return;
+        }
+
+        try this.send{ value: msg.value }(failedMessage.oft, sendParam) {
+            emit Sent(_guid, failedMessage.oft);
+        } catch {
+            failedMessages[_guid] = FailedMessage(
+                failedMessage.oft,
+                sendParam,
+                address(0),
+                failedMessage.refundSendParam
+            );
+            emit SendFailed(_guid, failedMessage.oft);
+            return;
+        }
+    }
 
     function _send(address _oft, SendParam memory _sendParam) internal {
         IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), tx.origin);
     }
 
-    function failedGuidState(bytes32 _guid) external view returns (FailedState) {
+    function failedGuidState(bytes32 _guid) public view returns (FailedState) {
         FailedMessage memory failedMessage = failedMessages[_guid];
 
         if (failedMessage.refundOFT == address(0) && failedMessage.oft == address(0)) {
