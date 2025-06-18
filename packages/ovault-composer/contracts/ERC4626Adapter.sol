@@ -21,6 +21,7 @@ contract ERC4626Adapter is IERC4626Adapter, IERC20 {
     string public symbol;
 
     uint8 private immutable _underlyingDecimals;
+    uint8 private immutable _shareDecimals;
 
     /**
      * @dev Set the underlying asset contract. This must be an ERC20-compatible contract (ERC-20 or ERC-777).
@@ -28,6 +29,8 @@ contract ERC4626Adapter is IERC4626Adapter, IERC20 {
     constructor(address asset_, address share_) {
         (bool success, uint8 assetDecimals) = _tryGetAssetDecimals(asset_);
         _underlyingDecimals = success ? assetDecimals : 18;
+        _shareDecimals = IERC20Metadata(share_).decimals();
+
         _asset = IERC20(asset_);
         _share = IERC20MintBurnExtension(share_);
 
@@ -49,17 +52,6 @@ contract ERC4626Adapter is IERC4626Adapter, IERC20 {
         return (false, 0);
     }
 
-    /**
-     * @dev Decimals are computed by adding the decimal offset on top of the underlying asset's decimals. This
-     * "original" value is cached during construction of the vault contract. If this read operation fails (e.g., the
-     * asset has not been created yet), a default of 18 is used to represent the underlying asset's decimals.
-     *
-     * See {IERC20Metadata-decimals}.
-     */
-    function decimals() public view virtual returns (uint8) {
-        return _underlyingDecimals + _decimalsOffset();
-    }
-
     /** @dev See {IERC4626-asset}. */
     function asset() public view virtual returns (address) {
         return address(_asset);
@@ -68,6 +60,10 @@ contract ERC4626Adapter is IERC4626Adapter, IERC20 {
     /** @notice NEW FUNCTION */
     function share() public view virtual returns (address) {
         return address(_share);
+    }
+
+    function decimals() public view virtual returns (uint8) {
+        return _shareDecimals;
     }
 
     /// @dev Adding to proxy the share token's total supply
@@ -286,6 +282,6 @@ contract ERC4626Adapter is IERC4626Adapter, IERC20 {
     }
 
     function _decimalsOffset() internal view virtual returns (uint8) {
-        return 0;
+        return _shareDecimals - _underlyingDecimals;
     }
 }
