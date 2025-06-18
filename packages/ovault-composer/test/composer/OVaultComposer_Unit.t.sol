@@ -331,7 +331,7 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
         assertEq(shareOFT_arb.totalSupply(), 0);
 
-        (uint256 mintShares, uint256 mintAssets) = _setTradeRatioAssetToShare(1, 2);
+        (uint256 mintAssets, uint256 mintShares) = _setTradeRatioAssetToShare(1, 2);
 
         OVaultComposerArb.retryWithSwap{ value: 1 ether }(guid, OPTIONS_LZRECEIVE_2M);
 

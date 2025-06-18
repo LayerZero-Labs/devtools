@@ -128,9 +128,9 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
     function _setTradeRatioAssetToShare(
         uint256 _assetNum,
         uint256 _shareNum
-    ) internal returns (uint256 mintShares, uint256 mintAssets) {
-        mintShares = _shareNum * TOKENS_TO_SEND;
+    ) internal returns (uint256 mintAssets, uint256 mintShares) {
         mintAssets = _assetNum * TOKENS_TO_SEND;
+        mintShares = _shareNum * TOKENS_TO_SEND;
 
         shareOFT_arb.setSuperUser(address(this), true);
         shareOFT_arb.mint(address(0xbeef), mintShares);
