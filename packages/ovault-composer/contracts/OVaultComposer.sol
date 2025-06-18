@@ -8,6 +8,7 @@ import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.s
 
 import { IOFT, SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { IOAppCore } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol";
+import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
 import { IOVaultComposer, FailedMessage, FailedState } from "./interfaces/IOVaultComposer.sol";
@@ -22,6 +23,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     address public immutable SHARE_OFT;
     address public immutable OVAULT;
     address public immutable ENDPOINT;
+    uint32 public immutable COMPOSER_EID;
 
     mapping(bytes32 guid => FailedMessage) public failedMessages;
 
@@ -36,6 +38,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         SHARE_OFT = IOVault(_ovault).SHARE_OFT();
         ASSET_OFT = IOVault(_ovault).ASSET_OFT();
         ENDPOINT = address(IOAppCore(ASSET_OFT).endpoint());
+        COMPOSER_EID = ILayerZeroEndpointV2(ENDPOINT).eid();
 
         // Approve the adapter to spend the share tokens held by this contract
         IERC20(share).approve(OVAULT, type(uint256).max);
@@ -129,6 +132,10 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
 
     /// @dev Dirty swapping amountLD and minAmountLD to 1e18 and 0 to avoid Slippage issue on the target OFT quoteSend()
     function validateTargetOFTConfig(address _oft, SendParam memory _sendParam) external view {
+        if (COMPOSER_EID == _sendParam.dstEid) {
+            return;
+        }
+
         _sendParam.amountLD = 1e18;
         _sendParam.minAmountLD = 0;
 
@@ -138,6 +145,18 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     /// @dev External call for try...catch logic in lzCompose()
     function send(address _oft, SendParam calldata _sendParam) external payable nonReentrant {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
+        if (_sendParam.dstEid == COMPOSER_EID) {
+            address _receiver = _sendParam.to.bytes32ToAddress();
+            uint256 _amountLD = _sendParam.amountLD;
+            IERC20 token = IERC20(IOFT(_oft).token());
+            token.transfer(_receiver, _amountLD);
+            if (msg.value > 0) {
+                (bool sent, ) = _receiver.call{ value: msg.value }("");
+                require(sent, "Failed to send Ether");
+            }
+            emit SentOnHub(_receiver, _oft, _amountLD);
+            return;
+        }
         _send(_oft, _sendParam);
     }
 
