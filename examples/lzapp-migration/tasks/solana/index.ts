@@ -29,7 +29,7 @@ import { getSimulationComputeUnits } from '@solana-developers/helpers'
 import { backOff } from 'exponential-backoff'
 
 import { formatEid } from '@layerzerolabs/devtools'
-import { getSolanaKeypair, getPrioritizationFees } from '@layerzerolabs/devtools-solana'
+import { getPrioritizationFees, getSolanaKeypair } from '@layerzerolabs/devtools-solana'
 import { promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { OftPDA } from '@layerzerolabs/oft-v2-solana-sdk'
