@@ -1,5 +1,17 @@
 # @layerzerolabs/io-devtools
 
+## 0.2.0
+
+### Minor Changes
+
+- bb62f09: Moved logging info to io-devtools package
+
+## 0.1.17
+
+### Patch Changes
+
+- eb6d163: refactor logger helpers; export `DebugLogger` from `io-devtools`; update example imports
+
 ## 0.1.16
 
 ### Patch Changes

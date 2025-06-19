@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.5.10
+
+### Patch Changes
+
+- 508363b: Adds a send script and updates the contract example to support enforced options
+
 ## 0.5.9
 
 ### Patch Changes

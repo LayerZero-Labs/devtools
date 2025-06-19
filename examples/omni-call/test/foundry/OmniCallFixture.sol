@@ -34,8 +34,8 @@ contract OmniCallFixture is OmniCall {
         _lzReceive(_origin, guid, payload, _executor, _extraData);
     }
 
-    function callInternal(address target, uint256 value, bytes memory callData) external returns (bool, bytes memory) {
-        return _call(target, value, callData);
+    function callInternal(address target, uint256 value, bytes memory callData) external {
+        _call(target, value, callData);
     }
 
     function quoteWithOptionsInternal(
