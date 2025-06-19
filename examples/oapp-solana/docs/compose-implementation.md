@@ -117,7 +117,6 @@ Handle compose_msg in `lz_receive`:
     pub use lz_receive_types::*;
     pub use quote_send::*;
     pub use set_peer_config::*;
-    pub use set_peer_config::*;
 ```
 
 ### Modify `programs/my_oapp/src/instructions/quote_send.rs` to take in `compose_msg`
@@ -324,13 +323,13 @@ and appended it to the payload:
 ```solidity
   function send(
      uint32 _dstEid,
-     string calldata _message,
+     string calldata _string,
 +    bytes calldata _composeMsg,
      bytes calldata _options
    ) external payable returns (MessagingReceipt memory receipt) {
-     bytes memory _payload = abi.encodePacked(
-         abi.encode(uint256(bytes(_message).length)),
-         bytes(_message),
+     bytes memory _message = abi.encodePacked(
+         abi.encode(uint256(bytes(_string).length)),
+         bytes(_string),
 +        _composeMsg
      );
 +   uint8 msgType = _composeMsg.length > 0 ? StringMsgCodec.COMPOSED_TYPE : StringMsgCodec.VANILLA_TYPE;
@@ -339,18 +338,17 @@ and appended it to the payload:
 // ...
    function quote(
         uint32 _dstEid,
-        string calldata _message,
+        string calldata _string,
 +       bytes calldata _composeMsg,
         bytes calldata _options,
         bool _payInLzToken
     ) public view returns (MessagingFee memory fee) {
-        bytes memory payload = abi.encodePacked(
-            abi.encode(uint256(bytes(_message).length)),
-            bytes(_message),
-            bytes(_message)
+        bytes memory _message = abi.encodePacked(
+            abi.encode(uint256(bytes(_string).length)),
+            bytes(_string),
 +           _composeMsg
         );
-+        uint8 msgType = _composeMsg.length > 0 ? StringMsgCodec.COMPOSED_TYPE : StringMsgCodec.VANILLA_TYPE;
++       uint8 msgType = _composeMsg.length > 0 ? StringMsgCodec.COMPOSED_TYPE : StringMsgCodec.VANILLA_TYPE;
 -       bytes memory options = combineOptions(_dstEid, StringMsgCodec.VANILLA_TYPE, _options);
 +       bytes memory options = combineOptions(_dstEid, msgType, _options);
 // ...
@@ -361,10 +359,11 @@ and appended it to the payload:
         address /*_executor*/,
         bytes calldata /*_extraData*/
     ) internal override {
-_        (string memory stringValue) = StringMsgCodec.decode(payload);
-+        (string memory stringValue, ) = StringMsgCodec.decode(payload); // TODO: use the last value from .decode()
+_       (string memory stringValue) = StringMsgCodec.decode(payload);
++       (string memory stringValue, bytes memory composeMsg) = StringMsgCodec.decode(payload);
         data = stringValue;
-+       // TODO: process _composeMsg
++      // if necessary, encode the composeMsg further
++       endpoint.sendCompose(toAddress, _guid, 0 /* the index of the composed message*/, composeMsg);
     }
 ```
 

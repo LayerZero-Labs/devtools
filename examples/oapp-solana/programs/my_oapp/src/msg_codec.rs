@@ -1,10 +1,25 @@
 use anchor_lang::prelude::error_code;
-use std::str; 
+use std::str;
 
-pub const VANILLA_TYPE: u8 = 1;
+// -----------------------------------------------------------------------------
+// This file defines how the example program encodes and decodes its messages.
+// Each OApp can implement its own layout as long as the sending and receiving
+// chains agree.  Here we simply prefix a UTF-8 string with a 32 byte length
+// header. In this example, the EVM-side equivalant is in `contracts/libs/StringMsgCodec.sol`
+// -----------------------------------------------------------------------------
 
-// Just like OFT, we don't need an explicit MSG_TYPE param
-// Instead, we'll check whether there's data after the string ends
+
+// The message is a UTF-8 encoded string prefixed with a 32 byte header.
+// The following is the layout of the message:
+// Offset →
+// 0                     28     32                     32+N
+// |---------------------|------|---------------------------->
+// |     28 bytes        | 4B   |     N bytes                |
+// |    zero padding     | len  | UTF-8 encoded string       |
+// |---------------------|------|----------------------------|
+
+
+// We prefix the encoded string with a 32 byte length header.
 pub const LENGTH_OFFSET: usize = 0;
 pub const STRING_OFFSET: usize = 32;
 
@@ -18,23 +33,27 @@ pub enum MsgCodecError {
     InvalidUtf8,
 }
 
+/// Extract the string length
 fn decode_string_len(buf: &[u8]) -> Result<usize, MsgCodecError> {
+    // Header not long enough
     if buf.len() < STRING_OFFSET {
         return Err(MsgCodecError::InvalidLength);
     }
     let mut string_len_bytes = [0u8;32];
     string_len_bytes.copy_from_slice(&buf[LENGTH_OFFSET..LENGTH_OFFSET+32]);
+    // The length is stored in the last 4 bytes (big endian)
     Ok(u32::from_be_bytes(string_len_bytes[28..32].try_into().unwrap()) as usize)
 }
 
+// Encode a UTF-8 string into a message format with a 32 byte header
 pub fn encode(string: &str) -> Vec<u8> {
     let string_bytes = string.as_bytes();
     let mut msg = Vec::with_capacity(
-        STRING_OFFSET +                          // length word
-        string_bytes.len()            // string
+        STRING_OFFSET +               // header length
+        string_bytes.len()            // string bytes
     );
 
-    // 4-byte length
+    // 4 byte length stored at the end of the 32 byte header
     msg.extend(std::iter::repeat(0).take(28)); // padding
     msg.extend_from_slice(&(string_bytes.len() as u32).to_be_bytes());
 
@@ -44,6 +63,8 @@ pub fn encode(string: &str) -> Vec<u8> {
     msg
 }
 
+// Decode a message format with a 32 byte header into a UTF-8 string
+// Returns an error if the message is malformed or not valid UTF-8
 pub fn decode(message: &[u8]) -> Result<String, MsgCodecError> {
     // Read the declared payload length from the header
     let string_len = decode_string_len(message)?;
@@ -61,7 +82,7 @@ pub fn decode(message: &[u8]) -> Result<String, MsgCodecError> {
 
     // Slice out the payload bytes
     let payload = &message[start..end];
-    // Attempt to convert to &str, returning an error if invalid UTF-8
+    // Attempt to convert the bytes into a Rust string
     match str::from_utf8(payload) {
         Ok(s) => Ok(s.to_string()),
         Err(_) => Err(MsgCodecError::InvalidUtf8),
