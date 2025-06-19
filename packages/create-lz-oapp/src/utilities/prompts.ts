@@ -4,8 +4,8 @@ import { handlePromptState, isDirectory, isFile } from '@layerzerolabs/io-devtoo
 import { resolve } from 'path'
 import type { Config } from '@/types'
 
-export const promptForConfig = (config: Partial<Config> = {}): Promise<Config> => {
-    const examples = getExamples()
+export const promptForConfig = async (config: Partial<Config> = {}): Promise<Config> => {
+    const examples = await getExamples(config.branch, config.logLevel)
     const packageManagers = getAvailablePackageManagers()
 
     return prompts([

@@ -1,5 +1,5 @@
 import { InvalidOptionArgumentError, Option } from 'commander'
-import { getAvailablePackageManagers, getExamples } from './config'
+import { getAvailablePackageManagers } from './config'
 import { LogLevel, isDirectory, isFile } from '@layerzerolabs/io-devtools'
 import { resolve } from 'path'
 import type { Example } from './types'
@@ -16,7 +16,7 @@ export const createPackageManagerOption = (packageManagers = getAvailablePackage
             return manager
         })
 
-export const createExampleOption = (examples: Example[] = getExamples()) =>
+export const createExampleOption = (examples: Example[]) =>
     new Option('-e,--example <name>', 'Example project').choices(examples.map(({ id }) => id)).argParser((id) => {
         const example = examples.find((e) => e.id === id)
         if (example == null) {
@@ -51,3 +51,5 @@ export const logLevelOption = new Option('--log-level <level>', 'Log level')
         LogLevel.silly,
     ])
     .default(LogLevel.info)
+
+export const branchOption = new Option('--branch <branch>', 'Branch to pull examples from (defaults to main)')

@@ -1,0 +1,144 @@
+{
+  "examples": [
+    {
+      "id": "oapp",
+      "label": "OApp",
+      "directory": "examples/oapp",
+      "ref": "main"
+    },
+    {
+      "id": "oft",
+      "label": "OFT",
+      "directory": "examples/oft",
+      "ref": "main"
+    },
+    {
+      "id": "oft-adapter",
+      "label": "OFTAdapter",
+      "directory": "examples/oft-adapter",
+      "ref": "main"
+    },
+    {
+      "id": "onft721",
+      "label": "ONFT721",
+      "directory": "examples/onft721",
+      "ref": "main"
+    },
+    {
+      "id": "lzapp-migration",
+      "label": "EndpointV1 Migration",
+      "directory": "examples/lzapp-migration",
+      "ref": "main",
+      "experimental": ["LZ_ENABLE_MIGRATION_EXAMPLE"]
+    },
+    {
+      "id": "onft721-zksync",
+      "label": "ONFT721 zksolc",
+      "directory": "examples/onft721-zksync",
+      "ref": "main",
+      "experimental": ["LZ_ENABLE_ZKSOLC_EXAMPLE"]
+    },
+    {
+      "id": "oft-upgradeable",
+      "label": "UpgradeableOFT",
+      "directory": "examples/oft-upgradeable",
+      "ref": "main",
+      "experimental": ["LZ_ENABLE_UPGRADEABLE_EXAMPLE"]
+    },
+    {
+      "id": "native-oft-adapter",
+      "label": "NativeOFTAdapter",
+      "directory": "examples/native-oft-adapter",
+      "ref": "main",
+      "experimental": ["LZ_ENABLE_NATIVE_EXAMPLE"]
+    },
+    {
+      "id": "oft-alt",
+      "label": "OFTAlt",
+      "directory": "examples/oft-alt",
+      "ref": "main",
+      "experimental": ["LZ_ENABLE_ALT_EXAMPLE"]
+    },
+    {
+      "id": "mint-burn-oft-adapter",
+      "label": "MintBurnOFTAdapter",
+      "directory": "examples/mint-burn-oft-adapter",
+      "ref": "main",
+      "experimental": ["LZ_ENABLE_MINTBURN_EXAMPLE"]
+    },
+    {
+      "id": "oapp-read",
+      "label": "lzRead View/Pure Functions Example",
+      "directory": "examples/oapp-read",
+      "ref": "main",
+      "experimental": ["LZ_ENABLE_READ_EXAMPLE"]
+    },
+    {
+      "id": "view-pure-read",
+      "label": "lzRead Public Variables Example",
+      "directory": "examples/view-pure-read",
+      "ref": "main",
+      "experimental": ["LZ_ENABLE_READ_EXAMPLE"]
+    },
+    {
+      "id": "uniswap-read",
+      "label": "lzRead UniswapV3 Quote",
+      "directory": "examples/uniswap-read",
+      "ref": "main",
+      "experimental": ["LZ_ENABLE_READ_EXAMPLE"]
+    },
+    {
+      "id": "oft-solana",
+      "label": "OFT (Solana)",
+      "directory": "examples/oft-solana",
+      "ref": "main",
+      "experimental": ["LZ_ENABLE_SOLANA_OFT_EXAMPLE"]
+    },
+    {
+      "id": "oft-initia",
+      "label": "OFT (Initia)",
+      "directory": "examples/oft-initia",
+      "ref": "main",
+      "experimental": ["LZ_ENABLE_INITIA_EXAMPLE"]
+    },
+    {
+      "id": "oft-adapter-initia",
+      "label": "OFT Adapter (Initia)",
+      "directory": "examples/oft-adapter-initia",
+      "ref": "main",
+      "experimental": ["LZ_ENABLE_INITIA_EXAMPLE"]
+    },
+    {
+      "id": "oft-aptos-move",
+      "label": "OFT (Aptos Move)",
+      "repository": "https://github.com/LayerZero-Labs/devtools.git",
+      "directory": "examples/oft-aptos-move",
+      "ref": "main",
+      "experimental": ["LZ_ENABLE_EXPERIMENTAL_MOVE_VM_EXAMPLES"]
+    },
+    {
+      "id": "oft-adapter-aptos-move",
+      "label": "OFT Adapter (Aptos Move)",
+      "repository": "https://github.com/LayerZero-Labs/devtools.git",
+      "directory": "examples/oft-adapter-aptos-move",
+      "ref": "main",
+      "experimental": ["LZ_ENABLE_EXPERIMENTAL_MOVE_VM_EXAMPLES"]
+    },
+    {
+      "id": "oapp-aptos-move",
+      "label": "OApp (Aptos Move)",
+      "repository": "https://github.com/LayerZero-Labs/devtools.git",
+      "directory": "examples/oapp-aptos-move",
+      "ref": "main",
+      "experimental": ["LZ_ENABLE_EXPERIMENTAL_MOVE_VM_EXAMPLES"]
+    },
+    {
+      "id": "oft-hyperliquid",
+      "label": "OFT + Composer (Hyperliquid)",
+      "repository": "https://github.com/LayerZero-Labs/devtools.git",
+      "directory": "examples/oft-hyperliquid",
+      "ref": "main",
+      "experimental": ["LZ_ENABLE_EXPERIMENTAL_HYPERLIQUID_EXAMPLE"]
+    }
+  ]
+}
