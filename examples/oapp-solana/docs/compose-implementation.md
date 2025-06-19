@@ -359,10 +359,11 @@ and appended it to the payload:
         address /*_executor*/,
         bytes calldata /*_extraData*/
     ) internal override {
-_        (string memory stringValue) = StringMsgCodec.decode(payload);
-+        (string memory stringValue, ) = StringMsgCodec.decode(payload); // TODO: use the last value from .decode()
+_       (string memory stringValue) = StringMsgCodec.decode(payload);
++       (string memory stringValue, bytes memory composeMsg) = StringMsgCodec.decode(payload);
         data = stringValue;
-+       // TODO: process _composeMsg
++      // if necessary, encode the composeMsg further
++       endpoint.sendCompose(toAddress, _guid, 0 /* the index of the composed message*/, composeMsg);
     }
 ```
 

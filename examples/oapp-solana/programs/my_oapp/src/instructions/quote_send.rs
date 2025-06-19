@@ -22,11 +22,13 @@ pub struct QuoteSend<'info> {
     #[account(seeds = [ENDPOINT_SEED], bump = endpoint.bump, seeds::program = ENDPOINT_ID)]
     pub endpoint: Account<'info, EndpointSettings>,
 }
+
 impl<'info> QuoteSend<'info> {
     pub fn apply(ctx: &Context<QuoteSend>, params: &QuoteSendParams) -> Result<MessagingFee> {
+        // Encode the payload for quoting
         let message = msg_codec::encode(&params.message);
 
-        // calling endpoint cpi
+        // Ask the Endpoint how much a send would cost
         let quote_params = QuoteParams {
             sender: ctx.accounts.store.key(),
             dst_eid: params.dst_eid,

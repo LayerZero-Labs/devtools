@@ -15,18 +15,23 @@ pub struct Send<'info> {
         ],
         bump = peer.bump
     )]
+    /// Configuration for the destination chain. Holds the peer address and any
+    /// enforced messaging options.
     pub peer: Account<'info, PeerConfig>,
     #[account(seeds = [STORE_SEED], bump = store.bump)]
+    /// OApp Store PDA that signs the send instruction
     pub store: Account<'info, Store>,
     #[account(seeds = [ENDPOINT_SEED], bump = endpoint.bump, seeds::program = ENDPOINT_ID)]
     pub endpoint: Account<'info, EndpointSettings>,
 }
 impl<'info> Send<'info> {
     pub fn apply(ctx: &mut Context<Send>, params: &SendMessageParams) -> Result<()> {
+        // Serialize the message according to our codec
         let message = msg_codec::encode(&params.message);
+        // Prepare the seeds for the OApp Store PDA, which is used to sign the CPI call to the Endpoint program.
         let seeds: &[&[u8]] = &[STORE_SEED, &[ctx.accounts.store.bump]];
 
-        // calling endpoint cpi
+        // Prepare the SendParams for the Endpoint::send CPI call.
         let send_params = SendParams {
             dst_eid: params.dst_eid,
             receiver: ctx.accounts.peer.peer_address,
@@ -39,9 +44,10 @@ impl<'info> Send<'info> {
             native_fee: params.native_fee,
             lz_token_fee: params.lz_token_fee,
         };
+        // Call the Endpoint::send CPI to send the message.
         oapp::endpoint_cpi::send(
             ENDPOINT_ID,
-            ctx.accounts.store.key(),
+            ctx.accounts.store.key(), // payer/signer derived from seeds
             ctx.remaining_accounts,
             seeds,
             send_params,
