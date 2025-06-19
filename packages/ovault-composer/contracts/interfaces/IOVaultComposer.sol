@@ -27,6 +27,7 @@ interface IOVaultComposer is IOAppComposer {
     event Refunded(bytes32 indexed guid, address indexed oft);
     event Retried(bytes32 indexed guid, address indexed oft);
     event GenericError(bytes32 indexed guid, address indexed oft, bytes errMsg);
+    event NoPeer(bytes32 indexed guid, address indexed oft, uint32 dstEid);
 
     /// ========================== Error Messages =====================================
     error InvalidAdapterMesh();
@@ -53,8 +54,6 @@ interface IOVaultComposer is IOAppComposer {
         uint256 _amount,
         SendParam calldata _sendParam
     ) external returns (uint256 vaultAmount);
-
-    function validateTargetOFTConfig(address _oft, SendParam memory _sendParam) external view;
 
     function refund(bytes32 guid, bytes memory extraOptions) external payable;
     function retry(bytes32 guid, bytes memory extraOptions) external payable;

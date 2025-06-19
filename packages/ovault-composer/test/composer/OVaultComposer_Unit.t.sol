@@ -92,7 +92,7 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         assetOFT_arb.mint(address(OVaultComposerArb), TOKENS_TO_SEND);
 
         SendParam memory internalSendParam = SendParam(
-            OVaultComposerArb.COMPOSER_EID(),
+            OVaultComposerArb.HUB_EID(),
             addressToBytes32(userA),
             TOKENS_TO_SEND,
             0,
@@ -183,9 +183,8 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         bytes memory composePayload = abi.encode(internalSendParam);
         bytes memory composeMsg = _createComposePayload(ETH_EID, composePayload, TOKENS_TO_SEND, userA);
 
-        bytes memory errMsg = abi.encodeWithSelector(IOAppCore.NoPeer.selector, BAD_EID);
-        vm.expectEmit(address(OVaultComposerArb));
-        emit IOVaultComposer.GenericError(guid, address(shareOFT_arb), errMsg);
+        vm.expectEmit(true, true, true, true, address(OVaultComposerArb));
+        emit IOVaultComposer.NoPeer(guid, address(shareOFT_arb), BAD_EID);
 
         assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
         assertEq(shareOFT_arb.totalSupply(), 0);
