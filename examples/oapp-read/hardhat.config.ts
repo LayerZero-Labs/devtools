@@ -13,6 +13,8 @@ import { HardhatUserConfig, HttpNetworkAccountsUserConfig } from 'hardhat/types'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
+import './tasks/readData'
+
 // Set your preferred authentication method
 //
 // If you prefer using a mnemonic, set a MNEMONIC environment variable
@@ -52,21 +54,17 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
-        'sepolia-testnet': {
-            eid: EndpointId.SEPOLIA_V2_TESTNET,
-            url: process.env.RPC_URL_SEPOLIA || 'https://rpc.sepolia.org/',
+        'base-testnet': {
+            eid: EndpointId.BASESEP_V2_TESTNET,
+            url: process.env.RPC_URL_BASE || 'https://sepolia.base.org',
             accounts,
         },
-        'avalanche-testnet': {
-            eid: EndpointId.AVALANCHE_V2_TESTNET,
-            url: process.env.RPC_URL_FUJI || 'https://rpc.ankr.com/avalanche_fuji',
+        'arbitrum-testnet': {
+            eid: EndpointId.ARBSEP_V2_TESTNET,
+            url: process.env.RPC_URL_ARBSEP || 'https://arbitrum-sepolia.gateway.tenderly.co',
             accounts,
         },
-        'amoy-testnet': {
-            eid: EndpointId.AMOY_V2_TESTNET,
-            url: process.env.RPC_URL_AMOY || 'https://polygon-amoy-bor-rpc.publicnode.com',
-            accounts,
-        },
+
         hardhat: {
             // Need this for testing because TestHelperOz5.sol is exceeding the compiled contract size limit
             allowUnlimitedContractSize: true,
