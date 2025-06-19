@@ -23,7 +23,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     address public immutable SHARE_OFT;
     address public immutable OVAULT;
     address public immutable ENDPOINT;
-    uint32 public immutable COMPOSER_EID;
+    uint32 public immutable HUB_EID;
 
     mapping(bytes32 guid => FailedMessage) public failedMessages;
 
@@ -38,7 +38,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         SHARE_OFT = IOVault(_ovault).SHARE_OFT();
         ASSET_OFT = IOVault(_ovault).ASSET_OFT();
         ENDPOINT = address(IOAppCore(ASSET_OFT).endpoint());
-        COMPOSER_EID = ILayerZeroEndpointV2(ENDPOINT).eid();
+        HUB_EID = ILayerZeroEndpointV2(ENDPOINT).eid();
 
         // Approve the adapter to spend the share tokens held by this contract
         IERC20(share).approve(OVAULT, type(uint256).max);
@@ -82,11 +82,10 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             return;
         }
 
-        /// @dev Try to early catch issues surrounding LayerZero config. This quoteSend catches issues like: invalid peer, dvn config, etc.
-        try this.validateTargetOFTConfig(oft, sendParam) {} catch (bytes memory errMsg) {
-            /// @dev When erroring out we want to NOT make a swap and the user can only go back to the source chain.
+        /// @dev Try to early catch ONLY when the target OFT does not have a peer set for the destination chain.
+        if (_isInvalidPeer(oft, sendParam.dstEid)) {
             failedMessages[_guid] = FailedMessage(address(0), sendParam, _refundOFT, refundSendParam);
-            emit GenericError(_guid, oft, errMsg);
+            emit NoPeer(_guid, oft, sendParam.dstEid);
             return;
         }
 
@@ -130,22 +129,10 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         }
     }
 
-    /// @dev Dirty swapping amountLD and minAmountLD to 1e18 and 0 to avoid Slippage issue on the target OFT quoteSend()
-    function validateTargetOFTConfig(address _oft, SendParam memory _sendParam) external view {
-        if (COMPOSER_EID == _sendParam.dstEid) {
-            return;
-        }
-
-        _sendParam.amountLD = 1e18;
-        _sendParam.minAmountLD = 0;
-
-        IOFT(_oft).quoteSend(_sendParam, false);
-    }
-
     /// @dev External call for try...catch logic in lzCompose()
     function send(address _oft, SendParam calldata _sendParam) external payable nonReentrant {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
-        if (_sendParam.dstEid == COMPOSER_EID) {
+        if (_sendParam.dstEid == HUB_EID) {
             address _receiver = _sendParam.to.bytes32ToAddress();
             uint256 _amountLD = _sendParam.amountLD;
             IERC20 token = IERC20(IOFT(_oft).token());
@@ -217,6 +204,11 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         } else {
             vaultAmount = IERC4626Adapter(OVAULT).redeem(_amount, address(this), address(this));
         }
+    }
+
+    /// @dev Helper to check if the target OFT does not have a peer set for the destination chain OR if our target chain is the not the same as the HUB chain
+    function _isInvalidPeer(address _oft, uint32 _dstEid) internal view returns (bool) {
+        return _dstEid != HUB_EID && IOAppCore(_oft).peers(_dstEid) == bytes32(0);
     }
 
     /// @dev Helper to view the state of a failed message
