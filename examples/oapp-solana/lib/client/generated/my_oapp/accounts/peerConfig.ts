@@ -108,7 +108,7 @@ export async function safeFetchAllPeerConfig(
 }
 
 export function getPeerConfigGpaBuilder(context: Pick<Context, 'rpc' | 'programs'>) {
-    const programId = context.programs.getPublicKey('myoapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
+    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
     return gpaBuilder(context, programId)
         .registerFields<{
             discriminator: Uint8Array

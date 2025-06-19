@@ -62,7 +62,7 @@ export class MyOApp {
         }
         this.programRepo = createDefaultProgramRepository({ rpc: rpc }, [
             {
-                name: 'myoapp',
+                name: 'myOapp',
                 publicKey: programId,
                 getErrorFromCode(code: number, cause?: Error): ProgramError | null {
                     return errors.getMyOappErrorFromCode(code, this, cause)
@@ -86,7 +86,7 @@ export class MyOApp {
     }
 
     getProgram(clusterFilter: ClusterFilter = 'custom'): Program {
-        return this.programRepo.get('myoapp', clusterFilter)
+        return this.programRepo.get('myOapp', clusterFilter)
     }
 
     async getStore(rpc: RpcInterface, commitment: Commitment = 'confirmed'): Promise<accounts.Store | null> {

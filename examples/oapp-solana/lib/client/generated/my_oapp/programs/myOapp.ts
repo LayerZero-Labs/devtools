@@ -32,9 +32,9 @@ export function getMyOappProgram<T extends Program = Program>(
     context: Pick<Context, 'programs'>,
     clusterFilter?: ClusterFilter
 ): T {
-    return context.programs.get<T>('myoapp', clusterFilter)
+    return context.programs.get<T>('myOapp', clusterFilter)
 }
 
 export function getMyOappProgramId(context: Pick<Context, 'programs'>, clusterFilter?: ClusterFilter): PublicKey {
-    return context.programs.getPublicKey('myoapp', MY_OAPP_PROGRAM_ID, clusterFilter)
+    return context.programs.getPublicKey('myOapp', MY_OAPP_PROGRAM_ID, clusterFilter)
 }
