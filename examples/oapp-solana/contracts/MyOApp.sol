@@ -28,9 +28,9 @@ contract MyOApp is OApp, OAppOptionsType3 {
         string calldata _string,
         bytes calldata _options
     ) external payable returns (MessagingReceipt memory receipt) {
-        bytes memory _payload = abi.encodePacked(abi.encode(uint256(bytes(_string).length)), bytes(_string));
+        bytes memory _message = abi.encodePacked(abi.encode(uint256(bytes(_string).length)), bytes(_string));
         bytes memory options = combineOptions(_dstEid, StringMsgCodec.VANILLA_TYPE, _options);
-        receipt = _lzSend(_dstEid, _payload, options, MessagingFee(msg.value, 0), payable(msg.sender));
+        receipt = _lzSend(_dstEid, _message, options, MessagingFee(msg.value, 0), payable(msg.sender));
     }
 
     /**
