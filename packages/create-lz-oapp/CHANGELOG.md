@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.7.5
+
+### Patch Changes
+
+- 2f4e8d4: Adding OmniCall example
+
 ## 0.7.4
 
 ### Patch Changes
