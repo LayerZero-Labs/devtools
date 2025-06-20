@@ -16,7 +16,7 @@ async function main() {
     const [counterResult, address1Result, address2Result, numberResult, rawMessageResult] = await Promise.all([
         aptos.view({
             payload: {
-                function: `${oappAddress}::oapp::get_counter`,
+                function: `${oappAddress}::oapp::get_counter_value`,
                 typeArguments: [],
             },
         }),

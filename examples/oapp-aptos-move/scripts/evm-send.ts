@@ -5,9 +5,9 @@ import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import 'dotenv/config'
 
-// ABI for the functions we need
+// ABI for the functions we need - updated to match the Solidity contract
 const ABI = [
-    'function quote(uint32 _dstEid, string memory _message, bytes memory _options, bool _payInLzToken) public view returns (tuple(uint256 nativeFee, uint256 lzTokenFee))',
+    'function quoteSend(uint32 _dstEid, string memory _message, bytes memory _options, bool _payInLzToken) public view returns (tuple(uint256 nativeFee, uint256 lzTokenFee))',
     'function send(uint32 _dstEid, string memory _message, bytes calldata _options) external payable returns (tuple(bytes32 guid, uint256 nonce, bytes32 messageId))',
 ]
 
@@ -22,8 +22,8 @@ async function main() {
     const provider = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545')
     const wallet = new ethers.Wallet(privateKey, provider)
 
-    // Contract address
-    const contractAddress = '0x21E23d7740771d005c189330a0B617A3c3f4Db50'
+    // Contract address - update this to your deployed contract address
+    const contractAddress = '<your-EVM-oapp-address>'
 
     // Create contract instance
     const myOApp = new ethers.Contract(contractAddress, ABI, wallet)
@@ -53,7 +53,7 @@ async function main() {
 
     try {
         // Get quote
-        const [nativeFee] = await myOApp.quote(aptosMoveEid, hexString, options, false)
+        const [nativeFee] = await myOApp.quoteSend(aptosMoveEid, hexString, options, false)
         console.log(`Quote for message: ${ethers.utils.formatEther(nativeFee)} native.`)
 
         // Send message
