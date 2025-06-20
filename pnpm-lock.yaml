@@ -624,7 +624,7 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0
       '@layerzerolabs/devtools':
-        specifier: ~1.0.0
+        specifier: ^1.0.0
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-extensible-cli':
         specifier: ^0.0.7
