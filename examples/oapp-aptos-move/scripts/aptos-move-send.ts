@@ -29,13 +29,13 @@ import { Options } from '@layerzerolabs/lz-v2-utilities'
 dotenv.config()
 
 // Validate required environment variables
-if (!process.env.APTOS_PRIVATE_KEY || !process.env.ACCOUNT_ADDRESS) {
-    throw new Error('Please set APTOS_PRIVATE_KEY and ACCOUNT_ADDRESS in your .env file')
+if (!process.env.APTOS_PRIVATE_KEY || !process.env.APTOS_ACCOUNT_ADDRESS) {
+    throw new Error('Please set APTOS_PRIVATE_KEY and APTOS_ACCOUNT_ADDRESS in your .env file')
 }
 
 // Configuration constants
 const APTOS_PRIVATE_KEY = process.env.APTOS_PRIVATE_KEY
-const ACCOUNT_ADDRESS = process.env.ACCOUNT_ADDRESS
+const APTOS_ACCOUNT_ADDRESS = process.env.APTOS_ACCOUNT_ADDRESS
 
 // OApp configuration
 const OAPP_ADDRESS = '' // Set your OApp's address on Aptos or Movement
@@ -47,7 +47,7 @@ const REMOTE_EID = EndpointId.BSC_V2_TESTNET // Destination chain endpoint ID
 const privateKey = PrivateKey.formatPrivateKey(APTOS_PRIVATE_KEY, PrivateKeyVariants.Ed25519)
 const signerAccount = Account.fromPrivateKey({
     privateKey: new Ed25519PrivateKey(privateKey),
-    address: ACCOUNT_ADDRESS,
+    address: APTOS_ACCOUNT_ADDRESS,
 })
 const aptos = new Aptos(new AptosConfig({ network: NETWORK }))
 
@@ -80,7 +80,7 @@ async function send() {
     console.log('ZRO fee:', quote[1])
 
     // Verify account has sufficient balance
-    const balance = await aptos.account.getAccountAPTAmount({ accountAddress: ACCOUNT_ADDRESS })
+    const balance = await aptos.account.getAccountAPTAmount({ accountAddress: APTOS_ACCOUNT_ADDRESS })
     console.log('Account balance:', Number(balance) / 100000000, 'APT')
 
     if (Number(balance) < Number(quote[0])) {
@@ -97,7 +97,7 @@ async function send() {
 
     // Create the transaction
     const transaction: SimpleTransaction = await aptos.transaction.build.simple({
-        sender: ACCOUNT_ADDRESS,
+        sender: APTOS_ACCOUNT_ADDRESS,
         data: payload,
         options: {
             maxGasAmount: 100000,
