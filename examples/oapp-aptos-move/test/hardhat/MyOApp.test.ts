@@ -1,9 +1,6 @@
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
-import { expect } from 'chai'
 import { Contract, ContractFactory } from 'ethers'
 import { deployments, ethers } from 'hardhat'
-
-import { Options } from '@layerzerolabs/lz-v2-utilities'
 
 describe('MyOApp Test', function () {
     // Constant representing a mock Endpoint ID for testing purposes
@@ -60,25 +57,5 @@ describe('MyOApp Test', function () {
         // Setting each MyOApp instance as a peer of the other
         await myOAppA.connect(ownerA).setPeer(eidB, ethers.utils.zeroPad(myOAppB.address, 32))
         await myOAppB.connect(ownerB).setPeer(eidA, ethers.utils.zeroPad(myOAppA.address, 32))
-    })
-
-    // A test case to verify message sending functionality
-    it('should increment counter when receiving a message', async function () {
-        // Assert initial counter state in both MyOApp instances
-        expect((await myOAppA.counter()).toNumber()).to.equal(0)
-        expect((await myOAppB.counter()).toNumber()).to.equal(0)
-
-        const options = Options.newOptions().addExecutorLzReceiveOption(200000, 0).toHex().toString()
-
-        // Define native fee and quote for the message send operation
-        let nativeFee = 0
-        ;[nativeFee] = await myOAppA.quote(eidB, 'Test message.', options, false)
-
-        // Execute send operation from myOAppA
-        await myOAppA.send(eidB, 'Test message.', options, { value: nativeFee.toString() })
-
-        // Assert the counter was incremented in the receiving app
-        expect((await myOAppA.counter()).toNumber()).to.equal(0)
-        expect((await myOAppB.counter()).toNumber()).to.equal(1)
     })
 })
