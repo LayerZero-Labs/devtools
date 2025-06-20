@@ -74,7 +74,7 @@ const config: OAppOmniGraphHardhat = {
                     },
                     ulnConfig: {
                         // The number of block confirmations to wait on Aptos before emitting the message from the source chain.
-                        confirmations: BigInt(260),
+                        confirmations: BigInt(10),
                         // The address of the DVNs you will pay to verify a sent message on the source chain.
                         // The destination tx will wait until ALL `requiredDVNs` verify the message.
                         requiredDVNs: ['0x756f8ab056688d22687740f4a9aeec3b361170b28d08b719e28c4d38eed1043e'],
@@ -143,7 +143,7 @@ const config: OAppOmniGraphHardhat = {
                 },
                 receiveConfig: {
                     ulnConfig: {
-                        confirmations: BigInt(260),
+                        confirmations: BigInt(10),
                         requiredDVNs: ['0x0eE552262f7B562eFcED6DD4A7e2878AB897d405'],
                         optionalDVNThreshold: 0,
                     },
