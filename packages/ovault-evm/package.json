@@ -1,7 +1,7 @@
 {
-  "name": "@layerzerolabs/ovault-composer-evm",
+  "name": "@layerzerolabs/ovault-evm",
   "version": "0.0.1",
-  "description": "LayerZero Labs reference EVM OVault composer implementation",
+  "description": "LayerZero Labs reference EVM OVault + composer implementation",
   "keywords": [
     "LayerZero",
     "OVault",
@@ -14,7 +14,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LayerZero-Labs/devtools.git",
-    "directory": "packages/ovault-composer-evm"
+    "directory": "packages/ovault-evm"
   },
   "license": "MIT",
   "exports": {
