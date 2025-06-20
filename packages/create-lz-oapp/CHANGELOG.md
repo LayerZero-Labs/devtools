@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.8.0
+
+### Minor Changes
+
+- 9b2c446: add Solana OApp example
+
 ## 0.7.5
 
 ### Patch Changes
