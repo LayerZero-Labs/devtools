@@ -1,10 +1,9 @@
 import { ethers } from 'ethers'
 
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { makeBytes32 } from '@layerzerolabs/devtools'
+import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
-
 import 'dotenv/config'
-import { makeBytes32 } from '../../../packages/devtools/dist'
 
 // ABI for the functions we need
 const ABI = [
@@ -24,22 +23,22 @@ async function main() {
     const wallet = new ethers.Wallet(privateKey, provider)
 
     // Contract address
-    const contractAddress = '<your-contract-address>'
+    const contractAddress = '0x21E23d7740771d005c189330a0B617A3c3f4Db50'
 
     // Create contract instance
     const myOApp = new ethers.Contract(contractAddress, ABI, wallet)
 
     // Destination endpoint ID for Aptos/Movement
-    const aptosEid = EndpointId.APTOS_V2_TESTNET // or EndpointId.MOVEMENT_V2_TESTNET
+    const aptosMoveEid = EndpointId.APTOS_V2_TESTNET
 
     // Example addresses and number to encode
     const address1 = '0x1234567890123456789012345678901234567890'
     const address2 = '0x9876543210987654321098765432109876543210'
-    const number = ethers.BigNumber.from('123456789012345678901234567890')
+    const num = ethers.BigNumber.from('123456789012345678901234567890')
 
     const encodedMessage = ethers.utils.solidityPack(
         ['bytes32', 'bytes32', 'uint256'],
-        [makeBytes32(address1), makeBytes32(address2), ethers.BigNumber.from(number)]
+        [makeBytes32(address1), makeBytes32(address2), num]
     )
 
     const hexString = ethers.utils.hexlify(encodedMessage)
@@ -47,24 +46,27 @@ async function main() {
     console.log('Encoded message:', hexString)
     console.log('Address1:', address1)
     console.log('Address2:', address2)
-    console.log('Number:', number.toString())
+    console.log('Number:', num)
 
     // Build options with gas for execution
     const options = Options.newOptions().addExecutorLzReceiveOption(200000, 0).toHex().toString()
 
     try {
         // Get quote
-        const [nativeFee] = await myOApp.quote(aptosEid, hexString, options, false)
-        console.log(`Quote for message: ${ethers.utils.formatEther(nativeFee)} ETH`)
+        const [nativeFee] = await myOApp.quote(aptosMoveEid, hexString, options, false)
+        console.log(`Quote for message: ${ethers.utils.formatEther(nativeFee)} native.`)
 
         // Send message
-        const tx = await myOApp.send(aptosEid, hexString, options, {
+        const tx = await myOApp.send(aptosMoveEid, hexString, options, {
             value: nativeFee.toString(),
         })
 
-        console.log('Sending encoded message to Aptos/Movement...')
+        const network = getNetworkForChainId(EndpointId.APTOS_V2_TESTNET)
+        const networkString = network.chainName + '-' + network.env
+        console.log(`Sending encoded message to ${networkString}...`)
+
         const receipt = await tx.wait()
-        console.log(`Transaction hash: ${receipt?.transactionHash}`)
+        console.log(`Transaction hash: https://layerzeroscan.com/tx/${receipt?.transactionHash}`)
         console.log('Message sent!')
     } catch (error) {
         console.error('Error sending message:', error)

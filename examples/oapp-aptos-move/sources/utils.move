@@ -4,6 +4,13 @@ module oapp::utils {
     use aptos_std::from_bcs;
     use aptos_std::bcs;
 
+    const ASCII_ZERO: u8 = 48;
+    const ASCII_NINE: u8 = 57;
+    const ASCII_UPPERCASE_A: u8 = 65;
+    const ASCII_UPPERCASE_F: u8 = 70;
+    const ASCII_LOWERCASE_A: u8 = 97;
+    const ASCII_LOWERCASE_F: u8 = 102;
+
     /// Converts a vector of bytes to a UTF-8 string
     /// Will abort if the bytes are not valid UTF-8
     public fun bytes_to_string(bytes: vector<u8>): String {
@@ -77,13 +84,6 @@ module oapp::utils {
         }
     }
 
-    const ASCII_ZERO: u8 = 48;
-    const ASCII_NINE: u8 = 57;
-    const ASCII_UPPERCASE_A: u8 = 65;
-    const ASCII_UPPERCASE_F: u8 = 70;
-    const ASCII_LOWERCASE_A: u8 = 97;
-    const ASCII_LOWERCASE_F: u8 = 102;
-    
     const EINVALID_HEX_CHARACTER: u64 = 1;
     const EINVALID_ADDRESS_LENGTH: u64 = 2;
 } 
