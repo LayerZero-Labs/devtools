@@ -21,6 +21,7 @@ import {
     SimpleTransaction,
 } from '@aptos-labs/ts-sdk'
 import * as dotenv from 'dotenv'
+import { ethers } from 'ethers'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
@@ -38,7 +39,7 @@ const APTOS_PRIVATE_KEY = process.env.APTOS_PRIVATE_KEY
 const APTOS_ACCOUNT_ADDRESS = process.env.APTOS_ACCOUNT_ADDRESS
 
 // OApp configuration
-const OAPP_ADDRESS = '' // Set your OApp's address on Aptos or Movement
+const OAPP_ADDRESS = '<your-Aptos-Move-OApp-address>'
 const NETWORK = Network.TESTNET // Aptos network configuration
 
 const REMOTE_EID = EndpointId.BSC_V2_TESTNET // Destination chain endpoint ID
@@ -60,9 +61,16 @@ async function send() {
     const options = Options.newOptions().addExecutorLzReceiveOption(BigInt(30000))
     const extraOptions = options.toBytes()
 
-    // Prepare the message
+    // Prepare the message - ABI encode it to match Solidity contract expectations
     const message = 'Hello, EVM!'
-    const messageBytes = new TextEncoder().encode(message)
+    console.log('Sending message:', message)
+
+    // ABI encode the string to match what the Solidity contract expects
+    const abiEncodedMessage = ethers.utils.defaultAbiCoder.encode(['string'], [message])
+    console.log('ABI encoded message:', abiEncodedMessage)
+
+    // Convert to bytes array for Aptos
+    const messageBytes = ethers.utils.arrayify(abiEncodedMessage)
     const messageArray = new Uint8Array(messageBytes)
 
     // Get fee quote for the cross-chain message
@@ -115,7 +123,7 @@ async function send() {
         transactionHash: signedTransaction.hash,
     })
 
-    console.log(`Transaction hash: ${executedTransaction.hash}`)
+    console.log(`Transaction link: https://layerzeroscan.com/tx/${executedTransaction.hash}`)
     console.log('Message sent!')
 }
 
