@@ -38,9 +38,10 @@ const APTOS_PRIVATE_KEY = process.env.APTOS_PRIVATE_KEY
 const ACCOUNT_ADDRESS = process.env.ACCOUNT_ADDRESS
 
 // OApp configuration
-const OAPP_ADDRESS = '' // Set your OApp's address on Aptos
-const REMOTE_EID = EndpointId.BSC_V2_TESTNET // Destination chain endpoint ID
+const OAPP_ADDRESS = '' // Set your OApp's address on Aptos or Movement
 const NETWORK = Network.TESTNET // Aptos network configuration
+
+const REMOTE_EID = EndpointId.BSC_V2_TESTNET // Destination chain endpoint ID
 
 // Initialize Aptos account and client
 const privateKey = PrivateKey.formatPrivateKey(APTOS_PRIVATE_KEY, PrivateKeyVariants.Ed25519)
@@ -75,7 +76,7 @@ async function send() {
     // Log fee details
     console.log('Quote details:')
     console.log('Native fee (octas):', quote[0])
-    console.log('Native fee (APT):', Number(quote[0]) / 100000000)
+    console.log('Native fee:', Number(quote[0]) / 100000000)
     console.log('ZRO fee:', quote[1])
 
     // Verify account has sufficient balance

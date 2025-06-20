@@ -113,6 +113,8 @@ module oapp::oapp {
         receive_data.number = number_u256;
         receive_data.counter = counter.value;
         receive_data.raw_message = _message;
+
+        // Optionally, you can add any additional logic here to handle the received message.
     }
 
     // todo: replicate the logic in here where sending a message must happen
