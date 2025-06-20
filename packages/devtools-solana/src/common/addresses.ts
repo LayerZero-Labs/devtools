@@ -1,8 +1,5 @@
 import { Connection, PublicKey, SystemProgram } from '@solana/web3.js'
 import { PROGRAM_ID as SQUADS_PROGRAM_ID } from '@sqds/multisig'
-import { type DebugLogger, debuglog } from '@layerzerolabs/io-devtools'
-
-const debug: DebugLogger = debuglog('solana-admin-validation')
 
 /**
  * Returns true if the provided address is a valid on-curve public key.
@@ -26,11 +23,8 @@ export async function isPossibleSquadsVault(connection: Connection, address: str
         const pubkey = new PublicKey(address)
         const accountInfo = await connection.getAccountInfo(pubkey)
 
-        debug(`Account ${address} owner: ${accountInfo?.owner.toBase58() ?? 'unknown'}`)
-
         return accountInfo != null && accountInfo.owner.equals(SystemProgram.programId)
     } catch (error) {
-        debug(`Failed to get account info for ${address}: ${error}`)
         return false
     }
 }
@@ -40,7 +34,6 @@ export async function assertValidSolanaAdmin(connection: Connection, address: st
 
     try {
         const accountInfo = await connection.getAccountInfo(pubkey)
-        debug(`Validating admin ${address}: owner=${accountInfo?.owner.toBase58() ?? 'unknown'}`)
 
         if (accountInfo != null && accountInfo.owner.equals(SQUADS_PROGRAM_ID)) {
             throw new Error(
