@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@layerzerolabs/devtools": "~1.0.0",
-    "@layerzerolabs/devtools-solana": "^1.1.0",
+    "@layerzerolabs/devtools-solana": "^2.1.0",
     "@layerzerolabs/io-devtools": "~0.2.0",
     "@layerzerolabs/lz-definitions": "^3.0.75",
     "@layerzerolabs/lz-v2-utilities": "^3.0.75",
