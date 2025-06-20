@@ -1,4 +1,5 @@
 export * from './logger'
 export * from './printer'
 export * from './prompts'
+export * from './debug'
 export * from './debugLogger'

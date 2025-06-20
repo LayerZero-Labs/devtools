@@ -1,7 +1,6 @@
 import { Connection, PublicKey, SystemProgram } from '@solana/web3.js'
 import { PROGRAM_ID as SQUADS_PROGRAM_ID } from '@sqds/multisig'
-import type { DebugLogger } from '@layerzerolabs/io-devtools'
-import { debuglog } from 'node:util'
+import { type DebugLogger, debuglog } from '@layerzerolabs/io-devtools'
 
 const debug: DebugLogger = debuglog('solana-admin-validation')
 
