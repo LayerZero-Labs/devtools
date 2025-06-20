@@ -12,16 +12,10 @@ async function main() {
     console.log('---')
 
     // Get all decoded values
-    const [counterResult, decodedCounterResult, address1Result, address2Result, numberResult] = await Promise.all([
+    const [counterResult, address1Result, address2Result, numberResult, rawMessageResult] = await Promise.all([
         aptos.view({
             payload: {
                 function: `${oappAddress}::oapp::get_counter`,
-                typeArguments: [],
-            },
-        }),
-        aptos.view({
-            payload: {
-                function: `${oappAddress}::oapp::get_decoded_counter`,
                 typeArguments: [],
             },
         }),
@@ -43,14 +37,20 @@ async function main() {
                 typeArguments: [],
             },
         }),
+        aptos.view({
+            payload: {
+                function: `${oappAddress}::oapp::get_raw_message`,
+                typeArguments: [],
+            },
+        }),
     ])
 
     console.log('Current decoded values:')
     console.log('- Counter:', counterResult[0])
-    console.log('- Decoded Counter:', decodedCounterResult[0])
     console.log('- Address 1:', address1Result[0])
     console.log('- Address 2:', address2Result[0])
     console.log('- Number:', numberResult[0])
+    console.log('- Raw Message:', rawMessageResult[0])
     console.log('---')
 }
 
