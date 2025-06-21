@@ -2,7 +2,7 @@
 solc-version = '0.8.22'
 src = 'contracts'
 out = 'out'
-test = 'test/foundry'
+test = 'test'
 cache_path = 'cache/foundry'
 verbosity = 3
 optimizer = true
