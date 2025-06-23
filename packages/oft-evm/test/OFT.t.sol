@@ -25,12 +25,17 @@ import { MintBurnOFTAdapter } from "../contracts/MintBurnOFTAdapter.sol";
 import { IMintableBurnable } from "../contracts/interfaces/IMintableBurnable.sol";
 import { NativeOFTAdapter } from "../contracts/NativeOFTAdapter.sol";
 import { OFTAdapter } from "../contracts/OFTAdapter.sol";
+import { IMintSelfBurnToken } from "../contracts/interfaces/IMintSelfBurnToken.sol";
+import { MintSelfBurnToken } from "../contracts/MintSelfBurnToken.sol";
+import { MintSelfBurnOFTAdapter } from "../contracts/MintSelfBurnOFTAdapter.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
 import { OFTMockCodec } from "./lib/OFTMockCodec.sol";
 import { OFTAdapterMockCodec } from "./lib/OFTAdapterMockCodec.sol";
 import { NativeOFTAdapterMockCodec } from "./lib/NativeOFTAdapterMockCodec.sol";
 import { MintBurnOFTAdapterMockCodec } from "./lib/MintBurnOFTAdapterMockCodec.sol";
+import { MintSelfBurnOFTAdapterMock } from "./mocks/MintSelfBurnOFTAdapterMock.sol";
+import { MintSelfBurnOFTAdapterMockCodec } from "./lib/MintSelfBurnOFTAdapterMockCodec.sol";
 
 import "forge-std/console.sol";
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
@@ -41,12 +46,14 @@ contract OFTTest is TestHelperOz5 {
     using OFTAdapterMockCodec for OFTAdapter;
     using NativeOFTAdapterMockCodec for NativeOFTAdapter;
     using MintBurnOFTAdapterMockCodec for MintBurnOFTAdapter;
+    using MintSelfBurnOFTAdapterMockCodec for MintSelfBurnOFTAdapter;
 
     uint32 internal constant A_EID = 1;
     uint32 internal constant B_EID = 2;
     uint32 internal constant C_EID = 3;
     uint32 internal constant D_EID = 4;
     uint32 internal constant E_EID = 5;
+    uint32 internal constant F_EID = 6;
 
     string internal constant A_OFT_NAME = "aOFT";
     string internal constant A_OFT_SYMBOL = "aOFT";
@@ -56,6 +63,8 @@ contract OFTTest is TestHelperOz5 {
     string internal constant C_TOKEN_SYMBOL = "cToken";
     string internal constant E_MINTABLE_TOKEN_NAME = "eMintableToken";
     string internal constant E_MINTABLE_TOKEN_SYMBOL = "eToken";
+    string internal constant F_MINT_SELF_BURN_TOKEN_NAME = "fMintSelfBurnToken";
+    string internal constant F_MINT_SELF_BURN_TOKEN_SYMBOL = "fToken";
 
     OFT internal aOFT;
     OFT internal bOFT;
@@ -65,6 +74,8 @@ contract OFTTest is TestHelperOz5 {
     MintBurnOFTAdapter internal eMintBurnOFTAdapter;
     ElevatedMinterBurnerMock internal eMinterBurnerMock;
     MintBurnERC20Mock internal eMintBurnERC20Mock;
+    MintSelfBurnToken internal fMintSelfBurnToken;
+    MintSelfBurnOFTAdapter internal fMintSelfBurnOFTAdapter;
 
     OFTInspectorMock internal oAppInspector;
 
@@ -73,6 +84,7 @@ contract OFTTest is TestHelperOz5 {
     address public userC = makeAddr("userC");
     address public userD = makeAddr("userD");
     address public userE = makeAddr("userE");
+    address public userF = makeAddr("userF");
     address public attacker = makeAddr("attacker");
     uint256 public initialBalance = 100 ether;
     uint256 public initialNativeBalance = 1000 ether;
@@ -82,6 +94,7 @@ contract OFTTest is TestHelperOz5 {
 
         super.setUp();
         setUpEndpoints(5, LibraryType.UltraLightNode);
+        setUpEndpoints(6, LibraryType.UltraLightNode);
 
         aOFT = OFTMock(
             _deployOApp(
@@ -127,13 +140,28 @@ contract OFTTest is TestHelperOz5 {
         );
         eMinterBurnerMock.setOperator(address(eMintBurnOFTAdapter), true);
 
+        fMintSelfBurnToken = new MintSelfBurnToken(
+            F_MINT_SELF_BURN_TOKEN_NAME,
+            F_MINT_SELF_BURN_TOKEN_SYMBOL,
+            address(this)
+        );
+        fMintSelfBurnOFTAdapter = MintSelfBurnOFTAdapterMock(
+            _deployOApp(
+                type(MintSelfBurnOFTAdapterMock).creationCode,
+                abi.encode(address(fMintSelfBurnToken), address(endpoints[F_EID]), address(this))
+            )
+        );
+        fMintSelfBurnToken.grantRole(fMintSelfBurnToken.MINTER_ROLE(), address(fMintSelfBurnOFTAdapter));
+        fMintSelfBurnToken.grantRole(fMintSelfBurnToken.BURNER_ROLE(), address(fMintSelfBurnOFTAdapter));
+
         // config and wire the ofts
-        address[] memory ofts = new address[](5);
+        address[] memory ofts = new address[](6);
         ofts[0] = address(aOFT);
         ofts[1] = address(bOFT);
         ofts[2] = address(cOFTAdapter);
         ofts[3] = address(dNativeOFTAdapter);
         ofts[4] = address(eMintBurnOFTAdapter);
+        ofts[5] = address(fMintSelfBurnOFTAdapter);
         this.wireOApps(ofts);
 
         // mint tokens
@@ -141,6 +169,9 @@ contract OFTTest is TestHelperOz5 {
         bOFT.asOFTMock().mint(userB, initialBalance);
         cERC20Mock.mint(userC, initialBalance);
         eMintBurnERC20Mock.mint(userE, initialBalance);
+        fMintSelfBurnToken.grantRole(fMintSelfBurnToken.MINTER_ROLE(), address(this));
+        fMintSelfBurnToken.mint(userF, initialBalance);
+        fMintSelfBurnToken.revokeRole(fMintSelfBurnToken.MINTER_ROLE(), address(this));
 
         // deploy a universal inspector, can be used by each oft
         oAppInspector = new OFTInspectorMock();
@@ -152,6 +183,7 @@ contract OFTTest is TestHelperOz5 {
         vm.deal(userC, initialNativeBalance);
         vm.deal(userD, initialNativeBalance);
         vm.deal(userE, initialNativeBalance);
+        vm.deal(userF, initialNativeBalance);
     }
 
     function test_constructor() public {
@@ -160,20 +192,24 @@ contract OFTTest is TestHelperOz5 {
         assertEq(cOFTAdapter.owner(), address(this));
         assertEq(dNativeOFTAdapter.owner(), address(this));
         assertEq(eMintBurnOFTAdapter.owner(), address(this));
+        assertEq(fMintSelfBurnOFTAdapter.owner(), address(this));
 
         assertEq(aOFT.balanceOf(userA), initialBalance);
         assertEq(bOFT.balanceOf(userB), initialBalance);
         assertEq(IERC20(cOFTAdapter.token()).balanceOf(userC), initialBalance);
         assertEq(IERC20(eMintBurnOFTAdapter.token()).balanceOf(userE), initialBalance);
+        assertEq(IERC20(fMintSelfBurnOFTAdapter.token()).balanceOf(userF), initialBalance);
 
         assertEq(aOFT.token(), address(aOFT));
         assertEq(bOFT.token(), address(bOFT));
         assertEq(cOFTAdapter.token(), address(cERC20Mock));
         assertEq(dNativeOFTAdapter.token(), address(0));
         assertEq(eMintBurnOFTAdapter.token(), address(eMintBurnERC20Mock));
+        assertEq(fMintSelfBurnOFTAdapter.token(), address(fMintSelfBurnToken));
 
         assertEq(dNativeOFTAdapter.approvalRequired(), false);
         assertEq(eMintBurnOFTAdapter.approvalRequired(), false);
+        assertEq(fMintSelfBurnOFTAdapter.approvalRequired(), true);
     }
 
     function test_oftVersion() public {
@@ -801,5 +837,78 @@ contract OFTTest is TestHelperOz5 {
         assertEq(type(uint256).max, oftLimit.maxAmountLD);
         assertEq(0, oftFeeDetails.length);
         assertEq(minAmountToCreditLD, oftReceipt.amountSentLD);
+    }
+
+    function test_mint_self_burn_oft_adapter_debit() public virtual {
+        uint256 amountToSendLD = 1 ether;
+        uint256 minAmountToCreditLD = 1 ether;
+        uint32 dstEid = F_EID;
+
+        vm.prank(userF);
+        vm.expectRevert(
+            abi.encodeWithSelector(IOFT.SlippageExceeded.selector, amountToSendLD, minAmountToCreditLD + 1)
+        );
+        fMintSelfBurnOFTAdapter.asMintSelfBurnOFTAdapterMock().debit(amountToSendLD, minAmountToCreditLD + 1, dstEid);
+
+        vm.prank(userF);
+        fMintSelfBurnToken.approve(address(fMintSelfBurnOFTAdapter), amountToSendLD);
+        vm.prank(userF);
+        (uint256 amountDebitedLD, uint256 amountToCreditLD) = fMintSelfBurnOFTAdapter
+            .asMintSelfBurnOFTAdapterMock()
+            .debit(amountToSendLD, minAmountToCreditLD, dstEid);
+
+        assertEq(amountDebitedLD, amountToSendLD);
+        assertEq(amountToCreditLD, amountToSendLD);
+    }
+
+    function test_mint_self_burn_oft_adapter_credit() public {
+        uint256 amountToCreditLD = 1 ether;
+        uint32 srcEid = F_EID;
+
+        uint256 amountReceived = fMintSelfBurnOFTAdapter.asMintSelfBurnOFTAdapterMock().credit(
+            userB,
+            amountToCreditLD,
+            srcEid
+        );
+
+        assertEq(fMintSelfBurnToken.balanceOf(userB), amountReceived);
+        assertEq(amountReceived, amountToCreditLD);
+    }
+
+    function test_mint_self_burn_oft_adapter_send() public {
+        uint256 tokensToSend = 1 ether;
+        bytes memory options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
+        SendParam memory sendParam = SendParam(
+            B_EID,
+            addressToBytes32(userB),
+            tokensToSend,
+            tokensToSend,
+            options,
+            "",
+            ""
+        );
+        MessagingFee memory fee = fMintSelfBurnOFTAdapter.quoteSend(sendParam, false);
+
+        assertEq(fMintSelfBurnToken.balanceOf(userF), initialBalance);
+        assertEq(bOFT.balanceOf(userB), initialBalance);
+
+        vm.startPrank(userF);
+        fMintSelfBurnToken.approve(address(fMintSelfBurnOFTAdapter), tokensToSend);
+        fMintSelfBurnOFTAdapter.send{ value: fee.nativeFee }(sendParam, fee, payable(address(this)));
+        vm.stopPrank();
+        verifyPackets(B_EID, addressToBytes32(address(bOFT)));
+
+        assertEq(fMintSelfBurnToken.balanceOf(userF), initialBalance - tokensToSend);
+        assertEq(bOFT.balanceOf(userB), initialBalance + tokensToSend);
+    }
+
+    function test_mint_self_burn_role_access() public {
+        vm.prank(attacker);
+        vm.expectRevert();
+        fMintSelfBurnToken.mint(attacker, initialBalance);
+
+        vm.prank(attacker);
+        vm.expectRevert();
+        fMintSelfBurnToken.burn(initialBalance);
     }
 }
