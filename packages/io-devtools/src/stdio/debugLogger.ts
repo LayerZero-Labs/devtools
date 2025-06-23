@@ -54,6 +54,8 @@ export enum KnownErrors {
     ERROR_QUOTING_NATIVE_GAS_COST = 'ERROR_QUOTING_NATIVE_GAS_COST',
     ERROR_SENDING_TRANSACTION = 'ERROR_SENDING_TRANSACTION',
     ERROR_GETTING_HRE = 'ERROR_GETTING_HARDHAT_RUNTIME_ENVIRONMENT_FOR_NETWORK',
+    SOLANA_INVALID_OWNER_OR_DELEGATE = 'SOLANA_INVALID_OWNER_OR_DELEGATE',
+    SOLANA_OWNER_OR_DELEGATE_CANNOT_BE_MULTISIG_ACCOUNT = 'SOLANA_OWNER_OR_DELEGATE_MULTISIG_ACCOUNT',
 }
 
 export enum KnownWarnings {
@@ -91,6 +93,14 @@ export const ERRORS_FIXES_MAP: Record<KnownErrors, ErrorFixInfo> = {
     [KnownErrors.ERROR_GETTING_HRE]: {
         tip: 'Have you added the srcEid network to your `./hardhat.config.ts` file?',
         info: 'If you loaded a custom OFT deployment from an EVM network, you must add the deployment srcEid to your `./hardhat.config.ts` file for the OFT to be found.',
+    },
+    [KnownErrors.SOLANA_INVALID_OWNER_OR_DELEGATE]: {
+        tip: 'The owner or delegate of the Solana OApp must either be an regular on curve address or a Squads Vault Account.',
+        info: 'Ensure that you are using a regular on-curve Solana address or a Squads Vault PDA as the owner or delegate of the OApp.',
+    },
+    [KnownErrors.SOLANA_OWNER_OR_DELEGATE_CANNOT_BE_MULTISIG_ACCOUNT]: {
+        tip: 'The owner or delegate of the Solana OApp must not be the Squads multisig account address.',
+        info: 'If you intend to use Squads Multisig, ensure that you are providing a Squads Vault address as the owner or delegate of the OApp. The Squads Multisig account address cannot be the owner or delegate.',
     },
 }
 

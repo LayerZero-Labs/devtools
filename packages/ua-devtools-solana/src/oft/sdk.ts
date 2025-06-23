@@ -17,7 +17,7 @@ import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import { EndpointV2 } from '@layerzerolabs/protocol-devtools-solana'
 import { type Logger, printBoolean, printJson } from '@layerzerolabs/io-devtools'
 import { mapError, AsyncRetriable } from '@layerzerolabs/devtools'
-import { OmniSDK } from '@layerzerolabs/devtools-solana'
+import { assertValidSolanaAdmin, OmniSDK } from '@layerzerolabs/devtools-solana'
 import { Connection, PublicKey, Transaction, TransactionInstruction } from '@solana/web3.js'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import assert from 'assert'
@@ -121,6 +121,7 @@ export class OFT extends OmniSDK implements IOApp {
     }
 
     async setOwner(address: OmniAddress): Promise<OmniTransaction> {
+        await assertValidSolanaAdmin(this.connection, address)
         this.logger.debug(`Setting owner to ${address}`)
 
         return {
@@ -236,6 +237,7 @@ export class OFT extends OmniSDK implements IOApp {
     }
 
     async setDelegate(delegate: OmniAddress): Promise<OmniTransaction> {
+        await assertValidSolanaAdmin(this.connection, delegate)
         this.logger.debug(`Setting delegate to ${delegate}`)
         return {
             ...(await this.createTransaction(this._umiToWeb3Tx([await this._setOFTDelegateIx(delegate)]))),

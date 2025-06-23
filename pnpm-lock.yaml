@@ -5099,9 +5099,6 @@ importers:
       '@layerzerolabs/devtools':
         specifier: ~1.0.0
         version: link:../devtools
-      '@layerzerolabs/devtools-solana':
-        specifier: ^2.1.0
-        version: link:../devtools-solana
       '@layerzerolabs/io-devtools':
         specifier: ~0.2.0
         version: link:../io-devtools

@@ -12,7 +12,6 @@ import {
 } from '@layerzerolabs/devtools'
 import type { OAppConfigurator, OAppEnforcedOption, OAppEnforcedOptionParam, OAppFactory } from './types'
 import { createModuleLogger, createWithAsyncLogger, printBoolean } from '@layerzerolabs/io-devtools'
-import { isOmniPointOnSolana, assertValidSolanaAdmin } from '@layerzerolabs/devtools-solana'
 import { Uln302ConfigType, type SetConfigParam } from '@layerzerolabs/protocol-devtools'
 import assert from 'assert'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
@@ -30,11 +29,6 @@ export const configureOAppDelegates: OAppConfigurator = withOAppLogger(
                 // Don't do anything if delegate is not set
                 if (config?.delegate == null) {
                     return logger.verbose(`Delegate not set for ${label}, skipping`), []
-                }
-
-                if (isOmniPointOnSolana(point)) {
-                    // @ts-expect-error sdk has connection
-                    await assertValidSolanaAdmin(sdk.connection, config.delegate)
                 }
 
                 const isDelegate = await sdk.isDelegate(config.delegate)
