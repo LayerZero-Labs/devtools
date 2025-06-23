@@ -97,7 +97,7 @@ contract MyOApp is OApp, OAppOptionsType3 {
     /// @dev   _guid      Global unique ID for tracking this message
     /// @param _message   ABI-encoded bytes (the string we sent earlier)
     /// @dev   _executor  Executor address that delivered the message
-    /// @dev   _extraData Additional data from the Executor (unused here)
+    /// @dev   _extraData Additional data from the Executor (unused by the LayerZero executor)
     function _lzReceive(
         Origin calldata /*_origin*/,
         bytes32 /*_guid*/,
