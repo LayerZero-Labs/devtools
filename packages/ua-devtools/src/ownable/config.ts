@@ -2,6 +2,7 @@ import { createModuleLogger } from '@layerzerolabs/io-devtools'
 import type { OwnableConfigurator } from './types'
 import { flattenTransactions, formatOmniPoint } from '@layerzerolabs/devtools'
 import { isOmniPointOnSolana, assertValidSolanaAdmin } from '@layerzerolabs/devtools-solana'
+import type { Connection } from '@solana/web3.js'
 
 export const configureOwnable: OwnableConfigurator = async (graph, createSdk) => {
     const logger = createModuleLogger('Ownable')
@@ -15,13 +16,14 @@ export const configureOwnable: OwnableConfigurator = async (graph, createSdk) =>
                     return logger.verbose(`No owner specified for ${formattedPoint}`), undefined
                 }
 
+                const sdk = await createSdk(point)
+
                 if (isOmniPointOnSolana(point)) {
-                    await assertValidSolanaAdmin(sdk.connection, config.owner)
+                    const { connection } = sdk as unknown as { connection: Connection }
+                    await assertValidSolanaAdmin(connection, config.owner)
                 }
 
                 logger.verbose(`Checking whether the owner of ${formattedPoint} is ${config.owner}`)
-
-                const sdk = await createSdk(point)
                 const hasOwner = await sdk.hasOwner(config.owner)
                 if (hasOwner) {
                     return logger.verbose(`The owner of ${formattedPoint} already is ${config.owner}`), undefined

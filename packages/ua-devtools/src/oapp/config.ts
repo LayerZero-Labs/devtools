@@ -13,6 +13,7 @@ import {
 import type { OAppConfigurator, OAppEnforcedOption, OAppEnforcedOptionParam, OAppFactory } from './types'
 import { createModuleLogger, createWithAsyncLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import { isOmniPointOnSolana, assertValidSolanaAdmin } from '@layerzerolabs/devtools-solana'
+import type { Connection } from '@solana/web3.js'
 import { Uln302ConfigType, type SetConfigParam } from '@layerzerolabs/protocol-devtools'
 import assert from 'assert'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
@@ -33,7 +34,8 @@ export const configureOAppDelegates: OAppConfigurator = withOAppLogger(
                 }
 
                 if (isOmniPointOnSolana(point)) {
-                    await assertValidSolanaAdmin(sdk.connection, config.delegate)
+                    const { connection } = sdk as unknown as { connection: Connection }
+                    await assertValidSolanaAdmin(connection, config.delegate)
                 }
 
                 const isDelegate = await sdk.isDelegate(config.delegate)
