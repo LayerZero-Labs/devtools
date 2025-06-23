@@ -21,7 +21,7 @@ module oapp::oapp {
     use endpoint_v2_common::serde;
     use oapp::oapp_core::{combine_options, lz_quote, lz_send, refund_fees};
     use oapp::oapp_store::OAPP_ADDRESS;
-    use oapp::utils::{bytes_to_string, hex_string_to_bytes};
+    use oapp::utils::hex_string_to_bytes;
 
     friend oapp::oapp_receive;
     friend oapp::oapp_compose;

@@ -11,12 +11,6 @@ module oapp::utils {
     const ASCII_LOWERCASE_A: u8 = 97;
     const ASCII_LOWERCASE_F: u8 = 102;
 
-    /// Converts a vector of bytes to a UTF-8 string
-    /// Will abort if the bytes are not valid UTF-8
-    public fun bytes_to_string(bytes: vector<u8>): String {
-        string::utf8(bytes)
-    }
-
     /// Converts a UTF-8 string to a vector of bytes
     public fun string_to_bytes(str: String): vector<u8> {
         *string::bytes(&str)
@@ -24,27 +18,19 @@ module oapp::utils {
 
     /// Converts a hex string (without 0x prefix) to a vector of bytes
     /// Example: "48656c6c6f" -> b"Hello"
-    /// Automatically pads odd-length strings with a leading zero
+    /// Aborts if the hex string has odd length (not properly formatted)
     public fun hex_string_to_bytes(hex_str: String): vector<u8> {
         let hex_bytes = string::bytes(&hex_str);
         let len = vector::length(hex_bytes);
         
-        // If the hex string is odd length, pad with leading zero
-        let padded_hex = if (len % 2 == 1) {
-            let padded = vector::empty<u8>();
-            vector::push_back(&mut padded, ASCII_ZERO);
-            vector::append(&mut padded, *hex_bytes);
-            padded
-        } else {
-            *hex_bytes
-        };
+        // Assert that hex string has even length
+        assert!(len % 2 == 0, EINVALID_HEX_LENGTH);
         
-        let padded_len = vector::length(&padded_hex);
-        let result = vector::empty<u8>();
+        let result = vector[];
         let i = 0;
-        while (i < padded_len) {
-            let high_nibble = hex_char_to_u8(*vector::borrow(&padded_hex, i));
-            let low_nibble = hex_char_to_u8(*vector::borrow(&padded_hex, i + 1));
+        while (i < len) {
+            let high_nibble = hex_char_to_u8(*vector::borrow(hex_bytes, i));
+            let low_nibble = hex_char_to_u8(*vector::borrow(hex_bytes, i + 1));
             let byte_val = (high_nibble << 4) | low_nibble;
             vector::push_back(&mut result, byte_val);
             i = i + 2;
@@ -55,7 +41,7 @@ module oapp::utils {
     /// Converts bytes to a hex string (lowercase)
     public fun bytes_to_hex_string(bytes: vector<u8>): String {
         let hex_chars = b"0123456789abcdef";
-        let result = vector::empty<u8>();
+        let result = vector[];
         
         let i = 0;
         let len = vector::length(&bytes);
@@ -86,4 +72,5 @@ module oapp::utils {
 
     const EINVALID_HEX_CHARACTER: u64 = 1;
     const EINVALID_ADDRESS_LENGTH: u64 = 2;
+    const EINVALID_HEX_LENGTH: u64 = 3;
 } 
