@@ -29,14 +29,14 @@ import { Options } from '@layerzerolabs/lz-v2-utilities'
 // Load environment variables from .env file
 dotenv.config()
 
+// Configuration constants
+const APTOS_PRIVATE_KEY = process.env.APTOS_PRIVATE_KEY || ''
+const APTOS_ACCOUNT_ADDRESS = process.env.APTOS_ACCOUNT_ADDRESS || ''
+
 // Validate required environment variables
-if (!process.env.APTOS_PRIVATE_KEY || !process.env.APTOS_ACCOUNT_ADDRESS) {
+if (!APTOS_PRIVATE_KEY || !APTOS_ACCOUNT_ADDRESS) {
     throw new Error('Please set APTOS_PRIVATE_KEY and APTOS_ACCOUNT_ADDRESS in your .env file')
 }
-
-// Configuration constants
-const APTOS_PRIVATE_KEY = process.env.APTOS_PRIVATE_KEY
-const APTOS_ACCOUNT_ADDRESS = process.env.APTOS_ACCOUNT_ADDRESS
 
 // OApp configuration
 const OAPP_ADDRESS = '<your-Aptos-Move-OApp-address>'
