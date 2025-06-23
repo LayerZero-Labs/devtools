@@ -9,7 +9,8 @@ contract MyOApp is OApp, OAppOptionsType3 {
     /// @notice Last string received from any remote chain
     string public lastMessage;
 
-    /// @notice Msg type for sending a string, for use in OAppOptionsType3 as an enforced option
+    /// @notice The only Message Type in use for this OApp: sending an arbitrary string.
+    /// Different message types can be assigned different enforced options per destination endpoint ID.
     uint16 public constant SEND = 1;
 
     /// @notice Initialize with Endpoint V2 and owner address
