@@ -15,8 +15,8 @@ export const configureOwnable: OwnableConfigurator = async (graph, createSdk) =>
                 }
 
                 logger.verbose(`Checking whether the owner of ${formattedPoint} is ${config.owner}`)
-                const sdk = await createSdk(point)
 
+                const sdk = await createSdk(point)
                 const hasOwner = await sdk.hasOwner(config.owner)
                 if (hasOwner) {
                     return logger.verbose(`The owner of ${formattedPoint} already is ${config.owner}`), undefined
