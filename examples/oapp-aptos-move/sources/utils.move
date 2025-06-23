@@ -70,6 +70,8 @@ module oapp::utils {
         }
     }
 
+    // ================================================== Error Codes =================================================
+
     const EINVALID_HEX_CHARACTER: u64 = 1;
     const EINVALID_ADDRESS_LENGTH: u64 = 2;
     const EINVALID_HEX_LENGTH: u64 = 3;

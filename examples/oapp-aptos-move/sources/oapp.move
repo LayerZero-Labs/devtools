@@ -51,6 +51,11 @@ module oapp::oapp {
         });
     }
 
+    /// Parses a cross-chain message to extract two addresses and a u256 number
+    /// The message format contains hex-encoded data representing:
+    /// - First 32 bytes: address1 
+    /// - Next 32 bytes: address2
+    /// - Remaining bytes: u256 number
     public fun parse_message(message: vector<u8>): (address, address, u256) {
         let string_length = (
             (*vector::borrow(&message, 60) as u64) << 24 |
