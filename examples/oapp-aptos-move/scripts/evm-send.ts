@@ -31,10 +31,10 @@ async function main() {
     // Destination endpoint ID for Aptos/Movement
     const aptosMoveEid = EndpointId.APTOS_V2_TESTNET
 
-    // Example addresses and number to encode
-    const address1 = '0x1234567890123456789012345678901234567890'
-    const address2 = '0x9876543210987654321098765432109876543210'
-    const num = ethers.BigNumber.from('123456789012345678901234567890')
+    // Fill in the addresses and number to send to Aptos/Movement
+    const address1 = ''
+    const address2 = ''
+    const num = ethers.BigNumber.from('')
 
     const encodedMessage = ethers.utils.solidityPack(
         ['bytes32', 'bytes32', 'uint256'],
