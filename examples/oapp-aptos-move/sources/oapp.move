@@ -15,10 +15,9 @@ module oapp::oapp {
 
     #[test_only]
     use std::account;
-
     use endpoint_v2_common::bytes32::{Self, Bytes32};
     use endpoint_v2_common::native_token;
-    use endpoint_v2_common::serde;
+    use endpoint_v2_common::serde::{extract_address, extract_u256};
     use oapp::oapp_core::{combine_options, lz_quote, lz_send, refund_fees};
     use oapp::oapp_store::OAPP_ADDRESS;
     use oapp::utils::hex_string_to_bytes;
@@ -70,28 +69,11 @@ module oapp::oapp {
 
         let hex_bytes = vector::slice(&string_bytes, 2, vector::length(&string_bytes));
         let hex_content = hex_string_to_bytes(string::utf8(hex_bytes));
-        
-        let addr1_bytes = vector::slice(&hex_content, 0, 32);
-        let decoded_addr1 = from_bcs::to_address(addr1_bytes);
-        
-        let addr2_bytes = vector::slice(&hex_content, 32, 64);
-        let decoded_addr2 = from_bcs::to_address(addr2_bytes);
-        
-        let hex_content_len = vector::length(&hex_content);
-        let number_bytes = if (hex_content_len >= 96) {
-            vector::slice(&hex_content, 64, 96)
-        } else {
-            vector::slice(&hex_content, 64, hex_content_len)
-        };
-        
-        let number_u256 = 0u256;
-        let j = 0;
-        let num_bytes_len = vector::length(&number_bytes);
-        while (j < num_bytes_len) {
-            let byte_val = *vector::borrow(&number_bytes, j);
-            number_u256 = (number_u256 << 8) + (byte_val as u256);
-            j = j + 1;
-        };
+
+        let pos = 0;
+        let decoded_addr1 = extract_address(&hex_content, &mut pos);
+        let decoded_addr2 = extract_address(&hex_content, &mut pos);
+        let number_u256 = extract_u256(&hex_content, &mut pos);
 
         (decoded_addr1, decoded_addr2, number_u256)
     }
