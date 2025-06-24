@@ -11,11 +11,6 @@ module oapp::utils {
     const ASCII_LOWERCASE_A: u8 = 97;
     const ASCII_LOWERCASE_F: u8 = 102;
 
-    /// Converts a UTF-8 string to a vector of bytes
-    public fun string_to_bytes(str: String): vector<u8> {
-        *string::bytes(&str)
-    }
-
     /// Converts a hex string (without 0x prefix) to a vector of bytes
     /// Example: "48656c6c6f" -> b"Hello"
     /// Aborts if the hex string has odd length (not properly formatted)

@@ -56,16 +56,11 @@ module oapp::oapp {
     /// - Next 32 bytes: address2
     /// - Remaining bytes: u256 number
     public fun parse_message(message: vector<u8>): (address, address, u256) {
-        let string_length = (
-            (*vector::borrow(&message, 60) as u64) << 24 |
-            (*vector::borrow(&message, 61) as u64) << 16 |
-            (*vector::borrow(&message, 62) as u64) << 8 |
-            (*vector::borrow(&message, 63) as u64)
-        );
-        
-        let string_start = 64;
-        let string_end = string_start + string_length;
-        let string_bytes = vector::slice(&message, string_start, string_end);
+        let string_len_offset = 0;
+        let offset = extract_u256(&message, &mut string_len_offset);
+        string_len_offset = (offset as u64);
+        let string_length = extract_u256(&message, &mut string_len_offset);
+        let string_bytes = vector::slice(&message, string_len_offset, string_len_offset + (string_length as u64));
 
         let hex_bytes = vector::slice(&string_bytes, 2, vector::length(&string_bytes));
         let hex_content = hex_string_to_bytes(string::utf8(hex_bytes));
