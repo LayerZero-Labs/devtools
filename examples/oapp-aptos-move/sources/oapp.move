@@ -9,11 +9,15 @@ module oapp::oapp {
     use std::option::Option;
     use std::primary_fungible_store;
     use std::signer::address_of;
+    use std::string;
+    use std::vector;
 
     use endpoint_v2_common::bytes32::Bytes32;
     use endpoint_v2_common::native_token;
+    use endpoint_v2_common::serde::{extract_address, extract_u256};
     use oapp::oapp_core::{combine_options, lz_quote, lz_send, refund_fees};
     use oapp::oapp_store::OAPP_ADDRESS;
+    use oapp::utils::hex_string_to_bytes;
 
     friend oapp::oapp_receive;
     friend oapp::oapp_compose;
@@ -24,13 +28,46 @@ module oapp::oapp {
         value: u64
     }
 
-    fun init_module(account: &signer) {
-        move_to(account, Counter { value: 0 });
+    struct ReceiveData has key {
+        address1: address,
+        address2: address,
+        number: u256,
+        counter: u64,
+        raw_message: vector<u8>
     }
 
-    #[view]
-    public fun get_counter(): u64 acquires Counter {
-        borrow_global<Counter>(@oapp).value
+    fun init_module(account: &signer) {
+        move_to(account, Counter { value: 0 });
+        move_to(account, ReceiveData { 
+            address1: @0x0, 
+            address2: @0x0, 
+            number: 0, 
+            counter: 0,
+            raw_message: vector::empty()
+        });
+    }
+
+    /// Parses a cross-chain message to extract two addresses and a u256 number
+    /// The message format contains hex-encoded data representing:
+    /// - First 32 bytes: address1 
+    /// - Next 32 bytes: address2
+    /// - Remaining bytes: u256 number
+    public fun parse_message(message: vector<u8>): (address, address, u256) {
+        let string_len_offset = 0;
+        let offset = extract_u256(&message, &mut string_len_offset);
+        string_len_offset = (offset as u64);
+        let string_length = extract_u256(&message, &mut string_len_offset);
+        let string_bytes = vector::slice(&message, string_len_offset, string_len_offset + (string_length as u64));
+
+        let hex_bytes = vector::slice(&string_bytes, 2, vector::length(&string_bytes));
+        let hex_content = hex_string_to_bytes(string::utf8(hex_bytes));
+
+        let pos = 0;
+        let decoded_addr1 = extract_address(&hex_content, &mut pos);
+        let decoded_addr2 = extract_address(&hex_content, &mut pos);
+        let number_u256 = extract_u256(&hex_content, &mut pos);
+
+        (decoded_addr1, decoded_addr2, number_u256)
     }
 
     public(friend) fun lz_receive_impl(
@@ -41,17 +78,23 @@ module oapp::oapp {
         _message: vector<u8>,
         _extra_data: vector<u8>,
         receive_value: Option<FungibleAsset>,
-    ) acquires Counter {
-        // Deposit any received value
+    ) acquires Counter, ReceiveData {
         option::destroy(receive_value, |value| primary_fungible_store::deposit(OAPP_ADDRESS(), value));
 
-        // Increment counter
-        let counter = borrow_global_mut<Counter>(@oapp);
+        let counter = borrow_global_mut<Counter>(OAPP_ADDRESS());
         counter.value = counter.value + 1;
 
-        // todo: Perform any actions with received message here
-    }
+        let (decoded_addr1, decoded_addr2, number_u256) = parse_message(_message);
 
+        let receive_data = borrow_global_mut<ReceiveData>(OAPP_ADDRESS());
+        receive_data.address1 = decoded_addr1;
+        receive_data.address2 = decoded_addr2;
+        receive_data.number = number_u256;
+        receive_data.counter = counter.value;
+        receive_data.raw_message = _message;
+
+        // Optionally, you can add any additional logic here to handle the received message.
+    }
 
     // todo: replicate the logic in here where sending a message must happen
     public entry fun example_message_sender(
@@ -126,8 +169,39 @@ module oapp::oapp {
         0
     }
 
+    // ================================================== View Functions ===========================================
+
+    #[view]
+    public fun get_decoded_address1(): address acquires ReceiveData {
+        borrow_global<ReceiveData>(OAPP_ADDRESS()).address1
+    }
+
+    #[view]
+    public fun get_decoded_address2(): address acquires ReceiveData {
+        borrow_global<ReceiveData>(OAPP_ADDRESS()).address2
+    }
+
+    #[view]
+    public fun get_decoded_number(): u256 acquires ReceiveData {
+        borrow_global<ReceiveData>(OAPP_ADDRESS()).number
+    }
+
+    #[view]
+    public fun get_counter_value(): u64 acquires Counter {
+        borrow_global<Counter>(OAPP_ADDRESS()).value
+    }
+
+    #[view]
+    public fun get_raw_message(): vector<u8> acquires ReceiveData {
+        borrow_global<ReceiveData>(OAPP_ADDRESS()).raw_message
+    }
+
     // ================================================== Error Codes =================================================
 
     const ECOMPOSE_NOT_IMPLEMENTED: u64 = 1;
     const EINSUFFICIENT_BALANCE: u64 = 2;
+    const EINVALID_HEX_CHAR: u64 = 3;
+    const EINVALID_LENGTH: u64 = 4;
+
+
 }

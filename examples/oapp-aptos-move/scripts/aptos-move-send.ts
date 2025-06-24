@@ -21,6 +21,7 @@ import {
     SimpleTransaction,
 } from '@aptos-labs/ts-sdk'
 import * as dotenv from 'dotenv'
+import { ethers } from 'ethers'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
@@ -28,25 +29,26 @@ import { Options } from '@layerzerolabs/lz-v2-utilities'
 // Load environment variables from .env file
 dotenv.config()
 
+// Configuration constants
+const APTOS_PRIVATE_KEY = process.env.APTOS_PRIVATE_KEY || ''
+const APTOS_ACCOUNT_ADDRESS = process.env.APTOS_ACCOUNT_ADDRESS || ''
+
 // Validate required environment variables
-if (!process.env.APTOS_PRIVATE_KEY || !process.env.ACCOUNT_ADDRESS) {
-    throw new Error('Please set APTOS_PRIVATE_KEY and ACCOUNT_ADDRESS in your .env file')
+if (!APTOS_PRIVATE_KEY || !APTOS_ACCOUNT_ADDRESS) {
+    throw new Error('Please set APTOS_PRIVATE_KEY and APTOS_ACCOUNT_ADDRESS in your .env file')
 }
 
-// Configuration constants
-const APTOS_PRIVATE_KEY = process.env.APTOS_PRIVATE_KEY
-const ACCOUNT_ADDRESS = process.env.ACCOUNT_ADDRESS
-
 // OApp configuration
-const OAPP_ADDRESS = '' // Set your OApp's address on Aptos
-const REMOTE_EID = EndpointId.BSC_V2_TESTNET // Destination chain endpoint ID
+const OAPP_ADDRESS = '<your-Aptos-Move-OApp-address>'
 const NETWORK = Network.TESTNET // Aptos network configuration
+
+const REMOTE_EID = EndpointId.BSC_V2_TESTNET // Destination chain endpoint ID
 
 // Initialize Aptos account and client
 const privateKey = PrivateKey.formatPrivateKey(APTOS_PRIVATE_KEY, PrivateKeyVariants.Ed25519)
 const signerAccount = Account.fromPrivateKey({
     privateKey: new Ed25519PrivateKey(privateKey),
-    address: ACCOUNT_ADDRESS,
+    address: APTOS_ACCOUNT_ADDRESS,
 })
 const aptos = new Aptos(new AptosConfig({ network: NETWORK }))
 
@@ -59,9 +61,21 @@ async function send() {
     const options = Options.newOptions().addExecutorLzReceiveOption(BigInt(30000))
     const extraOptions = options.toBytes()
 
-    // Prepare the message
-    const message = 'Hello, EVM!'
-    const messageBytes = new TextEncoder().encode(message)
+    // Prepare the message - ABI encode it to match Solidity contract expectations
+    const address1 = '0x' // EVM 20 byte address
+    const address2 = '0x' // EVM 20 byte address
+    const num = ethers.BigNumber.from('0')
+    console.log('Sending message:', address1, address2, num)
+
+    // ABI encode the string to match what the Solidity contract expects
+    const abiEncodedMessage = ethers.utils.defaultAbiCoder.encode(
+        ['address', 'address', 'uint256'],
+        [address1, address2, num]
+    )
+    console.log('ABI encoded message:', abiEncodedMessage)
+
+    // Convert to bytes array for Aptos
+    const messageBytes = ethers.utils.arrayify(abiEncodedMessage)
     const messageArray = new Uint8Array(messageBytes)
 
     // Get fee quote for the cross-chain message
@@ -75,11 +89,11 @@ async function send() {
     // Log fee details
     console.log('Quote details:')
     console.log('Native fee (octas):', quote[0])
-    console.log('Native fee (APT):', Number(quote[0]) / 100000000)
+    console.log('Native fee:', Number(quote[0]) / 100000000)
     console.log('ZRO fee:', quote[1])
 
     // Verify account has sufficient balance
-    const balance = await aptos.account.getAccountAPTAmount({ accountAddress: ACCOUNT_ADDRESS })
+    const balance = await aptos.account.getAccountAPTAmount({ accountAddress: APTOS_ACCOUNT_ADDRESS })
     console.log('Account balance:', Number(balance) / 100000000, 'APT')
 
     if (Number(balance) < Number(quote[0])) {
@@ -96,7 +110,7 @@ async function send() {
 
     // Create the transaction
     const transaction: SimpleTransaction = await aptos.transaction.build.simple({
-        sender: ACCOUNT_ADDRESS,
+        sender: APTOS_ACCOUNT_ADDRESS,
         data: payload,
         options: {
             maxGasAmount: 100000,
@@ -114,7 +128,7 @@ async function send() {
         transactionHash: signedTransaction.hash,
     })
 
-    console.log(`Transaction hash: ${executedTransaction.hash}`)
+    console.log(`Transaction link: https://layerzeroscan.com/tx/${executedTransaction.hash}`)
     console.log('Message sent!')
 }
 
