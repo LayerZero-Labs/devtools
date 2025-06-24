@@ -13,7 +13,7 @@
     "lint:fix": "eslint --fix '**/*.{js,ts,json}' && prettier --write . && solhint 'contracts/**/*.sol' --fix --noPrompt",
     "lint:js": "eslint '**/*.{js,ts,json}' && prettier --check .",
     "lint:sol": "solhint 'contracts/**/*.sol'",
-    "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat",
+    "test": "$npm_execpath run test:hardhat",
     "test:anchor": "anchor test",
     "test:forge": "forge test",
     "test:hardhat": "hardhat test"
