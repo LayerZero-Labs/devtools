@@ -249,14 +249,6 @@ pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID>
 
 :information_source: You can also specify `--amount <AMOUNT>` to have the OFT minted to your deployer address upon token creation.
 
-#### For OFTAdapter:
-
-```bash
-pnpm hardhat lz:oft-adapter:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <TOKEN_MINT> --token-program <TOKEN_PROGRAM_ID>
-```
-
-:information_source: You can use OFT Adapter if you want to use an existing token on Solana. For OFT Adapter, tokens will be locked when sending to other chains and unlocked when receiving from other chains.
-
 #### For OFT Mint-And-Burn Adapter (MABA):
 
 ```bash
