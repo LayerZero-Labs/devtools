@@ -10,6 +10,9 @@ import { ISwapRouter } from "@uniswap/v3-periphery/contracts/interfaces/ISwapRou
 import { IOAppComposer } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol";
 import { IOFT } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
+import { IOAppCore } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol";
+
+import { IUniswapV3Composer } from "./IUniswapV3Composer.sol";
 
 /**
  * @title UniswapV3Composer
@@ -18,73 +21,47 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
  *
  * @dev This contract inherits from IOAppComposer and interacts with Uniswap V3's SwapRouter to execute token swaps.
  */
-contract UniswapV3Composer is IOAppComposer {
+contract UniswapV3Composer is IOAppComposer, IUniswapV3Composer {
     using SafeERC20 for IERC20;
     /// @notice The Uniswap V3 SwapRouter used to perform token swaps.
-    ISwapRouter public immutable swapRouter;
-
-    /// @notice The LayerZero Endpoint address for cross-chain communication.
-    address public immutable endpoint;
+    ISwapRouter public immutable SWAP_ROUTER;
 
     /// @notice The address of the OFT on the receiving chain.
-    address public immutable oft;
+    address public immutable OFT;
 
-    /// @notice Custom errors for more gas-efficient reverts.
-    error InvalidSwapRouter();
-    error InvalidEndpoint();
-    error InvalidOFT();
-    error UnauthorizedOFT();
-    error UnauthorizedEndpoint();
+    /// @notice The LayerZero Endpoint address for cross-chain communication.
+    address public immutable ENDPOINT;
 
-    /**
-     * @notice Emitted when a token swap is successfully executed.
-     *
-     * @param srcSender The bytes32 address of the user initiating the swap on the source chain.
-     * @param tokenIn The address of the ERC20 token being swapped from (OFT).
-     * @param tokenOut The address of the ERC20 token being swapped to.
-     * @param amountIn The amount of `tokenIn` being swapped.
-     * @param amountOut The amount of `tokenOut` received from the swap.
-     */
-    event SwapExecuted(
-        bytes32 indexed srcSender,
-        address recipient,
-        address tokenIn,
-        address tokenOut,
-        uint256 amountIn,
-        uint256 amountOut
-    );
-
-    /**
-     * @notice Emitted when a token swap fails and the OFT tokens are refunded to the recipient.
-     *
-     * @param srcSender The bytes32 address of the user initiating the swap on the source chain.
-     * @param recipient The address of the recipient of the OFT tokens.
-     * @param tokenIn The address of the ERC20 token being swapped from (OFT).
-     * @param amountIn The amount of `tokenIn` being refunded.
-     */
-    event SwapFailedAndRefunded(bytes32 indexed srcSender, address tokenIn, address recipient, uint256 amountIn);
+    /// @notice The address of the token being swapped from (OFT).
+    address public immutable TOKEN_IN;
 
     /**
      * @notice Initializes the UniswapV3Composer contract with necessary parameters.
      *
      * @param _swapRouter The address of the Uniswap V3 SwapRouter.
-     * @param _endpoint The LayerZero Endpoint address for cross-chain communication.
      * @param _oft The address of the originating OFT that sends composed messages.
      *
      * Requirements:
      *
      * - `_swapRouter` cannot be the zero address.
-     * - `_endpoint` cannot be the zero address.
      * - `_oft` cannot be the zero address.
      */
-    constructor(address _swapRouter, address _endpoint, address _oft) {
+    constructor(address _swapRouter, address _oft) {
         if (_swapRouter == address(0)) revert InvalidSwapRouter();
-        if (_endpoint == address(0)) revert InvalidEndpoint();
         if (_oft == address(0)) revert InvalidOFT();
 
-        swapRouter = ISwapRouter(_swapRouter);
-        endpoint = _endpoint;
-        oft = _oft;
+        // Get the LayerZero Endpoint address from the OFT.
+        ENDPOINT = address(IOAppCore(_oft).endpoint());
+
+        // Initialize the swap router and OFT addresses.
+        SWAP_ROUTER = ISwapRouter(_swapRouter);
+        OFT = _oft;
+        TOKEN_IN = IOFT(OFT).token();
+
+        // Max approve the SwapRouter to spend TOKEN_IN to save gas on every compose transaction.
+        // This is safe since tokens can only enter this contract from the trusted LayerZero Endpoint
+        // via the trusted OFT, and the SwapRouter can only spend tokens the contract actually holds.
+        IERC20(TOKEN_IN).approve(address(SWAP_ROUTER), type(uint256).max);
     }
 
     /**
@@ -118,8 +95,8 @@ contract UniswapV3Composer is IOAppComposer {
         address /*_executor*/,
         bytes calldata /*_extraData*/
     ) external payable override {
-        if (_oft != oft) revert UnauthorizedOFT();
-        if (msg.sender != endpoint) revert UnauthorizedEndpoint();
+        if (_oft != OFT) revert UnauthorizedOFT();
+        if (msg.sender != ENDPOINT) revert UnauthorizedEndpoint();
 
         (address tokenOut, uint24 fee, address recipient, uint256 amountOutMinimum, uint160 sqrtPriceLimitX96) = abi
             .decode(OFTComposeMsgCodec.composeMsg(_message), (address, uint24, address, uint256, uint160));
@@ -128,31 +105,26 @@ contract UniswapV3Composer is IOAppComposer {
         bytes32 srcSender = OFTComposeMsgCodec.composeFrom(_message);
         // Decode the amountIn from the message amount received.
         uint256 amountIn = OFTComposeMsgCodec.amountLD(_message);
-        // Reference to the ERC20 token used by the OFT.
-        address tokenIn = IOFT(oft).token();
-
-        // Approve the SwapRouter to spend tokenIn.
-        IERC20(tokenIn).approve(address(swapRouter), amountIn);
 
         // Set up Uniswap V3 swap parameters.
         ISwapRouter.ExactInputSingleParams memory params = ISwapRouter.ExactInputSingleParams({
-            tokenIn: tokenIn,
+            tokenIn: TOKEN_IN,
             tokenOut: tokenOut,
             fee: fee,
             recipient: recipient,
-            deadline: block.timestamp + 300, // 5 minutes deadline.
+            deadline: block.timestamp + 300, // 5 minutes deadline for example.
             amountIn: amountIn,
             amountOutMinimum: amountOutMinimum,
             sqrtPriceLimitX96: sqrtPriceLimitX96
         });
 
         // Attempt to execute the swap on Uniswap V3.
-        try swapRouter.exactInputSingle(params) returns (uint256 amountOut) {
-            emit SwapExecuted(srcSender, recipient, tokenIn, tokenOut, amountIn, amountOut);
+        try SWAP_ROUTER.exactInputSingle(params) returns (uint256 amountOut) {
+            emit SwapExecuted(srcSender, recipient, TOKEN_IN, tokenOut, amountIn, amountOut);
         } catch {
             // Refund the OFT tokens to the recipient if the swap fails.
-            IERC20(tokenIn).safeTransfer(recipient, amountIn);
-            emit SwapFailedAndRefunded(srcSender, tokenIn, recipient, amountIn);
+            IERC20(TOKEN_IN).safeTransfer(recipient, amountIn);
+            emit SwapFailedAndRefunded(srcSender, TOKEN_IN, recipient, amountIn);
         }
     }
 }

@@ -5,6 +5,7 @@ pragma solidity ^0.8.20;
 import "forge-std/Test.sol";
 import { UniswapV3Composer } from "../../contracts/UniswapV3Composer.sol";
 import { ISwapRouter } from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
+import { IUniswapV3Composer } from "../../contracts/IUniswapV3Composer.sol";
 
 // Mock imports
 import { OFTMock } from "../mocks/OFTMock.sol";
@@ -100,7 +101,7 @@ contract UniswapV3ComposerTest is TestHelperOz5 {
         bSwapRouter = new SwapRouterMock(address(bTokenIn), address(bTokenOut), swapAmountOut);
 
         // Deploy the UniswapV3Composer contract with initialized SwapRouter and OFT
-        bComposer = new UniswapV3Composer(address(bSwapRouter), address(endpoints[bEid]), address(bOFT));
+        bComposer = new UniswapV3Composer(address(bSwapRouter), address(bOFT));
 
         // Configure and link the deployed OFTs
         address[] memory ofts = new address[](2);
@@ -123,15 +124,18 @@ contract UniswapV3ComposerTest is TestHelperOz5 {
      * @notice Tests the constructor of UniswapV3Composer for correct initialization.
      * @dev Verifies that SwapRouter, endpoint, and OFT addresses are set as expected.
      */
-    function test_constructor() public {
+    function test_constructor() public view {
         // Assert that the SwapRouter address is correctly set in UniswapV3Composer
-        assertEq(address(bComposer.swapRouter()), address(bSwapRouter), "SwapRouter address mismatch");
+        assertEq(address(bComposer.SWAP_ROUTER()), address(bSwapRouter), "SwapRouter address mismatch");
 
         // Assert that the endpoint address is correctly set in UniswapV3Composer
-        assertEq(bComposer.endpoint(), address(endpoints[bEid]), "Endpoint address mismatch");
+        assertEq(bComposer.ENDPOINT(), address(endpoints[bEid]), "Endpoint address mismatch");
 
         // Assert that the OFT address is correctly set in UniswapV3Composer
-        assertEq(bComposer.oft(), address(bOFT), "OFT address mismatch");
+        assertEq(bComposer.OFT(), address(bOFT), "OFT address mismatch");
+
+        // Assert that the TOKEN_IN address is correctly set in UniswapV3Composer
+        assertEq(bComposer.TOKEN_IN(), address(bTokenIn), "TOKEN_IN address mismatch");
     }
 
     // ----------------------------
@@ -319,7 +323,7 @@ contract UniswapV3ComposerTest is TestHelperOz5 {
         vm.prank(address(endpoints[bEid]));
 
         // Expect the transaction to revert with "Unauthorized OFT"
-        vm.expectRevert(UniswapV3Composer.UnauthorizedOFT.selector);
+        vm.expectRevert(IUniswapV3Composer.UnauthorizedOFT.selector);
 
         // Attempt to execute lzCompose with an unauthorized OFT address
         bComposer.lzCompose(
