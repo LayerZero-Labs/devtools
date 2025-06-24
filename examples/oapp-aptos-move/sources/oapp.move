@@ -11,11 +11,8 @@ module oapp::oapp {
     use std::signer::address_of;
     use std::string;
     use std::vector;
-    use aptos_std::from_bcs;
 
-    #[test_only]
-    use std::account;
-    use endpoint_v2_common::bytes32::{Self, Bytes32};
+    use endpoint_v2_common::bytes32::Bytes32;
     use endpoint_v2_common::native_token;
     use endpoint_v2_common::serde::{extract_address, extract_u256};
     use oapp::oapp_core::{combine_options, lz_quote, lz_send, refund_fees};

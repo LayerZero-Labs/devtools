@@ -1,8 +1,6 @@
 module oapp::utils {
     use std::string::{Self, String};
     use std::vector;
-    use aptos_std::from_bcs;
-    use aptos_std::bcs;
 
     const ASCII_ZERO: u8 = 48;
     const ASCII_NINE: u8 = 57;

@@ -1,9 +1,6 @@
 #[test_only]
 module oapp::oapp_tests {
-    use std::string;
-    use std::vector;
-    use aptos_std::from_bcs;
-    use oapp::utils::hex_string_to_bytes;
+
     use oapp::oapp::parse_message;
 
     #[test]
