@@ -1,6 +1,5 @@
 import { ethers } from 'ethers'
 
-import { makeBytes32 } from '@layerzerolabs/devtools'
 import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import 'dotenv/config'
@@ -32,14 +31,11 @@ async function main() {
     const aptosMoveEid = EndpointId.APTOS_V2_TESTNET
 
     // Fill in the addresses and number to send to Aptos/Movement
-    const address1 = ''
-    const address2 = ''
-    const num = ethers.BigNumber.from('')
+    const address1 = '0x' // Aptos 32 byte address
+    const address2 = '0x' // Aptos 32 byte address
+    const num = ethers.BigNumber.from('0')
 
-    const encodedMessage = ethers.utils.solidityPack(
-        ['bytes32', 'bytes32', 'uint256'],
-        [makeBytes32(address1), makeBytes32(address2), num]
-    )
+    const encodedMessage = ethers.utils.solidityPack(['bytes32', 'bytes32', 'uint256'], [address1, address2, num])
 
     const hexString = ethers.utils.hexlify(encodedMessage)
 

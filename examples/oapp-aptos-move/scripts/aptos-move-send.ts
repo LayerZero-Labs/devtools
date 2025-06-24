@@ -62,11 +62,16 @@ async function send() {
     const extraOptions = options.toBytes()
 
     // Prepare the message - ABI encode it to match Solidity contract expectations
-    const message = 'Hello, EVM!'
-    console.log('Sending message:', message)
+    const address1 = '0x' // EVM 20 byte address
+    const address2 = '0x' // EVM 20 byte address
+    const num = ethers.BigNumber.from('0')
+    console.log('Sending message:', address1, address2, num)
 
     // ABI encode the string to match what the Solidity contract expects
-    const abiEncodedMessage = ethers.utils.defaultAbiCoder.encode(['string'], [message])
+    const abiEncodedMessage = ethers.utils.defaultAbiCoder.encode(
+        ['address', 'address', 'uint256'],
+        [address1, address2, num]
+    )
     console.log('ABI encoded message:', abiEncodedMessage)
 
     // Convert to bytes array for Aptos

@@ -7,7 +7,9 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract MyOApp is OApp, OAppOptionsType3 {
     /// @notice Last string received from any remote chain
-    string public lastMessage;
+    address public address1;
+    address public address2;
+    uint256 public num;
 
     /// @notice The only Message Type in use for this OApp: sending an arbitrary string.
     /// Different message types can be assigned different enforced options per destination endpoint ID.
@@ -109,11 +111,9 @@ contract MyOApp is OApp, OAppOptionsType3 {
         // 1. Decode the incoming bytes into a string
         //    You can use abi.decode, abi.decodePacked, or directly splice bytes
         //    if you know the format of your data structures
-        string memory _message = abi.decode(_message, (string));
+        (address1, address2, num) = abi.decode(_message, (address, address, uint256));
 
         // 2. Apply your custom logic. In this example, store it in `lastMessage`.
-        lastMessage = _message;
-
         // 3. (Optional) Trigger further on-chain actions.
         //    e.g., emit an event, mint tokens, call another contract, etc.
         //    emit MessageReceived(_origin.srcEid, _message);
