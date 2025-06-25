@@ -9,7 +9,7 @@ contract MintSelfBurnToken is ERC20, AccessControl, IMintSelfBurnToken {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
 
-    constructor(string memory name, string memory symbol, address admin) ERC20(name, symbol) {
+    constructor(string memory _name, string memory _symbol, address _admin) ERC20(_name, _symbol) {
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
     }
 
