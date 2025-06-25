@@ -126,7 +126,7 @@ contract OFTTest is TestHelperOz5 {
         return address(new TransparentUpgradeableProxy(addr, proxyAdmin, _initializeArgs));
     }
 
-    function test_constructor() public {
+    function test_constructor() public virtual {
         assertEq(aOFT.owner(), address(this));
         assertEq(bOFT.owner(), address(this));
         assertEq(cOFTAdapter.owner(), address(this));
@@ -600,7 +600,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(amountToCreditLD, amountToSendLD);
     }
 
-    function test_native_oft_adapter_credit() public {
+    function test_native_oft_adapter_credit() public virtual {
         uint256 amountToCreditLD = 1 ether;
         uint32 srcEid = dEid;
 
@@ -657,7 +657,7 @@ contract OFTTest is TestHelperOz5 {
         dNativeOFTAdapter.send{ value: extraMsgValue }(sendParam, fee, userD);
     }
 
-    function test_native_oft_adapter_send_compose_msg() public {
+    function test_native_oft_adapter_send_compose_msg() public virtual {
         uint256 amountToSend = 1 ether;
 
         OFTComposerMock composer = new OFTComposerMock();

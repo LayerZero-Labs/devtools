@@ -356,4 +356,44 @@ contract OFTFeeTest is OFTTest {
             assertEq(cERC20Mock.balanceOf(address(cOFTAdapter)), amountDebitedLD - expectedFee);
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // @dev Override native adapter tests to skip them in OFTFeeTest (fee tests don't need native adapter functionality)
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    function test_constructor() public virtual override {
+        assertEq(aOFT.owner(), address(this));
+        assertEq(bOFT.owner(), address(this));
+        assertEq(cOFTAdapter.owner(), address(this));
+
+        assertEq(aOFT.balanceOf(userA), initialBalance);
+        assertEq(bOFT.balanceOf(userB), initialBalance);
+        assertEq(IERC20(cOFTAdapter.token()).balanceOf(userC), initialBalance);
+
+        assertEq(aOFT.token(), address(aOFT));
+        assertEq(bOFT.token(), address(bOFT));
+        assertEq(cOFTAdapter.token(), address(cERC20Mock));
+
+        // Skip native adapter assertions in fee test suite
+    }
+
+    function test_native_oft_adapter_debit() public virtual override {
+        // Skip native adapter tests in fee test suite
+        vm.skip(true);
+    }
+
+    function test_native_oft_adapter_credit() public virtual override {
+        // Skip native adapter tests in fee test suite
+        vm.skip(true);
+    }
+
+    function test_native_oft_adapter_send() public virtual override {
+        // Skip native adapter tests in fee test suite
+        vm.skip(true);
+    }
+
+    function test_native_oft_adapter_send_compose_msg() public virtual override {
+        // Skip native adapter tests in fee test suite
+        vm.skip(true);
+    }
 }
