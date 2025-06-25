@@ -19,7 +19,7 @@ contract MintSelfBurnOFTAdapter is OFTAdapter {
         uint256 _minAmountLD,
         uint32 _dstEid
     ) internal override returns (uint256 amountSentLD, uint256 amountReceivedLD) {
-        (amountSentLD, amountReceivedLD) = super._debitView(_amountLD, _minAmountLD, _dstEid);
+        (amountSentLD, amountReceivedLD) = _debitView(_amountLD, _minAmountLD, _dstEid);
 
         IERC20(address(innerToken)).transferFrom(_from, address(this), amountSentLD);
 
