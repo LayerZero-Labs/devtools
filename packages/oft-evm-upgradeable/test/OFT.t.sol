@@ -6,6 +6,8 @@ import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/Opti
 import { OFTUpgradeableMock } from "./mocks/OFTUpgradeableMock.sol";
 import { MessagingFee, MessagingReceipt } from "../contracts/oft/OFTCoreUpgradeable.sol";
 import { OFTAdapterUpgradeableMock } from "./mocks/OFTAdapterUpgradeableMock.sol";
+import { NativeOFTAdapterUpgradeableMock } from "./mocks/NativeOFTAdapterUpgradeableMock.sol";
+import { NativeOFTAdapterUpgradeable } from "../contracts/oft/NativeOFTAdapterUpgradeable.sol";
 import { ERC20Mock } from "./mocks/ERC20Mock.sol";
 import { OFTComposerMock } from "./mocks/OFTComposerMock.sol";
 import { OFTInspectorMock, IOAppMsgInspector } from "./mocks/OFTInspectorMock.sol";
@@ -20,36 +22,43 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Met
 import "forge-std/console.sol";
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 import { TransparentUpgradeableProxy } from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
+import { NativeOFTAdapterUpgradeableMockCodec } from "./lib/NativeOFTAdapterUpgradeableMockCodec.sol";
 
 
 contract OFTTest is TestHelperOz5 {
     using OptionsBuilder for bytes;
+    using NativeOFTAdapterUpgradeableMockCodec for NativeOFTAdapterUpgradeable;
 
     uint32 aEid = 1;
     uint32 bEid = 2;
     uint32 cEid = 3;
+    uint32 dEid = 4;
 
     OFTUpgradeableMock aOFT;
     OFTUpgradeableMock bOFT;
     OFTAdapterUpgradeableMock cOFTAdapter;
+    NativeOFTAdapterUpgradeableMock dNativeOFTAdapter;
     ERC20Mock cERC20Mock;
 
     OFTInspectorMock oAppInspector;
 
-    address public userA = address(0x1);
-    address public userB = address(0x2);
-    address public userC = address(0x3);
+    address public userA = makeAddr("userA");
+    address public userB = makeAddr("userB");
+    address public userC = makeAddr("userC");
+    address public userD = makeAddr("userD");
     uint256 public initialBalance = 100 ether;
+    uint256 public initialNativeBalance = 1000 ether;
 
     address public proxyAdmin = makeAddr("proxyAdmin");
 
     function setUp() public virtual override {
-        vm.deal(userA, 1000 ether);
-        vm.deal(userB, 1000 ether);
-        vm.deal(userC, 1000 ether);
+        vm.deal(userA, initialNativeBalance);
+        vm.deal(userB, initialNativeBalance);
+        vm.deal(userC, initialNativeBalance);
+        vm.deal(userD, initialNativeBalance);
 
         super.setUp();
-        setUpEndpoints(3, LibraryType.UltraLightNode);
+        setUpEndpoints(4, LibraryType.UltraLightNode);
 
         aOFT = OFTUpgradeableMock(
             _deployContractAndProxy(
@@ -76,11 +85,20 @@ contract OFTTest is TestHelperOz5 {
             )
         );
 
+        dNativeOFTAdapter = NativeOFTAdapterUpgradeableMock(
+            _deployContractAndProxy(
+                type(NativeOFTAdapterUpgradeableMock).creationCode,
+                abi.encode(18, address(endpoints[dEid])),
+                abi.encodeWithSelector(NativeOFTAdapterUpgradeableMock.initialize.selector, address(this))
+            )
+        );
+
         // config and wire the ofts
-        address[] memory ofts = new address[](3);
+        address[] memory ofts = new address[](4);
         ofts[0] = address(aOFT);
         ofts[1] = address(bOFT);
         ofts[2] = address(cOFTAdapter);
+        ofts[3] = address(dNativeOFTAdapter);
         this.wireOApps(ofts);
 
         // mint tokens
@@ -108,10 +126,11 @@ contract OFTTest is TestHelperOz5 {
         return address(new TransparentUpgradeableProxy(addr, proxyAdmin, _initializeArgs));
     }
 
-    function test_constructor() public view {
+    function test_constructor() public {
         assertEq(aOFT.owner(), address(this));
         assertEq(bOFT.owner(), address(this));
         assertEq(cOFTAdapter.owner(), address(this));
+        assertEq(dNativeOFTAdapter.owner(), address(this));
 
         assertEq(aOFT.balanceOf(userA), initialBalance);
         assertEq(bOFT.balanceOf(userB), initialBalance);
@@ -120,9 +139,12 @@ contract OFTTest is TestHelperOz5 {
         assertEq(aOFT.token(), address(aOFT));
         assertEq(bOFT.token(), address(bOFT));
         assertEq(cOFTAdapter.token(), address(cERC20Mock));
+        assertEq(dNativeOFTAdapter.token(), address(0));
+
+        assertEq(dNativeOFTAdapter.approvalRequired(), false);
     }
 
-    function test_oftVersion() public view {
+    function test_oftVersion() public {
         (bytes4 interfaceId, ) = aOFT.oftVersion();
         bytes4 expectedId = 0x02e49c2c;
         assertEq(interfaceId, expectedId);
@@ -209,7 +231,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(composer.extraData(), composerMsg_); // default to setting the extraData to the message as well to test
     }
 
-    function test_oft_compose_codec() public view {
+    function test_oft_compose_codec() public {
         uint64 nonce = 1;
         uint32 srcEid = 2;
         uint256 amountCreditLD = 3;
@@ -268,12 +290,12 @@ contract OFTTest is TestHelperOz5 {
         aOFT.debit(amountToSendLD, minAmountToCreditLD, dstEid);
     }
 
-    function test_toLD() public view {
+    function test_toLD() public {
         uint64 amountSD = 1000;
         assertEq(amountSD * aOFT.decimalConversionRate(), aOFT.toLD(uint64(amountSD)));
     }
 
-    function test_toSD() public view {
+    function test_toSD() public {
         uint256 amountLD = 1000000;
         assertEq(amountLD / aOFT.decimalConversionRate(), aOFT.toSD(amountLD));
     }
@@ -366,7 +388,7 @@ contract OFTTest is TestHelperOz5 {
         composeMsg = OFTMsgCodec.composeMsg(message);
     }
 
-    function test_oft_build_msg() public view {
+    function test_oft_build_msg() public {
         uint32 dstEid = bEid;
         bytes32 to = addressToBytes32(userA);
         uint256 amountToSendLD = 1.23456789 ether;
@@ -399,7 +421,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(composeMsg_, expectedComposeMsg);
     }
 
-    function test_oft_build_msg_no_compose_msg() public view {
+    function test_oft_build_msg_no_compose_msg() public {
         uint32 dstEid = bEid;
         bytes32 to = addressToBytes32(userA);
         uint256 amountToSendLD = 1.23456789 ether;
@@ -505,7 +527,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(combinedOptions, expectedOptions);
     }
 
-    function test_combine_options_no_enforced_options() public view {
+    function test_combine_options_no_enforced_options() public {
         uint32 eid = 1;
         uint16 msgType = 1;
 
@@ -554,5 +576,143 @@ contract OFTTest is TestHelperOz5 {
         // does revert because inspector is set
         vm.expectRevert(abi.encodeWithSelector(IOAppMsgInspector.InspectionFailed.selector, message, extraOptions));
         (message, ) = aOFT.buildMsgAndOptions(sendParam, amountToCreditLD);
+    }
+
+    function test_native_oft_adapter_debit() public virtual {
+        uint256 amountToSendLD = 1 ether;
+        uint256 minAmountToCreditLD = 1 ether;
+        uint32 dstEid = dEid;
+
+        vm.prank(userD);
+        vm.expectRevert(
+            abi.encodeWithSelector(IOFT.SlippageExceeded.selector, amountToSendLD, minAmountToCreditLD + 1)
+        );
+        dNativeOFTAdapter.debitView(amountToSendLD, minAmountToCreditLD + 1, dstEid);
+
+        vm.prank(userD);
+        (uint256 amountDebitedLD, uint256 amountToCreditLD) = dNativeOFTAdapter.debit(
+            amountToSendLD,
+            minAmountToCreditLD,
+            dstEid
+        );
+
+        assertEq(amountDebitedLD, amountToSendLD);
+        assertEq(amountToCreditLD, amountToSendLD);
+    }
+
+    function test_native_oft_adapter_credit() public {
+        uint256 amountToCreditLD = 1 ether;
+        uint32 srcEid = dEid;
+
+        // simulate userD already having deposited native to the adapter
+        vm.deal(address(dNativeOFTAdapter), amountToCreditLD);
+
+        uint256 amountReceived = dNativeOFTAdapter.credit(userB, amountToCreditLD, srcEid);
+
+        assertEq(userB.balance, initialNativeBalance + amountReceived);
+        assertEq(address(dNativeOFTAdapter).balance, 0);
+    }
+
+    function test_native_oft_adapter_send() public virtual {
+        assertEq(userD.balance, initialNativeBalance);
+        assertEq(address(dNativeOFTAdapter).balance, 0);
+
+        uint256 amountToSendLD = 1 ether;
+        uint32 dstEid = bEid;
+
+        SendParam memory sendParam = SendParam(
+            dstEid,
+            addressToBytes32(userB),
+            amountToSendLD,
+            amountToSendLD,
+            OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0),
+            "",
+            ""
+        );
+
+        MessagingFee memory fee = dNativeOFTAdapter.quoteSend(sendParam, false);
+        uint256 correctMsgValue = fee.nativeFee + sendParam.amountLD;
+
+        // expect sending wrapped native to fail if the amount to be sent is not provided in msg.value
+        vm.prank(userD);
+        vm.expectRevert(
+            abi.encodeWithSelector(NativeOFTAdapterUpgradeable.IncorrectMessageValue.selector, fee.nativeFee, correctMsgValue)
+        );
+        dNativeOFTAdapter.send{ value: fee.nativeFee }(sendParam, fee, userD);
+
+        // expect sending wrapped native to succeed if the amount to be sent and the fee are both included in msg.value
+        vm.prank(userD);
+        dNativeOFTAdapter.send{ value: correctMsgValue }(sendParam, fee, userD);
+
+        assertEq(userD.balance, initialNativeBalance - correctMsgValue);
+        assertEq(address(dNativeOFTAdapter).balance, amountToSendLD);
+
+        // expect sending wrapped native to fail if extra msg.value is provided
+        // i.e msg.value > amount to be sent (with dust removed) + fee
+        uint256 extraMsgValue = correctMsgValue + 1;
+        vm.prank(userD);
+        vm.expectRevert(
+            abi.encodeWithSelector(NativeOFTAdapterUpgradeable.IncorrectMessageValue.selector, extraMsgValue, correctMsgValue)
+        );
+        dNativeOFTAdapter.send{ value: extraMsgValue }(sendParam, fee, userD);
+    }
+
+    function test_native_oft_adapter_send_compose_msg() public {
+        uint256 amountToSend = 1 ether;
+
+        OFTComposerMock composer = new OFTComposerMock();
+
+        bytes memory options = OptionsBuilder
+            .newOptions()
+            .addExecutorLzReceiveOption(200000, 0)
+            .addExecutorLzComposeOption(0, 500000, 0);
+        bytes memory composeMsg = hex"1234";
+        SendParam memory sendParam = SendParam(
+            bEid,
+            addressToBytes32(address(composer)),
+            amountToSend,
+            amountToSend,
+            options,
+            composeMsg,
+            ""
+        );
+        MessagingFee memory fee = dNativeOFTAdapter.quoteSend(sendParam, false);
+
+        assertEq(userD.balance, initialNativeBalance);
+        assertEq(address(dNativeOFTAdapter).balance, 0);
+        assertEq(bOFT.balanceOf(address(composer)), 0);
+
+        uint256 msgValue = fee.nativeFee + dNativeOFTAdapter.removeDust(amountToSend);
+
+        vm.prank(userD);
+        (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) = dNativeOFTAdapter.send{ value: msgValue }(
+            sendParam,
+            fee,
+            payable(address(this))
+        );
+        verifyPackets(bEid, addressToBytes32(address(bOFT)));
+
+        // lzCompose params
+        address from_ = address(bOFT);
+        bytes memory options_ = options;
+        bytes32 guid_ = msgReceipt.guid;
+        address to_ = address(composer);
+        bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
+            msgReceipt.nonce,
+            dEid,
+            oftReceipt.amountReceivedLD,
+            abi.encodePacked(addressToBytes32(userD), composeMsg)
+        );
+        this.lzCompose(bEid, from_, options_, guid_, to_, composerMsg_);
+
+        assertEq(userD.balance, initialNativeBalance - msgValue);
+        assertEq(address(dNativeOFTAdapter).balance, amountToSend);
+        assertEq(bOFT.balanceOf(address(composer)), amountToSend);
+
+        assertEq(composer.from(), from_);
+        assertEq(composer.guid(), guid_);
+        assertEq(composer.message(), composerMsg_);
+        assertEq(composer.executor(), address(this));
+        assertEq(composer.extraData(), composerMsg_); // default to setting the extraData to the message as well to test
     }
 }
