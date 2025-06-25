@@ -2,9 +2,11 @@
 pragma solidity ^0.8.22;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { OFTAdapter } from "./OFTAdapter.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 import { IMintSelfBurnToken } from "./interfaces/IMintSelfBurnToken.sol";
+
+import { OFTAdapter } from "./OFTAdapter.sol";
 
 contract MintSelfBurnOFTAdapter is OFTAdapter {
     constructor(
