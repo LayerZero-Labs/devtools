@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.20;
 
@@ -16,12 +16,10 @@ abstract contract MintBurnNativeOFTAdapterUpgradeable is OFTCoreUpgradeable {
     /**
      * @param _localDecimals The decimals of the native on the local chain (this chain). 18 on ETH.
      * @param _lzEndpoint The LayerZero endpoint address.
-     * @param _delegate The delegate capable of making OApp configurations inside of the endpoint.
      */
     constructor(
         uint8 _localDecimals,
         address _lzEndpoint,
-        address _delegate
     ) OFTCoreUpgradeable(_localDecimals, _lzEndpoint) {}
 
     function __MintBurnNativeOFTAdapter_init(address _delegate) internal onlyInitializing {
