@@ -53,3 +53,8 @@ export const logLevelOption = new Option('--log-level <level>', 'Log level')
     .default(LogLevel.info)
 
 export const branchOption = new Option('--branch <branch>', 'Branch to pull examples from (defaults to main)')
+
+export const baseRepositoryOption = new Option(
+    '--base-repository <repository>',
+    'Base repository to pull examples from'
+)

@@ -33,13 +33,14 @@ const extractBranchFromUrl = (url: string): string => {
     return url
 }
 
-export const getExamples = async (branch?: string, logLevel = 'info'): Promise<Example[]> => {
+export const getExamples = async (branch?: string, baseRepository?: string, logLevel = 'info'): Promise<Example[]> => {
     const logger = createModuleLogger('create-lz-oapp', logLevel)
     /**
      * To enable example development in a custom repository
      * we open the repository URL field to be taken from the environment
      */
-    const repository = 'https://github.com/LayerZero-Labs/devtools.git'
+    const repository = baseRepository || 'LayerZero-Labs/devtools'
+    logger.verbose(`Using base repository: ${repository}`)
 
     /**
      * To enable example development in a custom branch,

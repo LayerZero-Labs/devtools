@@ -18,6 +18,7 @@ import {
   destinationOption,
   logLevelOption,
   branchOption,
+  baseRepositoryOption,
 } from "./options";
 import type { Config, Example, PackageManager } from "./types";
 import { DefaultErrorMessage } from "./components/error";
@@ -30,6 +31,7 @@ interface Args {
   logLevel?: LogLevel;
   packageManager: PackageManager;
   branch?: string;
+  baseRepository?: string;
 }
 
 const createCommand = async () => {
@@ -44,6 +46,7 @@ const createCommand = async () => {
     .addOption(logLevelOption)
     .addOption(createPackageManagerOption())
     .addOption(branchOption)
+    .addOption(baseRepositoryOption)
     .addOption(logLevelOption)
     .action(async (args: Args) => {
       printLogo();

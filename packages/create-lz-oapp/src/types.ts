@@ -5,6 +5,7 @@ export interface Config {
     example: Example
     packageManager: PackageManager
     branch?: string
+    baseRepository?: string
     logLevel?: LogLevel
 }
 

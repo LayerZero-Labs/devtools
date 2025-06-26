@@ -5,7 +5,7 @@ import { resolve } from 'path'
 import type { Config } from '@/types'
 
 export const promptForConfig = async (config: Partial<Config> = {}): Promise<Config> => {
-    const examples = await getExamples(config.branch, config.logLevel)
+    const examples = await getExamples(config.branch, config.baseRepository, config.logLevel)
     const packageManagers = getAvailablePackageManagers()
 
     return prompts([
