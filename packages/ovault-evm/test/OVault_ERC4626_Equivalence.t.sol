@@ -15,7 +15,7 @@ import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contract
 import { console } from "forge-std/console.sol";
 
 /// @dev Equivalent to Solmate's ERC4626 tests - https://github.com/transmissions11/solmate/blob/main/src/test/ERC4626.t.sol
-contract OVaultTest is TestHelperOz5 {
+contract OVaultERC4626EquivalenceTest is TestHelperOz5 {
     using Math for uint256;
 
     MockOFT assetOFT;

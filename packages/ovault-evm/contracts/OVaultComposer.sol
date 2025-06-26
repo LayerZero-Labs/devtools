@@ -24,22 +24,24 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
 
     mapping(bytes32 guid => FailedMessage) public failedMessages;
 
-    constructor(address _ovault, address _asset, address _share) {
+    constructor(address _ovault, address _assetOFT, address _shareOFT) {
         OVAULT = IERC4626(_ovault);
-        ASSET_OFT = _asset;
-        SHARE_OFT = _share;
+        ASSET_OFT = _assetOFT;
+        SHARE_OFT = _shareOFT;
 
-        if (!IOFT(_share).approvalRequired()) {
-            revert ShareOFTShouldBeLockboxAdapter(address(_share));
+        if (!IOFT(_shareOFT).approvalRequired()) {
+            revert ShareOFTShouldBeLockboxAdapter(address(_shareOFT));
         }
 
         ENDPOINT = address(IOAppCore(ASSET_OFT).endpoint());
         HUB_EID = ILayerZeroEndpointV2(ENDPOINT).eid();
 
-        // Approve the adapter to spend the share tokens held by this contract
-        IERC20(IOFT(_share).token()).approve(address(_ovault), type(uint256).max);
-        IERC20(IOFT(_share).token()).approve(_share, type(uint256).max);
-        IERC20(IOFT(_asset).token()).approve(address(_ovault), type(uint256).max);
+        // Approve the ovault to spend the share and asset tokens held by this contract
+        IERC20(IOFT(_shareOFT).token()).approve(address(_ovault), type(uint256).max);
+        IERC20(IOFT(_assetOFT).token()).approve(address(_ovault), type(uint256).max);
+
+        // Approve the shareOFTAdapter with the share tokens held by this contract
+        IERC20(IOFT(_shareOFT).token()).approve(_shareOFT, type(uint256).max);
     }
 
     function lzCompose(
@@ -70,6 +72,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         try this.decodeSendParam(sendParamEncoded) returns (SendParam memory sendParamDecoded) {
             /// @dev In the case of a valid decode we have the raw SendParam to be forwarded to the target OFT (oft)
             sendParam = sendParamDecoded;
+            /// @dev Setting target amount to 0 since the actual value will be determined by executeOVaultAction() (i.e. deposit or redeem)
             sendParam.amountLD = 0;
         } catch {
             /// @dev In the case of a failed decode we store the failed message and emit an event.
@@ -87,11 +90,14 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         }
 
         /// @dev Try to execute the action on the target OFT. If we hit an issue then it rolls back the storage changes.
-        try this.executeOVaultAction(_refundOFT, amount, sendParam) returns (uint256 vaultAmount) {
+        try this.executeOVaultActionWithSlippageCheck(_refundOFT, amount, sendParam.minAmountLD) returns (
+            uint256 vaultAmount
+        ) {
+            /// @dev Setting the target amount to the actual value of the action (i.e. deposit or redeem)
             sendParam.amountLD = vaultAmount;
         } catch (bytes memory errMsg) {
             failedMessages[_guid] = FailedMessage(oft, sendParam, _refundOFT, refundSendParam);
-            emit GenericError(_guid, oft, errMsg);
+            emit OVaultError(_guid, oft, errMsg); /// @dev Since the ovault can revert with custom errors, the error message is valuable
             return;
         }
 
@@ -102,7 +108,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             /// @dev A failed send can happen due to not enough msg.value
             /// @dev Since we have the target tokens in the composer, we can retry with more gas.
             failedMessages[_guid] = FailedMessage(oft, sendParam, address(0), refundSendParam);
-            emit SendFailed(_guid, oft);
+            emit SendFailed(_guid, oft); /// @dev This can be due to msg.value or layerzero config (dvn config, etc)
             return;
         }
     }
@@ -113,22 +119,26 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     }
 
     /// @dev External call for try...catch logic in lzCompose()
-    function executeOVaultAction(
+    function executeOVaultActionWithSlippageCheck(
         address _oft,
         uint256 _amount,
-        SendParam calldata _sendParam
+        uint256 _minAmountLD
     ) external nonReentrant returns (uint256 vaultAmount) {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
+
         vaultAmount = _executeOVaultAction(_oft, _amount);
-        if (vaultAmount < _sendParam.minAmountLD) {
+
+        if (vaultAmount < _minAmountLD) {
             /// @dev Will rollback on this function's storage changes (trade does not happen)
-            revert NotEnoughTargetTokens(vaultAmount, _sendParam.minAmountLD);
+            revert NotEnoughTargetTokens(vaultAmount, _minAmountLD);
         }
     }
 
     /// @dev External call for try...catch logic in lzCompose()
     function send(address _oft, SendParam calldata _sendParam) external payable nonReentrant {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
+
+        /// @dev If the destination is the HUB chain, we just transfer the tokens to the receiver
         if (_sendParam.dstEid == HUB_EID) {
             address _receiver = _sendParam.to.bytes32ToAddress();
             uint256 _amountLD = _sendParam.amountLD;
@@ -141,6 +151,8 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             emit SentOnHub(_receiver, _oft, _amountLD);
             return;
         }
+
+        /// @dev If the destination is not the HUB chain, we send the message to the target OFT
         _send(_oft, _sendParam);
     }
 
@@ -159,7 +171,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     }
 
     /// @dev Permissionless function to retry the message with more gas
-    /// @dev Probabilistically possible if the OFT.send() fails - ex: invalid peer
+    /// @dev Failure case when there is a LayerZero config issue - ex: dvn config
     function retry(bytes32 _guid, bytes calldata _extraOptions) external payable nonReentrant {
         FailedMessage memory failedMessage = failedMessages[_guid];
         if (failedGuidState(_guid) != FailedState.CanOnlyRetry) revert CanNotRetry(_guid);
@@ -174,6 +186,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     }
 
     /// @dev Retry mechanism for transactions that failed due to slippage. This can revert.
+    /// @dev Failure case when there is a LayerZero config issue - ex: dvn config
     function retryWithSwap(bytes32 _guid, bytes calldata _extraOptions) external payable {
         FailedMessage memory failedMessage = failedMessages[_guid];
         if (failedGuidState(_guid) != FailedState.CanRetryWithSwap) revert CanNotRetry(_guid);

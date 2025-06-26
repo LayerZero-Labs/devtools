@@ -231,7 +231,7 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
             TOKENS_TO_SEND,
             TOKENS_TO_SEND + 1
         );
-        emit IOVaultComposer.GenericError(guid, address(shareOFT_arb), errMsg);
+        emit IOVaultComposer.OVaultError(guid, address(shareOFT_arb), errMsg);
 
         assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
         assertEq(oVault_arb.totalSupply(), 0);
@@ -351,7 +351,7 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
             TOKENS_TO_SEND,
             targetAmount
         );
-        emit IOVaultComposer.GenericError(guid, address(shareOFT_arb), errMsg);
+        emit IOVaultComposer.OVaultError(guid, address(shareOFT_arb), errMsg);
 
         vm.prank(arbEndpoint);
         OVaultComposerArb.lzCompose{ value: 1 ether }(address(assetOFT_arb), guid, composeMsg, arbExecutor, "");
