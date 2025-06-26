@@ -72,6 +72,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         try this.decodeSendParam(sendParamEncoded) returns (SendParam memory sendParamDecoded) {
             /// @dev In the case of a valid decode we have the raw SendParam to be forwarded to the target OFT (oft)
             sendParam = sendParamDecoded;
+            /// @dev Setting target amount to 0 since the actual value will be determined by executeOVaultAction() (i.e. deposit or redeem)
             sendParam.amountLD = 0;
         } catch {
             /// @dev In the case of a failed decode we store the failed message and emit an event.
@@ -90,6 +91,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
 
         /// @dev Try to execute the action on the target OFT. If we hit an issue then it rolls back the storage changes.
         try this.executeOVaultAction(_refundOFT, amount, sendParam) returns (uint256 vaultAmount) {
+            /// @dev Setting the target amount to the actual value of the action (i.e. deposit or redeem)
             sendParam.amountLD = vaultAmount;
         } catch (bytes memory errMsg) {
             failedMessages[_guid] = FailedMessage(oft, sendParam, _refundOFT, refundSendParam);
