@@ -24,22 +24,24 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
 
     mapping(bytes32 guid => FailedMessage) public failedMessages;
 
-    constructor(address _ovault, address _asset, address _share) {
+    constructor(address _ovault, address _assetOFT, address _shareOFT) {
         OVAULT = IERC4626(_ovault);
-        ASSET_OFT = _asset;
-        SHARE_OFT = _share;
+        ASSET_OFT = _assetOFT;
+        SHARE_OFT = _shareOFT;
 
-        if (!IOFT(_share).approvalRequired()) {
-            revert ShareOFTShouldBeLockboxAdapter(address(_share));
+        if (!IOFT(_shareOFT).approvalRequired()) {
+            revert ShareOFTShouldBeLockboxAdapter(address(_shareOFT));
         }
 
         ENDPOINT = address(IOAppCore(ASSET_OFT).endpoint());
         HUB_EID = ILayerZeroEndpointV2(ENDPOINT).eid();
 
-        // Approve the adapter to spend the share tokens held by this contract
-        IERC20(IOFT(_share).token()).approve(address(_ovault), type(uint256).max);
-        IERC20(IOFT(_share).token()).approve(_share, type(uint256).max);
-        IERC20(IOFT(_asset).token()).approve(address(_ovault), type(uint256).max);
+        // Approve the ovault to spend the share and asset tokens held by this contract
+        IERC20(IOFT(_shareOFT).token()).approve(address(_ovault), type(uint256).max);
+        IERC20(IOFT(_assetOFT).token()).approve(address(_ovault), type(uint256).max);
+
+        // Approve the shareOFTAdapter with the share tokens held by this contract
+        IERC20(IOFT(_shareOFT).token()).approve(_shareOFT, type(uint256).max);
     }
 
     function lzCompose(
