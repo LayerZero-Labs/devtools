@@ -90,7 +90,9 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         }
 
         /// @dev Try to execute the action on the target OFT. If we hit an issue then it rolls back the storage changes.
-        try this.executeOVaultAction(_refundOFT, amount, sendParam) returns (uint256 vaultAmount) {
+        try this.executeOVaultActionWithSlippageCheck(_refundOFT, amount, sendParam.minAmountLD) returns (
+            uint256 vaultAmount
+        ) {
             /// @dev Setting the target amount to the actual value of the action (i.e. deposit or redeem)
             sendParam.amountLD = vaultAmount;
         } catch (bytes memory errMsg) {
@@ -117,16 +119,18 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     }
 
     /// @dev External call for try...catch logic in lzCompose()
-    function executeOVaultAction(
+    function executeOVaultActionWithSlippageCheck(
         address _oft,
         uint256 _amount,
-        SendParam calldata _sendParam
+        uint256 _minAmountLD
     ) external nonReentrant returns (uint256 vaultAmount) {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
+
         vaultAmount = _executeOVaultAction(_oft, _amount);
-        if (vaultAmount < _sendParam.minAmountLD) {
+
+        if (vaultAmount < _minAmountLD) {
             /// @dev Will rollback on this function's storage changes (trade does not happen)
-            revert NotEnoughTargetTokens(vaultAmount, _sendParam.minAmountLD);
+            revert NotEnoughTargetTokens(vaultAmount, _minAmountLD);
         }
     }
 

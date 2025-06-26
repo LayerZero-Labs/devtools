@@ -48,10 +48,10 @@ interface IOVaultComposer is IOAppComposer {
     function ENDPOINT() external view returns (address);
 
     /// ========================== FUNCTIONS =====================================
-    function executeOVaultAction(
+    function executeOVaultActionWithSlippageCheck(
         address _oft,
         uint256 _amount,
-        SendParam calldata _sendParam
+        uint256 _minAmountLD
     ) external returns (uint256 vaultAmount);
 
     function refund(bytes32 guid, bytes memory extraOptions) external payable;
