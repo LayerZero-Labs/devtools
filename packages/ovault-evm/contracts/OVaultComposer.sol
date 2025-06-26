@@ -95,7 +95,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             sendParam.amountLD = vaultAmount;
         } catch (bytes memory errMsg) {
             failedMessages[_guid] = FailedMessage(oft, sendParam, _refundOFT, refundSendParam);
-            emit GenericError(_guid, oft, errMsg);
+            emit OVaultError(_guid, oft, errMsg); /// @dev Since the ovault can revert with custom errors, the error message is valuable
             return;
         }
 
@@ -106,7 +106,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             /// @dev A failed send can happen due to not enough msg.value
             /// @dev Since we have the target tokens in the composer, we can retry with more gas.
             failedMessages[_guid] = FailedMessage(oft, sendParam, address(0), refundSendParam);
-            emit SendFailed(_guid, oft);
+            emit SendFailed(_guid, oft); /// @dev This can be due to msg.value or layerzero config (dvn config, etc)
             return;
         }
     }
@@ -133,6 +133,8 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     /// @dev External call for try...catch logic in lzCompose()
     function send(address _oft, SendParam calldata _sendParam) external payable nonReentrant {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
+
+        /// @dev If the destination is the HUB chain, we just transfer the tokens to the receiver
         if (_sendParam.dstEid == HUB_EID) {
             address _receiver = _sendParam.to.bytes32ToAddress();
             uint256 _amountLD = _sendParam.amountLD;
@@ -145,6 +147,8 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             emit SentOnHub(_receiver, _oft, _amountLD);
             return;
         }
+
+        /// @dev If the destination is not the HUB chain, we send the message to the target OFT
         _send(_oft, _sendParam);
     }
 
