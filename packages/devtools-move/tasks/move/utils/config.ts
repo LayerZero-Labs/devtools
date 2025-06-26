@@ -321,7 +321,7 @@ export async function getAptosCLICommand(chain: string, stage: string): Promise<
         console.log('Aptos chain detected')
         const MIN_VERSION = '6.0.1'
 
-        if (greaterThanOrEqualTo(version, MIN_VERSION)) {
+        if (isVersionGreaterOrEqualTo(version, MIN_VERSION)) {
             console.log(`🚀 Aptos CLI version ${version} is compatible.`)
         } else {
             throw new Error(`❌ Aptos CLI version too old. Required: ${MIN_VERSION} or newer, Found: ${version}`)
@@ -329,7 +329,7 @@ export async function getAptosCLICommand(chain: string, stage: string): Promise<
     } else if (chain === 'movement') {
         const MAX_VERSION = '3.5.0'
 
-        if (lessThanOrEqualTo(version, MAX_VERSION)) {
+        if (isVersionLessThanOrEqualTo(version, MAX_VERSION)) {
             console.log(`🚀 Aptos CLI version ${version} is compatible.`)
         } else {
             throw new Error(`❌ Aptos CLI version too new. Required: ${MAX_VERSION} or older, Found: ${version}`)
@@ -351,28 +351,34 @@ export async function checkInitiaCLIVersion(): Promise<void> {
     }
 }
 
-function greaterThanOrEqualTo(installed: string, required: string): boolean {
+export function isVersionGreaterOrEqualTo(installed: string, required: string): boolean {
     const installedParts = installed.split('.').map(Number)
     const requiredParts = required.split('.').map(Number)
 
     for (let i = 0; i < 3; i++) {
-        if (installedParts[i] < requiredParts[i]) {
+        if (installedParts[i] > requiredParts[i]) {
+            return true
+        } else if (installedParts[i] < requiredParts[i]) {
             return false
         }
     }
-    // all parts are greater than or equal to the required version
+
+    // all parts are equal to the required version
     return true
 }
 
-function lessThanOrEqualTo(installed: string, required: string): boolean {
+export function isVersionLessThanOrEqualTo(installed: string, required: string): boolean {
     const installedParts = installed.split('.').map(Number)
     const requiredParts = required.split('.').map(Number)
 
     for (let i = 0; i < 3; i++) {
         if (installedParts[i] > requiredParts[i]) {
             return false
+        } else if (installedParts[i] < requiredParts[i]) {
+            return true
         }
     }
-    // all parts are less than or equal to the required version
+
+    // all parts are equal to the required version
     return true
 }

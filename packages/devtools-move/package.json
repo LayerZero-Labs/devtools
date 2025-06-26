@@ -30,7 +30,8 @@
     "clean": "rm -rf dist",
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
-    "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
+    "test": "jest"
   },
   "dependencies": {
     "@types/chai": "^4.3.11",
