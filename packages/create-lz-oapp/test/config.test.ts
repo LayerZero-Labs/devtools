@@ -86,6 +86,7 @@ describe('config', () => {
         })
 
         it('should not include OApp Read example if LZ_ENABLE_READ_EXAMPLE is empty', async () => {
+
             process.env.LZ_ENABLE_READ_EXAMPLE = ''
 
             expect(await getExamples()).not.toContainEqual(expect.objectContaining({ id: 'oapp-read' }))

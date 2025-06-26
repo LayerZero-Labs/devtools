@@ -105,6 +105,7 @@ export const getExamples = async (branch?: string, baseRepository?: string, logL
     logger.verbose(`Filtered examples: ${JSON.stringify(filteredExamples, null, 2)}`)
 
     return filteredExamples
+
 }
 
 const PACKAGE_MANAGERS: PackageManager[] = [
