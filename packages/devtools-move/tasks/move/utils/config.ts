@@ -356,11 +356,15 @@ function greaterThanOrEqualTo(installed: string, required: string): boolean {
     const requiredParts = required.split('.').map(Number)
 
     for (let i = 0; i < 3; i++) {
-        if (installedParts[i] < requiredParts[i]) {
+        if (installedParts[i] > requiredParts[i]) {
+            return true
+        }
+        else if (installedParts[i] < requiredParts[i]){
+
             return false
         }
     }
-    // all parts are greater than or equal to the required version
+    // all parts are equal to the required version
     return true
 }
 
@@ -372,7 +376,11 @@ function lessThanOrEqualTo(installed: string, required: string): boolean {
         if (installedParts[i] > requiredParts[i]) {
             return false
         }
+        else if (installedParts[i] < requiredParts[i]){
+
+            return true
+        }
     }
-    // all parts are less than or equal to the required version
+    // all parts are equal to the required version
     return true
 }
