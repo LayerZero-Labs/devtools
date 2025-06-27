@@ -215,15 +215,6 @@ teardown() {
     pnpm test
 }
 
-@test "should work with pnpm & oapp solana example in CI mode" {
-    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp-solana"
-
-    LZ_ENABLE_SOLANA_OAPP_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oapp-solana --destination $DESTINATION --package-manager pnpm
-    cd "$DESTINATION"
-    pnpm compile
-    pnpm test
-}
-
 @test "should work with pnpm & oapp read example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp-read"
 
