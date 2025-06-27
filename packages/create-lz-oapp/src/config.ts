@@ -39,7 +39,7 @@ export const getExamples = async (branch?: string, baseRepository?: string, logL
      * To enable example development in a custom repository
      * we open the repository URL field to be taken from the environment
      */
-    const repository = baseRepository || 'LayerZero-Labs/devtools'
+    const repository = baseRepository || 'https://github.com/LayerZero-Labs/devtools.git'
     logger.verbose(`Using base repository: ${repository}`)
 
     /**
@@ -105,7 +105,6 @@ export const getExamples = async (branch?: string, baseRepository?: string, logL
     logger.verbose(`Filtered examples: ${JSON.stringify(filteredExamples, null, 2)}`)
 
     return filteredExamples
-
 }
 
 const PACKAGE_MANAGERS: PackageManager[] = [
