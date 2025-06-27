@@ -6,27 +6,14 @@ const CUSTOM_BRANCH = 'test/omnicall-new-createlzoapp'
 
 describe('config', () => {
     describe('getExamples()', () => {
-        it('should use the default repository if LAYERZERO_EXAMPLES_REPOSITORY_URL is empty', async () => {
-            process.env.LAYERZERO_EXAMPLES_REPOSITORY_URL = ''
-
+        it('should use the default repository', async () => {
             const examples = await getExamples()
             expect(examples).not.toEqual([])
 
             examples.forEach((example) => expect(example).toMatchObject({ repository: DEFAULT_REPO }))
         })
 
-        it('should use the default ref if LAYERZERO_EXAMPLES_REPOSITORY_REF is empty', async () => {
-            process.env.LAYERZERO_EXAMPLES_REPOSITORY_REF = ''
-
-            const examples = await getExamples()
-            expect(examples).not.toEqual([])
-
-            examples.forEach((example) => expect(example).toMatchObject({ ref: DEFAULT_BRANCH }))
-        })
-
-        it('should use LAYERZERO_EXAMPLES_REPOSITORY_REF if LAYERZERO_EXAMPLES_REPOSITORY_REF is defined', async () => {
-            process.env.LAYERZERO_EXAMPLES_REPOSITORY_REF = DEFAULT_BRANCH
-
+        it('should use the branch parameter if provided', async () => {
             const examples = await getExamples()
             expect(examples).not.toEqual([])
 
@@ -35,6 +22,13 @@ describe('config', () => {
 
         it('should use branch parameter if provided', async () => {
             const examples = await getExamples(CUSTOM_BRANCH)
+            expect(examples).not.toEqual([])
+
+            examples.forEach((example) => expect(example).toMatchObject({ ref: CUSTOM_BRANCH }))
+        })
+
+        it('should use branch parameter and repo if provided', async () => {
+            const examples = await getExamples(CUSTOM_BRANCH, DEFAULT_REPO)
             expect(examples).not.toEqual([])
 
             examples.forEach((example) => expect(example).toMatchObject({ ref: CUSTOM_BRANCH }))
@@ -86,7 +80,6 @@ describe('config', () => {
         })
 
         it('should not include OApp Read example if LZ_ENABLE_READ_EXAMPLE is empty', async () => {
-
             process.env.LZ_ENABLE_READ_EXAMPLE = ''
 
             expect(await getExamples()).not.toContainEqual(expect.objectContaining({ id: 'oapp-read' }))
