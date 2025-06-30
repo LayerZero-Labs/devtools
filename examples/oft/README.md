@@ -21,7 +21,7 @@
 
 - `Node.js` - ` >=18.16.0`
 - `pnpm` (recommended) - or another package manager of your choice (npm, yarn)
--  `forge` (optional) - `>=0.2.0` for testing, and if not using Hardhat for compilation
+- `forge` (optional) - `>=0.2.0` for testing, and if not using Hardhat for compilation
 
 ## Scaffold this example
 
@@ -33,7 +33,6 @@ pnpm dlx create-lz-oapp@latest --example oft
 
 Note that `create-lz-oapp` will also automatically run the dependencies install step for you.
 
-
 ## Helper Tasks
 
 Throughout this walkthrough, helper tasks will be used. For the full list of available helper tasks, refer to the [LayerZero Hardhat Helper Tasks section](#layerzero-hardhat-helper-tasks). All commands can be run at the project root.
@@ -42,6 +41,7 @@ Throughout this walkthrough, helper tasks will be used. For the full list of ava
 
 - Copy `.env.example` into a new `.env`
 - Set up your deployer address/account via the `.env`
+
   - You can specify either `MNEMONIC` or `PRIVATE_KEY`:
 
     ```
@@ -49,6 +49,7 @@ Throughout this walkthrough, helper tasks will be used. For the full list of ava
     or...
     PRIVATE_KEY="0xabc...def"
     ```
+
 - Fund this deployer address/account with the native tokens of the chains you want to deploy to. This example by default will deploy to the following chains' testnets: **Optimism**, **Avalanche**, and **Arbitrum**.
 
 ## Build
@@ -69,7 +70,6 @@ pnpm compile:hardhat
 ```
 
 ## Deploy
-
 
 To deploy your contracts to your desired blockchains, run the following command:
 
@@ -94,7 +94,6 @@ pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts
 ```
 
 Submit all the transactions to complete wiring. After all transactions confirm, your OApps are wired and can send messages to each other.
-
 
 ## Sending OFTs
 
@@ -130,7 +129,6 @@ Now that you've gone through a simplified walkthrough, here are what you can do 
 - If you are planning to deploy to production, go through the [Production Deployment Checklist](#production-deployment-checklist).
 - Read on [DVNs / Security Stack](https://docs.layerzero.network/v2/concepts/modular-security/security-stack-dvns)
 - Read on [Message Execution Options](https://docs.layerzero.network/v2/concepts/technical-reference/options-reference)
-
 
 ## Production Deployment Checklist
 
@@ -239,7 +237,6 @@ This approach simplifies repetitive tasks and ensures consistent testing across 
   Join our <a href="https://layerzero.network/community" style="color: #a77dff">community</a>! | Follow us on <a href="https://x.com/LayerZero_Labs" style="color: #a77dff">X (formerly Twitter)</a>
 </p>
 
-
 # Appendix
 
 ## Running Tests
@@ -267,10 +264,10 @@ If you're adding another EVM chain, first, add it to the `hardhat.config.ts`. Ad
 
 Then, modify `layerzero.config.ts` with the following changes:
 
-  - declare a new contract object (specifying the `eid` and `contractName`)
-  - decide whether to use an existing EVM enforced options variable or declare a new one
-  - create a new entry in the `pathways` variable
-  - add the new contract into the `contracts` key of the `return` of the `export default` function 
+- declare a new contract object (specifying the `eid` and `contractName`)
+- decide whether to use an existing EVM enforced options variable or declare a new one
+- create a new entry in the `pathways` variable
+- add the new contract into the `contracts` key of the `return` of the `export default` function
 
 After applying the desired changes, make sure you re-run the wiring task:
 
@@ -299,7 +296,6 @@ networks: {
   }
 }
 ```
-
 
 ## LayerZero Hardhat Helper Tasks
 
@@ -349,72 +345,81 @@ npx hardhat lz:oapp:config:init --contract-name CONTRACT_NAME --oapp-config FILE
 This will create a `layerzero.config.ts` in your working directory populated with your contract name and connections for every pathway possible between your hardhat networks:
 
 ```typescript
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { EndpointId } from "@layerzerolabs/lz-definitions";
 
 const arbsepContract = {
-    eid: EndpointId.ARBSEP_V2_TESTNET,
-    contractName: 'MyOFT',
-}
+  eid: EndpointId.ARBSEP_V2_TESTNET,
+  contractName: "MyOFT",
+};
 const sepoliaContract = {
-    eid: EndpointId.SEPOLIA_V2_TESTNET,
-    contractName: 'MyOFT',
-}
+  eid: EndpointId.SEPOLIA_V2_TESTNET,
+  contractName: "MyOFT",
+};
 
 export default {
-    contracts: [{ contract: arbsepContract }, { contract: sepoliaContract }],
-    connections: [
-        {
-            from: arbsepContract,
-            to: sepoliaContract,
-            config: {
-                sendLibrary: '0x4f7cd4DA19ABB31b0eC98b9066B9e857B1bf9C0E',
-                receiveLibraryConfig: { receiveLibrary: '0x75Db67CDab2824970131D5aa9CECfC9F69c69636', gracePeriod: 0 },
-                sendConfig: {
-                    executorConfig: { maxMessageSize: 10000, executor: '0x5Df3a1cEbBD9c8BA7F8dF51Fd632A9aef8308897' },
-                    ulnConfig: {
-                        confirmations: 1,
-                        requiredDVNs: ['0x53f488E93b4f1b60E8E83aa374dBe1780A1EE8a8'],
-                        optionalDVNs: [],
-                        optionalDVNThreshold: 0,
-                    },
-                },
-                // receiveConfig: {
-                //     ulnConfig: {
-                //         confirmations: 2,
-                //         requiredDVNs: ['0x53f488E93b4f1b60E8E83aa374dBe1780A1EE8a8'],
-                //         optionalDVNs: [],
-                //         optionalDVNThreshold: 0,
-                //     },
-                // },
-            },
+  contracts: [{ contract: arbsepContract }, { contract: sepoliaContract }],
+  connections: [
+    {
+      from: arbsepContract,
+      to: sepoliaContract,
+      config: {
+        sendLibrary: "0x4f7cd4DA19ABB31b0eC98b9066B9e857B1bf9C0E",
+        receiveLibraryConfig: {
+          receiveLibrary: "0x75Db67CDab2824970131D5aa9CECfC9F69c69636",
+          gracePeriod: 0,
         },
-        {
-            from: sepoliaContract,
-            to: arbsepContract,
-            config: {
-                sendLibrary: '0xcc1ae8Cf5D3904Cef3360A9532B477529b177cCE',
-                receiveLibraryConfig: { receiveLibrary: '0xdAf00F5eE2158dD58E0d3857851c432E34A3A851', gracePeriod: 0 },
-                // sendConfig: {
-                //     executorConfig: { maxMessageSize: 10000, executor: '0x718B92b5CB0a5552039B593faF724D182A881eDA' },
-                //     ulnConfig: {
-                //         confirmations: 2,
-                //         requiredDVNs: ['0x8eebf8b423B73bFCa51a1Db4B7354AA0bFCA9193'],
-                //         optionalDVNs: [],
-                //         optionalDVNThreshold: 0,
-                //     },
-                // },
-                receiveConfig: {
-                    ulnConfig: {
-                        confirmations: 1,
-                        requiredDVNs: ['0x8eebf8b423B73bFCa51a1Db4B7354AA0bFCA9193'],
-                        optionalDVNs: [],
-                        optionalDVNThreshold: 0,
-                    },
-                },
-            },
+        sendConfig: {
+          executorConfig: {
+            maxMessageSize: 10000,
+            executor: "0x5Df3a1cEbBD9c8BA7F8dF51Fd632A9aef8308897",
+          },
+          ulnConfig: {
+            confirmations: 1,
+            requiredDVNs: ["0x53f488E93b4f1b60E8E83aa374dBe1780A1EE8a8"],
+            optionalDVNs: [],
+            optionalDVNThreshold: 0,
+          },
         },
-    ],
-}
+        // receiveConfig: {
+        //     ulnConfig: {
+        //         confirmations: 2,
+        //         requiredDVNs: ['0x53f488E93b4f1b60E8E83aa374dBe1780A1EE8a8'],
+        //         optionalDVNs: [],
+        //         optionalDVNThreshold: 0,
+        //     },
+        // },
+      },
+    },
+    {
+      from: sepoliaContract,
+      to: arbsepContract,
+      config: {
+        sendLibrary: "0xcc1ae8Cf5D3904Cef3360A9532B477529b177cCE",
+        receiveLibraryConfig: {
+          receiveLibrary: "0xdAf00F5eE2158dD58E0d3857851c432E34A3A851",
+          gracePeriod: 0,
+        },
+        // sendConfig: {
+        //     executorConfig: { maxMessageSize: 10000, executor: '0x718B92b5CB0a5552039B593faF724D182A881eDA' },
+        //     ulnConfig: {
+        //         confirmations: 2,
+        //         requiredDVNs: ['0x8eebf8b423B73bFCa51a1Db4B7354AA0bFCA9193'],
+        //         optionalDVNs: [],
+        //         optionalDVNThreshold: 0,
+        //     },
+        // },
+        receiveConfig: {
+          ulnConfig: {
+            confirmations: 1,
+            requiredDVNs: ["0x8eebf8b423B73bFCa51a1Db4B7354AA0bFCA9193"],
+            optionalDVNs: [],
+            optionalDVNThreshold: 0,
+          },
+        },
+      },
+    },
+  ],
+};
 ```
 
 </details>
@@ -445,7 +450,6 @@ npx hardhat lz:oapp:wire --oapp-config YOUR_LAYERZERO_CONFIG_FILE
 ```
 
 Whenever you make changes to the configuration, run `lz:oapp:wire` again. The task will check your current configuration, and only apply NEW changes.
-
 
 </details>
 <details>
@@ -668,9 +672,8 @@ connections: [
 You can verify EVM chain contracts using the LayerZero helper package:
 
 ```bash
-pnpm dlx @layerzerolabs/verify-contract -n <NETWORK_NAME> -u <API_URL> -k <API_KEY> --contracts <CONTRACT_NAME> 
+pnpm dlx @layerzerolabs/verify-contract -n <NETWORK_NAME> -u <API_URL> -k <API_KEY> --contracts <CONTRACT_NAME>
 ```
-
 
 ### Troubleshooting
 
