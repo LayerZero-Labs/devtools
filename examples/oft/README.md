@@ -56,7 +56,7 @@ Throughout this walkthrough, helper tasks will be used. For the full list of ava
 
 ## Build
 
-#### Compiling your contracts
+### Compiling your contracts
 
 <!-- TODO: consider moving this section to Appendix, since for Hardhat, the deploy task wil auto-run compile -->
 
@@ -113,7 +113,7 @@ cast send <OFT_ADDRESS> "mint(address,uint256)" <RECIPIENT_ADDRESS> <AMOUNT> --p
 Send 1 OFT from **Optimism Sepolia** to **Arbitrum Sepolia**:
 
 ```bash
-npx hardhat lz:oft:send --src-eid 40232 --dst-eid 40231 --amount 1 --to <EVM_ADDRESS>
+pnpm hardhat lz:oft:send --src-eid 40232 --dst-eid 40231 --amount 1 --to <EVM_ADDRESS>
 ```
 
 > :information_source: `40232` and `40106` are the Endpoint IDs of Optimism Sepolia and Arbitrum Sepolia respectively. View the list of chains and their Endpoint IDs on the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.
@@ -230,7 +230,7 @@ Where:
 - `msgValue`: The amount of Ether sent with the message (in wei).
 - `numOfRuns`: The number of test runs to execute.
 
-### Notes
+#### Notes
 
 - Modify `numOfRuns` based on the level of accuracy or performance you require for gas profiling.
 - Log outputs will provide metrics such as the **average**, **median**, **minimum**, and **maximum** gas usage across all successful runs.
@@ -276,7 +276,7 @@ Then, modify `layerzero.config.ts` with the following changes:
 After applying the desired changes, make sure you re-run the wiring task:
 
 ```bash
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts
+pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts
 ```
 
 ## Using Multisigs
@@ -306,7 +306,7 @@ networks: {
 LayerZero Devtools provides several helper hardhat tasks to easily deploy, verify, configure, connect, and send OFTs cross-chain.
 
 <details>
-<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/deploying"><code>npx hardhat lz:deploy</code></a> </summary>
+<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/deploying"><code>pnpm hardhat lz:deploy</code></a> </summary>
 
  <br>
 
@@ -328,13 +328,13 @@ Deploys your contract to any of the available networks in your [`hardhat.config.
 More information about available CLI arguments can be found using the `--help` flag:
 
 ```bash
-npx hardhat lz:deploy --help
+pnpm hardhat lz:deploy --help
 ```
 
 </details>
 
 <details>
-<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/start"><code>npx hardhat lz:oapp:config:init --oapp-config YOUR_OAPP_CONFIG --contract-name CONTRACT_NAME</code></a> </summary>
+<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/start"><code>pnpm hardhat lz:oapp:config:init --oapp-config YOUR_OAPP_CONFIG --contract-name CONTRACT_NAME</code></a> </summary>
 
  <br>
 
@@ -343,7 +343,7 @@ Initializes a `layerzero.config.ts` file for all available pathways between your
 You can run this task by providing the `contract-name` you want to set for the config and `file-name` you want to generate:
 
 ```bash
-npx hardhat lz:oapp:config:init --contract-name CONTRACT_NAME --oapp-config FILE_NAME
+pnpm hardhat lz:oapp:config:init --contract-name CONTRACT_NAME --oapp-config FILE_NAME
 ```
 
 This will create a `layerzero.config.ts` in your working directory populated with your contract name and connections for every pathway possible between your hardhat networks:
@@ -429,7 +429,7 @@ export default {
 </details>
 
 <details>
-<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring"><code>npx hardhat lz:oapp:config:wire --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
+<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring"><code>pnpm hardhat lz:oapp:config:wire --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
 
  <br>
 
@@ -450,14 +450,14 @@ Running `lz:oapp:wire` will make the following function calls per pathway connec
 To use this task, run:
 
 ```bash
-npx hardhat lz:oapp:wire --oapp-config YOUR_LAYERZERO_CONFIG_FILE
+pnpm hardhat lz:oapp:wire --oapp-config YOUR_LAYERZERO_CONFIG_FILE
 ```
 
 Whenever you make changes to the configuration, run `lz:oapp:wire` again. The task will check your current configuration, and only apply NEW changes.
 
 </details>
 <details>
-<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring#checking-pathway-config"><code>npx hardhat lz:oapp:config:get --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
+<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring#checking-pathway-config"><code>pnpm hardhat lz:oapp:config:get --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
 
  <br>
 
@@ -522,7 +522,7 @@ If you do NOT explicitly set each configuration parameter, your OApp will fallba
 
 </details>
 <details>
-<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring#checking-pathway-executor"><code>npx hardhat lz:oapp:config:get:executor --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
+<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring#checking-pathway-executor"><code>pnpm hardhat lz:oapp:config:get:executor --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
 
  <br>
 
