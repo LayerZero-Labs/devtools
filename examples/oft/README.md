@@ -135,6 +135,8 @@ cast send <OFT_ADDRESS> "mint(address,uint256)" <RECIPIENT_ADDRESS> <AMOUNT> --p
 
 ```
 
+> You can get the address of your OFT on Optimism Sepolia from the file at `./deployments/optimism-testnet/MyOFTMock.json`
+
 Send 1 OFT from **Optimism Sepolia** to **Arbitrum Sepolia**:
 
 ```bash
