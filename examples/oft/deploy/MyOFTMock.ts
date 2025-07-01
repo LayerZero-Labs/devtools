@@ -26,9 +26,9 @@ const deploy: DeployFunction = async (hre) => {
     // For example:
     //
     // networks: {
-    //   fuji: {
+    //   'optimism-testnet': {
     //     ...
-    //     eid: EndpointId.AVALANCHE_V2_TESTNET
+    //     eid: EndpointId.OPTSEP_V2_TESTNET
     //   }
     // }
     const endpointV2Deployment = await hre.deployments.get('EndpointV2')

@@ -52,11 +52,13 @@ Throughout this walkthrough, helper tasks will be used. For the full list of ava
     PRIVATE_KEY="0xabc...def"
     ```
 
-- Fund this deployer address/account with the native tokens of the chains you want to deploy to. This example by default will deploy to the following chains' testnets: **Optimism**, **Avalanche**, and **Arbitrum**.
+- Fund this deployer address/account with the native tokens of the chains you want to deploy to. This example by default will deploy to the following chains' testnets: **Optimism** and **Arbitrum**.
 
 ## Build
 
 #### Compiling your contracts
+
+<!-- TODO: consider moving this section to Appendix, since for Hardhat, the deploy task wil auto-run compile -->
 
 This project supports both `hardhat` and `forge` compilation. By default, the `compile` command will execute both:
 
@@ -108,13 +110,13 @@ cast send <OFT_ADDRESS> "mint(address,uint256)" <RECIPIENT_ADDRESS> <AMOUNT> --p
 
 ```
 
-Send 1 OFT from **Optimism Sepolia** to **Avalanche Fuji**:
+Send 1 OFT from **Optimism Sepolia** to **Arbitrum Sepolia**:
 
 ```bash
-npx hardhat lz:oft:send --src-eid 40232 --dst-eid 40106 --amount 1 --to <EVM_ADDRESS>
+npx hardhat lz:oft:send --src-eid 40232 --dst-eid 40231 --amount 1 --to <EVM_ADDRESS>
 ```
 
-> :information_source: `40232` and `40106` are the Endpoint IDs of Optimism Sepolia and Avalanche Fuji respectively. View the list of chains and their Endpoint IDs on the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.
+> :information_source: `40232` and `40106` are the Endpoint IDs of Optimism Sepolia and Arbitrum Sepolia respectively. View the list of chains and their Endpoint IDs on the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.
 
 Upon a successful send, the script will provide you with the link to the message on LayerZero Scan.
 
