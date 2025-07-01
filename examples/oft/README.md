@@ -12,6 +12,31 @@
 
 <p align="center">Template project for a cross-chain token (<a href="https://docs.layerzero.network/v2/concepts/applications/oft-standard">OFT</a>) powered by the LayerZero protocol. This example's config involves EVM chains, but the same OFT can be extended to involve other VM chains such as Solana, Aptos and Hyperliquid.</p>
 
+## Table of Contents
+
+- [Prerequisite Knowledge](#prerequisite-knowledge)
+- [Requirements](#requirements)
+- [Scaffold this example](#scaffold-this-example)
+- [Helper Tasks](#helper-tasks)
+- [Setup](#setup)
+- [Build](#build)
+  - [Compiling your contracts](#compiling-your-contracts)
+- [Deploy](#deploy)
+- [Enable Messaging](#enable-messaging)
+- [Sending OFTs](#sending-ofts)
+- [Next Steps](#next-steps)
+- [Production Deployment Checklist](#production-deployment-checklist)
+  - [Profiling `lzReceive` and `lzCompose` Gas Usage](#profiling-lzreceive-and-lzcompose-gas-usage)
+  - [Available Commands](#available-commands)
+    - [`lzReceive`](#lzreceive)
+    - [`lzCompose`](#lzcompose)
+  - [Notes](#notes)
+- [Appendix](#appendix)
+  - [Running Tests](#running-tests)
+  - [Adding other chains](#adding-other-chains)
+  - [Using Multisigs](#using-multisigs)
+  - [LayerZero Hardhat Helper Tasks](#layerzero-hardhat-helper-tasks)
+
 ## Prerequisite Knowledge
 
 - [What is an OFT (Omnichain Fungible Token) ?](https://docs.layerzero.network/v2/concepts/applications/oft-standard)
