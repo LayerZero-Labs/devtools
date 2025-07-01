@@ -31,6 +31,8 @@ Create your local copy of this example:
 pnpm dlx create-lz-oapp@latest --example oft
 ```
 
+Specify the directory, select `OFT` and proceed with the installation.
+
 Note that `create-lz-oapp` will also automatically run the dependencies install step for you.
 
 ## Helper Tasks
