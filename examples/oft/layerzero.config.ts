@@ -7,7 +7,7 @@ import type { OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
 const optimismContract: OmniPointHardhat = {
     eid: EndpointId.OPTSEP_V2_TESTNET,
-    contractName: 'MyOFT',
+    contractName: 'MyOFTMock', // Note: change this to your production version
 }
 
 const arbitrumContract: OmniPointHardhat = {
