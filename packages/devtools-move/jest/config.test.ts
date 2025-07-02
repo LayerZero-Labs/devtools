@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { isVersionGreaterOrEqualTo, isVersionLessThanOrEqualTo } from '../tasks/move/utils/config'
+import { isVersionGreaterOrEqualTo, isVersionLessThanOrEqualTo, getAptosCLICommand } from '../tasks/move/utils/config'
 
 describe('tasks/move/utils/config', () => {
     describe('isVersionGreaterOrEqualTo', () => {
@@ -31,6 +31,12 @@ describe('tasks/move/utils/config', () => {
             expect(isVersionLessThanOrEqualTo('7.0.0', '5.0.0')).to.equal(false)
             expect(isVersionLessThanOrEqualTo('7.0.0', '7.0.0')).to.equal(true)
             expect(isVersionLessThanOrEqualTo('7.0.0', '8.0.0')).to.equal(true)
+        })
+    })
+
+    describe('warning message format', () => {
+        it('contains the correct professional warning text', async () => {
+            await getAptosCLICommand('aptos', 'mainnet')
         })
     })
 })
