@@ -1,8 +1,5 @@
-import { createLogger } from '@layerzerolabs/io-devtools'
 import { endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
-
-const logger = createLogger()
 
 export const deploymentMetadataUrl = 'https://metadata.layerzero-api.com/v1/metadata/deployments'
 
