@@ -8,66 +8,42 @@ import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/tool
  *
  *  for example:
  *
- *    sepolia: {
- *         eid: EndpointId.SEPOLIA_V2_TESTNET,
- *         url: process.env.RPC_URL_SEPOLIA || 'https://rpc.sepolia.org/',
- *         accounts,
+ *       'optimism-testnet': {
+ *           eid: EndpointId.OPTSEP_V2_TESTNET,
+ *           url: process.env.RPC_URL_OP_SEPOLIA || 'https://* optimism-sepolia.gateway.tenderly.co',
+ *           accounts,
  *         oftAdapter: {
  *             tokenAddress: '0x0', // Set the token address for the OFT adapter
  *         },
  *     },
  */
-const sepoliaContract: OmniPointHardhat = {
-    eid: EndpointId.SEPOLIA_V2_TESTNET,
+const optimismContract: OmniPointHardhat = {
+    eid: EndpointId.OPTSEP_V2_TESTNET,
     contractName: 'MyOFTAdapter',
 }
 
-const fujiContract: OmniPointHardhat = {
-    eid: EndpointId.AVALANCHE_V2_TESTNET,
-    contractName: 'MyOFT',
-}
-
-const amoyContract: OmniPointHardhat = {
-    eid: EndpointId.AMOY_V2_TESTNET,
+const arbitrumContract: OmniPointHardhat = {
+    eid: EndpointId.ARBSEP_V2_TESTNET,
     contractName: 'MyOFT',
 }
 
 const config: OAppOmniGraphHardhat = {
     contracts: [
         {
-            contract: fujiContract,
+            contract: optimismContract,
         },
         {
-            contract: sepoliaContract,
-        },
-        {
-            contract: amoyContract,
+            contract: arbitrumContract,
         },
     ],
     connections: [
         {
-            from: fujiContract,
-            to: sepoliaContract,
+            from: optimismContract,
+            to: arbitrumContract,
         },
         {
-            from: fujiContract,
-            to: amoyContract,
-        },
-        {
-            from: sepoliaContract,
-            to: fujiContract,
-        },
-        {
-            from: sepoliaContract,
-            to: amoyContract,
-        },
-        {
-            from: amoyContract,
-            to: sepoliaContract,
-        },
-        {
-            from: amoyContract,
-            to: fujiContract,
+            from: optimismContract,
+            to: arbitrumContract,
         },
     ],
 }
