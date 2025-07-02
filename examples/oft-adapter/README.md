@@ -155,3 +155,21 @@ pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts
 ```
 
 Submit all the transactions to complete wiring. After all transactions confirm, your OApps are wired and can send messages to each other.
+
+## Sending OFTs
+
+With your OFTs wired, you can now send them cross chain.
+
+Send 1 OFT from **Optimism Sepolia** to **Arbitrum Sepolia**:
+
+```bash
+pnpm hardhat lz:oft:send --src-eid 40232 --dst-eid 40231 --amount 1 --to <EVM_ADDRESS>
+```
+
+> :information_source: `40232` and `40106` are the Endpoint IDs of Optimism Sepolia and Arbitrum Sepolia respectively. View the list of chains and their Endpoint IDs on the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.
+
+Upon a successful send, the script will provide you with the link to the message on LayerZero Scan.
+
+Once the message is delivered, you will be able to click on the destination transaction hash to verify that the OFT was sent.
+
+Congratulations, you have now sent an OFT cross-chain!
