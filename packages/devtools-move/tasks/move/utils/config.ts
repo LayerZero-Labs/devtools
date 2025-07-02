@@ -314,6 +314,22 @@ async function getInitiaVersion(): Promise<string> {
     })
 }
 
+async function promptVersionWarningConfirmation(): Promise<void> {
+    const { shouldContinue } = await inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'shouldContinue',
+            message: 'Are you sure you want to continue?',
+            default: false,
+        },
+    ])
+
+    if (!shouldContinue) {
+        console.log('❌ Operation cancelled.')
+        process.exit(1)
+    }
+}
+
 export async function getAptosCLICommand(chain: string, stage: string): Promise<string> {
     const aptosCommand = 'aptos'
     const version = await getAptosVersion(aptosCommand)
@@ -327,6 +343,7 @@ export async function getAptosCLICommand(chain: string, stage: string): Promise<
                 console.log(
                     `\x1b[33m⚠️  Warning: You are deploying to Aptos chain but your Aptos CLI version is set to "${version}".\n\n\tOur recommended and tested version is ${MIN_VERSION}. Using other versions is at your own risk and may result in unexpected behavior.\x1b[0m`
                 )
+                await promptVersionWarningConfirmation()
             }
         } else {
             throw new Error(`❌ Aptos CLI version too old. Required: ${MIN_VERSION} or newer, Found: ${version}`)
@@ -340,6 +357,7 @@ export async function getAptosCLICommand(chain: string, stage: string): Promise<
                 console.log(
                     `\x1b[33m⚠️  Warning: You are deploying to Movement chain but your Aptos CLI version is set to "${version}".\n\n\tOur recommended and tested version is 3.5.0. Using other versions is at your own risk and may result in unexpected behavior.\x1b[0m`
                 )
+                await promptVersionWarningConfirmation()
             }
         } else {
             throw new Error(`❌ Aptos CLI version too new. Required: ${MAX_VERSION} or older, Found: ${version}`)
