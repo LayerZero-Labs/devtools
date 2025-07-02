@@ -1,7 +1,7 @@
 import { task, types } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
-import { types as cliTypes } from '@layerzerolabs/devtools-evm-hardhat'
+import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 
 import { EvmArgs, sendEvm } from './sendEvm'
@@ -13,6 +13,7 @@ interface MasterArgs {
     dstEid: number
     amount: string
     to: string
+    /** Path to LayerZero config file (default: layerzero.config.ts) */
     oappConfig: string
     /** Minimum amount to receive in case of custom slippage or fees (human readable units, e.g. "1.5") */
     minAmount?: string
@@ -33,7 +34,7 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from EVM chains')
     .addParam('dstEid', 'Destination endpoint ID', undefined, types.int)
     .addParam('amount', 'Amount to send (human readable units, e.g. "1.5")', undefined, types.string)
     .addParam('to', 'Recipient address (20-byte hex for EVM)', undefined, types.string)
-    .addOptionalParam('oappConfig', 'Path to the LayerZero config file', 'layerzero.config.ts', types.string)
+    .addOptionalParam('oappConfig', 'Path to LayerZero config file', 'layerzero.config.ts', types.string)
     .addOptionalParam(
         'minAmount',
         'Minimum amount to receive in case of custom slippage or fees (human readable units, e.g. "1.5")',
@@ -42,21 +43,21 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from EVM chains')
     )
     .addOptionalParam(
         'extraLzReceiveOptions',
-        'Array of extra lzReceive options in format "gas,value" (e.g. ["200000,0", "100000,1000000000000000000"])',
+        'Array of lzReceive options as comma-separated values "gas,value"',
         undefined,
-        cliTypes.csv
+        devtoolsTypes.csv
     )
     .addOptionalParam(
         'extraLzComposeOptions',
-        'Array of extra lzCompose options in format "index,gas,value" (e.g. ["0,500000,0", "1,300000,1000000000000000000"])',
+        'Array of lzCompose options as comma-separated values "index,gas,value"',
         undefined,
-        cliTypes.csv
+        devtoolsTypes.csv
     )
     .addOptionalParam(
         'extraNativeDropOptions',
-        'Array of extra native drop options in format "amount,recipient" (e.g. ["1000000000000000000,0x1234..."])',
+        'Array of native drop options as comma-separated values "amount,recipient"',
         undefined,
-        cliTypes.csv
+        devtoolsTypes.csv
     )
     .addOptionalParam('composeMsg', 'Arbitrary bytes message to deliver alongside the OFT', undefined, types.string)
     .addOptionalParam(

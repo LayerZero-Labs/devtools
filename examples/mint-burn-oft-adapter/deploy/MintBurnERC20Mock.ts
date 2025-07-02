@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-const contractName = 'MyERC20Mock'
+const contractName = 'MintBurnERC20Mock'
 
 const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
@@ -16,9 +16,9 @@ const deploy: DeployFunction = async (hre) => {
     console.log(`Deployer: ${deployer}`)
 
     // Token configuration
-    const tokenName = 'My ERC20 Mock'
-    const tokenSymbol = 'MERC20'
-    const initialMintAmount = hre.ethers.utils.parseEther('10') // 10 tokens
+    const tokenName = 'Mock Mint Burn Token'
+    const tokenSymbol = 'MMBT'
+    const initialMintAmount = hre.ethers.utils.parseEther('1000000') // 1M tokens
 
     const { address } = await deploy(contractName, {
         from: deployer,
