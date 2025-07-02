@@ -15,6 +15,7 @@
     "lint:sol": "solhint 'contracts/**/*.sol'",
     "test": "$npm_execpath run test:hardhat",
     "test:anchor": "anchor test",
+    "test:forge": "forge test",
     "test:hardhat": "hardhat test"
   },
   "resolutions": {
