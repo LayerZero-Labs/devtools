@@ -129,6 +129,8 @@ pnpm hardhat lz:deploy --tags MyOFTUpgradeableMock
 
 > :information_source: MyOFTUpgradeableMock will be used as it provides a public mint function which we require for testing
 
+> If you would like to try any of the other 3 variants (`MyOFTAdapterFeeUpgradeable`, `MyOFTAdapterUpgradeable`, `MyOFTFeeUpgradeable`), replace `MyOFTUpgradeableMock` with the name of the variant you'd like to deploy.
+
 Select all the chains you want to deploy the OFT to.
 
 ## Enable Messaging
@@ -136,6 +138,8 @@ Select all the chains you want to deploy the OFT to.
 The OFT standard builds on top of the OApp standard, which enables generic message-passing between chains. After deploying the OFT on the respective chains, you enable messaging by running the [wiring](https://docs.layerzero.network/v2/concepts/glossary#wire--wiring) task.
 
 > :information_source: This example uses the [Simple Config Generator](https://docs.layerzero.network/v2/developers/evm/technical-reference/simple-config), which is recommended over manual configuration.
+
+> If you are deploying a variant other than `MyOFTUpgradeableMock`, you would need to update the `layerzero.config.ts` so that the contract object uses the correct `contractName` value.
 
 Run the wiring task:
 
