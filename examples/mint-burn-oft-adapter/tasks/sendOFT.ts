@@ -1,6 +1,7 @@
 import { task, types } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
+import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 
 import { EvmArgs, sendEvm } from './sendEvm'
@@ -12,10 +13,16 @@ interface MasterArgs {
     dstEid: number
     amount: string
     to: string
+    /** Path to LayerZero config file (default: layerzero.config.ts) */
+    oappConfig: string
     /** Minimum amount to receive in case of custom slippage or fees (human readable units, e.g. "1.5") */
     minAmount?: string
-    /** Extra options for sending additional gas units to lzReceive, lzCompose, or receiver address */
-    extraOptions?: string
+    /** Array of lzReceive options as comma-separated values "gas,value" - e.g. --extra-lz-receive-options "200000,0" */
+    extraLzReceiveOptions?: string[]
+    /** Array of lzCompose options as comma-separated values "index,gas,value" - e.g. --extra-lz-compose-options "0,500000,0" */
+    extraLzComposeOptions?: string[]
+    /** Array of native drop options as comma-separated values "amount,recipient" - e.g. --extra-native-drop-options "1000000000000000000,0x1234..." */
+    extraNativeDropOptions?: string[]
     /** Arbitrary bytes message to deliver alongside the OFT */
     composeMsg?: string
     /** EVM: 20-byte hex address */
@@ -27,6 +34,7 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from EVM chains')
     .addParam('dstEid', 'Destination endpoint ID', undefined, types.int)
     .addParam('amount', 'Amount to send (human readable units, e.g. "1.5")', undefined, types.string)
     .addParam('to', 'Recipient address (20-byte hex for EVM)', undefined, types.string)
+    .addOptionalParam('oappConfig', 'Path to LayerZero config file', 'layerzero.config.ts', types.string)
     .addOptionalParam(
         'minAmount',
         'Minimum amount to receive in case of custom slippage or fees (human readable units, e.g. "1.5")',
@@ -34,11 +42,24 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from EVM chains')
         types.string
     )
     .addOptionalParam(
-        'extraOptions',
-        'Extra options for sending additional gas units to lzReceive, lzCompose, or receiver address',
+        'extraLzReceiveOptions',
+        'Array of lzReceive options as comma-separated values "gas,value"',
         undefined,
-        types.string
+        devtoolsTypes.csv
     )
+    .addOptionalParam(
+        'extraLzComposeOptions',
+        'Array of lzCompose options as comma-separated values "index,gas,value"',
+        undefined,
+        devtoolsTypes.csv
+    )
+    .addOptionalParam(
+        'extraNativeDropOptions',
+        'Array of native drop options as comma-separated values "amount,recipient"',
+        undefined,
+        devtoolsTypes.csv
+    )
+    .addOptionalParam('composeMsg', 'Arbitrary bytes message to deliver alongside the OFT', undefined, types.string)
     .addOptionalParam(
         'oftAddress',
         'Override the source local deployment OFT address (20-byte hex for EVM)',
