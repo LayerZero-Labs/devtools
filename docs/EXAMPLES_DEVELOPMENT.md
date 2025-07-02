@@ -6,83 +6,92 @@ Currently, this document will only detail the structure for the READMEs of the e
 
 1. **Header**
    - Goal: Branding + promote docs site + entrypoint
-   - Contents: LayerZero logo + links to docs and dev site
+   - Contents: LayerZero logo + links to docs and dev portal
 
 2. **Example Title**
    - Goal: What the example will teach
-   - Contents: Title and 1–2 sentence description (possibly goal-oriented)
+   - Contents: Title + 1–2 sentence description (goal-oriented preferred)
 
-3. **Prerequisite Knowledge**
+3. **Table of Contents**
+   - Goal: Allow user to easily navigate the README
+   - Contents: TOC of all headings
+
+4. **Prerequisite Knowledge**
    - Goal: What to understand before running the example
-   - Contents: Short list (≤3 items) like OApp, OFT
+   - Contents: e.g., What is an OApp? What is an OFT?
 
-4. **Requirements**
+5. **Introduction** _(optional)_
+   - Goal: What is this example about
+   - Contents: Brief explanation if needed; otherwise rely on title + prerequisites
+
+6. **Requirements**
    - Goal: What needs to be installed
-   - Contents: Tools + exact versions
+   - Contents: List tools + version numbers; consider noting testnet token needs
 
-5. **Scaffold this example**
+7. **Scaffold this example**
    - Goal: How to init the example
-   - Contents: `npx create-lz-oapp@latest --example <example>`
+   - Contents: `pnpm dlx create-lz-oapp@latest --example <name>`
 
-6. **Helper Tasks (inline notice)**
+8. **Helper Tasks (inline notice)**
    - Goal: Know that helper tasks exist
-   - Contents: Statement + link to helper section
+   - Contents: Single line pointing to the detailed section
 
-7. **Setup**
+9. **Setup**
    - Goal: What to configure before running
-   - Contents: .env instructions, deployer account setup
+   - Contents: `.env` instructions, deployer account setup
 
-8. **Build**
-   - Goal: How to build contracts/programs/modules
-   - Contents: Build command(s)
+10. **Build**
+    - Goal: How to build contracts/programs/modules
+    - Contents: Build command(s)
 
-9. **Deploy**
-   - Goal: How to deploy contracts/programs/modules
-   - Contents: Deploy command + minting instructions (if needed)
+11. **Deploy**
+    - Goal: How to deploy contracts/programs/modules
+    - Contents: Deploy command + minting instructions (if applicable)
 
-10. **Wiring / Configuring OApps**
-    - Goal: How to wire OApps for cross-chain use
+12. **Wiring / Configuring OApps**
+    - Goal: How to set up OApps for use
     - Contents: LZ config, init step, wiring step
 
-11. **Sending Message/OFT/ONFT**
-    - Goal: How to trigger cross-chain action
-    - Contents: Command to send message/OFT/ONFT, both/all directions
+13. **Sending Message/OFT/ONFT**
+    - Goal: How to trigger cross-chain actions
+    - Contents: Send command(s) for both/all directions
 
-12. **Next Steps**
-    - Goal: What to know after initial deployment
-    - Contents: Links to Production Checklist, Security Stack, Message Options
+14. **Next Steps**
+    - Goal: What to know after basic deployment
+    - Contents: Production Checklist + links to Security Stack, Message Options
 
-13. **Production Deployment Checklist**
-    - Goal: What’s needed for production readiness
-    - Contents: Gas profiling, DVN config, confirmation count
+15. **Production Deployment Checklist**
+    - Goal: Prepare for production
+    - Contents: Gas profiling, DVNs, confirmations
 
-14. **Appendix**
+16. **Appendix**
     - Goal: Mark end of main build steps
-    - Contents: Supplementary instructions and optional configurations
+    - Contents: Additional configuration, testing, and advanced info
 
-    14.1. **Running tests**
-       - Goal: How to test the contracts/programs
-       - Contents: Test commands
+    16.1. **Running tests**
+       - Goal: How to test contracts/programs
+       - Contents: Test command(s)
 
-    14.2. **Adding other chains**
-       - Goal: How to add additional networks
-       - Contents: How to add chains + example config (e.g. modify `hardhat.config.ts`)
+    16.2. **Adding other chains**
+       - Goal: Support more networks
+       - Contents: Add chain logic; update `hardhat.config.ts`
 
-    14.3. **Using Multisigs**
-       - Goal: How to deploy if using a multisig
-       - Contents: Command param diffs + multi-VM notes
+    16.3. **Using Multisigs**
+       - Goal: Deploy using multisig
+       - Contents: Command param diffs; multi-VM notes
 
-    14.4. **LayerZero Hardhat Helper Tasks (detailed)**
+    16.4. **LayerZero Hardhat Helper Tasks (detailed)**
        - Goal: Know all available helpers
-       - Contents: Link to docs + list of built-in and local helper tasks
+       - Contents: Link to docs + built-in + local tasks
 
-    14.5. **Contract/Program Verification**
-       - Goal: How to verify
-       - Contents: Links to verification docs (per VM)
+    16.5. **Contract/Program Verification**
+       - Goal: How to verify deployments
+       - Contents: Per-VM verification doc links
 
-    14.6. **Troubleshooting**
-       - Goal: How to debug errors/issues
-       - Contents: Link to global page + example-specific fixes
+    16.6. **Troubleshooting**
+       - Goal: Solve common issues
+       - Contents: Link to global troubleshooting + local fixes
+
 
 
 
