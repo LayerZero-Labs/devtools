@@ -35,12 +35,12 @@ const deploy: DeployFunction = async (hre) => {
 
     // Mint initial tokens to the deployer
     const [signer] = await hre.ethers.getSigners()
-    const mintBurnToken = await hre.ethers.getContractAt(contractName, address, signer)
+    const innerToken = await hre.ethers.getContractAt(contractName, address, signer)
 
-    const mintTx = await mintBurnToken.mint(deployer, initialMintAmount)
+    const mintTx = await innerToken.mint(deployer, initialMintAmount)
     await mintTx.wait()
 
-    const balance = await mintBurnToken.balanceOf(deployer)
+    const balance = await innerToken.balanceOf(deployer)
     console.log(`Minted ${hre.ethers.utils.formatEther(balance)} ${tokenSymbol} tokens to deployer: ${deployer}`)
 }
 
