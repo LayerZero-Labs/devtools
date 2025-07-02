@@ -47,9 +47,9 @@
 - [What is an OFT (Omnichain Fungible Token) ?](https://docs.layerzero.network/v2/concepts/applications/oft-standard)
 - [What is an OApp (Omnichain Application) ?](https://docs.layerzero.network/v2/concepts/applications/oapp-standard)
 
-
 ## Introduction
-**OFT Adapter** - while a regular OFT uses the mint/burn mechanism, an OFT adapter uses lock/unlock. The OFT Adapter contract functions as a lockbox for the existing token (referred to as the *inner token*). Given the inner token's chain, transfers to outside the inner token's chain will require locking and transfers to the inner token's chain will result in unlocking.
+
+**OFT Adapter** - while a regular OFT uses the mint/burn mechanism, an OFT adapter uses lock/unlock. The OFT Adapter contract functions as a lockbox for the existing token (referred to as the _inner token_). Given the inner token's chain, transfers to outside the inner token's chain will require locking and transfers to the inner token's chain will result in unlocking.
 
 <!-- TODO: remove this Introduction after having a page/section specifically on OFT Adapter that we can link to under Prerequisite Knowledge -->
 
@@ -58,7 +58,6 @@
 - `Node.js` - ` >=18.16.0`
 - `pnpm` (recommended) - or another package manager of your choice (npm, yarn)
 - `forge` (optional) - `>=0.2.0` for testing, and if not using Hardhat for compilation
-
 
 ## Scaffold this example
 
@@ -71,7 +70,6 @@ pnpm dlx create-lz-oapp@latest --example oft-adapter
 Specify the directory, select `OFTAdapter` and proceed with the installation.
 
 Note that `create-lz-oapp` will also automatically run the dependencies install step for you.
-
 
 ## Helper Tasks
 
@@ -91,7 +89,6 @@ Throughout this walkthrough, helper tasks will be used. For the full list of ava
     ```
 
 - Fund this deployer address/account with the native tokens of the chains you want to deploy to. This example by default will deploy to the following chains' testnets: **Optimism** and **Arbitrum**.
-
 
 ## Build
 
@@ -126,7 +123,6 @@ On the `Deployed Contract` line, note the `address` logged (inner token's addres
 
 > :information_source: MyERC20Mock will be used as it provides a public mint function which we require for testing. Ensure you do not use this for production.
 
-
 In the `hardhat.config.ts` file, add the inner token's address to the network you want to deploy the OFTAdapter to:
 
 ```typescript
@@ -151,7 +147,6 @@ pnpm hardhat lz:deploy --tags MyOFT --networks arbitrum-testnet
 ## Enable Messaging
 
 The OFT standard builds on top of the OApp standard, which enables generic message-passing between chains. After deploying the OFT on the respective chains, you enable messaging by running the [wiring](https://docs.layerzero.network/v2/concepts/glossary#wire--wiring) task.
-
 
 Run the wiring task:
 
