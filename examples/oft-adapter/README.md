@@ -15,6 +15,7 @@
 ## Table of Contents
 
 - [Prerequisite Knowledge](#prerequisite-knowledge)
+- [Introduction](#introduction)
 - [Requirements](#requirements)
 - [Scaffold this example](#scaffold-this-example)
 - [Helper Tasks](#helper-tasks)
@@ -30,12 +31,14 @@
   - [Available Commands](#available-commands)
     - [`lzReceive`](#lzreceive)
     - [`lzCompose`](#lzcompose)
+  - [Usage Examples](#usage-examples)
   - [Notes](#notes)
 - [Appendix](#appendix)
   - [Running Tests](#running-tests)
   - [Adding other chains](#adding-other-chains)
   - [Using Multisigs](#using-multisigs)
   - [LayerZero Hardhat Helper Tasks](#layerzero-hardhat-helper-tasks)
+  - [Manual Configuration](#manual-configuration)
   - [Contract Verification](#contract-verification)
   - [Troubleshooting](#troubleshooting)
 
