@@ -167,7 +167,8 @@ Now that you've gone through a simplified walkthrough, here are what you can do 
 
 Before deploying, ensure the following:
 
-- (required) you are not using `MyOFTMock`, which has a public `_mint` function
+- (required) you are not using `MyOFTMock`, which has a public `mint` function
+  - ensure there is no mention of `MyOFTMock` in `layerzero.config.ts`
 - (recommended) you have profiled the gas usage of `lzReceive` on your destination chains
 <!-- TODO: mention https://docs.layerzero.network/v2/developers/evm/technical-reference/integration-checklist#set-security-and-executor-configurations after it has been updated to reference the CLI -->
 
