@@ -49,13 +49,13 @@
 ## Introduction
 
 This example contains 4 OFT variations:
+
 - `MyOFTAdapterFeeUpgradeable`
 - `MyOFTAdapterUpgradeable`
 - `MyOFTFeeUpgradeable`
 - `MyOFTUpgradeable`
 
 The walkthrough will use `MyOFTUpgradeable` but you can as easily swap out the `contractName` (in the [Deploy](#deploy) step onwards).
-
 
 :warning: With great power comes great responsibility. Upgradeable contracts are powerful, but they also come with
 risks. Please ensure you understand the risks before deploying an upgradeable contract. For more information on the
