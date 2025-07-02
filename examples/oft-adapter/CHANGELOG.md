@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-adapter-example
 
+## 0.4.0
+
+### Minor Changes
+
+- d103291: Adds send task to oft-adapter
+
 ## 0.3.9
 
 ### Patch Changes

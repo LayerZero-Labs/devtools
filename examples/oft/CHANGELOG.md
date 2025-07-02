@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.6.0
+
+### Minor Changes
+
+- d103291: Adds a normalized send script that can be extended for other VMs
+
 ## 0.5.9
 
 ### Patch Changes
