@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.22;
 
 import { OApp, Origin, MessagingFee } from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
@@ -9,7 +9,8 @@ contract MyOApp is OApp, OAppOptionsType3 {
     /// @notice Last string received from any remote chain
     string public lastMessage;
 
-    /// @notice Msg type for sending a string, for use in OAppOptionsType3 as an enforced option
+    /// @notice The only Message Type in use for this OApp: sending an arbitrary string.
+    /// Different message types can be assigned different enforced options per destination endpoint ID.
     uint16 public constant SEND = 1;
 
     /// @notice Initialize with Endpoint V2 and owner address
@@ -97,7 +98,7 @@ contract MyOApp is OApp, OAppOptionsType3 {
     /// @dev   _guid      Global unique ID for tracking this message
     /// @param _message   ABI-encoded bytes (the string we sent earlier)
     /// @dev   _executor  Executor address that delivered the message
-    /// @dev   _extraData Additional data from the Executor (unused here)
+    /// @dev   _extraData Additional data from the Executor (unused by the LayerZero executor)
     function _lzReceive(
         Origin calldata /*_origin*/,
         bytes32 /*_guid*/,

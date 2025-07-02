@@ -96,14 +96,18 @@ APTOS_PRIVATE_KEY=<your-aptos-private-key>
 
 Then run `source .env` in order for your values to be mapped.
 
-> **Important:** If using Aptos CLI version >= 6.1.0 (required for Aptos chain), you need to uncomment the following lines in Move.toml and remove the existing AptosFramework dependency:
+> **Important:** If using Aptos CLI version 3.5.0 (required for Movement chain), you need to uncomment the following lines in Move.toml and remove the existing AptosFramework dependency:
 >
 > ```
 > # [dependencies.AptosFramework]
-> # git = "https://github.com/aptos-labs/aptos-framework.git"
-> # rev = "mainnet"
-> # subdir = "aptos-framework"
+> # git = "https://github.com/movementlabsxyz/aptos-core.git"
+> # rev = "movement-cli-v3.5.0"
+> # subdir = "aptos-move/framework/aptos-framework"
 > ```
+
+## Contracts
+
+The starter OApp contracts are located in `./sources/oapp.move` and `./contracts/MyOApp.sol`. Feel free to adjust these based on the needs of you application. There are also some test scripts in `./scripts/` that allow you to test sending messages between your OApps.
 
 ## OApp Config Setup
 
@@ -205,6 +209,48 @@ If `--only-calldata <true>` is specified, only the calldata is generated and not
 
 ```bash
 pnpm run lz:sdk:move:wire --oapp-config move.layerzero.config.ts
+```
+
+### Testing Send
+
+This OApp example includes several test scripts in `./scripts`. **Before running any script, you must manually update the values inside each file with your deployed contract addresses and configuration.**
+
+For EVM scripts (`evm-send.ts`, `evm-get-message.ts`), update the following values inside the files:
+
+- `contractAddress` with your deployed EVM contract address
+- RPC URL in the `JsonRpcProvider` with your EVM chain's RPC endpoint
+- Set `EVM_PRIVATE_KEY` environment variable for sending transactions
+
+For Aptos/Movement scripts (`aptos-move-send.ts`, `aptos-get-receive-values.ts`), update the following values inside the files:
+
+- `OAPP_ADDRESS` or `oappAddress` with your deployed Aptos/Movement contract address
+- Set `APTOS_PRIVATE_KEY` and `ACCOUNT_ADDRESS` environment variables for sending transactions
+- Adjust the `Network` configuration if needed (TESTNET/MAINNET)
+
+To test sending from your EVM deployment to your deployed OApp on Aptos or Movement, run:
+
+```bash
+ts-node scripts/evm-send.ts
+```
+
+For demonstration purposes, we have added encoding and decoding of some useful parameters in `oapp.move` and `evm-send.ts`. These are for demonstration purposes only and should be adjusted based on the needs of your application.
+
+To confirm your values have been sent to your Aptos or Movement OApp, run:
+
+```bash
+ts-node scripts/aptos-get-received-values.ts
+```
+
+To send a test value from your Aptos/Movement OApp to your EVM OApp, run:
+
+```bash
+ts-node scripts/aptos-move-send.ts
+```
+
+To check that your message has been registered in your EVM OApp, run:
+
+```bash
+ts-node scripts/evm-get-received-message.ts
 ```
 
 ### Transferring Ownership of your Move OApp
