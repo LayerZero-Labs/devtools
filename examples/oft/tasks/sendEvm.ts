@@ -91,10 +91,36 @@ export async function sendEvm(
     // 5️⃣ normalize the user-supplied amount
     const amountUnits: BigNumber = parseUnits(amount, decimals)
 
-    // hex string → Uint8Array → zero-pad to 32 bytes
+    // 6️⃣ Check if approval is required (for OFT Adapters) and handle approval
+    try {
+        const approvalRequired = await oft.approvalRequired()
+        if (approvalRequired) {
+            logger.info('OFT Adapter detected - checking ERC20 allowance...')
+
+            // Check current allowance
+            const currentAllowance = await erc20.allowance(signer.address, wrapperAddress)
+            logger.info(`Current allowance: ${currentAllowance.toString()}`)
+            logger.info(`Required amount: ${amountUnits.toString()}`)
+
+            if (currentAllowance.lt(amountUnits)) {
+                logger.info('Insufficient allowance - approving ERC20 tokens...')
+                const approveTx = await erc20.approve(wrapperAddress, amountUnits)
+                logger.info(`Approval transaction hash: ${approveTx.hash}`)
+                await approveTx.wait()
+                logger.info('ERC20 approval confirmed')
+            } else {
+                logger.info('Sufficient allowance already exists')
+            }
+        }
+    } catch (error) {
+        // If approvalRequired() doesn't exist or fails, assume it's a regular OFT (not an adapter)
+        logger.info('No approval required (regular OFT detected)')
+    }
+
+    // 7️⃣ hex string → Uint8Array → zero-pad to 32 bytes
     const toBytes = addressToBytes32(to)
 
-    // 6️⃣ Build options dynamically using Options.newOptions()
+    // 8️⃣ Build options dynamically using Options.newOptions()
     let options = Options.newOptions()
 
     // Add lzReceive options
@@ -171,7 +197,7 @@ export async function sendEvm(
 
     const extraOptions = options.toHex()
 
-    // 7️⃣ build sendParam and dispatch
+    // 9️⃣ build sendParam and dispatch
     const sendParam = {
         dstEid,
         to: toBytes,
@@ -182,7 +208,7 @@ export async function sendEvm(
         oftCmd: '0x',
     }
 
-    // 8️⃣ Quote (MessagingFee = { nativeFee, lzTokenFee })
+    // 10️⃣ Quote (MessagingFee = { nativeFee, lzTokenFee })
     logger.info('Quoting the native gas cost for the send transaction...')
     let msgFee: { nativeFee: BigNumber; lzTokenFee: BigNumber }
     try {
