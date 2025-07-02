@@ -1,42 +1,98 @@
 <p align="center">
   <a href="https://layerzero.network">
-    <img alt="LayerZero" style="width: 400px" src="https://docs.layerzero.network/img/LayerZero_Logo_White.svg"/>
+    <img alt="LayerZero" style="width: 400px" src="https://docs.layerzero.network/img/LayerZero_Logo_Black.svg"/>
   </a>
 </p>
 
 <p align="center">
-  <a href="https://layerzero.network" style="color: #a77dff">Homepage</a> | <a href="https://docs.layerzero.network/" style="color: #a77dff">Docs</a> | <a href="https://layerzero.network/developers" style="color: #a77dff">Developers</a>
+ <a href="https://docs.layerzero.network/" style="color: #a77dff">LayerZero Docs</a>
 </p>
 
-<h1 align="center">OFTAdapter Example</h1>
+<h1 align="center">OFT Adapter Example</h1>
 
-<p align="center">
-  <a href="https://docs.layerzero.network/v2/developers/evm/oft/adapter" style="color: #a77dff">Quickstart</a> | <a href="https://docs.layerzero.network/contracts/oapp-configuration" style="color: #a77dff">Configuration</a> | <a href="https://docs.layerzero.network/contracts/options" style="color: #a77dff">Message Execution Options</a> | <a href="https://docs.layerzero.network/contracts/endpoint-addresses" style="color: #a77dff">Endpoint Addresses</a>
-</p>
+<p align="center">Template project for converting an existing token into a cross-chain token (<a href="https://docs.layerzero.network/v2/concepts/applications/oft-standard">OFT</a>) using the LayerZero protocol. This example's config involves EVM chains, but the same OFT can be extended to involve other VM chains such as Solana, Aptos and Hyperliquid.</p>
 
-<p align="center">Template project for getting started with LayerZero's <code>OFTAdapter</code> contract development.</p>
+## Table of Contents
 
-### OFTAdapter additional setup:
+- [Prerequisite Knowledge](#prerequisite-knowledge)
+- [Requirements](#requirements)
+- [Scaffold this example](#scaffold-this-example)
+- [Helper Tasks](#helper-tasks)
+- [Setup](#setup)
+- [Build](#build)
+  - [Compiling your contracts](#compiling-your-contracts)
+- [Deploy](#deploy)
+- [Enable Messaging](#enable-messaging)
+- [Sending OFTs](#sending-ofts)
+- [Next Steps](#next-steps)
+- [Production Deployment Checklist](#production-deployment-checklist)
+  - [Profiling `lzReceive` and `lzCompose` Gas Usage](#profiling-lzreceive-and-lzcompose-gas-usage)
+  - [Available Commands](#available-commands)
+    - [`lzReceive`](#lzreceive)
+    - [`lzCompose`](#lzcompose)
+  - [Notes](#notes)
+- [Appendix](#appendix)
+  - [Running Tests](#running-tests)
+  - [Adding other chains](#adding-other-chains)
+  - [Using Multisigs](#using-multisigs)
+  - [LayerZero Hardhat Helper Tasks](#layerzero-hardhat-helper-tasks)
 
-- In your `hardhat.config.ts` file, add the following configuration to the network you want to deploy the OFTAdapter to:
-  ```typescript
-  // Replace `0x0` with the address of the ERC20 token you want to adapt to the OFT functionality.
-  oftAdapter: {
-      tokenAddress: '0x0',
-  }
-  ```
+## Prerequisite Knowledge
 
-## 1) Developing Contracts
+- [What is an OFT (Omnichain Fungible Token) ?](https://docs.layerzero.network/v2/concepts/applications/oft-standard)
+- [What is an OApp (Omnichain Application) ?](https://docs.layerzero.network/v2/concepts/applications/oapp-standard)
 
-#### Installing dependencies
 
-We recommend using `pnpm` as a package manager (but you can of course use a package manager of your choice):
+## Introduction
+**OFT Adapter** - while a regular OFT uses the mint/burn mechanism, an OFT adapter uses lock/unlock. The OFT Adapter contract functions as a lockbox for the existing token (referred to as the *inner token*). Given the inner token's chain, transfers to outside the inner token's chain will require locking and transfers to the inner token's chain will result in unlocking.
+
+<!-- TODO: remove this Introduction after having a page/section specifically on OFT Adapter that we can link to under Prerequisite Knowledge -->
+
+## Requirements
+
+- `Node.js` - ` >=18.16.0`
+- `pnpm` (recommended) - or another package manager of your choice (npm, yarn)
+- `forge` (optional) - `>=0.2.0` for testing, and if not using Hardhat for compilation
+
+
+## Scaffold this example
+
+Create your local copy of this example:
 
 ```bash
-pnpm install
+pnpm dlx create-lz-oapp@latest --example oft-adapter
 ```
 
-#### Compiling your contracts
+Specify the directory, select `OFTAdapter` and proceed with the installation.
+
+Note that `create-lz-oapp` will also automatically run the dependencies install step for you.
+
+
+## Helper Tasks
+
+Throughout this walkthrough, helper tasks will be used. For the full list of available helper tasks, refer to the [LayerZero Hardhat Helper Tasks section](#layerzero-hardhat-helper-tasks). All commands can be run at the project root.
+
+## Setup
+
+- Copy `.env.example` into a new `.env`
+- Set up your deployer address/account via the `.env`
+
+  - You can specify either `MNEMONIC` or `PRIVATE_KEY`:
+
+    ```
+    MNEMONIC="test test test test test test test test test test test junk"
+    or...
+    PRIVATE_KEY="0xabc...def"
+    ```
+
+- Fund this deployer address/account with the native tokens of the chains you want to deploy to. This example by default will deploy to the following chains' testnets: **Optimism** and **Arbitrum**.
+
+
+## Build
+
+### Compiling your contracts
+
+<!-- TODO: consider moving this section to Appendix, since for Hardhat, the deploy task wil auto-run compile -->
 
 This project supports both `hardhat` and `forge` compilation. By default, the `compile` command will execute both:
 
@@ -51,70 +107,48 @@ pnpm compile:forge
 pnpm compile:hardhat
 ```
 
-Or adjust the `package.json` to for example remove `forge` build:
+## Deploy
 
-```diff
-- "compile": "$npm_execpath run compile:forge && $npm_execpath run compile:hardhat",
-- "compile:forge": "forge build",
-- "compile:hardhat": "hardhat compile",
-+ "compile": "hardhat compile"
-```
-
-#### Running tests
-
-Similarly to the contract compilation, we support both `hardhat` and `forge` tests. By default, the `test` command will execute both:
+First, deploy the inner token to (only) **Optimism Sepolia**.
 
 ```bash
-pnpm test
+pnpm hardhat lz:deploy --tags MyERC20Mock --networks optimism-testnet
 ```
 
-If you prefer one over the other, you can use the tooling-specific commands:
+Note the address logged (inner token's address) upon successful deployment as you need it for the next step. Else, you can also refer to `./deployments/optimism-testnet/MyERC20Mock.json`.
+
+> :information_source: MyERC20Mock will be used as it provides a public mint function which we require for testing. Ensure you do not use this for production.
+
+In the `hardhat.config.ts` file, add the inner token's address to the network you want to deploy the OFTAdapter to:
+
+```typescript
+// Replace `0x0` with the address of the ERC20 token you want to adapt to the OFT functionality.
+oftAdapter: {
+    tokenAddress: '<INNER_TOKEN_ADDRESS>',
+}
+```
+
+Deploy an OFTAdapter to Optimism Sepolia:
 
 ```bash
-pnpm test:forge
-pnpm test:hardhat
+pnpm hardhat lz:deploy --tags MyOFTAdapter --networks optimism-testnet
 ```
 
-Or adjust the `package.json` to for example remove `hardhat` tests:
-
-```diff
-- "test": "$npm_execpath test:forge && $npm_execpath test:hardhat",
-- "test:forge": "forge test",
-- "test:hardhat": "$npm_execpath hardhat test"
-+ "test": "forge test"
-```
-
-## 2) Deploying Contracts
-
-Set up deployer wallet/account:
-
-- Rename `.env.example` -> `.env`
-- Choose your preferred means of setting up your deployer wallet/account:
-
-```
-MNEMONIC="test test test test test test test test test test test junk"
-or...
-PRIVATE_KEY="0xabc...def"
-```
-
-- Fund this address with the corresponding chain's native tokens you want to deploy to.
-
-To deploy your contracts to your desired blockchains, run the following command in your project's folder:
+Deploy the OFT to Arbitrum Sepolia:
 
 ```bash
-npx hardhat lz:deploy
+pnpm hardhat lz:deploy --tags MyOFT --networks arbitrum-testnet
 ```
 
-More information about available CLI arguments can be found using the `--help` flag:
+## Enable Messaging
+
+The OFT standard builds on top of the OApp standard, which enables generic message-passing between chains. After deploying the OFT on the respective chains, you enable messaging by running the [wiring](https://docs.layerzero.network/v2/concepts/glossary#wire--wiring) task.
+
+
+Run the wiring task:
 
 ```bash
-npx hardhat lz:deploy --help
+pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts
 ```
 
-By following these steps, you can focus more on creating innovative omnichain solutions and less on the complexities of cross-chain communication.
-
-<br></br>
-
-<p align="center">
-  Join our <a href="https://layerzero.network/community" style="color: #a77dff">community</a>! | Follow us on <a href="https://x.com/LayerZero_Labs" style="color: #a77dff">X (formerly Twitter)</a>
-</p>
+Submit all the transactions to complete wiring. After all transactions confirm, your OApps are wired and can send messages to each other.
