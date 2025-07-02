@@ -104,8 +104,8 @@ task(TASK_LZ_OAPP_WIRE)
         //
         //
 
-        // construct the user's keypair via the SOLANA_PRIVATE_KEY env var
-        const keypair = useWeb3Js().web3JsKeypair
+        // construct the user's keypair via SOLANA_PRIVATE_KEY or other supported methods
+        const keypair = (await useWeb3Js()).web3JsKeypair
         const userAccount = keypair.publicKey
 
         const solanaDeployment = getSolanaDeployment(args.solanaEid)
