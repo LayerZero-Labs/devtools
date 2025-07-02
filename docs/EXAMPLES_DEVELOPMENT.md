@@ -48,7 +48,7 @@ Currently, this document will only detail the structure for the READMEs of the e
     - Goal: How to deploy contracts/programs/modules
     - Contents: Deploy command + minting instructions (if applicable)
 
-12. **Wiring / Configuring OApps**
+12. **Enable Messaging**
     - Goal: How to set up OApps for use
     - Contents: LZ config, init step, wiring step
 
