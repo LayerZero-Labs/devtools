@@ -115,9 +115,12 @@ First, deploy the inner token to (only) **Optimism Sepolia**.
 pnpm hardhat lz:deploy --tags MyERC20Mock --networks optimism-testnet
 ```
 
-Note the address logged (inner token's address) upon successful deployment as you need it for the next step. Else, you can also refer to `./deployments/optimism-testnet/MyERC20Mock.json`.
+The deploy script for **MyERC20Mock** will also mint 10 tokens to the deployer address.
+
+On the `Deployed Contract` line, note the `address` logged (inner token's address) upon successful deployment as you need it for the next step. Else, you can also refer to `./deployments/optimism-testnet/MyERC20Mock.json`.
 
 > :information_source: MyERC20Mock will be used as it provides a public mint function which we require for testing. Ensure you do not use this for production.
+
 
 In the `hardhat.config.ts` file, add the inner token's address to the network you want to deploy the OFTAdapter to:
 
