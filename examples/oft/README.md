@@ -100,7 +100,7 @@ pnpm compile:hardhat
 
 ## Deploy
 
-To deploy your contracts to your desired blockchains, run the following command:
+To deploy the OFT contracts to your desired blockchains, run the following command:
 
 ```bash
 pnpm hardhat lz:deploy --tags MyOFTMock
