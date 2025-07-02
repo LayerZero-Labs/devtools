@@ -314,6 +314,22 @@ async function getInitiaVersion(): Promise<string> {
     })
 }
 
+async function promptVersionWarningConfirmation(): Promise<void> {
+    const { shouldContinue } = await inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'shouldContinue',
+            message: 'Are you sure you want to continue?',
+            default: false,
+        },
+    ])
+
+    if (!shouldContinue) {
+        console.log('❌ Operation cancelled.')
+        process.exit(1)
+    }
+}
+
 export async function getAptosCLICommand(chain: string, stage: string): Promise<string> {
     const aptosCommand = 'aptos'
     const version = await getAptosVersion(aptosCommand)
@@ -321,16 +337,28 @@ export async function getAptosCLICommand(chain: string, stage: string): Promise<
         console.log('Aptos chain detected')
         const MIN_VERSION = '6.0.1'
 
-        if (greaterThanOrEqualTo(version, MIN_VERSION)) {
+        if (isVersionGreaterOrEqualTo(version, MIN_VERSION)) {
             console.log(`🚀 Aptos CLI version ${version} is compatible.`)
+            if (version !== MIN_VERSION) {
+                console.log(
+                    `\x1b[33m⚠️  Warning: You are deploying to Aptos chain but your Aptos CLI version is set to "${version}".\n\n\tOur recommended and tested version is ${MIN_VERSION}. Using other versions is at your own risk and may result in unexpected behavior.\x1b[0m`
+                )
+                await promptVersionWarningConfirmation()
+            }
         } else {
             throw new Error(`❌ Aptos CLI version too old. Required: ${MIN_VERSION} or newer, Found: ${version}`)
         }
     } else if (chain === 'movement') {
         const MAX_VERSION = '3.5.0'
 
-        if (lessThanOrEqualTo(version, MAX_VERSION)) {
+        if (isVersionLessThanOrEqualTo(version, MAX_VERSION)) {
             console.log(`🚀 Aptos CLI version ${version} is compatible.`)
+            if (version !== '3.5.0') {
+                console.log(
+                    `\x1b[33m⚠️  Warning: You are deploying to Movement chain but your Aptos CLI version is set to "${version}".\n\n\tOur recommended and tested version is 3.5.0. Using other versions is at your own risk and may result in unexpected behavior.\x1b[0m`
+                )
+                await promptVersionWarningConfirmation()
+            }
         } else {
             throw new Error(`❌ Aptos CLI version too new. Required: ${MAX_VERSION} or older, Found: ${version}`)
         }
@@ -351,28 +379,34 @@ export async function checkInitiaCLIVersion(): Promise<void> {
     }
 }
 
-function greaterThanOrEqualTo(installed: string, required: string): boolean {
+export function isVersionGreaterOrEqualTo(installed: string, required: string): boolean {
     const installedParts = installed.split('.').map(Number)
     const requiredParts = required.split('.').map(Number)
 
     for (let i = 0; i < 3; i++) {
-        if (installedParts[i] < requiredParts[i]) {
+        if (installedParts[i] > requiredParts[i]) {
+            return true
+        } else if (installedParts[i] < requiredParts[i]) {
             return false
         }
     }
-    // all parts are greater than or equal to the required version
+
+    // all parts are equal to the required version
     return true
 }
 
-function lessThanOrEqualTo(installed: string, required: string): boolean {
+export function isVersionLessThanOrEqualTo(installed: string, required: string): boolean {
     const installedParts = installed.split('.').map(Number)
     const requiredParts = required.split('.').map(Number)
 
     for (let i = 0; i < 3; i++) {
         if (installedParts[i] > requiredParts[i]) {
             return false
+        } else if (installedParts[i] < requiredParts[i]) {
+            return true
         }
     }
-    // all parts are less than or equal to the required version
+
+    // all parts are equal to the required version
     return true
 }
