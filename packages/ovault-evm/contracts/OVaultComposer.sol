@@ -154,9 +154,9 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     /// @dev Permissionless function to send back the message to the source chain
     /// @dev Always possible unless the lzCompose() fails due to an Out-Of-Gas panic
     function refund(bytes32 _guid, bytes calldata _extraOptions) external payable nonReentrant {
-        if (failedGuidState(_guid) != FailedState.CanOnlyRefund) revert CanNotRefund(_guid);
-
         FailedMessage memory failedMessage = failedMessages[_guid];
+        if (failedMessage.refundOFT != address(0)) revert CanNotRefund(_guid);
+
         delete failedMessages[_guid];
 
         SendParam memory refundSendParam = failedMessage.refundSendParam;
@@ -177,9 +177,9 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     /// @dev Permissionless function to retry the message with more gas
     /// @dev Failure case when there is a LayerZero config issue - ex: dvn config
     function retry(bytes32 _guid, bytes calldata _extraOptions) external payable nonReentrant {
-        if (failedGuidState(_guid) != FailedState.CanOnlyRetry) revert CanNotRetry(_guid);
-
         FailedMessage memory failedMessage = failedMessages[_guid];
+        if (_failedGuidState(failedMessage) != FailedState.CanOnlyRetry) revert CanNotRetry(_guid);
+
         delete failedMessages[_guid];
 
         SendParam memory sendParam = failedMessage.sendParam;
@@ -200,9 +200,9 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     /// @dev Retry mechanism for transactions that failed due to slippage. This can revert.
     /// @dev Failure case when there is a LayerZero config issue - ex: dvn config
     function retryWithSwap(bytes32 _guid, bytes calldata _extraOptions) external payable {
-        if (failedGuidState(_guid) != FailedState.CanRetryWithSwap) revert CanNotRetry(_guid);
-
         FailedMessage memory failedMessage = failedMessages[_guid];
+        if (_failedGuidState(failedMessage) != FailedState.CanRetryWithSwapOrRefund) revert CanNotRetry(_guid);
+
         uint256 srcAmount = failedMessage.refundSendParam.amountLD;
         delete failedMessages[_guid];
 
@@ -225,6 +225,12 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
 
         _send(retryOFT, sendParam);
         emit Sent(_guid, retryOFT);
+    }
+
+    /// @dev Helper to view the state of a failed message
+    function failedGuidState(bytes32 _guid) external view returns (FailedState) {
+        FailedMessage memory failedMessage = failedMessages[_guid];
+        return _failedGuidState(failedMessage);
     }
 
     function _executeOVaultAction(address _oft, uint256 _amount) internal returns (uint256 vaultAmount) {
@@ -256,21 +262,18 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         return _dstEid != HUB_EID && IOAppCore(_oft).peers(_dstEid) == bytes32(0);
     }
 
-    /// @dev Helper to view the state of a failed message
-    function failedGuidState(bytes32 _guid) public view returns (FailedState) {
-        FailedMessage memory failedMessage = failedMessages[_guid];
-
-        if (failedMessage.refundOFT == address(0) && failedMessage.oft == address(0)) {
+    function _failedGuidState(FailedMessage memory _failedMessage) internal pure returns (FailedState) {
+        if (_failedMessage.refundOFT == address(0) && _failedMessage.oft == address(0)) {
             return FailedState.NotFound;
         }
-        if (failedMessage.refundOFT != address(0) && failedMessage.oft == address(0)) {
+        if (_failedMessage.refundOFT != address(0) && _failedMessage.oft == address(0)) {
             return FailedState.CanOnlyRefund;
         }
-        if (failedMessage.refundOFT == address(0) && failedMessage.oft != address(0)) {
+        if (_failedMessage.refundOFT == address(0) && _failedMessage.oft != address(0)) {
             return FailedState.CanOnlyRetry;
         }
 
-        return FailedState.CanRetryWithSwap;
+        return FailedState.CanRetryWithSwapOrRefund;
     }
     receive() external payable {}
 }
