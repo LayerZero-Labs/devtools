@@ -15,7 +15,7 @@ enum FailedState {
     NotFound,
     CanOnlyRefund,
     CanOnlyRetry,
-    CanRetryWithSwap
+    CanRetryWithSwapOrRefund
 }
 
 interface IOVaultComposer is IOAppComposer {
