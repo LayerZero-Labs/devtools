@@ -207,7 +207,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
 
     /// @dev Retry mechanism for transactions that failed due to slippage. This can revert.
     /// @dev Failure case when there is a LayerZero config issue when a peer is set - ex: dvn config
-    function retryWithSwap(bytes32 _guid, bytes calldata _extraOptions) external payable {
+    function retryWithSwap(bytes32 _guid, bytes calldata _extraOptions) external payable nonReentrant {
         FailedMessage memory failedMessage = failedMessages[_guid];
         if (_failedGuidState(failedMessage) != FailedState.CanRetryWithSwapOrRefund) revert CanNotRetry(_guid);
 
@@ -217,11 +217,13 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         SendParam memory sendParam = failedMessage.sendParam;
         address retryOFT = failedMessage.oft;
 
-        sendParam.amountLD = this.executeOVaultActionWithSlippageCheck(
-            failedMessage.refundOFT,
-            srcAmount,
-            sendParam.minAmountLD
-        );
+        uint256 vaultAmount = _executeOVaultAction(failedMessage.refundOFT, srcAmount);
+
+        if (vaultAmount < sendParam.minAmountLD) {
+            revert NotEnoughTargetTokens(vaultAmount, sendParam.minAmountLD);
+        }
+
+        sendParam.amountLD = vaultAmount;
 
         /// @dev If the destination is the HUB chain, we just transfer the tokens to the receiver
         if (sendParam.dstEid == HUB_EID) {
