@@ -304,12 +304,7 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(oVault_arb)), TOKENS_TO_SEND);
         assertEq(oVault_arb.totalSupply(), oVault_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
 
-        (
-            address oft,
-            SendParam memory sendParam,
-            address refundOFT,
-            SendParam memory refundSendParam
-        ) = OVaultComposerArb.failedMessages(guid);
+        (address oft, SendParam memory sendParam, address refundOFT, ) = OVaultComposerArb.failedMessages(guid);
 
         assertEq(refundOFT, address(0), "refundOFT should be 0 - not possible");
         assertEq(oft, address(shareOFT_arb), "retry oft should be shareOFT_arb");
@@ -318,12 +313,6 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         assertEq(sendParam.amountLD, TOKENS_TO_SEND, "retry amountLD should be TOKENS_TO_SEND");
         assertEq(sendParam.minAmountLD, 0, "retry minAmountLD should be 0");
         assertEq(sendParam.extraOptions, OPTIONS_LZRECEIVE_2M, "retry extraOptions should be OPTIONS_LZRECEIVE_2M");
-
-        assertEq(refundSendParam.dstEid, ETH_EID, "refund dstEid should be ETH_EID");
-        assertEq(refundSendParam.to, addressToBytes32(userA), "refund to should be userA");
-        assertEq(refundSendParam.amountLD, TOKENS_TO_SEND, "refund amountLD should be TOKENS_TO_SEND");
-        assertEq(refundSendParam.minAmountLD, 0, "refund minAmountLD should be 0");
-        assertEq(refundSendParam.extraOptions, bytes(""), "refund extraOptions should be empty");
     }
 
     function test_lzCompose_slippage_retry_with_swap() public {

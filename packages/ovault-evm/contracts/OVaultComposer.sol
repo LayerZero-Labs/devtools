@@ -116,9 +116,10 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         try this.send{ value: msg.value }(oft, sendParam) {
             emit Sent(_guid, oft);
         } catch {
+            SendParam memory emptySendParam;
             /// @dev A failed send can happen due to not enough msg.value
             /// @dev Since we have the target tokens in the composer, we can retry with more gas.
-            failedMessages[_guid] = FailedMessage(oft, sendParam, address(0), refundSendParam);
+            failedMessages[_guid] = FailedMessage(oft, sendParam, address(0), emptySendParam);
             emit SendFailed(_guid, oft); /// @dev This can be due to msg.value or layerzero config (dvn config, etc)
             return;
         }
