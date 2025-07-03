@@ -23,7 +23,7 @@ import {
 } from '@aptos-labs/ts-sdk'
 import * as dotenv from 'dotenv'
 
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { Chain, EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 
 // Load environment variables from .env file
@@ -60,10 +60,27 @@ async function send() {
     const options = Options.newOptions().addExecutorLzReceiveOption(BigInt(30000))
     const extraOptions = options.toBytes()
 
-    // Prepare the message
-    const message = 'Hello, EVM!'
-    const messageBytes = new TextEncoder().encode(message)
-    const messageArray = new Uint8Array(messageBytes)
+    let messageArray: Uint8Array
+    if (getNetworkForChainId(REMOTE_EID).chainName === Chain.SOLANA) {
+        const message = 'Hello, Solana!'
+        const messageBytes = new TextEncoder().encode(message)
+
+        // Create 32-byte length encoding (equivalent to abi.encode(uint256))
+        const lengthBytes = new Uint8Array(32)
+        const lengthView = new DataView(lengthBytes.buffer)
+        lengthView.setBigUint64(24, BigInt(messageBytes.length), false)
+
+        // Concatenate length and message bytes (equivalent to abi.encodePacked)
+        messageArray = new Uint8Array(lengthBytes.length + messageBytes.length)
+        messageArray.set(lengthBytes, 0)
+        messageArray.set(messageBytes, lengthBytes.length)
+    } else {
+        const message = 'Hello, EVM!'
+        const messageBytes = new TextEncoder().encode(message)
+        messageArray = new Uint8Array(messageBytes)
+    }
+
+    // The Following is the code required for packaing a string message to be sent to Solana:
 
     // Get fee quote for the cross-chain message
     const quote = await aptos.view({
