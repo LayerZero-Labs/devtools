@@ -293,7 +293,7 @@ If you do NOT explicitly set each configuration parameter, your OApp will fallba
 
 </details>
 
-### Contract Verification
+## Contract Verification
 
 You can verify EVM chain contracts using the LayerZero helper package:
 
@@ -301,6 +301,6 @@ You can verify EVM chain contracts using the LayerZero helper package:
 pnpm dlx @layerzerolabs/verify-contract -n <NETWORK_NAME> -u <API_URL> -k <API_KEY> --contracts <CONTRACT_NAME>
 ```
 
-### Troubleshooting
+## Troubleshooting
 
 Refer to [Debugging Messages](https://docs.layerzero.network/v2/developers/evm/troubleshooting/debugging-messages) or [Error Codes & Handling](https://docs.layerzero.network/v2/developers/evm/troubleshooting/error-messages).
