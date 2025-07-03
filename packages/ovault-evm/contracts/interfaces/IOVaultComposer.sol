@@ -31,6 +31,8 @@ interface IOVaultComposer is IOAppComposer {
 
     /// ========================== Error Messages =====================================
     error ShareOFTShouldBeLockboxAdapter(address share);
+    error AssetOFTInnerTokenShouldBeOvaultAsset(address assetInnerToken, address vaultAsset);
+    error ShareOFTInnerTokenShouldBeOVault(address shareInnerToken, address vaultToken);
 
     error OnlyEndpoint(address caller);
     error OnlySelf(address caller);

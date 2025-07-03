@@ -36,6 +36,14 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             revert ShareOFTShouldBeLockboxAdapter(address(_shareOFT));
         }
 
+        if (address(IOFT(_shareOFT).token()) != address(OVAULT)) {
+            revert ShareOFTInnerTokenShouldBeOVault(address(IOFT(_shareOFT).token()), address(OVAULT));
+        }
+
+        if (IOFT(_assetOFT).token() != OVAULT.asset()) {
+            revert AssetOFTInnerTokenShouldBeOvaultAsset(address(IOFT(_assetOFT).token()), address(OVAULT.asset()));
+        }
+
         ENDPOINT = address(IOAppCore(ASSET_OFT).endpoint());
         HUB_EID = ILayerZeroEndpointV2(ENDPOINT).eid();
 
