@@ -183,7 +183,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     }
 
     /// @dev Permissionless function to retry the message with more gas
-    /// @dev Failure case when there is a LayerZero config issue - ex: dvn config
+    /// @dev Failure case when there is a LayerZero config issue when a peer is set - ex: dvn config
     function retry(bytes32 _guid, bytes calldata _extraOptions) external payable nonReentrant {
         FailedMessage memory failedMessage = failedMessages[_guid];
         if (_failedGuidState(failedMessage) != FailedState.CanOnlyRetry) revert CanNotRetry(_guid);
@@ -206,7 +206,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     }
 
     /// @dev Retry mechanism for transactions that failed due to slippage. This can revert.
-    /// @dev Failure case when there is a LayerZero config issue - ex: dvn config
+    /// @dev Failure case when there is a LayerZero config issue when a peer is set - ex: dvn config
     function retryWithSwap(bytes32 _guid, bytes calldata _extraOptions) external payable {
         FailedMessage memory failedMessage = failedMessages[_guid];
         if (_failedGuidState(failedMessage) != FailedState.CanRetryWithSwapOrRefund) revert CanNotRetry(_guid);
