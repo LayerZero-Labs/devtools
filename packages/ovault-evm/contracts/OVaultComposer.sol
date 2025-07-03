@@ -3,6 +3,8 @@ pragma solidity ^0.8.22;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
+import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+
 import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 import { IOFT, SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
@@ -15,6 +17,7 @@ import { IOVaultComposer, FailedMessage, FailedState } from "./interfaces/IOVaul
 contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     using OFTComposeMsgCodec for bytes;
     using OFTComposeMsgCodec for bytes32;
+    using SafeERC20 for IERC20;
 
     address public immutable ASSET_OFT; // any OFT
     address public immutable SHARE_OFT; // lockbox adapter
@@ -240,7 +243,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
 
     function _executeHubTransfer(address _oft, address _receiver, uint256 _amountLD) internal {
         IERC20 token = IERC20(IOFT(_oft).token());
-        token.transfer(_receiver, _amountLD);
+        token.safeTransfer(_receiver, _amountLD);
         if (msg.value > 0) {
             (bool sent, ) = _receiver.call{ value: msg.value }("");
             require(sent, "Failed to send Ether");
