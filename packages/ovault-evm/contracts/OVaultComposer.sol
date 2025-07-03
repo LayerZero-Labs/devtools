@@ -160,7 +160,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     /// @dev Always possible unless the lzCompose() fails due to an Out-Of-Gas panic
     function refund(bytes32 _guid, bytes calldata _extraOptions) external payable nonReentrant {
         FailedMessage memory failedMessage = failedMessages[_guid];
-        SendParam memory refundSendParam = failedMessage.sendParam;
+        SendParam memory refundSendParam = failedMessage.refundSendParam;
         if (failedGuidState(_guid) != FailedState.CanOnlyRefund) revert CanNotRefund(_guid);
 
         refundSendParam.extraOptions = _extraOptions;
