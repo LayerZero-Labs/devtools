@@ -140,15 +140,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
 
         /// @dev If the destination is the HUB chain, we just transfer the tokens to the receiver
         if (_sendParam.dstEid == HUB_EID) {
-            address _receiver = _sendParam.to.bytes32ToAddress();
-            uint256 _amountLD = _sendParam.amountLD;
-            IERC20 token = IERC20(IOFT(_oft).token());
-            token.transfer(_receiver, _amountLD);
-            if (msg.value > 0) {
-                (bool sent, ) = _receiver.call{ value: msg.value }("");
-                require(sent, "Failed to send Ether");
-            }
-            emit SentOnHub(_receiver, _oft, _amountLD);
+            _executeHubTransfer(_oft, _sendParam.to.bytes32ToAddress(), _sendParam.amountLD);
             return;
         }
 
@@ -159,53 +151,77 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     /// @dev Permissionless function to send back the message to the source chain
     /// @dev Always possible unless the lzCompose() fails due to an Out-Of-Gas panic
     function refund(bytes32 _guid, bytes calldata _extraOptions) external payable nonReentrant {
-        FailedMessage memory failedMessage = failedMessages[_guid];
-        SendParam memory refundSendParam = failedMessage.refundSendParam;
         if (failedGuidState(_guid) != FailedState.CanOnlyRefund) revert CanNotRefund(_guid);
+
+        FailedMessage memory failedMessage = failedMessages[_guid];
+        delete failedMessages[_guid];
+
+        SendParam memory refundSendParam = failedMessage.refundSendParam;
+        address refundOft = failedMessage.oft;
+
+        /// @dev If the destination is the HUB chain, we just transfer the tokens to the receiver
+        if (refundSendParam.dstEid == HUB_EID) {
+            _executeHubTransfer(refundOft, refundSendParam.to.bytes32ToAddress(), refundSendParam.amountLD);
+            return;
+        }
 
         refundSendParam.extraOptions = _extraOptions;
 
-        delete failedMessages[_guid];
-        _send(failedMessage.refundOFT, refundSendParam);
-        emit Refunded(_guid, failedMessage.refundOFT);
+        _send(refundOft, refundSendParam);
+        emit Refunded(_guid, refundOft);
     }
 
     /// @dev Permissionless function to retry the message with more gas
     /// @dev Failure case when there is a LayerZero config issue - ex: dvn config
     function retry(bytes32 _guid, bytes calldata _extraOptions) external payable nonReentrant {
-        FailedMessage memory failedMessage = failedMessages[_guid];
         if (failedGuidState(_guid) != FailedState.CanOnlyRetry) revert CanNotRetry(_guid);
 
+        FailedMessage memory failedMessage = failedMessages[_guid];
+        delete failedMessages[_guid];
+
         SendParam memory sendParam = failedMessage.sendParam;
+        address retryOFT = failedMessage.oft;
+
+        /// @dev If the destination is the HUB chain, we just transfer the tokens to the receiver
+        if (sendParam.dstEid == HUB_EID) {
+            _executeHubTransfer(retryOFT, sendParam.to.bytes32ToAddress(), sendParam.amountLD);
+            return;
+        }
 
         sendParam.extraOptions = _extraOptions;
 
-        delete failedMessages[_guid];
-        _send(failedMessage.oft, sendParam);
-        emit Retried(_guid, failedMessage.oft);
+        _send(retryOFT, sendParam);
+        emit Retried(_guid, retryOFT);
     }
 
     /// @dev Retry mechanism for transactions that failed due to slippage. This can revert.
     /// @dev Failure case when there is a LayerZero config issue - ex: dvn config
     function retryWithSwap(bytes32 _guid, bytes calldata _extraOptions) external payable {
-        FailedMessage memory failedMessage = failedMessages[_guid];
         if (failedGuidState(_guid) != FailedState.CanRetryWithSwap) revert CanNotRetry(_guid);
 
+        FailedMessage memory failedMessage = failedMessages[_guid];
+        uint256 srcAmount = failedMessage.refundSendParam.amountLD;
+        delete failedMessages[_guid];
+
         SendParam memory sendParam = failedMessage.sendParam;
+        address retryOFT = failedMessage.oft;
+
+        sendParam.amountLD = this.executeOVaultActionWithSlippageCheck(
+            failedMessage.refundOFT,
+            srcAmount,
+            sendParam.minAmountLD
+        );
+
+        /// @dev If the destination is the HUB chain, we just transfer the tokens to the receiver
+        if (sendParam.dstEid == HUB_EID) {
+            _executeHubTransfer(retryOFT, sendParam.to.bytes32ToAddress(), sendParam.amountLD);
+            return;
+        }
+
         sendParam.extraOptions = _extraOptions;
 
-        uint256 amountLd = failedMessage.refundSendParam.amountLD;
-
-        delete failedMessages[_guid];
-        sendParam.amountLD = _executeOVaultAction(failedMessage.refundOFT, amountLd);
-
-        _send(failedMessage.oft, sendParam);
-        emit Sent(_guid, failedMessage.oft);
-    }
-
-    /// @dev Internal function to send the message to the target OFT
-    function _send(address _oft, SendParam memory _sendParam) internal {
-        IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), tx.origin);
+        _send(retryOFT, sendParam);
+        emit Sent(_guid, retryOFT);
     }
 
     function _executeOVaultAction(address _oft, uint256 _amount) internal returns (uint256 vaultAmount) {
@@ -214,6 +230,21 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         } else {
             vaultAmount = OVAULT.redeem(_amount, address(this), address(this));
         }
+    }
+
+    /// @dev Internal function to send the message to the target OFT
+    function _send(address _oft, SendParam memory _sendParam) internal {
+        IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), tx.origin);
+    }
+
+    function _executeHubTransfer(address _oft, address _receiver, uint256 _amountLD) internal {
+        IERC20 token = IERC20(IOFT(_oft).token());
+        token.transfer(_receiver, _amountLD);
+        if (msg.value > 0) {
+            (bool sent, ) = _receiver.call{ value: msg.value }("");
+            require(sent, "Failed to send Ether");
+        }
+        emit SentOnHub(_receiver, _oft, _amountLD);
     }
 
     /// @dev Helper to check if the target OFT does not have a peer set for the destination chain OR if our target chain is the not the same as the HUB chain
