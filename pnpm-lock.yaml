@@ -77,6 +77,8 @@ importers:
         specifier: 1.11.0
         version: 1.11.0
 
+  docs: {}
+
   examples/lzapp-migration:
     dependencies:
       '@layerzerolabs/devtools':
@@ -515,6 +517,9 @@ importers:
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
+      '@layerzerolabs/io-devtools':
+        specifier: ~0.2.0
+        version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.75
         version: 3.0.75
