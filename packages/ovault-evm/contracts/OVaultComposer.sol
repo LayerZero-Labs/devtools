@@ -265,7 +265,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         emit SentOnHub(_receiver, _oft, _amountLD);
     }
 
-    /// @dev Helper to check if the target OFT does not have a peer set for the destination chain OR if our target chain is the not the same as the HUB chain
+    /// @dev Helper to check if the target OFT does not have a peer set for the destination chain OR if our target chain is not the same as the HUB chain
     function _isInvalidPeer(address _oft, uint32 _dstEid) internal view returns (bool) {
         return _dstEid != HUB_EID && IOAppCore(_oft).peers(_dstEid) == bytes32(0);
     }
