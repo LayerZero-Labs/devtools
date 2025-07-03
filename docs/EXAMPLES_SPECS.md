@@ -2,7 +2,7 @@ This document is intended for the maintainers of the examples that are in `/exam
 
 Currently, this document will only detail the structure for the READMEs of the examples.
 
-## Structure for examples' READMEs
+## 1. README Structure
 
 1. **Header**
    - Goal: Branding + promote docs site + entrypoint
@@ -10,7 +10,7 @@ Currently, this document will only detail the structure for the READMEs of the e
 
 2. **Example Title**
    - Goal: What the example will teach
-   - Contents: Title + 1–2 sentence description (goal-oriented preferred)
+   - Contents: Title + 1–2 sentence goal-style description
 
 3. **Table of Contents**
    - Goal: Allow user to easily navigate the README
@@ -21,76 +21,92 @@ Currently, this document will only detail the structure for the READMEs of the e
    - Contents: e.g., What is an OApp? What is an OFT?
 
 5. **Introduction** _(optional)_
-   - Goal: What is this example about
-   - Contents: Brief explanation if needed; otherwise rely on title + prerequisites
+   - Goal: High-level context on what this example covers
+   - Contents: Brief explanation; skip if title + prerequisites suffice
 
 6. **Requirements**
    - Goal: What needs to be installed
-   - Contents: List tools + version numbers; consider noting testnet token needs
+   - Contents: Tools + versions; optionally call out testnet funding needs
 
 7. **Scaffold this example**
-   - Goal: How to init the example
+   - Goal: How to initialize the example
    - Contents: `pnpm dlx create-lz-oapp@latest --example <name>`
 
 8. **Helper Tasks (inline notice)**
-   - Goal: Know that helper tasks exist
-   - Contents: Single line pointing to the detailed section
+   - Goal: Let users know helpers exist
+   - Contents: Single-line pointer to helper tasks section
 
 9. **Setup**
-   - Goal: What to configure before running
-   - Contents: `.env` instructions, deployer account setup
+   - Goal: What to configure before building
+   - Contents: `.env` setup, deployer account prep
 
 10. **Build**
-    - Goal: How to build contracts/programs/modules
-    - Contents: Build command(s)
+    - Goal: How to compile contracts/programs/modules
+    - Contents: Build commands
 
 11. **Deploy**
     - Goal: How to deploy contracts/programs/modules
     - Contents: Deploy command + minting instructions (if applicable)
 
 12. **Enable Messaging**
-    - Goal: How to set up OApps for use
-    - Contents: LZ config, init step, wiring step
+    - Goal: How to wire/configure OApps for messaging
+    - Contents: LZ config, init, and wiring steps
 
 13. **Sending Message/OFT/ONFT**
-    - Goal: How to trigger cross-chain actions
-    - Contents: Send command(s) for both/all directions
+    - Goal: Trigger a cross-chain action
+    - Contents: Send command(s), both/all directions
 
 14. **Next Steps**
-    - Goal: What to know after basic deployment
-    - Contents: Production Checklist + links to Security Stack, Message Options
+    - Goal: What to know after completing the deployment
+    - Contents: Production Deployment Checklist + links (Security Stack, Message Options)
 
 15. **Production Deployment Checklist**
-    - Goal: Prepare for production
-    - Contents: Gas profiling, DVNs, confirmations
+    - Goal: Prep for production usage
+    - Contents: Gas profiling, DVN config, confirmation settings
 
 16. **Appendix**
-    - Goal: Mark end of main build steps
-    - Contents: Additional configuration, testing, and advanced info
+    - Goal: Mark end of core deployment steps
+    - Contents: Additional topics and configuration
 
     16.1. **Running tests**
        - Goal: How to test contracts/programs
-       - Contents: Test command(s)
+       - Contents: Test commands
 
     16.2. **Adding other chains**
-       - Goal: Support more networks
-       - Contents: Add chain logic; update `hardhat.config.ts`
+       - Goal: Expand the example to more networks
+       - Contents: Add logic, update `hardhat.config.ts`
 
     16.3. **Using Multisigs**
-       - Goal: Deploy using multisig
-       - Contents: Command param diffs; multi-VM notes
+       - Goal: Deploy using a multisig wallet
+       - Contents: Command param diffs, multi-VM notes
 
     16.4. **LayerZero Hardhat Helper Tasks (detailed)**
-       - Goal: Know all available helpers
-       - Contents: Link to docs + built-in + local tasks
+       - Goal: Understand all helper tasks
+       - Contents: Link to docs + list of built-in and local tasks
 
     16.5. **Contract/Program Verification**
-       - Goal: How to verify deployments
-       - Contents: Per-VM verification doc links
+       - Goal: Verify deployments
+       - Contents: VM-specific verification docs
 
     16.6. **Troubleshooting**
-       - Goal: Solve common issues
-       - Contents: Link to global troubleshooting + local fixes
+       - Goal: Resolve errors and setup issues
+       - Contents: Link to general troubleshooting + local fixes
+
+---
+
+## 2. README Principles
+
+1. Example READMEs should focus on required commands, with elaborations linked to docs.
+2. Avoid duplicating explanations of general concepts (e.g., OFTs)—link to docs instead.
+3. The first mention of concepts like Endpoint IDs, Wiring, etc. should link to the glossary: https://docs.layerzero.network/v2/home/glossary
+4. TODO: Every README should invite partners to provide feedback to drive improvements.
+
+---
+
+## 3. Example Code Principles
+
+1. **Options-first**: Enforced Options implementation and instructions should be included by default (e.g. in `layerzero.config.ts`).
+2. **Two chains only**: Examples should use only 2 chains by default to reduce testnet setup friction; use “Add other chains” section to scale up if needed.
 
 
 
