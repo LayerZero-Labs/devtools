@@ -1,3 +1,5 @@
+// NOTE: This config is an example for wiring Solana -> Aptos.
+// See wiring-to-aptos.md for more information.
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
 import { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
