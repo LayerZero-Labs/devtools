@@ -79,7 +79,6 @@ Throughout this walkthrough, helper tasks will be used. For the full list of ava
 
 - Copy `.env.example` into a new `.env`
 - Set up your deployer address/account via the `.env`
-
   - You can specify either `MNEMONIC` or `PRIVATE_KEY`:
 
     ```
