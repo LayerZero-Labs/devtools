@@ -139,6 +139,25 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
         assetOFT_arb.mint(address(oVault_arb), mintAssets);
     }
 
+    function _removeDustWithOffset(uint256 _amount, int128 _offset) internal pure returns (uint256, uint256) {
+        uint256 amountWithOffset = _amount;
+        if (_offset < 0) {
+            uint256 modOffset = uint128(-1 * _offset);
+            // If offset is negative, we need to ensure we don't underflow
+            require(_amount >= modOffset, "Offset too large");
+            amountWithOffset = _amount - modOffset;
+        } else {
+            // If offset is positive, we can safely add it
+            amountWithOffset = _amount + uint128(_offset);
+        }
+        return _removeDust(amountWithOffset);
+    }
+
+    function _removeDust(uint256 _amount) internal pure returns (uint256, uint256) {
+        uint256 dust = _amount % 10 ** 12;
+        return (_amount - dust, dust);
+    }
+
     function _randomGUID() internal view returns (bytes32) {
         return bytes32(vm.randomBytes(32));
     }

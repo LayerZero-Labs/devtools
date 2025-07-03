@@ -239,7 +239,7 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         vm.prank(arbEndpoint);
         OVaultComposerArb.lzCompose{ value: 1 ether }(address(assetOFT_arb), guid, composeMsg, arbExecutor, "");
 
-        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.CanRetryWithSwap));
+        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.CanRetryWithSwapOrRefund));
 
         assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
         assertEq(oVault_arb.totalSupply(), 0);
@@ -304,12 +304,7 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(oVault_arb)), TOKENS_TO_SEND);
         assertEq(oVault_arb.totalSupply(), oVault_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
 
-        (
-            address oft,
-            SendParam memory sendParam,
-            address refundOFT,
-            SendParam memory refundSendParam
-        ) = OVaultComposerArb.failedMessages(guid);
+        (address oft, SendParam memory sendParam, address refundOFT, ) = OVaultComposerArb.failedMessages(guid);
 
         assertEq(refundOFT, address(0), "refundOFT should be 0 - not possible");
         assertEq(oft, address(shareOFT_arb), "retry oft should be shareOFT_arb");
@@ -318,19 +313,13 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         assertEq(sendParam.amountLD, TOKENS_TO_SEND, "retry amountLD should be TOKENS_TO_SEND");
         assertEq(sendParam.minAmountLD, 0, "retry minAmountLD should be 0");
         assertEq(sendParam.extraOptions, OPTIONS_LZRECEIVE_2M, "retry extraOptions should be OPTIONS_LZRECEIVE_2M");
-
-        assertEq(refundSendParam.dstEid, ETH_EID, "refund dstEid should be ETH_EID");
-        assertEq(refundSendParam.to, addressToBytes32(userA), "refund to should be userA");
-        assertEq(refundSendParam.amountLD, TOKENS_TO_SEND, "refund amountLD should be TOKENS_TO_SEND");
-        assertEq(refundSendParam.minAmountLD, 0, "refund minAmountLD should be 0");
-        assertEq(refundSendParam.extraOptions, bytes(""), "refund extraOptions should be empty");
     }
 
     function test_lzCompose_slippage_retry_with_swap() public {
         bytes32 guid = _randomGUID();
         assetOFT_arb.mint(address(OVaultComposerArb), TOKENS_TO_SEND);
 
-        uint256 targetAmount = TOKENS_TO_SEND * 2;
+        (uint256 targetAmount, ) = _removeDustWithOffset(TOKENS_TO_SEND * 2, -1);
 
         SendParam memory internalSendParam = SendParam(
             POL_EID,
@@ -356,7 +345,7 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         vm.prank(arbEndpoint);
         OVaultComposerArb.lzCompose{ value: 1 ether }(address(assetOFT_arb), guid, composeMsg, arbExecutor, "");
 
-        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.CanRetryWithSwap));
+        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.CanRetryWithSwapOrRefund));
 
         assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
         assertEq(oVault_arb.totalSupply(), 0);
@@ -369,8 +358,68 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
 
         assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(oVault_arb)), mintAssets + TOKENS_TO_SEND);
 
+        (uint256 _ovaultTotalSupply, ) = _removeDust(oVault_arb.totalSupply());
         assertEq(
-            oVault_arb.totalSupply(),
+            _ovaultTotalSupply,
+            oVault_arb.balanceOf(address(0xbeef)) + oVault_arb.balanceOf(address(shareOFT_arb)),
+            mintShares + targetAmount
+        );
+    }
+
+    function test_lzCompose_slippage_retry_with_swap_failed_retains_transaction() public {
+        bytes32 guid = _randomGUID();
+        assetOFT_arb.mint(address(OVaultComposerArb), TOKENS_TO_SEND);
+
+        (uint256 targetAmount, ) = _removeDustWithOffset(TOKENS_TO_SEND * 2, -1);
+
+        SendParam memory internalSendParam = SendParam(
+            POL_EID,
+            addressToBytes32(userB),
+            TOKENS_TO_SEND,
+            targetAmount,
+            OPTIONS_LZRECEIVE_2M,
+            "",
+            ""
+        );
+
+        bytes memory composePayload = abi.encode(internalSendParam);
+        bytes memory composeMsg = _createComposePayload(ETH_EID, composePayload, TOKENS_TO_SEND, userA);
+
+        vm.expectEmit(true, true, true, true, address(OVaultComposerArb));
+        bytes memory errMsg = abi.encodeWithSelector(
+            IOVaultComposer.NotEnoughTargetTokens.selector,
+            TOKENS_TO_SEND,
+            targetAmount
+        );
+        emit IOVaultComposer.OVaultError(guid, address(shareOFT_arb), errMsg);
+
+        vm.prank(arbEndpoint);
+        OVaultComposerArb.lzCompose{ value: 1 ether }(address(assetOFT_arb), guid, composeMsg, arbExecutor, "");
+
+        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.CanRetryWithSwapOrRefund));
+
+        assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
+        assertEq(oVault_arb.totalSupply(), 0);
+
+        vm.expectRevert();
+        OVaultComposerArb.retryWithSwap{ value: 1 ether }(guid, OPTIONS_LZRECEIVE_2M);
+        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.CanRetryWithSwapOrRefund));
+
+        assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
+        assertEq(oVault_arb.totalSupply(), 0);
+
+        (uint256 mintAssets, uint256 mintShares) = _setTradeRatioAssetToShare(1, 2);
+
+        OVaultComposerArb.retryWithSwap{ value: 1 ether }(guid, OPTIONS_LZRECEIVE_2M);
+
+        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.NotFound));
+
+        assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(oVault_arb)), mintAssets + TOKENS_TO_SEND);
+
+        (uint256 _ovaultTotalSupply, ) = _removeDust(oVault_arb.totalSupply());
+
+        assertEq(
+            _ovaultTotalSupply,
             oVault_arb.balanceOf(address(0xbeef)) + oVault_arb.balanceOf(address(shareOFT_arb)),
             mintShares + targetAmount
         );
