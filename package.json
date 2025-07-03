@@ -29,7 +29,7 @@
   },
   "lint-staged": {
     "**/*.{js,ts,tsx,json}": [
-      "pnpm prettier --write --ignore-unknown",
+      "pnpm exec prettier --write --ignore-unknown",
       "pnpm eslint --fix"
     ]
   },
