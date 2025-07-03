@@ -233,6 +233,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     }
 
     /// @dev Internal function to send the message to the target OFT
+    /// @dev In the event you're using a bundler or anything where the tx.origin is not the right receiver then this function will have to be overridden.
     function _send(address _oft, SendParam memory _sendParam) internal {
         IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), tx.origin);
     }
