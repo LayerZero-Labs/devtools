@@ -13,7 +13,7 @@ import type { OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
  *
  *       'optimism-testnet': {
  *           eid: EndpointId.OPTSEP_V2_TESTNET,
- *           url: process.env.RPC_URL_OP_SEPOLIA || 'https://* optimism-sepolia.gateway.tenderly.co',
+ *           url: process.env.RPC_URL_OP_SEPOLIA || 'https://optimism-sepolia.gateway.tenderly.co',
  *           accounts,
  *         oftAdapter: {
  *             tokenAddress: '0x0', // Set the token address for the OFT adapter
