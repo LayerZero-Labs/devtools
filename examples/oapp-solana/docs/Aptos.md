@@ -2,14 +2,14 @@
 
 :warning: **Important Limitations for Solana ↔ Move-VM Pathways**
 
-Currently, you can only perform **one-way wiring from Solana → Move-VM** using this example. For the reverse pathway (Move-VM → Solana), you must use the [OFT Aptos Move example](https://github.com/LayerZero-Labs/devtools/tree/main/examples/oft-aptos-move). Please follow the deployment instructions in the README.md of the `oft-aptos-move` example for deploying to Move-VM and configuring the Move-VM → Solana pathway.
+Currently, you can only perform **one-way wiring from Solana → Move-VM** using this example. For the reverse pathway (Move-VM → Solana), you must use the [OApp Aptos Move example](https://github.com/LayerZero-Labs/devtools/tree/main/examples/oapp-aptos-move). Please follow the deployment instructions in the README.md of the `oapp-aptos-move` example for deploying to Move-VM and configuring the Move-VM → Solana pathway.
 
 #### Configuration Steps for Solana → Aptos
 
 :information_source: **For bidirectional Solana ↔ Aptos communication, deploy both examples:**
 
 - **Solana → Aptos**: Use this example
-- **Aptos → Solana**: Use the [OFT Aptos Move example](https://github.com/LayerZero-Labs/devtools/tree/main/examples/oft-aptos-move)
+- **Aptos → Solana**: Use the [OApp Aptos Move example](https://github.com/LayerZero-Labs/devtools/tree/main/examples/oapp-aptos-move)
 
 #### Deployment Process
 
