@@ -16,18 +16,4 @@ contract OVaultUpgradeable is ERC4626Upgradeable {
     constructor() {
         _disableInitializers();
     }
-
-    /// @dev Using solmate's implementation to work around rounding issues on initial minting
-    function _convertToShares(uint256 assets, Math.Rounding rounding) internal view override returns (uint256) {
-        uint256 supply = totalSupply(); // Saves an extra SLOAD if totalSupply is non-zero.
-
-        return supply == 0 ? assets : assets.mulDiv(supply, totalAssets(), rounding);
-    }
-
-    /// @dev Using solmate's implementation to work around rounding issues on initial minting
-    function _convertToAssets(uint256 shares, Math.Rounding rounding) internal view override returns (uint256) {
-        uint256 supply = totalSupply(); // Saves an extra SLOAD if totalSupply is non-zero.
-
-        return supply == 0 ? shares : shares.mulDiv(totalAssets(), supply, rounding);
-    }
 }
