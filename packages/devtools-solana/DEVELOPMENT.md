@@ -1,0 +1,1 @@
+@solana-developers/helpers pinned to 2.8.0 due to this issue: https://solana.stackexchange.com/questions/21945/issue-with-solana-developers-helpers-package-in-browser-environments-anchors?utm_source=chatgpt.com
