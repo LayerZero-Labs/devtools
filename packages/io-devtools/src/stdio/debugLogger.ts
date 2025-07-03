@@ -95,7 +95,7 @@ export const ERRORS_FIXES_MAP: Record<KnownErrors, ErrorFixInfo> = {
         info: 'If you loaded a custom OFT deployment from an EVM network, you must add the deployment srcEid to your `./hardhat.config.ts` file for the OFT to be found.',
     },
     [KnownErrors.SOLANA_INVALID_OWNER_OR_DELEGATE]: {
-        tip: 'The owner or delegate of the Solana OApp must either be an regular on curve address or a Squads Vault Account.',
+        tip: 'The owner or delegate of the Solana OApp must either be a regular on curve address or a Squads Vault Account.',
         info: 'Ensure that you are using a regular on-curve Solana address or a Squads Vault PDA as the owner or delegate of the OApp.',
     },
     [KnownErrors.SOLANA_OWNER_OR_DELEGATE_CANNOT_BE_MULTISIG_ACCOUNT]: {
