@@ -26,6 +26,7 @@ interface IOVaultComposer is IOAppComposer {
     event SendFailed(bytes32 indexed guid, address indexed oft);
     event Refunded(bytes32 indexed guid, address indexed oft);
     event Retried(bytes32 indexed guid, address indexed oft);
+    event RetriedWithSwap(bytes32 indexed guid, address indexed oft);
     event OVaultError(bytes32 indexed guid, address indexed oft, bytes errMsg);
     event NoPeer(bytes32 indexed guid, address indexed oft, uint32 dstEid);
 

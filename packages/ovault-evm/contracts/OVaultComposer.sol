@@ -176,12 +176,11 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         /// @dev If the destination is the HUB chain, we just transfer the tokens to the receiver
         if (refundSendParam.dstEid == HUB_EID) {
             _executeHubTransfer(refundOft, refundSendParam.to.bytes32ToAddress(), refundSendParam.amountLD);
-            return;
+        } else {
+            refundSendParam.extraOptions = _extraOptions;
+            _send(refundOft, refundSendParam);
         }
 
-        refundSendParam.extraOptions = _extraOptions;
-
-        _send(refundOft, refundSendParam);
         emit Refunded(_guid, refundOft);
     }
 
@@ -199,12 +198,11 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         /// @dev If the destination is the HUB chain, we just transfer the tokens to the receiver
         if (sendParam.dstEid == HUB_EID) {
             _executeHubTransfer(retryOFT, sendParam.to.bytes32ToAddress(), sendParam.amountLD);
-            return;
+        } else {
+            sendParam.extraOptions = _extraOptions;
+            _send(retryOFT, sendParam);
         }
 
-        sendParam.extraOptions = _extraOptions;
-
-        _send(retryOFT, sendParam);
         emit Retried(_guid, retryOFT);
     }
 
@@ -237,7 +235,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         sendParam.extraOptions = _extraOptions;
 
         _send(retryOFT, sendParam);
-        emit Sent(_guid, retryOFT);
+        emit RetriedWithSwap(_guid, retryOFT);
     }
 
     /// @dev Helper to view the state of a failed message
