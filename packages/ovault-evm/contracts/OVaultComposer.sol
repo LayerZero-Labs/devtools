@@ -161,15 +161,17 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     }
 
     /// @dev Permissionless function to send back the message to the source chain
-    /// @dev Always possible unless the lzCompose() fails due to an Out-Of-Gas panic
+    /// @dev Always possible unless the lzCompose() fails due to an Out-Of-Gas panic or we are in retry-only mode
     function refund(bytes32 _guid, bytes calldata _extraOptions) external payable nonReentrant {
         FailedMessage memory failedMessage = failedMessages[_guid];
-        if (failedMessage.refundOFT != address(0)) revert CanNotRefund(_guid);
+
+        FailedState f = _failedGuidState(failedMessage);
+        if ((f != FailedState.CanOnlyRefund) && (f != FailedState.CanRetryWithSwapOrRefund)) revert CanNotRefund(_guid);
 
         delete failedMessages[_guid];
 
         SendParam memory refundSendParam = failedMessage.refundSendParam;
-        address refundOft = failedMessage.oft;
+        address refundOft = failedMessage.refundOFT;
 
         /// @dev If the destination is the HUB chain, we just transfer the tokens to the receiver
         if (refundSendParam.dstEid == HUB_EID) {
