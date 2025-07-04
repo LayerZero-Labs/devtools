@@ -1,8 +1,23 @@
-This document is intended for the maintainers of the examples that are in `/examples` in this repo. It is also meant as a guide for coding agents for the purposes of reviewing or editing.
+# Example Specs
+
+## Table of Contents
+
+- [Audience](#audience)
+- [README Structure](#readme-structure)
+- [Example README Principles](#example-readme-principles)
+- [Example Code Principles](#example-code-principles)
+
+## Audience
+
+This guide is intended for both:
+- **Developers** maintaining or contributing to `/examples`
+- **Coding agents** (e.g. Cursor, Copilot, GPT) that assist with editing, reviewing, or scaffolding examples
+
+AI agents should be pointed to this file via `AGENTS.md` or `.cursor/rules`.
 
 Currently, this document will only detail the structure for the READMEs of the examples.
 
-## 1. README Structure
+## README Structure
 
 1. **Header**
    - Goal: Branding + promote docs site + entrypoint
@@ -30,7 +45,7 @@ Currently, this document will only detail the structure for the READMEs of the e
 
 7. **Scaffold this example**
    - Goal: How to initialize the example
-   - Contents: `pnpm dlx create-lz-oapp@latest --example <name>`
+   - Contents: `pnpm dlx create-lz-oapp@latest --example <name>` (Some examples require a feature flag. Refer to `packages/create-lz-oapp/src/config.ts` to verify)
 
 8. **Helper Tasks (inline notice)**
    - Goal: Let users know helpers exist
@@ -54,7 +69,7 @@ Currently, this document will only detail the structure for the READMEs of the e
 
 13. **Sending Message/OFT/ONFT**
     - Goal: Trigger a cross-chain action
-    - Contents: Send command(s), both/all directions
+    - Contents: CLI command to triffer send, both/all directions. E.g. for examples/oft, it is `pnpm hardhat lz:oft:send --src-eid 40232 --dst-eid 40231 --amount 1 --to <EVM_ADDRESS>`
 
 14. **Next Steps**
     - Goal: What to know after completing the deployment
@@ -92,9 +107,12 @@ Currently, this document will only detail the structure for the READMEs of the e
        - Goal: Resolve errors and setup issues
        - Contents: Link to general troubleshooting + local fixes
 
+Any sections that don't appear in the above list should be considered for removal.
+
+
 ---
 
-## 2. README Principles
+## Example README Principles
 
 1. Example READMEs should focus on required commands, with elaborations linked to docs.
 2. Avoid duplicating explanations of general concepts (e.g., OFTs)—link to docs instead.
@@ -103,13 +121,7 @@ Currently, this document will only detail the structure for the READMEs of the e
 
 ---
 
-## 3. Example Code Principles
+## Example Code Principles
 
 1. **Options-first**: Enforced Options implementation and instructions should be included by default (e.g. in `layerzero.config.ts`).
 2. **Two chains only**: Examples should use only 2 chains by default to reduce testnet setup friction; use “Add other chains” section to scale up if needed.
-
-
-
-
-
-Any sections that don't appear in the above list should be considered for removal.
