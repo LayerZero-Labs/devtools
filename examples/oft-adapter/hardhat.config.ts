@@ -63,11 +63,6 @@ const config: HardhatUserConfig = {
                 tokenAddress: '0x0', // Set the token address for the OFT adapter
             },
         },
-        'avalanche-testnet': {
-            eid: EndpointId.AVALANCHE_V2_TESTNET,
-            url: process.env.RPC_URL_FUJI || 'https://avalanche-fuji.drpc.org',
-            accounts,
-        },
         'arbitrum-testnet': {
             eid: EndpointId.ARBSEP_V2_TESTNET,
             url: process.env.RPC_URL_ARB_SEPOLIA || 'https://arbitrum-sepolia.gateway.tenderly.co',

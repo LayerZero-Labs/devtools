@@ -121,8 +121,8 @@ teardown() {
     cd "$DESTINATION"
     pnpm compile
     pnpm test
-    pnpm lint
     pnpm lint:fix
+    pnpm lint
 }
 
 @test "should work with pnpm & oft example in CI mode" {
@@ -132,8 +132,8 @@ teardown() {
     cd "$DESTINATION"
     pnpm compile
     pnpm test
-    pnpm lint
     pnpm lint:fix
+    pnpm lint
 }
 
 @test "should work with pnpm & onft721 example in CI mode" {
@@ -154,8 +154,8 @@ teardown() {
     cd "$DESTINATION"
     pnpm compile
     pnpm test
-    pnpm lint
     pnpm lint:fix
+    pnpm lint
 }
 
 @test "should work with pnpm & native-oft-adapter example in CI mode" {
