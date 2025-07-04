@@ -7,6 +7,7 @@ import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/Opti
 // OFT imports
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 import { SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
+import { EnforcedOptionParam } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppOptionsType3.sol";
 
 import { OVaultComposer } from "@layerzerolabs/ovault-evm/contracts/OVaultComposer.sol";
 
@@ -45,9 +46,11 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
     address public userA = makeAddr("userA");
     address public userB = makeAddr("userB");
 
+    address public refundOverpayAddress = makeAddr("refundOverpayAddress");
+
     address public arbEndpoint;
     address public arbExecutor = makeAddr("arbExecutor");
-    bytes public OPTIONS_LZRECEIVE_2M = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200_000, 0);
+    bytes public OPTIONS_LZRECEIVE_100k = OptionsBuilder.newOptions().addExecutorLzReceiveOption(100_000, 0);
 
     uint256 public constant INITIAL_BALANCE = 100 ether;
     uint256 public constant TOKENS_TO_SEND = 1 ether;
@@ -73,7 +76,12 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
         /// Now the "expansion" is for the arb vault and share ofts on other networks.
         oVault_arb = new MockOVault("arbShare", "arbShare", address(assetOFT_arb));
         shareOFT_arb = new MockOFTAdapter(address(oVault_arb), address(endpoints[ARB_EID]), address(this));
-        OVaultComposerArb = new OVaultComposer(address(oVault_arb), address(assetOFT_arb), address(shareOFT_arb));
+        OVaultComposerArb = new OVaultComposer(
+            address(oVault_arb),
+            address(assetOFT_arb),
+            address(shareOFT_arb),
+            refundOverpayAddress
+        );
 
         /// Deploy the Share OFTs on other networks - these are NOT lockbox adapters.
         shareOFT_eth = new MockOFT("ethShare", "ethShare", address(endpoints[ETH_EID]), address(this));
@@ -98,6 +106,13 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
 
         deal(arbExecutor, INITIAL_BALANCE);
         deal(arbEndpoint, INITIAL_BALANCE);
+
+        EnforcedOptionParam[] memory enforcedOptions = new EnforcedOptionParam[](2);
+        enforcedOptions[0] = EnforcedOptionParam({ eid: ETH_EID, msgType: 1, options: OPTIONS_LZRECEIVE_100k });
+        enforcedOptions[1] = EnforcedOptionParam({ eid: POL_EID, msgType: 1, options: OPTIONS_LZRECEIVE_100k });
+
+        assetOFT_arb.setEnforcedOptions(enforcedOptions);
+        shareOFT_arb.setEnforcedOptions(enforcedOptions);
     }
 
     function _createComposePayload(
