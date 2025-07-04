@@ -14,7 +14,6 @@ import { OVaultComposer } from "@layerzerolabs/ovault-evm/contracts/OVaultCompos
 import { OVaultComposerBaseTest } from "./OVaultComposer_Base.t.sol";
 
 import { console } from "forge-std/console.sol";
-
 contract OVaultComposerUnitTest is OVaultComposerBaseTest {
     using OptionsBuilder for bytes;
 
@@ -121,9 +120,10 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         assertEq(oVault_arb.totalSupply(), oVault_arb.balanceOf(address(userA)), TOKENS_TO_SEND);
     }
 
-    function test_lzCompose_fail_invalid_payload() public {
+    function test_lzCompose_fail_invalid_payload_and_can_refund() public {
         bytes32 guid = _randomGUID();
         assetOFT_arb.mint(address(OVaultComposerArb), TOKENS_TO_SEND);
+        uint256 userBBalanceEth = assetOFT_arb.balanceOf(userB);
 
         bytes memory invalidPayload = bytes("0x1234");
 
@@ -153,11 +153,18 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         assertEq(refundSendParam.extraOptions, "", "refund extraOptions should be empty");
 
         assertEmpty(sendParam);
+
+        OVaultComposerArb.refund{ value: 1 ether }(guid, OPTIONS_LZRECEIVE_2M);
+
+        verifyPackets(ETH_EID, address(assetOFT_arb));
+        assertEq(assetOFT_arb.balanceOf(userA), userBBalanceEth, "userA should have the same asset amount on Ethereum");
     }
 
-    function test_lzCompose_quoteSend_fail() public {
+    function test_lzCompose_quoteSend_fail_and_can_refund() public {
         bytes32 guid = _randomGUID();
         assetOFT_arb.mint(address(OVaultComposerArb), TOKENS_TO_SEND);
+
+        uint256 userBBalanceEth = assetOFT_arb.balanceOf(userB);
 
         SendParam memory internalSendParam = SendParam(
             BAD_EID,
@@ -206,9 +213,14 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         expectedSendParam.amountLD = 0;
 
         assertEq(sendParam, expectedSendParam);
+
+        OVaultComposerArb.refund{ value: 1 ether }(guid, OPTIONS_LZRECEIVE_2M);
+
+        verifyPackets(ETH_EID, address(assetOFT_arb));
+        assertEq(assetOFT_arb.balanceOf(userA), userBBalanceEth, "userA should have the same asset amount on Ethereum");
     }
 
-    function test_lzCompose_slippage_on_target_token() public {
+    function test_lzCompose_slippage_on_target_token_and_can_retry_with_swap_or_refund() public {
         bytes32 guid = _randomGUID();
         assetOFT_arb.mint(address(OVaultComposerArb), TOKENS_TO_SEND);
 
@@ -266,9 +278,11 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         assertEq(sendParam, expectedSendParam);
     }
 
-    function test_lzCompose_fail_insufficient_fee_amount() public {
+    function test_lzCompose_fail_insufficient_fee_amount_and_can_retry() public {
         bytes32 guid = _randomGUID();
         assetOFT_arb.mint(address(OVaultComposerArb), TOKENS_TO_SEND);
+
+        uint256 userBBalancePolygon = shareOFT_pol.balanceOf(userB);
 
         SendParam memory internalSendParam = SendParam(
             POL_EID,
@@ -313,6 +327,19 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         assertEq(sendParam.amountLD, TOKENS_TO_SEND, "retry amountLD should be TOKENS_TO_SEND");
         assertEq(sendParam.minAmountLD, 0, "retry minAmountLD should be 0");
         assertEq(sendParam.extraOptions, OPTIONS_LZRECEIVE_2M, "retry extraOptions should be OPTIONS_LZRECEIVE_2M");
+
+        verifyPackets(POL_EID, address(shareOFT_pol));
+        assertEq(shareOFT_pol.balanceOf(userB), userBBalancePolygon, "userB should have the same shares on Polygon");
+
+        OVaultComposerArb.retry{ value: 1 ether }(guid, OPTIONS_LZRECEIVE_2M);
+
+        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.NotFound));
+
+        assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(oVault_arb)), TOKENS_TO_SEND);
+        assertEq(oVault_arb.totalSupply(), oVault_arb.balanceOf(address(shareOFT_arb)), TOKENS_TO_SEND);
+
+        verifyPackets(POL_EID, address(shareOFT_pol));
+        assertGt(shareOFT_pol.balanceOf(userB), userBBalancePolygon, "userB should have more shares on Polygon");
     }
 
     function test_lzCompose_slippage_retry_with_swap() public {
@@ -320,6 +347,8 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         assetOFT_arb.mint(address(OVaultComposerArb), TOKENS_TO_SEND);
 
         (uint256 targetAmount, ) = _removeDustWithOffset(TOKENS_TO_SEND * 2, -1);
+
+        uint256 userBBalancePolygon = shareOFT_pol.balanceOf(userB);
 
         SendParam memory internalSendParam = SendParam(
             POL_EID,
@@ -350,8 +379,10 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
         assertEq(oVault_arb.totalSupply(), 0);
 
-        (uint256 mintAssets, uint256 mintShares) = _setTradeRatioAssetToShare(1, 2);
+        verifyPackets(POL_EID, address(shareOFT_pol));
+        assertEq(shareOFT_pol.balanceOf(userB), userBBalancePolygon, "userB should have the same shares on Polygon");
 
+        (uint256 mintAssets, uint256 mintShares) = _setTradeRatioAssetToShare(1, 2);
         OVaultComposerArb.retryWithSwap{ value: 1 ether }(guid, OPTIONS_LZRECEIVE_2M);
 
         assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.NotFound));
@@ -364,6 +395,9 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
             oVault_arb.balanceOf(address(0xbeef)) + oVault_arb.balanceOf(address(shareOFT_arb)),
             mintShares + targetAmount
         );
+
+        verifyPackets(POL_EID, address(shareOFT_pol));
+        assertGt(shareOFT_pol.balanceOf(userB), userBBalancePolygon, "userB should have more shares on Polygon");
     }
 
     function test_lzCompose_slippage_retry_with_swap_failed_retains_transaction() public {
