@@ -144,7 +144,7 @@ The OFT standard builds on top of the OApp standard, which enables generic messa
 Run the wiring task:
 
 ```bash
-pnpm hardhat lz:oapp:wire --oapp-config layerzero.config
+pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts
 ```
 
 Submit all the transactions to complete wiring. After all transactions confirm, your OApps are wired and can send messages to each other.
