@@ -206,13 +206,16 @@ Ensure that in move.layerzero.config.ts, all of your evm contracts have the owne
     ]
 ```
 
-If you are wiring solana to move-vm, create a file in `deployments/solana-mainnet/MyOFT.json` (solana-testnet if you are using testnet) and add the following field:
+If you are wiring your Move-VM OFT to Solana, in your config add:
 
-```json
-{
-    "address": <oft-store-address-from-solana-deployment-folder>
-}
+```ts
+const solanaContract: OmniPointHardhat = {
+  eid: EndpointId.SOLANA_V2_TESTNET as EndpointId,
+  address: "YOUR_SOLANA_OFT_STORE_ADDRESS",
+};
 ```
+
+Note: Solana OFT can only be deployed from the Solana example.
 
 ### To wire from EVM to Move-VM:
 
