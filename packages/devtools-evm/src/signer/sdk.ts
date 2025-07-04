@@ -97,6 +97,10 @@ export class GnosisOmniSignerEVM<TSafeConfig extends ConnectSafeConfig> extends 
     }
 
     async signAndSendBatch(transactions: OmniTransaction[]): Promise<OmniTransactionResponse> {
+        if (transactions.length === 0) {
+            throw new Error('/signAndSendBatch received 0 transactions')
+        }
+
         const safeTransaction = await this.#createSafeTransaction(transactions)
         return this.#proposeSafeTransaction(safeTransaction)
     }
