@@ -74,7 +74,7 @@ Throughout this walkthrough, helper tasks will be used. For the full list of ava
     PRIVATE_KEY="0xabc...def"
     ```
 
-- Fund this deployer address/account with the native tokens of the chains you want to deploy to. This example by default will deploy to the following chains' testnets: **Ethereum Sepolia** and **Arbitrum Sepolia**.
+- Fund this deployer address/account with the native tokens of the chains you want to deploy to. This example by default will deploy to the following chains' testnets: **Optimism Sepolia** and **Arbitrum Sepolia**.
 
 ## Build
 
@@ -121,13 +121,19 @@ Submit all the transactions to complete wiring. After all transactions confirm, 
 
 With your OApps wired, you can now send messages cross-chain.
 
-Send a message from **Ethereum Sepolia** to **Arbitrum Sepolia**:
+Send a message from **Optimism Sepolia** to **Arbitrum Sepolia**:
 
 ```bash
-pnpm hardhat lz:oapp:send --src-eid 40161 --dst-eid 40231 --msg 'Hello from Ethereum!'
+pnpm hardhat lz:oapp:send --dst-eid 40231 --string 'Hello from Ethereum!' --network optimism-testnet
 ```
 
-> :information_source: `40161` and `40231` are the Endpoint IDs of Ethereum Sepolia and Arbitrum Sepolia respectively. View the list of chains and their Endpoint IDs on the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.
+Send a message from **Arbitrum Sepolia** to **Optimism Sepolia**:
+
+```bash
+pnpm hardhat lz:oapp:send --dst-eid 40161 --string 'Hello from Arbitrum!' --network arbitrum-testnet
+```
+
+> :information_source: `40161` and `40231` are the Endpoint IDs of Optimism Sepolia and Arbitrum Sepolia respectively. The source network is determined by the `--network` flag, not a separate `--src-eid` parameter. View the list of chains and their Endpoint IDs on the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.
 
 Upon a successful send, the script will provide you with the link to the message on LayerZero Scan.
 
