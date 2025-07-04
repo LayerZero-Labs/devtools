@@ -22,6 +22,7 @@ import {
     SimpleTransaction,
 } from '@aptos-labs/ts-sdk'
 import * as dotenv from 'dotenv'
+import { ethers } from 'ethers'
 
 import { Chain, EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
@@ -39,8 +40,8 @@ const APTOS_PRIVATE_KEY = process.env.APTOS_PRIVATE_KEY
 const ACCOUNT_ADDRESS = process.env.APTOS_ACCOUNT_ADDRESS
 
 // OApp configuration
-const OAPP_ADDRESS = '' // Set your OApp's address on Aptos
-const REMOTE_EID = EndpointId.BSC_V2_TESTNET // Destination chain endpoint ID
+const OAPP_ADDRESS = '0x' // Set your OApp's address on Aptos
+const REMOTE_EID = EndpointId.SOLANA_V2_TESTNET // Destination chain endpoint ID
 const NETWORK = Network.TESTNET // Aptos network configuration
 
 // Initialize Aptos account and client
@@ -76,7 +77,7 @@ async function send() {
         messageArray = new Uint8Array(messageBytes)
     }
 
-    // The Following is the code required for packaing a string message to be sent to Solana:
+    // The Following is the code required for packaging a string message to be sent to Solana:
 
     // Get fee quote for the cross-chain message
     const quote = await aptos.view({
