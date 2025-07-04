@@ -124,7 +124,7 @@ With your OApps wired, you can now send messages cross-chain.
 Send a message from **Ethereum Sepolia** to **Arbitrum Sepolia**:
 
 ```bash
-pnpm hardhat lz:oapp:send --src-eid 40161 --dst-eid 40231 --msg "Hello from Ethereum!"
+pnpm hardhat lz:oapp:send --src-eid 40161 --dst-eid 40231 --msg 'Hello from Ethereum!'
 ```
 
 > :information_source: `40161` and `40231` are the Endpoint IDs of Ethereum Sepolia and Arbitrum Sepolia respectively. View the list of chains and their Endpoint IDs on the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.
