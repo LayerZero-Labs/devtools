@@ -8,11 +8,6 @@ const optimismContract: OmniPointHardhat = {
     contractName: 'MyOApp',
 }
 
-const avalancheContract: OmniPointHardhat = {
-    eid: EndpointId.AVALANCHE_V2_TESTNET,
-    contractName: 'MyOApp',
-}
-
 const arbitrumContract: OmniPointHardhat = {
     eid: EndpointId.ARBSEP_V2_TESTNET,
     contractName: 'MyOApp',
@@ -31,33 +26,17 @@ const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
 ]
 
 // To connect all the above chains to each other, we need the following pathways:
-// Optimism <-> Avalanche
 // Optimism <-> Arbitrum
-// Avalanche <-> Arbitrum
 
 // With the config generator, pathways declared are automatically bidirectional
 // i.e. if you declare A,B there's no need to declare B,A
 const pathways: TwoWayConfig[] = [
     [
         optimismContract, // Chain A contract
-        avalancheContract, // Chain B contract
+        arbitrumContract, // Chain B contract
         [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
         [1, 1], // [A to B confirmations, B to A confirmations]
         [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain B enforcedOptions, Chain A enforcedOptions
-    ],
-    [
-        optimismContract, // Chain A contract
-        arbitrumContract, // Chain C contract
-        [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
-        [1, 1], // [A to B confirmations, B to A confirmations]
-        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain C enforcedOptions, Chain A enforcedOptions
-    ],
-    [
-        avalancheContract, // Chain B contract
-        arbitrumContract, // Chain C contract
-        [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
-        [1, 1], // [A to B confirmations, B to A confirmations]
-        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain C enforcedOptions, Chain B enforcedOptions
     ],
 ]
 
@@ -65,7 +44,7 @@ export default async function () {
     // Generate the connections config based on the pathways
     const connections = await generateConnectionsConfig(pathways)
     return {
-        contracts: [{ contract: optimismContract }, { contract: avalancheContract }, { contract: arbitrumContract }],
+        contracts: [{ contract: optimismContract }, { contract: arbitrumContract }],
         connections,
     }
 }

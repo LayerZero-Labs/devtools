@@ -30,6 +30,7 @@ Welcome to the **LayerZero Developer Tools Hub**. This repository houses everyth
 Visit our <a href="https://docs.layerzero.network/" style="color: #a77dff">developer docs</a> to get started building omnichain applications.
 
 ## Repository Structure
+
 The primary folders that smart contract developers will find most useful are:
 
 `examples/`: Contains various example projects demonstrating how to build with `OApp.sol` (Omnichain App Standard), `OFT.sol` (Omnichain Fungible Tokens), `ONFT.sol` (Omnichain Non-Fungible Tokens), and more. These examples serve as templates and learning resources.
@@ -88,7 +89,7 @@ pnpm build
 
 This will build all the packages and examples in the repository.
 
-Review the README for each individual `examples/` project to learn how to interact with and use each sample project. 
+Review the README for each individual `examples/` project to learn how to interact with and use each sample project.
 
 ## Contributing
 
