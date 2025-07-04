@@ -8,7 +8,6 @@ import {
     OmniSigner,
     OmniTransactionReceipt,
     OmniTransactionResponse,
-    firstFactory,
     formatEid,
 } from '@layerzerolabs/devtools'
 import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
@@ -31,6 +30,7 @@ import {
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
 
 import { createSimpleOAppFactory } from '../../lib/factory'
+import { createAptosOAppFactory } from '../aptos'
 
 export const createSolanaConnectionFactory = () =>
     createConnectionFactory(
@@ -50,6 +50,7 @@ export const createSdkFactory = (
     // We do this by using the firstFactory helper function that is provided by the devtools package.
     // This function will try to execute the factories one by one and return the first one that succeeds.
     const evmSdkfactory = createOAppFactory(createConnectedContractFactory())
+    const aptosSdkFactory = createAptosOAppFactory()
     const solanaSdkFactory = createSimpleOAppFactory(
         // The first parameter to createOFTFactory is a user account factory
         //
@@ -76,7 +77,21 @@ export const createSdkFactory = (
     //
     // We do this by using the firstFactory helper function that is provided by the devtools package.
     // This function will try to execute the factories one by one and return the first one that succeeds.
-    return firstFactory<[OmniPoint], IOApp>(evmSdkfactory, solanaSdkFactory)
+    return async (point: OmniPoint): Promise<IOApp> => {
+        if (endpointIdToChainType(point.eid) === ChainType.SOLANA) {
+            return solanaSdkFactory(point)
+        } else if (endpointIdToChainType(point.eid) === ChainType.EVM) {
+            return evmSdkfactory(point)
+        } else if (
+            endpointIdToChainType(point.eid) === ChainType.APTOS ||
+            endpointIdToChainType(point.eid) === ChainType.INITIA
+        ) {
+            return aptosSdkFactory(point)
+        } else {
+            console.error(`Unsupported chain type for EID ${point.eid}`)
+            throw new Error(`Unsupported chain type for EID ${point.eid}`)
+        }
+    }
 }
 
 export const createSolanaSignerFactory = (
