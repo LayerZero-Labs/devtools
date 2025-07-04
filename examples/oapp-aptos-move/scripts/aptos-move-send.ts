@@ -63,17 +63,13 @@ async function send() {
     let messageArray: Uint8Array
     if (getNetworkForChainId(REMOTE_EID).chainName === Chain.SOLANA) {
         const message = 'Hello, Solana!'
-        const messageBytes = new TextEncoder().encode(message)
 
-        // Create 32-byte length encoding (equivalent to abi.encode(uint256))
-        const lengthBytes = new Uint8Array(32)
-        const lengthView = new DataView(lengthBytes.buffer)
-        lengthView.setBigUint64(24, BigInt(messageBytes.length), false)
-
-        // Concatenate length and message bytes (equivalent to abi.encodePacked)
-        messageArray = new Uint8Array(lengthBytes.length + messageBytes.length)
-        messageArray.set(lengthBytes, 0)
-        messageArray.set(messageBytes, lengthBytes.length)
+        const messageHex = ethers.utils.solidityPack(
+            ['uint256', 'bytes'],
+            [ethers.utils.toUtf8Bytes(message).length, ethers.utils.toUtf8Bytes(message)]
+        )
+        // Convert hex string to Uint8Array
+        messageArray = ethers.utils.arrayify(messageHex)
     } else {
         const message = 'Hello, EVM!'
         const messageBytes = new TextEncoder().encode(message)
