@@ -178,8 +178,15 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             )
         {
             emit Refunded(_guid, failedMessage.refundOFT);
-        } catch {
+        } catch (bytes memory errMsg) {
             emit SendFailed(_guid, failedMessage.refundOFT);
+
+            if (errMsg.length > 0) {
+                assembly {
+                    revert(add(errMsg, 32), mload(errMsg))
+                }
+            }
+            revert();
         }
     }
 
@@ -203,8 +210,15 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             this.sendFailedMessage{ value: msg.value }(_guid, failedMessage.oft, sendParam, prePaidMsgValue, tx.origin)
         {
             emit Retried(_guid, failedMessage.oft);
-        } catch {
+        } catch (bytes memory errMsg) {
             emit SendFailed(_guid, failedMessage.oft);
+
+            if (errMsg.length > 0) {
+                assembly {
+                    revert(add(errMsg, 32), mload(errMsg))
+                }
+            }
+            revert();
         }
     }
 
