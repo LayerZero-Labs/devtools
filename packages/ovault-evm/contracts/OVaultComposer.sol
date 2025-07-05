@@ -295,11 +295,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             vaultAmount = OVAULT.redeem(_amount, address(this), address(this));
         }
 
-        /// @dev Remove dust before slippage check to be equivalent to OFTCore::_debitView()
-        uint256 vaultAmountLD = _removeDust(_oft, vaultAmount);
-        if (vaultAmountLD < _minAmountLD) {
-            revert NotEnoughTargetTokens(vaultAmountLD, _minAmountLD);
-        }
+        _checkSlippage(_oft, vaultAmount, _minAmountLD);
     }
 
     /// @dev Internal function to send the message to the target OFT
@@ -311,7 +307,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         SendParam memory _sendParam,
         uint256 _totalMsgValue,
         address _refundOverpayAddress
-    ) internal {
+    ) internal virtual {
         if (_sendParam.dstEid == HUB_EID) {
             address token = IOFT(_oft).token();
             address to = _sendParam.to.bytes32ToAddress();
@@ -344,6 +340,17 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             ? ASSET_DECIMAL_CONVERSION_RATE
             : SHARE_DECIMAL_CONVERSION_RATE;
         return (_amount / decimalConversionRate) * decimalConversionRate;
+    }
+
+    /// @dev Remove dust before slippage check to be equivalent to OFTCore::_debitView()
+    /// @dev If the OFT has a Fee or anything that changes the tokens such that:
+    /// @dev dstChain.receivedAmount != srcChain.sentAmount, this will have to be overridden.
+    function _checkSlippage(address _oft, uint256 _amount, uint256 _minAmountLD) internal view virtual {
+        uint256 vaultAmountLD = _removeDust(_oft, _amount);
+        uint256 amountReceivedLD = vaultAmountLD; /// @dev Perform your adjustments here if needed (ex: Fee)
+        if (amountReceivedLD < _minAmountLD) {
+            revert NotEnoughTargetTokens(amountReceivedLD, _minAmountLD);
+        }
     }
 
     function _failedGuidState(FailedMessage memory _failedMessage) internal pure returns (FailedState) {
