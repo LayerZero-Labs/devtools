@@ -56,7 +56,11 @@ interface IOVaultComposer is IOAppComposer {
     function ASSET_OFT() external view returns (address);
     function SHARE_OFT() external view returns (address);
     function ENDPOINT() external view returns (address);
+    function HUB_EID() external view returns (uint32);
     function REFUND_OVERPAY_ADDRESS() external view returns (address);
+
+    function ASSET_DECIMAL_CONVERSION_RATE() external view returns (uint256);
+    function SHARE_DECIMAL_CONVERSION_RATE() external view returns (uint256);
 
     /// ========================== FUNCTIONS =====================================
     function refund(bytes32 guid) external payable;

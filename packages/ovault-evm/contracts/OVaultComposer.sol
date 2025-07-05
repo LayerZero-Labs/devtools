@@ -7,12 +7,13 @@ import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.s
 
 import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
-import { IOFT, SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
+import { SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { IOAppCore } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol";
 import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
 import { IOVaultComposer, FailedMessage, FailedState } from "./interfaces/IOVaultComposer.sol";
+import { IOFTWithDecimalConversionRate as IOFT } from "./interfaces/IOFTWithDecimalConversionRate.sol";
 
 contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     using OFTComposeMsgCodec for bytes;
@@ -26,6 +27,9 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     uint32 public immutable HUB_EID;
 
     address public immutable REFUND_OVERPAY_ADDRESS;
+
+    uint256 public immutable ASSET_DECIMAL_CONVERSION_RATE;
+    uint256 public immutable SHARE_DECIMAL_CONVERSION_RATE;
 
     mapping(bytes32 guid => FailedMessage) public failedMessages;
 
@@ -48,6 +52,9 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
 
         ENDPOINT = address(IOAppCore(ASSET_OFT).endpoint());
         HUB_EID = ILayerZeroEndpointV2(ENDPOINT).eid();
+
+        ASSET_DECIMAL_CONVERSION_RATE = IOFT(_assetOFT).decimalConversionRate();
+        SHARE_DECIMAL_CONVERSION_RATE = IOFT(_shareOFT).decimalConversionRate();
 
         // Approve the ovault to spend the share and asset tokens held by this contract
         IERC20(IOFT(_shareOFT).token()).approve(address(_ovault), type(uint256).max);
@@ -145,12 +152,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     ) external nonReentrant returns (uint256 vaultAmount) {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
-        vaultAmount = _executeOVaultAction(_oft, _amount);
-
-        if (vaultAmount < _minAmountLD) {
-            /// @dev Will rollback on this function's storage changes (trade does not happen)
-            revert NotEnoughTargetTokens(vaultAmount, _minAmountLD);
-        }
+        vaultAmount = _executeOVaultActionWithSlippageCheck(_oft, _amount, _minAmountLD);
     }
 
     /// @dev External call for try...catch logic in lzCompose()
@@ -232,14 +234,12 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         failedMessages[_guid].refundOFT = address(0);
 
         uint256 srcAmount = failedMessage.refundSendParam.amountLD;
-        uint256 minAmountLD = failedMessage.sendParam.minAmountLD;
 
-        uint256 vaultAmount = _executeOVaultAction(failedMessage.refundOFT, srcAmount);
-
-        if (vaultAmount < minAmountLD) {
-            /// @dev Will rollback on this function's storage changes (trade does not happen)
-            revert NotEnoughTargetTokens(vaultAmount, minAmountLD);
-        }
+        uint256 vaultAmount = _executeOVaultActionWithSlippageCheck(
+            failedMessage.refundOFT,
+            srcAmount,
+            failedMessage.sendParam.minAmountLD
+        );
 
         failedMessage.sendParam.amountLD = vaultAmount;
         emit SwappedTokens(_guid);
@@ -284,11 +284,21 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         return _failedGuidState(failedMessage);
     }
 
-    function _executeOVaultAction(address _oft, uint256 _amount) internal returns (uint256 vaultAmount) {
+    function _executeOVaultActionWithSlippageCheck(
+        address _oft,
+        uint256 _amount,
+        uint256 _minAmountLD
+    ) internal returns (uint256 vaultAmount) {
         if (_oft == address(ASSET_OFT)) {
             vaultAmount = OVAULT.deposit(_amount, address(this));
         } else {
             vaultAmount = OVAULT.redeem(_amount, address(this), address(this));
+        }
+
+        /// @dev Remove dust before slippage check to be equivalent to OFTCore::_debitView()
+        uint256 vaultAmountLD = _removeDust(_oft, vaultAmount);
+        if (vaultAmountLD < _minAmountLD) {
+            revert NotEnoughTargetTokens(vaultAmountLD, _minAmountLD);
         }
     }
 
@@ -327,6 +337,13 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     /// @dev Helper to check if the target OFT does not have a peer set for the destination chain OR if our target chain is not the same as the HUB chain
     function _isInvalidPeer(address _oft, uint32 _dstEid) internal view returns (bool) {
         return _dstEid != HUB_EID && IOAppCore(_oft).peers(_dstEid) == bytes32(0);
+    }
+
+    function _removeDust(address _oft, uint256 _amount) internal view returns (uint256) {
+        uint256 decimalConversionRate = _oft == address(ASSET_OFT)
+            ? ASSET_DECIMAL_CONVERSION_RATE
+            : SHARE_DECIMAL_CONVERSION_RATE;
+        return (_amount / decimalConversionRate) * decimalConversionRate;
     }
 
     function _failedGuidState(FailedMessage memory _failedMessage) internal pure returns (FailedState) {
