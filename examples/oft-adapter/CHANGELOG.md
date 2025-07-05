@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-adapter-example
 
+## 0.5.0
+
+### Minor Changes
+
+- 870deb2: revamp README, add mock deploy script, reduce to 2 chains
+
 ## 0.4.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-upgradeable-example
 
+## 0.3.0
+
+### Minor Changes
+
+- 870deb2: revamp README, add mock deploy script, reduce to 2 chains, add send scripts
+
 ## 0.2.12
 
 ### Patch Changes
