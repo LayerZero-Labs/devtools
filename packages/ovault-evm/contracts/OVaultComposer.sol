@@ -256,6 +256,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             {
                 emit Retried(_guid, failedMessage.oft);
             } catch {
+                failedMessages[_guid].msgValue += msg.value;
                 emit SendFailed(_guid, failedMessage.oft);
             }
         }
