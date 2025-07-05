@@ -200,10 +200,11 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         uint256 prePaidMsgValue = failedMessage.msgValue;
 
         if (removeExtraOptions) {
+            (bool sent, ) = payable(REFUND_OVERPAY_ADDRESS).call{ value: prePaidMsgValue }("");
+            require(sent, "Failed to send Ether");
+
             sendParam.extraOptions = "";
             prePaidMsgValue = 0;
-
-            payable(REFUND_OVERPAY_ADDRESS).transfer(prePaidMsgValue);
         }
 
         try
