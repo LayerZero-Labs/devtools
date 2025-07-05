@@ -170,26 +170,14 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         FailedState f = _failedGuidState(failedMessage);
         if ((f != FailedState.CanOnlyRefund) && (f != FailedState.CanRefundOrRetryWithSwap)) revert CanNotRefund(_guid);
 
-        try
-            this.sendFailedMessage{ value: msg.value }(
-                _guid,
-                failedMessage.refundOFT,
-                failedMessage.refundSendParam,
-                failedMessage.msgValue,
-                REFUND_OVERPAY_ADDRESS
-            )
-        {
-            emit Refunded(_guid, failedMessage.refundOFT);
-        } catch (bytes memory errMsg) {
-            emit SendFailed(_guid, failedMessage.refundOFT);
-
-            if (errMsg.length > 0) {
-                assembly {
-                    revert(add(errMsg, 32), mload(errMsg))
-                }
-            }
-            revert();
-        }
+        this.sendFailedMessage{ value: msg.value }(
+            _guid,
+            failedMessage.refundOFT,
+            failedMessage.refundSendParam,
+            failedMessage.msgValue,
+            REFUND_OVERPAY_ADDRESS
+        );
+        emit Refunded(_guid, failedMessage.refundOFT);
     }
 
     /// @dev If removeExtraOptions is true, only enforcedOptions are used and the sender needs to pay the entire msg.value
@@ -209,20 +197,8 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             prePaidMsgValue = 0;
         }
 
-        try
-            this.sendFailedMessage{ value: msg.value }(_guid, failedMessage.oft, sendParam, prePaidMsgValue, tx.origin)
-        {
-            emit Retried(_guid, failedMessage.oft);
-        } catch (bytes memory errMsg) {
-            emit SendFailed(_guid, failedMessage.oft);
-
-            if (errMsg.length > 0) {
-                assembly {
-                    revert(add(errMsg, 32), mload(errMsg))
-                }
-            }
-            revert();
-        }
+        this.sendFailedMessage{ value: msg.value }(_guid, failedMessage.oft, sendParam, prePaidMsgValue, tx.origin);
+        emit Retried(_guid, failedMessage.oft);
     }
 
     /// @dev Performs the ovault action for a failed swap. If we fail on the send then the GUID enters the retry state for manual execution.
@@ -245,6 +221,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         emit SwappedTokens(_guid);
 
         /// @dev Regardless of the outcome of skipRetry and sendFailedMessage, the failedMessage is now in a RETRY only state.
+        /// @dev try..catch to accumulate the msg.value in the case of a failed send
         if (!skipRetry) {
             try
                 this.sendFailedMessage{ value: msg.value }(
