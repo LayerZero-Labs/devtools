@@ -36,7 +36,7 @@ contract OVaultComposerE2ETest is OVaultComposerBaseTest {
     }
 
     function test_E2E_ethereum_to_polygon() public {
-        uint256 shareTokensToReceive = TOKENS_TO_SEND * 2;
+        (uint256 shareTokensToReceive, ) = _removeDustWithOffset(TOKENS_TO_SEND * 2, -1);
 
         deal(address(assetOFT_eth), userA, TOKENS_TO_SEND);
 
@@ -105,10 +105,11 @@ contract OVaultComposerE2ETest is OVaultComposerBaseTest {
             address(this),
             ""
         );
+
         assertEq(
             assetOFT_arb.balanceOf(composerAddress),
             0,
-            "composerAddress should have no tokens after lzCompose on arb"
+            "composerAddress should have the no tokens after lzCompose on arb"
         );
 
         verifyPackets(POL_EID, addressToBytes32(address(shareOFT_pol)));

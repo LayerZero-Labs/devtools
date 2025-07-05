@@ -7,6 +7,7 @@ import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/Opti
 // OFT imports
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 import { SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
+import { EnforcedOptionParam } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppOptionsType3.sol";
 
 import { OVaultComposer } from "@layerzerolabs/ovault-evm/contracts/OVaultComposer.sol";
 
@@ -45,9 +46,11 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
     address public userA = makeAddr("userA");
     address public userB = makeAddr("userB");
 
+    address public refundOverpayAddress = makeAddr("refundOverpayAddress");
+
     address public arbEndpoint;
     address public arbExecutor = makeAddr("arbExecutor");
-    bytes public OPTIONS_LZRECEIVE_2M = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200_000, 0);
+    bytes public OPTIONS_LZRECEIVE_100k = OptionsBuilder.newOptions().addExecutorLzReceiveOption(100_000, 0);
 
     uint256 public constant INITIAL_BALANCE = 100 ether;
     uint256 public constant TOKENS_TO_SEND = 1 ether;
@@ -73,7 +76,12 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
         /// Now the "expansion" is for the arb vault and share ofts on other networks.
         oVault_arb = new MockOVault("arbShare", "arbShare", address(assetOFT_arb));
         shareOFT_arb = new MockOFTAdapter(address(oVault_arb), address(endpoints[ARB_EID]), address(this));
-        OVaultComposerArb = new OVaultComposer(address(oVault_arb), address(assetOFT_arb), address(shareOFT_arb));
+        OVaultComposerArb = new OVaultComposer(
+            address(oVault_arb),
+            address(assetOFT_arb),
+            address(shareOFT_arb),
+            refundOverpayAddress
+        );
 
         /// Deploy the Share OFTs on other networks - these are NOT lockbox adapters.
         shareOFT_eth = new MockOFT("ethShare", "ethShare", address(endpoints[ETH_EID]), address(this));
@@ -98,6 +106,13 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
 
         deal(arbExecutor, INITIAL_BALANCE);
         deal(arbEndpoint, INITIAL_BALANCE);
+
+        EnforcedOptionParam[] memory enforcedOptions = new EnforcedOptionParam[](2);
+        enforcedOptions[0] = EnforcedOptionParam({ eid: ETH_EID, msgType: 1, options: OPTIONS_LZRECEIVE_100k });
+        enforcedOptions[1] = EnforcedOptionParam({ eid: POL_EID, msgType: 1, options: OPTIONS_LZRECEIVE_100k });
+
+        assetOFT_arb.setEnforcedOptions(enforcedOptions);
+        shareOFT_arb.setEnforcedOptions(enforcedOptions);
     }
 
     function _createComposePayload(
@@ -137,6 +152,25 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
 
         oVault_arb.mint(address(0xbeef), mintShares);
         assetOFT_arb.mint(address(oVault_arb), mintAssets);
+    }
+
+    function _removeDustWithOffset(uint256 _amount, int128 _offset) internal pure returns (uint256, uint256) {
+        uint256 amountWithOffset = _amount;
+        if (_offset < 0) {
+            uint256 modOffset = uint128(-1 * _offset);
+            // If offset is negative, we need to ensure we don't underflow
+            require(_amount >= modOffset, "Offset too large");
+            amountWithOffset = _amount - modOffset;
+        } else {
+            // If offset is positive, we can safely add it
+            amountWithOffset = _amount + uint128(_offset);
+        }
+        return _removeDust(amountWithOffset);
+    }
+
+    function _removeDust(uint256 _amount) internal pure returns (uint256, uint256) {
+        uint256 dust = _amount % 10 ** 12;
+        return (_amount - dust, dust);
     }
 
     function _randomGUID() internal view returns (bytes32) {
