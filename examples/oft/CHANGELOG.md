@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.7.0
+
+### Minor Changes
+
+- 870deb2: revamp README, add mock deploy script, reduce to 2 chains
+
 ## 0.6.0
 
 ### Minor Changes
