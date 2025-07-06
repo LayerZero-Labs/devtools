@@ -206,18 +206,22 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         FailedMessage memory failedMessage = failedMessages[_guid];
         if (_failedGuidState(failedMessage) != FailedState.CanRefundOrRetryWithSwap) revert CanNotSwap(_guid);
 
-        /// @dev Disable refund. If this call reverts refund is still possible.
-        failedMessages[_guid].refundOFT = address(0);
+        if (skipRetry && msg.value > 0) revert NoMsgValueWhenSkippingRetry();
 
         uint256 srcAmount = failedMessage.refundSendParam.amountLD;
 
-        uint256 vaultAmount = _executeOVaultActionWithSlippageCheck(
+        failedMessage.sendParam.amountLD = _executeOVaultActionWithSlippageCheck(
             failedMessage.refundOFT,
             srcAmount,
             failedMessage.sendParam.minAmountLD
         );
 
-        failedMessage.sendParam.amountLD = vaultAmount;
+        /// @dev Perform global state update.
+        /// @dev Disable refund. If this call reverts refund is still possible.
+        /// @dev Store the vault out amount for the retry.
+        failedMessages[_guid].refundOFT = address(0);
+        failedMessages[_guid].sendParam.amountLD = failedMessage.sendParam.amountLD;
+
         emit SwappedTokens(_guid);
 
         /// @dev Regardless of the outcome of skipRetry and sendFailedMessage, the failedMessage is now in a RETRY only state.

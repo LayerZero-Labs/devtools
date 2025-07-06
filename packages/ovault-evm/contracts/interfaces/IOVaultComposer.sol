@@ -50,6 +50,7 @@ interface IOVaultComposer is IOAppComposer {
     error CanNotSwap(bytes32 guid);
     error CanNotWithdraw(bytes32 guid);
 
+    error NoMsgValueWhenSkippingRetry();
     error NotEnoughTargetTokens(uint256 amountLD, uint256 minAmountLD);
 
     /// ========================== GLOBAL VARIABLE FUNCTIONS =====================================
