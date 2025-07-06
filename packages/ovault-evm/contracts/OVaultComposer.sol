@@ -67,7 +67,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     }
 
     function lzCompose(
-        address _refundOFT,
+        address _refundOFT, /// @note The OFT used on refund, also the vaultIn token.
         bytes32 _guid,
         bytes calldata _message,
         address /*_executor*/,
@@ -77,6 +77,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         if (_refundOFT != ASSET_OFT && _refundOFT != SHARE_OFT) revert OnlyOFT(_refundOFT);
 
         /// @dev Route to the correct target OFT
+        /// @note Also the vaultOut token.
         address oft = _refundOFT == ASSET_OFT ? SHARE_OFT : ASSET_OFT;
 
         /// @dev Extracted from the _message header. Will always be part of the _message since it is created by lzReceive
@@ -146,13 +147,13 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
 
     /// @dev External call for try...catch logic in lzCompose()
     function executeOVaultActionWithSlippageCheck(
-        address _oft,
+        address _refundOFT,
         uint256 _amount,
         uint256 _minAmountLD
     ) external nonReentrant returns (uint256 vaultAmount) {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
-        vaultAmount = _executeOVaultActionWithSlippageCheck(_oft, _amount, _minAmountLD);
+        vaultAmount = _executeOVaultActionWithSlippageCheck(_refundOFT, _amount, _minAmountLD);
     }
 
     /// @dev External call for try...catch logic in lzCompose()
@@ -266,17 +267,20 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     }
 
     function _executeOVaultActionWithSlippageCheck(
-        address _oft,
+        address _refundOFT,
         uint256 _amount,
         uint256 _minAmountLD
     ) internal returns (uint256 vaultAmount) {
-        if (_oft == address(ASSET_OFT)) {
+        address targetOFT = SHARE_OFT;
+
+        if (_refundOFT == address(ASSET_OFT)) {
             vaultAmount = OVAULT.deposit(_amount, address(this));
         } else {
             vaultAmount = OVAULT.redeem(_amount, address(this), address(this));
+            targetOFT = ASSET_OFT;
         }
 
-        _checkSlippage(_oft, vaultAmount, _minAmountLD);
+        _checkSlippage(targetOFT, vaultAmount, _minAmountLD);
     }
 
     /// @dev Internal function to send the message to the target OFT
