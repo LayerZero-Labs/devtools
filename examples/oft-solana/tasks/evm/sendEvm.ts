@@ -5,7 +5,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { makeBytes32 } from '@layerzerolabs/devtools'
 import { createGetHreByEid } from '@layerzerolabs/devtools-evm-hardhat'
-import { createLogger } from '@layerzerolabs/io-devtools'
+import { createLogger, promptToContinue } from '@layerzerolabs/io-devtools'
 import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 
 import layerzeroConfig from '../../layerzero.config'
@@ -95,6 +95,22 @@ export async function sendEvm(
         extraOptions: extraOptions ? extraOptions.toString() : '0x',
         composeMsg: composeMsg ? composeMsg.toString() : '0x',
         oftCmd: '0x',
+    }
+
+    if (!extraOptions) {
+        try {
+            const enforced = await oft.enforcedOptions(dstEid, 1)
+            if (!enforced || /^0x0*$/.test(enforced)) {
+                const proceed = await promptToContinue(
+                    'No extra options were included and OFT has no set enforced options. Your quote / send will most likely fail. Continue ?'
+                )
+                if (!proceed) {
+                    throw new Error('Aborted due to missing options')
+                }
+            }
+        } catch (error) {
+            logger.debug(`Failed to check enforced options: ${error}`)
+        }
     }
 
     // 6️⃣ Quote (MessagingFee = { nativeFee, lzTokenFee })
