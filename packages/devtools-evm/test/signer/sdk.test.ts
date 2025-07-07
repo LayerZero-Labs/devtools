@@ -283,6 +283,7 @@ describe('signer/ethers', () => {
                                     operation: OperationType.Call,
                                 })),
                                 options: { nonce },
+                                onlyCalls: true,
                             })
 
                             expect(apiKit.getNextNonce).toHaveBeenCalledWith(safeAddress)
