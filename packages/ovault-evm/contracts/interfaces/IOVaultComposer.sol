@@ -9,13 +9,14 @@ struct FailedMessage {
     SendParam sendParam;
     address refundOFT;
     SendParam refundSendParam;
+    uint256 msgValue;
 }
 
 enum FailedState {
     NotFound,
     CanOnlyRefund,
     CanOnlyRetry,
-    CanRetryWithSwap
+    CanRefundOrRetryWithSwap
 }
 
 interface IOVaultComposer is IOAppComposer {
@@ -28,6 +29,8 @@ interface IOVaultComposer is IOAppComposer {
     event Retried(bytes32 indexed guid, address indexed oft);
     event OVaultError(bytes32 indexed guid, address indexed oft, bytes errMsg);
     event NoPeer(bytes32 indexed guid, address indexed oft, uint32 dstEid);
+    event FailedToSendEther(address indexed receiver, uint256 amount, bytes errMsg);
+    event SwappedTokens(bytes32 indexed guid);
 
     /// ========================== Error Messages =====================================
     error ShareOFTShouldBeLockboxAdapter(address share);
@@ -39,13 +42,18 @@ interface IOVaultComposer is IOAppComposer {
     error OnlyShare(address share);
     error CanNotRefund(bytes32 guid);
     error CanNotRetry(bytes32 guid);
+    error CanNotSwap(bytes32 guid);
     error CanNotWithdraw(bytes32 guid);
     error NotEnoughTargetTokens(uint256 amountLD, uint256 minAmountLD);
+    error NoMsgValueWhenSkippingRetry();
 
     /// ========================== GLOBAL VARIABLE FUNCTIONS =====================================
     function ASSET_OFT() external view returns (address);
     function SHARE_OFT() external view returns (address);
     function ENDPOINT() external view returns (address);
+    function REFUND_OVERPAY_ADDRESS() external view returns (address);
+    function ASSET_DECIMAL_CONVERSION_RATE() external view returns (uint256);
+    function SHARE_DECIMAL_CONVERSION_RATE() external view returns (uint256);
 
     /// ========================== FUNCTIONS =====================================
     function executeOVaultActionWithSlippageCheck(
@@ -54,9 +62,9 @@ interface IOVaultComposer is IOAppComposer {
         uint256 _minAmountLD
     ) external returns (uint256 vaultAmount);
 
-    function refund(bytes32 guid, bytes memory extraOptions) external payable;
-    function retry(bytes32 guid, bytes memory extraOptions) external payable;
-    function retryWithSwap(bytes32 guid, bytes memory extraOptions) external payable;
+    function refund(bytes32 guid) external payable;
+    function retry(bytes32 guid, bool removeExtraOptions) external payable;
+    function retryWithSwap(bytes32 guid, bool skipRetry) external payable;
     function send(address _oft, SendParam calldata _sendParam) external payable;
 
     function failedGuidState(bytes32 guid) external view returns (FailedState);
