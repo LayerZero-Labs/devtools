@@ -288,17 +288,25 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         address _refundOFT,
         uint256 _amount,
         uint256 _minAmountLD
-    ) internal returns (uint256 vaultAmount) {
-        address targetOFT; /// @note optimize setting of targetOFT
-
-        if (_refundOFT == address(ASSET_OFT)) {
-            vaultAmount = OVAULT.deposit(_amount, address(this));
-            targetOFT = SHARE_OFT;
-        } else if (_refundOFT == address(SHARE_OFT)) {
-            vaultAmount = OVAULT.redeem(_amount, address(this), address(this));
-        }
+    ) internal returns (uint256) {
+        (uint256 vaultAmount, address targetOFT) = _executeOVaultAction(_refundOFT, _amount);
 
         _checkSlippage(targetOFT, vaultAmount, _minAmountLD);
+
+        return vaultAmount;
+    }
+
+    function _executeOVaultAction(
+        address _oft,
+        uint256 _amount
+    ) internal virtual returns (uint256 vaultAmount, address targetOFT) {
+        if (_oft == address(ASSET_OFT)) {
+            vaultAmount = OVAULT.deposit(_amount, address(this));
+            targetOFT = SHARE_OFT;
+        } else if (_oft == address(SHARE_OFT)) {
+            vaultAmount = OVAULT.redeem(_amount, address(this), address(this));
+            targetOFT = ASSET_OFT;
+        }
     }
 
     /// @dev Internal function to send the message to the target OFT
