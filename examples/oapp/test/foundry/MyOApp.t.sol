@@ -35,7 +35,7 @@ contract MyOAppTest is TestHelperOz5 {
         super.setUp();
 
         string[] memory forkUrls = new string[](2);
-        forkUrls[0] = "https://eth-mainnet.alchemyapi.io/v2/pwc5rmJhrdoaSEfimoKEmsvOjKSmPDrP";
+        forkUrls[0] = "https://eth.drpc.org";
         forkUrls[1] = "https://arb1.arbitrum.io/rpc";
 
         createEndpoints(2, LibraryType.UltraLightNode, new address[](2), forkUrls);
