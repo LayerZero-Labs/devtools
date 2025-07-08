@@ -9,7 +9,7 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
 import { SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { EnforcedOptionParam } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppOptionsType3.sol";
 
-import { OVaultComposer } from "../../contracts/OVaultComposer.sol";
+import { MockOVaultComposer as OVaultComposer } from "../mocks/MockComposer.sol";
 
 import { MockOFT } from "../mocks/MockOFT.sol";
 import { MockOFTAdapter } from "../mocks/MockOFT.sol";
@@ -42,10 +42,10 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
 
     MockOVault public oVault_arb;
     OVaultComposer public OVaultComposerArb;
+    OVaultComposer public mockOVaultComposer;
 
     address public userA = makeAddr("userA");
     address public userB = makeAddr("userB");
-
     address public refundOverpayAddress = makeAddr("refundOverpayAddress");
 
     address public arbEndpoint;
@@ -54,6 +54,9 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
 
     uint256 public constant INITIAL_BALANCE = 100 ether;
     uint256 public constant TOKENS_TO_SEND = 1 ether;
+
+    uint256 public constant msgValueToFail = 100_000 wei;
+    uint256 public constant msgValueToPass = 250_000_000 wei;
 
     function setUp() public virtual override {
         super.setUp();
@@ -67,11 +70,11 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
         assetOFT_pol = new MockOFT("polAsset", "polAsset", address(endpoints[POL_EID]), address(this));
 
         // config and wire the ofts
-        address[] memory nativeMeshOFTs = new address[](subMeshSize);
-        nativeMeshOFTs[0] = address(assetOFT_eth);
-        nativeMeshOFTs[1] = address(assetOFT_arb);
-        nativeMeshOFTs[2] = address(assetOFT_pol);
-        this.wireOApps(nativeMeshOFTs);
+        address[] memory assetOFTs = new address[](subMeshSize);
+        assetOFTs[0] = address(assetOFT_eth);
+        assetOFTs[1] = address(assetOFT_arb);
+        assetOFTs[2] = address(assetOFT_pol);
+        this.wireOApps(assetOFTs);
 
         /// Now the "expansion" is for the arb vault and share ofts on other networks.
         oVault_arb = new MockOVault("arbShare", "arbShare", address(assetOFT_arb));
@@ -87,11 +90,11 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
         shareOFT_eth = new MockOFT("ethShare", "ethShare", address(endpoints[ETH_EID]), address(this));
         shareOFT_pol = new MockOFT("polShare", "polShare", address(endpoints[POL_EID]), address(this));
 
-        address[] memory usdt0OFTs = new address[](subMeshSize);
-        usdt0OFTs[0] = address(shareOFT_eth);
-        usdt0OFTs[1] = address(shareOFT_arb);
-        usdt0OFTs[2] = address(shareOFT_pol);
-        this.wireOApps(usdt0OFTs);
+        address[] memory shareOFTs = new address[](subMeshSize);
+        shareOFTs[0] = address(shareOFT_eth);
+        shareOFTs[1] = address(shareOFT_arb);
+        shareOFTs[2] = address(shareOFT_pol);
+        this.wireOApps(shareOFTs);
 
         vm.label(address(assetOFT_arb), "AssetOFT::arb");
         vm.label(address(assetOFT_eth), "AssetOFT::eth");
@@ -107,12 +110,18 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
         deal(arbExecutor, INITIAL_BALANCE);
         deal(arbEndpoint, INITIAL_BALANCE);
 
-        EnforcedOptionParam[] memory enforcedOptions = new EnforcedOptionParam[](2);
-        enforcedOptions[0] = EnforcedOptionParam({ eid: ETH_EID, msgType: 1, options: OPTIONS_LZRECEIVE_100k });
-        enforcedOptions[1] = EnforcedOptionParam({ eid: POL_EID, msgType: 1, options: OPTIONS_LZRECEIVE_100k });
+        EnforcedOptionParam[] memory enforcedOptions = new EnforcedOptionParam[](3);
+        enforcedOptions[0] = EnforcedOptionParam({ eid: POL_EID, msgType: 1, options: OPTIONS_LZRECEIVE_100k });
+        enforcedOptions[1] = EnforcedOptionParam({ eid: ARB_EID, msgType: 1, options: OPTIONS_LZRECEIVE_100k });
+        enforcedOptions[2] = EnforcedOptionParam({ eid: ETH_EID, msgType: 1, options: OPTIONS_LZRECEIVE_100k });
 
         assetOFT_arb.setEnforcedOptions(enforcedOptions);
+        assetOFT_eth.setEnforcedOptions(enforcedOptions);
+        assetOFT_pol.setEnforcedOptions(enforcedOptions);
+
         shareOFT_arb.setEnforcedOptions(enforcedOptions);
+        shareOFT_eth.setEnforcedOptions(enforcedOptions);
+        shareOFT_pol.setEnforcedOptions(enforcedOptions);
     }
 
     function _createComposePayload(
@@ -171,6 +180,28 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
     function _removeDust(uint256 _amount) internal pure returns (uint256, uint256) {
         uint256 dust = _amount % 10 ** 12;
         return (_amount - dust, dust);
+    }
+
+    function _createRefundSendParam(uint256 _amount) internal returns (SendParam memory) {
+        assetOFT_arb.mint(address(OVaultComposerArb), _amount);
+
+        SendParam memory sendParam;
+        sendParam.dstEid = ETH_EID;
+        sendParam.to = addressToBytes32(userA);
+        sendParam.amountLD = _amount;
+        return sendParam;
+    }
+
+    function _createSendParam(uint256 _amount, bool skipMint) internal returns (SendParam memory) {
+        if (!skipMint) {
+            oVault_arb.mint(address(OVaultComposerArb), _amount);
+        }
+
+        SendParam memory sendParam;
+        sendParam.dstEid = POL_EID;
+        sendParam.to = addressToBytes32(userB);
+        sendParam.amountLD = _amount;
+        return sendParam;
     }
 
     function _randomGUID() internal view returns (bytes32) {

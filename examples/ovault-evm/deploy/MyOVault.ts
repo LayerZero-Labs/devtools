@@ -11,8 +11,6 @@ const tokenSymbol = 'MockShare'
 const shareOFTAdapterContractName = 'MyShareOFTAdapter'
 const composerContractName = 'MyOVaultComposer'
 
-const refundOverpayAddress = '0x0000000000000000000000000000000000000000'
-
 const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
 
@@ -25,10 +23,6 @@ const deploy: DeployFunction = async (hre) => {
     console.log(`Deployer: ${deployer}`)
 
     const assetOFTDeployment = await hre.deployments.get(assetOFTContractName)
-
-    if (refundOverpayAddress === '0x0000000000000000000000000000000000000000') {
-        throw new Error('Refund overpay address is not set')
-    }
 
     const { address: ovaultAddress } = await deploy(ovaultContractName, {
         from: deployer,
@@ -54,7 +48,7 @@ const deploy: DeployFunction = async (hre) => {
 
     const { address: composerAddress } = await deploy(composerContractName, {
         from: deployer,
-        args: [ovaultAddress, assetOFTDeployment.address, shareOFTAdapterAddress, refundOverpayAddress],
+        args: [ovaultAddress, assetOFTDeployment.address, shareOFTAdapterAddress],
         log: true,
         skipIfAlreadyDeployed: true,
     })

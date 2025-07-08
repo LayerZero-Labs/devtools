@@ -239,6 +239,7 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         OVaultComposerArb.lzCompose{ value: 1 ether }(address(assetOFT_arb), guid, composeMsg, arbExecutor, "");
 
         assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.CanRefundOrRetryWithSwap));
+        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.CanRefundOrRetryWithSwap));
 
         assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
         assertEq(oVault_arb.totalSupply(), 0);
@@ -415,16 +416,9 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
         assertEq(oVault_arb.totalSupply(), 0);
 
-        vm.expectRevert();
-        OVaultComposerArb.retryWithSwap(guid, false);
-        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.CanRefundOrRetryWithSwap));
-
-        assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
-        assertEq(oVault_arb.totalSupply(), 0);
-
         (uint256 mintAssets, uint256 mintShares) = _setTradeRatioAssetToShare(1, 2);
 
-        OVaultComposerArb.retryWithSwap(guid, false);
+        OVaultComposerArb.retryWithSwap{ value: 1 ether }(guid, false);
 
         assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.NotFound));
 

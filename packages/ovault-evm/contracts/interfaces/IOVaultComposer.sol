@@ -33,6 +33,7 @@ interface IOVaultComposer is IOAppComposer {
     event SendFailed(bytes32 indexed guid, address indexed oft);
     event OVaultError(bytes32 indexed guid, address indexed oft, bytes errMsg);
     event NoPeer(bytes32 indexed guid, address indexed oft, uint32 dstEid);
+    event FailedToSendEther(address indexed receiver, uint256 amount, bytes errMsg);
 
     /// ========================== Error Messages =====================================
     error ShareOFTShouldBeLockboxAdapter(address share);
@@ -50,16 +51,14 @@ interface IOVaultComposer is IOAppComposer {
     error CanNotSwap(bytes32 guid);
     error CanNotWithdraw(bytes32 guid);
 
-    error NoMsgValueWhenSkippingRetry();
     error NotEnoughTargetTokens(uint256 amountLD, uint256 minAmountLD);
+    error NoMsgValueWhenSkippingRetry();
 
     /// ========================== GLOBAL VARIABLE FUNCTIONS =====================================
     function ASSET_OFT() external view returns (address);
     function SHARE_OFT() external view returns (address);
     function ENDPOINT() external view returns (address);
-    function HUB_EID() external view returns (uint32);
     function REFUND_OVERPAY_ADDRESS() external view returns (address);
-
     function ASSET_DECIMAL_CONVERSION_RATE() external view returns (uint256);
     function SHARE_DECIMAL_CONVERSION_RATE() external view returns (uint256);
 
@@ -75,6 +74,8 @@ interface IOVaultComposer is IOAppComposer {
         uint256 _prePaidMsgValue,
         address _refundOverpayAddress
     ) external payable;
+
+    function send(address _oft, SendParam calldata _sendParam) external payable;
 
     function failedGuidState(bytes32 guid) external view returns (FailedState);
 
