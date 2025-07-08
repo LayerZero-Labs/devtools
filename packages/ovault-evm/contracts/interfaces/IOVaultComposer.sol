@@ -2,7 +2,7 @@
 pragma solidity ^0.8.22;
 
 import { IOAppComposer } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol";
-import { SendParam } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
+import { SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 
 struct FailedMessage {
     address oft;
@@ -79,5 +79,13 @@ interface IOVaultComposer is IOAppComposer {
 
     function failedGuidState(bytes32 guid) external view returns (FailedState);
 
+    /// ========================== Proxy OFT =====================================
+    function depositSend(SendParam calldata _sendParam, address _refundAddress) external payable;
+    function redeemSend(SendParam calldata _sendParam, address _refundAddress) external payable;
+
+    function quoteDepositSend(SendParam calldata _sendParam) external view returns (MessagingFee memory);
+    function quoteRedeemSend(SendParam calldata _sendParam) external view returns (MessagingFee memory);
+
+    /// ========================== Receive =====================================
     receive() external payable;
 }
