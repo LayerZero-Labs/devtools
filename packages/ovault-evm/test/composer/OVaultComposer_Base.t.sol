@@ -50,7 +50,7 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
 
     address public arbEndpoint;
     address public arbExecutor = makeAddr("arbExecutor");
-    bytes public OPTIONS_LZRECEIVE_2M = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200_000, 0);
+    bytes public OPTIONS_LZRECEIVE_100k = OptionsBuilder.newOptions().addExecutorLzReceiveOption(100_000, 0);
 
     uint256 public constant INITIAL_BALANCE = 100 ether;
     uint256 public constant TOKENS_TO_SEND = 1 ether;
@@ -111,9 +111,9 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
         deal(arbEndpoint, INITIAL_BALANCE);
 
         EnforcedOptionParam[] memory enforcedOptions = new EnforcedOptionParam[](3);
-        enforcedOptions[0] = EnforcedOptionParam({ eid: POL_EID, msgType: 1, options: OPTIONS_LZRECEIVE_2M });
-        enforcedOptions[1] = EnforcedOptionParam({ eid: ARB_EID, msgType: 1, options: OPTIONS_LZRECEIVE_2M });
-        enforcedOptions[2] = EnforcedOptionParam({ eid: ETH_EID, msgType: 1, options: OPTIONS_LZRECEIVE_2M });
+        enforcedOptions[0] = EnforcedOptionParam({ eid: POL_EID, msgType: 1, options: OPTIONS_LZRECEIVE_100k });
+        enforcedOptions[1] = EnforcedOptionParam({ eid: ARB_EID, msgType: 1, options: OPTIONS_LZRECEIVE_100k });
+        enforcedOptions[2] = EnforcedOptionParam({ eid: ETH_EID, msgType: 1, options: OPTIONS_LZRECEIVE_100k });
 
         assetOFT_arb.setEnforcedOptions(enforcedOptions);
         assetOFT_eth.setEnforcedOptions(enforcedOptions);
