@@ -3,18 +3,22 @@ pragma solidity ^0.8.22;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
+import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+
 import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
-import { IOFT, SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
+import { SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { IOAppCore } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol";
 import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
 import { IOVaultComposer, FailedMessage, FailedState } from "./interfaces/IOVaultComposer.sol";
+import { IOFTWithDecimalConversionRate as IOFT } from "./interfaces/IOFTWithDecimalConversionRate.sol";
 
 contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     using OFTComposeMsgCodec for bytes;
     using OFTComposeMsgCodec for bytes32;
+    using SafeERC20 for IERC20;
 
     address public immutable ASSET_OFT; // any OFT
     address public immutable SHARE_OFT; // lockbox adapter
@@ -22,9 +26,14 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     address public immutable ENDPOINT;
     uint32 public immutable HUB_EID;
 
+    address public immutable REFUND_OVERPAY_ADDRESS;
+
+    uint256 public immutable ASSET_DECIMAL_CONVERSION_RATE;
+    uint256 public immutable SHARE_DECIMAL_CONVERSION_RATE;
+
     mapping(bytes32 guid => FailedMessage) public failedMessages;
 
-    constructor(address _ovault, address _assetOFT, address _shareOFT) {
+    constructor(address _ovault, address _assetOFT, address _shareOFT, address _refundOverpayAddress) {
         OVAULT = IERC4626(_ovault);
         ASSET_OFT = _assetOFT;
         SHARE_OFT = _shareOFT;
@@ -33,8 +42,19 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             revert ShareOFTShouldBeLockboxAdapter(address(_shareOFT));
         }
 
+        if (address(IOFT(_shareOFT).token()) != address(OVAULT)) {
+            revert ShareOFTInnerTokenShouldBeOVault(address(IOFT(_shareOFT).token()), address(OVAULT));
+        }
+
+        if (IOFT(_assetOFT).token() != OVAULT.asset()) {
+            revert AssetOFTInnerTokenShouldBeOvaultAsset(address(IOFT(_assetOFT).token()), address(OVAULT.asset()));
+        }
+
         ENDPOINT = address(IOAppCore(ASSET_OFT).endpoint());
         HUB_EID = ILayerZeroEndpointV2(ENDPOINT).eid();
+
+        ASSET_DECIMAL_CONVERSION_RATE = IOFT(_assetOFT).decimalConversionRate();
+        SHARE_DECIMAL_CONVERSION_RATE = IOFT(_shareOFT).decimalConversionRate();
 
         // Approve the ovault to spend the share and asset tokens held by this contract
         IERC20(IOFT(_shareOFT).token()).approve(address(_ovault), type(uint256).max);
@@ -42,10 +62,12 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
 
         // Approve the shareOFTAdapter with the share tokens held by this contract
         IERC20(IOFT(_shareOFT).token()).approve(_shareOFT, type(uint256).max);
+
+        REFUND_OVERPAY_ADDRESS = _refundOverpayAddress;
     }
 
     function lzCompose(
-        address _refundOFT,
+        address _refundOFT, /// @note The OFT used on refund, also the vaultIn token.
         bytes32 _guid,
         bytes calldata _message,
         address /*_executor*/,
@@ -55,6 +77,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         if (_refundOFT != ASSET_OFT && _refundOFT != SHARE_OFT) revert OnlyOFT(_refundOFT);
 
         /// @dev Route to the correct target OFT
+        /// @note Also the vaultOut token.
         address oft = _refundOFT == ASSET_OFT ? SHARE_OFT : ASSET_OFT;
 
         /// @dev Extracted from the _message header. Will always be part of the _message since it is created by lzReceive
@@ -77,38 +100,42 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         } catch {
             /// @dev In the case of a failed decode we store the failed message and emit an event.
             /// @dev This message can only be refunded back to the source chain.
-            failedMessages[_guid] = FailedMessage(address(0), sendParam, _refundOFT, refundSendParam);
+            failedMessages[_guid] = FailedMessage(address(0), sendParam, _refundOFT, refundSendParam, msg.value);
             emit DecodeFailed(_guid, _refundOFT, sendParamEncoded);
             return;
         }
 
         /// @dev Try to early catch ONLY when the target OFT does not have a peer set for the destination chain.
+        /// @dev This is because we do not know if the vault protocol wants to expand to that chain.
         if (_isInvalidPeer(oft, sendParam.dstEid)) {
-            failedMessages[_guid] = FailedMessage(address(0), sendParam, _refundOFT, refundSendParam);
+            failedMessages[_guid] = FailedMessage(address(0), sendParam, _refundOFT, refundSendParam, msg.value);
             emit NoPeer(_guid, oft, sendParam.dstEid);
             return;
         }
 
-        /// @dev Try to execute the action on the target OFT. If we hit an issue then it rolls back the storage changes.
+        /// @dev Try to execute the action on the target OFT. If we hit an error then it rolls back the storage changes.
         try this.executeOVaultActionWithSlippageCheck(_refundOFT, amount, sendParam.minAmountLD) returns (
             uint256 vaultAmount
         ) {
             /// @dev Setting the target amount to the actual value of the action (i.e. deposit or redeem)
             sendParam.amountLD = vaultAmount;
         } catch (bytes memory errMsg) {
-            failedMessages[_guid] = FailedMessage(oft, sendParam, _refundOFT, refundSendParam);
+            failedMessages[_guid] = FailedMessage(oft, sendParam, _refundOFT, refundSendParam, msg.value);
             emit OVaultError(_guid, oft, errMsg); /// @dev Since the ovault can revert with custom errors, the error message is valuable
             return;
         }
 
-        /// @dev Try sending the message to the target OFT
+        /// @dev Try sending the vault out tokens to the receiver on the target chain (can also be the HUB chain)
         try this.send{ value: msg.value }(oft, sendParam) {
             emit Sent(_guid, oft);
         } catch {
-            /// @dev A failed send can happen due to not enough msg.value
-            /// @dev Since we have the target tokens in the composer, we can retry with more gas.
-            failedMessages[_guid] = FailedMessage(oft, sendParam, address(0), refundSendParam);
-            emit SendFailed(_guid, oft); /// @dev This can be due to msg.value or layerzero config (dvn config, etc)
+            SendParam memory emptySendParam;
+            /// @dev A failed send will result in the target tokens being in the composer, we can retry with:
+            /// @dev 1. more msg.value OR
+            /// @dev 2. after the config is fixed OR
+            /// @dev 3. without extraOptions (re-executor needs to pay the entire msg.value)
+            failedMessages[_guid] = FailedMessage(oft, sendParam, address(0), emptySendParam, msg.value);
+            emit SendFailed(_guid, oft);
             return;
         }
     }
@@ -120,122 +147,210 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
 
     /// @dev External call for try...catch logic in lzCompose()
     function executeOVaultActionWithSlippageCheck(
-        address _oft,
+        address _refundOFT,
         uint256 _amount,
         uint256 _minAmountLD
     ) external nonReentrant returns (uint256 vaultAmount) {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
-        vaultAmount = _executeOVaultAction(_oft, _amount);
-
-        if (vaultAmount < _minAmountLD) {
-            /// @dev Will rollback on this function's storage changes (trade does not happen)
-            revert NotEnoughTargetTokens(vaultAmount, _minAmountLD);
-        }
+        vaultAmount = _executeOVaultActionWithSlippageCheck(_refundOFT, _amount, _minAmountLD);
     }
 
     /// @dev External call for try...catch logic in lzCompose()
     function send(address _oft, SendParam calldata _sendParam) external payable nonReentrant {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
-
-        /// @dev If the destination is the HUB chain, we just transfer the tokens to the receiver
-        if (_sendParam.dstEid == HUB_EID) {
-            address _receiver = _sendParam.to.bytes32ToAddress();
-            uint256 _amountLD = _sendParam.amountLD;
-            IERC20 token = IERC20(IOFT(_oft).token());
-            token.transfer(_receiver, _amountLD);
-            if (msg.value > 0) {
-                (bool sent, ) = _receiver.call{ value: msg.value }("");
-                require(sent, "Failed to send Ether");
-            }
-            emit SentOnHub(_receiver, _oft, _amountLD);
-            return;
-        }
-
-        /// @dev If the destination is not the HUB chain, we send the message to the target OFT
-        _send(_oft, _sendParam);
+        _send(_oft, _sendParam, msg.value, tx.origin);
     }
 
-    /// @dev Permissionless function to send back the message to the source chain
-    /// @dev Always possible unless the lzCompose() fails due to an Out-Of-Gas panic
-    function refund(bytes32 _guid, bytes calldata _extraOptions) external payable nonReentrant {
+    /// @dev Always uses enforced options to send the transaction to an EOA.
+    /// @dev Custom logic to be implemented by the developer in the case where the sender is NOT an EOA.
+    /// @dev If the total msg.value (cached + supplier) is greater than the consumed msg.value, the excess is sent to the REFUND_OVERPAY_ADDRESS
+    function refund(bytes32 _guid) external payable nonReentrant {
         FailedMessage memory failedMessage = failedMessages[_guid];
-        SendParam memory refundSendParam = failedMessage.sendParam;
-        if (failedGuidState(_guid) != FailedState.CanOnlyRefund) revert CanNotRefund(_guid);
 
-        refundSendParam.extraOptions = _extraOptions;
+        FailedState f = _failedGuidState(failedMessage);
+        if ((f != FailedState.CanOnlyRefund) && (f != FailedState.CanRefundOrRetryWithSwap)) revert CanNotRefund(_guid);
 
-        delete failedMessages[_guid];
-        _send(failedMessage.refundOFT, refundSendParam);
+        this.sendFailedMessage{ value: msg.value }(
+            _guid,
+            failedMessage.refundOFT,
+            failedMessage.refundSendParam,
+            failedMessage.msgValue,
+            REFUND_OVERPAY_ADDRESS
+        );
         emit Refunded(_guid, failedMessage.refundOFT);
     }
 
-    /// @dev Permissionless function to retry the message with more gas
-    /// @dev Failure case when there is a LayerZero config issue - ex: dvn config
-    function retry(bytes32 _guid, bytes calldata _extraOptions) external payable nonReentrant {
+    /// @dev If removeExtraOptions is true, only enforcedOptions are used and the sender needs to pay the entire msg.value
+    /// @dev A transaction can never fail due to a lack of extraOptions, unless the OFT is customized in-which case the Composer would need to be customized.
+    function retry(bytes32 _guid, bool removeExtraOptions) external payable nonReentrant {
         FailedMessage memory failedMessage = failedMessages[_guid];
-        if (failedGuidState(_guid) != FailedState.CanOnlyRetry) revert CanNotRetry(_guid);
+        if (_failedGuidState(failedMessage) != FailedState.CanOnlyRetry) revert CanNotRetry(_guid);
 
         SendParam memory sendParam = failedMessage.sendParam;
+        uint256 prePaidMsgValue = failedMessage.msgValue;
 
-        sendParam.extraOptions = _extraOptions;
+        if (removeExtraOptions) {
+            (bool sent, ) = payable(REFUND_OVERPAY_ADDRESS).call{ value: prePaidMsgValue }("");
+            require(sent, "Failed to send Ether");
 
-        delete failedMessages[_guid];
-        _send(failedMessage.oft, sendParam);
+            sendParam.extraOptions = "";
+            prePaidMsgValue = 0;
+        }
+
+        this.sendFailedMessage{ value: msg.value }(_guid, failedMessage.oft, sendParam, prePaidMsgValue, tx.origin);
         emit Retried(_guid, failedMessage.oft);
     }
 
-    /// @dev Retry mechanism for transactions that failed due to slippage. This can revert.
-    /// @dev Failure case when there is a LayerZero config issue - ex: dvn config
-    function retryWithSwap(bytes32 _guid, bytes calldata _extraOptions) external payable {
+    /// @dev Performs the ovault action for a failed swap. If we fail on the send then the GUID enters the retry state for manual execution.
+    function retryWithSwap(bytes32 _guid, bool skipRetry) external payable nonReentrant {
         FailedMessage memory failedMessage = failedMessages[_guid];
-        if (failedGuidState(_guid) != FailedState.CanRetryWithSwap) revert CanNotRetry(_guid);
+        if (_failedGuidState(failedMessage) != FailedState.CanRefundOrRetryWithSwap) revert CanNotSwap(_guid);
 
-        SendParam memory sendParam = failedMessage.sendParam;
-        sendParam.extraOptions = _extraOptions;
+        if (skipRetry && msg.value > 0) revert NoMsgValueWhenSkippingRetry();
 
-        uint256 amountLd = failedMessage.refundSendParam.amountLD;
+        uint256 srcAmount = failedMessage.refundSendParam.amountLD;
 
-        delete failedMessages[_guid];
-        sendParam.amountLD = _executeOVaultAction(failedMessage.refundOFT, amountLd);
+        failedMessage.sendParam.amountLD = _executeOVaultActionWithSlippageCheck(
+            failedMessage.refundOFT,
+            srcAmount,
+            failedMessage.sendParam.minAmountLD
+        );
 
-        _send(failedMessage.oft, sendParam);
-        emit Sent(_guid, failedMessage.oft);
-    }
+        /// @dev Perform global state update.
+        /// @dev Disable refund. If this call reverts refund is still possible.
+        /// @dev Store the vault out amount for the retry.
+        failedMessages[_guid].refundOFT = address(0);
+        failedMessages[_guid].sendParam.amountLD = failedMessage.sendParam.amountLD;
 
-    /// @dev Internal function to send the message to the target OFT
-    function _send(address _oft, SendParam memory _sendParam) internal {
-        IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), tx.origin);
-    }
+        emit SwappedTokens(_guid);
 
-    function _executeOVaultAction(address _oft, uint256 _amount) internal returns (uint256 vaultAmount) {
-        if (_oft == address(ASSET_OFT)) {
-            vaultAmount = OVAULT.deposit(_amount, address(this));
-        } else {
-            vaultAmount = OVAULT.redeem(_amount, address(this), address(this));
+        /// @dev Regardless of the outcome of skipRetry and sendFailedMessage, the failedMessage is now in a RETRY only state.
+        /// @dev try..catch to accumulate the msg.value in the case of a failed send
+        if (!skipRetry) {
+            try
+                this.sendFailedMessage{ value: msg.value }(
+                    _guid,
+                    failedMessage.oft,
+                    failedMessage.sendParam,
+                    failedMessage.msgValue,
+                    tx.origin
+                )
+            {
+                emit Retried(_guid, failedMessage.oft);
+            } catch {
+                failedMessages[_guid].msgValue += msg.value;
+                emit SendFailed(_guid, failedMessage.oft);
+            }
         }
     }
 
-    /// @dev Helper to check if the target OFT does not have a peer set for the destination chain OR if our target chain is the not the same as the HUB chain
+    function sendFailedMessage(
+        bytes32 _guid,
+        address _oft,
+        SendParam memory _sendParam,
+        uint256 _prePaidMsgValue,
+        address _refundOverpayAddress
+    ) external payable {
+        if (msg.sender != address(this)) revert OnlySelf(msg.sender);
+
+        delete failedMessages[_guid];
+
+        uint256 totalMsgValue = _prePaidMsgValue + msg.value;
+        _send(_oft, _sendParam, totalMsgValue, _refundOverpayAddress);
+    }
+
+    /// @dev Helper to view the state of a failed message
+    function failedGuidState(bytes32 _guid) external view returns (FailedState) {
+        FailedMessage memory failedMessage = failedMessages[_guid];
+        return _failedGuidState(failedMessage);
+    }
+
+    function _executeOVaultActionWithSlippageCheck(
+        address _refundOFT,
+        uint256 _amount,
+        uint256 _minAmountLD
+    ) internal returns (uint256 vaultAmount) {
+        address targetOFT = SHARE_OFT;
+
+        if (_refundOFT == address(ASSET_OFT)) {
+            vaultAmount = OVAULT.deposit(_amount, address(this));
+        } else {
+            vaultAmount = OVAULT.redeem(_amount, address(this), address(this));
+            targetOFT = ASSET_OFT;
+        }
+
+        _checkSlippage(targetOFT, vaultAmount, _minAmountLD);
+    }
+
+    /// @dev Internal function to send the message to the target OFT
+    /// @dev In the event you're using a bundler or anything where the tx.origin is not the intended refund receiver then this function will have to be overridden.
+    /// @dev Slippage check happens at the OFT for : amountLD >= sendParam.minAmountLD
+    /// @dev Handles the case where the dstEid is the HUB chain
+    function _send(
+        address _oft,
+        SendParam memory _sendParam,
+        uint256 _totalMsgValue,
+        address _refundOverpayAddress
+    ) internal virtual {
+        if (_sendParam.dstEid == HUB_EID) {
+            address token = IOFT(_oft).token();
+            address to = _sendParam.to.bytes32ToAddress();
+
+            uint256 amountLD = _sendParam.amountLD;
+            IERC20(token).safeTransfer(to, amountLD);
+
+            if (_totalMsgValue > 0) {
+                (bool sent, ) = to.call{ value: _totalMsgValue }("");
+                require(sent, "Failed to send Ether");
+            }
+
+            emit SentOnHub(to, _oft, amountLD);
+        } else {
+            IOFT(_oft).send{ value: _totalMsgValue }(
+                _sendParam,
+                MessagingFee(_totalMsgValue, 0),
+                _refundOverpayAddress
+            );
+        }
+    }
+
+    /// @dev Helper to check if the target OFT does not have a peer set for the destination chain OR if our target chain is not the same as the HUB chain
     function _isInvalidPeer(address _oft, uint32 _dstEid) internal view returns (bool) {
         return _dstEid != HUB_EID && IOAppCore(_oft).peers(_dstEid) == bytes32(0);
     }
 
-    /// @dev Helper to view the state of a failed message
-    function failedGuidState(bytes32 _guid) public view returns (FailedState) {
-        FailedMessage memory failedMessage = failedMessages[_guid];
+    function _removeDust(address _oft, uint256 _amount) internal view returns (uint256) {
+        uint256 decimalConversionRate = _oft == address(ASSET_OFT)
+            ? ASSET_DECIMAL_CONVERSION_RATE
+            : SHARE_DECIMAL_CONVERSION_RATE;
+        return (_amount / decimalConversionRate) * decimalConversionRate;
+    }
 
-        if (failedMessage.refundOFT == address(0) && failedMessage.oft == address(0)) {
+    /// @dev Remove dust before slippage check to be equivalent to OFTCore::_debitView()
+    /// @dev If the OFT has a Fee or anything that changes the tokens such that:
+    /// @dev dstChain.receivedAmount != srcChain.sentAmount, this will have to be overridden.
+    function _checkSlippage(address _oft, uint256 _amount, uint256 _minAmountLD) internal view virtual {
+        uint256 vaultAmountLD = _removeDust(_oft, _amount);
+        uint256 amountReceivedLD = vaultAmountLD; /// @dev Perform your adjustments here if needed (ex: Fee)
+        if (amountReceivedLD < _minAmountLD) {
+            revert NotEnoughTargetTokens(amountReceivedLD, _minAmountLD);
+        }
+    }
+
+    function _failedGuidState(FailedMessage memory _failedMessage) internal pure returns (FailedState) {
+        if (_failedMessage.refundOFT == address(0) && _failedMessage.oft == address(0)) {
             return FailedState.NotFound;
         }
-        if (failedMessage.refundOFT != address(0) && failedMessage.oft == address(0)) {
+        if (_failedMessage.refundOFT != address(0) && _failedMessage.oft == address(0)) {
             return FailedState.CanOnlyRefund;
         }
-        if (failedMessage.refundOFT == address(0) && failedMessage.oft != address(0)) {
+        if (_failedMessage.refundOFT == address(0) && _failedMessage.oft != address(0)) {
             return FailedState.CanOnlyRetry;
         }
 
-        return FailedState.CanRetryWithSwap;
+        return FailedState.CanRefundOrRetryWithSwap;
     }
+
     receive() external payable {}
 }
