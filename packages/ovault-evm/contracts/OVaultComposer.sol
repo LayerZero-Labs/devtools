@@ -9,7 +9,6 @@ import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.s
 import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 import { SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
-import { SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { IOAppCore } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol";
 import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
@@ -25,8 +24,12 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
 
     address public immutable ASSET_OFT; // any OFT
     address public immutable SHARE_OFT; // lockbox adapter
+    address public immutable ASSET_ERC20;
+
     IERC4626 public immutable OVAULT; // IERC4626
+
     address public immutable ENDPOINT;
+
     uint32 public immutable HUB_EID;
     uint256 public immutable ASSET_DECIMAL_CONVERSION_RATE;
     uint256 public immutable SHARE_DECIMAL_CONVERSION_RATE;
@@ -69,6 +72,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         SHARE_DECIMAL_CONVERSION_RATE = IOFT(_shareOFT).decimalConversionRate();
 
         REFUND_OVERPAY_ADDRESS = _refundOverpayAddress;
+        ASSET_ERC20 = address(OVAULT.asset());
     }
 
     /// @dev This composer is designed to handle refunds to an EOA address and not a contract.
@@ -144,6 +148,26 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             emit SendFailed(_guid, oft); /// @dev This can be due to msg.value or layerzero config (dvn config, etc)
             return;
         }
+    }
+
+    function depositSend(SendParam calldata _sendParam, address _refundAddress) external payable nonReentrant {
+        IERC20(ASSET_ERC20).safeTransferFrom(msg.sender, address(this), _sendParam.amountLD);
+        _executeOVaultAction(ASSET_OFT, _sendParam.amountLD);
+        _send(SHARE_OFT, _sendParam, msg.value, _refundAddress);
+    }
+
+    function redeemSend(SendParam calldata _sendParam, address _refundAddress) external payable nonReentrant {
+        IERC20(OVAULT).safeTransferFrom(msg.sender, address(this), _sendParam.amountLD);
+        _executeOVaultAction(SHARE_OFT, _sendParam.amountLD);
+        _send(ASSET_OFT, _sendParam, msg.value, _refundAddress);
+    }
+
+    function quoteDepositSend(SendParam calldata _sendParam) external view returns (MessagingFee memory) {
+        return IOFT(SHARE_OFT).quoteSend(_sendParam, false);
+    }
+
+    function quoteRedeemSend(SendParam calldata _sendParam) external view returns (MessagingFee memory) {
+        return IOFT(ASSET_OFT).quoteSend(_sendParam, false);
     }
 
     /// @dev External call for try...catch logic in lzCompose()
