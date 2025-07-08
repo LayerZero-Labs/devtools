@@ -141,7 +141,8 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
             address oft,
             SendParam memory sendParam,
             address refundOFT,
-            SendParam memory refundSendParam
+            SendParam memory refundSendParam,
+
         ) = OVaultComposerArb.failedMessages(guid);
 
         assertEq(refundOFT, address(assetOFT_arb), "refundOFT should be assetOFT_arb");
@@ -190,7 +191,8 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
             address oft,
             SendParam memory sendParam,
             address refundOFT,
-            SendParam memory refundSendParam
+            SendParam memory refundSendParam,
+
         ) = OVaultComposerArb.failedMessages(guid);
 
         assertEq(refundOFT, address(assetOFT_arb), "refundOFT should be assetOFT_arb");
@@ -239,7 +241,7 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         vm.prank(arbEndpoint);
         OVaultComposerArb.lzCompose{ value: 1 ether }(address(assetOFT_arb), guid, composeMsg, arbExecutor, "");
 
-        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.CanRetryWithSwap));
+        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.CanRefundOrRetryWithSwap));
 
         assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
         assertEq(oVault_arb.totalSupply(), 0);
@@ -248,7 +250,8 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
             address oft,
             SendParam memory sendParam,
             address refundOFT,
-            SendParam memory refundSendParam
+            SendParam memory refundSendParam,
+
         ) = OVaultComposerArb.failedMessages(guid);
 
         assertEq(refundOFT, address(assetOFT_arb), "refundOFT should be assetOFT_arb");
@@ -308,7 +311,8 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
             address oft,
             SendParam memory sendParam,
             address refundOFT,
-            SendParam memory refundSendParam
+            SendParam memory refundSendParam,
+
         ) = OVaultComposerArb.failedMessages(guid);
 
         assertEq(refundOFT, address(0), "refundOFT should be 0 - not possible");
@@ -356,14 +360,14 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         vm.prank(arbEndpoint);
         OVaultComposerArb.lzCompose{ value: 1 ether }(address(assetOFT_arb), guid, composeMsg, arbExecutor, "");
 
-        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.CanRetryWithSwap));
+        assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.CanRefundOrRetryWithSwap));
 
         assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
         assertEq(oVault_arb.totalSupply(), 0);
 
         (uint256 mintAssets, uint256 mintShares) = _setTradeRatioAssetToShare(1, 2);
 
-        OVaultComposerArb.retryWithSwap{ value: 1 ether }(guid, OPTIONS_LZRECEIVE_2M);
+        OVaultComposerArb.retryWithSwap{ value: 1 ether }(guid, false);
 
         assertEq(uint256(OVaultComposerArb.failedGuidState(guid)), uint256(FailedState.NotFound));
 
