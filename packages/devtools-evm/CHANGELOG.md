@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm
 
+## 2.0.1
+
+### Patch Changes
+
+- 50dbf9c: Add fix so call is enforced instead of delegatecall for gnosis safe batch tx signing
+
 ## 2.0.0
 
 ### Patch Changes
