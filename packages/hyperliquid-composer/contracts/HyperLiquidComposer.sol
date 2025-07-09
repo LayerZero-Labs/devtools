@@ -121,9 +121,10 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         /// @dev If the message is being sent with a value, we fund the address on HyperCore
         if (msg.value > 0) {
             try this.fundAddressOnHyperCore(receiver, msg.value, _executor) {} catch (bytes memory _err) {
-                this.refundNativeTokens{ value: msg.value }(receiver);
-                bytes memory errMsg = completeRefund(_err, _executor);
-                emit ErrorMessage(errMsg);
+                try this.refundNativeTokens{ value: msg.value }(receiver) {} catch {
+                    _err = completeRefund(_err, _executor);
+                }
+                emit ErrorMessage(_err);
             }
         }
 
