@@ -195,31 +195,46 @@ const sendBatchedIfAvailable =
             return await fallbackLogic(eid, logger, signer, transactions, onSuccess, onError)
         }
 
-        // For brevity we'll create a variable that holds a string with pluralized label for the transactions
-        // e.g. "0 transactions" or "1 transaction"
-        const transactionsName = pluralizeNoun(
-            transactions.length,
-            `1 transaction`,
-            `${transactions.length} transactions`
+        // Get the batch size from an environment variable, with a default value of 10
+        const batchSize = Number(process.env.LZ_BATCH_SIZE) || 20
+        const totalBatches = Math.ceil(transactions.length / batchSize)
+        logger.debug(
+            `Sending ${transactions.length} transactions for ${eidName} in ${totalBatches} batches of up to ${batchSize}`
         )
 
-        try {
-            logger.debug(`Signing a batch of ${transactionsName} for ${eidName}`)
-            const response = await signer.signAndSendBatch(transactions)
+        // Loop through the transactions in chunks of the specified batchSize
+        for (let i = 0; i < transactions.length; i += batchSize) {
+            const batch = transactions.slice(i, i + batchSize)
+            const batchNumber = Math.floor(i / batchSize) + 1
 
-            logger.debug(`Signed a batch of ${transactionsName} for ${eidName}, got hash ${response.transactionHash}`)
-            const receipt = await response.wait()
+            const transactionsName = pluralizeNoun(batch.length, `1 transaction`, `${batch.length} transactions`)
 
-            logger.debug(`Finished a batch of ${transactionsName} for ${eidName}`)
+            try {
+                logger.debug(`Signing batch ${batchNumber}/${totalBatches} (${transactionsName}) for ${eidName}`)
+                const response = await signer.signAndSendBatch(batch)
 
-            for (const transaction of transactions) {
-                onSuccess({ transaction, receipt })
-            }
-        } catch (error) {
-            logger.debug(`Failed to process a batch of ${transactionsName} for ${eidName}: ${error}`)
+                logger.debug(
+                    `Signed batch ${batchNumber}/${totalBatches} for ${eidName}, got hash ${response.transactionHash}`
+                )
+                const receipt = await response.wait()
 
-            for (const transaction of transactions) {
-                onError({ transaction, error })
+                logger.debug(`Finished batch ${batchNumber}/${totalBatches} for ${eidName}`)
+
+                // If the batch was successful, report success for each transaction within it
+                for (const transaction of batch) {
+                    onSuccess({ transaction, receipt })
+                }
+            } catch (error) {
+                logger.error(`Failed to process batch ${batchNumber}/${totalBatches} for ${eidName}: ${error}`)
+
+                // If a batch fails, report an error for each transaction within it
+                for (const transaction of batch) {
+                    onError({ transaction, error })
+                }
+
+                // Stop processing further batches for this endpoint if one fails
+                logger.warn(`Halting further batches for ${eidName} due to a failed batch`)
+                return
             }
         }
     }
