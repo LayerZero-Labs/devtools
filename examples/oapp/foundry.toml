@@ -5,8 +5,12 @@ out = 'out'
 test = 'test/foundry'
 cache_path = 'cache/foundry'
 verbosity = 3
+<<<<<<< HEAD
 optimize = true
 optimizer_runs = 1000
+=======
+via_ir = true
+>>>>>>> 4198e33b (fixed stack too deep)
 libs = [
     # We provide a set of useful contract utilities
     # in the lib directory of @layerzerolabs/toolbox-foundry:
