@@ -21,7 +21,6 @@ enum FailedState {
 
 interface IOVaultComposer is IOAppComposer {
     /// ========================== EVENTS =====================================
-    event DecodeFailed(bytes32 indexed guid, address indexed oft, bytes message);
 
     event Sent(bytes32 indexed guid, address indexed oft);
     event SentOnHub(address indexed receiver, address indexed oft, uint256 amountLD);
@@ -30,11 +29,13 @@ interface IOVaultComposer is IOAppComposer {
     event Retried(bytes32 indexed guid, address indexed oft);
     event SwappedTokens(bytes32 indexed guid);
 
-    event SendFailed(bytes32 indexed guid, address indexed oft, bytes errMsg);
-    event OVaultError(bytes32 indexed guid, address indexed oft, bytes errMsg);
-    event NoPeer(bytes32 indexed guid, address indexed oft, uint32 dstEid);
-    event FailedToSendEther(address indexed receiver, uint256 amount, bytes errMsg);
-    event MessageFailed(bytes4 indexed failEventSelector, bytes errMsg);
+    event DecodeFailed(bytes32 indexed guid, address indexed oft, bytes message); // 0xbc772e67
+    event SendFailed(bytes32 indexed guid, address indexed oft, bytes errMsg); // 0x5feca73a
+    event OVaultError(bytes32 indexed guid, address indexed oft, bytes errMsg); // 0xc8a2d9e0
+    event NoPeer(bytes32 indexed guid, address indexed oft, uint32 dstEid); // 0x60e5ac46
+    event FailedToSendEther(address indexed receiver, uint256 amount, bytes errMsg); // 0xb7da4a55
+
+    event MessageFailed(bytes4 indexed failEventSelector, bytes errMsg); // 0x6afd04fc
 
     /// ========================== Error Messages =====================================
     error ShareOFTShouldBeLockboxAdapter(address share);
