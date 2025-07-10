@@ -35,7 +35,7 @@ interface IOVaultComposer is IOAppComposer {
     event NoPeer(bytes32 indexed guid, address indexed oft, uint32 dstEid); // 0x60e5ac46
     event FailedToSendEther(address indexed receiver, uint256 amount, bytes errMsg); // 0xb7da4a55
 
-    event MessageFailed(bytes4 indexed failEventSelector, bytes errMsg); // 0x6afd04fc
+    event lzComposeInFailedState(bytes4 indexed failEventSelector, bytes errMsg); // 0x6875e033
 
     /// ========================== Error Messages =====================================
     error ShareOFTShouldBeLockboxAdapter(address share);

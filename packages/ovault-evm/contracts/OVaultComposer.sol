@@ -112,7 +112,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             /// @dev This message can only be refunded back to the source chain.
             failedMessages[_guid] = FailedMessage(address(0), sendParam, _refundOFT, refundSendParam, msg.value);
             emit DecodeFailed(_guid, _refundOFT, sendParamEncoded);
-            emit MessageFailed(bytes4(IOVaultComposer.DecodeFailed.selector), sendParamEncoded);
+            emit lzComposeInFailedState(bytes4(IOVaultComposer.DecodeFailed.selector), sendParamEncoded);
             return;
         }
 
@@ -121,7 +121,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         if (_isInvalidPeer(oft, sendParam.dstEid)) {
             failedMessages[_guid] = FailedMessage(address(0), sendParam, _refundOFT, refundSendParam, msg.value);
             emit NoPeer(_guid, oft, sendParam.dstEid);
-            emit MessageFailed(bytes4(IOVaultComposer.NoPeer.selector), "");
+            emit lzComposeInFailedState(bytes4(IOVaultComposer.NoPeer.selector), "");
             return;
         }
 
@@ -134,7 +134,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         } catch (bytes memory errMsg) {
             failedMessages[_guid] = FailedMessage(oft, sendParam, _refundOFT, refundSendParam, msg.value);
             emit OVaultError(_guid, oft, errMsg); /// @dev Since the ovault can revert with custom errors, the error message is valuable
-            emit MessageFailed(bytes4(IOVaultComposer.OVaultError.selector), errMsg);
+            emit lzComposeInFailedState(bytes4(IOVaultComposer.OVaultError.selector), errMsg);
             return;
         }
 
@@ -146,7 +146,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             /// @dev Since we have the target tokens in the composer, we can retry with more gas.
             failedMessages[_guid] = FailedMessage(oft, sendParam, address(0), refundSendParam, msg.value);
             emit SendFailed(_guid, oft, errMsg); /// @dev This can be due to msg.value or layerzero config (dvn config, etc)
-            emit MessageFailed(bytes4(IOVaultComposer.SendFailed.selector), errMsg);
+            emit lzComposeInFailedState(bytes4(IOVaultComposer.SendFailed.selector), errMsg);
             return;
         }
     }
