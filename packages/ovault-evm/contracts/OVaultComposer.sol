@@ -111,8 +111,8 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             /// @dev In the case of a failed decode we store the failed message and emit an event.
             /// @dev This message can only be refunded back to the source chain.
             failedMessages[_guid] = FailedMessage(address(0), sendParam, _refundOFT, refundSendParam, msg.value);
-            failedMessages[_guid] = FailedMessage(address(0), sendParam, _refundOFT, refundSendParam, msg.value);
             emit DecodeFailed(_guid, _refundOFT, sendParamEncoded);
+            emit lzComposeInFailedState(bytes4(IOVaultComposer.DecodeFailed.selector), sendParamEncoded);
             return;
         }
 
@@ -120,8 +120,8 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         /// @dev This is because we do not know if the vault protocol wants to expand to that chain.
         if (_isInvalidPeer(oft, sendParam.dstEid)) {
             failedMessages[_guid] = FailedMessage(address(0), sendParam, _refundOFT, refundSendParam, msg.value);
-            failedMessages[_guid] = FailedMessage(address(0), sendParam, _refundOFT, refundSendParam, msg.value);
             emit NoPeer(_guid, oft, sendParam.dstEid);
+            emit lzComposeInFailedState(bytes4(IOVaultComposer.NoPeer.selector), "");
             return;
         }
 
@@ -133,19 +133,20 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             sendParam.amountLD = vaultAmount;
         } catch (bytes memory errMsg) {
             failedMessages[_guid] = FailedMessage(oft, sendParam, _refundOFT, refundSendParam, msg.value);
-            failedMessages[_guid] = FailedMessage(oft, sendParam, _refundOFT, refundSendParam, msg.value);
             emit OVaultError(_guid, oft, errMsg); /// @dev Since the ovault can revert with custom errors, the error message is valuable
+            emit lzComposeInFailedState(bytes4(IOVaultComposer.OVaultError.selector), errMsg);
             return;
         }
 
         /// @dev Try sending the vault out tokens to the receiver on the target chain (can also be the HUB chain)
         try this.send{ value: msg.value }(oft, sendParam) {
             emit Sent(_guid, oft);
-        } catch {
+        } catch (bytes memory errMsg) {
             /// @dev A failed send can happen due to not enough msg.value
             /// @dev Since we have the target tokens in the composer, we can retry with more gas.
             failedMessages[_guid] = FailedMessage(oft, sendParam, address(0), refundSendParam, msg.value);
-            emit SendFailed(_guid, oft); /// @dev This can be due to msg.value or layerzero config (dvn config, etc)
+            emit SendFailed(_guid, oft, errMsg); /// @dev This can be due to msg.value or layerzero config (dvn config, etc)
+            emit lzComposeInFailedState(bytes4(IOVaultComposer.SendFailed.selector), errMsg);
             return;
         }
     }
@@ -301,9 +302,9 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
                 )
             {
                 emit Retried(_guid, failedMessage.oft);
-            } catch {
+            } catch (bytes memory errMsg) {
                 failedMessages[_guid].msgValue += msg.value;
-                emit SendFailed(_guid, failedMessage.oft);
+                emit SendFailed(_guid, failedMessage.oft, errMsg);
             }
         }
     }
