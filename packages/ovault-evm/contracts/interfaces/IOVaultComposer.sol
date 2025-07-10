@@ -36,9 +36,6 @@ interface IOVaultComposer is IOAppComposer {
     event FailedToSendEther(address indexed receiver, uint256 amount, bytes errMsg);
     event MessageFailed(bytes4 indexed failEventSelector, bytes errMsg);
 
-    event DepositMade(bytes32 indexed guid, address indexed oft, address indexed depositor, uint256 amountLD);
-    event RedeemMade(bytes32 indexed guid, address indexed oft, address indexed redeemer, uint256 amountLD);
-
     /// ========================== Error Messages =====================================
     error ShareOFTShouldBeLockboxAdapter(address share);
     error AssetOFTInnerTokenShouldBeOvaultAsset(address assetInnerToken, address vaultAsset);
