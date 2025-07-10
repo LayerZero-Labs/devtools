@@ -20,7 +20,7 @@ declare_id!(anchor_lang::solana_program::pubkey::Pubkey::new_from_array(program_
 
 const LZ_RECEIVE_TYPES_SEED: &[u8] = b"LzReceiveTypes"; // The Executor relies on this exact seed to derive the LzReceiveTypes PDA. Keep it the same.
 const STORE_SEED: &[u8] = b"Store"; // You are free to edit this seed.
-const PEER_SEED: &[u8] = b"Peer"; // The Executor relies on this exact seed to derive the LzReceiveTypes PDA. Keep it the same.
+const PEER_SEED: &[u8] = b"Peer"; // The Executor relies on this exact seed. Keep it the same.
 
 #[program]
 pub mod my_oapp {
