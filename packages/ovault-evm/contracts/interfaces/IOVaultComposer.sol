@@ -30,10 +30,14 @@ interface IOVaultComposer is IOAppComposer {
     event Retried(bytes32 indexed guid, address indexed oft);
     event SwappedTokens(bytes32 indexed guid);
 
-    event SendFailed(bytes32 indexed guid, address indexed oft);
+    event SendFailed(bytes32 indexed guid, address indexed oft, bytes errMsg);
     event OVaultError(bytes32 indexed guid, address indexed oft, bytes errMsg);
     event NoPeer(bytes32 indexed guid, address indexed oft, uint32 dstEid);
     event FailedToSendEther(address indexed receiver, uint256 amount, bytes errMsg);
+    event MessageFailed(bytes4 indexed failEventSelector, bytes errMsg);
+
+    event DepositMade(bytes32 indexed guid, address indexed oft, address indexed depositor, uint256 amountLD);
+    event RedeemMade(bytes32 indexed guid, address indexed oft, address indexed redeemer, uint256 amountLD);
 
     /// ========================== Error Messages =====================================
     error ShareOFTShouldBeLockboxAdapter(address share);

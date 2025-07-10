@@ -287,7 +287,11 @@ contract OVaultComposerUnitTest is OVaultComposerBaseTest {
         emit IERC4626.Deposit(address(OVaultComposerArb), address(OVaultComposerArb), TOKENS_TO_SEND, TOKENS_TO_SEND);
 
         vm.expectEmit(true, true, true, true, address(OVaultComposerArb));
-        emit IOVaultComposer.SendFailed(guid, address(shareOFT_arb));
+        emit IOVaultComposer.SendFailed(
+            guid,
+            address(shareOFT_arb),
+            hex"4f3ec0d3000000000000000000000000000000000000000000000000000000000bed727c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" // LZ_InsufficientFee(uint256,uint256,uint256,uint256)
+        );
 
         assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(OVaultComposerArb)), TOKENS_TO_SEND);
         assertEq(oVault_arb.totalSupply(), 0);
