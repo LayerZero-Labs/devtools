@@ -249,14 +249,6 @@ pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID>
 
 :information_source: You can also specify `--amount <AMOUNT>` to have the OFT minted to your deployer address upon token creation.
 
-#### For OFTAdapter:
-
-```bash
-pnpm hardhat lz:oft-adapter:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <TOKEN_MINT> --token-program <TOKEN_PROGRAM_ID>
-```
-
-:information_source: You can use OFT Adapter if you want to use an existing token on Solana. For OFT Adapter, tokens will be locked when sending to other chains and unlocked when receiving from other chains.
-
 #### For OFT Mint-And-Burn Adapter (MABA):
 
 ```bash
@@ -306,16 +298,41 @@ npx hardhat --network sepolia-testnet lz:lzapp:set-min-dst-gas --dst-eid 40168
 
 ### Calling Send
 
+:information_source: Note that for sends, the amount is expected to be in human-readable form (conversion to the raw units via decimals is done by the script)
+
 Sepolia V1 to Solana
 
 ```bash
-npx hardhat --network sepolia-testnet lz:oft-v1:send --dst-eid 40168 --amount 1000000000000000000 --to <SOLANA_ADDRESS>
+npx hardhat --network sepolia-testnet lz:oft:send --src-eid 10161 --dst-eid 40168 --amount 1 --to <SOLANA_ADDRESS>
 ```
 
 Solana to Sepolia V1
 
 ```bash
-npx hardhat lz:oft:solana:send --amount 1000000000 --from-eid 40168 --to <EVM_ADDRESS> --to-eid 10161
+npx hardhat lz:oft:send --amount 1 --src-eid 40168 --to <EVM_ADDRESS> --dst-eid 10161
+```
+
+For more information on the unified send task across EVM and Solana, run:
+
+```bash
+npx hardhat lz:oft:send --help
+```
+
+### Set Message Execution Options
+
+For custom gas settings, enable `enforcedOptions` in `layerzero.config.ts` or pass an `_options` value when calling `send()`.
+
+When manually specifying options:
+
+- **EVM → Solana:** set `sendParam.extraOptions` in [tasks/evm/sendOFT.ts](./tasks/evm/sendOFT.ts)
+- **Solana → EVM:** use the `options` param in [tasks/solana/sendOFT.ts](./tasks/solana/sendOFT.ts)
+
+### Set a new Mint Authority
+
+If you do not want the deployer to remain mint authority, create and set a new authority:
+
+```bash
+pnpm hardhat lz:oft:solana:setauthority --eid <SOLANA_EID> --mint <TOKEN_MINT> --program-id <PROGRAM_ID> --escrow <ESCROW>
 ```
 
 Congratulations!
