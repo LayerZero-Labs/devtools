@@ -15,9 +15,9 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Met
 import "forge-std/console.sol";
 
 // DevTools imports
-import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
+import { LzTestHelperSlim } from "@layerzerolabs/test-devtools-evm-foundry/contracts/LzTestHelperSlim.sol";
 
-contract MyOAppTest is TestHelperOz5 {
+contract MyOAppTest is LzTestHelperSlim {
     using OptionsBuilder for bytes;
 
     uint32 private aEid = 1;
@@ -47,7 +47,7 @@ contract MyOAppTest is TestHelperOz5 {
         this.wireOApps(oapps);
     }
 
-    function test_constructor() public {
+    function test_constructor() public view {
         assertEq(aOApp.owner(), address(this));
         assertEq(bOApp.owner(), address(this));
 
