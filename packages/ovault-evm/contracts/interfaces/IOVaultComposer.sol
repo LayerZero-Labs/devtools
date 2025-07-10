@@ -80,11 +80,18 @@ interface IOVaultComposer is IOAppComposer {
     function failedGuidState(bytes32 guid) external view returns (FailedState);
 
     /// ========================== Proxy OFT =====================================
-    function depositSend(SendParam calldata _sendParam, address _refundAddress) external payable;
-    function redeemSend(SendParam calldata _sendParam, address _refundAddress) external payable;
+    function depositSend(uint256 assetAmountLD, SendParam memory _sendParam, address _refundAddress) external payable;
+    function redeemSend(uint256 shareAmountLD, SendParam memory _sendParam, address _refundAddress) external payable;
 
-    function quoteDepositSend(SendParam calldata _sendParam) external view returns (MessagingFee memory);
-    function quoteRedeemSend(SendParam calldata _sendParam) external view returns (MessagingFee memory);
+    function quoteDepositSend(
+        uint256 assetAmountLD,
+        SendParam memory _sendParam
+    ) external view returns (MessagingFee memory);
+
+    function quoteRedeemSend(
+        uint256 shareAmountLD,
+        SendParam memory _sendParam
+    ) external view returns (MessagingFee memory);
 
     /// ========================== Receive =====================================
     receive() external payable;

@@ -150,23 +150,39 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         }
     }
 
-    function depositSend(SendParam calldata _sendParam, address _refundAddress) external payable nonReentrant {
-        IERC20(ASSET_ERC20).safeTransferFrom(msg.sender, address(this), _sendParam.amountLD);
-        _executeOVaultAction(ASSET_OFT, _sendParam.amountLD);
+    function depositSend(
+        uint256 assetAmountLD,
+        SendParam memory _sendParam,
+        address _refundAddress
+    ) external payable nonReentrant {
+        IERC20(ASSET_ERC20).safeTransferFrom(msg.sender, address(this), assetAmountLD);
+        _sendParam.amountLD = _executeOVaultActionWithSlippageCheck(ASSET_OFT, assetAmountLD, _sendParam.minAmountLD);
         _send(SHARE_OFT, _sendParam, msg.value, _refundAddress);
     }
 
-    function redeemSend(SendParam calldata _sendParam, address _refundAddress) external payable nonReentrant {
-        IERC20(OVAULT).safeTransferFrom(msg.sender, address(this), _sendParam.amountLD);
-        _executeOVaultAction(SHARE_OFT, _sendParam.amountLD);
+    function redeemSend(
+        uint256 shareAmountLD,
+        SendParam memory _sendParam,
+        address _refundAddress
+    ) external payable nonReentrant {
+        IERC20(OVAULT).safeTransferFrom(msg.sender, address(this), shareAmountLD);
+        _sendParam.amountLD = _executeOVaultActionWithSlippageCheck(SHARE_OFT, shareAmountLD, _sendParam.minAmountLD);
         _send(ASSET_OFT, _sendParam, msg.value, _refundAddress);
     }
 
-    function quoteDepositSend(SendParam calldata _sendParam) external view returns (MessagingFee memory) {
+    function quoteDepositSend(
+        uint256 assetAmountLD,
+        SendParam memory _sendParam
+    ) external view returns (MessagingFee memory) {
+        _sendParam.amountLD = OVAULT.previewDeposit(assetAmountLD);
         return IOFT(SHARE_OFT).quoteSend(_sendParam, false);
     }
 
-    function quoteRedeemSend(SendParam calldata _sendParam) external view returns (MessagingFee memory) {
+    function quoteRedeemSend(
+        uint256 shareAmountLD,
+        SendParam memory _sendParam
+    ) external view returns (MessagingFee memory) {
+        _sendParam.amountLD = OVAULT.previewRedeem(shareAmountLD);
         return IOFT(ASSET_OFT).quoteSend(_sendParam, false);
     }
 

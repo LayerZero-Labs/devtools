@@ -29,7 +29,7 @@ contract OVaultComposerProxySendTest is OVaultComposerBaseTest {
 
         vm.startPrank(userA);
         assetOFT_arb.approve(address(OVaultComposerArb), TOKENS_TO_SEND);
-        OVaultComposerArb.depositSend(sendParam, userA);
+        OVaultComposerArb.depositSend(TOKENS_TO_SEND, sendParam, userA);
         vm.stopPrank();
 
         assertEq(oVault_arb.balanceOf(userA), TOKENS_TO_SEND);
@@ -43,7 +43,7 @@ contract OVaultComposerProxySendTest is OVaultComposerBaseTest {
 
         vm.startPrank(userA);
         oVault_arb.approve(address(OVaultComposerArb), TOKENS_TO_SEND);
-        OVaultComposerArb.redeemSend(sendParam, userA);
+        OVaultComposerArb.redeemSend(TOKENS_TO_SEND, sendParam, userA);
         vm.stopPrank();
 
         assertEq(oVault_arb.balanceOf(userA), 0);
@@ -54,11 +54,11 @@ contract OVaultComposerProxySendTest is OVaultComposerBaseTest {
         SendParam memory sendParam = SendParam(POL_EID, addressToBytes32(userA), TOKENS_TO_SEND, 0, "", "", "");
         assetOFT_arb.mint(address(userA), TOKENS_TO_SEND);
 
-        MessagingFee memory fee = OVaultComposerArb.quoteDepositSend(sendParam);
+        MessagingFee memory fee = OVaultComposerArb.quoteDepositSend(TOKENS_TO_SEND, sendParam);
 
         vm.startPrank(userA);
         assetOFT_arb.approve(address(OVaultComposerArb), TOKENS_TO_SEND);
-        OVaultComposerArb.depositSend{ value: fee.nativeFee }(sendParam, userA);
+        OVaultComposerArb.depositSend{ value: fee.nativeFee }(TOKENS_TO_SEND, sendParam, userA);
         vm.stopPrank();
 
         assertEq(assetOFT_arb.totalSupply(), assetOFT_arb.balanceOf(address(oVault_arb)), TOKENS_TO_SEND);
@@ -75,11 +75,11 @@ contract OVaultComposerProxySendTest is OVaultComposerBaseTest {
         assetOFT_arb.mint(address(oVault_arb), TOKENS_TO_SEND);
         oVault_arb.mint(address(userA), TOKENS_TO_SEND);
 
-        MessagingFee memory fee = OVaultComposerArb.quoteRedeemSend(sendParam);
+        MessagingFee memory fee = OVaultComposerArb.quoteRedeemSend(TOKENS_TO_SEND, sendParam);
 
         vm.startPrank(userA);
         oVault_arb.approve(address(OVaultComposerArb), TOKENS_TO_SEND);
-        OVaultComposerArb.redeemSend{ value: fee.nativeFee }(sendParam, userA);
+        OVaultComposerArb.redeemSend{ value: fee.nativeFee }(TOKENS_TO_SEND, sendParam, userA);
         vm.stopPrank();
 
         assertEq(oVault_arb.totalSupply(), 0, "redeem burns the share tokens");
