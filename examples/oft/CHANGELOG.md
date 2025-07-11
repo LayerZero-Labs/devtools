@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.7.1
+
+### Patch Changes
+
+- 37f8cf0: Added useful forge scripts and updated forge-std to latest commit
+
 ## 0.7.0
 
 ### Minor Changes

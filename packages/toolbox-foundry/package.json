@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/toolbox-foundry",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "One-stop-shop for developing LayerZero applications using foundry",
   "repository": {
     "type": "git",

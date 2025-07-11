@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/io-devtools",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Utilities for working with I/O in LayerZero devtools",
   "repository": {
     "type": "git",
