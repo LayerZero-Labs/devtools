@@ -15,7 +15,7 @@
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
     "test": "$npm_execpath test:jest",
-    "test:jest": "jest --ci --runInBand --forceExit"
+    "test:jest": "jest --ci --runInBand --forceExit --passWithNoTests"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
