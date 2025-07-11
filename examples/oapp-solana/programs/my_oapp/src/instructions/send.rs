@@ -47,7 +47,7 @@ impl<'info> Send<'info> {
         // Call the Endpoint::send CPI to send the message.
         oapp::endpoint_cpi::send(
             ENDPOINT_ID,
-            ctx.accounts.store.key(), // payer/signer derived from seeds
+            ctx.accounts.store.key(),
             ctx.remaining_accounts,
             seeds,
             send_params,
