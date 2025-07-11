@@ -15,7 +15,7 @@ import {
     printJson,
     promptToContinue,
 } from '@layerzerolabs/io-devtools'
-import { createProgressBar, printRecords, render } from '@layerzerolabs/io-devtools/swag'
+import { createPenguinSpinner, printRecords, render } from '@layerzerolabs/io-devtools/swag'
 
 export interface SignAndSendFlowArgs {
     transactions: OmniTransaction[]
@@ -88,19 +88,16 @@ export const createSignAndSendFlow =
         //
         // eslint-disable-next-line no-constant-condition
         while (true) {
-            // Now we render a progressbar to monitor the task progress
-            const progressBar = render(
-                createProgressBar({ before: 'Signing... ', after: ` 0/${transactionsToSign.length}` })
+            const penguinSpinner = render(
+                createPenguinSpinner({ before: 'Signing... ', after: ` 0/${transactionsToSign.length}` })
             )
 
             subtaskLogger.verbose(`Sending the transactions`)
             const [successfulBatch, errorsBatch, pendingBatch] = await signAndSend(
                 transactionsToSign,
                 (result, results) => {
-                    // We'll keep updating the progressbar as we sign the transactions
-                    progressBar.rerender(
-                        createProgressBar({
-                            progress: results.length / transactionsToSign.length,
+                    penguinSpinner.rerender(
+                        createPenguinSpinner({
                             before: 'Signing... ',
                             after: ` ${results.length}/${transactionsToSign.length}`,
                         })
@@ -108,8 +105,7 @@ export const createSignAndSendFlow =
                 }
             )
 
-            // And finally we drop the progressbar and continue
-            progressBar.clear()
+            penguinSpinner.clear()
 
             // Now let's update the accumulators
             //
