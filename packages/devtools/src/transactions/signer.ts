@@ -195,8 +195,10 @@ const sendBatchedIfAvailable =
             return await fallbackLogic(eid, logger, signer, transactions, onSuccess, onError)
         }
 
-        // Get the batch size from an environment variable, with a default value of 10
-        const batchSize = Number(process.env.LZ_BATCH_SIZE) || 20
+        const DEFAULT_BATCH_SIZE = 20
+
+        // Get the batch size from an environment variable or default size
+        const batchSize = Number(process.env.LZ_BATCH_SIZE) || DEFAULT_BATCH_SIZE
         const totalBatches = Math.ceil(transactions.length / batchSize)
         logger.debug(
             `Sending ${transactions.length} transactions for ${eidName} in ${totalBatches} batches of up to ${batchSize}`
