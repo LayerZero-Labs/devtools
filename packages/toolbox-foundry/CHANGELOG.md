@@ -1,5 +1,11 @@
 # @layerzerolabs/toolbox-foundry
 
+## 0.1.13
+
+### Patch Changes
+
+- 37f8cf0: Added useful forge scripts and updated forge-std to latest commit
+
 ## 0.1.12
 
 ### Patch Changes

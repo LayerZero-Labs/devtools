@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-cli",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "CLI for configuring LayerZero OApp contracts",
   "keywords": [
     "LayerZero",
@@ -43,8 +43,8 @@
     "yoga-layout-prebuilt": "^1.10.0"
   },
   "devDependencies": {
-    "@layerzerolabs/devtools": "~1.0.0",
-    "@layerzerolabs/io-devtools": "~0.2.0",
+    "@layerzerolabs/devtools": "~1.0.1",
+    "@layerzerolabs/io-devtools": "~0.2.1",
     "@layerzerolabs/ua-devtools": "~4.0.0",
     "@types/prompts": "^2.4.9",
     "@types/react": "^17.0.74",

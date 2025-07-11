@@ -1,5 +1,11 @@
 # @layerzerolabs/io-devtools
 
+## 0.2.1
+
+### Patch Changes
+
+- 3ee845c: Adding penguin logo prinout and penguin spinner to contract signing.
+
 ## 0.2.0
 
 ### Minor Changes
