@@ -55,6 +55,7 @@ interface IOVaultComposer is IOAppComposer {
 
     error NotEnoughTargetTokens(uint256 amountLD, uint256 minAmountLD);
     error NoMsgValueWhenSkippingRetry();
+    error NoMsgValueOnSameChainOVaultAction();
 
     /// ========================== GLOBAL VARIABLE FUNCTIONS =====================================
     function ASSET_OFT() external view returns (address);

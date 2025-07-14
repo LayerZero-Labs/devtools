@@ -156,6 +156,8 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         SendParam memory _sendParam,
         address _refundAddress
     ) external payable nonReentrant {
+        if (_sendParam.dstEid == HUB_EID && msg.value > 0) revert NoMsgValueOnSameChainOVaultAction();
+
         IERC20(ASSET_ERC20).safeTransferFrom(msg.sender, address(this), assetAmountLD);
         _sendParam.amountLD = _executeOVaultActionWithSlippageCheck(
             ASSET_OFT,
@@ -171,6 +173,8 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         SendParam memory _sendParam,
         address _refundAddress
     ) external payable nonReentrant {
+        if (_sendParam.dstEid == HUB_EID && msg.value > 0) revert NoMsgValueOnSameChainOVaultAction();
+
         IERC20(OVAULT).safeTransferFrom(msg.sender, address(this), shareAmountLD);
         _sendParam.amountLD = _executeOVaultActionWithSlippageCheck(
             SHARE_OFT,

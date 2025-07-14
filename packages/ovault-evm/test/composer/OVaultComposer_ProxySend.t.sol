@@ -23,6 +23,17 @@ contract OVaultComposerProxySendTest is OVaultComposerBaseTest {
         vm.deal(userA, 100 ether);
     }
 
+    function test_target_is_hub_reverts_when_msg_value_provided() public {
+        SendParam memory sendParam = SendParam(ARB_EID, addressToBytes32(userA), TOKENS_TO_SEND, 0, "", "", "");
+        assetOFT_arb.mint(address(userA), TOKENS_TO_SEND);
+
+        vm.expectRevert(abi.encodeWithSelector(IOVaultComposer.NoMsgValueOnSameChainOVaultAction.selector));
+        OVaultComposerArb.depositSend{ value: 1 wei }(TOKENS_TO_SEND, sendParam, userA);
+
+        vm.expectRevert(abi.encodeWithSelector(IOVaultComposer.NoMsgValueOnSameChainOVaultAction.selector));
+        OVaultComposerArb.redeemSend{ value: 1 wei }(TOKENS_TO_SEND, sendParam, userA);
+    }
+
     function test_depositSend_target_hub() public {
         SendParam memory sendParam = SendParam(ARB_EID, addressToBytes32(userA), TOKENS_TO_SEND, 0, "", "", "");
         assetOFT_arb.mint(address(userA), TOKENS_TO_SEND);
