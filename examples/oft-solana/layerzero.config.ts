@@ -31,9 +31,13 @@ const SOLANA_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
         msgType: 1,
         optionType: ExecutorOptionType.LZ_RECEIVE,
         gas: 200000,
-        value: 2039280, // This figure represents lamports on Solana. When sending OFTs to Solana, SOL is needed (for rent) to initialize the recipient's token account. This value is the exact rent value needed for SPL token accounts (0.00203928 SOL).
-        // For Token2022 token accounts, you will need to increase `value` to a higher amount, which depends on the token account size, which in turns depends on the extentions that you enable.
-        // To learn more about Solana's rent concept, refer to https://solana.com/docs/core/accounts#rent
+        value: 2039280, // This figure represents lamports (https://solana.com/docs/references/terminology#lamport) on Solana. Read below for more details.
+        /*
+         Elaboration on `value` when sending OFTs to Solana:
+            When sending OFTs to Solana, SOL is needed for rent (https://solana.com/docs/core/accounts#rent) to initialize the recipient's token account.
+            The `2039280` lamports value is the exact rent value needed for SPL token accounts (0.00203928 SOL).
+            For Token2022 token accounts, you will need to increase `value` to a higher amount, which depends on the token account size, which in turn depends on the extensions that you enable.
+        */
     },
 ]
 
