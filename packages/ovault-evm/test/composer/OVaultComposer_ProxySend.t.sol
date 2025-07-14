@@ -36,6 +36,21 @@ contract OVaultComposerProxySendTest is OVaultComposerBaseTest {
         assertEq(assetOFT_arb.balanceOf(userA), 0);
     }
 
+    function test_depositSend_target_hub_can_have_dust() public {
+        uint256 amountWithDust = TOKENS_TO_SEND + 1; // 1 extra token to test dust handling
+
+        SendParam memory sendParam = SendParam(ARB_EID, addressToBytes32(userA), amountWithDust, 0, "", "", "");
+        assetOFT_arb.mint(address(userA), amountWithDust);
+
+        vm.startPrank(userA);
+        assetOFT_arb.approve(address(OVaultComposerArb), amountWithDust);
+        OVaultComposerArb.depositSend(amountWithDust, sendParam, userA);
+        vm.stopPrank();
+
+        assertEq(oVault_arb.balanceOf(userA), amountWithDust);
+        assertEq(assetOFT_arb.balanceOf(userA), 0);
+    }
+
     function test_redeemSend_target_hub() public {
         SendParam memory sendParam = SendParam(ARB_EID, addressToBytes32(userA), TOKENS_TO_SEND, 0, "", "", "");
         assetOFT_arb.mint(address(oVault_arb), TOKENS_TO_SEND);
@@ -48,6 +63,22 @@ contract OVaultComposerProxySendTest is OVaultComposerBaseTest {
 
         assertEq(oVault_arb.balanceOf(userA), 0);
         assertEq(assetOFT_arb.balanceOf(userA), TOKENS_TO_SEND);
+    }
+
+    function test_redeemSend_target_hub_can_have_dust() public {
+        uint256 amountWithDust = TOKENS_TO_SEND + 1; // 1 extra token to test dust handling
+
+        SendParam memory sendParam = SendParam(ARB_EID, addressToBytes32(userA), amountWithDust, 0, "", "", "");
+        assetOFT_arb.mint(address(oVault_arb), amountWithDust);
+        oVault_arb.mint(address(userA), amountWithDust);
+
+        vm.startPrank(userA);
+        oVault_arb.approve(address(OVaultComposerArb), amountWithDust);
+        OVaultComposerArb.redeemSend(amountWithDust, sendParam, userA);
+        vm.stopPrank();
+
+        assertEq(oVault_arb.balanceOf(userA), 0);
+        assertEq(assetOFT_arb.balanceOf(userA), amountWithDust);
     }
 
     function test_depositSend_target_not_hub() public {
