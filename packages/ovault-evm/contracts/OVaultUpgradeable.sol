@@ -10,4 +10,10 @@ contract OVaultUpgradeable is ERC4626Upgradeable {
     constructor() {
         _disableInitializers();
     }
+
+    function __OVault_init(string memory _name, string memory _symbol, address _asset) public initializer {
+        __ERC4626_init(IERC20(_asset));
+        __ERC20_init(_name, _symbol);
+        __Context_init();
+    }
 }
