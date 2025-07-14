@@ -223,7 +223,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             address _receiver = _sendParam.to.bytes32ToAddress();
             uint256 _amountLD = _sendParam.amountLD;
             IERC20 token = IERC20(IOFT(_oft).token());
-            token.transfer(_receiver, _amountLD);
+            token.safeTransfer(_receiver, _amountLD);
             if (msg.value > 0) {
                 (bool sent, ) = _receiver.call{ value: msg.value }("");
                 require(sent, "Failed to send Ether");
