@@ -9,13 +9,13 @@ import { Errors } from "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Errors.
 import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
 import { OmniCounterMock as OmniCounter, MsgCodec } from "../../contracts/mocks/OmniCounterMock.sol";
 
-import { TestHelperOz5 } from "../../contracts/TestHelperOz5.sol";
-import { EndpointV2Mock } from "../../contracts/mocks/EndpointV2Mock.sol";
+import { LzTestHelperSlim } from "../../contracts/LzTestHelperSlim.sol";
+import { EndpointV2Simple } from "../../contracts/mocks/EndpointV2Simple.sol";
 import { MessagingReceipt } from "@layerzerolabs/oapp-evm/contracts/oapp/OAppSender.sol";
 
 import "forge-std/console.sol";
 
-contract OmniCounterTest is TestHelperOz5 {
+contract OmniCounterTest is LzTestHelperSlim {
     using OptionsBuilder for bytes;
 
     uint32 aEid = 1;
@@ -27,7 +27,7 @@ contract OmniCounterTest is TestHelperOz5 {
     function setUp() public virtual override {
         super.setUp();
 
-        setUpEndpoints(2, LibraryType.UltraLightNode);
+        setUpEndpoints(2);
 
         address[] memory uas = setupOApps(type(OmniCounter).creationCode, 1, 2);
         aCounter = OmniCounter(payable(uas[0]));

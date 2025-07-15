@@ -19,9 +19,9 @@ import { Vm } from "forge-std/Test.sol";
 import "forge-std/Test.sol";
 
 // DevTools imports
-import { TestHelperOz5 } from "../../contracts/TestHelperOz5.sol";
+import { LzTestHelperSlim } from "../../contracts/LzTestHelperSlim.sol";
 
-contract BatchSendTest is TestHelperOz5 {
+contract BatchSendTest is LzTestHelperSlim {
     using OptionsBuilder for bytes;
 
     uint32 aEid = 1;
@@ -56,7 +56,7 @@ contract BatchSendTest is TestHelperOz5 {
         vm.deal(userD, 1000 ether);
 
         super.setUp();
-        setUpEndpoints(4, LibraryType.UltraLightNode);
+        setUpEndpoints(4);
 
         aSender = BatchSend(
             payable(_deployOApp(type(BatchSend).creationCode, abi.encode(address(endpoints[aEid]), address(this))))

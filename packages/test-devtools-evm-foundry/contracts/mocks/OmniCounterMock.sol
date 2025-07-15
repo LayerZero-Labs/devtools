@@ -98,16 +98,26 @@ contract OmniCounterMock is ILayerZeroComposer, OApp {
 
         MessagingReceipt memory receipt;
         uint256 providedFee = msg.value;
+        
+        // First check if we have enough total fee
+        uint256 totalFeeNeeded = 0;
+        for (uint256 i = 0; i < _eids.length; i++) {
+            (uint256 nativeFee, ) = quote(_eids[i], _types[i], _options[i]);
+            totalFeeNeeded += nativeFee;
+        }
+        require(providedFee >= totalFeeNeeded, "Insufficient fee");
+        
+        // Send messages with exact fees
         for (uint256 i = 0; i < _eids.length; i++) {
             address refundAddress = i == _eids.length - 1 ? msg.sender : address(this);
             uint32 dstEid = _eids[i];
             uint8 msgType = _types[i];
-            //            bytes memory options = combineOptions(dstEid, msgType, _options[i]);
+            (uint256 nativeFee, ) = quote(dstEid, msgType, _options[i]);
             receipt = _lzSend(
                 dstEid,
                 MsgCodec.encode(msgType, eid),
                 _options[i],
-                MessagingFee(providedFee, 0),
+                MessagingFee(nativeFee, 0),
                 payable(refundAddress)
             );
             _incrementOutbound(dstEid);

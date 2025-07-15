@@ -13,7 +13,7 @@ import { Origin, ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/
 import { PacketV1Codec } from "@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/PacketV1Codec.sol";
 
 // Minimal Mocks
-import { EndpointV2Mock as EndpointV2 } from "./mocks/EndpointV2Mock.sol";
+import { EndpointV2Simple as EndpointV2 } from "./mocks/EndpointV2Simple.sol";
 import { SimpleMessageLibMock } from "./mocks/SimpleMessageLibMock.sol";
 import { OptionsHelper } from "./OptionsHelper.sol";
 
@@ -93,7 +93,7 @@ contract LzTestHelperSlim is Test, OptionsHelper {
         for (uint8 i = 0; i < _endpointNum; i++) {
             uint32 eid = i + 1;
             endpointSetup.eidList[i] = eid;
-            endpointSetup.endpointList[i] = new EndpointV2(eid, address(this));
+            endpointSetup.endpointList[i] = new EndpointV2(eid);
             registerEndpoint(endpointSetup.endpointList[i]);
         }
 
@@ -235,6 +235,14 @@ contract LzTestHelperSlim is Test, OptionsHelper {
             // Simplified delivery - just do lzReceive
             if (_executorOptionExists(options, ExecutorOptions.OPTION_TYPE_LZRECEIVE)) {
                 this.lzReceive(packetBytes, options);
+            }
+            
+            // Handle native drops
+            if (_executorOptionExists(options, ExecutorOptions.OPTION_TYPE_NATIVE_DROP)) {
+                (uint256 amount, bytes32 receiver) = _parseExecutorNativeDropOption(options);
+                address receiverAddress = address(uint160(uint256(receiver)));
+                (bool success, ) = receiverAddress.call{value: amount}("");
+                require(success, "Native drop failed");
             }
             
             // Handle compose if composer specified

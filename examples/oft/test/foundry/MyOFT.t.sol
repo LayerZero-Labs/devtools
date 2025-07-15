@@ -43,7 +43,7 @@ contract MyOFTTest is LzTestHelperSlim {
         vm.deal(userB, 1000 ether);
 
         super.setUp();
-        setUpEndpoints(2, LibraryType.UltraLightNode);
+        setUpEndpoints(2);
 
         aOFT = OFTMock(
             _deployOApp(type(OFTMock).creationCode, abi.encode("aOFT", "aOFT", address(endpoints[aEid]), address(this)))

@@ -23,9 +23,9 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Met
 import "forge-std/console.sol";
 
 // DevTools imports
-import { TestHelperOz5 } from "../../contracts/TestHelperOz5.sol";
+import { LzTestHelperSlim } from "../../contracts/LzTestHelperSlim.sol";
 
-contract ComposerTest is TestHelperOz5 {
+contract ComposerTest is LzTestHelperSlim {
     using OptionsBuilder for bytes;
 
     uint32 private aEid = 1;
@@ -43,7 +43,7 @@ contract ComposerTest is TestHelperOz5 {
         vm.deal(userB, 1000 ether);
 
         super.setUp();
-        setUpEndpoints(2, LibraryType.UltraLightNode);
+        setUpEndpoints(2);
 
         aOFT = OFTMock(
             _deployOApp(type(OFTMock).creationCode, abi.encode("aOFT", "aOFT", address(endpoints[aEid]), address(this)))

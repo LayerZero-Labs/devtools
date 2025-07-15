@@ -19,9 +19,9 @@ import { Vm } from "forge-std/Test.sol";
 import "forge-std/Test.sol";
 
 // DevTools imports
-import { TestHelperOz5 } from "../../contracts/TestHelperOz5.sol";
+import { LzTestHelperSlim } from "../../contracts/LzTestHelperSlim.sol";
 
-contract ABATest is TestHelperOz5 {
+contract ABATest is LzTestHelperSlim {
     using OptionsBuilder for bytes;
 
     uint32 aEid = 1;
@@ -45,7 +45,7 @@ contract ABATest is TestHelperOz5 {
         vm.deal(userB, 1000 ether);
 
         super.setUp();
-        setUpEndpoints(2, LibraryType.UltraLightNode);
+        setUpEndpoints(2);
 
         aSender = ABA(
             payable(_deployOApp(type(ABA).creationCode, abi.encode(address(endpoints[aEid]), address(this))))
