@@ -262,7 +262,6 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     function retry(bytes32 _guid, bool _removeExtraOptions) external payable nonReentrant {
         FailedMessage memory failedMessage = failedMessages[_guid];
         if (_failedGuidState(failedMessage) != FailedState.CanOnlyRetry) revert CanNotRetry(_guid);
-        if (_failedGuidState(failedMessage) != FailedState.CanOnlyRetry) revert CanNotRetry(_guid);
 
         SendParam memory sendParam = failedMessage.sendParam;
         uint256 prepaidMsgValue = failedMessage.msgValue;
