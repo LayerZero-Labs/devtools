@@ -1,0 +1,50 @@
+# This will approve a single PR from layerzero-bot if it only contains changes to package.json, pnpm-lock.yaml, .changeset files, or CHANGELOG.md.
+# It will also add a comment explaining the auto-approval.
+# This makes it so that we only need 1 human approval to merge the PR.
+
+name: Auto Approve PRs from layerzero-bot 
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  auto-approve-layerzero-bot:
+    name: Auto approve bot PRs
+    if: github.actor == 'layerzero-bot'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Assert changed files
+        id: files
+        uses: tj-actions/changed-files@v44
+        with:
+          files: |
+            **/package.json
+            **/pnpm-lock.yaml
+            **/.changeset/**
+            **/CHANGELOG.md
+            .changeset/**
+
+      - name: Auto-approve PR if only allowed files changed
+        if: steps.files.outputs.any_changed == 'true' && steps.files.outputs.only_changed == 'true'
+        uses: hmarr/auto-approve-action@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add comment explaining auto-approval (if approval was made)
+        if: steps.files.outputs.any_changed == 'true' && steps.files.outputs.only_changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Auto-approved: This PR from layerzero-bot only contains package.json, lockfile, changeset, or CHANGELOG updates.'
+            })
