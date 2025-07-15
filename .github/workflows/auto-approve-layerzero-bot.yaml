@@ -14,6 +14,11 @@ jobs:
     if: github.actor == 'layerzero-bot'
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read          # Read repository contents
+      pull-requests: write    # Approve pull requests
+      issues: write           # Add comments to PRs
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
