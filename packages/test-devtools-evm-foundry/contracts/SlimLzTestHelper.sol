@@ -14,7 +14,7 @@ import { PacketV1Codec } from "@layerzerolabs/lz-evm-protocol-v2/contracts/messa
 
 // Minimal Mocks
 import { EndpointV2Simple as EndpointV2 } from "./mocks/EndpointV2Simple.sol";
-import { SimpleMessageLibMock } from "./mocks/SimpleMessageLibMock.sol";
+import { SlimSimpleMessageLibMock } from "./mocks/SlimSimpleMessageLibMock.sol";
 import { OptionsHelper } from "./OptionsHelper.sol";
 
 interface IOAppSetPeer {
@@ -23,12 +23,12 @@ interface IOAppSetPeer {
 }
 
 /**
- * @title LzTestHelperSlim
+ * @title SlimLzTestHelper
  * @notice Lightweight helper contract for basic LayerZero OApp testing without compile size issues.
  * @dev Maintains backward compatibility with TestHelperOz5 for basic testing scenarios.
  * @dev For advanced features (DVN, Executor, workers), use TestHelperOz5 instead.
  */
-contract LzTestHelperSlim is Test, OptionsHelper {
+contract SlimLzTestHelper is Test, OptionsHelper {
     using DoubleEndedQueue for DoubleEndedQueue.Bytes32Deque;
     using PacketV1Codec for bytes;
 
@@ -101,7 +101,7 @@ contract LzTestHelperSlim is Test, OptionsHelper {
         for (uint8 i = 0; i < _endpointNum; i++) {
             address endpointAddr = address(endpointSetup.endpointList[i]);
             
-            SimpleMessageLibMock messageLib = new SimpleMessageLibMock(
+            SlimSimpleMessageLibMock messageLib = new SlimSimpleMessageLibMock(
                 payable(this),
                 endpointAddr
             );
@@ -301,7 +301,7 @@ contract LzTestHelperSlim is Test, OptionsHelper {
         (address receiveLib, ) = endpoint.getReceiveLibrary(_packetBytes.receiverB20(), _packetBytes.srcEid());
         
         // In slim version, always use SimpleMessageLibMock
-        SimpleMessageLibMock(payable(receiveLib)).validatePacket(_packetBytes);
+        SlimSimpleMessageLibMock(payable(receiveLib)).validatePacket(_packetBytes);
     }
 
     function assertGuid(bytes calldata packetBytes, bytes32 guid) external pure {

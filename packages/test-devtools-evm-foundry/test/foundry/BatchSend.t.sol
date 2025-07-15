@@ -19,9 +19,9 @@ import { Vm } from "forge-std/Test.sol";
 import "forge-std/Test.sol";
 
 // DevTools imports
-import { LzTestHelperSlim } from "../../contracts/LzTestHelperSlim.sol";
+import { SlimLzTestHelper } from "../../contracts/SlimLzTestHelper.sol";
 
-contract BatchSendTest is LzTestHelperSlim {
+contract BatchSendTest is SlimLzTestHelper {
     using OptionsBuilder for bytes;
 
     uint32 aEid = 1;

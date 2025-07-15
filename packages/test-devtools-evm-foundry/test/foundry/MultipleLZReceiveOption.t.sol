@@ -8,9 +8,9 @@ import { ExecutorOptions } from "@layerzerolabs/lz-evm-protocol-v2/contracts/mes
 import { IOAppOptionsType3, EnforcedOptionParam } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
 import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
 
-import { LzTestHelperSlim } from "../../contracts/LzTestHelperSlim.sol";
+import { SlimLzTestHelper } from "../../contracts/SlimLzTestHelper.sol";
 
-contract MultipleLZReceiveOptionTest is LzTestHelperSlim {
+contract MultipleLZReceiveOptionTest is SlimLzTestHelper {
     using OptionsBuilder for bytes;
 
     function setUp() public virtual override {}

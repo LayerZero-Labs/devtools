@@ -15,9 +15,9 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Met
 import "forge-std/console.sol";
 
 // DevTools imports
-import { LzTestHelperSlim } from "@layerzerolabs/test-devtools-evm-foundry/contracts/LzTestHelperSlim.sol";
+import { SlimLzTestHelper } from "@layerzerolabs/test-devtools-evm-foundry/contracts/SlimLzTestHelper.sol";
 
-contract MyOAppTest is LzTestHelperSlim {
+contract MyOAppTest is SlimLzTestHelper {
     using OptionsBuilder for bytes;
 
     uint32 private aEid = 1;

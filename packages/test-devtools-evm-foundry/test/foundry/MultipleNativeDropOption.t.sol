@@ -8,9 +8,9 @@ import { ExecutorOptions } from "@layerzerolabs/lz-evm-protocol-v2/contracts/mes
 import { IOAppOptionsType3, EnforcedOptionParam } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
 import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
 
-import { LzTestHelperSlim } from "../../contracts/LzTestHelperSlim.sol";
+import { SlimLzTestHelper } from "../../contracts/SlimLzTestHelper.sol";
 
-contract MultipleNativeDropOptionTest is LzTestHelperSlim {
+contract MultipleNativeDropOptionTest is SlimLzTestHelper {
     using OptionsBuilder for bytes;
 
     bytes32 receiver = keccak256(abi.encodePacked("receiver"));
