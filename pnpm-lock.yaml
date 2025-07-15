@@ -803,7 +803,7 @@ importers:
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/io-devtools':
-        specifier: 0.2.0
+        specifier: 0.2.1
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.75
@@ -833,7 +833,7 @@ importers:
         specifier: ~6.0.3
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.12
+        specifier: ~0.1.13
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
         specifier: ~0.6.9
@@ -1119,7 +1119,7 @@ importers:
         specifier: ^7.23.9
         version: 7.23.9
       '@layerzerolabs/devtools':
-        specifier: ~1.0.0
+        specifier: ~1.0.1
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-evm-hardhat':
         specifier: ^3.1.0
@@ -1128,7 +1128,7 @@ importers:
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/io-devtools':
-        specifier: ~0.2.0
+        specifier: ~0.2.1
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.75
@@ -1158,7 +1158,7 @@ importers:
         specifier: ^2.3.39
         version: 2.3.44
       '@layerzerolabs/script-devtools-evm-foundry':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../../packages/script-devtools-evm-foundry
       '@layerzerolabs/solhint-config':
         specifier: ^3.0.12
@@ -1167,7 +1167,7 @@ importers:
         specifier: ~6.0.3
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.12
+        specifier: ~0.1.13
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
         specifier: ~0.6.11
@@ -3611,7 +3611,7 @@ importers:
         specifier: ~5.7.0
         version: 5.7.0
       '@layerzerolabs/io-devtools':
-        specifier: ~0.2.0
+        specifier: ~0.2.1
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.75
@@ -3660,10 +3660,10 @@ importers:
         version: 1.10.0
     devDependencies:
       '@layerzerolabs/devtools':
-        specifier: ~1.0.0
+        specifier: ~1.0.1
         version: link:../devtools
       '@layerzerolabs/io-devtools':
-        specifier: ~0.2.0
+        specifier: ~0.2.1
         version: link:../io-devtools
       '@layerzerolabs/ua-devtools':
         specifier: ~4.0.0
@@ -5007,7 +5007,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.86(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
       '@layerzerolabs/toolbox-foundry':
-        specifier: ^0.1.12
+        specifier: ^0.1.13
         version: link:../toolbox-foundry
       '@openzeppelin/contracts':
         specifier: ^5.0.2

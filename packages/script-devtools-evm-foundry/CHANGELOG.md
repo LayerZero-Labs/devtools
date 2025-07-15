@@ -1,5 +1,11 @@
 # @layerzerolabs/script-devtools-evm-foundry
 
+## 0.0.2
+
+### Patch Changes
+
+- 37f8cf0: Added useful forge scripts and updated forge-std to latest commit
+
 ## 0.0.1
 
 ### Minor Changes
