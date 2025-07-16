@@ -3,6 +3,7 @@
   "exclude": ["dist", "node_modules"],
   "include": ["src", "test"],
   "compilerOptions": {
+    "target": "es2020",
     "types": ["node", "jest"],
     "paths": {
       "@/*": ["./src/*"]
