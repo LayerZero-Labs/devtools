@@ -66,9 +66,6 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         // Approve the shareOFTAdapter with the share tokens held by this contract
         IERC20(IOFT(_shareOFT).token()).approve(_shareOFT, type(uint256).max);
 
-        ASSET_DECIMAL_CONVERSION_RATE = IOFT(_assetOFT).decimalConversionRate();
-        SHARE_DECIMAL_CONVERSION_RATE = IOFT(_shareOFT).decimalConversionRate();
-
         REFUND_OVERPAY_ADDRESS = _refundOverpayAddress;
         ASSET_ERC20 = address(OVAULT.asset());
     }
