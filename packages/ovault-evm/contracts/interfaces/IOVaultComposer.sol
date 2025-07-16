@@ -45,16 +45,14 @@ interface IOVaultComposer is IOAppComposer {
     error OnlyEndpoint(address caller);
     error OnlySelf(address caller);
     error OnlyOFT(address oft);
-    error OnlyAsset(address asset);
-    error OnlyShare(address share);
 
     error CanNotRefund(bytes32 guid);
     error CanNotRetry(bytes32 guid);
     error CanNotSwap(bytes32 guid);
-    error CanNotWithdraw(bytes32 guid);
 
     error NotEnoughTargetTokens(uint256 amountLD, uint256 minAmountLD);
     error NoMsgValueWhenSkippingRetry();
+    error NoMsgValueOnSameChainOVaultAction();
 
     /// ========================== GLOBAL VARIABLE FUNCTIONS =====================================
     function ASSET_OFT() external view returns (address);

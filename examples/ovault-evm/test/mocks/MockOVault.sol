@@ -28,9 +28,8 @@ contract MockOVaultUpgradeable is OVaultUpgradeable {
         _disableInitializers();
     }
 
-    function __OVault_init(string memory _name, string memory _symbol, address _asset) internal onlyInitializing {
-        __ERC4626_init(IERC20(_asset));
-        __ERC20_init(_name, _symbol);
+    function initialize(string memory _name, string memory _symbol, address _asset) internal onlyInitializing {
+        __OVault_init(_name, _symbol, _asset);
     }
 
     function totalAssets() public view override returns (uint256) {

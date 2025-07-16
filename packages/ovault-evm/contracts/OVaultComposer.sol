@@ -4,7 +4,6 @@ pragma solidity ^0.8.22;
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
-import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
@@ -19,7 +18,6 @@ import { IOVaultComposer, FailedMessage, FailedState } from "./interfaces/IOVaul
 contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     using OFTComposeMsgCodec for bytes;
     using OFTComposeMsgCodec for bytes32;
-    using SafeERC20 for IERC20;
     using SafeERC20 for IERC20;
 
     address public immutable ASSET_OFT; // any OFT
@@ -67,9 +65,6 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
 
         // Approve the shareOFTAdapter with the share tokens held by this contract
         IERC20(IOFT(_shareOFT).token()).approve(_shareOFT, type(uint256).max);
-
-        ASSET_DECIMAL_CONVERSION_RATE = IOFT(_assetOFT).decimalConversionRate();
-        SHARE_DECIMAL_CONVERSION_RATE = IOFT(_shareOFT).decimalConversionRate();
 
         REFUND_OVERPAY_ADDRESS = _refundOverpayAddress;
         ASSET_ERC20 = address(OVAULT.asset());
@@ -126,9 +121,9 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         }
 
         /// @dev Try to execute the action on the target OFT. If we hit an error then it rolls back the storage changes.
-        try this.executeOVaultActionWithSlippageCheck(_refundOFT, amount, sendParam.minAmountLD) returns (
-            uint256 vaultAmount
-        ) {
+        try
+            this.executeOVaultActionWithSlippageCheck(_refundOFT, sendParam.dstEid, amount, sendParam.minAmountLD)
+        returns (uint256 vaultAmount) {
             /// @dev Setting the target amount to the actual value of the action (i.e. deposit or redeem)
             sendParam.amountLD = vaultAmount;
         } catch (bytes memory errMsg) {
@@ -156,8 +151,15 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         SendParam memory _sendParam,
         address _refundAddress
     ) external payable nonReentrant {
+        if (_sendParam.dstEid == HUB_EID && msg.value > 0) revert NoMsgValueOnSameChainOVaultAction();
+
         IERC20(ASSET_ERC20).safeTransferFrom(msg.sender, address(this), assetAmountLD);
-        _sendParam.amountLD = _executeOVaultActionWithSlippageCheck(ASSET_OFT, assetAmountLD, _sendParam.minAmountLD);
+        _sendParam.amountLD = _executeOVaultActionWithSlippageCheck(
+            ASSET_OFT,
+            _sendParam.dstEid,
+            assetAmountLD,
+            _sendParam.minAmountLD
+        );
         _send(SHARE_OFT, _sendParam, msg.value, _refundAddress);
     }
 
@@ -166,8 +168,15 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
         SendParam memory _sendParam,
         address _refundAddress
     ) external payable nonReentrant {
+        if (_sendParam.dstEid == HUB_EID && msg.value > 0) revert NoMsgValueOnSameChainOVaultAction();
+
         IERC20(OVAULT).safeTransferFrom(msg.sender, address(this), shareAmountLD);
-        _sendParam.amountLD = _executeOVaultActionWithSlippageCheck(SHARE_OFT, shareAmountLD, _sendParam.minAmountLD);
+        _sendParam.amountLD = _executeOVaultActionWithSlippageCheck(
+            SHARE_OFT,
+            _sendParam.dstEid,
+            shareAmountLD,
+            _sendParam.minAmountLD
+        );
         _send(ASSET_OFT, _sendParam, msg.value, _refundAddress);
     }
 
@@ -195,12 +204,13 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     /// @dev External call for try...catch logic in lzCompose()
     function executeOVaultActionWithSlippageCheck(
         address _refundOFT,
+        uint32 _dstEid,
         uint256 _amount,
         uint256 _minAmountLD
     ) external nonReentrant returns (uint256 vaultAmount) {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
-        vaultAmount = _executeOVaultActionWithSlippageCheck(_refundOFT, _amount, _minAmountLD);
+        vaultAmount = _executeOVaultActionWithSlippageCheck(_refundOFT, _dstEid, _amount, _minAmountLD);
     }
 
     /// @dev External call for try...catch logic in lzCompose()
@@ -212,7 +222,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
             address _receiver = _sendParam.to.bytes32ToAddress();
             uint256 _amountLD = _sendParam.amountLD;
             IERC20 token = IERC20(IOFT(_oft).token());
-            token.transfer(_receiver, _amountLD);
+            token.safeTransfer(_receiver, _amountLD);
             if (msg.value > 0) {
                 (bool sent, ) = _receiver.call{ value: msg.value }("");
                 require(sent, "Failed to send Ether");
@@ -249,7 +259,6 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     function retry(bytes32 _guid, bool _removeExtraOptions) external payable nonReentrant {
         FailedMessage memory failedMessage = failedMessages[_guid];
         if (_failedGuidState(failedMessage) != FailedState.CanOnlyRetry) revert CanNotRetry(_guid);
-        if (_failedGuidState(failedMessage) != FailedState.CanOnlyRetry) revert CanNotRetry(_guid);
 
         SendParam memory sendParam = failedMessage.sendParam;
         uint256 prepaidMsgValue = failedMessage.msgValue;
@@ -277,6 +286,7 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
 
         failedMessage.sendParam.amountLD = _executeOVaultActionWithSlippageCheck(
             failedMessage.refundOFT,
+            failedMessage.sendParam.dstEid, //dstEid
             failedMessage.refundSendParam.amountLD,
             failedMessage.sendParam.minAmountLD
         );
@@ -327,12 +337,13 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
 
     function _executeOVaultActionWithSlippageCheck(
         address _refundOFT,
+        uint32 _dstEid,
         uint256 _amount,
         uint256 _minAmountLD
     ) internal returns (uint256) {
         (uint256 vaultAmount, address targetOFT) = _executeOVaultAction(_refundOFT, _amount);
 
-        _checkSlippage(targetOFT, vaultAmount, _minAmountLD);
+        _checkSlippage(targetOFT, _dstEid, vaultAmount, _minAmountLD);
 
         return vaultAmount;
     }
@@ -396,8 +407,10 @@ contract OVaultComposer is IOVaultComposer, ReentrancyGuard {
     /// @dev Remove dust before slippage check to be equivalent to OFTCore::_debitView()
     /// @dev If the OFT has a Fee or anything that changes the tokens such that:
     /// @dev dstChain.receivedAmount != srcChain.sentAmount, this will have to be overridden.
-    function _checkSlippage(address _oft, uint256 _amount, uint256 _minAmountLD) internal view virtual {
-        uint256 vaultAmountLD = _removeDust(_oft, _amount);
+    function _checkSlippage(address _oft, uint32 _dstEid, uint256 _amount, uint256 _minAmountLD) internal view virtual {
+        /// @dev In the event of a same chain deposit. Dust is never removed since we do not call OFT.send() but ERC20.transfer()
+        uint256 vaultAmountLD = HUB_EID == _dstEid ? _amount : _removeDust(_oft, _amount);
+
         uint256 amountReceivedLD = vaultAmountLD; /// @dev Perform your adjustments here if needed (ex: Fee)
         if (amountReceivedLD < _minAmountLD) {
             revert NotEnoughTargetTokens(amountReceivedLD, _minAmountLD);
