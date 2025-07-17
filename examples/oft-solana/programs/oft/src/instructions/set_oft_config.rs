@@ -1,5 +1,5 @@
 use crate::*;
-use oapp::endpoint::instructions::SetDelegateParams;
+use oapp::endpoint_interface::instructions::SetDelegateParams;
 
 #[derive(Accounts)]
 pub struct SetOFTConfig<'info> {

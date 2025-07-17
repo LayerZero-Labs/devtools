@@ -2,7 +2,7 @@ use crate::*;
 use anchor_spl::token_interface::{
     self, Burn, Mint, TokenAccount, TokenInterface, TransferChecked,
 };
-use oapp::endpoint::{instructions::SendParams as EndpointSendParams, MessagingReceipt};
+use oapp::endpoint_interface::{instructions::SendParams as EndpointSendParams, MessagingReceipt};
 
 #[event_cpi]
 #[derive(Accounts)]

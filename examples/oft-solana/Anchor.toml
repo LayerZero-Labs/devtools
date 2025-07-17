@@ -1,5 +1,8 @@
+# Ensure your default Rust nightly toolchain is dated after 2025-04-16 before running `anchor build`.
+# See: https://solana.stackexchange.com/a/21645
 [toolchain]
-anchor_version = "0.29.0"
+anchor_version = "0.31.1" # anchor-cli
+solana_version = "2.2.20" # solana-cli
 
 [features]
 seeds = false
