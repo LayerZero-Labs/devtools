@@ -120,14 +120,24 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
 
         /// @dev If the message is being sent with a value, we fund the address on HyperCore
         if (msg.value > 0) {
+            ///
             try this.fundAddressOnHyperCore(receiver, msg.value, _executor) {} catch (bytes memory _err) {
+                /// @dev The gas token on HyperCore is USDC at the moment, the outcome of a failed HYPE transfer is invariant of the ERC20 transfer
+                /// @dev When HYPE is the gas token on HyperCore, we MAY want to stop execution and perform a completeRefund()
+                /// @dev This would require composer redeployment
                 try this.refundNativeTokens{ value: msg.value }(receiver) {} catch {
-                    _err = completeRefund(_err, _executor);
+                    /// @dev When we can not refund the receiver, we refund the tx.origin
+                    /// @dev If this fails, we do not revert as we still want to transfer the ERC20 to hypercore
+                    (bool succ, bytes memory data) = (tx.origin).call{ value: msg.value }("");
+                    if (!succ) {
+                        emit ErrorMessage(data);
+                    }
                 }
                 emit ErrorMessage(_err);
             }
         }
 
+        /// @dev We always want to transfer the ERC20 tokens to HyperCore
         try this.sendAssetToHyperCore(receiver, amountLD) {} catch (bytes memory _err) {
             this.refundERC20(receiver, amountLD);
             emit ErrorSpot_FailedToSend(receiver, oftAsset.coreIndexId, amountLD, _err);
