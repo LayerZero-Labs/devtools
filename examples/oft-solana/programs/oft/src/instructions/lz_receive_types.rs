@@ -2,10 +2,10 @@ use crate::*;
 use anchor_lang::solana_program;
 use anchor_spl::{
     associated_token::{get_associated_token_address_with_program_id, ID as ASSOCIATED_TOKEN_ID},
-    token_2022::spl_token_2022::solana_program::program_option::COption,
     token_interface::Mint,
 };
 use oapp::endpoint_cpi::LzAccount;
+use solana_program::program_option::COption;
 
 #[derive(Accounts)]
 pub struct LzReceiveTypes<'info> {
@@ -49,12 +49,12 @@ impl LzReceiveTypes<'_> {
         let mut accounts = vec![
             LzAccount { pubkey: Pubkey::default(), is_signer: true, is_writable: true }, // 0
             LzAccount { pubkey: peer, is_signer: false, is_writable: true },             // 1
-            LzAccount { pubkey: ctx.accounts.oft_store.key(), is_signer: false, is_writable: true }, // 2
+            LzAccount { pubkey: ctx.accounts.oft_store.key(), is_signer: false, is_writable: true }, /* 2 */
             LzAccount {
                 pubkey: ctx.accounts.oft_store.token_escrow.key(),
                 is_signer: false,
                 is_writable: true,
-            }, // 3
+            }, /* 3 */
         ];
 
         // account 4..9

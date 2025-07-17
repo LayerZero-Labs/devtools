@@ -15,8 +15,10 @@ no-log-ix-name = []
 cpi = ["no-entrypoint"]
 default = []
 idl-build = ["anchor-lang/idl-build"]
+custom-heap = []
+custom-panic = []
+anchor-debug = []
 
 [dependencies]
-anchor-lang = { version = "0.29.0", features = ["event-cpi"] }
-solana-program = "=1.17.31"
-cpi-helper = { git = "https://github.com/LayerZero-Labs/LayerZero-v2.git", rev = "34321ac15e47e0dafd25d66659e2f3d1b9b6db8f" }
+anchor-lang = { workspace = true, features = ["event-cpi"]}
+cpi-helper = { workspace = true }

@@ -2,14 +2,15 @@ use crate::*;
 use anchor_lang::solana_program;
 use anchor_spl::{
     associated_token::AssociatedToken,
-    token_2022::spl_token_2022::{self, solana_program::program_option::COption},
+    token_2022::spl_token_2022::{self},
     token_interface::{self, Mint, TokenAccount, TokenInterface, TransferChecked},
 };
-use oapp::endpoint::{
+use oapp::endpoint_interface::{
     cpi::accounts::Clear,
     instructions::{ClearParams, SendComposeParams},
     ConstructCPIContext,
 };
+use solana_program::program_option::COption;
 
 #[event_cpi]
 #[derive(Accounts)]
@@ -60,7 +61,8 @@ pub struct LzReceive<'info> {
     )]
     pub token_mint: InterfaceAccount<'info, Mint>,
     // Only used for native mint, the mint authority can be:
-    //      1. a spl-token multisig account with oft_store as one of the signers, and the quorum **MUST** be 1-of-n. (recommended)
+    //      1. a spl-token multisig account with oft_store as one of the signers, and the quorum
+    //         **MUST** be 1-of-n. (recommended)
     //      2. or the mint_authority is oft_store itself.
     #[account(constraint = token_mint.mint_authority == COption::Some(mint_authority.key()) @OFTError::InvalidMintAuthority)]
     pub mint_authority: Option<AccountInfo<'info>>,

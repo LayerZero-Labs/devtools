@@ -14,3 +14,23 @@ codegen-units = 1
 opt-level = 3
 incremental = false
 codegen-units = 1
+
+# [patch.crates-io]
+# spl-token-2022 = { git = "https://github.com/solana-program/token-2022.git", tag = "program@v7.0.0" }
+#  https://github.com/solana-program/token-2022/compare/program@v6.0.0...program@v8.0.0
+
+
+[workspace.dependencies]
+anchor-lang = "=0.31.1"
+anchor-spl = { git = "https://github.com/ziming-zung/anchor.git", branch = "0.31.1-token2022v8" }
+solana-program = "=2.3.0"
+solana-helper = "0.1.0"
+cpi-helper = { git = "https://github.com/ziming-zung/LayerZero-v2.git", branch = "anchor-0.31.1" }
+oapp = { git = "https://github.com/ziming-zung/LayerZero-v2.git", branch = "anchor-0.31.1" }
+utils = { git = "https://github.com/ziming-zung/LayerZero-v2.git", branch = "anchor-0.31.1" }
+
+# cargo update -p ahash --precise 0.8.7
+# cargo update -p spl-token-2022 --precise 7.0.0
+# oapp = { git = "https://github.com/LayerZero-Labs/LayerZero-v2.git", rev = "34321ac15e47e0dafd25d66659e2f3d1b9b6db8f" }
+# utils = { git = "https://github.com/LayerZero-Labs/LayerZero-v2.git", rev = "34321ac15e47e0dafd25d66659e2f3d1b9b6db8f" }
+# anchor-spl = "=0.31.1"
