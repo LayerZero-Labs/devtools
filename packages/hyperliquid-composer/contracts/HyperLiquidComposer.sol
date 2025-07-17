@@ -62,7 +62,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
     /// @dev This function is called by the OFTCore contract when a message is sent
     ///
     /// @param _oft The address of the OFT contract.
-    /// @param _message The encoded message content, expected to contain a composeMsg that decodes to type: (address receiver).
+    /// @param _message The encoded message content, expected to contain a composeMsg that decodes to type: (address receiver, uint256 msgValue).
     /// @param _executor The address that called EndpointV2::lzCompose()
     function lzCompose(
         address _oft,
@@ -89,7 +89,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         address receiver;
         uint256 amountLD;
         bytes32 maybeEVMSender;
-        bytes memory maybeEVMReceiver;
+        bytes memory composeMsg;
 
         /// @dev Checks if the payload contains a compose message that can be sliced to extract the amount, sender as bytes32, and receiver as bytes
         /// @dev The slice ranges can be found in OFTComposeMsgCodec.sol
@@ -97,11 +97,11 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         try this.validate_message(_message) returns (
             uint256 _amountLD,
             bytes32 _maybeSenderBytes32,
-            bytes memory _maybeEVMReceiver
+            bytes memory _composeMsg
         ) {
             amountLD = _amountLD;
             maybeEVMSender = _maybeSenderBytes32;
-            maybeEVMReceiver = _maybeEVMReceiver;
+            composeMsg = _composeMsg;
         } catch (bytes memory _err) {
             revert IHyperLiquidComposerErrors.HyperLiquidComposer_InvalidComposeMessage(_err);
         }
@@ -109,7 +109,12 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         /// @dev Checks if the receiver and sender are valid addresses
         /// @dev If the addresses are invalid, the function will emit an error message and try a complete refund to the sender
         /// @dev If developers want custom error messages they need to implement their own custom revert messages
-        try this.validate_addresses_or_refund(maybeEVMReceiver, maybeEVMSender, amountLD) returns (address _receiver) {
+        try this.validate_msg_or_refund(composeMsg, maybeEVMSender, amountLD) returns (
+            uint256 _minMsgValue,
+            address _receiver
+        ) {
+            if (msg.value < _minMsgValue) revert IHyperLiquidComposerErrors.NotEnoughMsgValue(msg.value, _minMsgValue);
+
             receiver = _receiver;
         } catch (bytes memory _err) {
             bytes memory errMsg = completeRefund(_err, _executor);

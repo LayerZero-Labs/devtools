@@ -21,6 +21,8 @@ interface IHyperLiquidComposerErrors {
     // 0x5950c85e
     error HyperLiquidComposer_InvalidCall_NotComposer(address notComposerAddress);
 
+    error NotEnoughMsgValue(uint256 msgValue, uint256 requiredValue);
+
     // 0x00d4895a
     error HyperLiquidComposer_InvalidComposeMessage(bytes errorMessage);
 
