@@ -233,6 +233,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
                     emit ExcessHYPE_Refund(_executor, amounts.dust);
                 } else {
                     // Finally refund the transaction origin - we know this is an eoa and can accept tokens
+                    /// @dev If this fails we are fine with the tokens staying the composer contract
                     (success, ) = tx.origin.call{ value: amounts.dust }("");
                     emit ExcessHYPE_Refund(tx.origin, amounts.dust);
                 }
