@@ -98,13 +98,13 @@ APTOS_PRIVATE_KEY=<your-aptos-private-key>
 
 Then run `source .env` in order for your values to be mapped.
 
-> **Important:** If using Aptos CLI version >= 6.1.0 (required for Aptos chain), you need to uncomment the following lines in Move.toml and remove the existing AptosFramework dependency:
+> **Important:** If using Aptos CLI version 3.5.0 (required for Movement chain), you need to uncomment the following lines in Move.toml and remove the existing AptosFramework dependency:
 >
 > ```
 > # [dependencies.AptosFramework]
-> # git = "https://github.com/aptos-labs/aptos-framework.git"
-> # rev = "mainnet"
-> # subdir = "aptos-framework"
+> # git = "https://github.com/movementlabsxyz/aptos-core.git"
+> # rev = "movement-cli-v3.5.0"
+> # subdir = "aptos-move/framework/aptos-framework"
 > ```
 
 ## OApp Config Setup
