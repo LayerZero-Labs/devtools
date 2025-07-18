@@ -103,7 +103,7 @@ function bufferEquals(a: Uint8Array, b: Uint8Array): boolean {
 }
 
 export function isEmptyOptionsEvm(optionsHex?: string): boolean {
-    return !optionsHex || optionsHex === '0x'
+    return !optionsHex || optionsHex === '0x' || optionsHex === '0x0003' // 0x0003 is an empty options type 3
 }
 
 export function isEmptyOptionsSolana(optionsBytes: Uint8Array): boolean {
