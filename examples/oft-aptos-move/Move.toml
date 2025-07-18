@@ -64,6 +64,7 @@ dvn = "0x100002"
 # Note for Aptos CLI version >= 6.1.0 (the version supported by Aptos), use the following dependencies
 [dependencies.AptosFramework]
 git = "https://github.com/aptos-labs/aptos-framework.git"
+# Note: rev is set to a stable commit hash of the aptos-framework package that we have tested our code with.
 rev = "acea17645546fa9f6bc5ea80a8398b1691822e1a"
 subdir = "aptos-framework"
 
