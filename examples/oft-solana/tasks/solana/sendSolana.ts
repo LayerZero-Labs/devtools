@@ -103,7 +103,7 @@ export async function sendSolana({
 
             if (isEmptyOptionsSolana(enforcedOptionsBuffer)) {
                 const proceed = await promptToContinue(
-                    'No extra options were included and OFT has no set enforced options. Your quote / send will most likely fail. Continue ?'
+                    'No extra options were included and OFT has no set enforced options. Your quote / send will most likely fail. Continue?'
                 )
                 if (!proceed) {
                     throw new Error('Aborted due to missing options')
