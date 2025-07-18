@@ -349,6 +349,16 @@ contract OFTTest is TestHelperOz5 {
         assertEq(amountLD / aOFT.asOFTMock().decimalConversionRate(), aOFT.asOFTMock().toSD(amountLD));
     }
 
+    function test_toSD_overflow() public {
+        // Create an amount that will cause overflow when converted to shared decimals
+        uint256 justOverMaxAmount = (uint256(type(uint64).max) + 1) * aOFT.asOFTMock().decimalConversionRate();
+        uint256 expectedOverflowValue = justOverMaxAmount / aOFT.asOFTMock().decimalConversionRate();
+        
+        // Expect the AmountSDOverflowed error with the overflow value
+        vm.expectRevert(abi.encodeWithSelector(IOFT.AmountSDOverflowed.selector, expectedOverflowValue));
+        aOFT.asOFTMock().toSD(justOverMaxAmount);
+    }
+
     function test_oft_debit() public virtual {
         uint256 amountToSendLD = 1 ether;
         uint256 minAmountToCreditLD = 1 ether;
