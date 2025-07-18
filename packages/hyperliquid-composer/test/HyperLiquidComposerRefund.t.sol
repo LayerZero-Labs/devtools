@@ -109,7 +109,7 @@ contract HyperLiquidComposerRefundTest is Test {
         // Mocks the lzReceive call which mints the tokens to the hyperLiquidComposer
         deal(address(oft), address(hyperLiquidComposer), AMOUNT_TO_SEND);
 
-        bytes memory composeMsg = abi.encodePacked(userB, "error");
+        bytes memory composeMsg = abi.encode(AMOUNT_TO_FUND, abi.encodePacked(userB, "error"));
 
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
             0,
@@ -119,10 +119,11 @@ contract HyperLiquidComposerRefundTest is Test {
         );
 
         bytes memory message = this.getComposeMessage(composerMsg_);
+        (, bytes memory _address) = abi.decode(message, (uint256, bytes));
         bytes memory expectedErrorMessage = abi.encodeWithSelector(
             IHyperLiquidComposerErrors.HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength.selector,
-            message,
-            message.length
+            _address,
+            _address.length
         );
 
         vm.expectEmit(address(hyperLiquidComposer));
@@ -141,7 +142,7 @@ contract HyperLiquidComposerRefundTest is Test {
         // Mocks the lzReceive call which mints the tokens to the hyperLiquidComposer
         deal(address(oft), address(hyperLiquidComposer), AMOUNT_TO_SEND);
 
-        bytes memory composeMsg = abi.encodePacked(userB, "error");
+        bytes memory composeMsg = abi.encode(0, abi.encodePacked(userB, "error"));
 
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
             0,
@@ -151,10 +152,11 @@ contract HyperLiquidComposerRefundTest is Test {
         );
 
         bytes memory message = this.getComposeMessage(composerMsg_);
+        (, bytes memory _address) = abi.decode(message, (uint256, bytes));
         bytes memory expectedErrorMessage = abi.encodeWithSelector(
             IHyperLiquidComposerErrors.HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength.selector,
-            message,
-            message.length
+            _address,
+            _address.length
         );
 
         vm.expectEmit(address(oft));
@@ -186,7 +188,7 @@ contract HyperLiquidComposerRefundTest is Test {
             uint64(AMOUNT_TO_SEND / scaleAliceDecimalDiff)
         );
 
-        bytes memory composeMsg = abi.encodePacked(userB);
+        bytes memory composeMsg = abi.encode(0, abi.encodePacked(userB));
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
             0,
             SRC_EID,
@@ -225,7 +227,7 @@ contract HyperLiquidComposerRefundTest is Test {
             uint64(AMOUNT_TO_SEND / scaleAliceDecimalDiff)
         );
 
-        bytes memory composeMsg = abi.encodePacked(noFallback);
+        bytes memory composeMsg = abi.encode(AMOUNT_TO_FUND, abi.encodePacked(noFallback));
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
             0,
             SRC_EID,

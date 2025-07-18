@@ -50,11 +50,11 @@ interface IHyperLiquidComposerCore {
 
     function hypeIndexByChainId(uint256 _chainId) external view returns (uint64);
 
-    function validate_addresses_or_refund(
+    function validate_msg_or_refund(
         bytes calldata _maybeReceiver,
         bytes32 _senderBytes32,
         uint256 _amountLD
-    ) external returns (address _receiver);
+    ) external returns (uint256 _msgValue, address _receiver);
     function quoteHyperCoreAmount(uint256 _amount, bool _isOFT) external returns (IHyperAssetAmount memory);
     function balanceOfHyperCore(address _user, uint64 _tokenId) external view returns (uint64);
     function getOFTAsset() external view returns (IHyperAsset memory);
