@@ -34,7 +34,7 @@
     "yoga-layout-prebuilt": "^1.10.0"
   },
   "devDependencies": {
-    "@layerzerolabs/io-devtools": "~0.2.0",
+    "@layerzerolabs/io-devtools": "~0.3.0",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.12",
