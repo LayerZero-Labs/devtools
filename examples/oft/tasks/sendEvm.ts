@@ -5,12 +5,12 @@ import { parseUnits } from 'ethers/lib/utils'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { OmniPointHardhat, createGetHreByEid } from '@layerzerolabs/devtools-evm-hardhat'
-import { createLogger } from '@layerzerolabs/io-devtools'
+import { createLogger, promptToContinue } from '@layerzerolabs/io-devtools'
 import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { Options, addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 
 import { SendResult } from './types'
-import { DebugLogger, KnownErrors, getLayerZeroScanLink } from './utils'
+import { DebugLogger, KnownErrors, MSG_TYPE, getLayerZeroScanLink, isEmptyOptionsEvm } from './utils'
 
 const logger = createLogger()
 
@@ -76,10 +76,10 @@ export async function sendEvm(
     }
 
     // 2️⃣ load IOFT ABI, extend it with token()
-    const ioftArtifact = await srcEidHre.artifacts.readArtifact('IOFT')
+    const oftArtifact = await srcEidHre.artifacts.readArtifact('OFT')
 
     // now attach
-    const oft = await srcEidHre.ethers.getContractAt(ioftArtifact.abi, wrapperAddress, signer)
+    const oft = await srcEidHre.ethers.getContractAt(oftArtifact.abi, wrapperAddress, signer)
 
     // 3️⃣ fetch the underlying ERC-20
     const underlying = await oft.token()
@@ -194,8 +194,26 @@ export async function sendEvm(
             }
         }
     }
-
     const extraOptions = options.toHex()
+    // Check whether there are extra options or enforced options. If not, warn the user.
+    if (isEmptyOptionsEvm(extraOptions)) {
+        try {
+            const enforcedOptions = composeMsg
+                ? await oft.enforcedOptions(dstEid, MSG_TYPE.SEND_AND_CALL)
+                : await oft.enforcedOptions(dstEid, MSG_TYPE.SEND)
+
+            if (isEmptyOptionsEvm(enforcedOptions)) {
+                const proceed = await promptToContinue(
+                    'No extra options were included and OFT has no set enforced options. Your quote / send will most likely fail. Continue ?'
+                )
+                if (!proceed) {
+                    throw new Error('Aborted due to missing options')
+                }
+            }
+        } catch (error) {
+            logger.debug(`Failed to check enforced options: ${error}`)
+        }
+    }
 
     // 9️⃣ build sendParam and dispatch
     const sendParam = {

@@ -102,12 +102,12 @@ function bufferEquals(a: Uint8Array, b: Uint8Array): boolean {
     return a.length === b.length && a.every((val, i) => val === b[i])
 }
 
-export function isEmptyOptionsEvm(enforcedHex?: string): boolean {
-    return !enforcedHex || enforcedHex === '0x'
+export function isEmptyOptionsEvm(optionsHex?: string): boolean {
+    return !optionsHex || optionsHex === '0x'
 }
 
-export function isEmptyOptionsSolana(enforcedBytes: Uint8Array): boolean {
-    return bufferEquals(enforcedBytes, Uint8Array.from([0, 3]))
+export function isEmptyOptionsSolana(optionsBytes: Uint8Array): boolean {
+    return bufferEquals(optionsBytes, Uint8Array.from([0, 3]))
 }
 
 export function decodeLzReceiveOptions(hex: string): string {
