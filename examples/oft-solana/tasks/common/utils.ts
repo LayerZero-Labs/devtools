@@ -3,7 +3,6 @@ import { Connection, PublicKey } from '@solana/web3.js'
 import { OmniPoint } from '@layerzerolabs/devtools'
 import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import { createSolanaConnectionFactory, createSolanaSignerFactory } from '@layerzerolabs/devtools-solana'
-import { createLogger } from '@layerzerolabs/io-devtools'
 import { ChainType, EndpointId, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { UlnProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
@@ -12,9 +11,13 @@ import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { createOFTFactory } from '@layerzerolabs/ua-devtools-solana'
 
 export { createSolanaConnectionFactory }
-const logger = createLogger()
 
 export const deploymentMetadataUrl = 'https://metadata.layerzero-api.com/v1/metadata/deployments'
+
+export enum MSG_TYPE {
+    SEND = 1,
+    SEND_AND_CALL = 2,
+}
 
 /**
  * Given a srcEid and on-chain tx hash, return
@@ -77,6 +80,18 @@ export function uint8ArrayToHex(uint8Array: Uint8Array, prefix = false): string 
 
 function formatBigIntForDisplay(n: bigint) {
     return n.toLocaleString().replace(/,/g, '_')
+}
+
+function bufferEquals(a: Uint8Array, b: Uint8Array): boolean {
+    return a.length === b.length && a.every((val, i) => val === b[i])
+}
+
+export function isEmptyOptionsEvm(enforcedHex?: string): boolean {
+    return !enforcedHex || enforcedHex === '0x'
+}
+
+export function isEmptyOptionsSolana(enforcedBytes: Uint8Array): boolean {
+    return bufferEquals(enforcedBytes, Uint8Array.from([0, 3]))
 }
 
 export function decodeLzReceiveOptions(hex: string): string {

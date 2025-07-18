@@ -12,7 +12,7 @@ import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { SendResult } from '../common/types'
-import { DebugLogger, KnownErrors } from '../common/utils'
+import { DebugLogger, KnownErrors, isEmptyOptionsSolana } from '../common/utils'
 
 import { parseDecimalToUnits, silenceSolana429 } from './utils'
 
@@ -94,11 +94,13 @@ export async function sendSolana({
         throw new Error(`Insufficient balance (need ${amountUnits}, have ${balance})`)
     }
 
+    // Check whether there are extra options or enforced options. If not, warn the user.
     if (!extraOptions) {
         try {
-            const enforced = await oft.getEnforcedOptions(umi.rpc, storePda, dstEid, programId)
-            const enforcedBytes = composeMsg ? enforced.sendAndCall : enforced.send
-            if (!enforcedBytes || enforcedBytes.length === 0) {
+            const enforcedOptionsMap = await oft.getEnforcedOptions(umi.rpc, storePda, dstEid, programId)
+            const enforcedOptionsBuffer = composeMsg ? enforcedOptionsMap.sendAndCall : enforcedOptionsMap.send
+
+            if (isEmptyOptionsSolana(enforcedOptionsBuffer)) {
                 const proceed = await promptToContinue(
                     'No extra options were included and OFT has no set enforced options. Your quote / send will most likely fail. Continue ?'
                 )
