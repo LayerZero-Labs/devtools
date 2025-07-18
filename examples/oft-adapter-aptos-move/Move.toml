@@ -64,7 +64,9 @@ dvn = "0x100002"
 [dependencies.AptosFramework]
 git = "https://github.com/aptos-labs/aptos-framework.git"
 # Note: rev is set to a stable commit hash of the aptos-framework package that we have tested our code with.
-rev = "acea17645546fa9f6bc5ea80a8398b1691822e1a"
+# https://github.com/aptos-labs/aptos-framework/commit/99f5e915b6d231d0ffbc1aff282d36148d2a8b24 @ Feb 4
+
+rev = "99f5e915b6d231d0ffbc1aff282d36148d2a8b24"
 subdir = "aptos-framework"
 
 # Note: For using Aptos CLI version <= 3.5.0 (the version supported by Movement), use the following dependencies:
