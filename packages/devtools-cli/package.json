@@ -43,9 +43,9 @@
     "yoga-layout-prebuilt": "^1.10.0"
   },
   "devDependencies": {
-    "@layerzerolabs/devtools": "~1.0.1",
-    "@layerzerolabs/io-devtools": "~0.2.1",
-    "@layerzerolabs/ua-devtools": "~4.0.0",
+    "@layerzerolabs/devtools": "~2.0.0",
+    "@layerzerolabs/io-devtools": "~0.3.0",
+    "@layerzerolabs/ua-devtools": "~5.0.0",
     "@types/prompts": "^2.4.9",
     "@types/react": "^17.0.74",
     "commander": "^11.1.0",
