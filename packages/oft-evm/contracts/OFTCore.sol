@@ -3,6 +3,7 @@
 pragma solidity ^0.8.20;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 
 import { OApp, Origin } from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
 import { OAppOptionsType3 } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
@@ -21,6 +22,7 @@ import { OFTComposeMsgCodec } from "./libs/OFTComposeMsgCodec.sol";
 abstract contract OFTCore is IOFT, OApp, OAppPreCrimeSimulator, OAppOptionsType3 {
     using OFTMsgCodec for bytes;
     using OFTMsgCodec for bytes32;
+    using SafeCast for uint256;
 
     // @notice Provides a conversion rate when swapping between denominations of SD and LD
     //      - shareDecimals == SD == shared Decimals
@@ -359,7 +361,7 @@ abstract contract OFTCore is IOFT, OApp, OAppPreCrimeSimulator, OAppOptionsType3
      * @return amountSD The amount in shared decimals.
      */
     function _toSD(uint256 _amountLD) internal view virtual returns (uint64 amountSD) {
-        return uint64(_amountLD / decimalConversionRate);
+        return (_amountLD / decimalConversionRate).toUint64();
     }
 
     /**

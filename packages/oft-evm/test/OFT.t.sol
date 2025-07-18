@@ -345,7 +345,7 @@ contract OFTTest is TestHelperOz5 {
     }
 
     function test_toSD(uint256 amountLD) public {
-        vm.assume(amountLD <= type(uint64).max); // avoid reverting due to overflow
+        vm.assume(amountLD / aOFT.asOFTMock().decimalConversionRate() <= type(uint64).max); // avoid SafeCast overflow
         assertEq(amountLD / aOFT.asOFTMock().decimalConversionRate(), aOFT.asOFTMock().toSD(amountLD));
     }
 
@@ -601,6 +601,7 @@ contract OFTTest is TestHelperOz5 {
 
     function test_oft_build_msg(uint32 dstEid, bytes32 to, uint256 amountToSendLD, bytes memory composeMsg) public {
         vm.assume(composeMsg.length > 0); // ensure there is a composed payload
+        vm.assume(amountToSendLD / aOFT.asOFTMock().decimalConversionRate() <= type(uint64).max); // avoid SafeCast overflow
         uint256 minAmountToCreditLD = aOFT.asOFTMock().removeDust(amountToSendLD);
 
         // params for buildMsgAndOptions
@@ -630,6 +631,7 @@ contract OFTTest is TestHelperOz5 {
     }
 
     function test_oft_build_msg_no_compose_msg(uint32 dstEid, bytes32 to, uint256 amountToSendLD) public {
+        vm.assume(amountToSendLD / aOFT.asOFTMock().decimalConversionRate() <= type(uint64).max); // avoid SafeCast overflow
         uint256 minAmountToCreditLD = aOFT.asOFTMock().removeDust(amountToSendLD);
 
         // params for buildMsgAndOptions
@@ -751,6 +753,7 @@ contract OFTTest is TestHelperOz5 {
     }
 
     function test_oapp_inspector_inspect(uint32 dstEid, address user, uint256 amountToSendLD) public {
+        vm.assume(amountToSendLD / aOFT.asOFTMock().decimalConversionRate() <= type(uint64).max); // avoid SafeCast overflow
         bytes32 to = addressToBytes32(user);
         uint256 minAmountToCreditLD = aOFT.asOFTMock().removeDust(amountToSendLD);
 
@@ -782,6 +785,7 @@ contract OFTTest is TestHelperOz5 {
     }
 
     function test_quoteOFT(uint256 _amountToSendLD) public virtual {
+        vm.assume(_amountToSendLD / aOFT.asOFTMock().decimalConversionRate() <= type(uint64).max); // avoid SafeCast overflow
         bytes32 to = addressToBytes32(userA);
         uint256 minAmountToCreditLD = aOFT.asOFTMock().removeDust(_amountToSendLD);
         SendParam memory sendParam = SendParam(B_EID, to, _amountToSendLD, minAmountToCreditLD, "", "", "");
