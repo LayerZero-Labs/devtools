@@ -359,7 +359,11 @@ abstract contract OFTCore is IOFT, OApp, OAppPreCrimeSimulator, OAppOptionsType3
      * @return amountSD The amount in shared decimals.
      */
     function _toSD(uint256 _amountLD) internal view virtual returns (uint64 amountSD) {
-        return uint64(_amountLD / decimalConversionRate);
+        uint256 _amountSD = _amountLD / decimalConversionRate;
+        if (_amountSD > type(uint64).max) {
+            revert AmountSDOverflowed(_amountSD);
+        }
+        return uint64(_amountSD);
     }
 
     /**
