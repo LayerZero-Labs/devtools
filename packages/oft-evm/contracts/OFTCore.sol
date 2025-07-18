@@ -13,7 +13,6 @@ import { OAppPreCrimeSimulator } from "@layerzerolabs/oapp-evm/contracts/precrim
 import { IOFT, SendParam, OFTLimit, OFTReceipt, OFTFeeDetail, MessagingReceipt, MessagingFee } from "./interfaces/IOFT.sol";
 import { OFTMsgCodec } from "./libs/OFTMsgCodec.sol";
 import { OFTComposeMsgCodec } from "./libs/OFTComposeMsgCodec.sol";
-import { Vm } from "forge-std/Vm.sol";
 
 /**
  * @title OFTCore
