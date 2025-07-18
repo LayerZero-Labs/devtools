@@ -95,6 +95,7 @@ export async function sendSolana({
     }
 
     // Check whether there are extra options or enforced options. If not, warn the user.
+    // Read on Message Options: https://docs.layerzero.network/v2/concepts/message-options
     if (!extraOptions) {
         try {
             const enforcedOptionsMap = await oft.getEnforcedOptions(umi.rpc, storePda, dstEid, programId)
