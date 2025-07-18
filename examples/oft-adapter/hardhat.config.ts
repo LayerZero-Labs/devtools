@@ -14,6 +14,7 @@ import { HardhatUserConfig, HttpNetworkAccountsUserConfig } from 'hardhat/types'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 import './type-extensions'
+import './tasks/sendOFT'
 
 // Set your preferred authentication method
 //
@@ -54,22 +55,17 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
-        'sepolia-testnet': {
-            eid: EndpointId.SEPOLIA_V2_TESTNET,
-            url: process.env.RPC_URL_SEPOLIA || 'https://rpc.sepolia.org/',
+        'optimism-testnet': {
+            eid: EndpointId.OPTSEP_V2_TESTNET,
+            url: process.env.RPC_URL_OP_SEPOLIA || 'https://optimism-sepolia.gateway.tenderly.co',
             accounts,
             oftAdapter: {
                 tokenAddress: '0x0', // Set the token address for the OFT adapter
             },
         },
-        'avalanche-testnet': {
-            eid: EndpointId.AVALANCHE_V2_TESTNET,
-            url: process.env.RPC_URL_FUJI || 'https://rpc.ankr.com/avalanche_fuji',
-            accounts,
-        },
-        'amoy-testnet': {
-            eid: EndpointId.AMOY_V2_TESTNET,
-            url: process.env.RPC_URL_AMOY || 'https://polygon-amoy-bor-rpc.publicnode.com',
+        'arbitrum-testnet': {
+            eid: EndpointId.ARBSEP_V2_TESTNET,
+            url: process.env.RPC_URL_ARB_SEPOLIA || 'https://arbitrum-sepolia.gateway.tenderly.co',
             accounts,
         },
         hardhat: {

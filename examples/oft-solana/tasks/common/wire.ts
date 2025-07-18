@@ -14,6 +14,7 @@ import {
     TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP,
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
 
+import { createAptosSignerFactory } from '../aptos'
 import { getSolanaDeployment, useWeb3Js } from '../solana'
 import { findSolanaEndpointIdInGraph } from '../solana/utils'
 
@@ -85,7 +86,6 @@ task(TASK_LZ_OAPP_WIRE)
             logger.error('Missing programId in solana deployment')
             return
         }
-
         const configurator = args.internalConfigurator
 
         //
@@ -105,6 +105,7 @@ task(TASK_LZ_OAPP_WIRE)
 
         // We'll also need a signer factory
         const solanaSignerFactory = createSolanaSignerFactory(keypair, connectionFactory, args.multisigKey)
+        const aptosSignerFactory = createAptosSignerFactory()
 
         //
         //
@@ -170,6 +171,17 @@ task(TASK_LZ_OAPP_WIRE)
                     ...subtaskArgs,
                     configurator: configurator ?? subtaskArgs.configurator,
                     sdkFactory,
+                    graph: {
+                        ...subtaskArgs.graph,
+                        contracts: subtaskArgs.graph.contracts.filter((contract) => {
+                            const chainType = endpointIdToChainType(contract.point.eid)
+                            return chainType !== ChainType.APTOS && chainType !== ChainType.INITIA
+                        }),
+                        connections: subtaskArgs.graph.connections.filter((connection) => {
+                            const fromChainType = endpointIdToChainType(connection.vector.from.eid)
+                            return fromChainType !== ChainType.APTOS && fromChainType !== ChainType.INITIA
+                        }),
+                    },
                 })
             }
         )
@@ -182,7 +194,7 @@ task(TASK_LZ_OAPP_WIRE)
         subtask(SUBTASK_LZ_SIGN_AND_SEND, 'Sign OFT transactions', (args: SignAndSendTaskArgs, _hre, runSuper) =>
             runSuper({
                 ...args,
-                createSigner: firstFactory(solanaSignerFactory, args.createSigner),
+                createSigner: firstFactory(aptosSignerFactory, solanaSignerFactory, args.createSigner),
             })
         )
 

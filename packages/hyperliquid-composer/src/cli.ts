@@ -10,7 +10,9 @@ import {
     tradingFee,
     userGenesis,
     genesis,
+    createSpotDeployment,
     registerTradingSpot,
+    spotDeployState,
 } from './commands'
 
 const program = new Command()
@@ -72,6 +74,18 @@ program
     .action(hipTokenInfo)
 
 program
+    .command('spot-deploy-state')
+    .description('Get the current deployment state of a hypercore token')
+    .requiredOption(
+        '-idx, --token-index <token-index>',
+        'Filter on token index. To view all deployments, use "--log-level verbose"'
+    )
+    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
+    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
+    .option('-da, --deployer-address <0x>', 'Core spot deployer address (optional)')
+    .action(spotDeployState)
+
+program
     .command('trading-fee')
     .description('Set trading fee share')
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
@@ -105,6 +119,15 @@ program
     .option('-l, --log-level <level>', 'Log level', LogLevel.info)
     .option('-pk, --private-key <0x>', 'Private key')
     .action(genesis)
+
+program
+    .command('create-spot-deployment')
+    .description('Create a spot deployment without hyperliquidity')
+    .requiredOption('-idx, --token-index <token-index>', 'Token index')
+    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
+    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
+    .option('-pk, --private-key <0x>', 'Private key')
+    .action(createSpotDeployment)
 
 program
     .command('register-spot')

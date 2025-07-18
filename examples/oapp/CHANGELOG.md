@@ -1,5 +1,17 @@
 # @layerzerolabs/oapp-example
 
+## 0.6.0
+
+### Minor Changes
+
+- 870deb2: reduce to 2 chains and revamp README
+
+## 0.5.10
+
+### Patch Changes
+
+- 508363b: Adds a send script and updates the contract example to support enforced options
+
 ## 0.5.9
 
 ### Patch Changes

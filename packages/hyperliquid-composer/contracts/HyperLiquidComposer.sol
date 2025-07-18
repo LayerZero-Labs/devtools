@@ -8,8 +8,8 @@ import { IOAppComposer } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces
 
 import { HyperLiquidComposerCodec } from "./library/HyperLiquidComposerCodec.sol";
 
-import { IHyperLiquidWritePrecompile } from "./interfaces/IHyperLiquidWritePrecompile.sol";
 import { IHyperLiquidComposerErrors } from "./interfaces/IHyperLiquidComposerErrors.sol";
+import { ICoreWriter } from "./interfaces/ICoreWriter.sol";
 
 import { HyperLiquidComposerCore, IHyperAsset, IHyperAssetAmount } from "./HyperLiquidComposerCore.sol";
 
@@ -120,10 +120,18 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
 
         /// @dev If the message is being sent with a value, we fund the address on HyperCore
         if (msg.value > 0) {
-            _fundAddressOnHyperCore(receiver, msg.value, _executor);
+            try this.fundAddressOnHyperCore(receiver, msg.value, _executor) {} catch (bytes memory _err) {
+                try this.refundNativeTokens{ value: msg.value }(receiver) {} catch {
+                    _err = completeRefund(_err, _executor);
+                }
+                emit ErrorMessage(_err);
+            }
         }
 
-        _sendAssetToHyperCore(receiver, amountLD);
+        try this.sendAssetToHyperCore(receiver, amountLD) {} catch (bytes memory _err) {
+            this.refundERC20(receiver, amountLD);
+            emit ErrorSpot_FailedToSend(receiver, oftAsset.coreIndexId, amountLD, _err);
+        }
     }
 
     /// @notice Transfers the asset to the _receiver on HyperCore through the SpotSend precompile
@@ -140,7 +148,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
     ///
     /// @param _receiver The address of the receiver
     /// @param _amountLD The amount of tokens to send
-    function _sendAssetToHyperCore(address _receiver, uint256 _amountLD) internal virtual {
+    function sendAssetToHyperCore(address _receiver, uint256 _amountLD) external virtual onlyComposer {
         /// @dev Computes the tokens to send to HyperCore, dust (refund amount), and the swap amount.
         /// @dev It also takes into account the maximum transferable amount at any given time.
         /// @dev This is done by reading from HLP_PRECOMPILE_READ_SPOT_BALANCE the tokens on the HyperCore side of the asset bridge
@@ -153,8 +161,10 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
             /// Transfers the tokens to the composer address on HyperCore
             token.safeTransfer(oftAsset.assetBridgeAddress, amounts.evm);
 
+            bytes memory action = abi.encode(_receiver, oftAsset.coreIndexId, amounts.core);
+            bytes memory payload = abi.encodePacked(SPOT_SEND_HEADER, action);
             /// Transfers tokens from the composer address on HyperCore to the _receiver
-            IHyperLiquidWritePrecompile(HLP_PRECOMPILE_WRITE).sendSpot(_receiver, oftAsset.coreIndexId, amounts.core);
+            ICoreWriter(HLP_CORE_WRITER).sendRawAction(payload);
         }
         /// Transfers any leftover dust to the _receiver on HyperEVM
         if (amounts.dust > 0) {
@@ -172,7 +182,11 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
     ///
     /// @param _receiver The address of the receiver
     /// @param _amount The amount of HYPE tokens to send
-    function _fundAddressOnHyperCore(address _receiver, uint256 _amount, address _executor) internal virtual {
+    function fundAddressOnHyperCore(
+        address _receiver,
+        uint256 _amount,
+        address _executor
+    ) external virtual onlyComposer {
         /// @dev Computes the tokens to send to HyperCore, dust (refund amount), and the swap amount.
         /// @dev It also takes into account the maximum transferable amount at any given time.
         /// @dev This is done by reading from HLP_PRECOMPILE_READ_SPOT_BALANCE the tokens on the HyperCore side of the asset bridge
@@ -186,8 +200,10 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
             revert IHyperLiquidComposerErrors.HyperLiquidComposer_FailedToSend_HYPE(_amount);
         }
 
+        bytes memory action = abi.encode(_receiver, hypeAsset.coreIndexId, amounts.core);
+        bytes memory payload = abi.encodePacked(SPOT_SEND_HEADER, action);
         /// Transfers HYPE tokens from the composer address on HyperCore to the _receiver via the SpotSend precompile
-        IHyperLiquidWritePrecompile(HLP_PRECOMPILE_WRITE).sendSpot(_receiver, hypeAsset.coreIndexId, amounts.core);
+        ICoreWriter(HLP_CORE_WRITER).sendRawAction(payload);
 
         /// @dev Tries transferring any leftover dust to the _receiver on HyperEVM
         /// @dev If the transfer fails, we try refunding it to the executor and if that fails then we refund the tx.origin as to not have any dust locked in the contract

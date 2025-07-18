@@ -11,9 +11,8 @@ import { MULTISIG_SIZE, TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/
 import { Connection, PublicKey } from '@solana/web3.js'
 import bs58 from 'bs58'
 
+import { assertAccountInitialized } from '@layerzerolabs/devtools-solana'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-
-import { assertAccountInitialized } from './utils'
 
 import { TransactionType, addComputeUnitInstructions, getExplorerTxLink } from '.'
 

@@ -1,5 +1,15 @@
 # @layerzerolabs/protocol-devtools-evm
 
+## 4.0.0
+
+### Patch Changes
+
+- Updated dependencies [bb62f09]
+  - @layerzerolabs/io-devtools@0.2.0
+  - @layerzerolabs/devtools@1.0.0
+  - @layerzerolabs/devtools-evm@2.0.0
+  - @layerzerolabs/protocol-devtools@2.0.0
+
 ## 3.0.8
 
 ### Patch Changes

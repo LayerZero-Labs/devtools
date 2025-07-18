@@ -13,6 +13,8 @@ import { HardhatUserConfig, HttpNetworkAccountsUserConfig } from 'hardhat/types'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
+import './tasks/sendOFT'
+
 // Set your preferred authentication method
 //
 // If you prefer using a mnemonic, set a MNEMONIC environment variable
@@ -55,11 +57,6 @@ const config: HardhatUserConfig = {
         'optimism-testnet': {
             eid: EndpointId.OPTSEP_V2_TESTNET,
             url: process.env.RPC_URL_OP_SEPOLIA || 'https://optimism-sepolia.gateway.tenderly.co',
-            accounts,
-        },
-        'avalanche-testnet': {
-            eid: EndpointId.AVALANCHE_V2_TESTNET,
-            url: process.env.RPC_URL_FUJI || 'https://avalanche-fuji.drpc.org',
             accounts,
         },
         'arbitrum-testnet': {

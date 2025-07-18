@@ -1,5 +1,23 @@
 # create-lz-oapp
 
+## 0.8.0
+
+### Minor Changes
+
+- 9b2c446: add Solana OApp example
+
+## 0.7.5
+
+### Patch Changes
+
+- 2f4e8d4: Adding OmniCall example
+
+## 0.7.4
+
+### Patch Changes
+
+- 98f173a: Adds lzRead view/pure to examples and renames OApp-Read label
+
 ## 0.7.3
 
 ### Patch Changes

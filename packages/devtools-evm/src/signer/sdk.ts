@@ -11,8 +11,6 @@ import {
     type OmniTransaction,
     type OmniPoint,
 } from '@layerzerolabs/devtools'
-import assert from 'assert'
-
 import { ethers } from 'ethers'
 
 export abstract class OmniSignerEVMBase extends OmniSignerBase implements OmniSigner {
@@ -99,10 +97,11 @@ export class GnosisOmniSignerEVM<TSafeConfig extends ConnectSafeConfig> extends 
     }
 
     async signAndSendBatch(transactions: OmniTransaction[]): Promise<OmniTransactionResponse> {
-        assert(transactions.length > 0, `signAndSendBatch received 0 transactions`)
+        if (transactions.length === 0) {
+            throw new Error('/signAndSendBatch received 0 transactions')
+        }
 
         const safeTransaction = await this.#createSafeTransaction(transactions)
-
         return this.#proposeSafeTransaction(safeTransaction)
     }
 
@@ -141,7 +140,8 @@ export class GnosisOmniSignerEVM<TSafeConfig extends ConnectSafeConfig> extends 
         return safeSdk.createTransaction({
             safeTransactionData: transactions.map((transaction) => this.#serializeTransaction(transaction)),
             options: { nonce },
-        })
+            onlyCalls: true,
+        } as any)
     }
 
     #serializeTransaction(transaction: OmniTransaction): MetaTransactionData {

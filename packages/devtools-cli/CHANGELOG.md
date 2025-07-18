@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-cli
 
+## 0.0.7
+
+### Patch Changes
+
+- 3ee845c: De-coupling logo printout from unit tests.
+
 ## 0.0.6
 
 ### Patch Changes
