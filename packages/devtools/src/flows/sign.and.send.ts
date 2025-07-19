@@ -70,7 +70,7 @@ export const createSignAndSendFlow =
 
         // The last step is to execute those transactions
         //
-        // For now we are only allowing sign & send using the accounts confgiured in hardhat config
+        // For now we are only allowing sign & send using the accounts configured in hardhat config
         const signAndSend = createSignAndSend(createSigner)
 
         // We'll use these variables to store the state of signing
