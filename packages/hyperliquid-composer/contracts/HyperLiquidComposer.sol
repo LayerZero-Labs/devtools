@@ -125,7 +125,6 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
 
         /// @dev If the message is being sent with a value, we fund the address on HyperCore
         if (msg.value > 0) {
-            ///
             try this.fundAddressOnHyperCore(receiver, msg.value, _executor) {} catch (bytes memory _err) {
                 /// @dev The gas token on HyperCore is USDC at the moment, the outcome of a failed HYPE transfer is invariant of the ERC20 transfer
                 /// @dev When HYPE is the gas token on HyperCore, we MAY want to stop execution and perform a completeRefund()
