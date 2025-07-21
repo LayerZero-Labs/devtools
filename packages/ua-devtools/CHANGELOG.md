@@ -1,5 +1,15 @@
 # @layerzerolabs/ua-devtools
 
+## 5.0.0
+
+### Patch Changes
+
+- 0aff8fb: bump target version for tsconfig
+- Updated dependencies [0aff8fb]
+  - @layerzerolabs/io-devtools@0.3.0
+  - @layerzerolabs/devtools@2.0.0
+  - @layerzerolabs/protocol-devtools@3.0.0
+
 ## 4.0.0
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # @layerzerolabs/protocol-devtools-solana
 
+## 8.0.0
+
+### Patch Changes
+
+- Updated dependencies [0aff8fb]
+- Updated dependencies [0aff8fb]
+  - @layerzerolabs/devtools-solana@3.0.0
+  - @layerzerolabs/io-devtools@0.3.0
+  - @layerzerolabs/ua-devtools@5.0.0
+  - @layerzerolabs/devtools@2.0.0
+  - @layerzerolabs/protocol-devtools@3.0.0
+
 ## 7.0.0
 
 ### Patch Changes
