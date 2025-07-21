@@ -359,13 +359,11 @@ abstract contract OFTCore is IOFT, OApp, OAppPreCrimeSimulator, OAppOptionsType3
      * @return amountSD The amount in shared decimals.
      *
      * @dev Reverts if the _amountLD in shared decimals overflows uint64.
-     * @dev eg. uint(2**64 + 123) with a conversion rate of 1 wraps around modulo 2**64 to uint(123).
+     * @dev eg. uint(2**64 + 123) with a conversion rate of 1 wraps around 2**64 to uint(123).
      */
     function _toSD(uint256 _amountLD) internal view virtual returns (uint64 amountSD) {
         uint256 _amountSD = _amountLD / decimalConversionRate;
-        if (_amountSD > type(uint64).max) {
-            revert AmountSDOverflowed(_amountSD);
-        }
+        if (_amountSD > type(uint64).max) revert AmountSDOverflowed(_amountSD);
         return uint64(_amountSD);
     }
 
