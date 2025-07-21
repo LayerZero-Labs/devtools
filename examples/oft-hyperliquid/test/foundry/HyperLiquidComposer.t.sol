@@ -84,7 +84,7 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
     }
 
     function test_SendSpot_no_FundAddress() public {
-        bytes memory composeMsg = abi.encode(0, abi.encodePacked(userB));
+        bytes memory composeMsg = abi.encode(0, userB);
 
         // Build composerMsg similar to the outcome of OFTCore.send()
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
@@ -119,7 +119,7 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
     }
 
     function test_SendSpot_and_FundAddress() public {
-        bytes memory composeMsg = abi.encode(AMOUNT_TO_FUND, abi.encodePacked(userB));
+        bytes memory composeMsg = abi.encode(AMOUNT_TO_FUND, userB);
 
         // Build composerMsg similar to the outcome of OFTCore.send()
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
