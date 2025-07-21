@@ -195,9 +195,17 @@ export async function setNoHyperliquidity(wallet: Wallet, isTestnet: boolean, to
         'The following values will be set: startPx as 1, orderSz as 0, and nOrders as 0. This is because the pricing is determined by the market as we do not support hyperliquidity, which is what these values are used for.'
     )
 
+    const { startPxApprox } = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'startPxApprox',
+            message: `Enter the start price of the token in the same order as what you expect it to be in. This is because market makers can't change the price to outside of 95% the current.`,
+        },
+    ])
+
     const registerHyperliquidity: RegisterHyperliquidity = {
         spot: parseInt(spotId),
-        startPx: '1',
+        startPx: startPxApprox.toString(),
         orderSz: '0',
         nOrders: 0,
     }
