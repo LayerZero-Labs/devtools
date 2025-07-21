@@ -83,12 +83,12 @@ contract ComposeMessageTest is Test {
 
     function validateAndDecodeMessage(
         bytes calldata _message
-    ) public view returns (uint256 _minMsgValue, address _receiver, uint256 _amountLD) {
+    ) public view returns (uint256 minMsgValue, address receiver, uint256 amountLD) {
         bytes memory maybeReceiver = OFTComposeMsgCodec.composeMsg(_message);
         bytes32 senderBytes32 = OFTComposeMsgCodec.composeFrom(_message);
 
-        _amountLD = OFTComposeMsgCodec.amountLD(_message);
-        (_minMsgValue, _receiver) = hyperLiquidComposer.validate_msg_or_refund(maybeReceiver, senderBytes32, _amountLD);
+        amountLD = OFTComposeMsgCodec.amountLD(_message);
+        (minMsgValue, receiver) = hyperLiquidComposer.validate_msg_or_refund(maybeReceiver, senderBytes32, amountLD);
     }
 
     function composeMsg(bytes calldata _message) public pure returns (bytes memory) {
