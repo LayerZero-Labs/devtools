@@ -29,46 +29,62 @@ abstract contract RecoverableComposer is HyperLiquidComposer {
         innerToken = IERC20(IOFT(_oft).token());
     }
 
-    function transferCorespotERC20(uint256 _coreAmount) public onlyRecoveryAddress {
+    function retrieveCoreERC20(uint64 _coreAmount) public onlyRecoveryAddress {
         uint256 transferAmt = _coreAmount == FULL_TRANSFER
             ? _balanceOfHyperCore(address(this), oftAsset.coreIndexId)
             : _coreAmount;
 
+        /// @dev Transfers transferAmt of the asset from Composer_core to Composer_evm via the asset bridge
         bytes memory action = abi.encode(oftAsset.assetBridgeAddress, oftAsset.coreIndexId, transferAmt);
         bytes memory payload = abi.encodePacked(SPOT_SEND_HEADER, action);
         ICoreWriter(HLP_CORE_WRITER).sendRawAction(payload);
     }
 
-    function transferCorespotHYPE(uint256 _coreAmount) public onlyRecoveryAddress {
+    function retrieveCoreHYPE(uint64 _coreAmount) public onlyRecoveryAddress {
         uint256 transferAmt = _coreAmount == FULL_TRANSFER
             ? _balanceOfHyperCore(address(this), hypeAsset.coreIndexId)
             : _coreAmount;
 
+        /// @dev Transfers transferAmt of HYPE from Composer_core to Composer_evm via the asset bridge
         bytes memory action = abi.encode(hypeAsset.assetBridgeAddress, hypeAsset.coreIndexId, transferAmt);
         bytes memory payload = abi.encodePacked(SPOT_SEND_HEADER, action);
         ICoreWriter(HLP_CORE_WRITER).sendRawAction(payload);
     }
 
-    function transferCorespotUSDC(uint256 _coreAmount, address _to) public onlyRecoveryAddress {
+    function retrieveCoreUSDC(uint64 _coreAmount, address _to) public onlyRecoveryAddress {
         uint256 transferAmt = _coreAmount == FULL_TRANSFER
             ? _balanceOfHyperCore(address(this), USDC_CORE_INDEX)
             : _coreAmount;
 
+        /// @dev Transfers transferAmt of the asset from Composer_core to _to on HyperCore since USDC does not natively exist on HyperEVM
         bytes memory action = abi.encode(_to, USDC_CORE_INDEX, transferAmt);
         bytes memory payload = abi.encodePacked(SPOT_SEND_HEADER, action);
         ICoreWriter(HLP_CORE_WRITER).sendRawAction(payload);
     }
 
-    function recoverFundsERC20(uint256 _evmAmount) public onlyRecoveryAddress {
+    function recoverEvmERC20(uint256 _evmAmount) public onlyRecoveryAddress {
         uint256 recoverAmt = _evmAmount == FULL_TRANSFER ? innerToken.balanceOf(address(this)) : _evmAmount;
 
         innerToken.safeTransfer(RECOVERY_ADDRESS, recoverAmt);
     }
 
-    function recoverFundsNative(uint256 _evmAmount) public onlyRecoveryAddress {
+    function recoverEvmNative(uint256 _evmAmount) public onlyRecoveryAddress {
         uint256 recoverAmt = _evmAmount == FULL_TRANSFER ? address(this).balance : _evmAmount;
 
         (bool success, ) = RECOVERY_ADDRESS.call{ value: recoverAmt }("");
+        require(success, "Transfer failed");
+    }
+
+    function recoverEvmERC20(uint256 _evmAmount, address _to) public onlyRecoveryAddress {
+        uint256 recoverAmt = _evmAmount == FULL_TRANSFER ? innerToken.balanceOf(address(this)) : _evmAmount;
+
+        innerToken.safeTransfer(_to, recoverAmt);
+    }
+
+    function recoverEvmNative(uint256 _evmAmount, address _to) public onlyRecoveryAddress {
+        uint256 recoverAmt = _evmAmount == FULL_TRANSFER ? address(this).balance : _evmAmount;
+
+        (bool success, ) = _to.call{ value: recoverAmt }("");
         require(success, "Transfer failed");
     }
 }
