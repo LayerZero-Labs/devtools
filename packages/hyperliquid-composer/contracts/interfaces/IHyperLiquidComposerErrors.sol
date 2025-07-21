@@ -11,6 +11,8 @@ interface IHyperLiquidComposerErrors {
     // 0xfb82c1f1
     error HyperLiquidComposer_InvalidArgument_EndpointShouldNotBeZeroAddress(address receivedEndpointAddress);
 
+    error FailedMessageNotFound(bytes32 guid);
+
     // 0x4f952033
     error ErrorMsg(bytes errorMessage);
 
@@ -24,7 +26,7 @@ interface IHyperLiquidComposerErrors {
     error NotEnoughMsgValue(uint256 msgValue, uint256 requiredValue);
 
     // 0x00d4895a
-    error HyperLiquidComposer_InvalidComposeMessage(bytes errorMessage);
+    error HyperLiquidComposer_ComposeMsgNot64Byte(bytes composeMessage, uint256 length);
 
     // 0xc8ee485e
     error HyperLiquidComposer_FailedToRefund_HYPE(address to, uint256 amount);
