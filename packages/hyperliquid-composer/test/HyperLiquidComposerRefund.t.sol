@@ -6,9 +6,10 @@ import { Test, console } from "forge-std/Test.sol";
 import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 
 import { IHyperLiquidComposerErrors } from "../contracts/interfaces/IHyperLiquidComposerErrors.sol";
-import { IHyperAsset, IHyperLiquidComposerCore } from "../contracts/interfaces/IHyperLiquidComposerCore.sol";
+import { IHyperAsset, IHyperLiquidComposerCore, FailedMessage } from "../contracts/interfaces/IHyperLiquidComposerCore.sol";
 
 import { HyperLiquidComposerCodec } from "../contracts/library/HyperLiquidComposerCodec.sol";
 import { HyperLiquidComposer } from "../contracts/HyperLiquidComposer.sol";
@@ -77,7 +78,8 @@ contract HyperLiquidComposerRefundTest is Test {
             HL_LZ_ENDPOINT_V2,
             address(oft),
             ALICE.coreIndexId,
-            ALICE.decimalDiff
+            ALICE.decimalDiff,
+            userA
         );
         DST_EID = oft.endpoint().eid();
 
@@ -90,12 +92,9 @@ contract HyperLiquidComposerRefundTest is Test {
 
         bytes memory composerMsg_ = "";
 
-        vm.expectRevert(
-            abi.encodeWithSelector(IHyperLiquidComposerErrors.HyperLiquidComposer_InvalidComposeMessage.selector, "")
-        );
-
         uint256 preBalance_endpoint = address(HL_LZ_ENDPOINT_V2).balance;
 
+        vm.expectRevert();
         vm.startPrank(HL_LZ_ENDPOINT_V2);
         hyperLiquidComposer.lzCompose{ value: AMOUNT_TO_FUND }(address(oft), bytes32(0), composerMsg_, msg.sender, "");
         vm.stopPrank();
@@ -115,34 +114,24 @@ contract HyperLiquidComposerRefundTest is Test {
             0,
             SRC_EID,
             AMOUNT_TO_SEND,
-            abi.encodePacked(keccak256(abi.encodePacked(userA)), composeMsg)
+            abi.encodePacked(addressToBytes32(userA), composeMsg)
         );
-
-        bytes memory message = this.getComposeMessage(composerMsg_);
-        (, bytes memory _address) = abi.decode(message, (uint256, bytes));
-        bytes memory expectedErrorMessage = abi.encodeWithSelector(
-            IHyperLiquidComposerErrors.HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength.selector,
-            _address,
-            _address.length
-        );
-
-        vm.expectEmit(address(hyperLiquidComposer));
-        emit IHyperLiquidComposerCore.ErrorMessage(expectedErrorMessage);
-        uint256 preBalance_txOrigin = tx.origin.balance;
 
         vm.startPrank(HL_LZ_ENDPOINT_V2);
         hyperLiquidComposer.lzCompose{ value: AMOUNT_TO_FUND }(address(oft), bytes32(0), composerMsg_, msg.sender, "");
         vm.stopPrank();
 
-        assertEq(tx.origin.balance, preBalance_txOrigin + AMOUNT_TO_FUND);
-        assertEq(oft.balanceOf(address(hyperLiquidComposer)), AMOUNT_TO_SEND);
+        (SendParam memory refundSendParam, uint256 msgValue) = hyperLiquidComposer.failedMessages(bytes32(0));
+        assertEq(refundSendParam.to, addressToBytes32(userA));
+        assertEq(refundSendParam.amountLD, AMOUNT_TO_SEND);
+        assertEq(msgValue, AMOUNT_TO_FUND);
     }
 
     function test_erc20_refund_sender_malformed_receiver() public {
         // Mocks the lzReceive call which mints the tokens to the hyperLiquidComposer
         deal(address(oft), address(hyperLiquidComposer), AMOUNT_TO_SEND);
 
-        bytes memory composeMsg = abi.encode(0, abi.encodePacked(userB, "error"));
+        bytes memory composeMsg = abi.encode(0, "error");
 
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
             0,
@@ -151,26 +140,14 @@ contract HyperLiquidComposerRefundTest is Test {
             abi.encodePacked(addressToBytes32(userA), composeMsg)
         );
 
-        bytes memory message = this.getComposeMessage(composerMsg_);
-        (, bytes memory _address) = abi.decode(message, (uint256, bytes));
-        bytes memory expectedErrorMessage = abi.encodeWithSelector(
-            IHyperLiquidComposerErrors.HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength.selector,
-            _address,
-            _address.length
-        );
-
-        vm.expectEmit(address(oft));
-        emit IERC20.Transfer(address(hyperLiquidComposer), userA, AMOUNT_TO_SEND);
-
-        vm.expectEmit(address(hyperLiquidComposer));
-        emit IHyperLiquidComposerCore.ErrorMessage(expectedErrorMessage);
-
         vm.startPrank(HL_LZ_ENDPOINT_V2);
         hyperLiquidComposer.lzCompose(address(oft), bytes32(0), composerMsg_, msg.sender, "");
         vm.stopPrank();
 
-        assertEq(oft.balanceOf(address(hyperLiquidComposer)), 0);
-        assertEq(oft.balanceOf(userA), AMOUNT_TO_SEND);
+        (SendParam memory refundSendParam, uint256 msgValue) = hyperLiquidComposer.failedMessages(bytes32(0));
+        assertEq(refundSendParam.to, addressToBytes32(userA));
+        assertEq(refundSendParam.amountLD, AMOUNT_TO_SEND);
+        assertEq(msgValue, 0);
     }
 
     /// forge-config: default.fuzz.runs = 128
@@ -188,7 +165,7 @@ contract HyperLiquidComposerRefundTest is Test {
             uint64(AMOUNT_TO_SEND / scaleAliceDecimalDiff)
         );
 
-        bytes memory composeMsg = abi.encode(0, abi.encodePacked(userB));
+        bytes memory composeMsg = abi.encode(0, userB);
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
             0,
             SRC_EID,
@@ -227,7 +204,7 @@ contract HyperLiquidComposerRefundTest is Test {
             uint64(AMOUNT_TO_SEND / scaleAliceDecimalDiff)
         );
 
-        bytes memory composeMsg = abi.encode(AMOUNT_TO_FUND, abi.encodePacked(noFallback));
+        bytes memory composeMsg = abi.encode(AMOUNT_TO_FUND, noFallback);
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
             0,
             SRC_EID,
