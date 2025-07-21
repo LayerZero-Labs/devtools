@@ -9,11 +9,7 @@ library HyperLiquidComposerCodec {
     /// @dev This is the largest possible token supply on HyperCore
     uint64 public constant EVM_MAX_TRANSFERABLE_INTO_CORE_PER_TX = type(uint64).max;
 
-    /// @dev Valid compose message lengths for the HyperLiquidComposer - can be abi.encodePacked(address) or abi.encode(address)
-    /// @dev If we are in abi.encodePacked(address) mode, the length is 20 bytes because addresses are 20 bytes
-    uint256 public constant VALID_COMPOSE_MESSAGE_LENGTH_PACKED = 20;
-    /// @dev If we are in abi.encode(address) mode, the length is 32 bytes
-    uint256 public constant VALID_COMPOSE_MESSAGE_LENGTH_ENCODE = 32;
+    uint256 public constant COMPOSE_MSG_LENGTH = 64; // abi.encode(uint256, address)
 
     /// @dev The base asset bridge address is the address of the HyperLiquid L1 contract
     /// @dev This is the address that the OFT contract will transfer the tokens to when we want to send tokens to HyperLiquid L1
@@ -141,37 +137,6 @@ library HyperLiquidComposerCodec {
 
         /// @dev Guaranteed to be in the range of [0, u64.max] because it is uppoerbounded by uint64 _maxTransferableCoreAmount
         amountCore = uint64(amountEVM * scale);
-    }
-
-    /// @notice Converts a bytes32 to an evm address
-    /// @notice This function is called by the HyperLiquidComposer contract
-    ///
-    /// @param _senderAsBytes32 The bytes32 to convert
-    ///
-    /// @return _evmAddress Non zero address if the bytes32 is a valid evm address, otherwise zero address
-    function into_evmAddress_or_zero(bytes32 _senderAsBytes32) internal pure returns (address) {
-        uint256 senderAsUint160 = uint256(_senderAsBytes32);
-        if (senderAsUint160 <= type(uint160).max) {
-            return address(uint160(senderAsUint160));
-        }
-        return address(0);
-    }
-
-    /// @notice Converts a bytes to an evm address
-    /// @notice This function is called by the HyperLiquidComposer contract
-    ///
-    /// @param _senderAsBytes The bytes to convert
-    ///
-    /// @return _evmAddress Non zero address if the bytes are a valid evm address, otherwise zero address
-    function into_evmAddress_or_zero(bytes memory _senderAsBytes) internal pure returns (address) {
-        uint256 length = _senderAsBytes.length;
-        if (length == VALID_COMPOSE_MESSAGE_LENGTH_PACKED) {
-            return address(bytes20(_senderAsBytes));
-        } else if (length == VALID_COMPOSE_MESSAGE_LENGTH_ENCODE) {
-            bytes32 senderAsBytes32 = bytes32(_senderAsBytes);
-            return into_evmAddress_or_zero(senderAsBytes32);
-        }
-        return address(0);
     }
 
     /// @notice Extracts the error payload from a bytes array

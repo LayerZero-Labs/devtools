@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import { IOFT } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
+import { IOFT, SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { SafeERC20, IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import { HyperLiquidComposerCodec } from "./library/HyperLiquidComposerCodec.sol";
 import { IHyperLiquidComposerErrors, ErrorMessagePayload } from "./interfaces/IHyperLiquidComposerErrors.sol";
 import { IHyperLiquidReadPrecompile } from "./interfaces/IHyperLiquidReadPrecompile.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
-import { IHyperLiquidComposerCore, IHyperAsset, IHyperAssetAmount } from "./interfaces/IHyperLiquidComposerCore.sol";
+import { IHyperLiquidComposerCore, IHyperAsset, IHyperAssetAmount, FailedMessage } from "./interfaces/IHyperLiquidComposerCore.sol";
 
 contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     using SafeERC20 for IERC20;
@@ -41,11 +41,14 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     uint64 public constant HYPE_INDEX_MAINNET = 150;
 
     mapping(uint256 => uint64) public hypeIndexByChainId;
+    mapping(bytes32 => FailedMessage) public failedMessages;
 
     address public immutable endpoint;
 
     IOFT public immutable oft;
     IERC20 public immutable token;
+
+    address public immutable REFUND_ADDRESS;
 
     IHyperAsset public oftAsset;
     IHyperAsset public hypeAsset;
@@ -66,42 +69,16 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
         hypeIndexByChainId[HYPE_CHAIN_ID_MAINNET] = HYPE_INDEX_MAINNET;
     }
 
-    function validate_message(bytes calldata _composeMessage) external pure returns (uint256, bytes32, bytes memory) {
-        /// @dev Revert type : out of bounds or type cast error
-        /// @dev Reason: Trying to slice the bytes object when it isn't of the form created by a OFTComposeMsgCodec.encode()
-        uint256 amountLD = OFTComposeMsgCodec.amountLD(_composeMessage);
-        bytes32 maybeSenderBytes32 = OFTComposeMsgCodec.composeFrom(_composeMessage);
-
-        /// @dev This is an unbounded slice range without type casting thereby having the least chance of erroring
-        bytes memory composeMsg = OFTComposeMsgCodec.composeMsg(_composeMessage);
-
-        return (amountLD, maybeSenderBytes32, composeMsg);
-    }
-
-    function validate_msg_or_refund(
-        bytes memory _composeMsg,
-        bytes32 _senderBytes32,
-        uint256 _amountLD
-    ) external pure returns (uint256, address) {
-        (uint256 _minMsgValue, bytes memory maybeReceiver) = abi.decode(_composeMsg, (uint256, bytes));
-
-        /// @dev Test the conversion of the below (i.e. bytes and bytes32 into address)
-        /// @dev This function returns address(0) if the sender is not a valid evm address
-        address sender = _senderBytes32.into_evmAddress_or_zero();
-        address receiver = maybeReceiver.into_evmAddress_or_zero();
-
-        /// @dev Initiate refund if the receiver is not a valid evm adress
-        /// @dev Handling the if sender is not a valid evm address in the refund function
-        if (receiver == address(0)) {
-            bytes memory errMsg = abi.encodeWithSelector(
-                IHyperLiquidComposerErrors.HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength.selector,
-                maybeReceiver,
-                maybeReceiver.length
+    function decode_message(
+        bytes calldata _composeMessage
+    ) external pure returns (uint256 minMsgValue, address receiver) {
+        if (_composeMessage.length != HyperLiquidComposerCodec.COMPOSE_MSG_LENGTH) {
+            revert IHyperLiquidComposerErrors.HyperLiquidComposer_ComposeMsgNot64Byte(
+                _composeMessage,
+                _composeMessage.length
             );
-            revert IHyperLiquidComposerErrors.ErrorMsg(errMsg.createErrorMessage(sender, _amountLD));
         }
-
-        return (_minMsgValue, receiver);
+        (minMsgValue, receiver) = abi.decode(_composeMessage, (uint256, address));
     }
 
     /// @notice External function to quote the conversion of evm tokens to hypercore tokens
@@ -220,6 +197,24 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
                 revert IHyperLiquidComposerErrors.HyperLiquidComposer_FailedToRefund_HYPE(_refundAddress, msg.value);
             }
         }
+    }
+
+    function refund(bytes32 _guid) external payable virtual {
+        FailedMessage memory failedMessage = failedMessages[_guid];
+        if (failedMessage.refundSendParam.to == bytes32(0)) {
+            revert IHyperLiquidComposerErrors.FailedMessageNotFound(_guid);
+        }
+        delete failedMessages[_guid];
+
+        uint256 totalMsgValue = failedMessage.msgValue + msg.value;
+
+        /// @dev Refunds the OFT contract with the refundSendParam
+        oft.send{ value: totalMsgValue }(failedMessage.refundSendParam, MessagingFee(totalMsgValue, 0), REFUND_ADDRESS);
+
+        /// @dev Emits the RefundSuccessful event
+        emit RefundSuccessful(_guid);
+
+        /// @dev Deletes the failed message from storage
     }
 
     function getOFTAsset() external view returns (IHyperAsset memory) {
