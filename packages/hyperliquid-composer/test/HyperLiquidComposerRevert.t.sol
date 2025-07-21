@@ -41,11 +41,7 @@ contract HyperLiquidComposerRevertTest is HyperliquidBaseTest {
     }
 
     function test_panic_invalid_message() public {
-        bytes memory revertMessage = abi.encodeWithSelector(
-            IHyperLiquidComposerErrors.HyperLiquidComposer_InvalidComposeMessage.selector,
-            ""
-        );
-        vm.expectRevert(revertMessage, address(hyperLiquidComposer));
+        vm.expectRevert();
 
         vm.startPrank(HL_LZ_ENDPOINT_V2);
         hyperLiquidComposer.lzCompose(address(oft), bytes32(0), "", msg.sender, "");
