@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import { IOFT } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
+import { IOFT, SendParam } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { SafeERC20, IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 import { IOAppComposer } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol";
@@ -11,7 +11,7 @@ import { HyperLiquidComposerCodec } from "./library/HyperLiquidComposerCodec.sol
 import { IHyperLiquidComposerErrors } from "./interfaces/IHyperLiquidComposerErrors.sol";
 import { ICoreWriter } from "./interfaces/ICoreWriter.sol";
 
-import { HyperLiquidComposerCore, IHyperAsset, IHyperAssetAmount } from "./HyperLiquidComposerCore.sol";
+import { HyperLiquidComposerCore, IHyperAsset, IHyperAssetAmount, FailedMessage } from "./HyperLiquidComposerCore.sol";
 
 contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
     using SafeERC20 for IERC20;
@@ -28,11 +28,13 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
     /// @param _oft The OFT contract address associated with this composer
     /// @param _coreIndexId The core index id of the HyperLiquid L1 contract
     /// @param _assetDecimalDiff The difference in decimals between the HyperEVM OFT deployment and HyperLiquid L1 HIP-1 listing
+    /// @param _REFUND_ADDRESS Address that receives excess tokens after a refund(). it MUST be able to receive native tokens.
     constructor(
         address _endpoint,
         address _oft,
         uint64 _coreIndexId,
-        int64 _assetDecimalDiff
+        int64 _assetDecimalDiff,
+        address _REFUND_ADDRESS
     ) HyperLiquidComposerCore(_endpoint, _oft) {
         /// @dev Hyperliquid L1 contract address is the prefix (0x2000...0000) + the core index id
         /// @dev This is the address that the OFT contract will transfer the tokens to when we want to send tokens between HyperEVM and HyperLiquid L1
@@ -54,6 +56,8 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
             /// @dev 8 is the number of decimals in the HYPE Core Spot on HyperLiquid L1
             decimalDiff: 18 - 8
         });
+
+        REFUND_ADDRESS = _REFUND_ADDRESS;
     }
 
     /// @notice Composes a message to be sent to the HyperLiquidComposer
@@ -66,7 +70,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
     /// @param _executor The address that called EndpointV2::lzCompose()
     function lzCompose(
         address _oft,
-        bytes32 /*_guid*/,
+        bytes32 _guid,
         bytes calldata _message,
         address _executor,
         bytes calldata /*_extraData*/
@@ -86,40 +90,36 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
             revert IHyperLiquidComposerErrors.HyperLiquidComposer_InvalidCall_NotOFT(address(oft), _oft);
         }
 
+        uint256 minMsgValue;
         address receiver;
-        uint256 amountLD;
-        bytes32 maybeEVMSender;
-        bytes memory composeMsg;
+
+        /// @dev Since these are populated by the OFT contract, we can safely assume they are always decodeable
+        uint32 srcEid = OFTComposeMsgCodec.srcEid(_message);
+        uint256 amountLD = OFTComposeMsgCodec.amountLD(_message);
+        bytes32 sender = OFTComposeMsgCodec.composeFrom(_message);
+        bytes memory composeMsgEncoded = OFTComposeMsgCodec.composeMsg(_message);
 
         /// @dev Checks if the payload contains a compose message that can be sliced to extract the amount, sender as bytes32, and receiver as bytes
         /// @dev The slice ranges can be found in OFTComposeMsgCodec.sol
         /// @dev If the payload is invalid, the function will revert with the error message and there is no refunds
-        try this.validate_message(_message) returns (
-            uint256 _amountLD,
-            bytes32 _maybeSenderBytes32,
-            bytes memory _composeMsg
-        ) {
-            amountLD = _amountLD;
-            maybeEVMSender = _maybeSenderBytes32;
-            composeMsg = _composeMsg;
-        } catch (bytes memory _err) {
-            revert IHyperLiquidComposerErrors.HyperLiquidComposer_InvalidComposeMessage(_err);
-        }
+        try this.decode_message(composeMsgEncoded) returns (uint256 _minMsgValue, address _receiver) {
+            if (_minMsgValue > msg.value) {
+                revert IHyperLiquidComposerErrors.NotEnoughMsgValue(msg.value, minMsgValue);
+            }
 
-        /// @dev Checks if the receiver and sender are valid addresses
-        /// @dev If the addresses are invalid, the function will emit an error message and try a complete refund to the sender
-        /// @dev If developers want custom error messages they need to implement their own custom revert messages
-        try this.validate_msg_or_refund(composeMsg, maybeEVMSender, amountLD) returns (
-            uint256 _minMsgValue,
-            address _receiver
-        ) {
-            if (msg.value < _minMsgValue) revert IHyperLiquidComposerErrors.NotEnoughMsgValue(msg.value, _minMsgValue);
-
+            minMsgValue = _minMsgValue;
             receiver = _receiver;
-        } catch (bytes memory _err) {
-            bytes memory errMsg = completeRefund(_err, _executor);
-            emit ErrorMessage(errMsg);
-            // Pre-emptive return after the refund
+        } catch {
+            /// @dev The msgValue passed will be re-used to pay for the layerzero message
+            /// @dev The excess will be transferred to the REFUND_ADDRESS
+
+            SendParam memory refundSendParam;
+            refundSendParam.dstEid = srcEid;
+            refundSendParam.to = sender;
+            refundSendParam.amountLD = amountLD;
+
+            failedMessages[_guid] = FailedMessage({ refundSendParam: refundSendParam, msgValue: msg.value });
+            emit FailedMessageDecode(_guid, sender, msg.value, composeMsgEncoded);
             return;
         }
 
