@@ -188,7 +188,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.12
@@ -308,7 +308,7 @@ importers:
         specifier: ^0.3.2
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.3
+        specifier: ^3.2.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -317,7 +317,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.12
@@ -422,7 +422,7 @@ importers:
         specifier: ^0.3.2
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.3
+        specifier: ^3.2.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -431,7 +431,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ^6.0.3
+        specifier: ^7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.12
@@ -548,7 +548,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.12
@@ -680,7 +680,7 @@ importers:
         specifier: ^0.3.2
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.3
+        specifier: ^3.2.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-move':
         specifier: ^1.1.0
@@ -692,7 +692,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.12
@@ -830,7 +830,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.13
@@ -984,7 +984,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.12
@@ -1152,19 +1152,19 @@ importers:
         specifier: ^0.3.2
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.3
+        specifier: ^3.2.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
         version: 2.3.44
       '@layerzerolabs/script-devtools-evm-foundry':
-        specifier: ^0.0.2
+        specifier: ^1.0.0
         version: link:../../packages/script-devtools-evm-foundry
       '@layerzerolabs/solhint-config':
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.13
@@ -1278,7 +1278,7 @@ importers:
         specifier: ^0.3.2
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.3
+        specifier: ^3.2.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -1287,7 +1287,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.12
@@ -1422,7 +1422,7 @@ importers:
         specifier: ^0.3.2
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.3
+        specifier: ^3.2.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-move':
         specifier: ^1.1.0
@@ -1434,7 +1434,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.12
@@ -1593,7 +1593,7 @@ importers:
         specifier: ^0.3.2
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.3
+        specifier: ^3.2.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-move':
         specifier: ^1.1.0
@@ -1605,7 +1605,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.12
@@ -1743,7 +1743,7 @@ importers:
         specifier: ^0.0.3
         version: link:../../packages/oft-alt-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.0.0
+        specifier: ^3.2.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -1752,7 +1752,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.9
@@ -1884,7 +1884,7 @@ importers:
         specifier: ^0.3.2
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.3
+        specifier: ^3.2.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-move':
         specifier: ^1.1.0
@@ -1896,7 +1896,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.12
@@ -2010,7 +2010,7 @@ importers:
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/hyperliquid-composer':
-        specifier: ^0.0.16
+        specifier: ^0.0.17
         version: link:../../packages/hyperliquid-composer
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
@@ -2034,7 +2034,7 @@ importers:
         specifier: ^0.3.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.2
+        specifier: ^3.2.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -2043,7 +2043,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.2
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.12
@@ -2188,7 +2188,7 @@ importers:
         specifier: ^0.3.0
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.0.0
+        specifier: ^3.2.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-move':
         specifier: ^1.1.0
@@ -2200,7 +2200,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.9
@@ -2353,7 +2353,7 @@ importers:
         specifier: ^0.3.2
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.3
+        specifier: ^3.2.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-v2-solana-sdk':
         specifier: ^3.0.86
@@ -2374,7 +2374,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.5.2
@@ -2572,7 +2572,7 @@ importers:
         specifier: ^0.1.2
         version: link:../../packages/oapp-evm-upgradeable
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.3
+        specifier: ^3.2.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-evm-upgradeable':
         specifier: ^3.0.2
@@ -2584,7 +2584,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.12
@@ -2704,7 +2704,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.9
@@ -2821,7 +2821,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.12
@@ -2932,7 +2932,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.12
@@ -3052,7 +3052,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.12
@@ -3166,7 +3166,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.9
@@ -4090,7 +4090,7 @@ importers:
         specifier: ^0.3.1
         version: link:../oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.2
+        specifier: ^3.2.0
         version: link:../oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -4263,7 +4263,7 @@ importers:
         specifier: ^0.3.2
         version: link:../oapp-evm
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ^0.1.12
@@ -4291,7 +4291,7 @@ importers:
         specifier: ^3.0.75
         version: 3.0.75(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ^0.1.12
@@ -4322,7 +4322,7 @@ importers:
         specifier: ^0.3.2
         version: link:../oapp-evm
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ^0.1.12
@@ -4352,10 +4352,10 @@ importers:
         specifier: ^0.3.2
         version: link:../oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.3
+        specifier: ^3.2.0
         version: link:../oft-evm
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ^0.1.12
@@ -4382,7 +4382,7 @@ importers:
         specifier: ^0.3.2
         version: link:../oapp-evm
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ^0.1.12
@@ -4415,10 +4415,10 @@ importers:
         specifier: ^0.1.2
         version: link:../oapp-evm-upgradeable
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.3
+        specifier: ^3.2.0
         version: link:../oft-evm
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ^0.1.12
@@ -4596,7 +4596,7 @@ importers:
         specifier: ^0.3.2
         version: link:../oapp-evm
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.3
+        specifier: ~7.0.0
         version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.12
@@ -4829,10 +4829,10 @@ importers:
   packages/script-devtools-evm-foundry:
     dependencies:
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.1
+        specifier: ^0.3.2
         version: link:../oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.2
+        specifier: ^3.2.0
         version: link:../oft-evm
     devDependencies:
       '@layerzerolabs/lz-evm-messagelib-v2':
@@ -4900,7 +4900,7 @@ importers:
         specifier: ^0.3.2
         version: link:../oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.3
+        specifier: ^3.2.0
         version: link:../oft-evm
     devDependencies:
       '@layerzerolabs/lz-evm-messagelib-v2':

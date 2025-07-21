@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 0.0.10
+
+### Patch Changes
+
+- 26c44d4: hyperliquid corewriter variant
+
 ## 0.0.9
 
 ### Patch Changes
