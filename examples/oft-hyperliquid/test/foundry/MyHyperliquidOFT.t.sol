@@ -88,7 +88,13 @@ contract MyHyperLiquidOFTTest is TestHelperOz5 {
         srcOFT = new MyOFT(SRC_OFT_NAME, SRC_OFT_SYMBOL, address(endpoints[SRC_EID]), address(this));
         dstOFT = new MyOFT(DST_OFT_NAME, DST_OFT_SYMBOL, address(endpoints[DST_EID]), address(this));
 
-        dstLZComposer = new MyHyperLiquidComposer(address(endpoints[DST_EID]), address(dstOFT), oftHlIndexId, WEI_DIFF);
+        dstLZComposer = new MyHyperLiquidComposer(
+            address(endpoints[DST_EID]),
+            address(dstOFT),
+            oftHlIndexId,
+            WEI_DIFF,
+            userB
+        );
 
         // config and wire the ofts
         address[] memory ofts = new address[](2);
