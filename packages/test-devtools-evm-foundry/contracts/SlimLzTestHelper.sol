@@ -223,7 +223,7 @@ contract SlimLzTestHelper is Test, OptionsHelper {
             numberOfPackets = pendingPacketsSize > _packetAmount ? _packetAmount : pendingPacketsSize;
         }
         
-        while (numberOfPackets > 0) {
+        while (numberOfPackets > 0 && queue.length() > 0) {
             numberOfPackets--;
             bytes32 guid = queue.popBack();
             bytes memory packetBytes = packets[guid];
@@ -249,6 +249,10 @@ contract SlimLzTestHelper is Test, OptionsHelper {
             if (_composer != address(0) && _executorOptionExists(options, ExecutorOptions.OPTION_TYPE_LZCOMPOSE)) {
                 this.lzCompose(packetBytes, options, guid, _composer);
             }
+            
+            // Clean up storage to prevent memory leaks during testing
+            delete packets[guid];
+            delete optionsLookup[guid];
         }
     }
 
