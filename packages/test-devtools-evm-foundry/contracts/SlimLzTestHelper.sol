@@ -29,6 +29,30 @@ interface IOAppSetPeer {
  * @dev For advanced features (DVN, Executor, workers), use TestHelperOz5 instead.
  */
 contract SlimLzTestHelper is Test, OptionsHelper {
+    // ==================== Custom Errors ====================
+    
+    /// @notice Core operational errors
+    /// @dev Thrown when trying to verify packets for an unregistered endpoint
+    /// @param eid The endpoint ID that was not found
+    error SlimLzTestHelper_EndpointNotRegistered(uint32 eid);
+    
+    /// @dev Thrown when native drop transfer fails
+    /// @param receiver The address that failed to receive native tokens
+    /// @param amount The amount that failed to transfer
+    error SlimLzTestHelper_NativeDropFailed(address receiver, uint256 amount);
+    
+    /// @dev Thrown when packet GUID doesn't match expected value
+    /// @param expected The expected GUID value
+    /// @param actual The actual GUID value found in packet
+    error SlimLzTestHelper_GuidMismatch(bytes32 expected, bytes32 actual);
+    
+    /// @dev Thrown when packet validation fails
+    /// @param guid The GUID of the packet that failed validation
+    error SlimLzTestHelper_PacketValidationFailed(bytes32 guid);
+    
+    /// @dev Thrown when attempting to schedule a packet with duplicate GUID
+    /// @param guid The duplicate GUID that was detected
+    error SlimLzTestHelper_DuplicateGuid(bytes32 guid);
     using DoubleEndedQueue for DoubleEndedQueue.Bytes32Deque;
     using PacketV1Codec for bytes;
 
@@ -177,12 +201,19 @@ contract SlimLzTestHelper is Test, OptionsHelper {
 
     /**
      * @notice Schedules a packet for delivery
+     * @dev Includes optional duplicate GUID detection for enhanced safety
      */
     function schedulePacket(bytes calldata _packetBytes, bytes calldata _options) public {
         uint32 dstEid = _packetBytes.dstEid();
         bytes32 dstAddress = _packetBytes.receiver();
         DoubleEndedQueue.Bytes32Deque storage queue = packetsQueue[dstEid][dstAddress];
         bytes32 guid = _packetBytes.guid();
+        
+        // Optional: Check for duplicate GUIDs (can be disabled if performance is critical)
+        if (packets[guid].length > 0) {
+            revert SlimLzTestHelper_DuplicateGuid(guid);
+        }
+        
         queue.pushFront(guid);
         packets[guid] = _packetBytes;
         optionsLookup[guid] = _options;
@@ -212,7 +243,9 @@ contract SlimLzTestHelper is Test, OptionsHelper {
         address _composer,
         bytes memory _resolvedPayload
     ) public {
-        require(endpoints[_dstEid] != address(0), "endpoint not yet registered");
+        if (endpoints[_dstEid] == address(0)) {
+            revert SlimLzTestHelper_EndpointNotRegistered(_dstEid);
+        }
 
         DoubleEndedQueue.Bytes32Deque storage queue = packetsQueue[_dstEid][_dstAddress];
         uint256 pendingPacketsSize = queue.length();
@@ -242,7 +275,9 @@ contract SlimLzTestHelper is Test, OptionsHelper {
                 (uint256 amount, bytes32 receiver) = _parseExecutorNativeDropOption(options);
                 address receiverAddress = address(uint160(uint256(receiver)));
                 (bool success, ) = receiverAddress.call{value: amount}("");
-                require(success, "Native drop failed");
+                if (!success) {
+                    revert SlimLzTestHelper_NativeDropFailed(receiverAddress, amount);
+                }
             }
             
             // Handle compose if composer specified
@@ -310,7 +345,9 @@ contract SlimLzTestHelper is Test, OptionsHelper {
 
     function assertGuid(bytes calldata packetBytes, bytes32 guid) external pure {
         bytes32 packetGuid = packetBytes.guid();
-        require(packetGuid == guid, "guid not match");
+        if (packetGuid != guid) {
+            revert SlimLzTestHelper_GuidMismatch(guid, packetGuid);
+        }
     }
 
     function registerEndpoint(EndpointV2 endpoint) public {
