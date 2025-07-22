@@ -1,6 +1,6 @@
 use crate::*;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
-use oapp::endpoint_interface::{instructions::RegisterOAppParams, ID as ENDPOINT_ID};
+use oapp::endpoint::{instructions::RegisterOAppParams, ID as ENDPOINT_ID};
 
 #[derive(Accounts)]
 pub struct InitOFT<'info> {

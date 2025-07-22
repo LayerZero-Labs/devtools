@@ -5,7 +5,7 @@ use anchor_spl::{
     token_2022::spl_token_2022::{self},
     token_interface::{self, Mint, TokenAccount, TokenInterface, TransferChecked},
 };
-use oapp::endpoint_interface::{
+use oapp::endpoint::{
     cpi::accounts::Clear,
     instructions::{ClearParams, SendComposeParams},
     ConstructCPIContext,
