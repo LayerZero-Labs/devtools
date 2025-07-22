@@ -11,7 +11,7 @@ use errors::*;
 use events::*;
 use instructions::*;
 use oapp::{
-    endpoint_interface::{MessagingFee, MessagingReceipt},
+    endpoint::{MessagingFee, MessagingReceipt},
     LzReceiveParams,
 };
 use solana_helper::program_id_from_env;

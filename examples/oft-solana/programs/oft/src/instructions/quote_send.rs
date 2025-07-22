@@ -1,5 +1,5 @@
 use crate::*;
-use oapp::endpoint_interface::{instructions::QuoteParams, MessagingFee};
+use oapp::endpoint::{instructions::QuoteParams, MessagingFee};
 
 use anchor_spl::{
     token_2022::spl_token_2022::{
