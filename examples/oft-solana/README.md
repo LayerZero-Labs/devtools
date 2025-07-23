@@ -63,7 +63,6 @@ Note that `create-lz-oapp` will also automatically run the dependencies install 
 
 Throughout this walkthrough, helper tasks will be used. For the full list of available helper tasks, refer to the [LayerZero Hardhat Helper Tasks section](#layerzero-hardhat-helper-tasks). All commands can be run at the project root.
 
-
 ## Setup
 
 :warning: You need Anchor version `0.29` and solana version `1.17.31` specifically to compile the build artifacts. Using higher Anchor and Solana versions can introduce unexpected issues during compilation. After compiling the correct build artifacts, you can change the Solana version to higher versions.
@@ -74,6 +73,7 @@ Throughout this walkthrough, helper tasks will be used. For the full list of ava
 
 [Docker](https://docs.docker.com/get-started/get-docker/) is required to build using anchor. We highly recommend that you use the most up-to-date Docker version to avoid any issues with anchor
 builds.
+
 </details>
 
 <details>
@@ -83,6 +83,7 @@ builds.
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ```
+
 </details>
 
 <details>
@@ -92,6 +93,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ```bash
 sh -c "$(curl -sSfL https://release.anza.xyz/v1.17.31/install)"
 ```
+
 </details>
 
 <details>
@@ -101,10 +103,10 @@ sh -c "$(curl -sSfL https://release.anza.xyz/v1.17.31/install)"
 ```bash
 cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 anchor-cli --locked
 ```
+
 </details>
 
 <br>
-
 
 - Copy `.env.example` into a new `.env`
 - Solana Deployer:
@@ -116,23 +118,27 @@ cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 anchor-cli
     - Run: `solana airdrop 5 -u devnet`
     - We recommend that you request 5 devnet SOL, which should be sufficient for this walkthrough. For the example here, we will deploy to **Solana Devnet**.
     - If you hit rate limits with the above `airdrop` command, you can also use the [official Solana faucet](https://faucet.solana.com/).
- - Solana RPC
-    - Also set the `RPC_URL_SOLANA_TESTNET` value. Note that while the naming used here is `TESTNET`, it refers to the [Solana Devnet](https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#solana-testnet). We use `TESTNET` to keep it consistent with the existing EVM testnets.
+- Solana RPC
+
+  - Also set the `RPC_URL_SOLANA_TESTNET` value. Note that while the naming used here is `TESTNET`, it refers to the [Solana Devnet](https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#solana-testnet). We use `TESTNET` to keep it consistent with the existing EVM testnets.
 
 - EVM Deployer:
+
   - Set up your EVM deployer address/account via the `.env`
   - You can specify either `MNEMONIC` or `PRIVATE_KEY`:
 
-      ```
-      MNEMONIC="test test test test test test test test test test test junk"
-      or...
-      PRIVATE_KEY="0xabc...def"
-      ```
+    ```
+    MNEMONIC="test test test test test test test test test test test junk"
+    or...
+    PRIVATE_KEY="0xabc...def"
+    ```
+
   - Fund your EVM deployer address with the native tokens of the chains you want to deploy to. This example by default will deploy to the following EVM testnet: **Ethereum Sepolia**.
 
 ## Build
 
 ### Prepare the Solana OFT Program keypair
+
 Create the OFT `programId` keypair by running:
 
 ```bash
@@ -254,7 +260,6 @@ The above command will create a Solana OFT which will have only the OFT Store as
 pnpm hardhat lz:deploy # follow the prompts
 ```
 
-
 ## Enable Messaging
 
 Run the following command to initialize the SendConfig and ReceiveConfig Accounts. This step is unique to pathways that involve Solana.
@@ -302,7 +307,6 @@ Congratulations, you have now sent an OFT cross-chain between Solana and Ethereu
 
 > If you run into any issues, refer to [Troubleshooting](#troubleshooting).
 
-
 ## Next Steps
 
 After successfully deploying your OFT, consider the following steps:
@@ -311,9 +315,7 @@ After successfully deploying your OFT, consider the following steps:
 - Review the [Production Deployment Checklist](#production-deployment-checklist) before going to mainnet
 - Learn about [Security Stack](https://docs.layerzero.network/v2/developers/evm/protocol-gas-settings/security-stack)
 - Understand [Message Execution Options](https://docs.layerzero.network/v2/developers/evm/protocol-gas-settings/options)
--  Wiring **Solana to Aptos** - for Wiring Solana to Aptos please refer to the instructions in [docs/wiring-to-aptos.md](./docs/wiring-to-aptos.md).
-
-
+- Wiring **Solana to Aptos** - for Wiring Solana to Aptos please refer to the instructions in [docs/wiring-to-aptos.md](./docs/wiring-to-aptos.md).
 
 ## Choosing between OFT, OFT Adapter and Mint and Burn Adapter OFT
 
@@ -344,7 +346,6 @@ This section explains the three different options available for creating OFTs on
                           • Uses burn and mint mechanism
 </pre>
 </p>
-
 
 ### OFT
 
@@ -414,7 +415,7 @@ For production deployments, consider using multisig wallets:
 - Solana: Use [Squads](https://squads.so/) multisig with the `--multisig-key` flag
 - EVM chains: Use Safe or similar multisig solutions
 
-If your Solana OFT's delegate/owner is a Squads multisig,  you can simply append the `--multisig-key` flag to the end of tasks such as the `wire` task:
+If your Solana OFT's delegate/owner is a Squads multisig, you can simply append the `--multisig-key` flag to the end of tasks such as the `wire` task:
 
 ```bash
 pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts --multisig-key <SQUADS_MULTISIG_ACCOUNT>
@@ -443,7 +444,6 @@ npx hardhat --help
 
 `lz:oft:solana:create`
 
-
 ##### Required Parameters
 
 - **`--eid`** (EndpointId)  
@@ -456,47 +456,47 @@ npx hardhat --help
 
 - **`--amount`** (number)  
   The initial supply to mint on Solana  
-  *Default: undefined*
+  _Default: undefined_
 
 - **`--local-decimals`** (number)  
   Token local decimals  
-  *Default: 9*
+  _Default: 9_
 
 - **`--shared-decimals`** (number)  
   OFT shared decimals  
-  *Default: 6*
+  _Default: 6_
 
 - **`--name`** (string)  
   Token Name  
-  *Default: "MockOFT"*
+  _Default: "MockOFT"_
 
 - **`--symbol`** (string)  
   Token Symbol  
-  *Default: "MOFT"*
+  _Default: "MOFT"_
 
 - **`--uri`** (string)  
   URI for token metadata  
-  *Default: ""*
+  _Default: ""_
 
 - **`--seller-fee-basis-points`** (number)  
   Seller fee basis points  
-  *Default: 0*
+  _Default: 0_
 
 - **`--token-metadata-is-mutable`** (boolean)  
   Whether token metadata is mutable  
-  *Default: true*
+  _Default: true_
 
 - **`--additional-minters`** (CSV string)  
   Comma-separated list of additional minters  
-  *Default: undefined*
+  _Default: undefined_
 
 - **`--only-oft-store`** (boolean)  
   If you plan to have only the OFTStore and no additional minters. This is not reversible, and will result in losing the ability to mint new tokens by everything but the OFTStore.  
-  *Default: false*
+  _Default: false_
 
 - **`--freeze-authority`** (string)  
   The Freeze Authority address (only supported in onlyOftStore mode)  
-  *Default: ""*
+  _Default: ""_
 
 ##### MABA-Only Parameters
 
@@ -504,11 +504,11 @@ The following parameters are only used for Mint-And-Burn Adapter (MABA) mode:
 
 - **`--mint`** (string)  
   The Token mint public key (used for MABA only)  
-  *Default: undefined*
+  _Default: undefined_
 
 - **`--token-program`** (string)  
   The Token Program public key (used for MABA only)  
-  *Default: TOKEN_PROGRAM_ID*
+  _Default: TOKEN_PROGRAM_ID_
 
 #### Mint Authority Configuration
 
@@ -522,13 +522,13 @@ The following parameters are only used for Mint-And-Burn Adapter (MABA) mode:
 
 :warning: Use `--additional-minters` flag to add a CSV of additional minter addresses to the Mint Authority Multisig. If you do not want to, you must specify `--only-oft-store true`.
 
-
 <details>
 <summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/deploying"><code>pnpm hardhat lz:oft:solana:debug --eid <SOLANA_EID></code></a> </summary>
 
 <br>
 
 Fetches and prints info related to the Solana OFT.
+
 </details>
 
 ### Note on the LZ Config file
