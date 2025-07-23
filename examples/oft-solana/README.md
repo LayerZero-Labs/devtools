@@ -417,7 +417,7 @@ For production deployments, consider using multisig wallets:
 If your Solana OFT's delegate/owner is a Squads multisig,  you can simply append the `--multisig-key` flag to the end of tasks such as the `wire` task:
 
 ```bash
-pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts ---multisig-key <SQUADS_MULTISIG_ACCOUNT>
+pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts --multisig-key <SQUADS_MULTISIG_ACCOUNT>
 ```
 
 ### Set a new Mint Authority Multisig
