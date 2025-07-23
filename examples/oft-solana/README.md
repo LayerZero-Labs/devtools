@@ -132,7 +132,7 @@ cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 anchor-cli
 
 ## Build
 
-
+### Prepare the Solana OFT Program keypair
 Create the OFT `programId` keypair by running:
 
 ```bash
@@ -198,6 +198,8 @@ Rent-exempt minimum: 3.87415872 SOL
 
 :information_source: LayerZero's default deployment path for Solana OFTs require you to deploy your own OFT program as this means you own the Upgrade Authority and don't rely on LayerZero to manage that authority for you. Read [this](https://neodyme.io/en/blog/solana_upgrade_authority/) to understand more no why this is important.
 
+To deploy a Solana OFT, you need to both deploy an OFT Program and also create the OFT Store, alongside the other configuration steps that are handled by the provided tasks. To understand the relationship between the OFT Program and the OFT Store, read the section ['The OFT Program'](https://docs.layerzero.network/v2/developers/solana/oft/account#the-oft-program) on the LayerZero docs.
+
 ### Deploy the Solana OFT Program
 
 While for building, we must use Solana `v1.17.31`, for deploying, we will be using `v1.18.26` as it provides an improved program deployment experience (i.e. ability to attach priority fees and also exact-sized on-chain program length which prevents needing to provide 2x the rent as in `v1.17.31`).
@@ -238,43 +240,13 @@ sh -c "$(curl -sSfL https://release.anza.xyz/v1.17.31/install)"
 
 ### Create the Solana OFT
 
-:information_source: For **OFT** and **OFT Mint-and-Burn Adapter**, the SPL token's Mint Authority is set to the **Mint Authority Multisig**, which always has the **OFT Store** as a signer. The multisig is fixed to needing 1 of N signatures.
-
-:information_source: For **OFT** and **OFT Mint-And-Burn Adapter**, you have the option to specify additional signers through the `--additional-minters` flag. If you choose not to, you must pass in `--only-oft-store true`, which means only the **OFT Store** will be a signer for the \_Mint Authority Multisig\*.
-
-:warning: If you choose to go with `--only-oft-store`, you will not be able to add in other signers/minters or update the Mint Authority, and the Freeze Authority will be immediately renounced. The token Mint Authority will be fixed Mint Authority Multisig address while the Freeze Authority will be set to None.
-
-#### For OFT:
-
 ```bash
-pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID>
+pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --only-oft-store true --amount 100000000000
 ```
 
-:warning: Use `--additional-minters` flag to add a CSV of additional minter addresses to the Mint Authority Multisig. If you do not want to, you must specify `--only-oft-store true`.
+The above command will create a Solana OFT which will have only the OFT Store as the Mint Authority and will also mint 100 OFT (given the default 9 decimals on Solana, this would be `100_000_000_000` in raw amount).
 
-:information_source: You can also specify `--amount <AMOUNT>` to have the OFT minted to your deployer address upon token creation.
-
-#### For OFTAdapter:
-
-```bash
-pnpm hardhat lz:oft-adapter:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <TOKEN_MINT> --token-program <TOKEN_PROGRAM_ID>
-```
-
-:information_source: You can use OFT Adapter if you want to use an existing token on Solana. For OFT Adapter, tokens will be locked when sending to other chains and unlocked when receiving from other chains.
-
-#### For OFT Mint-And-Burn Adapter (MABA):
-
-```bash
-pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <TOKEN_MINT> --token-program <TOKEN_PROGRAM_ID>
-```
-
-:information_source: You can use OFT Mint-And-Burn Adapter if you want to use an existing token on Solana. For OFT Mint-And-Burn Adapter, tokens will be burned when sending to other chains and minted when receiving from other chains.
-
-:warning: You cannot use this option if your token's Mint Authority has been renounced.
-
-:warning: Note that for MABA mode, before attempting any cross-chain transfers, **you must transfer the Mint Authority** for `lz_receive` to work, as that is not handled in the script (since you are using an existing token). If you opted for `--additional-minters`, then you must transfer the Mint Authority to the newly created multisig (this is the `mintAuthority` value in the `/deployments/solana-<mainnet/testnet>/OFT.json`). If not, then it should be set to the OFT Store address, which is `oftStore` in the same file.
-
-:warning: Ensure that you `address` is specified only for the solana contract object. Do not specify addresses for the EVM chain contract objects. Under the hood, we use `hardhat-deploy` to retrieve the contract addresses of the deployed EVM chain contracts. You will run into an error if you specify `address` for an EVM chain contract object.
+> For an elaboration on the command params for this command to create an Solana OFT, refer to the section [Create OFT Params](#create-oft-params)
 
 ### Deploy a sepolia OFT peer
 
@@ -335,10 +307,59 @@ Congratulations, you have now sent an OFT cross-chain between Solana and Ethereu
 
 After successfully deploying your OFT, consider the following steps:
 
+- Review the [Choosing between OFT, OFT Adapter and Mint and Burn Adapter OFT](#choosing-between-oft-oft-adapter-and-mint-and-burn-adapter-oft) section in this README
 - Review the [Production Deployment Checklist](#production-deployment-checklist) before going to mainnet
 - Learn about [Security Stack](https://docs.layerzero.network/v2/developers/evm/protocol-gas-settings/security-stack)
 - Understand [Message Execution Options](https://docs.layerzero.network/v2/developers/evm/protocol-gas-settings/options)
 -  Wiring **Solana to Aptos** - for Wiring Solana to Aptos please refer to the instructions in [docs/wiring-to-aptos.md](./docs/wiring-to-aptos.md).
+
+## Create OFT Params
+
+This section provides detailed information about the parameters and options available when creating a Solana OFT.
+
+### Mint Authority Configuration
+
+:information_source: For **OFT**, the SPL token's Mint Authority is set to the **Mint Authority Multisig**, which always has the **OFT Store** as a signer. The multisig is fixed to needing 1 of N signatures.
+
+:information_source: You have the option to specify additional signers through the `--additional-minters` flag. If you choose not to, you must pass in `--only-oft-store true`, which means only the **OFT Store** will be a signer for the **Mint Authority Multisig**.
+
+:warning: If you choose to go with `--only-oft-store`, you will not be able to add in other signers/minters or update the Mint Authority, and the Freeze Authority will be immediately renounced. The token Mint Authority will be fixed Mint Authority Multisig address while the Freeze Authority will be set to None.
+
+### Command Flags
+
+:warning: Use `--additional-minters` flag to add a CSV of additional minter addresses to the Mint Authority Multisig. If you do not want to, you must specify `--only-oft-store true`.
+
+:information_source: You can also specify `--amount <AMOUNT>` to have the OFT minted to your deployer address upon token creation.
+
+## Choosing between OFT, OFT Adapter and Mint and Burn Adapter OFT
+
+The above instructions show how to create a regular OFT. However, you may want to use an existing token on Solana instead. In that case, you have two alternative options:
+
+### OFT Adapter
+
+:information_source: You can use OFT Adapter if you want to use an existing token on Solana. For OFT Adapter, tokens will be locked when sending to other chains and unlocked when receiving from other chains.
+
+```bash
+pnpm hardhat lz:oft-adapter:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <TOKEN_MINT> --token-program <TOKEN_PROGRAM_ID>
+```
+
+### OFT Mint-And-Burn Adapter (MABA)
+
+:information_source: You can use OFT Mint-And-Burn Adapter if you want to use an existing token on Solana. For OFT Mint-And-Burn Adapter, tokens will be burned when sending to other chains and minted when receiving from other chains.
+
+:warning: You cannot use this option if your token's Mint Authority has been renounced.
+
+:information_source: For **OFT Mint-and-Burn Adapter**, the SPL token's Mint Authority is set to the **Mint Authority Multisig**, which always has the **OFT Store** as a signer. The multisig is fixed to needing 1 of N signatures.
+
+:information_source: You have the option to specify additional signers through the `--additional-minters` flag. If you choose not to, you must pass in `--only-oft-store true`, which means only the **OFT Store** will be a signer for the **Mint Authority Multisig**.
+
+```bash
+pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <TOKEN_MINT> --token-program <TOKEN_PROGRAM_ID>
+```
+
+:warning: Use `--additional-minters` flag to add a CSV of additional minter addresses to the Mint Authority Multisig. If you do not want to, you must specify `--only-oft-store true`.
+
+:warning: Note that for MABA mode, before attempting any cross-chain transfers, **you must transfer the Mint Authority** for `lz_receive` to work, as that is not handled in the script (since you are using an existing token). If you opted for `--additional-minters`, then you must transfer the Mint Authority to the newly created multisig (this is the `mintAuthority` value in the `/deployments/solana-<mainnet/testnet>/OFT.json`). If not, then it should be set to the OFT Store address, which is `oftStore` in the same file.
 
 ## Production Deployment Checklist
 
@@ -419,6 +440,8 @@ const solanaContract: OmniPointHardhat = {
   address: getOftStoreAddress(EndpointId.SOLANA_V2_TESTNET),
 };
 ```
+
+:warning: Ensure that you `address` is specified only for the solana contract object. Do not specify addresses for the EVM chain contract objects. Under the hood, we use `hardhat-deploy` to retrieve the contract addresses of the deployed EVM chain contracts. You will run into an error if you specify `address` for an EVM chain contract object.
 
 ### Mint OFT on Solana
 
