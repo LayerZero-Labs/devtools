@@ -246,7 +246,7 @@ pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --only-o
 
 The above command will create a Solana OFT which will have only the OFT Store as the Mint Authority and will also mint 100 OFT (given the default 9 decimals on Solana, this would be `100_000_000_000` in raw amount).
 
-> For an elaboration on the command params for this command to create an Solana OFT, refer to the section [Create OFT Params](#create-oft-params)
+> For an elaboration on the command params for this command to create an Solana OFT, refer to the section [Create Solana OFT](#create-solana-oft)
 
 ### Deploy a sepolia OFT peer
 
@@ -313,23 +313,7 @@ After successfully deploying your OFT, consider the following steps:
 - Understand [Message Execution Options](https://docs.layerzero.network/v2/developers/evm/protocol-gas-settings/options)
 -  Wiring **Solana to Aptos** - for Wiring Solana to Aptos please refer to the instructions in [docs/wiring-to-aptos.md](./docs/wiring-to-aptos.md).
 
-## Create OFT Params
 
-This section provides detailed information about the parameters and options available when creating a Solana OFT.
-
-### Mint Authority Configuration
-
-:information_source: For **OFT**, the SPL token's Mint Authority is set to the **Mint Authority Multisig**, which always has the **OFT Store** as a signer. The multisig is fixed to needing 1 of N signatures.
-
-:information_source: You have the option to specify additional signers through the `--additional-minters` flag. If you choose not to, you must pass in `--only-oft-store true`, which means only the **OFT Store** will be a signer for the **Mint Authority Multisig**.
-
-:warning: If you choose to go with `--only-oft-store`, you will not be able to add in other signers/minters or update the Mint Authority, and the Freeze Authority will be immediately renounced. The token Mint Authority will be fixed Mint Authority Multisig address while the Freeze Authority will be set to None.
-
-### Command Flags
-
-:warning: Use `--additional-minters` flag to add a CSV of additional minter addresses to the Mint Authority Multisig. If you do not want to, you must specify `--only-oft-store true`.
-
-:information_source: You can also specify `--amount <AMOUNT>` to have the OFT minted to your deployer address upon token creation.
 
 ## Choosing between OFT, OFT Adapter and Mint and Burn Adapter OFT
 
@@ -421,6 +405,90 @@ This example includes various helper tasks. For a complete list, run:
 ```bash
 npx hardhat --help
 ```
+
+#### Create Solana OFT
+
+Detailed information about the parameters and options available when creating a Solana OFT using the `lz:oft:solana:create` command.
+
+##### Required Parameters
+
+- **`--eid`** (EndpointId)  
+  Solana mainnet (30168) or testnet (40168)
+
+- **`--program-id`** (string)  
+  The OFT Program ID
+
+##### Optional Parameters
+
+- **`--amount`** (number)  
+  The initial supply to mint on Solana  
+  *Default: undefined*
+
+- **`--local-decimals`** (number)  
+  Token local decimals  
+  *Default: 9*
+
+- **`--shared-decimals`** (number)  
+  OFT shared decimals  
+  *Default: 6*
+
+- **`--name`** (string)  
+  Token Name  
+  *Default: "MockOFT"*
+
+- **`--symbol`** (string)  
+  Token Symbol  
+  *Default: "MOFT"*
+
+- **`--uri`** (string)  
+  URI for token metadata  
+  *Default: ""*
+
+- **`--seller-fee-basis-points`** (number)  
+  Seller fee basis points  
+  *Default: 0*
+
+- **`--token-metadata-is-mutable`** (boolean)  
+  Whether token metadata is mutable  
+  *Default: true*
+
+- **`--additional-minters`** (CSV string)  
+  Comma-separated list of additional minters  
+  *Default: undefined*
+
+- **`--only-oft-store`** (boolean)  
+  If you plan to have only the OFTStore and no additional minters. This is not reversible, and will result in losing the ability to mint new tokens by everything but the OFTStore.  
+  *Default: false*
+
+- **`--freeze-authority`** (string)  
+  The Freeze Authority address (only supported in onlyOftStore mode)  
+  *Default: ""*
+
+##### MABA-Only Parameters
+
+The following parameters are only used for Mint-And-Burn Adapter (MABA) mode:
+
+- **`--mint`** (string)  
+  The Token mint public key (used for MABA only)  
+  *Default: undefined*
+
+- **`--token-program`** (string)  
+  The Token Program public key (used for MABA only)  
+  *Default: TOKEN_PROGRAM_ID*
+
+##### Mint Authority Configuration
+
+:information_source: For **OFT**, the SPL token's Mint Authority is set to the **Mint Authority Multisig**, which always has the **OFT Store** as a signer. The multisig is fixed to needing 1 of N signatures.
+
+:information_source: You have the option to specify additional signers through the `--additional-minters` flag. If you choose not to, you must pass in `--only-oft-store true`, which means only the **OFT Store** will be a signer for the **Mint Authority Multisig**.
+
+:warning: If you choose to go with `--only-oft-store`, you will not be able to add in other signers/minters or update the Mint Authority, and the Freeze Authority will be immediately renounced. The token Mint Authority will be fixed Mint Authority Multisig address while the Freeze Authority will be set to None.
+
+##### Important Notes
+
+:warning: Use `--additional-minters` flag to add a CSV of additional minter addresses to the Mint Authority Multisig. If you do not want to, you must specify `--only-oft-store true`.
+
+:information_source: You can also specify `--amount <AMOUNT>` to have the OFT minted to your deployer address upon token creation.
 
 <details>
 <summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/deploying"><code>pnpm hardhat lz:oft:solana:debug --eid <SOLANA_EID></code></a> </summary>

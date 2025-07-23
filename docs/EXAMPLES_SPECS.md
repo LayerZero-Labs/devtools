@@ -97,7 +97,9 @@ Currently, this document will only detail the structure for the READMEs of the e
 
     16.4. **LayerZero Hardhat Helper Tasks (detailed)**
        - Goal: Understand all helper tasks
-       - Contents: Link to docs + list of built-in and local tasks
+       - Contents:
+         - Link to docs for the built-in tasks (after the page has been created in docs)
+         - local tasks (defined in src/tasks/index.ts) should have their params listed (manual style)
 
     16.5. **Contract/Program Verification**
        - Goal: Verify deployments
@@ -107,7 +109,7 @@ Currently, this document will only detail the structure for the READMEs of the e
        - Goal: Resolve errors and setup issues
        - Contents: Link to general troubleshooting + local fixes
 
-Any sections that don't appear in the above list should be considered for removal.
+Any sections that don't appear in the above list should be considered for removal. Before removing, ask the user for confirmation.
 
 
 ---
@@ -124,4 +126,4 @@ Any sections that don't appear in the above list should be considered for remova
 ## Example Code Principles
 
 1. **Options-first**: Enforced Options implementation and instructions should be included by default (e.g. in `layerzero.config.ts`).
-2. **Two chains only**: Examples should use only 2 chains by default to reduce testnet setup friction; use “Add other chains” section to scale up if needed.
+2. **Two chains only**: Examples should use only 2 chains by default to reduce testnet setup friction; use “Add other chains” section to scale up if needed. For EVM, prefer using the following in the following order: Optimism Sepolia, Arbitrum Sepolia.
