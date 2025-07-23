@@ -441,7 +441,8 @@ npx hardhat --help
 
 #### Create Solana OFT
 
-Detailed information about the parameters and options available when creating a Solana OFT using the `lz:oft:solana:create` command.
+`lz:oft:solana:create`
+
 
 ##### Required Parameters
 
@@ -509,7 +510,7 @@ The following parameters are only used for Mint-And-Burn Adapter (MABA) mode:
   The Token Program public key (used for MABA only)  
   *Default: TOKEN_PROGRAM_ID*
 
-##### Mint Authority Configuration
+#### Mint Authority Configuration
 
 :information_source: For **OFT**, the SPL token's Mint Authority is set to the **Mint Authority Multisig**, which always has the **OFT Store** as a signer. The multisig is fixed to needing 1 of N signatures.
 
@@ -521,7 +522,6 @@ The following parameters are only used for Mint-And-Burn Adapter (MABA) mode:
 
 :warning: Use `--additional-minters` flag to add a CSV of additional minter addresses to the Mint Authority Multisig. If you do not want to, you must specify `--only-oft-store true`.
 
-:information_source: You can also specify `--amount <AMOUNT>` to have the OFT minted to your deployer address upon token creation.
 
 <details>
 <summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/deploying"><code>pnpm hardhat lz:oft:solana:debug --eid <SOLANA_EID></code></a> </summary>
