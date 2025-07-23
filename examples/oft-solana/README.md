@@ -348,7 +348,9 @@ This section explains the three different options available for creating OFTs on
 
 ### OFT
 
-:information_source: Use regular OFT when you want to create a brand new token for cross-chain transfers. This creates a new SPL token with its own mint and metadata.
+- **Mechanism**: Burn and mint
+- **Token**: Create new as part of the [create task](#create-solana-oft)
+- **Note**: Preferred option when you don't have an existing token
 
 ```bash
 pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --only-oft-store true --amount 100000000000
@@ -356,7 +358,9 @@ pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --only-o
 
 ### OFT Adapter
 
-:information_source: You can use OFT Adapter if you want to use an existing token on Solana. For OFT Adapter, tokens will be locked when sending to other chains and unlocked when receiving from other chains.
+- **Mechanism**: Lock and unlock
+- **Token**: Use existing
+- **Note**: ⚠️ Last resort option when you can't or won't transfer Mint Authority of existing token
 
 ```bash
 pnpm hardhat lz:oft-adapter:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <TOKEN_MINT> --token-program <TOKEN_PROGRAM_ID>
@@ -364,21 +368,15 @@ pnpm hardhat lz:oft-adapter:solana:create --eid 40168 --program-id <PROGRAM_ID> 
 
 ### OFT Mint-And-Burn Adapter (MABA)
 
-:information_source: You can use OFT Mint-And-Burn Adapter if you want to use an existing token on Solana. For OFT Mint-And-Burn Adapter, tokens will be burned when sending to other chains and minted when receiving from other chains.
-
-:warning: You cannot use this option if your token's Mint Authority has been renounced.
-
-:information_source: For **OFT Mint-and-Burn Adapter**, the SPL token's Mint Authority is set to the **Mint Authority Multisig**, which always has the **OFT Store** as a signer. The multisig is fixed to needing 1 of N signatures.
-
-:information_source: You have the option to specify additional signers through the `--additional-minters` flag. If you choose not to, you must pass in `--only-oft-store true`, which means only the **OFT Store** will be a signer for the **Mint Authority Multisig**.
+- **Mechanism**: Burn and mint
+- **Token**: Use existing
+- **Note**: ⚠️ Requires transferring Mint Authority to OFT Store or new SPL Multisig. Cannot use if Mint Authority has been renounced.
 
 ```bash
 pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <TOKEN_MINT> --token-program <TOKEN_PROGRAM_ID>
 ```
 
-:warning: Use `--additional-minters` flag to add a CSV of additional minter addresses to the Mint Authority Multisig. If you do not want to, you must specify `--only-oft-store true`.
-
-:warning: Note that for MABA mode, before attempting any cross-chain transfers, **you must transfer the Mint Authority** for `lz_receive` to work, as that is not handled in the script (since you are using an existing token). If you opted for `--additional-minters`, then you must transfer the Mint Authority to the newly created multisig (this is the `mintAuthority` value in the `/deployments/solana-<mainnet/testnet>/OFT.json`). If not, then it should be set to the OFT Store address, which is `oftStore` in the same file.
+:warning: **Important for MABA**: Before attempting any cross-chain transfers, you must transfer the Mint Authority for `lz_receive` to work. If you used `--additional-minters`, transfer to the newly created multisig address. Otherwise, set it to the OFT Store address.
 
 ## Production Deployment Checklist
 
