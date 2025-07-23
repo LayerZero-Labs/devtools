@@ -26,6 +26,7 @@ const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
     },
 ]
 
+const CU_LIMIT = 200000 // This represents the CU limit for executing the `lz_receive` function on Solana.
 const SPL_TOKEN_ACCOUNT_RENT_VALUE = 2039280 // This figure represents lamports (https://solana.com/docs/references/terminology#lamport) on Solana. Read below for more details.
 /*
  *  Elaboration on `value` when sending OFTs to Solana:
@@ -38,7 +39,7 @@ const SOLANA_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
     {
         msgType: 1,
         optionType: ExecutorOptionType.LZ_RECEIVE,
-        gas: 200000,
+        gas: CU_LIMIT,
         value: SPL_TOKEN_ACCOUNT_RENT_VALUE,
     },
 ]
