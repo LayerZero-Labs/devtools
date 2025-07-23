@@ -1,113 +1,137 @@
 <p align="center">
   <a href="https://layerzero.network">
-    <img alt="LayerZero" style="width: 400px" src="https://docs.layerzero.network/img/LayerZero_Logo_White.svg"/>
+    <img alt="LayerZero" style="width: 400px" src="https://docs.layerzero.network/img/LayerZero_Logo_Black.svg"/>
   </a>
 </p>
 
 <p align="center">
-  <a href="https://layerzero.network" style="color: #a77dff">Homepage</a> | <a href="https://docs.layerzero.network/" style="color: #a77dff">Docs</a> | <a href="https://layerzero.network/developers" style="color: #a77dff">Developers</a>
+ <a href="https://docs.layerzero.network/" style="color: #a77dff">LayerZero Docs</a>
 </p>
 
-<h1 align="center">Omnichain Fungible Token (OFT) Solana Example</h1>
+<h1 align="center">Solana-EVM Omnichain Fungible Token (OFT) Example</h1>
+
+<p align="center">Template project for a cross-chain token (<a href="https://docs.layerzero.network/v2/concepts/applications/oft-standard">OFT</a>) powered by the LayerZero protocol. This example primarily involves Solana and EVM. There are also additional instructions for wiring to Aptos.</p>
+
+## Table of Contents
+
+- [Prerequisite Knowledge](#prerequisite-knowledge)
+- [Requirements](#requirements)
+- [Scaffold this example](#scaffold-this-example)
+- [Setup](#setup)
+- [Build](#build)
+- [Deploy](#deploy)
+- [Enable Messaging](#enable-messaging)
+- [Sending OFT](#sending-oft)
+- [Next Steps](#next-steps)
+- [Production Deployment Checklist](#production-deployment-checklist)
+- [Appendix](#appendix)
+  - [Running tests](#running-tests)
+  - [Adding other chains](#adding-other-chains)
+  - [Using Multisigs](#using-multisigs)
+  - [LayerZero Hardhat Helper Tasks](#layerzero-hardhat-helper-tasks)
+  - [Solana Program Verification](#solana-program-verification)
+  - [Troubleshooting](#troubleshooting)
+
+## Prerequisite Knowledge
+
+- [What is an OFT (Omnichain Fungible Token) ?](https://docs.layerzero.network/v2/concepts/applications/oft-standard)
+- [What is an OApp (Omnichain Application) ?](https://docs.layerzero.network/v2/concepts/applications/oapp-standard)
 
 ## Requirements
 
 - Rust `v1.75.0`
 - Anchor `v0.29`
 - Solana CLI `v1.17.31`
-- Docker
-- Node.js
+- Docker `28.3.0`
+- Node.js `>=18.16.0`
+- `pnpm` (recommended) - or another package manager of your choice (npm, yarn)
+- `forge` (optional) - `>=0.2.0` for testing, and if not using Hardhat for compilation
+
+## Scaffold this example
+
+Create your local copy of this example:
+
+```bash
+LZ_ENABLE_SOLANA_OFT_EXAMPLE=1 pnpm dlx create-lz-oapp@latest
+```
+
+Specify the directory, select `OFT (Solana)` and proceed with the installation.
+
+Note that `create-lz-oapp` will also automatically run the dependencies install step for you.
+
+## Helper Tasks
+
+Throughout this walkthrough, helper tasks will be used. For the full list of available helper tasks, refer to the [LayerZero Hardhat Helper Tasks section](#layerzero-hardhat-helper-tasks). All commands can be run at the project root.
+
 
 ## Setup
 
-We recommend using `pnpm` as a package manager (but you can of course use a package manager of your choice).
+:warning: You need Anchor version `0.29` and solana version `1.17.31` specifically to compile the build artifacts. Using higher Anchor and Solana versions can introduce unexpected issues during compilation. After compiling the correct build artifacts, you can change the Solana version to higher versions.
+
+<details>
+<summary> Docker</summary>
+<br>
 
 [Docker](https://docs.docker.com/get-started/get-docker/) is required to build using anchor. We highly recommend that you use the most up-to-date Docker version to avoid any issues with anchor
 builds.
+</details>
 
-:warning: You need anchor version `0.29` and solana version `1.17.31` specifically to compile the build artifacts. Using higher Anchor and Solana versions can introduce unexpected issues during compilation. See the following issues in Anchor's repo: [1](https://github.com/coral-xyz/anchor/issues/3089), [2](https://github.com/coral-xyz/anchor/issues/2835). After compiling the correct build artifacts, you can change the Solana version to higher versions.
-
-### Install Rust
+<details>
+<summary>Install Rust</summary>
+<br>
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ```
+</details>
 
-### Install Solana
+<details>
+<summary>Install Solana <code>1.17.31</code></summary>
+<br>
 
 ```bash
 sh -c "$(curl -sSfL https://release.anza.xyz/v1.17.31/install)"
 ```
+</details>
 
-### Install Anchor
-
-Install and use the correct version
+<details>
+<summary>Install Anchor <code>0.29</code> </summary>
+<br>
 
 ```bash
 cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 anchor-cli --locked
 ```
+</details>
 
-### Get the code
+<br>
 
-```bash
-LZ_ENABLE_SOLANA_OFT_EXAMPLE=1 npx create-lz-oapp@latest
-```
 
-Make sure you select the **OFT (Solana)** example from the dropdown:
+- Copy `.env.example` into a new `.env`
+- Solana Deployer:
+  - To set up your Solana deployer, you have 3 options:
+    - Use the keypair at the default path of `~/.config/solana/id.json`. For this, no action is needed.
+    - In the `.env`, set `SOLANA_PRIVATE_KEY` - this can be either in base58 string format (i.e. when imported from a wallet) or the Uint8 Array in string format (all in one line, e.g. `[1,1,...1]`).
+    - In the `.env`, set `SOLANA_KEYPAIR_PATH` - the location to the keypair file that you want to use.
+  - Fund your Solana deployer address
+    - Run: `solana airdrop 5 -u devnet`
+    - We recommend that you request 5 devnet SOL, which should be sufficient for this walkthrough. For the example here, we will deploy to **Solana Devnet**.
+    - If you hit rate limits with the above `airdrop` command, you can also use the [official Solana faucet](https://faucet.solana.com/).
+ - Solana RPC
+    - Also set the `RPC_URL_SOLANA_TESTNET` value. Note that while the naming used here is `TESTNET`, it refers to the [Solana Devnet](https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#solana-testnet). We use `TESTNET` to keep it consistent with the existing EVM testnets.
 
-```bash
-✔ Where do you want to start your project? … ./example
-? Which example would you like to use as a starting point? › - Use arrow-keys. Return to submit.
-    OApp
-    OFT
-    OFTAdapter
-    ONFT721
-❯   OFT (Solana)
-```
+- EVM Deployer:
+  - Set up your EVM deployer address/account via the `.env`
+  - You can specify either `MNEMONIC` or `PRIVATE_KEY`:
 
-### Installing Dependencies
+      ```
+      MNEMONIC="test test test test test test test test test test test junk"
+      or...
+      PRIVATE_KEY="0xabc...def"
+      ```
+  - Fund your EVM deployer address with the native tokens of the chains you want to deploy to. This example by default will deploy to the following EVM testnet: **Ethereum Sepolia**.
 
-```bash
-pnpm install
-```
+## Build
 
-### Running tests
-
-```bash
-pnpm test
-```
-
-### Get Devnet SOL
-
-```bash
-solana airdrop 5 -u devnet
-```
-
-We recommend that you request 5 devnet SOL, which should be sufficient for this walkthrough. For the example here, we will be using Solana Devnet. If you hit rate limits, you can also use the [official Solana faucet](https://faucet.solana.com/).
-
-### Prepare `.env`
-
-```bash
-cp .env.example .env
-```
-
-#### Solana Keypair
-
-By default, the scripts will use the keypair at the default location `~/.config/solana/id.json`. If you want to use this keypair, there is no need to set any environment variable. There will, however, be a prompt when running certain commands to confirm that you want to use the default keypair.
-
-If you wish to use a different keypair, then you can set either of the following in the `.env`:
-
-1. `SOLANA_PRIVATE_KEY` - this can be either in base58 string format (i.e. when imported from a wallet) or the Uint8 Array in string format (all in one line, e.g. `[1,1,...1]`).
-
-2. `SOLANA_KEYPAIR_PATH` - the location to the keypair file that you want to use.
-
-#### Solana RPC
-
-Also set the `RPC_URL_SOLANA_TESTNET` value. Note that while the naming used here is `TESTNET`, it refers to the [Solana Devnet](https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#solana-testnet). We use `TESTNET` to keep it consistent with the existing EVM testnets.
-
-## Deploy
-
-### Prepare the OFT Program ID
 
 Create the OFT `programId` keypair by running:
 
@@ -115,8 +139,10 @@ Create the OFT `programId` keypair by running:
 anchor keys sync -p oft
 ```
 
-The above command will generate a keypair for the OFT program in your workspace if it doesn't yet exist, and also automatically update `Anchor.toml` to use the generated keypair's public key. The default path for the program's keypair will be `target/deploy/oft-keypair.json`.
-
+<details>
+The above command will generate a keypair for the OFT program in your workspace if it doesn't yet exist, and also automatically update `Anchor.toml` to use the generated keypair's public key. The default path for the program's keypair will be `target/deploy/oft-keypair.json`. The program keypair is only used for initial deployment of the program. 
+</details>
+<br>
 View the program ID's based on the generated keypairs:
 
 ```
@@ -132,7 +158,7 @@ oft: DLZdefiak8Ur82eWp3Fii59RiCRZn3SjNCmweCdhf1DD
 
 Copy the `oft` program ID value for use in the build step later.
 
-### Building and Deploying the Solana OFT Program
+### Building the Solana OFT Program
 
 Ensure you have Docker running before running the build command.
 
@@ -146,7 +172,8 @@ Where `<OFT_PROGRAM_ID>` is replaced with your OFT Program ID copied from the pr
 
 <!-- TODO: move the following 'preview rent costs' into docs and replace below with link to docs page -->
 
-#### Preview Rent Costs for the Solana OFT
+<details>
+<summary> Preview Rent Costs for the Solana OFT</summary>
 
 :information_source: The majority of the SOL required to deploy your program will be for [**rent**](https://solana.com/docs/core/fees#rent) (specifically, for the minimum balance of SOL required for [rent-exemption](https://solana.com/docs/core/fees#rent-exempt)), which is calculated based on the amount of bytes the program or account uses. Programs typically require more rent than PDAs as more bytes are required to store the program's executable code.
 
@@ -164,13 +191,18 @@ You should see an output such as
 Rent-exempt minimum: 3.87415872 SOL
 ```
 
+</details>
+<br>
+
+## Deploy
+
 :information_source: LayerZero's default deployment path for Solana OFTs require you to deploy your own OFT program as this means you own the Upgrade Authority and don't rely on LayerZero to manage that authority for you. Read [this](https://neodyme.io/en/blog/solana_upgrade_authority/) to understand more no why this is important.
 
-#### Deploy the Solana OFT
+### Deploy the Solana OFT Program
 
 While for building, we must use Solana `v1.17.31`, for deploying, we will be using `v1.18.26` as it provides an improved program deployment experience (i.e. ability to attach priority fees and also exact-sized on-chain program length which prevents needing to provide 2x the rent as in `v1.17.31`).
 
-##### Temporarily switch to Solana `v1.18.26`
+#### Temporarily switch to Solana `v1.18.26`
 
 First, we switch to Solana `v1.18.26` (remember to switch back to `v1.17.31` later)
 
@@ -178,22 +210,25 @@ First, we switch to Solana `v1.18.26` (remember to switch back to `v1.17.31` lat
 sh -c "$(curl -sSfL https://release.anza.xyz/v1.18.26/install)"
 ```
 
-##### (Recommended) Deploying with a priority fee
+#### (Recommended) Deploying with a priority fee
 
-The `deploy` command will run with a priority fee. Read the section on ['Deploying Solana programs with a priority fee
-'](https://docs.layerzero.network/v2/developers/solana/technical-reference/solana-guidance#deploying-solana-programs-with-a-priority-fee) to learn more.
+The `deploy` command will run with a priority fee. Read the section on ['Deploying Solana programs with a priority fee'](https://docs.layerzero.network/v2/developers/solana/technical-reference/solana-guidance#deploying-solana-programs-with-a-priority-fee) to learn more.
 
-##### Run the deploy command
+#### Run the deploy command
 
 ```bash
 solana program deploy --program-id target/deploy/oft-keypair.json target/verifiable/oft.so -u devnet --with-compute-unit-price <COMPUTE_UNIT_PRICE_IN_MICRO_LAMPORTS>
 ```
 
+<details>
+
 :information_source: the `-u` flag specifies the RPC URL that should be used. The options are `mainnet-beta, devnet, testnet, localhost`, which also have their respective shorthands: `-um, -ud, -ut, -ul`
 
 :warning: If the deployment is slow, it could be that the network is congested and you might need to increase the priority fee.
 
-##### Switch back to Solana `1.17.31`
+</details>
+
+#### Switch back to Solana `1.17.31`
 
 :warning: After deploying, make sure to switch back to v1.17.31 after deploying. If you need to rebuild artifacts, you must use Solana CLI version `1.17.31` and Anchor version `0.29.0`
 
@@ -239,7 +274,142 @@ pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <
 
 :warning: Note that for MABA mode, before attempting any cross-chain transfers, **you must transfer the Mint Authority** for `lz_receive` to work, as that is not handled in the script (since you are using an existing token). If you opted for `--additional-minters`, then you must transfer the Mint Authority to the newly created multisig (this is the `mintAuthority` value in the `/deployments/solana-<mainnet/testnet>/OFT.json`). If not, then it should be set to the OFT Store address, which is `oftStore` in the same file.
 
-### Note on the LZ Config file, [layerzero.config.ts](./layerzero.config.ts)
+:warning: Ensure that you `address` is specified only for the solana contract object. Do not specify addresses for the EVM chain contract objects. Under the hood, we use `hardhat-deploy` to retrieve the contract addresses of the deployed EVM chain contracts. You will run into an error if you specify `address` for an EVM chain contract object.
+
+### Deploy a sepolia OFT peer
+
+```bash
+pnpm hardhat lz:deploy # follow the prompts
+```
+
+
+## Enable Messaging
+
+Run the following command to initialize the SendConfig and ReceiveConfig Accounts. This step is unique to pathways that involve Solana.
+
+```bash
+npx hardhat lz:oft:solana:init-config --oapp-config layerzero.config.ts
+```
+
+<details>
+You only need to do this when initializing the OFT pathways the first time. If a new pathway is added later, run this again to initialize the new pathway.
+</details>
+<br>
+
+The OFT standard builds on top of the OApp standard, which enables generic message-passing between chains. After deploying the OFT on the respective chains, you enable messaging by running the [wiring](https://docs.layerzero.network/v2/concepts/glossary#wire--wiring) task.
+
+> :information_source: This example uses the [Simple Config Generator](https://docs.layerzero.network/v2/developers/evm/technical-reference/simple-config), which is recommended over manual configuration.
+
+Run the wiring task:
+
+```bash
+pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts
+```
+
+## Sending OFTs
+
+Send From 1 OFT from **Solana Devnet** to **Ethereum Sepolia**
+
+```bash
+npx hardhat lz:oft:send --src-eid 40168 --dst-eid 40161 --to <EVM_ADDRESS>  --amount 1
+```
+
+> :information_source: `40168` and `40161` are the Endpoint IDs of Solana Devnet and Ethereum Sepolia respectively. View the list of chains and their Endpoint IDs on the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.
+
+Send 1 OFT From **Ethereum Sepolia** to **Solana Devnet**
+
+```bash
+npx hardhat lz:oft:send --src-eid 40161 --dst-eid 40168 --to <SOLANA_ADDRESS>  --amount 1
+```
+
+Upon a successful send, the script will provide you with the link to the message on LayerZero Scan.
+
+Once the message is delivered, you will be able to click on the destination transaction hash to verify that the OFT was sent.
+
+Congratulations, you have now sent an OFT cross-chain between Solana and Ethereum!
+
+> If you run into any issues, refer to [Troubleshooting](#troubleshooting).
+
+
+## Next Steps
+
+After successfully deploying your OFT, consider the following steps:
+
+- Review the [Production Deployment Checklist](#production-deployment-checklist) before going to mainnet
+- Learn about [Security Stack](https://docs.layerzero.network/v2/developers/evm/protocol-gas-settings/security-stack)
+- Understand [Message Execution Options](https://docs.layerzero.network/v2/developers/evm/protocol-gas-settings/options)
+-  Wiring **Solana to Aptos** - for Wiring Solana to Aptos please refer to the instructions in [docs/wiring-to-aptos.md](./docs/wiring-to-aptos.md).
+
+## Production Deployment Checklist
+
+<!-- TODO: move to docs page, then just link -->
+
+Before deploying, ensure the following:
+
+- (required) you are not using `MyOFTMock`, which has a public `mint` function
+  - In `layerzero.config.ts`, ensure you are not using `MyOFTMock` as the `contractName` for any of the contract objects.
+- (recommended) you have profiled the gas usage of `lzReceive` on your destination chains
+<!-- TODO: mention https://docs.layerzero.network/v2/developers/evm/technical-reference/integration-checklist#set-security-and-executor-configurations after it has been updated to reference the CLI -->
+
+## Appendix
+
+### Running tests
+
+```bash
+pnpm test
+```
+
+### Adding other chains
+
+To add additional chains to your OFT deployment:
+
+1. If EVM, add the new chain configuration to your `hardhat.config.ts`
+2. Deploy the OFT contract on the new chain
+3. Update your `layerzero.config.ts` to include the new chain
+4. Run `init-config` for the new pathway (if it involves Solana)
+5. Run the wiring task
+
+### Using Multisigs
+
+For production deployments, consider using multisig wallets:
+
+- Solana: Use [Squads](https://squads.so/) multisig with the `--multisig-key` flag
+- EVM chains: Use Safe or similar multisig solutions
+
+If your Solana OFT's delegate/owner is a Squads multisig,  you can simply append the `--multisig-key` flag to the end of tasks such as the `wire` task:
+
+```bash
+pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts ---multisig-key <SQUADS_MULTISIG_ACCOUNT>
+```
+
+### Set a new Mint Authority Multisig
+
+If you are not happy with the deployer being a mint authority, you can create and set a new mint authority by running:
+
+```bash
+pnpm hardhat lz:oft:solana:setauthority --eid <SOLANA_EID> --mint <TOKEN_MINT> --program-id <PROGRAM_ID> --escrow <ESCROW> --additional-minters <MINTERS_CSV>
+```
+
+The `OFTStore` is automatically added as a mint authority to the newly created mint authority, and does not need to be
+included in the `--additional-minters` list.
+
+### LayerZero Hardhat Helper Tasks
+
+This example includes various helper tasks. For a complete list, run:
+
+```bash
+npx hardhat --help
+```
+
+<details>
+<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/deploying"><code>pnpm hardhat lz:oft:solana:debug --eid <SOLANA_EID></code></a> </summary>
+
+<br>
+
+Fetches and prints info related to the Solana OFT.
+</details>
+
+### Note on the LZ Config file
 
 In [layerzero.config.ts](./layerzero.config.ts), the `solanaContract.address` is auto-populated with the `oftStore` address from the deployment file, which has the default path of `deployments/solana-<mainnet/testnet>`.
 
@@ -249,40 +419,6 @@ const solanaContract: OmniPointHardhat = {
   address: getOftStoreAddress(EndpointId.SOLANA_V2_TESTNET),
 };
 ```
-
-:warning: Ensure that you `address` is specified only for the solana contract object. Do not specify addresses for the EVM chain contract objects. Under the hood, we use `hardhat-deploy` to retrieve the contract addresses of the deployed EVM chain contracts. You will run into an error if you specify `address` for an EVM chain contract object.
-
-### Deploy a sepolia OFT peer
-
-```bash
-pnpm hardhat lz:deploy # follow the prompts
-```
-
-Note: If you are on testnet, consider using `MyOFTMock` to allow test token minting. If you do use `MyOFTMock`, make sure to update the `sepoliaContract.contractName` in [layerzero.config.ts](./layerzero.config.ts) to `MyOFTMock`.
-
-#### Initialize the OFT Program's SendConfig and ReceiveConfig Accounts
-
-:warning: Do this only when initializing the OFT for the first time. The only exception is if a new pathway is added later. If so, run this again to properly initialize the pathway.
-
-Run the following command to init the pathway config. This step is unique to pathways that involve Solana.
-
-```bash
-npx hardhat lz:oft:solana:init-config --oapp-config layerzero.config.ts
-```
-
-### Wire
-
-Run the following to wire the pathways specified in your `layerzero.config.ts`
-
-```bash
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts
-```
-
-With a squads multisig, you can simply append the `--multisig-key` flag to the end of the above command.
-
-### Wiring Solana to Aptos
-
-For Wiring Solana to Aptos please refer to the instructions in `docs/Aptos.md`.
 
 ### Mint OFT on Solana
 
@@ -306,84 +442,9 @@ spl-token mint <TOKEN_MINT> <AMOUNT> --multisig-signer ~/.config/solana/id.json 
 
 :information_source: You can get the `<MINT_AUTHORITY>` address from [deployments/solana-testnet/OFT.json](deployments/solana-testnet/OFT.json).
 
-### Set Message Execution Options
-
-Refer to [Generating Execution Options](https://docs.layerzero.network/v2/developers/solana/gas-settings/options#generating-options) to learn how to build the options param for send transactions.
-
-Note that you will need to either enable `enforcedOptions` in [./layerzero.config.ts](./layerzero.config.ts) or pass in a value for `_options` when calling `send()`. Having neither will cause a revert when calling send().
-
-For this example, we have already included `enforcedOptions` by default in the `layerzero.config.ts`, which will take effect in the wiring step.
-
-#### (Optional) If specifying the `_options` value when calling `send()`
-
-It's only necessary to specify `_options` if you do not have `enforcedOptions`.
-
-For Sepolia -> Solana, you should pass in the options value into the script at [tasks/evm/send.ts](./tasks/evm/send.ts) as the value for `sendParam.extraOptions`.
-
-For Solana -> Sepolia, you should pass in the options value into the script at [tasks/solana/sendOFT.ts](./tasks/solana/sendOFT.ts) as the value for `options` for both in `quote` and `send`.
-
-### Send
-
-#### Send From Solana Devnet -> To Ethereum Sepolia
-
-```bash
-npx hardhat lz:oft:send --src-eid 40168 --dst-eid 40161 --to <RECEIVER_BYTES20>  --amount <AMOUNT>
-```
-
-#### Send From Ethereum Sepolia -> To Solana Devnet
-
-```bash
-npx hardhat lz:oft:send --src-eid 40161 --dst-eid 40168 --to <RECEIVER_BASE58>  --amount <AMOUNT>
-```
-
-For more information, run:
-
-```bash
-npx hardhat lz:oft:send --help
-```
-
-### Set a new Mint Authority Multisig
-
-If you are not happy with the deployer being a mint authority, you can create and set a new mint authority by running:
-
-```bash
-pnpm hardhat lz:oft:solana:setauthority --eid <SOLANA_EID> --mint <TOKEN_MINT> --program-id <PROGRAM_ID> --escrow <ESCROW> --additional-minters <MINTERS_CSV>
-```
-
-The `OFTStore` is automatically added as a mint authority to the newly created mint authority, and does not need to be
-included in the `--additional-minters` list.
-
-## Appendix
-
 ### Solana Program Verification
 
 Refer to [Verify the OFT Program](https://docs.layerzero.network/v2/developers/solana/oft/program#optional-verify-the-oft-program).
-
-### Transferring ownership
-
-Ownership of OFTs can be transferred via running the wire command after the appropriate changes are made to the LZ Config file (`layerzero.config.ts`). You need to first set the `delegate` value, and then only the `owner` value.
-
-**First, set the `delegate`.**
-
-How to set delegate: https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/configuring-pathways#adding-delegate
-
-Now run
-
-```
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts
-```
-
-and execute the transactions.
-
-**Then, set the `owner`.**
-
-How to set owner: https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/configuring-pathways#adding-owner
-
-Now, run
-
-```
-npx hardhat lz:ownable:transfer-ownership --oapp-config layerzero.config.ts
-```
 
 ### Troubleshooting
 
