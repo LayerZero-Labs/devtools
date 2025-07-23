@@ -307,7 +307,7 @@ Congratulations, you have now sent an OFT cross-chain between Solana and Ethereu
 
 After successfully deploying your OFT, consider the following steps:
 
-- Review the [Choosing between OFT, OFT Adapter and Mint and Burn Adapter OFT](#choosing-between-oft-oft-adapter-and-mint-and-burn-adapter-oft) section in this README
+- Review the [Choosing between OFT, OFT Adapter and Mint and Burn Adapter OFT](#choosing-between-oft-oft-adapter-and-mint-and-burn-adapter-oft) section
 - Review the [Production Deployment Checklist](#production-deployment-checklist) before going to mainnet
 - Learn about [Security Stack](https://docs.layerzero.network/v2/developers/evm/protocol-gas-settings/security-stack)
 - Understand [Message Execution Options](https://docs.layerzero.network/v2/developers/evm/protocol-gas-settings/options)
@@ -317,7 +317,15 @@ After successfully deploying your OFT, consider the following steps:
 
 ## Choosing between OFT, OFT Adapter and Mint and Burn Adapter OFT
 
-The above instructions show how to create a regular OFT. However, you may want to use an existing token on Solana instead. In that case, you have two alternative options:
+This section explains the three different options available for creating OFTs on Solana and when to use each one.
+
+### OFT
+
+:information_source: Use regular OFT when you want to create a brand new token for cross-chain transfers. This creates a new SPL token with its own mint and metadata.
+
+```bash
+pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --only-oft-store true --amount 100000000000
+```
 
 ### OFT Adapter
 
