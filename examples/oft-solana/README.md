@@ -307,7 +307,7 @@ Congratulations, you have now sent an OFT cross-chain between Solana and Ethereu
 
 After successfully deploying your OFT, consider the following steps:
 
-- Review the [Choosing between OFT, OFT Adapter and Mint and Burn Adapter OFT](#choosing-between-oft-oft-adapter-and-mint-and-burn-adapter-oft) section
+- Review the [Choosing between OFT, OFT Adapter and OFT Mint-and-Burn-Adapter](#choosing-between-oft-oft-adapter-and-mint-and-burn-adapter-oft) section
 - Review the [Production Deployment Checklist](#production-deployment-checklist) before going to mainnet
 - Learn about [Security Stack](https://docs.layerzero.network/v2/developers/evm/protocol-gas-settings/security-stack)
 - Understand [Message Execution Options](https://docs.layerzero.network/v2/developers/evm/protocol-gas-settings/options)
@@ -318,6 +318,33 @@ After successfully deploying your OFT, consider the following steps:
 ## Choosing between OFT, OFT Adapter and Mint and Burn Adapter OFT
 
 This section explains the three different options available for creating OFTs on Solana and when to use each one.
+
+### Decision Tree
+
+<p align="center">
+<pre>
+              Do you have an existing Solana token (SPL or Token2022)?
+                                      │
+          ┌───────────────────────────┴───────────────────────────┐
+          │                                                       │
+         NO                                                     YES
+          │                                                       │
+  ✅ Use OFT (Preferred)                              Can you transfer the 
+  • Creates a new token                              Mint Authority to OFT 
+  • Uses burn and mint mechanism                     Store or new SPL Multisig?
+                                                              │
+                                                ┌────────────┴────────────┐
+                                                │                         │
+                                              YES                       NO/WON'T
+                                                │                         │
+                          ✅ Use OFT MABA (Mint-And-Burn Adapter)   ⚠️ Use OFT Adapter (Last Resort)
+                          • Uses existing token                    • Uses existing token
+                          • Transfers Mint Authority               • Keeps existing Mint Authority
+                            to OFT Store/Multisig                  • Uses lock and unlock mechanism
+                          • Uses burn and mint mechanism
+</pre>
+</p>
+
 
 ### OFT
 
