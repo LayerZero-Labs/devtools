@@ -17,6 +17,7 @@
 - [Prerequisite Knowledge](#prerequisite-knowledge)
 - [Requirements](#requirements)
 - [Scaffold this example](#scaffold-this-example)
+- [Helper Tasks](#helper-tasks)
 - [Setup](#setup)
 - [Build](#build)
 - [Deploy](#deploy)
