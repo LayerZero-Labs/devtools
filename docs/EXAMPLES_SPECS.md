@@ -22,6 +22,19 @@ Currently, this document will only detail the structure for the READMEs of the e
 1. **Header**
    - Goal: Branding + promote docs site + entrypoint
    - Contents: LayerZero logo + links to docs and dev portal
+   - Details: The logo should use the following code that ensures the right color logo is displayed depending on the mode (light vs dark):
+
+      ```
+      <p align="center">
+         <a href="https://layerzero.network">
+            <picture>
+               <source srcset="https://docs.layerzero.network/img/LayerZero_Logo_White.svg" media="(prefers-color-scheme: dark)">
+               <source srcset="https://docs.layerzero.network/img/LayerZero_Logo_Black.svg" media="(prefers-color-scheme: light)">
+               <img alt="LayerZero" src="https://docs.layerzero.network/img/LayerZero_Logo_Black.svg" style="width: 400px;">
+            </picture>
+         </a>
+      </p>
+      ``` 
 
 2. **Example Title**
    - Goal: What the example will teach
