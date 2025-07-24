@@ -4,6 +4,7 @@ import { BlockConfirmationsDefinition, BlockConfirmationsType, IMetadata } from 
 import { TwoWayConfig } from './types'
 import {
     METADATA_KEY_EVM_BLOCKED_MESSAGE,
+    METADATA_KEY_SOLANA_BLOCKED_MESSAGE,
     METADATA_KEY_RECEIVE_LIBRARY,
     METADATA_KEY_SEND_LIBRARY,
     METADATA_URL,
@@ -141,8 +142,7 @@ function resolveExecutorForDeployment(
 function resolveLibraryMetadataKey(isSend: boolean, isBlocked: boolean, deployment: { chainKey: string }) {
     if (isBlocked) {
         if (isSolanaDeployment(deployment)) {
-            throw new Error('BlockedMessageLib is not currently supported by simple config generator on Solana')
-            // return METADATA_KEY_SOLANA_BLOCKED_MESSAGE // @TODO uncomment this when blocked message lib is supported on Solana
+            return METADATA_KEY_SOLANA_BLOCKED_MESSAGE
         }
 
         return METADATA_KEY_EVM_BLOCKED_MESSAGE

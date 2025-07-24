@@ -581,7 +581,7 @@ describe('config-metadata', () => {
             ).rejects.toThrow('Can\'t find executor for endpoint with eid: "49999".')
         })
 
-        it('supports does not support blocked message lib on Solana', async () => {
+        it('supports blocked message lib on Solana', async () => {
             const avalancheContract = {
                 eid: 40106,
                 contractName: 'MyOFT',
@@ -602,9 +602,12 @@ describe('config-metadata', () => {
                 ],
             ]
 
-            await expect(generateConnectionsConfig(pathways)).rejects.toThrow(
-                'BlockedMessageLib is not currently supported by simple config generator on Solana'
-            )
+            const config = await generateConnectionsConfig(pathways)
+            expect(config).toHaveLength(2)
+
+            // Verify blocked message lib is configured for both directions
+            expect(config[0]?.config?.sendLibrary).toBeDefined()
+            expect(config[1]?.config?.sendLibrary).toBeDefined()
         })
     })
 
