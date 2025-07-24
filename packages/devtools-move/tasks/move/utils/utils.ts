@@ -385,7 +385,13 @@ function formatInitiaArgumentValue(arg: any): any {
 
 function formatArgumentValue(arg: any): any {
     if (Array.isArray(arg)) {
-        return arg.map((item: any) => item)
+        return arg.map((item: any) => formatArgumentValue(item))
+    }
+    if (arg instanceof Uint8Array) {
+        return Array.from(arg)
+    }
+    if (typeof arg === 'bigint') {
+        return arg.toString()
     }
     return arg
 }
