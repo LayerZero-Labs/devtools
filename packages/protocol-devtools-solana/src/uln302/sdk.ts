@@ -226,7 +226,6 @@ export class Uln302 extends OmniSDK implements IUln302 {
     protected serializeUlnConfig({
         confirmations = BigInt(0),
         requiredDVNs,
-        requiredDVNCount = requiredDVNs.length,
         optionalDVNs = [],
         optionalDVNThreshold = 0,
     }: Uln302UlnUserConfig): SerializedUln302UlnConfig {
@@ -235,7 +234,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
             optionalDVNThreshold,
             requiredDVNs: serializeDVNs(requiredDVNs),
             optionalDVNs: serializeDVNs(optionalDVNs),
-            requiredDVNCount,
+            requiredDVNCount: requiredDVNs.length,
             optionalDVNCount: optionalDVNs.length,
         }
     }
