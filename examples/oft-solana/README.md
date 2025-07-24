@@ -8,7 +8,6 @@
   </a>
 </p>
 
-
 <p align="center">
  <a href="https://docs.layerzero.network/" style="color: #a77dff">LayerZero Docs</a>
 </p>
