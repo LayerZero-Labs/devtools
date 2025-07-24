@@ -4357,6 +4357,9 @@ importers:
 
   packages/metadata-tools:
     devDependencies:
+      '@ethersproject/address':
+        specifier: ~5.7.0
+        version: 5.7.0
       '@layerzerolabs/devtools-evm-hardhat':
         specifier: ~4.0.0
         version: link:../devtools-evm-hardhat
