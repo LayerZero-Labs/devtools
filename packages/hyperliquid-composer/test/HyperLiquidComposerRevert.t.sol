@@ -68,7 +68,8 @@ contract HyperLiquidComposerRevertTest is Test {
             HL_LZ_ENDPOINT_V2,
             address(oft),
             ALICE.coreIndexId,
-            ALICE.decimalDiff
+            ALICE.decimalDiff,
+            userA
         );
         DST_EID = oft.endpoint().eid();
 
@@ -103,11 +104,7 @@ contract HyperLiquidComposerRevertTest is Test {
     }
 
     function test_panic_invalid_message() public {
-        bytes memory revertMessage = abi.encodeWithSelector(
-            IHyperLiquidComposerErrors.HyperLiquidComposer_InvalidComposeMessage.selector,
-            ""
-        );
-        vm.expectRevert(revertMessage, address(hyperLiquidComposer));
+        vm.expectRevert();
 
         vm.startPrank(HL_LZ_ENDPOINT_V2);
         hyperLiquidComposer.lzCompose(address(oft), bytes32(0), "", msg.sender, "");

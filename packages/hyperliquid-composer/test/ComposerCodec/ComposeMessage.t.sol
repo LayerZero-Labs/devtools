@@ -54,15 +54,15 @@ contract ComposeMessageTest is Test {
             HL_LZ_ENDPOINT_V2,
             address(oft),
             ALICE.coreIndexId,
-            ALICE.decimalDiff
+            ALICE.decimalDiff,
+            sender
         );
     }
 
-    function test_validateAndDecodeMessage_EncodingVariants(address _receiver, bool _useEncodePacked) public view {
+    function test_validateAndDecodeMessage(address _receiver) public view {
         vm.assume(_receiver != address(0));
 
-        bytes memory encodedReceiver = _useEncodePacked ? abi.encodePacked(_receiver) : abi.encode(_receiver);
-        bytes memory encodedMessage = abi.encode(1 ether, encodedReceiver);
+        bytes memory encodedMessage = abi.encode(1 ether, _receiver);
 
         bytes memory message = _createMessage(encodedMessage, DEFAULT_AMOUNT, "");
 
@@ -84,11 +84,10 @@ contract ComposeMessageTest is Test {
     function validateAndDecodeMessage(
         bytes calldata _message
     ) public view returns (uint256 minMsgValue, address receiver, uint256 amountLD) {
-        bytes memory maybeReceiver = OFTComposeMsgCodec.composeMsg(_message);
-        bytes32 senderBytes32 = OFTComposeMsgCodec.composeFrom(_message);
+        bytes memory _msg = OFTComposeMsgCodec.composeMsg(_message);
 
         amountLD = OFTComposeMsgCodec.amountLD(_message);
-        (minMsgValue, receiver) = hyperLiquidComposer.validate_msg_or_refund(maybeReceiver, senderBytes32, amountLD);
+        (minMsgValue, receiver) = hyperLiquidComposer.decode_message(_msg);
     }
 
     function composeMsg(bytes calldata _message) public pure returns (bytes memory) {

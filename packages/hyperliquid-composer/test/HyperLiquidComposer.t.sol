@@ -81,7 +81,8 @@ contract HyperLiquidComposerTest is Test {
             HL_LZ_ENDPOINT_V2,
             address(oft),
             ALICE.coreIndexId,
-            ALICE.decimalDiff
+            ALICE.decimalDiff,
+            userA
         );
         DST_EID = oft.endpoint().eid();
 
@@ -111,7 +112,8 @@ contract HyperLiquidComposerTest is Test {
             HL_LZ_ENDPOINT_V2_TESTNET,
             address(oftTestnet),
             ALICE.coreIndexId,
-            ALICE.decimalDiff
+            ALICE.decimalDiff,
+            userA
         );
 
         assertEq(hypeComposerTestnet.hypeIndexByChainId(998), 1105);
@@ -128,14 +130,15 @@ contract HyperLiquidComposerTest is Test {
             HL_LZ_ENDPOINT_V2_MAINNET,
             address(oftMainnet),
             ALICE.coreIndexId,
-            ALICE.decimalDiff
+            ALICE.decimalDiff,
+            userA
         );
 
         assertEq(hypeComposerMainnet.hypeIndexByChainId(999), 150);
     }
 
     function test_SendSpot_no_FundAddress() public {
-        bytes memory composeMsg = abi.encode(0, abi.encodePacked(userB));
+        bytes memory composeMsg = abi.encode(0, userB);
 
         // Build composerMsg similar to the outcome of OFTCore.send()
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
@@ -170,7 +173,7 @@ contract HyperLiquidComposerTest is Test {
     }
 
     function test_SendSpot_and_FundAddress() public {
-        bytes memory composeMsg = abi.encode(AMOUNT_TO_FUND, abi.encodePacked(userB));
+        bytes memory composeMsg = abi.encode(AMOUNT_TO_FUND, userB);
 
         // Build composerMsg similar to the outcome of OFTCore.send()
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
