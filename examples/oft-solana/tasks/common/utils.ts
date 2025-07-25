@@ -106,7 +106,10 @@ export function isEmptyOptionsEvm(optionsHex?: string): boolean {
 }
 
 export function isEmptyOptionsSolana(optionsBytes?: Uint8Array): boolean {
-    return !optionsBytes || Buffer.from(optionsBytes).toString('hex') === '0003' // empty options type 3 without 0x prefix
+    if (!optionsBytes) {
+        return true // Treat undefined or null as empty options
+    }
+    return Buffer.from(optionsBytes).toString('hex') === '0003' // empty options type 3 without 0x prefix
 }
 
 export function decodeLzReceiveOptions(hex: string): string {
