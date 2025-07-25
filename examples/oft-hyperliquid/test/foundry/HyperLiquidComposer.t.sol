@@ -22,6 +22,10 @@ contract HyperLiquidComposerTest is Test {
     IHyperAsset public ALICE;
     IHyperAsset public HYPE;
     address public constant HL_LZ_ENDPOINT_V2 = 0xf9e1815F151024bDE4B7C10BAC10e8Ba9F6b53E1;
+
+    address public constant HL_LZ_ENDPOINT_V2_TESTNET = 0xf9e1815F151024bDE4B7C10BAC10e8Ba9F6b53E1;
+    address public constant HL_LZ_ENDPOINT_V2_MAINNET = 0x3A73033C0b1407574C76BdBAc67f126f6b4a9AA9;
+
     address public constant HLP_CORE_WRITER = 0x3333333333333333333333333333333333333333;
     address public constant HLP_PRECOMPILE_READ_SPOT_BALANCE = 0x0000000000000000000000000000000000000801;
     // Ethereum Sepolia
@@ -38,12 +42,6 @@ contract HyperLiquidComposerTest is Test {
     uint64 public constant AMOUNT_TO_SEND = 1e18;
     uint64 public constant AMOUNT_TO_FUND = 100 gwei;
     uint64 public constant DUST = 1 wei;
-
-    address public constant HYPERLIQUID_PRECOMPILE = 0x2222222222222222222222222222222222222222;
-    address public constant SPOT_BALANCE_PRECOMPILE = 0x0000000000000000000000000000000000000801;
-
-    uint64 public constant ALICE_HL_INDEX_ID = 1231;
-    uint64 public constant HYPE_HL_INDEX_ID = 1105;
 
     function setUp() public {
         // Skip test if fork fails
@@ -102,8 +100,42 @@ contract HyperLiquidComposerTest is Test {
         assertEq(oftAsset.decimalDiff, ALICE.decimalDiff);
     }
 
-    function test_SendSpot_no_FundAddress_positive_ratio() public {
-        bytes memory composeMsg = abi.encodePacked(userB);
+    function test_hypeIndexByChainId_testnet() public {
+        try vm.createSelectFork("https://rpc.hyperliquid-testnet.xyz/evm") {} catch {
+            console.log("Forking testnet https://rpc.hyperliquid-testnet.xyz/evm failed");
+            vm.skip(true);
+        }
+
+        MyOFT oftTestnet = new MyOFT("test", "test", HL_LZ_ENDPOINT_V2_TESTNET, msg.sender);
+        HyperLiquidComposer hypeComposerTestnet = new HyperLiquidComposer(
+            HL_LZ_ENDPOINT_V2_TESTNET,
+            address(oftTestnet),
+            ALICE.coreIndexId,
+            ALICE.decimalDiff
+        );
+
+        assertEq(hypeComposerTestnet.hypeIndexByChainId(998), 1105);
+    }
+
+    function test_hypeIndexByChainId_mainnet() public {
+        try vm.createSelectFork("https://rpc.hyperliquid.xyz/evm") {} catch {
+            console.log("Forking mainnet https://rpc.hyperliquid.xyz/evm failed");
+            vm.skip(true);
+        }
+
+        MyOFT oftMainnet = new MyOFT("test", "test", HL_LZ_ENDPOINT_V2_MAINNET, msg.sender);
+        HyperLiquidComposer hypeComposerMainnet = new HyperLiquidComposer(
+            HL_LZ_ENDPOINT_V2_MAINNET,
+            address(oftMainnet),
+            ALICE.coreIndexId,
+            ALICE.decimalDiff
+        );
+
+        assertEq(hypeComposerMainnet.hypeIndexByChainId(999), 150);
+    }
+
+    function test_SendSpot_no_FundAddress() public {
+        bytes memory composeMsg = abi.encode(0, abi.encodePacked(userB));
 
         // Build composerMsg similar to the outcome of OFTCore.send()
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
@@ -137,8 +169,8 @@ contract HyperLiquidComposerTest is Test {
         assertEq(oft.balanceOf(userB), balanceBefore + DUST);
     }
 
-    function test_SendSpot_and_FundAddress_positive_ratio() public {
-        bytes memory composeMsg = abi.encodePacked(userB);
+    function test_SendSpot_and_FundAddress() public {
+        bytes memory composeMsg = abi.encode(AMOUNT_TO_FUND, abi.encodePacked(userB));
 
         // Build composerMsg similar to the outcome of OFTCore.send()
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(

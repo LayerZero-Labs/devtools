@@ -62,45 +62,14 @@ contract ComposeMessageTest is Test {
         vm.assume(_receiver != address(0));
 
         bytes memory encodedReceiver = _useEncodePacked ? abi.encodePacked(_receiver) : abi.encode(_receiver);
+        bytes memory encodedMessage = abi.encode(1 ether, encodedReceiver);
 
-        bytes memory message = _createMessage(encodedReceiver, DEFAULT_AMOUNT, "");
+        bytes memory message = _createMessage(encodedMessage, DEFAULT_AMOUNT, "");
 
-        (address decodedReceiver, uint256 decodedAmount) = this.validateAndDecodeMessage(message);
+        (uint256 _minMsgValue, address decodedReceiver, uint256 decodedAmount) = this.validateAndDecodeMessage(message);
+        assertEq(_minMsgValue, 1 ether);
         assertEq(decodedReceiver, _receiver);
         assertEq(decodedAmount, DEFAULT_AMOUNT);
-    }
-
-    function test_validateAndDecodeMessage_InvalidLength(
-        address _receiver,
-        bytes memory _noise,
-        bool _useEncodePacked
-    ) public {
-        vm.assume(_receiver != address(0));
-        vm.assume(_noise.length > 0);
-
-        // When the noise length is 12, abi.encodePacked (20 bytes) + 12 bytes = 32 bytes
-        // 32 bytes is the length of the message when we use abi.encode
-        // This causes the abi.decode to fail as the 32 byte "address" is not valid
-        bool isNoiseLengthNot12 = _noise.length != 12;
-
-        bytes memory encodedReceiver = _useEncodePacked ? abi.encodePacked(_receiver) : abi.encode(_receiver);
-
-        bytes memory message = _createMessage(encodedReceiver, DEFAULT_AMOUNT, _noise);
-
-        if (isNoiseLengthNot12 && _useEncodePacked) {
-            bytes memory expectedRevertMessage = this.composeMsg(message);
-            address expectedRevertTo = sender;
-            uint256 expectedRevertAmount = DEFAULT_AMOUNT;
-            bytes memory expectedRevertReason = abi.encodeWithSelector(
-                IHyperLiquidComposerErrors.HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength.selector,
-                expectedRevertMessage,
-                expectedRevertMessage.length
-            );
-            vm.expectRevert(createErrorMessage(expectedRevertTo, expectedRevertAmount, expectedRevertReason));
-        } else {
-            vm.expectRevert();
-        }
-        this.validateAndDecodeMessage(message);
     }
 
     function _createMessage(
@@ -114,12 +83,12 @@ contract ComposeMessageTest is Test {
 
     function validateAndDecodeMessage(
         bytes calldata _message
-    ) public view returns (address _receiver, uint256 _amountLD) {
+    ) public view returns (uint256 minMsgValue, address receiver, uint256 amountLD) {
         bytes memory maybeReceiver = OFTComposeMsgCodec.composeMsg(_message);
         bytes32 senderBytes32 = OFTComposeMsgCodec.composeFrom(_message);
 
-        _amountLD = OFTComposeMsgCodec.amountLD(_message);
-        _receiver = hyperLiquidComposer.validate_addresses_or_refund(maybeReceiver, senderBytes32, _amountLD);
+        amountLD = OFTComposeMsgCodec.amountLD(_message);
+        (minMsgValue, receiver) = hyperLiquidComposer.validate_msg_or_refund(maybeReceiver, senderBytes32, amountLD);
     }
 
     function composeMsg(bytes calldata _message) public pure returns (bytes memory) {

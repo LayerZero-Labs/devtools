@@ -207,7 +207,7 @@ Rent-exempt minimum: 3.87415872 SOL
 
 ## Deploy
 
-:information_source: LayerZero's default deployment path for Solana OFTs require you to deploy your own OFT program as this means you own the Upgrade Authority and don't rely on LayerZero to manage that authority for you. Read [this](https://neodyme.io/en/blog/solana_upgrade_authority/) to understand more no why this is important.
+:information_source: LayerZero's default deployment path for Solana OFTs require you to deploy your own OFT program as this means you own the Upgrade Authority and don't rely on LayerZero to manage that authority for you. Read [this](https://neodyme.io/en/blog/solana_upgrade_authority/) to understand more on why this is important.
 
 To deploy a Solana OFT, you need to both deploy an OFT Program and also create the OFT Store, alongside the other configuration steps that are handled by the provided tasks. To understand the relationship between the OFT Program and the OFT Store, read the section ['The OFT Program'](https://docs.layerzero.network/v2/developers/solana/oft/account#the-oft-program) on the LayerZero docs.
 

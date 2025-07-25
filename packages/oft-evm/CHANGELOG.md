@@ -1,5 +1,15 @@
 # @layerzerolabs/oft-evm
 
+## 3.2.0
+
+### Minor Changes
+
+- 75cbd95: Implements custom overflow checking to prevent silent truncation of funds when shared decimals is changed and reduces the decimalConversionRate. OpenZeppelin's SafeCast toUint64() is not used in this implementation.
+
+### Patch Changes
+
+- @layerzerolabs/oapp-evm@0.3.2
+
 ## 3.1.4
 
 ### Patch Changes
