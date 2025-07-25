@@ -4,11 +4,6 @@ pragma solidity ^0.8.20;
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { IReceiveUlnE2 } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IReceiveUlnE2.sol";
 
-error InvalidLocalEid(uint32 localEid);
-
-event PayloadVerified(bytes32 indexed guid);
-event PayloadCommitted(bytes32 indexed guid);
-
 // A message on the destination chain has to go through three steps:
 // 1. verify -> 2. commit -> 3. execute
 
@@ -18,6 +13,11 @@ event PayloadCommitted(bytes32 indexed guid);
  * @dev We accept sender and receiver as bytes32 to handle arbitrary remote address formats.
  */
 contract SimpleDVN is Ownable {
+
+    error InvalidLocalEid(uint32 localEid);
+    event PayloadVerified(bytes32 indexed guid);
+    event PayloadCommitted(bytes32 indexed guid);
+
     // Version prefix for Packet encoding (mirrors PacketV1Codec but without assumptions about address types)
     uint8 public constant PACKET_VERSION = 1;
 
