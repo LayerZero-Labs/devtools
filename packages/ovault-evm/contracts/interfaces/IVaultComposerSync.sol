@@ -1,33 +1,39 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.22;
 
+import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
+
 import { IOAppComposer } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol";
 import { SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 
-interface IOVaultComposer is IOAppComposer {
+interface IVaultComposerSync is IOAppComposer {
     /// ========================== EVENTS =====================================
     event Sent(bytes32 indexed guid);
-    event SentOnHub(address indexed receiver, uint256 shares);
-
     event Refunded(bytes32 indexed guid);
 
     /// ========================== Error Messages =====================================
-    error ShareOFTShouldBeLockboxAdapter(address share);
-    error AssetOFTInnerTokenShouldBeOvaultAsset(address assetInnerToken, address vaultAsset);
-    error ShareOFTInnerTokenShouldBeOVault(address shareInnerToken, address vaultToken);
+    error ShareOFTNotAdapter(address shareOFT);
+    error ShareTokenNotVault(address shareERC20, address vault);
+    error AssetTokenNotVaultAsset(address assetERC20, address vaultAsset);
 
     error OnlyEndpoint(address caller);
     error OnlySelf(address caller);
-    error OFTCannotVaultOperation(address oft);
+    error OnlyValidComposeCaller(address caller);
 
-    error InvalidMsgValue(uint256 expectedMsgValue, uint256 msgValuePassed);
+    error InsufficientMsgValue(uint256 expectedMsgValue, uint256 actualMsgValue);
 
-    error SlippageEncountered(uint256 amountLD, uint256 minAmountLD);
+    error SlippageExceeded(uint256 amountLD, uint256 minAmountLD);
 
     /// ========================== GLOBAL VARIABLE FUNCTIONS =====================================
+    function VAULT() external view returns (IERC4626);
+
     function ASSET_OFT() external view returns (address);
+    function ASSET_ERC20() external view returns (address);
     function SHARE_OFT() external view returns (address);
+    function SHARE_ERC20() external view returns (address);
+
     function ENDPOINT() external view returns (address);
+    function VAULT_EID() external view returns (uint32);
 
     /// ========================== Proxy OFT =====================================
     function depositAndSend(uint256 assetAmount, SendParam memory sendParam, address refundAddress) external payable;
