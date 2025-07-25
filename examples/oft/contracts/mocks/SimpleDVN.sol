@@ -28,7 +28,7 @@ contract SimpleDVN is Ownable {
     IReceiveUlnE2 public immutable receiveUln;
 
     /// @param _receiveUln  Address of this chain's deployed ReceiveUln302
-    /// @param _localEid    EID of this chain (receive side)
+    /// @param _localEid    EID of this chain (receive/destination side)
     constructor(address _receiveUln, uint32 _localEid) Ownable(msg.sender) {
         receiveUln = IReceiveUlnE2(_receiveUln);
         localEid = _localEid;
