@@ -13,13 +13,13 @@ import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/Opti
 import { SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
-import { IOVaultComposer, FailedState } from "../../contracts/interfaces/IOVaultComposer.sol";
-import { OVaultComposer } from "../../contracts/OVaultComposer.sol";
+import { IVaultComposerSync } from "../../contracts/interfaces/IVaultComposerSync.sol";
+import { VaultComposerSync } from "../../contracts/VaultComposerSync.sol";
+import { VaultComposerSyncBaseTest } from "./VaultComposerSync_Base.t.sol";
 
-import { OVaultComposerBaseTest } from "./OVaultComposer_Base.t.sol";
 import { console } from "forge-std/console.sol";
 
-contract OVaultComposerE2ETest is OVaultComposerBaseTest {
+contract VaultComposerSyncE2ETest is VaultComposerSyncBaseTest {
     using OptionsBuilder for bytes;
 
     /// @dev Not profiled
@@ -42,7 +42,7 @@ contract OVaultComposerE2ETest is OVaultComposerBaseTest {
 
         (uint256 mintAssets, ) = _setTradeRatioAssetToShare(1, 2);
 
-        address composerAddress = address(OVaultComposerArb);
+        address composerAddress = address(VaultComposerSyncArb);
         uint256 initialPolygonBalance = shareOFT_pol.balanceOf(userA);
 
         /// @dev This is the send param that is passed as the compose payload to the final OFT
@@ -79,12 +79,12 @@ contract OVaultComposerE2ETest is OVaultComposerBaseTest {
         assetOFT_eth.send{ value: fee.nativeFee }(ethToArbSendParam, fee, payable(address(this)));
         vm.stopPrank();
 
-        assertEq(assetOFT_arb.balanceOf(address(oVault_arb)), assetOFT_arb.totalSupply(), mintAssets);
+        assertEq(assetOFT_arb.balanceOf(address(vault_arb)), assetOFT_arb.totalSupply(), mintAssets);
 
         verifyPackets(ARB_EID, addressToBytes32(address(assetOFT_arb)));
 
         assertEq(
-            assetOFT_arb.balanceOf(composerAddress) + assetOFT_arb.balanceOf(address(oVault_arb)),
+            assetOFT_arb.balanceOf(composerAddress) + assetOFT_arb.balanceOf(address(vault_arb)),
             assetOFT_arb.totalSupply(),
             mintAssets + TOKENS_TO_SEND
         );
@@ -98,7 +98,7 @@ contract OVaultComposerE2ETest is OVaultComposerBaseTest {
 
         vm.prank(arbEndpoint);
         vm.deal(address(arbEndpoint), 1000 ether);
-        OVaultComposerArb.lzCompose{ value: lzComposeMsgValue, gas: lzComposeGasValue }(
+        VaultComposerSyncArb.lzCompose{ value: lzComposeMsgValue, gas: lzComposeGasValue }(
             address(assetOFT_arb),
             addressToBytes32(address(assetOFT_arb)),
             composeMsg,
