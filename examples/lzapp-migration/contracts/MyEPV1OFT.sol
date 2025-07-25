@@ -3,11 +3,11 @@ pragma solidity ^0.8.0;
 
 import { OFTV2 } from "@layerzerolabs/solidity-examples/contracts/token/oft/v2/OFTV2.sol";
 
-/// @title MyEndpointV1OFTV2
+/// @title MyEPV1OFT
 /// @notice **This contract is an EndpointV1 OFT implementation** and should not be used for new OFT deployments.
 /// @dev The name `OFTV2`refers to the V2 implementation of the OFT on **LayerZero EndpointV1** and **not** **LayerZero EndpointV2**
 ///      The `solidity-examples` repo is exclusively for EndpointV1 OFT
-contract MyEndpointV1OFTV2 is OFTV2 {
+contract MyEPV1OFT is OFTV2 {
     /// @notice Initializes an OFT token with LayerZero's EndpointV1.
     /// @param _name The name of the token.
     /// @param _symbol The symbol of the token.
