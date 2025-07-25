@@ -122,21 +122,35 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         return lib
     }
 
+    /**
+     * Gets the send library for a given OApp and destination endpoint
+     * This method has been updated to properly detect BlockedMessageLib
+     */
     @AsyncRetriable()
     async getSendLibrary(sender: OmniAddress, dstEid: EndpointId): Promise<OmniAddress | undefined> {
         const eidLabel = formatEid(dstEid)
 
         this.logger.debug(`Getting send library for eid ${dstEid} (${eidLabel}) and address ${sender}`)
 
-        const config = await mapError(
-            () => this.program.getSendLibrary(this.connection, new PublicKey(sender), dstEid),
-            (error) =>
-                new Error(
-                    `Failed to get the send library for ${this.label} for OApp ${sender} for ${eidLabel}: ${error}`
-                )
-        )
+        try {
+            const config = await this.program.getSendLibrary(this.connection, new PublicKey(sender), dstEid)
+            return config?.programId?.toBase58() ?? undefined
+        } catch (error: any) {
+            // Handle the specific error for sendLibInfo being null
+            // This can happen when BlockedMessageLib is set
+            if (error?.message?.includes('sendLibInfo should not be null')) {
+                this.logger.debug(`Encountered sendLibInfo error, likely BlockedMessageLib is set`)
 
-        return config?.programId?.toBase58() ?? undefined
+                // When this error occurs, we can't determine the library
+                // Return undefined to indicate unknown state
+                return undefined
+            }
+
+            // Re-throw the error if we couldn't handle it
+            throw new Error(
+                `Failed to get the send library for ${this.label} for OApp ${sender} for ${eidLabel}: ${error}`
+            )
+        }
     }
 
     @AsyncRetriable()
@@ -148,21 +162,30 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
 
         this.logger.debug(`Getting receive library for eid ${srcEid} (${eidLabel}) and address ${receiver}`)
 
-        const config = await mapError(
-            () => this.program.getReceiveLibrary(this.connection, new PublicKey(receiver), srcEid),
-            (error) =>
-                new Error(
-                    `Failed to get the receive library for ${this.label} for OApp ${receiver} for ${eidLabel}: ${error}`
-                )
-        )
+        try {
+            const config = await this.program.getReceiveLibrary(this.connection, new PublicKey(receiver), srcEid)
+            const lib = config?.programId?.toBase58() ?? undefined
+            const isDefault = config?.isDefault ?? false
+            this.logger.debug(
+                `Got receive library for eid ${srcEid} (${eidLabel}) and address ${receiver}: ${lib} (${isDefault ? 'default' : 'not default'})`
+            )
+            return [lib, isDefault]
+        } catch (error: any) {
+            // Handle the specific error for messageLibInfo being null
+            // This can happen when BlockedMessageLib is set
+            if (error?.message?.includes('messageLibInfo should not be null')) {
+                this.logger.debug(`Encountered messageLibInfo error, likely BlockedMessageLib is set`)
 
-        const lib = config?.programId?.toBase58() ?? undefined
-        const isDefault = config?.isDefault ?? false
-        this.logger.debug(
-            `Got receive library for eid ${srcEid} (${eidLabel}) and address ${receiver}: ${lib} (${isDefault ? 'default' : 'not default'})`
-        )
+                // When this error occurs, we can't determine the library
+                // Return undefined to indicate unknown state
+                return [undefined, false]
+            }
 
-        return [lib, isDefault]
+            // Re-throw the error if we couldn't handle it
+            throw new Error(
+                `Failed to get the receive library for ${this.label} for OApp ${receiver} for ${eidLabel}: ${error}`
+            )
+        }
     }
 
     async setDefaultReceiveLibrary(
@@ -349,6 +372,13 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         setConfigParams: SetConfigParam[]
     ): Promise<OmniTransaction[]> {
         this.logger.debug(`Setting config for OApp ${oapp} to ULN ${uln} with config ${printJson(setConfigParams)}`)
+
+        // Check if this is a BlockedMessageLib
+        const isBlocked = await this.isBlockedMessageLib(new PublicKey(uln))
+        if (isBlocked) {
+            this.logger.verbose(`Skipping setConfig for BlockedMessageLib at ${uln} for OApp ${oapp}`)
+            return []
+        }
 
         // We'll use this to hold the transaction that receives any new instructions
         //
@@ -548,8 +578,8 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         throw new TypeError(`isRegisteredLibrary() not implemented on Solana Endpoint SDK`)
     }
 
-    async isBlockedLibrary(_uln: OmniAddress): Promise<boolean> {
-        throw new TypeError(`isBlockedLibrary() not implemented on Solana Endpoint SDK`)
+    async isBlockedLibrary(uln: OmniAddress): Promise<boolean> {
+        return this.isBlockedMessageLib(new PublicKey(uln))
     }
 
     async registerLibrary(): Promise<OmniTransaction> {
@@ -745,6 +775,14 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         const instruction = await mapError(
             async () => {
                 const libPublicKey = new PublicKey(lib)
+
+                // Check if this is a BlockedMessageLib first
+                const isBlocked = await this.isBlockedMessageLib(libPublicKey)
+                if (isBlocked) {
+                    this.logger.verbose(`Skipping initOAppConfig for BlockedMessageLib at ${lib} for OApp ${oapp}`)
+                    return null
+                }
+
                 const msgLibInterface = libPublicKey.equals(SimpleMessageLibProgram.PROGRAM_ID)
                     ? (this.logger.debug(`Using SimpleMessageLib at ${libPublicKey} to initialize OApp config`),
                       new SimpleMessageLibProgram.SimpleMessageLib(libPublicKey))
@@ -773,5 +811,41 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
                 description: `Initializing OApp config for OApp ${oapp} on ${eidLabel}`,
             },
         ]
+    }
+
+    /**
+     * Checks if a message library is a BlockedMessageLib
+     * BlockedMessageLib has version major=type(uint64).max and doesn't support setConfig
+     *
+     * @remarks
+     * BlockedMessageLib is a special library used to block message sending/receiving on certain pathways.
+     * It only implements a version() method that returns:
+     * - major: type(uint64).max (18446744073709551615)
+     * - minor: 255
+     * - endpointVersion: 2
+     *
+     * Unlike ULN or SimpleMessageLib, it does not implement:
+     * - set_config() method
+     * - init_config() method
+     *
+     * Therefore, we must skip any configuration attempts for BlockedMessageLib to avoid on-chain errors.
+     */
+    public async isBlockedMessageLib(msgLibProgram: PublicKey): Promise<boolean> {
+        try {
+            const msgLibVersion = await this.program.getMessageLibVersion(
+                this.connection,
+                this.userAccount, // Use a default account for version check
+                msgLibProgram
+            )
+
+            // BlockedMessageLib returns major=type(uint64).max (18446744073709551615)
+            // which might be represented as 255 when cast to uint8
+            return (
+                msgLibVersion?.major.toString() === '18446744073709551615' || msgLibVersion?.major.toString() === '255'
+            )
+        } catch (error) {
+            this.logger.debug(`Failed to check if ${msgLibProgram.toBase58()} is BlockedMessageLib: ${error}`)
+            return false
+        }
     }
 }
