@@ -36,9 +36,30 @@ interface IVaultComposerSync is IOAppComposer {
     function VAULT_EID() external view returns (uint32);
 
     /// ========================== Proxy OFT =====================================
+
+    /**
+     * @notice Deposits ERC20 assets from the caller into the vault and sends them to the recipient
+     * @param assetAmount The number of ERC20 tokens to deposit and send
+     * @param sendParam Parameters on how to send the shares to the recipient
+     * @param refundAddress Address to receive excess `msg.value`
+     */
     function depositAndSend(uint256 assetAmount, SendParam memory sendParam, address refundAddress) external payable;
+
+    /**
+     * @notice Redeems vault shares and sends the resulting assets to the user
+     * @param shareAmount The number of vault shares to redeem
+     * @param sendParam Parameter that defines how to send the assets
+     * @param refundAddress Address to receive excess payment of the LZ fees
+     */
     function redeemAndSend(uint256 shareAmount, SendParam memory sendParam, address refundAddress) external payable;
 
+    /**
+     * @notice Quotes the send operation for the given OFT and SendParam
+     * @param oft The OFT contract address to quote
+     * @param sendParam The parameters for the send operation
+     * @return MessagingFee The estimated fee for the send operation
+     * @dev This function can be overridden to implement custom quoting logic
+     */
     function quoteSend(address oft, SendParam memory sendParam) external view returns (MessagingFee memory);
 
     /// ========================== Receive =====================================
