@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.11.2
+
+### Patch Changes
+
+- 368b4b4: oft-solana: introduce named variables and use exact value for sending to Solana
+
 ## 0.11.1
 
 ### Patch Changes
