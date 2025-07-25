@@ -22,6 +22,19 @@ Currently, this document will only detail the structure for the READMEs of the e
 1. **Header**
    - Goal: Branding + promote docs site + entrypoint
    - Contents: LayerZero logo + links to docs and dev portal
+   - Details: The logo should use the following code that ensures the right color logo is displayed depending on the mode (light vs dark):
+
+      ```
+      <p align="center">
+         <a href="https://layerzero.network">
+            <picture>
+               <source srcset="https://docs.layerzero.network/img/LayerZero_Logo_White.svg" media="(prefers-color-scheme: dark)">
+               <source srcset="https://docs.layerzero.network/img/LayerZero_Logo_Black.svg" media="(prefers-color-scheme: light)">
+               <img alt="LayerZero" src="https://docs.layerzero.network/img/LayerZero_Logo_Black.svg" style="width: 400px;">
+            </picture>
+         </a>
+      </p>
+      ``` 
 
 2. **Example Title**
    - Goal: What the example will teach
@@ -97,7 +110,9 @@ Currently, this document will only detail the structure for the READMEs of the e
 
     16.4. **LayerZero Hardhat Helper Tasks (detailed)**
        - Goal: Understand all helper tasks
-       - Contents: Link to docs + list of built-in and local tasks
+       - Contents:
+         - Link to docs for the built-in tasks (after the page has been created in docs)
+         - local tasks (defined in src/tasks/index.ts) should have their params listed (manual style)
 
     16.5. **Contract/Program Verification**
        - Goal: Verify deployments
@@ -107,7 +122,7 @@ Currently, this document will only detail the structure for the READMEs of the e
        - Goal: Resolve errors and setup issues
        - Contents: Link to general troubleshooting + local fixes
 
-Any sections that don't appear in the above list should be considered for removal.
+Any sections that don't appear in the above list should be considered for removal. Before removing, ask the user for confirmation.
 
 
 ---
@@ -124,4 +139,4 @@ Any sections that don't appear in the above list should be considered for remova
 ## Example Code Principles
 
 1. **Options-first**: Enforced Options implementation and instructions should be included by default (e.g. in `layerzero.config.ts`).
-2. **Two chains only**: Examples should use only 2 chains by default to reduce testnet setup friction; use “Add other chains” section to scale up if needed.
+2. **Two chains only**: Examples should use only 2 chains by default to reduce testnet setup friction; use “Add other chains” section to scale up if needed. For EVM, prefer using the following in the following order: Optimism Sepolia, Arbitrum Sepolia.
