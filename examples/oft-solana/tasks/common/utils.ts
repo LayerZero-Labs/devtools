@@ -3,6 +3,7 @@ import { Connection, PublicKey } from '@solana/web3.js'
 import { OmniPoint } from '@layerzerolabs/devtools'
 import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import { createSolanaConnectionFactory, createSolanaSignerFactory } from '@layerzerolabs/devtools-solana'
+import { createLogger } from '@layerzerolabs/io-devtools'
 import { ChainType, EndpointId, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { UlnProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
@@ -13,6 +14,8 @@ import { createOFTFactory } from '@layerzerolabs/ua-devtools-solana'
 import { createAptosOAppFactory } from '../aptos'
 
 export { createSolanaConnectionFactory }
+
+const logger = createLogger()
 
 export const deploymentMetadataUrl = 'https://metadata.layerzero-api.com/v1/metadata/deployments'
 
@@ -98,16 +101,12 @@ function formatBigIntForDisplay(n: bigint) {
     return n.toLocaleString().replace(/,/g, '_')
 }
 
-function bufferEquals(a: Uint8Array, b: Uint8Array): boolean {
-    return a.length === b.length && a.every((val, i) => val === b[i])
-}
-
 export function isEmptyOptionsEvm(optionsHex?: string): boolean {
     return !optionsHex || optionsHex === '0x' || optionsHex === '0x0003' // 0x0003 is an empty options type 3
 }
 
-export function isEmptyOptionsSolana(optionsBytes: Uint8Array): boolean {
-    return bufferEquals(optionsBytes, Uint8Array.from([0, 3]))
+export function isEmptyOptionsSolana(optionsBytes?: Uint8Array): boolean {
+    return !optionsBytes || Buffer.from(optionsBytes).toString('hex') === '0003' // empty options type 3 without 0x prefix
 }
 
 export function decodeLzReceiveOptions(hex: string): string {
@@ -138,4 +137,4 @@ export async function getSolanaUlnConfigPDAs(
     return await Promise.all([sendConfig, receiveConfig])
 }
 
-export { DebugLogger, KnownErrors, KnownOutputs, KnownWarnings } from '@layerzerolabs/io-devtools'
+export { createLogger, DebugLogger, KnownErrors, KnownOutputs, KnownWarnings } from '@layerzerolabs/io-devtools'
