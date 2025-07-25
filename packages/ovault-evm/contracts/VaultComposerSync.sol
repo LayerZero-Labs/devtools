@@ -11,80 +11,80 @@ import { IOAppCore } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOA
 import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
-import { IOVaultComposer } from "./interfaces/IOVaultComposer.sol";
+import { IVaultComposerSync } from "./interfaces/IVaultComposerSync.sol";
 
-contract SynchronousVaultComposer is IOVaultComposer, ReentrancyGuard {
+contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
     using OFTComposeMsgCodec for bytes;
     using OFTComposeMsgCodec for bytes32;
     using SafeERC20 for IERC20;
 
-    address public immutable ASSET_OFT; // any OFT
-    address public immutable SHARE_OFT; // lockbox adapter
+    // @dev Must be a synchronous vault - NO 2-step redemptions/deposit windows
+    IERC4626 public immutable VAULT;
 
+    address public immutable ASSET_OFT;
     address public immutable ASSET_ERC20;
+    address public immutable SHARE_OFT;
     address public immutable SHARE_ERC20;
 
-    IERC4626 public immutable OVAULT; // must be a synchronous vault - no lockups
-
     address public immutable ENDPOINT;
-
     uint32 public immutable VAULT_EID;
 
-    constructor(address _ovault, address _assetOFT, address _shareOFT) {
-        OVAULT = IERC4626(_ovault);
+    constructor(address _vault, address _assetOFT, address _shareOFT) {
+        VAULT = IERC4626(_vault);
+
         ASSET_OFT = _assetOFT;
+        ASSET_ERC20 = IOFT(ASSET_OFT).token();
         SHARE_OFT = _shareOFT;
-
-        SHARE_ERC20 = _ovault;
-        ASSET_ERC20 = address(OVAULT.asset());
-
-        /// @dev ShareOFT must be a lockbox adapter.
-        /// @dev burn() on tokens when they exit changes totalSupply() which the asset:share ratio depends on.
-        if (!IOFT(_shareOFT).approvalRequired()) {
-            revert ShareOFTShouldBeLockboxAdapter(address(_shareOFT));
-        }
-
-        if (address(IOFT(_shareOFT).token()) != SHARE_ERC20) {
-            revert ShareOFTInnerTokenShouldBeOVault(address(IOFT(_shareOFT).token()), SHARE_ERC20);
-        }
-
-        if (IOFT(_assetOFT).token() != ASSET_ERC20) {
-            revert AssetOFTInnerTokenShouldBeOvaultAsset(address(IOFT(_assetOFT).token()), ASSET_ERC20);
-        }
+        SHARE_ERC20 = IOFT(SHARE_OFT).token();
 
         ENDPOINT = address(IOAppCore(ASSET_OFT).endpoint());
         VAULT_EID = ILayerZeroEndpointV2(ENDPOINT).eid();
 
-        /// @notice Approve the ovault to spend the share and asset tokens held by this contract
-        IERC20(SHARE_ERC20).approve(address(_ovault), type(uint256).max);
-        IERC20(ASSET_ERC20).approve(address(_ovault), type(uint256).max);
+        if (SHARE_ERC20 != address(VAULT)) {
+            revert ShareTokenNotVault(SHARE_ERC20, address(VAULT));
+        }
 
-        /// @notice Approve the shareOFTAdapter with the share tokens held by this contract
+        if (ASSET_ERC20 != address(VAULT.asset())) {
+            revert AssetTokenNotVaultAsset(ASSET_ERC20, address(VAULT.asset()));
+        }
+
+        // @dev ShareOFT must be an OFT adapter. We can infer this by checking 'approvalRequired()'.
+        // @dev burn() on tokens when a user sends changes totalSupply() which the asset:share ratio depends on.
+        if (!IOFT(SHARE_OFT).approvalRequired()) revert ShareOFTNotAdapter(SHARE_OFT);
+
+        // @dev Approve the vault to spend the share and asset tokens held by this contract
+        IERC20(SHARE_ERC20).approve(_vault, type(uint256).max);
+        IERC20(ASSET_ERC20).approve(_vault, type(uint256).max);
+
+        // @dev Approve the share adapter with the share tokens held by this contract
         IERC20(SHARE_ERC20).approve(_shareOFT, type(uint256).max);
+        // @dev If the asset OFT is an adapter, approve it as well
         if (IOFT(_assetOFT).approvalRequired()) IERC20(ASSET_ERC20).approve(_assetOFT, type(uint256).max);
     }
 
-    /// @dev This composer is designed to handle refunds to an EOA address and not a contract.
-    /// @dev Any revert in atomicOvaultOperation() causes a reufund on source EXCEPT for InvalidMsgValue
+    // @dev This composer is designed to handle refunds to an EOA address and not a contract.
+    // @dev Any revert in handleCompose() causes a refund back to the src EXCEPT for InsufficientMsgValue.
     function lzCompose(
-        address _composeCaller, // The OFT used on refund, also the vaultIn token. TODO name of this param
+        address _composeCaller, // The OFT used on refund, also the vaultIn token.
         bytes32 _guid,
         bytes calldata _message, // expected to be abi.encode(SendParam hopSendParam,uint256 minMsgValue)
         address /*_executor*/,
         bytes calldata /*_extraData*/
     ) external payable virtual override {
         if (msg.sender != ENDPOINT) revert OnlyEndpoint(msg.sender);
-        if (_composeCaller != ASSET_OFT && _composeCaller != SHARE_OFT) revert OFTCannotVaultOperation(_composeCaller);
+        if (_composeCaller != ASSET_OFT && _composeCaller != SHARE_OFT) revert OnlyValidComposeCaller(_composeCaller);
 
         bytes32 composeFrom = _message.composeFrom();
         bytes memory composeMsg = _message.composeMsg();
         uint256 amount = _message.amountLD();
 
+        // TODO comment this
         try this.handleCompose{ value: msg.value }(_composeCaller, composeFrom, composeMsg, amount) {
             emit Sent(_guid);
         } catch (bytes memory _err) {
-            /// @dev If the revert was due to InvalidMsgValue, revert with the same error so that we can retry from the Endpoint
-            if (bytes4(_err) == InvalidMsgValue.selector) {
+            // TODO comment here about WHY we want to provide this logic
+            // @dev If the revert was due to InsufficientMsgValue, revert with the same error so that we can retry from the Endpoint
+            if (bytes4(_err) == InsufficientMsgValue.selector) {
                 assembly {
                     revert(add(32, _err), mload(_err))
                 }
@@ -95,22 +95,20 @@ contract SynchronousVaultComposer is IOVaultComposer, ReentrancyGuard {
         }
     }
 
-    /// =========================== Vault FUNCTIONS ========================================
-
     function handleCompose(
-        address _oft,
+        address _oftIn,
         bytes32 _composeFrom,
         bytes memory _composeMsg,
         uint256 _amount
     ) external payable {
-        // Can only be called by self
+        // @dev Can only be called by self
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
         // TODO comment why we do this
         (SendParam memory sendParam, uint256 minMsgValue) = abi.decode(_composeMsg, (SendParam, uint256));
-        if (msg.value < minMsgValue) revert InvalidMsgValue(minMsgValue, msg.value); /// @dev only happens on lzCompose
+        if (msg.value < minMsgValue) revert InsufficientMsgValue(minMsgValue, msg.value);
 
-        if (_oft == ASSET_OFT) {
+        if (_oftIn == ASSET_OFT) {
             _depositAndSend(_composeFrom, _amount, sendParam, tx.origin);
         } else {
             _redeemAndSend(_composeFrom, _amount, sendParam, tx.origin);
@@ -123,7 +121,12 @@ contract SynchronousVaultComposer is IOVaultComposer, ReentrancyGuard {
         address _refundAddress
     ) external payable virtual nonReentrant {
         IERC20(ASSET_ERC20).safeTransferFrom(msg.sender, address(this), _assetAmount);
-        _depositAndSend(OFTComposeMsgCodec.addressToBytes32(msg.sender), _assetAmount, _sendParam, _refundAddress);
+        _depositAndSend(
+            OFTComposeMsgCodec.addressToBytes32(msg.sender),
+            _assetAmount,
+            _sendParam,
+            _refundAddress
+        );
     }
 
     function _depositAndSend(
@@ -133,7 +136,7 @@ contract SynchronousVaultComposer is IOVaultComposer, ReentrancyGuard {
         address _refundAddress
     ) internal virtual {
         uint256 shareAmount = _deposit(_depositor, _assetAmount);
-        _checkSlippage(shareAmount, _sendParam.minAmountLD);
+        _assertSlippage(shareAmount, _sendParam.minAmountLD);
 
         _sendParam.amountLD = shareAmount;
         _sendParam.minAmountLD = 0;
@@ -142,7 +145,7 @@ contract SynchronousVaultComposer is IOVaultComposer, ReentrancyGuard {
     }
 
     function _deposit(bytes32 /*_depositor*/, uint256 _assetAmount) internal virtual returns (uint256 shareAmount) {
-        shareAmount = OVAULT.deposit(_assetAmount, address(this));
+        shareAmount = VAULT.deposit(_assetAmount, address(this));
     }
 
     function redeemAndSend(
@@ -151,7 +154,12 @@ contract SynchronousVaultComposer is IOVaultComposer, ReentrancyGuard {
         address _refundAddress
     ) external payable virtual nonReentrant {
         IERC20(SHARE_ERC20).safeTransferFrom(msg.sender, address(this), _shareAmount);
-        _redeemAndSend(OFTComposeMsgCodec.addressToBytes32(msg.sender), _shareAmount, _sendParam, _refundAddress);
+        _redeemAndSend(
+            OFTComposeMsgCodec.addressToBytes32(msg.sender),
+            _shareAmount,
+            _sendParam,
+            _refundAddress
+        );
     }
 
     function _redeemAndSend(
@@ -161,7 +169,7 @@ contract SynchronousVaultComposer is IOVaultComposer, ReentrancyGuard {
         address _refundAddress
     ) internal virtual {
         uint256 assetAmount = _redeem(_redeemer, _shareAmount);
-        _checkSlippage(assetAmount, _sendParam.minAmountLD);
+        _assertSlippage(assetAmount, _sendParam.minAmountLD);
 
         _sendParam.amountLD = assetAmount;
         _sendParam.minAmountLD = 0;
@@ -170,7 +178,12 @@ contract SynchronousVaultComposer is IOVaultComposer, ReentrancyGuard {
     }
 
     function _redeem(bytes32 /*_redeemer*/, uint256 _shareAmount) internal virtual returns (uint256 assetAmount) {
-        assetAmount = OVAULT.redeem(_shareAmount, address(this), address(this));
+        assetAmount = VAULT.redeem(_shareAmount, address(this), address(this));
+    }
+
+    /// @dev In the case that slippage does not exist, can just override with empty function
+    function _assertSlippage(uint256 _amountLD, uint256 _minAmountLD) internal view virtual {
+        if (_amountLD < _minAmountLD) revert SlippageExceeded(_amountLD, _minAmountLD);
     }
 
     // TODO maybe do preview and pass to sendParam perhaps
@@ -178,24 +191,12 @@ contract SynchronousVaultComposer is IOVaultComposer, ReentrancyGuard {
         return IOFT(_oft).quoteSend(_sendParam, false);
     }
 
-    /// @dev In the case that slippage does not exist, can always return 0
-    function _checkSlippage(uint256 _amountLD, uint256 _minAmountLD) internal view virtual {
-        if (_amountLD < _minAmountLD) {
-            revert SlippageEncountered(_amountLD, _minAmountLD);
-        }
-    }
-
-    /// =========================== Internal ==========================================
-
-    /// @notice all transfer MUST go through this function
     function _send(address _oft, SendParam memory _sendParam, address _refundAddress) internal {
         if (_sendParam.dstEid == VAULT_EID) {
-            // Local transfer, just send the token
-
             /// @dev Can do this because _oft is validated before this function is called
             address erc20 = _oft == ASSET_OFT ? ASSET_ERC20 : SHARE_ERC20;
 
-            if (msg.value > 0) revert InvalidMsgValue(0, msg.value);
+            if (msg.value > 0) revert InsufficientMsgValue(0, msg.value);
             IERC20(erc20).safeTransfer(_sendParam.to.bytes32ToAddress(), _sendParam.amountLD);
         } else {
             // crosschain send
@@ -205,7 +206,6 @@ contract SynchronousVaultComposer is IOVaultComposer, ReentrancyGuard {
 
     function _refund(address _oft, bytes calldata _message, uint256 _amount, address _refundAddress) internal virtual {
         /// @dev Extracted from the _message header. Will always be part of the _message since it is created by lzReceive
-        /// @dev Used on refund AND when amount == 0
         SendParam memory refundSendParam;
         refundSendParam.dstEid = OFTComposeMsgCodec.srcEid(_message);
         refundSendParam.to = OFTComposeMsgCodec.composeFrom(_message);
