@@ -30,16 +30,8 @@ function formatBigIntForDisplay(n: bigint) {
     return n.toLocaleString().replace(/,/g, '_')
 }
 
-function bufferEquals(a: Uint8Array, b: Uint8Array): boolean {
-    return a.length === b.length && a.every((val, i) => val === b[i])
-}
-
 export function isEmptyOptionsEvm(optionsHex?: string): boolean {
     return !optionsHex || optionsHex === '0x' || optionsHex === '0x0003' // 0x0003 is an empty options type 3
-}
-
-export function isEmptyOptionsSolana(optionsBytes: Uint8Array): boolean {
-    return bufferEquals(optionsBytes, Uint8Array.from([0, 3]))
 }
 
 export function decodeLzReceiveOptions(hex: string): string {
