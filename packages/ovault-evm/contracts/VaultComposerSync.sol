@@ -270,13 +270,23 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
 
     /**
      * @notice Quotes the send operation for the given OFT and SendParam
+     * @dev Revert on slippage will be thrown by the OFT and not _assertSlippage
      * @param _oft The OFT contract address to quote
+     * @param _vaultInAmount The amount of tokens to send to the vault
      * @param _sendParam The parameters for the send operation
      * @return MessagingFee The estimated fee for the send operation
      * @dev This function can be overridden to implement custom quoting logic
      */
-    // TODO maybe do preview and pass to sendParam perhaps
-    function quoteSend(address _oft, SendParam memory _sendParam) external view virtual returns (MessagingFee memory) {
+    function quoteSend(
+        address _oft,
+        uint256 _vaultInAmount,
+        SendParam memory _sendParam
+    ) external view virtual returns (MessagingFee memory) {
+        if (_oft == ASSET_OFT) {
+            _sendParam.amountLD = VAULT.previewDeposit(_vaultInAmount);
+        } else {
+            _sendParam.amountLD = VAULT.previewRedeem(_vaultInAmount);
+        }
         return IOFT(_oft).quoteSend(_sendParam, false);
     }
 
