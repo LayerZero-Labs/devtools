@@ -8,21 +8,21 @@ import { SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interf
 
 interface IVaultComposerSync is IOAppComposer {
     /// ========================== EVENTS =====================================
-    event Sent(bytes32 indexed guid);
-    event Refunded(bytes32 indexed guid);
+    event Sent(bytes32 indexed guid); // 0x27b5aea9
+    event Refunded(bytes32 indexed guid); // 0xfe509803
 
     /// ========================== Error Messages =====================================
-    error ShareOFTNotAdapter(address shareOFT);
-    error ShareTokenNotVault(address shareERC20, address vault);
-    error AssetTokenNotVaultAsset(address assetERC20, address vaultAsset);
+    error ShareOFTNotAdapter(address shareOFT); // 0xfc1514ae
+    error ShareTokenNotVault(address shareERC20, address vault); // 0x0e178ab6
+    error AssetTokenNotVaultAsset(address assetERC20, address vaultAsset); // 0xba9d665f
 
-    error OnlyEndpoint(address caller);
-    error OnlySelf(address caller);
-    error OnlyValidComposeCaller(address caller);
+    error OnlyEndpoint(address caller); // 0x91ac5e4f
+    error OnlySelf(address caller); // 0xa19dbf00
+    error OnlyValidComposeCaller(address caller); // 0x84fb3f0d
 
-    error InsufficientMsgValue(uint256 expectedMsgValue, uint256 actualMsgValue);
+    error InsufficientMsgValue(uint256 expectedMsgValue, uint256 actualMsgValue); // 0x7cb769dc
 
-    error SlippageExceeded(uint256 amountLD, uint256 minAmountLD);
+    error SlippageExceeded(uint256 amountLD, uint256 minAmountLD); // 0x71c4efed
 
     /// ========================== GLOBAL VARIABLE FUNCTIONS =====================================
     function VAULT() external view returns (IERC4626);
