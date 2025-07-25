@@ -6,14 +6,14 @@ import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/Opti
 
 // OFT imports
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
-import { SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
+import { SendParam } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { EnforcedOptionParam } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppOptionsType3.sol";
 
-import { MockOVaultComposer as OVaultComposer } from "../mocks/MockComposer.sol";
+import { VaultComposerSync } from "../../contracts/VaultComposerSync.sol";
 
 import { MockOFT } from "../mocks/MockOFT.sol";
 import { MockOFTAdapter } from "../mocks/MockOFT.sol";
-import { MockOVault } from "../mocks/MockOVault.sol";
+import { MockVault } from "../mocks/MockVault.sol";
 
 // Forge imports
 import "forge-std/console.sol";
@@ -21,7 +21,7 @@ import "forge-std/console.sol";
 // DevTools imports
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 
-contract OVaultComposerBaseTest is TestHelperOz5 {
+contract VaultComposerSyncBaseTest is TestHelperOz5 {
     using OptionsBuilder for bytes;
 
     uint8 subMeshSize = 3;
@@ -40,13 +40,11 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
     MockOFT public assetOFT_pol;
     MockOFT public shareOFT_pol;
 
-    MockOVault public oVault_arb;
-    OVaultComposer public OVaultComposerArb;
-    OVaultComposer public mockOVaultComposer;
+    MockVault public vault_arb;
+    VaultComposerSync public VaultComposerSyncArb;
 
     address public userA = makeAddr("userA");
     address public userB = makeAddr("userB");
-    address public refundOverpayAddress = makeAddr("refundOverpayAddress");
 
     address public arbEndpoint;
     address public arbExecutor = makeAddr("arbExecutor");
@@ -64,7 +62,7 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
 
         arbEndpoint = address(endpoints[ARB_EID]);
 
-        /// @dev Deploy the Asset OFT (we can expect them to exist before we deploy the OVaultComposer)
+        /// @dev Deploy the Asset OFT (we can expect them to exist before we deploy the VaultComposerSync)
         assetOFT_arb = new MockOFT("arbAsset", "arbAsset", address(endpoints[ARB_EID]), address(this));
         assetOFT_eth = new MockOFT("ethAsset", "ethAsset", address(endpoints[ETH_EID]), address(this));
         assetOFT_pol = new MockOFT("polAsset", "polAsset", address(endpoints[POL_EID]), address(this));
@@ -77,13 +75,12 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
         this.wireOApps(assetOFTs);
 
         /// Now the "expansion" is for the arb vault and share ofts on other networks.
-        oVault_arb = new MockOVault("arbShare", "arbShare", address(assetOFT_arb));
-        shareOFT_arb = new MockOFTAdapter(address(oVault_arb), address(endpoints[ARB_EID]), address(this));
-        OVaultComposerArb = new OVaultComposer(
-            address(oVault_arb),
+        vault_arb = new MockVault("arbShare", "arbShare", address(assetOFT_arb));
+        shareOFT_arb = new MockOFTAdapter(address(vault_arb), address(endpoints[ARB_EID]), address(this));
+        VaultComposerSyncArb = new VaultComposerSync(
+            address(vault_arb),
             address(assetOFT_arb),
-            address(shareOFT_arb),
-            refundOverpayAddress
+            address(shareOFT_arb)
         );
 
         /// Deploy the Share OFTs on other networks - these are NOT lockbox adapters.
@@ -104,8 +101,8 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
         vm.label(address(shareOFT_eth), "ShareOFT::eth");
         vm.label(address(shareOFT_pol), "ShareOFT::pol");
 
-        vm.label(address(oVault_arb), "OVault::arb");
-        vm.label(address(OVaultComposerArb), "OVaultComposer::arb");
+        vm.label(address(vault_arb), "Vault::arb");
+        vm.label(address(VaultComposerSyncArb), "VaultComposerSync::arb");
 
         deal(arbExecutor, INITIAL_BALANCE);
         deal(arbEndpoint, INITIAL_BALANCE);
@@ -124,9 +121,29 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
         shareOFT_pol.setEnforcedOptions(enforcedOptions);
     }
 
+    function _removeDustWithOffset(uint256 _amount, int128 _offset) internal pure returns (uint256, uint256) {
+        uint256 amountWithOffset = _amount;
+        if (_offset < 0) {
+            uint256 modOffset = uint128(-1 * _offset);
+            // If offset is negative, we need to ensure we don't underflow
+            require(_amount >= modOffset, "Offset too large");
+            amountWithOffset = _amount - modOffset;
+        } else {
+            // If offset is positive, we can safely add it
+            amountWithOffset = _amount + uint128(_offset);
+        }
+        return _removeDust(amountWithOffset);
+    }
+
+    function _removeDust(uint256 _amount) internal pure returns (uint256, uint256) {
+        uint256 dust = _amount % 10 ** 12;
+        return (_amount - dust, dust);
+    }
+
     function _createComposePayload(
         uint32 _srcEid,
         SendParam memory _sendParam,
+        uint256 _minMsgValue,
         uint256 _amount,
         address _msgSender
     ) internal pure returns (bytes memory composeMsg) {
@@ -134,7 +151,7 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
             0,
             _srcEid,
             _amount,
-            abi.encodePacked(addressToBytes32(_msgSender), abi.encode(_sendParam))
+            abi.encodePacked(addressToBytes32(_msgSender), abi.encode(_sendParam, _minMsgValue))
         );
     }
 
@@ -159,42 +176,13 @@ contract OVaultComposerBaseTest is TestHelperOz5 {
         mintAssets = _assetNum * TOKENS_TO_SEND;
         mintShares = _shareNum * TOKENS_TO_SEND;
 
-        oVault_arb.mint(address(0xbeef), mintShares);
-        assetOFT_arb.mint(address(oVault_arb), mintAssets);
-    }
-
-    function _removeDustWithOffset(uint256 _amount, int128 _offset) internal pure returns (uint256, uint256) {
-        uint256 amountWithOffset = _amount;
-        if (_offset < 0) {
-            uint256 modOffset = uint128(-1 * _offset);
-            // If offset is negative, we need to ensure we don't underflow
-            require(_amount >= modOffset, "Offset too large");
-            amountWithOffset = _amount - modOffset;
-        } else {
-            // If offset is positive, we can safely add it
-            amountWithOffset = _amount + uint128(_offset);
-        }
-        return _removeDust(amountWithOffset);
-    }
-
-    function _removeDust(uint256 _amount) internal pure returns (uint256, uint256) {
-        uint256 dust = _amount % 10 ** 12;
-        return (_amount - dust, dust);
-    }
-
-    function _createRefundSendParam(uint256 _amount) internal returns (SendParam memory) {
-        assetOFT_arb.mint(address(OVaultComposerArb), _amount);
-
-        SendParam memory sendParam;
-        sendParam.dstEid = ETH_EID;
-        sendParam.to = addressToBytes32(userA);
-        sendParam.amountLD = _amount;
-        return sendParam;
+        vault_arb.mint(address(0xbeef), mintShares);
+        assetOFT_arb.mint(address(vault_arb), mintAssets);
     }
 
     function _createSendParam(uint256 _amount, bool skipMint) internal returns (SendParam memory) {
         if (!skipMint) {
-            oVault_arb.mint(address(OVaultComposerArb), _amount);
+            vault_arb.mint(address(VaultComposerSyncArb), _amount);
         }
 
         SendParam memory sendParam;
