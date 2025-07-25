@@ -93,12 +93,10 @@ networks: {
         eid: EndpointId.SEPOLIA_TESTNET,
 ```
 
-In `layerzero.config.ts`, for the pathway from Sepolia to Solana, we have specified the following:
-
-- `sendLibrary`: `0x6862b19f6e42a810946B9C782E6ebE26Ad266C84` (SendUln301)
-- `receiveLibraryConfig.receiveLibrary`: `0x5937A5fe272fbA38699A1b75B3439389EEFDb399` (ReceiveUln301)
-
-To view the list of ULN addresses on all networks, refer to https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts
+`layerzero.config.ts` now uses `generateConnectionsConfig` from
+`@layerzerolabs/metadata-tools` to automatically populate ULN libraries and DVN
+addresses based on metadata. Simply provide the pathway details and the Solana
+OFT store address.
 
 ## Developing Contracts
 
