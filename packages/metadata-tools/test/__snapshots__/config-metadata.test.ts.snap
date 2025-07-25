@@ -10,6 +10,7 @@ exports[`config-metadata generateConnectionsConfig should allow for call without
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
+          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -28,6 +29,7 @@ exports[`config-metadata generateConnectionsConfig should allow for call without
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
+          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -52,6 +54,7 @@ exports[`config-metadata generateConnectionsConfig should allow for call without
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
+          "requiredDVNCount": 1,
           "requiredDVNs": [
             "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
           ],
@@ -70,6 +73,7 @@ exports[`config-metadata generateConnectionsConfig should allow for call without
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
+          "requiredDVNCount": 1,
           "requiredDVNs": [
             "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
           ],
@@ -99,6 +103,7 @@ exports[`config-metadata generateConnectionsConfig should allow for custom DVNs 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
+          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -117,6 +122,7 @@ exports[`config-metadata generateConnectionsConfig should allow for custom DVNs 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
+          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -141,6 +147,7 @@ exports[`config-metadata generateConnectionsConfig should allow for custom DVNs 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
+          "requiredDVNCount": 1,
           "requiredDVNs": [
             "29EKzmCscUg8mf4f5uskwMqvu2SXM8hKF1gWi1cCBoKT",
           ],
@@ -159,6 +166,7 @@ exports[`config-metadata generateConnectionsConfig should allow for custom DVNs 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
+          "requiredDVNCount": 1,
           "requiredDVNs": [
             "29EKzmCscUg8mf4f5uskwMqvu2SXM8hKF1gWi1cCBoKT",
           ],
@@ -188,6 +196,7 @@ exports[`config-metadata generateConnectionsConfig should generate the connectio
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
+          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -206,6 +215,7 @@ exports[`config-metadata generateConnectionsConfig should generate the connectio
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
+          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -230,6 +240,7 @@ exports[`config-metadata generateConnectionsConfig should generate the connectio
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
+          "requiredDVNCount": 1,
           "requiredDVNs": [
             "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
           ],
@@ -248,9 +259,463 @@ exports[`config-metadata generateConnectionsConfig should generate the connectio
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
+          "requiredDVNCount": 1,
           "requiredDVNs": [
             "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
           ],
+        },
+      },
+      "sendLibrary": "7a4WjyR8VZ7yZz5XJAKm39BUGn5iT9CKcv2pmG9tdXVH",
+    },
+    "from": {
+      "address": "HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy",
+      "eid": 40168,
+    },
+    "to": {
+      "contractName": "MyOFT",
+      "eid": 40106,
+    },
+  },
+]
+`;
+
+exports[`config-metadata generateConnectionsConfig supports NIL_CONFIRMATIONS 1`] = `
+[
+  {
+    "config": {
+      "enforcedOptions": undefined,
+      "receiveConfig": {
+        "ulnConfig": {
+          "confirmations": 18446744073709551615n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNCount": 255,
+          "requiredDVNs": [],
+        },
+      },
+      "receiveLibraryConfig": {
+        "gracePeriod": 0n,
+        "receiveLibrary": "0x819F0FAF2cb1Fba15b9cB24c9A2BDaDb0f895daf",
+      },
+      "sendConfig": {
+        "executorConfig": {
+          "executor": "0xa7BFA9D51032F82D649A501B6a1f922FC2f7d4e3",
+          "maxMessageSize": 10000,
+        },
+        "ulnConfig": {
+          "confirmations": 18446744073709551615n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNCount": 255,
+          "requiredDVNs": [],
+        },
+      },
+      "sendLibrary": "0x69BF5f48d2072DfeBc670A1D19dff91D0F4E8170",
+    },
+    "from": {
+      "contractName": "MyOFT",
+      "eid": 40106,
+    },
+    "to": {
+      "address": "HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy",
+      "eid": 40168,
+    },
+  },
+  {
+    "config": {
+      "enforcedOptions": undefined,
+      "receiveConfig": {
+        "ulnConfig": {
+          "confirmations": 18446744073709551615n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNCount": 255,
+          "requiredDVNs": [],
+        },
+      },
+      "receiveLibraryConfig": {
+        "gracePeriod": 0n,
+        "receiveLibrary": "7a4WjyR8VZ7yZz5XJAKm39BUGn5iT9CKcv2pmG9tdXVH",
+      },
+      "sendConfig": {
+        "executorConfig": {
+          "executor": "AwrbHeCyniXaQhiJZkLhgWdUCteeWSGaSN1sTfLiY7xK",
+          "maxMessageSize": 10000,
+        },
+        "ulnConfig": {
+          "confirmations": 18446744073709551615n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNCount": 255,
+          "requiredDVNs": [],
+        },
+      },
+      "sendLibrary": "7a4WjyR8VZ7yZz5XJAKm39BUGn5iT9CKcv2pmG9tdXVH",
+    },
+    "from": {
+      "address": "HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy",
+      "eid": 40168,
+    },
+    "to": {
+      "contractName": "MyOFT",
+      "eid": 40106,
+    },
+  },
+]
+`;
+
+exports[`config-metadata generateConnectionsConfig supports passing no required DVNs and no optional DVNs 1`] = `
+[
+  {
+    "config": {
+      "enforcedOptions": undefined,
+      "receiveConfig": {
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNCount": 255,
+          "requiredDVNs": [],
+        },
+      },
+      "receiveLibraryConfig": {
+        "gracePeriod": 0n,
+        "receiveLibrary": "0x819F0FAF2cb1Fba15b9cB24c9A2BDaDb0f895daf",
+      },
+      "sendConfig": {
+        "executorConfig": {
+          "executor": "0xa7BFA9D51032F82D649A501B6a1f922FC2f7d4e3",
+          "maxMessageSize": 10000,
+        },
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNCount": 255,
+          "requiredDVNs": [],
+        },
+      },
+      "sendLibrary": "0x69BF5f48d2072DfeBc670A1D19dff91D0F4E8170",
+    },
+    "from": {
+      "contractName": "MyOFT",
+      "eid": 40106,
+    },
+    "to": {
+      "address": "HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy",
+      "eid": 40168,
+    },
+  },
+  {
+    "config": {
+      "enforcedOptions": undefined,
+      "receiveConfig": {
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNCount": 255,
+          "requiredDVNs": [],
+        },
+      },
+      "receiveLibraryConfig": {
+        "gracePeriod": 0n,
+        "receiveLibrary": "7a4WjyR8VZ7yZz5XJAKm39BUGn5iT9CKcv2pmG9tdXVH",
+      },
+      "sendConfig": {
+        "executorConfig": {
+          "executor": "AwrbHeCyniXaQhiJZkLhgWdUCteeWSGaSN1sTfLiY7xK",
+          "maxMessageSize": 10000,
+        },
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNCount": 255,
+          "requiredDVNs": [],
+        },
+      },
+      "sendLibrary": "7a4WjyR8VZ7yZz5XJAKm39BUGn5iT9CKcv2pmG9tdXVH",
+    },
+    "from": {
+      "address": "HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy",
+      "eid": 40168,
+    },
+    "to": {
+      "contractName": "MyOFT",
+      "eid": 40106,
+    },
+  },
+]
+`;
+
+exports[`config-metadata generateConnectionsConfig supports using block send and receive for A to B 1`] = `
+[
+  {
+    "config": {
+      "enforcedOptions": undefined,
+      "receiveConfig": {
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNCount": 1,
+          "requiredDVNs": [
+            "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
+          ],
+        },
+      },
+      "receiveLibraryConfig": {
+        "gracePeriod": 0n,
+        "receiveLibrary": "0x819F0FAF2cb1Fba15b9cB24c9A2BDaDb0f895daf",
+      },
+      "sendConfig": {
+        "executorConfig": {
+          "executor": "0xa7BFA9D51032F82D649A501B6a1f922FC2f7d4e3",
+          "maxMessageSize": 10000,
+        },
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNCount": 1,
+          "requiredDVNs": [
+            "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
+          ],
+        },
+      },
+      "sendLibrary": "0x0C77d8d771aB35E2E184E7cE127f19CEd31FF8C0",
+    },
+    "from": {
+      "contractName": "MyOFT",
+      "eid": 40106,
+    },
+    "to": {
+      "contractName": "MyOFT",
+      "eid": 40267,
+    },
+  },
+  {
+    "config": {
+      "enforcedOptions": undefined,
+      "receiveConfig": {
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNCount": 1,
+          "requiredDVNs": [
+            "0x55c175dd5b039331db251424538169d8495c18d1",
+          ],
+        },
+      },
+      "receiveLibraryConfig": {
+        "gracePeriod": 0n,
+        "receiveLibrary": "0x0C77d8d771aB35E2E184E7cE127f19CEd31FF8C0",
+      },
+      "sendConfig": {
+        "executorConfig": {
+          "executor": "0x4Cf1B3Fa61465c2c907f82fC488B43223BA0CF93",
+          "maxMessageSize": 10000,
+        },
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNCount": 1,
+          "requiredDVNs": [
+            "0x55c175dd5b039331db251424538169d8495c18d1",
+          ],
+        },
+      },
+      "sendLibrary": "0x1d186C560281B8F1AF831957ED5047fD3AB902F9",
+    },
+    "from": {
+      "contractName": "MyOFT",
+      "eid": 40267,
+    },
+    "to": {
+      "contractName": "MyOFT",
+      "eid": 40106,
+    },
+  },
+]
+`;
+
+exports[`config-metadata generateConnectionsConfig supports using block send and receive for both A to B and B to A 1`] = `
+[
+  {
+    "config": {
+      "enforcedOptions": undefined,
+      "receiveConfig": {
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNCount": 1,
+          "requiredDVNs": [
+            "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
+          ],
+        },
+      },
+      "receiveLibraryConfig": {
+        "gracePeriod": 0n,
+        "receiveLibrary": "0x0C77d8d771aB35E2E184E7cE127f19CEd31FF8C0",
+      },
+      "sendConfig": {
+        "executorConfig": {
+          "executor": "0xa7BFA9D51032F82D649A501B6a1f922FC2f7d4e3",
+          "maxMessageSize": 10000,
+        },
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNCount": 1,
+          "requiredDVNs": [
+            "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
+          ],
+        },
+      },
+      "sendLibrary": "0x0C77d8d771aB35E2E184E7cE127f19CEd31FF8C0",
+    },
+    "from": {
+      "contractName": "MyOFT",
+      "eid": 40106,
+    },
+    "to": {
+      "contractName": "MyOFT",
+      "eid": 40267,
+    },
+  },
+  {
+    "config": {
+      "enforcedOptions": undefined,
+      "receiveConfig": {
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNCount": 1,
+          "requiredDVNs": [
+            "0x55c175dd5b039331db251424538169d8495c18d1",
+          ],
+        },
+      },
+      "receiveLibraryConfig": {
+        "gracePeriod": 0n,
+        "receiveLibrary": "0x0C77d8d771aB35E2E184E7cE127f19CEd31FF8C0",
+      },
+      "sendConfig": {
+        "executorConfig": {
+          "executor": "0x4Cf1B3Fa61465c2c907f82fC488B43223BA0CF93",
+          "maxMessageSize": 10000,
+        },
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNCount": 1,
+          "requiredDVNs": [
+            "0x55c175dd5b039331db251424538169d8495c18d1",
+          ],
+        },
+      },
+      "sendLibrary": "0x0C77d8d771aB35E2E184E7cE127f19CEd31FF8C0",
+    },
+    "from": {
+      "contractName": "MyOFT",
+      "eid": 40267,
+    },
+    "to": {
+      "contractName": "MyOFT",
+      "eid": 40106,
+    },
+  },
+]
+`;
+
+exports[`config-metadata generateConnectionsConfig uses NIL_DVN_COUNT when no required DVNs are provided 1`] = `
+[
+  {
+    "config": {
+      "enforcedOptions": undefined,
+      "receiveConfig": {
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 1,
+          "optionalDVNs": [
+            "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
+            "0xdbec329a5e6d7fb0113eb0a098750d2afd61e9ae",
+          ],
+          "requiredDVNCount": 255,
+          "requiredDVNs": [],
+        },
+      },
+      "receiveLibraryConfig": {
+        "gracePeriod": 0n,
+        "receiveLibrary": "0x819F0FAF2cb1Fba15b9cB24c9A2BDaDb0f895daf",
+      },
+      "sendConfig": {
+        "executorConfig": {
+          "executor": "0xa7BFA9D51032F82D649A501B6a1f922FC2f7d4e3",
+          "maxMessageSize": 10000,
+        },
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 1,
+          "optionalDVNs": [
+            "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
+            "0xdbec329a5e6d7fb0113eb0a098750d2afd61e9ae",
+          ],
+          "requiredDVNCount": 255,
+          "requiredDVNs": [],
+        },
+      },
+      "sendLibrary": "0x69BF5f48d2072DfeBc670A1D19dff91D0F4E8170",
+    },
+    "from": {
+      "contractName": "MyOFT",
+      "eid": 40106,
+    },
+    "to": {
+      "address": "HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy",
+      "eid": 40168,
+    },
+  },
+  {
+    "config": {
+      "enforcedOptions": undefined,
+      "receiveConfig": {
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 1,
+          "optionalDVNs": [
+            "29EKzmCscUg8mf4f5uskwMqvu2SXM8hKF1gWi1cCBoKT",
+            "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
+          ],
+          "requiredDVNCount": 255,
+          "requiredDVNs": [],
+        },
+      },
+      "receiveLibraryConfig": {
+        "gracePeriod": 0n,
+        "receiveLibrary": "7a4WjyR8VZ7yZz5XJAKm39BUGn5iT9CKcv2pmG9tdXVH",
+      },
+      "sendConfig": {
+        "executorConfig": {
+          "executor": "AwrbHeCyniXaQhiJZkLhgWdUCteeWSGaSN1sTfLiY7xK",
+          "maxMessageSize": 10000,
+        },
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 1,
+          "optionalDVNs": [
+            "29EKzmCscUg8mf4f5uskwMqvu2SXM8hKF1gWi1cCBoKT",
+            "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
+          ],
+          "requiredDVNCount": 255,
+          "requiredDVNs": [],
         },
       },
       "sendLibrary": "7a4WjyR8VZ7yZz5XJAKm39BUGn5iT9CKcv2pmG9tdXVH",
@@ -277,6 +742,7 @@ exports[`config-metadata translatePathwayToConfig should be able to translate a 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
+          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -295,6 +761,7 @@ exports[`config-metadata translatePathwayToConfig should be able to translate a 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
+          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -319,6 +786,7 @@ exports[`config-metadata translatePathwayToConfig should be able to translate a 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
+          "requiredDVNCount": 1,
           "requiredDVNs": [
             "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
           ],
@@ -337,6 +805,7 @@ exports[`config-metadata translatePathwayToConfig should be able to translate a 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
+          "requiredDVNCount": 1,
           "requiredDVNs": [
             "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
           ],

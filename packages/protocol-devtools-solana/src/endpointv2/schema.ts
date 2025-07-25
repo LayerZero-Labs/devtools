@@ -14,10 +14,10 @@ export const SetConfigSchema = z.union([
     z.object({
         configType: z.union([z.literal(SetConfigType.RECEIVE_ULN), z.literal(SetConfigType.SEND_ULN)]),
         config: Uln302UlnConfigSchema.transform(
-            ({ confirmations, requiredDVNs, optionalDVNs, optionalDVNThreshold }) => ({
+            ({ confirmations, requiredDVNs, optionalDVNs, optionalDVNThreshold, requiredDVNCount }) => ({
                 confirmations: Number(confirmations),
                 optionalDvnCount: optionalDVNs.length,
-                requiredDvnCount: requiredDVNs.length,
+                requiredDvnCount: requiredDVNCount,
                 requiredDvns: requiredDVNs.map((dvn) => new PublicKey(dvn)),
                 optionalDvns: optionalDVNs.map((dvn) => new PublicKey(dvn)),
                 optionalDvnThreshold: optionalDVNThreshold,

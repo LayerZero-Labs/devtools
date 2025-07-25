@@ -24,6 +24,9 @@ import { Contract } from '@ethersproject/contracts'
 // because it contains all the necessary method fragments
 import { abi } from '@layerzerolabs/lz-evm-sdk-v2/artifacts/contracts/uln/uln302/SendUln302.sol/SendUln302.json'
 
+// A value used to indicate that no DVNs are required. It has to be used instead of 0, because 0 falls back to default value.
+const NIL_DVN_COUNT = (1 << 8) - 1 // type(uint8).max = 255
+
 export class Uln302 extends OmniSDK implements IUln302 {
     constructor(provider: Provider, point: OmniPoint) {
         super({ eid: point.eid, contract: new Contract(point.address, abi).connect(provider) })
@@ -249,7 +252,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
     protected serializeUlnConfig({
         confirmations = BigInt(0),
         requiredDVNs,
-        requiredDVNCount = requiredDVNs.length,
+        requiredDVNCount = requiredDVNs.length > 0 ? requiredDVNs.length : NIL_DVN_COUNT,
         optionalDVNs = [],
         optionalDVNThreshold = 0,
     }: Uln302UlnUserConfig): SerializedUln302UlnConfig {

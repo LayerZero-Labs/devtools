@@ -1,0 +1,131 @@
+{
+  "created": "2024-12-12T03:31:20.000Z",
+  "updated": "2024-12-12T03:31:20.000Z",
+  "tableName": "layerzero-chain_metadata",
+  "environment": "testnet",
+  "blockExplorers": [
+    {
+      "url": "https://cchain.explorer.avax-test.network"
+    }
+  ],
+  "deployments": [
+    {
+      "eid": "49999",
+      "endpointV2View": {
+        "address": "0x31fFd858c7826817F830C3dF2bb2A74126d51126"
+      },
+      "chainKey": "dummy",
+      "stage": "testnet",
+      "endpointV2": {
+        "address": "0x6EDCE65403992e310A62460808c4b910D972f10f"
+      },
+      "sendUln302": {
+        "address": "0x69BF5f48d2072DfeBc670A1D19dff91D0F4E8170"
+      },
+      "lzExecutor": {
+        "address": "0x1356D9201036A216836925803512649d6BB2395e"
+      },
+      "blockedMessageLib": {
+        "address": "0x0c77d8d771ab35e2e184e7ce127f19ced31ff8c0"
+      },
+      "version": 2,
+      "receiveUln302": {
+        "address": "0x819F0FAF2cb1Fba15b9cB24c9A2BDaDb0f895daf"
+      }
+    }
+  ],
+  "chainDetails": {
+    "chainKey": "dummy",
+    "nativeChainId": 43113,
+    "chainLayer": "L1",
+    "nativeCurrency": {
+      "name": "Avalanche Token",
+      "symbol": "AVAX",
+      "cgId": "avalanche-2",
+      "cmcId": 5805,
+      "decimals": 18
+    },
+    "name": "dummy",
+    "chainType": "evm",
+    "shortName": "Avalanche"
+  },
+  "dvns": {
+    "0xca5ab7adcd3ea879f1a1c4eee81eaccd250173e4": {
+      "version": 2,
+      "canonicalName": "Switchboard",
+      "id": "switchboard"
+    },
+    "0x8ca279897cde74350bd880737fd60c047d6d3d64": {
+      "version": 2,
+      "canonicalName": "Bitgo",
+      "id": "bitgo",
+      "deprecated": true
+    },
+    "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467": {
+      "version": 2,
+      "canonicalName": "LayerZero Labs",
+      "id": "layerzero-labs"
+    },
+    "0x92cfdb3789693c2ae7225fcc2c263de94d630be4": {
+      "version": 1,
+      "canonicalName": "TSS",
+      "id": "tss"
+    },
+    "0xe0f3389bf8a8aa1576b420d888cd462483fdc2a0": {
+      "version": 2,
+      "canonicalName": "Delegate",
+      "id": "delegate"
+    },
+    "0xfde647565009b33b1df02689d5873bffff15d907": {
+      "version": 2,
+      "canonicalName": "Stablelab",
+      "id": "stablelab"
+    },
+    "0xdbec329a5e6d7fb0113eb0a098750d2afd61e9ae": {
+      "version": 2,
+      "canonicalName": "P2P",
+      "id": "p2p"
+    },
+    "0xefdd92121acb3acd6e2f09dd810752d8da3dfdaf": {
+      "version": 2,
+      "canonicalName": "Republic",
+      "id": "republic-crypto"
+    },
+    "0x071fbf35b35d48afc3edf84f0397980c25531560": {
+      "version": 2,
+      "canonicalName": "Gitcoin",
+      "id": "gitcoin"
+    },
+    "0xa4652582077afc447ea7c9e984d656ee4963fe95": {
+      "version": 2,
+      "canonicalName": "Google",
+      "id": "google-cloud"
+    },
+    "0x7883f83ea40a56137a63baf93bfee5b9b8c1c447": {
+      "version": 2,
+      "canonicalName": "Nethermind",
+      "id": "nethermind"
+    },
+    "0x0d88ab4c8e8f89d8d758cbd5a6373f86f7bd737b": {
+      "version": 2,
+      "canonicalName": "BWare",
+      "id": "bware-labs"
+    },
+    "0xa1d84e5576299acda9ffed53195eadbe60d48e83": {
+      "version": 2,
+      "canonicalName": "Bitgo",
+      "id": "bitgo"
+    },
+    "0xb1c95f6687299acda9ffed53195eadcf71d49f94": {
+      "version": 2,
+      "canonicalName": "Deprec",
+      "id": "deprec",
+      "deprecated": true
+    }
+  },
+  "rpcs": [],
+  "addressToOApp": {},
+  "chainName": "avalanche",
+  "tokens": {},
+  "chainKey": "dummy"
+}
