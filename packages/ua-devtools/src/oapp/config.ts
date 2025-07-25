@@ -13,7 +13,6 @@ import {
 import type { OAppConfigurator, OAppEnforcedOption, OAppEnforcedOptionParam, OAppFactory } from './types'
 import { createModuleLogger, createWithAsyncLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import { Uln302ConfigType, type SetConfigParam } from '@layerzerolabs/protocol-devtools'
-import assert from 'assert'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 
 const createOAppLogger = () => createModuleLogger('OApp')
@@ -106,6 +105,38 @@ export const configureSendLibraries: OAppConfigurator = withOAppLogger(
                 const isDefaultLibrary = await endpointSdk.isDefaultSendLibrary(from.address, to.eid)
                 const currentSendLibrary = await endpointSdk.getSendLibrary(from.address, to.eid)
 
+                // If currentSendLibrary is undefined, we should not propose a change
+                // The library might be set to BlockedMessageLib which the SDK can't read properly
+                if (currentSendLibrary === undefined) {
+                    // Check if we're trying to set BlockedMessageLib
+                    const desiredLibrary = config.sendLibrary
+
+                    logger.verbose(
+                        `Current sendLibrary could not be determined for ${formatOmniVector({ from, to })}. ` +
+                            `This might mean BlockedMessageLib is already set. Desired library: ${desiredLibrary}`
+                    )
+
+                    // Check if the desired library is a BlockedMessageLib by checking its version
+                    let isSettingBlockedLib = false
+                    try {
+                        isSettingBlockedLib = await endpointSdk.isBlockedLibrary(desiredLibrary)
+                    } catch (error) {
+                        logger.debug(`Failed to check if library ${desiredLibrary} is blocked: ${error}`)
+                    }
+
+                    if (isSettingBlockedLib) {
+                        logger.verbose(
+                            `Skipping sendLibrary change as we're trying to set BlockedMessageLib which is likely already set`
+                        )
+                        return []
+                    }
+
+                    // If we're trying to set a normal library (unblocking), we should allow it
+                    logger.verbose(
+                        `Allowing sendLibrary change to ${desiredLibrary} as we're likely unblocking from BlockedMessageLib`
+                    )
+                }
+
                 if (!isDefaultLibrary && currentSendLibrary?.toLowerCase() === config.sendLibrary.toLowerCase()) {
                     logger.verbose(
                         `Current sendLibrary is not default library and is already set to ${config.sendLibrary} for ${formatOmniVector({ from, to })}, skipping`
@@ -148,6 +179,38 @@ export const configureReceiveLibraries: OAppConfigurator = withOAppLogger(
                     from.address,
                     to.eid
                 )
+
+                // If currentReceiveLibrary is undefined, we should not propose a change
+                // The library might be set to BlockedMessageLib which the SDK can't read properly
+                if (currentReceiveLibrary === undefined) {
+                    // Check if we're trying to set BlockedMessageLib
+                    const desiredLibrary = config.receiveLibraryConfig.receiveLibrary
+
+                    logger.verbose(
+                        `Current receiveLibrary could not be determined for ${formatOmniVector({ from, to })}. ` +
+                            `This might mean BlockedMessageLib is already set. Desired library: ${desiredLibrary}`
+                    )
+
+                    // Check if the desired library is a BlockedMessageLib by checking its version
+                    let isSettingBlockedLib = false
+                    try {
+                        isSettingBlockedLib = await endpointSdk.isBlockedLibrary(desiredLibrary)
+                    } catch (error) {
+                        logger.debug(`Failed to check if library ${desiredLibrary} is blocked: ${error}`)
+                    }
+
+                    if (isSettingBlockedLib) {
+                        logger.verbose(
+                            `Skipping receiveLibrary change as we're trying to set BlockedMessageLib which is likely already set`
+                        )
+                        return []
+                    }
+
+                    // If we're trying to set a normal library (unblocking), we should allow it
+                    logger.verbose(
+                        `Allowing receiveLibrary change to ${desiredLibrary} as we're likely unblocking from BlockedMessageLib`
+                    )
+                }
 
                 if (!isDefaultLibrary && currentReceiveLibrary === config.receiveLibraryConfig.receiveLibrary) {
                     logger.verbose(
@@ -262,10 +325,13 @@ export const configureSendConfig: OAppConfigurator = withOAppLogger(
             const oappSdk = await createSdk(from)
             const endpointSdk = await oappSdk.getEndpointSDK()
             const currentSendLibrary = config.sendLibrary ?? (await endpointSdk.getSendLibrary(from.address, to.eid))
-            assert(
-                currentSendLibrary !== undefined,
-                'sendLibrary has not been set in your config and no default value exists'
-            )
+
+            // If we can't determine the current send library, skip configuration
+            // This can happen with BlockedMessageLib which doesn't support configuration
+            if (currentSendLibrary === undefined) {
+                logger.verbose(`Unable to determine current send library for ${connectionName}, skipping configuration`)
+                continue
+            }
 
             if (config.sendConfig.executorConfig != null) {
                 // We ask the endpoint SDK whether this config has already been applied
@@ -380,10 +446,15 @@ export const configureReceiveConfig: OAppConfigurator = withOAppLogger(
             const [currentReceiveLibrary] = config?.receiveLibraryConfig?.receiveLibrary
                 ? [config.receiveLibraryConfig?.receiveLibrary, false]
                 : await endpointSdk.getReceiveLibrary(from.address, to.eid)
-            assert(
-                currentReceiveLibrary !== undefined,
-                `${connectionName}: receiveLibrary has not been set in your config and no default value exists`
-            )
+
+            // If we can't determine the current receive library, skip configuration
+            // This can happen with BlockedMessageLib which doesn't support configuration
+            if (currentReceiveLibrary === undefined) {
+                logger.verbose(
+                    `Unable to determine current receive library for ${connectionName}, skipping configuration`
+                )
+                continue
+            }
 
             // We ask the endpoint SDK whether this config has already been applied
             //
