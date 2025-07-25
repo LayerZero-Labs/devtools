@@ -14,7 +14,7 @@ import { IReceiveUlnE2 } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln
  */
 contract SimpleDVN is Ownable {
 
-    error InvalidLocalEid(uint32 localEid);
+    error InvalidLocalEid(uint32 expected, uint32 got);
     event PayloadVerified(bytes32 indexed guid);
     event PayloadCommitted(bytes32 indexed guid);
 
@@ -55,7 +55,7 @@ contract SimpleDVN is Ownable {
     ) external onlyOwner {
         // Ensure localEid matches contract's localEid
         if (_dstEid != localEid) {
-            revert InvalidLocalEid(_dstEid);
+            revert InvalidLocalEid(localEid, _dstEid);
         }
         // Convert local EVM address to bytes32 for GUID and header
         bytes32 localOAppB32 = bytes32(uint256(uint160(_localOApp)));
@@ -102,7 +102,7 @@ contract SimpleDVN is Ownable {
     ) external onlyOwner {
         // Ensure localEid matches contract's localEid
         if (_dstEid != localEid) {
-            revert InvalidLocalEid(_dstEid);
+            revert InvalidLocalEid(localEid, _dstEid);
         }
         // Convert local EVM address to bytes32 for GUID and header
         bytes32 localOAppB32 = bytes32(uint256(uint160(_localOApp)));
