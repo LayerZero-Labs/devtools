@@ -9,7 +9,6 @@ error InvalidLocalEid(uint32 localEid);
 event PayloadVerified(bytes32 indexed guid);
 event PayloadCommitted(bytes32 indexed guid);
 
-
 // A message on the destination chain has to go through three steps:
 // 1. verify -> 2. commit -> 3. execute
 
@@ -77,7 +76,7 @@ contract SimpleDVN is Ownable {
         receiveUln.verify(
             _encodeHeader(_nonce, _srcEid, _remoteOApp, _dstEid, localOAppB32),
             _encodePayloadHash(_guid, _message),
-            1 
+            1
         );
         // Emit event for successful verification
         emit PayloadVerified(_guid);
@@ -116,10 +115,10 @@ contract SimpleDVN is Ownable {
 
         /*
          * 2. Call ULN commit:
-            *    - payloadHeader = nonce || srcEid || sender || dstEid || receiver
-            *    - payloadHash = keccak256(guid || message)
+         *    - payloadHeader = nonce || srcEid || sender || dstEid || receiver
+         *    - payloadHash = keccak256(guid || message)
          */
-        
+
         receiveUln.commitVerification(
             _encodeHeader(_nonce, _srcEid, _remoteOApp, _dstEid, localOAppB32),
             _encodePayloadHash(_guid, _message)
@@ -142,7 +141,7 @@ contract SimpleDVN is Ownable {
     }
 
     /**
-     * @dev Encodes payload portion (GUID + message) for ULN-302 into a keccak256 hash. 
+     * @dev Encodes payload portion (GUID + message) for ULN-302 into a keccak256 hash.
      */
     function _encodePayloadHash(bytes32 _guid, bytes memory _message) internal pure returns (bytes32) {
         return (keccak256(abi.encodePacked(_guid, _message)));
