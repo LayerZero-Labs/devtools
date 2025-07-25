@@ -144,7 +144,7 @@ contract SimpleDVN is Ownable {
      * @dev Encodes payload portion (GUID + message) for ULN-302 into a keccak256 hash.
      */
     function _encodePayloadHash(bytes32 _guid, bytes memory _message) internal pure returns (bytes32) {
-        return (keccak256(abi.encodePacked(_guid, _message)));
+        return keccak256(abi.encodePacked(_guid, _message));
     }
 
     /**
