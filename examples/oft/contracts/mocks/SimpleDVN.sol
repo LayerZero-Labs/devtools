@@ -157,7 +157,6 @@ contract SimpleDVN is Ownable {
         uint32 _dstEid,
         bytes32 _receiver
     ) internal pure returns (bytes32) {
-        bytes32 guid = keccak256(abi.encodePacked(_nonce, _srcEid, _sender, _dstEid, _receiver));
-        return guid;
+        return keccak256(abi.encodePacked(_nonce, _srcEid, _sender, _dstEid, _receiver));
     }
 }
