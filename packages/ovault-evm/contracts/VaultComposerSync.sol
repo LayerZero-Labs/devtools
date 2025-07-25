@@ -15,7 +15,7 @@ import { IVaultComposerSync } from "./interfaces/IVaultComposerSync.sol";
 
 /**
  * @title VaultComposerSync - Synchronous Vault Composer
- * @author Shankar and Riley on behalf of LayerZero Labs
+ * @author LayerZero Labs (@shankars99, @TRileySchwarz)
  * @notice This contract is a composer that allows deposits and redemptions operations against a
  *         synchronous vault across different chains using LayerZero's OFT protocol.
  * @dev The contract is designed to handle deposits and redemptions of vault shares and assets,
