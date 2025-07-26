@@ -127,6 +127,29 @@ contract HyperLiquidComposerRefundTest is Test {
         assertEq(msgValue, AMOUNT_TO_FUND);
     }
 
+    function test_zero_address_receiver() public {
+        // Mocks the lzReceive call which mints the tokens to the hyperLiquidComposer
+        deal(address(oft), address(hyperLiquidComposer), AMOUNT_TO_SEND);
+
+        bytes memory composeMsg = abi.encode(AMOUNT_TO_FUND, address(0));
+
+        bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
+            0,
+            SRC_EID,
+            AMOUNT_TO_SEND,
+            abi.encodePacked(addressToBytes32(address(userA)), composeMsg)
+        );
+
+        vm.startPrank(HL_LZ_ENDPOINT_V2);
+        hyperLiquidComposer.lzCompose{ value: AMOUNT_TO_FUND }(address(oft), bytes32(0), composerMsg_, msg.sender, "");
+        vm.stopPrank();
+
+        (SendParam memory refundSendParam, uint256 msgValue) = hyperLiquidComposer.failedMessages(bytes32(0));
+        assertEq(refundSendParam.to, addressToBytes32(userA));
+        assertEq(refundSendParam.amountLD, AMOUNT_TO_SEND);
+        assertEq(msgValue, AMOUNT_TO_FUND);
+    }
+
     function test_erc20_refund_sender_malformed_receiver() public {
         // Mocks the lzReceive call which mints the tokens to the hyperLiquidComposer
         deal(address(oft), address(hyperLiquidComposer), AMOUNT_TO_SEND);

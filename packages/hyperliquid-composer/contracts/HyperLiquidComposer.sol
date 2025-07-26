@@ -90,7 +90,6 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
             revert IHyperLiquidComposerErrors.HyperLiquidComposer_InvalidCall_NotOFT(address(oft), _oft);
         }
 
-        uint256 minMsgValue;
         address receiver;
 
         /// @dev Since these are populated by the OFT contract, we can safely assume they are always decodeable
@@ -104,10 +103,9 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         /// @dev If the payload is invalid, the function will revert with the error message and there is no refunds
         try this.decode_message(composeMsgEncoded) returns (uint256 _minMsgValue, address _receiver) {
             if (_minMsgValue > msg.value) {
-                revert IHyperLiquidComposerErrors.NotEnoughMsgValue(msg.value, minMsgValue);
+                revert IHyperLiquidComposerErrors.NotEnoughMsgValue(msg.value, _minMsgValue);
             }
 
-            minMsgValue = _minMsgValue;
             receiver = _receiver;
         } catch {
             /// @dev The msgValue passed will be re-used to pay for the layerzero message
