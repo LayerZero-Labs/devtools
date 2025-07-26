@@ -79,6 +79,10 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
             );
         }
         (minMsgValue, receiver) = abi.decode(_composeMessage, (uint256, address));
+
+        if (receiver == address(0)) {
+            revert IHyperLiquidComposerErrors.HyperLiquidComposer_ReceiverCannotBeZeroAddress(receiver);
+        }
     }
 
     /// @notice External function to quote the conversion of evm tokens to hypercore tokens
