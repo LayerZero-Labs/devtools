@@ -20,6 +20,9 @@ abstract contract RecoverableComposer is HyperLiquidComposer {
 
     error MaxRetrieveAmountExceeded(uint256 maxAmount, uint256 requestedAmount);
 
+    event Retrieved(uint64 indexed coreIndexId, uint256 amount, address indexed to);
+    event Recovered(address indexed to, uint256 amount);
+
     uint256 public constant FULL_TRANSFER = 0;
     uint64 public constant USDC_CORE_INDEX = 0;
 
@@ -35,37 +38,36 @@ abstract contract RecoverableComposer is HyperLiquidComposer {
         uint256 maxTransferAmt = _getMaxTransferAmount(oftAsset.coreIndexId, _coreAmount);
 
         _submitCoreWriterTransfer(oftAsset.assetBridgeAddress, oftAsset.coreIndexId, maxTransferAmt);
+        emit Retrieved(oftAsset.coreIndexId, maxTransferAmt, oftAsset.assetBridgeAddress);
     }
 
     function retrieveCoreHYPE(uint64 _coreAmount) public onlyRecoveryAddress {
         uint256 maxTransferAmt = _getMaxTransferAmount(hypeAsset.coreIndexId, _coreAmount);
 
         _submitCoreWriterTransfer(hypeAsset.assetBridgeAddress, hypeAsset.coreIndexId, maxTransferAmt);
+        emit Retrieved(hypeAsset.coreIndexId, maxTransferAmt, hypeAsset.assetBridgeAddress);
     }
 
     function retrieveCoreUSDC(uint64 _coreAmount, address _to) public onlyRecoveryAddress {
         uint256 maxTransferAmt = _getMaxTransferAmount(USDC_CORE_INDEX, _coreAmount);
 
         _submitCoreWriterTransfer(_to, USDC_CORE_INDEX, maxTransferAmt);
+        emit Retrieved(USDC_CORE_INDEX, maxTransferAmt, _to);
     }
 
     function recoverEvmERC20(uint256 _evmAmount) public onlyRecoveryAddress {
-        uint256 recoverAmt = _evmAmount == FULL_TRANSFER ? innerToken.balanceOf(address(this)) : _evmAmount;
-
-        innerToken.safeTransfer(RECOVERY_ADDRESS, recoverAmt);
+        recoverEvmERC20(_evmAmount, RECOVERY_ADDRESS);
     }
 
     function recoverEvmNative(uint256 _evmAmount) public onlyRecoveryAddress {
-        uint256 recoverAmt = _evmAmount == FULL_TRANSFER ? address(this).balance : _evmAmount;
-
-        (bool success, ) = RECOVERY_ADDRESS.call{ value: recoverAmt }("");
-        require(success, "Transfer failed");
+        recoverEvmNative(_evmAmount, RECOVERY_ADDRESS);
     }
 
     function recoverEvmERC20(uint256 _evmAmount, address _to) public onlyRecoveryAddress {
         uint256 recoverAmt = _evmAmount == FULL_TRANSFER ? innerToken.balanceOf(address(this)) : _evmAmount;
 
         innerToken.safeTransfer(_to, recoverAmt);
+        emit Recovered(_to, recoverAmt);
     }
 
     function recoverEvmNative(uint256 _evmAmount, address _to) public onlyRecoveryAddress {
@@ -73,6 +75,7 @@ abstract contract RecoverableComposer is HyperLiquidComposer {
 
         (bool success, ) = _to.call{ value: recoverAmt }("");
         require(success, "Transfer failed");
+        emit Recovered(_to, recoverAmt);
     }
 
     function _getMaxTransferAmount(uint64 _coreIndexId, uint256 _coreAmount) internal view returns (uint256) {
