@@ -20,9 +20,8 @@ The Simple DVN follows the same folow on the destination chain:
                    Validate the        Store verification    Execute the
                   packet payload       result on-chain      cross-chain
                    and signatures      Prepare for          transaction
-                                       execution                     
+                                       execution
 ```
-
 
 ## Instructions
 
@@ -75,4 +74,3 @@ pnpm hardhat --network arbitrum-testnet lz:simple-dvn:lz-receive \
   --amount 1.5 \
   --dst-eid 40231
 ```
-
