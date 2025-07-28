@@ -13,7 +13,6 @@ import { IReceiveUlnE2 } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln
  * @dev We accept sender and receiver as bytes32 to handle arbitrary remote address formats.
  */
 contract SimpleDVN is Ownable {
-
     error InvalidLocalEid(uint32 expected, uint32 got);
     event PayloadVerified(bytes32 indexed guid);
     event PayloadCommitted(bytes32 indexed guid);
