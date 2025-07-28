@@ -57,6 +57,7 @@ Commit
 ```
 pnpm hardhat --network arbitrum-testnet lz:simple-dvn:commit \
   --src-eid 40232 \
+  --src-oapp <SOURCE_OFT_ADDRESS>
   --nonce 1 \
   --to-address <RECIPIENT_ADDRESS> \
   --amount 1.5 \
