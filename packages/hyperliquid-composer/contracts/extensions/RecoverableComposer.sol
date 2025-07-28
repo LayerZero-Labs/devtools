@@ -35,21 +35,21 @@ abstract contract RecoverableComposer is HyperLiquidComposer {
     }
 
     function retrieveCoreERC20(uint64 _coreAmount) public onlyRecoveryAddress {
-        uint256 maxTransferAmt = _getMaxTransferAmount(oftAsset.coreIndexId, _coreAmount);
+        uint64 maxTransferAmt = _getMaxTransferAmount(oftAsset.coreIndexId, _coreAmount);
 
         _submitCoreWriterTransfer(oftAsset.assetBridgeAddress, oftAsset.coreIndexId, maxTransferAmt);
         emit Retrieved(oftAsset.coreIndexId, maxTransferAmt, oftAsset.assetBridgeAddress);
     }
 
     function retrieveCoreHYPE(uint64 _coreAmount) public onlyRecoveryAddress {
-        uint256 maxTransferAmt = _getMaxTransferAmount(hypeAsset.coreIndexId, _coreAmount);
+        uint64 maxTransferAmt = _getMaxTransferAmount(hypeAsset.coreIndexId, _coreAmount);
 
         _submitCoreWriterTransfer(hypeAsset.assetBridgeAddress, hypeAsset.coreIndexId, maxTransferAmt);
         emit Retrieved(hypeAsset.coreIndexId, maxTransferAmt, hypeAsset.assetBridgeAddress);
     }
 
     function retrieveCoreUSDC(uint64 _coreAmount, address _to) public onlyRecoveryAddress {
-        uint256 maxTransferAmt = _getMaxTransferAmount(USDC_CORE_INDEX, _coreAmount);
+        uint64 maxTransferAmt = _getMaxTransferAmount(USDC_CORE_INDEX, _coreAmount);
 
         _submitCoreWriterTransfer(_to, USDC_CORE_INDEX, maxTransferAmt);
         emit Retrieved(USDC_CORE_INDEX, maxTransferAmt, _to);
@@ -78,15 +78,15 @@ abstract contract RecoverableComposer is HyperLiquidComposer {
         emit Recovered(_to, recoverAmt);
     }
 
-    function _getMaxTransferAmount(uint64 _coreIndexId, uint256 _coreAmount) internal view returns (uint256) {
-        uint256 maxTransferAmt = _balanceOfHyperCore(address(this), _coreIndexId);
+    function _getMaxTransferAmount(uint64 _coreIndexId, uint64 _coreAmount) internal view returns (uint64) {
+        uint64 maxTransferAmt = _balanceOfHyperCore(address(this), _coreIndexId);
         if (_coreAmount > maxTransferAmt) {
             revert MaxRetrieveAmountExceeded(maxTransferAmt, _coreAmount);
         }
         return _coreAmount == FULL_TRANSFER ? maxTransferAmt : _coreAmount;
     }
 
-    function _submitCoreWriterTransfer(address _to, uint64 _coreIndexId, uint256 _transferAmt) internal {
+    function _submitCoreWriterTransfer(address _to, uint64 _coreIndexId, uint64 _transferAmt) internal {
         bytes memory action = abi.encode(_to, _coreIndexId, _transferAmt);
         bytes memory payload = abi.encodePacked(SPOT_SEND_HEADER, action);
         ICoreWriter(HLP_CORE_WRITER).sendRawAction(payload);
