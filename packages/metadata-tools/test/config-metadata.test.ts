@@ -1,5 +1,10 @@
-import { DVNsToAddresses, generateConnectionsConfig, translatePathwayToConfig } from '@/config-metadata'
-import { IMetadataDvns, IMetadata, TwoWayConfig } from '@/types'
+import {
+    DVNsToAddresses,
+    executorNameToAddress,
+    generateConnectionsConfig,
+    translatePathwayToConfig,
+} from '@/config-metadata'
+import { IMetadataDvns, IMetadataExecutors, IMetadata, TwoWayConfig } from '@/types'
 
 import fujiMetadata from './data/fuji.json'
 import polygonMainnetMetadata from './data/polygon-mainnet.json'
@@ -117,6 +122,159 @@ describe('config-metadata', () => {
             const config = await generateConnectionsConfig(pathways, { fetchMetadata: customFetchMetadata })
             expect(config).toMatchSnapshot()
         })
+
+        it('should allow for custom executor in the metadata', async () => {
+            // extend the Fuji metadata with custom executor
+            const fujiExecutorsWithCustom: IMetadataExecutors = {
+                '0x1234567890abcdef1234567890abcdef12345678': {
+                    version: 2,
+                    canonicalName: 'CustomExecutor',
+                    id: 'custom-executor',
+                },
+            }
+
+            const customFetchMetadata = async (): Promise<IMetadata> => {
+                return {
+                    ...metadata,
+                    fuji: {
+                        ...metadata.fuji!,
+                        executors: fujiExecutorsWithCustom,
+                    },
+                }
+            }
+
+            const avalancheContract = { eid: 40106, contractName: 'MyOFT' }
+            const solanaContract = { eid: 40168, address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy' }
+
+            // A pathway using the custom executor
+            const pathways: TwoWayConfig[] = [
+                [
+                    avalancheContract,
+                    solanaContract,
+                    [['LayerZero Labs'], []],
+                    [1, 1],
+                    [undefined, undefined],
+                    'CustomExecutor', // Use custom executor
+                ],
+            ]
+
+            const config = await generateConnectionsConfig(pathways, { fetchMetadata: customFetchMetadata })
+
+            // Check that the custom executor address is used in send configs
+            expect(config[0]?.config?.sendConfig?.executorConfig?.executor).toBe(
+                '0x1234567890abcdef1234567890abcdef12345678'
+            )
+            // Solana doesn't have custom executor defined, so it uses the name as-is
+            expect(config[1]?.config?.sendConfig?.executorConfig?.executor).toBe('CustomExecutor')
+        })
+
+        it('should use custom executor for both directions when specified', async () => {
+            // extend both Fuji and Solana metadata with custom executors
+            const customFetchMetadata = async (): Promise<IMetadata> => {
+                return {
+                    ...metadata,
+                    fuji: {
+                        ...metadata.fuji!,
+                        executors: {
+                            '0xaaaa567890abcdef1234567890abcdef12345678': {
+                                version: 2,
+                                canonicalName: 'FujiCustomExecutor',
+                                id: 'fuji-custom-executor',
+                            },
+                        },
+                    },
+                    'solana-testnet': {
+                        ...metadata['solana-testnet']!,
+                        executors: {
+                            SoLaNaExEcUtOrAdDrEsSfOrTeStInGpUrPoSeS1234: {
+                                version: 2,
+                                canonicalName: 'SolanaCustomExecutor',
+                                id: 'solana-custom-executor',
+                            },
+                        },
+                    },
+                }
+            }
+
+            const avalancheContract = { eid: 40106, contractName: 'MyOFT' }
+            const solanaContract = { eid: 40168, address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy' }
+
+            // Test with FujiCustomExecutor
+            const pathwaysWithFujiExecutor: TwoWayConfig[] = [
+                [
+                    avalancheContract,
+                    solanaContract,
+                    [['LayerZero Labs'], []],
+                    [1, 1],
+                    [undefined, undefined],
+                    'FujiCustomExecutor',
+                ],
+            ]
+
+            const configWithFujiExecutor = await generateConnectionsConfig(pathwaysWithFujiExecutor, {
+                fetchMetadata: customFetchMetadata,
+            })
+
+            // Both directions should use the custom executor from their respective chains
+            expect(configWithFujiExecutor[0]?.config?.sendConfig?.executorConfig?.executor).toBe(
+                '0xaaaa567890abcdef1234567890abcdef12345678'
+            )
+            // Solana doesn't have FujiCustomExecutor defined, so it uses the name as-is
+            expect(configWithFujiExecutor[1]?.config?.sendConfig?.executorConfig?.executor).toBe('FujiCustomExecutor')
+        })
+
+        it('should resolve executor name based on each chain metadata', async () => {
+            // Define the same executor name with different addresses on each chain
+            const customFetchMetadata = async (): Promise<IMetadata> => {
+                return {
+                    ...metadata,
+                    fuji: {
+                        ...metadata.fuji!,
+                        executors: {
+                            '0xfuji567890abcdef1234567890abcdef12345678': {
+                                version: 2,
+                                canonicalName: 'MyCustomExecutor',
+                                id: 'my-custom-executor-fuji',
+                            },
+                        },
+                    },
+                    'solana-testnet': {
+                        ...metadata['solana-testnet']!,
+                        executors: {
+                            SoLaNaExEcUtOrAdDrEsSfOrMyCustomExecutor123: {
+                                version: 2,
+                                canonicalName: 'MyCustomExecutor',
+                                id: 'my-custom-executor-solana',
+                            },
+                        },
+                    },
+                }
+            }
+
+            const avalancheContract = { eid: 40106, contractName: 'MyOFT' }
+            const solanaContract = { eid: 40168, address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy' }
+
+            const pathways: TwoWayConfig[] = [
+                [
+                    avalancheContract,
+                    solanaContract,
+                    [['LayerZero Labs'], []],
+                    [1, 1],
+                    [undefined, undefined],
+                    'MyCustomExecutor', // Same name resolves to different addresses on each chain
+                ],
+            ]
+
+            const config = await generateConnectionsConfig(pathways, { fetchMetadata: customFetchMetadata })
+
+            // Each chain resolves the executor name to its own address
+            expect(config[0]?.config?.sendConfig?.executorConfig?.executor).toBe(
+                '0xfuji567890abcdef1234567890abcdef12345678'
+            )
+            expect(config[1]?.config?.sendConfig?.executorConfig?.executor).toBe(
+                'SoLaNaExEcUtOrAdDrEsSfOrMyCustomExecutor123'
+            )
+        })
     })
 
     describe('translatePathwayToConfig', () => {
@@ -227,6 +385,119 @@ describe('config-metadata', () => {
         it('should throw error if all DVNs are deprecated', () => {
             expect(() => DVNsToAddresses(['Deprec'], 'fuji', metadata)).toThrow(
                 `Can't find DVN: "Deprec" on chainKey: "fuji". Double check you're using valid DVN canonical name (not an address).`
+            )
+        })
+    })
+
+    describe('executorNameToAddress', () => {
+        it('should return the address as-is if it starts with 0x', () => {
+            expect(executorNameToAddress('0x1234567890abcdef1234567890abcdef12345678', 'fuji', metadata)).toBe(
+                '0x1234567890abcdef1234567890abcdef12345678'
+            )
+        })
+
+        it('should return the name as-is if no executors are defined for the chain', () => {
+            expect(executorNameToAddress('CustomExecutor', 'fuji', metadata)).toBe('CustomExecutor')
+        })
+
+        it('should resolve executor name to address when custom executors are defined', () => {
+            const metadataWithExecutors: IMetadata = {
+                ...metadata,
+                fuji: {
+                    ...metadata.fuji!,
+                    executors: {
+                        '0xaaaa567890abcdef1234567890abcdef12345678': {
+                            version: 2,
+                            canonicalName: 'CustomExecutor',
+                            id: 'custom-executor',
+                        },
+                        '0xbbbb567890abcdef1234567890abcdef12345678': {
+                            version: 2,
+                            canonicalName: 'AnotherExecutor',
+                            id: 'another-executor',
+                        },
+                    },
+                },
+            }
+
+            expect(executorNameToAddress('CustomExecutor', 'fuji', metadataWithExecutors)).toBe(
+                '0xaaaa567890abcdef1234567890abcdef12345678'
+            )
+            expect(executorNameToAddress('AnotherExecutor', 'fuji', metadataWithExecutors)).toBe(
+                '0xbbbb567890abcdef1234567890abcdef12345678'
+            )
+        })
+
+        it('should return name as-is if executor name not found in custom executors', () => {
+            const metadataWithExecutors: IMetadata = {
+                ...metadata,
+                fuji: {
+                    ...metadata.fuji!,
+                    executors: {
+                        '0xaaaa567890abcdef1234567890abcdef12345678': {
+                            version: 2,
+                            canonicalName: 'CustomExecutor',
+                            id: 'custom-executor',
+                        },
+                    },
+                },
+            }
+
+            expect(executorNameToAddress('NonExistentExecutor', 'fuji', metadataWithExecutors)).toBe(
+                'NonExistentExecutor'
+            )
+        })
+
+        it('should skip deprecated executors', () => {
+            const metadataWithExecutors: IMetadata = {
+                ...metadata,
+                fuji: {
+                    ...metadata.fuji!,
+                    executors: {
+                        '0xaaaa567890abcdef1234567890abcdef12345678': {
+                            version: 2,
+                            canonicalName: 'CustomExecutor',
+                            id: 'custom-executor',
+                            deprecated: true,
+                        },
+                        '0xbbbb567890abcdef1234567890abcdef12345678': {
+                            version: 2,
+                            canonicalName: 'CustomExecutor',
+                            id: 'custom-executor-new',
+                        },
+                    },
+                },
+            }
+
+            // Should return the non-deprecated one
+            expect(executorNameToAddress('CustomExecutor', 'fuji', metadataWithExecutors)).toBe(
+                '0xbbbb567890abcdef1234567890abcdef12345678'
+            )
+        })
+
+        it('should only match version 2 executors', () => {
+            const metadataWithExecutors: IMetadata = {
+                ...metadata,
+                fuji: {
+                    ...metadata.fuji!,
+                    executors: {
+                        '0xaaaa567890abcdef1234567890abcdef12345678': {
+                            version: 1,
+                            canonicalName: 'CustomExecutor',
+                            id: 'custom-executor-v1',
+                        },
+                        '0xbbbb567890abcdef1234567890abcdef12345678': {
+                            version: 2,
+                            canonicalName: 'CustomExecutor',
+                            id: 'custom-executor-v2',
+                        },
+                    },
+                },
+            }
+
+            // Should return the version 2 executor
+            expect(executorNameToAddress('CustomExecutor', 'fuji', metadataWithExecutors)).toBe(
+                '0xbbbb567890abcdef1234567890abcdef12345678'
             )
         })
     })

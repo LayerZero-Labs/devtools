@@ -8,6 +8,7 @@ export type TwoWayConfig = [
     [string[], [string[], number] | []], // [requiredDVNs, [optionalDVNs, threshold]]
     [number, number | undefined], // [srcToDstConfirmations, dstToSrcConfirmations]
     [OAppEnforcedOption[] | undefined, OAppEnforcedOption[] | undefined], // [enforcedOptionsSrcToDst, enforcedOptionsDstToSrc]
+    string?, // customExecutor - optional custom executor for send config
 ]
 
 export interface IMetadataDvns {
@@ -17,6 +18,15 @@ export interface IMetadataDvns {
         id: string
         deprecated?: boolean
         lzReadCompatible?: boolean
+    }
+}
+
+export interface IMetadataExecutors {
+    [address: string]: {
+        version: number
+        canonicalName: string
+        id: string
+        deprecated?: boolean
     }
 }
 
@@ -64,6 +74,7 @@ export interface IMetadata {
             name?: string
         }
         dvns?: IMetadataDvns
+        executors?: IMetadataExecutors
         rpcs?: { url: string; weight?: number }[]
         addressToOApp?: {
             [address: string]: {
