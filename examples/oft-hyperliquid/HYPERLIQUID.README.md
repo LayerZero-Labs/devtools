@@ -40,9 +40,9 @@ npx @layerzerolabs/hyperliquid-composer core-spot \
 #### Get Core Spot balances
 
 ```bash
-npx @layerzerolabs/hyperliquid-composer get-core-balances \ 
+npx @layerzerolabs/hyperliquid-composer get-core-balances \
     --user <0x> \
-    [--show-zero {false | true}] \ 
+    [--show-zero {false | true}] \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
 ```
