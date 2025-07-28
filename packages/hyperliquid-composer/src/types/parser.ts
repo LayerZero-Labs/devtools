@@ -96,3 +96,15 @@ export interface SpotDeployStates {
     states: DeployState[]
     gasAuction: GasAuction
 }
+
+export interface SpotBalance {
+    coin: string
+    token: number
+    total: string
+    hold: string
+    entryNtl: string
+}
+
+export interface SpotBalancesResponse {
+    balances: SpotBalance[]
+}
