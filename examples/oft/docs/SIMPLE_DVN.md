@@ -64,4 +64,15 @@ pnpm hardhat --network arbitrum-testnet lz:simple-dvn:commit \
   --dst-eid 40231 \
 ```
 
+Now you can call lzReceive on the destination (execution)
+
+```
+pnpm hardhat --network arbitrum-testnet lz:simple-dvn:lz-receive \
+  --src-eid 40232 \
+  --src-oapp <SOURCE_OFT_ADDRESS> \
+  --nonce 1 \
+  --to-address <RECIPIENT_ADDRESS> \
+  --amount 1.5 \
+  --dst-eid 40231
+```
 
