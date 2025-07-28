@@ -1,4 +1,5 @@
 import './sendOFT'
 import './mock/commit'
 import './mock/verify'
+import './mock/lzReceive'
 import './mock/setReceiveConfig'
