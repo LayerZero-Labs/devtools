@@ -16,7 +16,7 @@ interface TaskArgs {
     localOapp: string // Receiver EVM address on this chain
 }
 
-task('lz:mock:commit', 'Call commit() on SimpleDVN to commit ULN verification for message')
+task('lz:simple-dvn:commit', 'Call commit() on SimpleDVN to commit ULN verification for message')
     .addParam('contractName', 'Deployed SimpleDVN name', undefined, types.string)
     .addParam('remoteEid', 'Source chain EID', undefined, types.int)
     .addParam('remoteOapp', 'Sender app on source chain (hex)', undefined, types.string)

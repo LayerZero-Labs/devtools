@@ -16,7 +16,7 @@ interface TaskArgs {
     localOapp: string // Receiver EVM address on this chain
 }
 
-task('lz:mock:verify', 'Call verify() on SimpleDVN to verify a message')
+task('lz:simple-dvn:verify', 'Call verify() on SimpleDVN to verify a message')
     .addParam('contractName', 'Deployed SimpleDVN name', undefined, types.string)
     .addParam('remoteEid', 'Source chain EID', undefined, types.int)
     .addParam('remoteOapp', 'Sender app on source chain (hex)', undefined, types.string)
