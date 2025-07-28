@@ -11,6 +11,7 @@ import { DoubleEndedQueue } from "@openzeppelin/contracts/utils/structs/DoubleEn
 // Protocol
 import { Origin, ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 import { PacketV1Codec } from "@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/PacketV1Codec.sol";
+import { ExecutorOptions } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol";
 
 // Minimal Mocks
 import { EndpointV2Simple as EndpointV2 } from "./mocks/EndpointV2Simple.sol";
@@ -24,37 +25,37 @@ interface IOAppSetPeer {
 
 /**
  * @title SlimLzTestHelper
- * @notice Lightweight helper contract for basic LayerZero OApp testing without compile size issues.
+ * @notice Lightweight helper contract for basic LayerZero OApp testing without compile size issues
  * @dev Maintains backward compatibility with TestHelperOz5 for basic testing scenarios.
- * @dev For advanced features (DVN, Executor, workers), use TestHelperOz5 instead.
+ * For advanced features (DVN, Executor, workers), use TestHelperOz5 instead.
  */
 contract SlimLzTestHelper is Test, OptionsHelper {
+    using DoubleEndedQueue for DoubleEndedQueue.Bytes32Deque;
+    using PacketV1Codec for bytes;
+    
     // ==================== Custom Errors ====================
     
-    /// @notice Core operational errors
-    /// @dev Thrown when trying to verify packets for an unregistered endpoint
+    /// @notice Thrown when trying to verify packets for an unregistered endpoint
     /// @param eid The endpoint ID that was not found
     error SlimLzTestHelper_EndpointNotRegistered(uint32 eid);
     
-    /// @dev Thrown when native drop transfer fails
+    /// @notice Thrown when native drop transfer fails
     /// @param receiver The address that failed to receive native tokens
     /// @param amount The amount that failed to transfer
     error SlimLzTestHelper_NativeDropFailed(address receiver, uint256 amount);
     
-    /// @dev Thrown when packet GUID doesn't match expected value
+    /// @notice Thrown when packet GUID doesn't match expected value
     /// @param expected The expected GUID value
     /// @param actual The actual GUID value found in packet
     error SlimLzTestHelper_GuidMismatch(bytes32 expected, bytes32 actual);
     
-    /// @dev Thrown when packet validation fails
+    /// @notice Thrown when packet validation fails
     /// @param guid The GUID of the packet that failed validation
     error SlimLzTestHelper_PacketValidationFailed(bytes32 guid);
     
-    /// @dev Thrown when attempting to schedule a packet with duplicate GUID
+    /// @notice Thrown when attempting to schedule a packet with duplicate GUID
     /// @param guid The duplicate GUID that was detected
     error SlimLzTestHelper_DuplicateGuid(bytes32 guid);
-    using DoubleEndedQueue for DoubleEndedQueue.Bytes32Deque;
-    using PacketV1Codec for bytes;
 
     enum LibraryType {
         UltraLightNode,
@@ -78,32 +79,34 @@ contract SlimLzTestHelper is Test, OptionsHelper {
     mapping(bytes32 => bytes) optionsLookup;
     mapping(uint32 => address) endpoints;
 
-    // Constants
     uint128 public executorValueCap = 0.1 ether;
 
     // Maintain same visibility as TestHelperOz5
     EndpointSetup internal endpointSetup;
 
-    /// @dev Initializes test environment setup
+    /// @notice Initializes test environment setup
     function setUp() public virtual {
         _setUpUlnOptions();
     }
 
     /**
-     * @dev set executorValueCap if more than 0.1 ether is necessary
-     * @param _valueCap amount executor can pass as msg.value to lzReceive()
+     * @notice Sets the maximum value that can be passed to lzReceive() calls
+     * @dev Default is 0.1 ether, call this to increase if needed
+     * 
+     * @param _valueCap The new maximum value cap
      */
     function setExecutorValueCap(uint128 _valueCap) public {
         executorValueCap = _valueCap;
     }
 
     /**
-     * @notice Sets up endpoints - maintains backward compatibility
+     * @notice Sets up endpoints for testing
+     * @dev Creates endpoints and configures them with SimpleMessageLib
+     * 
      * @param _endpointNum Number of endpoints to create
      */
-    function setUpEndpoints(uint8 _endpointNum, LibraryType /* _libraryType */) public {
-        // In slim version, we always use SimpleMessageLib regardless of _libraryType
-        // This maintains API compatibility while simplifying implementation
+    function setUpEndpoints(uint8 _endpointNum) public {
+        // In slim version, we always use SimpleMessageLib
         
         endpointSetup.endpointList = new EndpointV2[](_endpointNum);
         endpointSetup.eidList = new uint32[](_endpointNum);
@@ -148,14 +151,43 @@ contract SlimLzTestHelper is Test, OptionsHelper {
     }
 
     /**
-     * @notice Overload for backward compatibility
+     * @notice Overload for backward compatibility with LibraryType parameter
+     * @dev Library type is ignored - always uses SimpleMessageLib
+     * 
+     * @param _endpointNum Number of endpoints to create
      */
-    function setUpEndpoints(uint8 _endpointNum) public {
-        setUpEndpoints(_endpointNum, LibraryType.SimpleMessageLib);
+    function setUpEndpoints(uint8 _endpointNum, LibraryType /* _libraryType */) public {
+        setUpEndpoints(_endpointNum);
+    }
+
+    /**
+     * @notice Deploys an OApp contract
+     * @dev Uses CREATE opcode to deploy contract with constructor arguments
+     * 
+     * @param _oappBytecode The OApp contract bytecode
+     * @param _constructorArgs The encoded constructor arguments
+     * 
+     * @return addr The deployed contract address
+     */
+    function _deployOApp(bytes memory _oappBytecode, bytes memory _constructorArgs) internal returns (address addr) {
+        bytes memory bytecode = bytes.concat(abi.encodePacked(_oappBytecode), _constructorArgs);
+        assembly {
+            addr := create(0, add(bytecode, 0x20), mload(bytecode))
+            if iszero(extcodesize(addr)) {
+                revert(0, 0)
+            }
+        }
     }
 
     /**
      * @notice Sets up mock OApp contracts for testing
+     * @dev Deploys OApp contracts and wires them together
+     * 
+     * @param _oappCreationCode The bytecode for creating OApp contracts
+     * @param _startEid The starting endpoint ID
+     * @param _oappNum The number of OApp contracts to create
+     * 
+     * @return oapps Array of deployed OApp addresses
      */
     function setupOApps(
         bytes memory _oappCreationCode,
@@ -172,6 +204,9 @@ contract SlimLzTestHelper is Test, OptionsHelper {
 
     /**
      * @notice Configures the peers between multiple OApp instances
+     * @dev Sets up bidirectional peer relationships between all OApps
+     * 
+     * @param oapps Array of OApp addresses to wire together
      */
     function wireOApps(address[] memory oapps) public {
         uint256 size = oapps.length;
@@ -187,21 +222,11 @@ contract SlimLzTestHelper is Test, OptionsHelper {
     }
 
     /**
-     * @notice Deploys an OApp contract
-     */
-    function _deployOApp(bytes memory _oappBytecode, bytes memory _constructorArgs) internal returns (address addr) {
-        bytes memory bytecode = bytes.concat(abi.encodePacked(_oappBytecode), _constructorArgs);
-        assembly {
-            addr := create(0, add(bytecode, 0x20), mload(bytecode))
-            if iszero(extcodesize(addr)) {
-                revert(0, 0)
-            }
-        }
-    }
-
-    /**
      * @notice Schedules a packet for delivery
-     * @dev Includes optional duplicate GUID detection for enhanced safety
+     * @dev Stores packet and options for later verification. Includes optional duplicate GUID detection.
+     * 
+     * @param _packetBytes The encoded packet data
+     * @param _options The executor options for packet delivery
      */
     function schedulePacket(bytes calldata _packetBytes, bytes calldata _options) public {
         uint32 dstEid = _packetBytes.dstEid();
@@ -220,21 +245,36 @@ contract SlimLzTestHelper is Test, OptionsHelper {
     }
 
     /**
-     * @notice Verifies and processes packets
+     * @notice Verifies and processes all pending packets for a destination
+     * @dev Convenience function that processes all packets without compose
+     * 
+     * @param _dstEid The destination endpoint ID
+     * @param _dstAddress The destination address as bytes32
      */
     function verifyPackets(uint32 _dstEid, bytes32 _dstAddress) public {
         verifyPackets(_dstEid, _dstAddress, 0, address(0x0), bytes(""));
     }
 
     /**
-     * @notice Verifies packets by address
+     * @notice Verifies and processes all pending packets for a destination address
+     * @dev Convenience function that converts address to bytes32
+     * 
+     * @param _dstEid The destination endpoint ID
+     * @param _dstAddress The destination address
      */
     function verifyPackets(uint32 _dstEid, address _dstAddress) public {
         verifyPackets(_dstEid, bytes32(uint256(uint160(_dstAddress))), 0, address(0x0), bytes(""));
     }
 
     /**
-     * @notice Main packet verification and delivery
+     * @notice Main packet verification and delivery function
+     * @dev Processes packets from queue, executes lzReceive, handles native drops and compose
+     * 
+     * @param _dstEid The destination endpoint ID
+     * @param _dstAddress The destination address as bytes32
+     * @param _packetAmount Number of packets to process (0 for all)
+     * @param _composer The composer address for lzCompose calls
+     * @param _resolvedPayload Payload for packet validation (currently unused)
      */
     function verifyPackets(
         uint32 _dstEid,
@@ -291,6 +331,13 @@ contract SlimLzTestHelper is Test, OptionsHelper {
         }
     }
 
+    /**
+     * @notice Executes lzReceive for a packet
+     * @dev Extracts gas and value from options and calls endpoint's lzReceive
+     * 
+     * @param _packetBytes The encoded packet data
+     * @param _options The executor options containing gas and value limits
+     */
     function lzReceive(bytes calldata _packetBytes, bytes memory _options) external payable {
         EndpointV2 endpoint = EndpointV2(endpoints[_packetBytes.dstEid()]);
         (uint256 gas, uint256 value) = _parseExecutorLzReceiveOption(_options);
@@ -305,6 +352,15 @@ contract SlimLzTestHelper is Test, OptionsHelper {
         );
     }
 
+    /**
+     * @notice Executes lzCompose for a packet
+     * @dev Convenience wrapper that extracts packet data and calls full lzCompose
+     * 
+     * @param _packetBytes The encoded packet data
+     * @param _options The executor options
+     * @param _guid The packet GUID
+     * @param _composer The composer address
+     */
     function lzCompose(
         bytes calldata _packetBytes,
         bytes memory _options,
@@ -321,6 +377,17 @@ contract SlimLzTestHelper is Test, OptionsHelper {
         );
     }
 
+    /**
+     * @notice Executes lzCompose with full parameters
+     * @dev Extracts gas and value from options and calls endpoint's lzCompose
+     * 
+     * @param _dstEid The destination endpoint ID
+     * @param _from The sender address
+     * @param _options The executor options
+     * @param _guid The packet GUID
+     * @param _to The composer contract address
+     * @param _composerMsg The message for the composer
+     */
     function lzCompose(
         uint32 _dstEid,
         address _from,
@@ -334,6 +401,12 @@ contract SlimLzTestHelper is Test, OptionsHelper {
         endpoint.lzCompose{ value: value, gas: gas }(_from, _to, _guid, index, _composerMsg, bytes(""));
     }
 
+    /**
+     * @notice Validates a packet
+     * @dev Calls the receive library's validatePacket function
+     * 
+     * @param _packetBytes The encoded packet data
+     */
     function validatePacket(bytes calldata _packetBytes, bytes memory /* _resolvedPayload */) external {
         uint32 dstEid = _packetBytes.dstEid();
         EndpointV2 endpoint = EndpointV2(endpoints[dstEid]);
@@ -343,6 +416,13 @@ contract SlimLzTestHelper is Test, OptionsHelper {
         SlimSimpleMessageLibMock(payable(receiveLib)).validatePacket(_packetBytes);
     }
 
+    /**
+     * @notice Asserts that a packet's GUID matches the expected value
+     * @dev Reverts if GUIDs don't match
+     * 
+     * @param packetBytes The encoded packet data
+     * @param guid The expected GUID
+     */
     function assertGuid(bytes calldata packetBytes, bytes32 guid) external pure {
         bytes32 packetGuid = packetBytes.guid();
         if (packetGuid != guid) {
@@ -350,16 +430,28 @@ contract SlimLzTestHelper is Test, OptionsHelper {
         }
     }
 
+    /**
+     * @notice Registers an endpoint for testing
+     * @dev Maps endpoint ID to endpoint address
+     * 
+     * @param endpoint The endpoint to register
+     */
     function registerEndpoint(EndpointV2 endpoint) public {
         endpoints[endpoint.eid()] = address(endpoint);
     }
 
+    /**
+     * @notice Converts an address to bytes32
+     * @dev Used for OApp peer configuration
+     * 
+     * @param _addr The address to convert
+     * 
+     * @return The address as bytes32
+     */
     function addressToBytes32(address _addr) internal pure returns (bytes32) {
         return bytes32(uint256(uint160(_addr)));
     }
 
+    /// @notice Allows contract to receive native tokens
     receive() external payable {}
 }
-
-// Import ExecutorOptions for compatibility
-import { ExecutorOptions } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol"; 
