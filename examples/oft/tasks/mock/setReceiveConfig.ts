@@ -83,21 +83,11 @@ task('lz:simple-dvn:set-receive-config', 'Configure ULN receive side to use your
             throw new Error(`Invalid executor address: ${appliedExecutorAddress}`)
         }
 
-        const executorConfig = uln302.encodeExecutorConfig({
-            maxMessageSize: 10000,
-            executor: appliedExecutorAddress,
-        })
-
         const setConfigParams: SetConfigParam[] = [
             {
                 eid: srcEid,
                 configType: 2, // CONFIG_TYPE_ULN
                 config: ulnConfig,
-            },
-            {
-                eid: srcEid,
-                configType: 1, // CONFIG_TYPE_EXECUTOR
-                config: executorConfig,
             },
         ]
 
