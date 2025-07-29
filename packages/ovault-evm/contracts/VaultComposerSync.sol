@@ -304,7 +304,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
             /// @dev Can do this because _oft is validated before this function is called
             address erc20 = _oft == ASSET_OFT ? ASSET_ERC20 : SHARE_ERC20;
 
-            if (msg.value > 0) revert InsufficientMsgValue(0, msg.value);
+            if (msg.value > 0) revert NoMsgValueExpected();
             IERC20(erc20).safeTransfer(_sendParam.to.bytes32ToAddress(), _sendParam.amountLD);
         } else {
             // crosschain send

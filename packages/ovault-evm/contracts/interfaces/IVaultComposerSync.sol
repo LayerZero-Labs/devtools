@@ -21,6 +21,7 @@ interface IVaultComposerSync is IOAppComposer {
     error OnlyValidComposeCaller(address caller); // 0x84fb3f0d
 
     error InsufficientMsgValue(uint256 expectedMsgValue, uint256 actualMsgValue); // 0x7cb769dc
+    error NoMsgValueExpected(); // 0x7578d2bd
 
     error SlippageExceeded(uint256 amountLD, uint256 minAmountLD); // 0x71c4efed
 
