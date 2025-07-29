@@ -25,6 +25,8 @@ interface IHyperLiquidComposerErrors {
 
     error NotEnoughMsgValue(uint256 msgValue, uint256 requiredValue);
 
+    error HyperLiquidComposer_ReceiverCannotBeZeroAddress(address receiver);
+
     // 0x00d4895a
     error HyperLiquidComposer_ComposeMsgNot64Byte(bytes composeMessage, uint256 length);
 
