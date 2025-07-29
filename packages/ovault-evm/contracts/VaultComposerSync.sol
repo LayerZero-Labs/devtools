@@ -90,26 +90,26 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @notice Handles LayerZero compose operations for vault transactions with automatic refund functionality
      * @dev This composer is designed to handle refunds to an EOA address and not a contract
      * @dev Any revert in handleCompose() causes a refund back to the src EXCEPT for InsufficientMsgValue
-     * @param _composeCaller The OFT contract address used for refunds, must be either ASSET_OFT or SHARE_OFT
+     * @param _composeSender The OFT contract address used for refunds, must be either ASSET_OFT or SHARE_OFT
      * @param _guid LayerZero's unique tx id (created on the source tx)
      * @param _message Decomposable bytes object into [composeHeader][composeMessage]
      */
     function lzCompose(
-        address _composeCaller, // The OFT used on refund, also the vaultIn token.
+        address _composeSender, // The OFT used on refund, also the vaultIn token.
         bytes32 _guid,
         bytes calldata _message, // expected to contain a composeMessage = abi.encode(SendParam hopSendParam,uint256 minMsgValue)
         address /*_executor*/,
         bytes calldata /*_extraData*/
     ) external payable virtual override {
         if (msg.sender != ENDPOINT) revert OnlyEndpoint(msg.sender);
-        if (_composeCaller != ASSET_OFT && _composeCaller != SHARE_OFT) revert OnlyValidComposeCaller(_composeCaller);
+        if (_composeSender != ASSET_OFT && _composeSender != SHARE_OFT) revert OnlyValidComposeCaller(_composeSender);
 
         bytes32 composeFrom = _message.composeFrom();
         uint256 amount = _message.amountLD();
         bytes memory composeMsg = _message.composeMsg();
 
         /// @dev try...catch to handle the compose operation. if it fails we refund the user
-        try this.handleCompose{ value: msg.value }(_composeCaller, composeFrom, composeMsg, amount) {
+        try this.handleCompose{ value: msg.value }(_composeSender, composeFrom, composeMsg, amount) {
             emit Sent(_guid);
         } catch (bytes memory _err) {
             /// @dev A revert where the msg.value passed is lower than the min expected msg.value is handled separately
@@ -120,7 +120,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
                 }
             }
 
-            _refund(_composeCaller, _message, amount, tx.origin);
+            _refund(_composeSender, _message, amount, tx.origin);
             emit Refunded(_guid);
         }
     }
