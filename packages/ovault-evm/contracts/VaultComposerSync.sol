@@ -283,7 +283,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         uint256 _vaultInAmount,
         SendParam memory _sendParam
     ) external view virtual returns (MessagingFee memory) {
-        /// @dev If we are quoting the asset OFT, that means we are inputting shares and the amountLD passed into quote should be  denominated in assets (and vice versa)
+        /// @dev When quoting the asset OFT, the function input is shares and the SendParam.amountLD into quoteSend() should be assets (and vice versa)
 
         if (_targetOFT == ASSET_OFT) {
             _sendParam.amountLD = VAULT.previewRedeem(_vaultInAmount);
