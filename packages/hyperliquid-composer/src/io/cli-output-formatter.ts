@@ -18,6 +18,10 @@ export function formatBalancesTable(balances: SpotBalancesResponse, showZeroBala
         filteredBalances = balances.balances.filter((balance) => parseFloat(balance.total) > 0)
     }
 
+    if (filteredBalances.length === 0) {
+        return 'No non-zero balances found for this address.'
+    }
+
     filteredBalances.sort((a, b) => parseFloat(b.total) - parseFloat(a.total))
 
     for (const balance of filteredBalances) {
