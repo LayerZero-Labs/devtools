@@ -18,6 +18,11 @@ abstract contract RecoverableComposer is HyperLiquidComposer {
     using SafeERC20 for IERC20;
     using HyperLiquidComposerCodec for uint64;
 
+    error MaxRetrieveAmountExceeded(uint256 maxAmount, uint256 requestedAmount);
+
+    event Retrieved(uint64 indexed coreIndexId, uint256 amount, address indexed to);
+    event Recovered(address indexed to, uint256 amount);
+
     uint256 public constant FULL_TRANSFER = 0;
     uint64 public constant USDC_CORE_INDEX = 0;
 
@@ -30,55 +35,39 @@ abstract contract RecoverableComposer is HyperLiquidComposer {
     }
 
     function retrieveCoreERC20(uint64 _coreAmount) public onlyRecoveryAddress {
-        uint256 transferAmt = _coreAmount == FULL_TRANSFER
-            ? _balanceOfHyperCore(address(this), oftAsset.coreIndexId)
-            : _coreAmount;
+        uint64 maxTransferAmt = _getMaxTransferAmount(oftAsset.coreIndexId, _coreAmount);
 
-        /// @dev Transfers transferAmt of the asset from Composer_core to Composer_evm via the asset bridge
-        bytes memory action = abi.encode(oftAsset.assetBridgeAddress, oftAsset.coreIndexId, transferAmt);
-        bytes memory payload = abi.encodePacked(SPOT_SEND_HEADER, action);
-        ICoreWriter(HLP_CORE_WRITER).sendRawAction(payload);
+        _submitCoreWriterTransfer(oftAsset.assetBridgeAddress, oftAsset.coreIndexId, maxTransferAmt);
+        emit Retrieved(oftAsset.coreIndexId, maxTransferAmt, oftAsset.assetBridgeAddress);
     }
 
     function retrieveCoreHYPE(uint64 _coreAmount) public onlyRecoveryAddress {
-        uint256 transferAmt = _coreAmount == FULL_TRANSFER
-            ? _balanceOfHyperCore(address(this), hypeAsset.coreIndexId)
-            : _coreAmount;
+        uint64 maxTransferAmt = _getMaxTransferAmount(hypeAsset.coreIndexId, _coreAmount);
 
-        /// @dev Transfers transferAmt of HYPE from Composer_core to Composer_evm via the asset bridge
-        bytes memory action = abi.encode(hypeAsset.assetBridgeAddress, hypeAsset.coreIndexId, transferAmt);
-        bytes memory payload = abi.encodePacked(SPOT_SEND_HEADER, action);
-        ICoreWriter(HLP_CORE_WRITER).sendRawAction(payload);
+        _submitCoreWriterTransfer(hypeAsset.assetBridgeAddress, hypeAsset.coreIndexId, maxTransferAmt);
+        emit Retrieved(hypeAsset.coreIndexId, maxTransferAmt, hypeAsset.assetBridgeAddress);
     }
 
     function retrieveCoreUSDC(uint64 _coreAmount, address _to) public onlyRecoveryAddress {
-        uint256 transferAmt = _coreAmount == FULL_TRANSFER
-            ? _balanceOfHyperCore(address(this), USDC_CORE_INDEX)
-            : _coreAmount;
+        uint64 maxTransferAmt = _getMaxTransferAmount(USDC_CORE_INDEX, _coreAmount);
 
-        /// @dev Transfers transferAmt of the asset from Composer_core to _to on HyperCore since USDC does not natively exist on HyperEVM
-        bytes memory action = abi.encode(_to, USDC_CORE_INDEX, transferAmt);
-        bytes memory payload = abi.encodePacked(SPOT_SEND_HEADER, action);
-        ICoreWriter(HLP_CORE_WRITER).sendRawAction(payload);
+        _submitCoreWriterTransfer(_to, USDC_CORE_INDEX, maxTransferAmt);
+        emit Retrieved(USDC_CORE_INDEX, maxTransferAmt, _to);
     }
 
     function recoverEvmERC20(uint256 _evmAmount) public onlyRecoveryAddress {
-        uint256 recoverAmt = _evmAmount == FULL_TRANSFER ? innerToken.balanceOf(address(this)) : _evmAmount;
-
-        innerToken.safeTransfer(RECOVERY_ADDRESS, recoverAmt);
+        recoverEvmERC20(_evmAmount, RECOVERY_ADDRESS);
     }
 
     function recoverEvmNative(uint256 _evmAmount) public onlyRecoveryAddress {
-        uint256 recoverAmt = _evmAmount == FULL_TRANSFER ? address(this).balance : _evmAmount;
-
-        (bool success, ) = RECOVERY_ADDRESS.call{ value: recoverAmt }("");
-        require(success, "Transfer failed");
+        recoverEvmNative(_evmAmount, RECOVERY_ADDRESS);
     }
 
     function recoverEvmERC20(uint256 _evmAmount, address _to) public onlyRecoveryAddress {
         uint256 recoverAmt = _evmAmount == FULL_TRANSFER ? innerToken.balanceOf(address(this)) : _evmAmount;
 
         innerToken.safeTransfer(_to, recoverAmt);
+        emit Recovered(_to, recoverAmt);
     }
 
     function recoverEvmNative(uint256 _evmAmount, address _to) public onlyRecoveryAddress {
@@ -86,5 +75,20 @@ abstract contract RecoverableComposer is HyperLiquidComposer {
 
         (bool success, ) = _to.call{ value: recoverAmt }("");
         require(success, "Transfer failed");
+        emit Recovered(_to, recoverAmt);
+    }
+
+    function _getMaxTransferAmount(uint64 _coreIndexId, uint64 _coreAmount) internal view returns (uint64) {
+        uint64 maxTransferAmt = _balanceOfHyperCore(address(this), _coreIndexId);
+        if (_coreAmount > maxTransferAmt) {
+            revert MaxRetrieveAmountExceeded(maxTransferAmt, _coreAmount);
+        }
+        return _coreAmount == FULL_TRANSFER ? maxTransferAmt : _coreAmount;
+    }
+
+    function _submitCoreWriterTransfer(address _to, uint64 _coreIndexId, uint64 _transferAmt) internal {
+        bytes memory action = abi.encode(_to, _coreIndexId, _transferAmt);
+        bytes memory payload = abi.encodePacked(SPOT_SEND_HEADER, action);
+        ICoreWriter(HLP_CORE_WRITER).sendRawAction(payload);
     }
 }

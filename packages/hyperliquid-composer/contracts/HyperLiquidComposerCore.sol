@@ -79,6 +79,10 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
             );
         }
         (minMsgValue, receiver) = abi.decode(_composeMessage, (uint256, address));
+
+        if (receiver == address(0)) {
+            revert IHyperLiquidComposerErrors.HyperLiquidComposer_ReceiverCannotBeZeroAddress(receiver);
+        }
     }
 
     /// @notice External function to quote the conversion of evm tokens to hypercore tokens
@@ -126,44 +130,6 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
             revert IHyperLiquidComposerErrors.HyperLiquidComposerCore_SpotBalanceRead_Failed(_user, _tokenId);
         }
         return abi.decode(result, (IHyperLiquidReadPrecompile.SpotBalance)).total;
-    }
-
-    /// @notice Refunds the tokens to the sender
-    /// @notice This function is called by the lzCompose function
-    ///
-    /// @dev The function refunds the oft token or msg.value to the sender if the error message contains a refund amount
-    /// @dev This is applicable in cases when we would normally revert the transaction but can't due to the composer being the intermediate recipient of the minted tokens
-    ///
-    /// @param _err The error message
-    /// @param _executor The caller of EndpointV2::lzCompose()
-    ///
-    /// @return errMsg.errorMessage The error message
-    function completeRefund(bytes memory _err, address _executor) internal returns (bytes memory) {
-        // All error messages beyond this point are of the form ErrorMessage(address refundTo, uint256 refundAmount, bytes errorMessage)
-
-        bytes memory encodedErrorMessage = this.getErrorPayload(_err);
-        ErrorMessagePayload memory errMsg = abi.decode(encodedErrorMessage, (ErrorMessagePayload));
-
-        // The refund amount can vary based on partial refunds
-        try this.refundERC20(errMsg.refundTo, errMsg.refundAmount) {} catch {
-            emit ErrorERC20_Refund(errMsg.refundTo, errMsg.refundAmount);
-        }
-
-        address refundNative = errMsg.refundTo == address(0) ? _executor : errMsg.refundTo;
-
-        // Try to refund the native tokens and if this fails, we fallback to the tx.origin
-        try this.refundNativeTokens{ value: msg.value }(refundNative) {} catch {
-            // Try refunding the executor and if that fails then refund tx.origin
-            (bool success, ) = _executor.call{ value: msg.value }("");
-            if (success) {
-                emit ExcessHYPE_Refund(_executor, msg.value);
-            } else {
-                // Finally refund the transaction origin - we know this is an eoa and can accept tokens
-                (success, ) = tx.origin.call{ value: msg.value }("");
-                emit ExcessHYPE_Refund(tx.origin, msg.value);
-            }
-        }
-        return errMsg.errorMessage;
     }
 
     /// @notice Refunds the ERC20 tokens to the refund address
