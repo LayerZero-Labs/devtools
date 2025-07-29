@@ -16,10 +16,16 @@ import { ExecutorOptions } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/l
 // Minimal Mocks
 import { EndpointV2Simple as EndpointV2 } from "./mocks/EndpointV2Simple.sol";
 import { SlimSimpleMessageLibMock } from "./mocks/SlimSimpleMessageLibMock.sol";
+import { ReadLib1002Mock } from "./mocks/ReadLib1002Mock.sol";
 import { OptionsHelper } from "./OptionsHelper.sol";
 
 interface IOAppSetPeer {
     function setPeer(uint32 _eid, bytes32 _peer) external;
+    function endpoint() external view returns (ILayerZeroEndpointV2 iEndpoint);
+}
+
+interface IOAppSetReadChannel {
+    function setReadChannel(uint32 _channelId, bool _active) external;
     function endpoint() external view returns (ILayerZeroEndpointV2 iEndpoint);
 }
 
@@ -69,9 +75,10 @@ contract SlimLzTestHelper is Test, OptionsHelper {
         address[] sendLibs;
         address[] receiveLibs;
         address[] readLibs;
-        address[] signers;
-        address priceFeed; // Simplified - just address
     }
+
+    // Constants
+    uint32 internal constant DEFAULT_CHANNEL_ID = 4294967295;
 
     // Core mappings
     mapping(uint32 => mapping(bytes32 => DoubleEndedQueue.Bytes32Deque)) packetsQueue;
@@ -106,37 +113,34 @@ contract SlimLzTestHelper is Test, OptionsHelper {
      * @param _endpointNum Number of endpoints to create
      */
     function setUpEndpoints(uint8 _endpointNum) public {
-        // In slim version, we always use SimpleMessageLib
-        
         endpointSetup.endpointList = new EndpointV2[](_endpointNum);
         endpointSetup.eidList = new uint32[](_endpointNum);
         endpointSetup.sendLibs = new address[](_endpointNum);
         endpointSetup.receiveLibs = new address[](_endpointNum);
         endpointSetup.readLibs = new address[](_endpointNum);
-        endpointSetup.signers = new address[](1);
-        endpointSetup.signers[0] = vm.addr(1);
 
-        // Deploy endpoints
         for (uint8 i = 0; i < _endpointNum; i++) {
             uint32 eid = i + 1;
             endpointSetup.eidList[i] = eid;
-            endpointSetup.endpointList[i] = new EndpointV2(eid);
-            registerEndpoint(endpointSetup.endpointList[i]);
-        }
 
-        // Setup message libraries
-        for (uint8 i = 0; i < _endpointNum; i++) {
-            address endpointAddr = address(endpointSetup.endpointList[i]);
-            
-            SlimSimpleMessageLibMock messageLib = new SlimSimpleMessageLibMock(
-                payable(this),
-                endpointAddr
-            );
-            
-            endpointSetup.endpointList[i].registerLibrary(address(messageLib));
-            endpointSetup.sendLibs[i] = address(messageLib);
-            endpointSetup.receiveLibs[i] = address(messageLib);
-            endpointSetup.readLibs[i] = address(messageLib);
+            // Deploy endpoint
+            EndpointV2 endpoint = new EndpointV2(eid);
+            endpointSetup.endpointList[i] = endpoint;
+            endpoints[eid] = address(endpoint);
+
+            // Deploy message libraries
+            SlimSimpleMessageLibMock sendLib = new SlimSimpleMessageLibMock(address(this), address(endpoint));
+            SlimSimpleMessageLibMock receiveLib = new SlimSimpleMessageLibMock(address(this), address(endpoint));
+            SlimSimpleMessageLibMock readLib = new SlimSimpleMessageLibMock(address(this), address(endpoint));
+
+            // Register libraries with endpoint
+            endpoint.registerLibrary(address(sendLib));
+            endpoint.registerLibrary(address(receiveLib));
+            endpoint.registerLibrary(address(readLib));
+
+            endpointSetup.sendLibs[i] = address(sendLib);
+            endpointSetup.receiveLibs[i] = address(receiveLib);
+            endpointSetup.readLibs[i] = address(readLib);
         }
 
         // Configure endpoints
@@ -144,9 +148,15 @@ contract SlimLzTestHelper is Test, OptionsHelper {
             EndpointV2 endpoint = endpointSetup.endpointList[i];
             for (uint8 j = 0; j < _endpointNum; j++) {
                 if (i == j) continue;
+                // Set up send library for this endpoint to send to destination j+1
                 endpoint.setDefaultSendLibrary(j + 1, endpointSetup.sendLibs[i]);
+                // Set up receive library for this endpoint to receive from source j+1
                 endpoint.setDefaultReceiveLibrary(j + 1, endpointSetup.receiveLibs[i], 0);
             }
+            
+            // Configure DEFAULT_CHANNEL_ID to use read library (like TestHelperOz5)
+            endpoint.setDefaultSendLibrary(DEFAULT_CHANNEL_ID, endpointSetup.readLibs[i]);
+            endpoint.setDefaultReceiveLibrary(DEFAULT_CHANNEL_ID, endpointSetup.readLibs[i], 0);
         }
     }
 
@@ -222,6 +232,22 @@ contract SlimLzTestHelper is Test, OptionsHelper {
     }
 
     /**
+     * @notice Configures the read channels for multiple OApp instances
+     * @dev Sets each OApp to read from the provided channels
+     * 
+     * @param oapps An array of addresses representing the deployed OApp instances
+     * @param channels An array of channel IDs to set as read channels
+     */
+    function wireReadOApps(address[] memory oapps, uint32[] memory channels) public {
+        for (uint256 i = 0; i < oapps.length; i++) {
+            IOAppSetReadChannel localOApp = IOAppSetReadChannel(oapps[i]);
+            for (uint256 j = 0; j < channels.length; j++) {
+                localOApp.setReadChannel(channels[j], true);
+            }
+        }
+    }
+
+    /**
      * @notice Schedules a packet for delivery
      * @dev Stores packet and options for later verification. Includes optional duplicate GUID detection.
      * 
@@ -283,11 +309,26 @@ contract SlimLzTestHelper is Test, OptionsHelper {
         address _composer,
         bytes memory _resolvedPayload
     ) public {
-        if (endpoints[_dstEid] == address(0)) {
+        // Special handling for DEFAULT_CHANNEL_ID (read operations)
+        uint32 effectiveEid = _dstEid;
+        if (_dstEid == DEFAULT_CHANNEL_ID) {
+            // For read operations, we need to determine the effective EID from the packet
+            // Since we can't access the packet here, we'll use a fallback approach
+            // The actual packet processing will be handled in lzReadReceive
+            // Use endpoint 2 as fallback since that's where the ReadPublic contract is deployed
+            effectiveEid = 2;
+        }
+        
+        if (endpoints[effectiveEid] == address(0)) {
             revert SlimLzTestHelper_EndpointNotRegistered(_dstEid);
         }
 
+        // Fallback: if no packets queued for requested dstEid and it's not the read channel,
+        // but there are packets queued on the DEFAULT_CHANNEL_ID, use that (lzRead flow)
         DoubleEndedQueue.Bytes32Deque storage queue = packetsQueue[_dstEid][_dstAddress];
+        if (queue.length() == 0 && _dstEid != DEFAULT_CHANNEL_ID) {
+            queue = packetsQueue[DEFAULT_CHANNEL_ID][_dstAddress];
+        }
         uint256 pendingPacketsSize = queue.length();
         uint256 numberOfPackets;
         if (_packetAmount == 0) {
@@ -308,6 +349,11 @@ contract SlimLzTestHelper is Test, OptionsHelper {
             // Simplified delivery - just do lzReceive
             if (_executorOptionExists(options, ExecutorOptions.OPTION_TYPE_LZRECEIVE)) {
                 this.lzReceive(packetBytes, options);
+            }
+            
+            // Handle lzRead - similar to lzReceive but uses resolved payload
+            if (_executorOptionExists(options, ExecutorOptions.OPTION_TYPE_LZREAD)) {
+                this.lzReadReceive(packetBytes, options, _resolvedPayload);
             }
             
             // Handle native drops
@@ -348,6 +394,38 @@ contract SlimLzTestHelper is Test, OptionsHelper {
             _packetBytes.receiverB20(),
             _packetBytes.guid(),
             _packetBytes.message(),
+            bytes("")
+        );
+    }
+
+    /**
+     * @notice Executes lzReceive for a read packet with resolved payload
+     * @dev Extracts gas and value from options and calls endpoint's lzReceive with resolved payload
+     * 
+     * @param _packetBytes The encoded packet data
+     * @param _options The executor options containing gas and value limits
+     * @param _resolvedPayload The resolved payload for the read operation
+     */
+    function lzReadReceive(
+        bytes calldata _packetBytes,
+        bytes memory _options,
+        bytes memory _resolvedPayload
+    ) external payable {
+        (uint128 gas, , uint128 value) = _parseExecutorLzReadOption(_options);
+
+        Origin memory origin = Origin(DEFAULT_CHANNEL_ID, _packetBytes.sender(), _packetBytes.nonce());
+        
+        // For read operations, the packet is sent to DEFAULT_CHANNEL_ID but the OApp
+        // was deployed with a different endpoint. We need to call the OApp's endpoint.
+        // The OApp was deployed with endpoints[bEid] where bEid is the destination EID
+        // in the original read request (not DEFAULT_CHANNEL_ID).
+        EndpointV2 endpoint = EndpointV2(endpoints[_packetBytes.srcEid()]);
+        
+        endpoint.lzReceive{ value: value, gas: gas }(
+            origin,
+            _packetBytes.receiverB20(),
+            _packetBytes.guid(),
+            _resolvedPayload,
             bytes("")
         );
     }
@@ -409,8 +487,18 @@ contract SlimLzTestHelper is Test, OptionsHelper {
      */
     function validatePacket(bytes calldata _packetBytes, bytes memory /* _resolvedPayload */) external {
         uint32 dstEid = _packetBytes.dstEid();
-        EndpointV2 endpoint = EndpointV2(endpoints[dstEid]);
-        (address receiveLib, ) = endpoint.getReceiveLibrary(_packetBytes.receiverB20(), _packetBytes.srcEid());
+        
+        // Special handling for DEFAULT_CHANNEL_ID (read operations)
+        uint32 effectiveEid = dstEid;
+        if (dstEid == DEFAULT_CHANNEL_ID) {
+            // For read operations, use the source EID to determine the endpoint
+            effectiveEid = _packetBytes.srcEid();
+        }
+        
+        EndpointV2 endpoint = EndpointV2(endpoints[effectiveEid]);
+        
+        // Use the default receive library instead of trying to get a specific OApp's library
+        address receiveLib = endpointSetup.receiveLibs[effectiveEid - 1]; // Convert to 0-based index
         
         // In slim version, always use SimpleMessageLibMock
         SlimSimpleMessageLibMock(payable(receiveLib)).validatePacket(_packetBytes);

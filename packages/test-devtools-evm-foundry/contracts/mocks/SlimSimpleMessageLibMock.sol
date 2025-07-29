@@ -57,6 +57,30 @@ contract SlimSimpleMessageLibMock is IMessageLib {
     ) external virtual returns (MessagingFee memory fee, bytes memory encodedPacket) {
         require(msg.sender == endpoint, "SimpleMessageLibMock: only endpoint");
         
+        // Special handling for DEFAULT_CHANNEL_ID (read operations)
+        if (_packet.dstEid == 4294967295) { // DEFAULT_CHANNEL_ID
+            // For read operations, we just schedule the packet normally
+            // The test helper will handle the read-specific logic
+            encodedPacket = PacketV1Codec.encode(_packet);
+            
+            // Schedule packet in test helper
+            (bool success,) = testHelper.call(
+                abi.encodeWithSignature("schedulePacket(bytes,bytes)", encodedPacket, _options)
+            );
+            require(success, "SimpleMessageLibMock: failed to schedule packet");
+            
+            // Return a simple fee for read operations
+            uint256 totalFee = 0.001 ether; // Fixed fee for read operations
+            
+            if (_payInLzToken) {
+                fee = MessagingFee({ nativeFee: 0, lzTokenFee: totalFee });
+            } else {
+                fee = MessagingFee({ nativeFee: totalFee, lzTokenFee: 0 });
+            }
+            return (fee, encodedPacket);
+        }
+        
+        // Normal message handling
         encodedPacket = PacketV1Codec.encode(_packet);
         
         // Schedule packet in test helper
@@ -81,6 +105,7 @@ contract SlimSimpleMessageLibMock is IMessageLib {
         } else {
             fee = MessagingFee({ nativeFee: totalFee, lzTokenFee: 0 });
         }
+        return (fee, encodedPacket);
     }
 
     /**
