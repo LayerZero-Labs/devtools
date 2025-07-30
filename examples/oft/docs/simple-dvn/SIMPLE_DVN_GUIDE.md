@@ -34,6 +34,7 @@ Replace your `layerzero.config.ts` file with the SimpleDVNMock configuration. Th
 **Simply copy the contents of [`simple-dvn-example.layerzero.config.ts`](./simple-dvn-example.layerzero.config.ts) and replace your entire `layerzero.config.ts` file.**
 
 The example configuration includes:
+
 - A custom `fetchMetadata` function that extends the default LayerZero metadata
 - Variables for SimpleDVNMock addresses on both Optimism and Arbitrum Sepolia
 - SimpleDVNMock defined as a custom DVN on both chains
@@ -45,11 +46,13 @@ The example configuration includes:
 Deploy SimpleDVNMock on both networks:
 
 **Deploy on Optimism Sepolia:**
+
 ```
 pnpm hardhat --network optimism-testnet deploy --tags SimpleDVNMock
 ```
 
 **Deploy on Arbitrum Sepolia:**
+
 ```
 pnpm hardhat --network arbitrum-testnet deploy --tags SimpleDVNMock
 ```
@@ -59,19 +62,21 @@ pnpm hardhat --network arbitrum-testnet deploy --tags SimpleDVNMock
 After deploying on both networks, update the address variables in your `layerzero.config.ts` file:
 
 1. **For Optimism Sepolia:**
+
    - Open `deployments/optimism-testnet/SimpleDVNMock.json`
    - Copy the `address` field value
    - Paste it into the `simpleDvnAddressOptimism` variable
 
 2. **For Arbitrum Sepolia:**
    - Open `deployments/arbitrum-testnet/SimpleDVNMock.json`
-   - Copy the `address` field value  
+   - Copy the `address` field value
    - Paste it into the `simpleDvnAddressArbitrum` variable
 
 Example:
+
 ```typescript
-const simpleDvnAddressOptimism = '0x1234...' // Your Optimism deployment address
-const simpleDvnAddressArbitrum = '0x5678...' // Your Arbitrum deployment address
+const simpleDvnAddressOptimism = "0x1234..."; // Your Optimism deployment address
+const simpleDvnAddressArbitrum = "0x5678..."; // Your Arbitrum deployment address
 ```
 
 ### Step 4: Wire Your Contracts
@@ -100,8 +105,9 @@ pnpm hardhat lz:oft:send \
 ⚠️ **Development Only**: The `--simple-dvn` flag is for development/testing only. Do NOT use on mainnet.
 
 This single command will:
+
 1. 🚀 **Send** the OFT transaction from source to destination
-2. 📋 **Verify** the message payload and signatures  
+2. 📋 **Verify** the message payload and signatures
 3. 📝 **Commit** the verification result on-chain
 4. 📦 **Execute** the cross-chain transaction via lzReceive
 

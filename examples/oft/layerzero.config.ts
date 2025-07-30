@@ -1,6 +1,12 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
-import { TwoWayConfig, generateConnectionsConfig } from '@layerzerolabs/metadata-tools'
+import {
+    IMetadata,
+    IMetadataDvns,
+    TwoWayConfig,
+    defaultFetchMetadata,
+    generateConnectionsConfig,
+} from '@layerzerolabs/metadata-tools'
 import { OAppEnforcedOption } from '@layerzerolabs/toolbox-hardhat'
 
 import type { OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
@@ -13,6 +19,65 @@ const optimismContract: OmniPointHardhat = {
 const arbitrumContract: OmniPointHardhat = {
     eid: EndpointId.ARBSEP_V2_TESTNET,
     contractName: 'MyOFTMock', // Note: change this to 'MyOFT' or your production contract name
+}
+
+// TODO: Fill in your SimpleDVNMock addresses from deployment files
+const simpleDvnAddressOptimism = '0x2F5e9dF13AF5A94a0b5f80C228e398928B11ee36' // from deployments/optimism-testnet/SimpleDVNMock.json
+const simpleDvnAddressArbitrum = '0xf305B0C5Aa7150F4ce9889836E6295D3636D3f84' // from deployments/arbitrum-testnet/SimpleDVNMock.json
+
+// Create a custom fetchMetadata implementation to add SimpleDVNMock
+const customFetchMetadata = async (): Promise<IMetadata> => {
+    // Get the default metadata
+    const defaultMetadata = await defaultFetchMetadata()
+
+    // Validate that SimpleDVN addresses are provided
+    if (!simpleDvnAddressOptimism || !simpleDvnAddressArbitrum) {
+        throw new Error(
+            'SimpleDVN addresses are required. Please set both simpleDvnAddressOptimism and simpleDvnAddressArbitrum variables with addresses from deployment files'
+        )
+    }
+
+    // Extend the Optimism Sepolia DVNs with SimpleDVNMock
+    const optimismSepoliaChain = defaultMetadata['optimism-sepolia']
+    if (!optimismSepoliaChain) {
+        throw new Error('Optimism Sepolia testnet not found in metadata')
+    }
+
+    const optimismSepoliaDVNsWithCustom: IMetadataDvns = {
+        ...optimismSepoliaChain.dvns,
+        [simpleDvnAddressOptimism]: {
+            version: 2,
+            canonicalName: 'SimpleDVNMock',
+            id: 'simple-dvn-mock',
+        },
+    }
+
+    // Extend the Arbitrum Sepolia DVNs with SimpleDVNMock
+    const arbitrumSepoliaChain = defaultMetadata['arbitrum-sepolia']
+    if (!arbitrumSepoliaChain) {
+        throw new Error('Arbitrum Sepolia testnet not found in metadata')
+    }
+
+    const arbitrumSepoliaDVNsWithCustom: IMetadataDvns = {
+        ...arbitrumSepoliaChain.dvns,
+        [simpleDvnAddressArbitrum]: {
+            version: 2,
+            canonicalName: 'SimpleDVNMock',
+            id: 'simple-dvn-mock',
+        },
+    }
+
+    return {
+        ...defaultMetadata,
+        'optimism-sepolia': {
+            ...optimismSepoliaChain,
+            dvns: optimismSepoliaDVNsWithCustom,
+        },
+        'arbitrum-sepolia': {
+            ...arbitrumSepoliaChain,
+            dvns: arbitrumSepoliaDVNsWithCustom,
+        },
+    }
 }
 
 // To connect all the above chains to each other, we need the following pathways:
@@ -32,19 +97,20 @@ const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
 
 // With the config generator, pathways declared are automatically bidirectional
 // i.e. if you declare A,B there's no need to declare B,A
+// With SimpleDVNMock deployed on both chains, we use LayerZero Labs as required DVN and SimpleDVNMock as optional
 const pathways: TwoWayConfig[] = [
     [
         optimismContract, // Chain A contract
-        arbitrumContract, // Chain C contract
-        [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
+        arbitrumContract, // Chain B contract
+        [['SimpleDVNMock'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
         [1, 1], // [A to B confirmations, B to A confirmations]
-        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain C enforcedOptions, Chain A enforcedOptions
+        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain A enforcedOptions, Chain B enforcedOptions
     ],
 ]
 
 export default async function () {
-    // Generate the connections config based on the pathways
-    const connections = await generateConnectionsConfig(pathways)
+    // Generate the connections config based on the pathways with custom metadata
+    const connections = await generateConnectionsConfig(pathways, { fetchMetadata: customFetchMetadata })
     return {
         contracts: [{ contract: optimismContract }, { contract: arbitrumContract }],
         connections,
