@@ -1,10 +1,12 @@
-// tasks/simple-dvn-mock/process-receive.ts
+// tasks/simple-dvn-mock/full.ts
 import { Contract } from 'ethers'
 import { task, types } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
+import { commit } from './utils/commit'
 import { SimpleDvnMockTaskArgs } from './utils/common'
-import { processReceive } from './utils/processReceive'
+import { lzReceive } from './utils/lzReceive'
+import { verify } from './utils/verify'
 
 interface ProcessReceiveTaskArgs extends SimpleDvnMockTaskArgs {
     guid?: string
@@ -20,6 +22,8 @@ task('lz:simple-dvn:process-receive', 'Process received message through SimpleDV
     .addOptionalParam('dstContractName', 'Name of the destination chain OFT in deployments', 'MyOFTMock', types.string)
     .addOptionalParam('guid', 'Message GUID (if not provided, will be generated)', undefined, types.string)
     .setAction(async (args: ProcessReceiveTaskArgs, hre: HardhatRuntimeEnvironment) => {
+        console.log('\n🚀 Starting SimpleDVNMock message processing...\n')
+
         const signer = (await hre.ethers.getSigners())[0]
 
         // Get SimpleDVNMock contract
@@ -34,5 +38,25 @@ task('lz:simple-dvn:process-receive', 'Process received message through SimpleDV
         const endpointDep = await hre.deployments.get('EndpointV2')
         const endpointContract = new Contract(endpointDep.address, endpointDep.abi, signer)
 
-        await processReceive(dvnContract, dstOftContract, endpointContract, args)
+        try {
+            // Step 1: Verify
+            console.log('📋 Step 1: Verifying message...')
+            await verify(dvnContract, dstOftContract, args)
+            console.log('✅ Verification completed\n')
+
+            // Step 2: Commit
+            console.log('📝 Step 2: Committing verification...')
+            await commit(dvnContract, dstOftContract, args)
+            console.log('✅ Commit completed\n')
+
+            // Step 3: LzReceive
+            console.log('📦 Step 3: Executing lzReceive...')
+            await lzReceive(endpointContract, dstOftContract, args)
+            console.log('✅ LzReceive completed\n')
+
+            console.log('🎉 SimpleDVNMock message processing completed successfully!')
+        } catch (error) {
+            console.error(`❌ Message processing failed:`, error)
+            throw error
+        }
     })
