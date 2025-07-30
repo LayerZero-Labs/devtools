@@ -84,77 +84,28 @@ pnpm hardhat lz:wire
 
 This will configure your contracts to use SimpleDVNMock as the only required DVN (bypassing LayerZero Labs DVN entirely).
 
-### Step 5: Execute SimpleDVN Flow
+### Step 5: Send 1 OFT from **Optimism Sepolia** to **Arbitrum Sepolia**
 
-Now you can test the SimpleDVN flow!
-
-**Use the `lz:simple-dvn:process-receive` task to execute all three steps (verify → commit → execute) in one command:**
+**Use the `lz:oft:send` task with the `--simple-dvn` flag to send OFT tokens and automatically process them through SimpleDVN:**
 
 ```
-pnpm hardhat --network arbitrum-testnet lz:simple-dvn:process-receive \
+pnpm hardhat lz:oft:send \
   --src-eid 40232 \
-  --src-oapp <SOURCE_OFT_ADDRESS> \
-  --nonce 1 \
-  --to-address <RECIPIENT_ADDRESS> \
-  --amount 1.5 \
-  --dst-eid 40231
+  --dst-eid 40231 \
+  --amount 1.0 \
+  --to $EVM_ADDY \
+  --simple-dvn
 ```
+
+⚠️ **Development Only**: The `--simple-dvn` flag is for development/testing only. Do NOT use on mainnet.
 
 This single command will:
-1. 📋 **Verify** the message payload and signatures
-2. 📝 **Commit** the verification result on-chain  
-3. 📦 **Execute** the cross-chain transaction via lzReceive
+1. 🚀 **Send** the OFT transaction from source to destination
+2. 📋 **Verify** the message payload and signatures  
+3. 📝 **Commit** the verification result on-chain
+4. 📦 **Execute** the cross-chain transaction via lzReceive
 
-### Alternative: Execute Individual Steps
-
-If you need more control or want to execute steps separately, you can use the individual tasks:
-
-**Step 1: Verify**
-```
-pnpm hardhat --network arbitrum-testnet lz:simple-dvn:verify \
-  --src-eid 40232 \
-  --src-oapp <SOURCE_OFT_ADDRESS> \
-  --nonce 1 \
-  --to-address <RECIPIENT_ADDRESS> \
-  --amount 1.5 \
-  --dst-eid 40231
-```
-
-**Step 2: Commit**
-```
-pnpm hardhat --network arbitrum-testnet lz:simple-dvn:commit \
-  --src-eid 40232 \
-  --src-oapp <SOURCE_OFT_ADDRESS> \
-  --nonce 1 \
-  --to-address <RECIPIENT_ADDRESS> \
-  --amount 1.5 \
-  --dst-eid 40231
-```
-
-**Step 3: Execute (lzReceive)**
-```
-pnpm hardhat --network arbitrum-testnet lz:simple-dvn:lz-receive \
-  --src-eid 40232 \
-  --src-oapp <SOURCE_OFT_ADDRESS> \
-  --nonce 1 \
-  --to-address <RECIPIENT_ADDRESS> \
-  --amount 1.5 \
-  --dst-eid 40231
-```
-
-### Optional: Add LayerZero Labs DVN Alongside SimpleDVNMock
-
-If you want to test with both LayerZero Labs DVN and SimpleDVNMock as required DVNs, you can modify the pathways configuration:
-
-```typescript
-// Change this line in your layerzero.config.ts:
-[['SimpleDVNMock'], []], // Only SimpleDVNMock required
-
-// To this:
-[['LayerZero Labs', 'SimpleDVNMock'], []], // Both LayerZero Labs and SimpleDVNMock required
-```
-
-**Note:** The default example configuration uses only SimpleDVNMock as the required DVN for simpler testing.
+The SimpleDVN processing happens automatically after the standard OFT send completes.
 
 ## Troubleshooting
 

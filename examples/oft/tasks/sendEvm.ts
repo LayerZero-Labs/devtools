@@ -1,6 +1,6 @@
 import path from 'path'
 
-import { BigNumber, ContractTransaction } from 'ethers'
+import { BigNumber, Contract, ContractTransaction } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
@@ -13,6 +13,29 @@ import { SendResult } from './types'
 import { DebugLogger, KnownErrors, getLayerZeroScanLink } from './utils'
 
 const logger = createLogger()
+
+/**
+ * Get OApp contract address by EID from LayerZero config
+ */
+async function getOAppAddressByEid(
+    eid: number,
+    oappConfig: string,
+    hre: HardhatRuntimeEnvironment,
+    overrideAddress?: string
+): Promise<string> {
+    if (overrideAddress) {
+        return overrideAddress
+    }
+
+    const layerZeroConfig = (await import(path.resolve('./', oappConfig))).default
+    const { contracts } = typeof layerZeroConfig === 'function' ? await layerZeroConfig() : layerZeroConfig
+    const wrapper = contracts.find((c: { contract: OmniPointHardhat }) => c.contract.eid === eid)
+    if (!wrapper) throw new Error(`No config for EID ${eid}`)
+
+    return wrapper.contract.contractName
+        ? (await hre.deployments.get(wrapper.contract.contractName)).address
+        : wrapper.contract.address || ''
+}
 
 export interface EvmArgs {
     srcEid: number
@@ -62,24 +85,26 @@ export async function sendEvm(
     const signer = (await srcEidHre.ethers.getSigners())[0]
 
     // 1️⃣ resolve the OFT wrapper address
-    let wrapperAddress: string
-    if (oftAddress) {
-        wrapperAddress = oftAddress
-    } else {
-        const layerZeroConfig = (await import(path.resolve('./', oappConfig))).default
-        const { contracts } = typeof layerZeroConfig === 'function' ? await layerZeroConfig() : layerZeroConfig
-        const wrapper = contracts.find((c: { contract: OmniPointHardhat }) => c.contract.eid === srcEid)
-        if (!wrapper) throw new Error(`No config for EID ${srcEid}`)
-        wrapperAddress = wrapper.contract.contractName
-            ? (await srcEidHre.deployments.get(wrapper.contract.contractName)).address
-            : wrapper.contract.address || ''
-    }
+    const wrapperAddress = await getOAppAddressByEid(srcEid, oappConfig, srcEidHre, oftAddress)
 
     // 2️⃣ load IOFT ABI, extend it with token()
     const ioftArtifact = await srcEidHre.artifacts.readArtifact('IOFT')
 
     // now attach
     const oft = await srcEidHre.ethers.getContractAt(ioftArtifact.abi, wrapperAddress, signer)
+
+    // 🔗 Get LayerZero endpoint contract
+    const endpointDep = await srcEidHre.deployments.get('EndpointV2')
+    const _endpointContract = new Contract(endpointDep.address, endpointDep.abi, signer)
+
+    // Get destination OApp address for outboundNonce call
+    const dstEidHre = await getHreByEid(dstEid)
+    const dstWrapperAddress = await getOAppAddressByEid(dstEid, oappConfig, dstEidHre, oftAddress)
+
+    // 🔗 Get outbound nonce, only for SimpleDVN process-receive mode
+    const dstWrapperBytes32 = addressToBytes32(dstWrapperAddress)
+    const currentOutboundNonce = await _endpointContract.outboundNonce(wrapperAddress, dstEid, dstWrapperBytes32)
+    const outboundNonce = currentOutboundNonce.toNumber() + 1
 
     // 3️⃣ fetch the underlying ERC-20
     const underlying = await oft.token()
@@ -238,5 +263,5 @@ export async function sendEvm(
     const txHash = receipt.transactionHash
     const scanLink = getLayerZeroScanLink(txHash, srcEid >= 40_000 && srcEid < 50_000)
 
-    return { txHash, scanLink }
+    return { txHash, scanLink, outboundNonce: outboundNonce.toString() }
 }
