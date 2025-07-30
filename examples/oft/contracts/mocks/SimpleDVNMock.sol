@@ -3,6 +3,7 @@ pragma solidity ^0.8.20;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { IReceiveUlnE2 } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IReceiveUlnE2.sol";
+import { ILayerZeroDVN } from "./interfaces/ILayerZeroDVN.sol";
 
 // A message on the destination chain has to go through three steps:
 // 1. verify -> 2. commit -> 3. execute
@@ -12,7 +13,7 @@ import { IReceiveUlnE2 } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln
  * @notice A minimal DVN for manually verifying messages, for development use on testnets. Not for production. Deploy this on the destination chain.
  * @dev We accept sender and receiver as bytes32 to handle arbitrary remote address formats.
  */
-contract SimpleDVNMock is Ownable {
+contract SimpleDVNMock is Ownable, ILayerZeroDVN {
     error InvalidLocalEid(uint32 expected, uint32 got);
     event PayloadVerified(bytes32 indexed guid);
     event PayloadCommitted(bytes32 indexed guid);
@@ -31,6 +32,36 @@ contract SimpleDVNMock is Ownable {
     constructor(address _receiveUln, uint32 _localEid) Ownable(msg.sender) {
         receiveUln = IReceiveUlnE2(_receiveUln);
         localEid = _localEid;
+    }
+
+    /**
+     * @notice Get the fee for DVN services (mock implementation)
+     * @dev Returns a minimal fee for testing purposes
+     */
+    function getFee(
+        uint32 _dstEid,
+        uint64 _confirmations,
+        address _sender,
+        bytes calldata _options
+    ) external pure override returns (uint256 fee) {
+        // Suppress unused parameter warnings
+        (_dstEid, _confirmations, _sender, _options);
+        // Return minimal fee for testing (1 wei)
+        return 1;
+    }
+
+    /**
+     * @notice Assign job and return fee (mock implementation)
+     * @dev Returns a minimal fee and doesn't actually assign any job
+     */
+    function assignJob(
+        AssignJobParam calldata _param,
+        bytes calldata _options
+    ) external payable override returns (uint256 fee) {
+        // Suppress unused parameter warnings
+        (_param, _options);
+        // Return minimal fee for testing (1 wei)
+        return 1;
     }
 
     /**

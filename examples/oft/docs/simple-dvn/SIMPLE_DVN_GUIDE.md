@@ -35,30 +35,43 @@ Replace your `layerzero.config.ts` file with the SimpleDVNMock configuration. Th
 
 The example configuration includes:
 - A custom `fetchMetadata` function that extends the default LayerZero metadata
-- A `simpleDvnAddress` variable that you need to fill in with your deployed SimpleDVNMock address
-- SimpleDVNMock defined as a custom DVN using the address from the variable
-- Pathways configured to use SimpleDVNMock by its canonical name 'SimpleDVNMock'
+- Variables for SimpleDVNMock addresses on both Optimism and Arbitrum Sepolia
+- SimpleDVNMock defined as a custom DVN on both chains
+- Pathways configured to use SimpleDVNMock as the only required DVN (no LayerZero Labs DVN)
 - The configuration passed to `generateConnectionsConfig` with the custom metadata
 
 ### Step 2: Deploy SimpleDVNMock
 
-Deploy SimpleDVNMock on the destination chain:
+Deploy SimpleDVNMock on both networks:
 
+**Deploy on Optimism Sepolia:**
+```
+pnpm hardhat --network optimism-testnet deploy --tags SimpleDVNMock
+```
+
+**Deploy on Arbitrum Sepolia:**
 ```
 pnpm hardhat --network arbitrum-testnet deploy --tags SimpleDVNMock
 ```
 
-### Step 3: Update SimpleDVN Address
+### Step 3: Update SimpleDVN Addresses
 
-After deployment, update the `simpleDvnAddress` variable in your `layerzero.config.ts` file:
+After deploying on both networks, update the address variables in your `layerzero.config.ts` file:
 
-1. Open `deployments/arbitrum-testnet/SimpleDVNMock.json`
-2. Copy the `address` field value
-3. Paste it into the `simpleDvnAddress` variable in your `layerzero.config.ts`
+1. **For Optimism Sepolia:**
+   - Open `deployments/optimism-testnet/SimpleDVNMock.json`
+   - Copy the `address` field value
+   - Paste it into the `simpleDvnAddressOptimism` variable
+
+2. **For Arbitrum Sepolia:**
+   - Open `deployments/arbitrum-testnet/SimpleDVNMock.json`
+   - Copy the `address` field value  
+   - Paste it into the `simpleDvnAddressArbitrum` variable
 
 Example:
 ```typescript
-const simpleDvnAddress = '0xF1e41BaB1E9D09473fA048E09174EBA2669f7ea8' // Your actual deployed address
+const simpleDvnAddressOptimism = '0x1234...' // Your Optimism deployment address
+const simpleDvnAddressArbitrum = '0x5678...' // Your Arbitrum deployment address
 ```
 
 ### Step 4: Wire Your Contracts
@@ -69,17 +82,11 @@ Now you can run the wire command to configure your OFT connections with the cust
 pnpm hardhat lz:wire
 ```
 
-This will configure your contracts to use the SimpleDVNMock as defined in your `layerzero.config.ts`.
+This will configure your contracts to use SimpleDVNMock as the only required DVN (bypassing LayerZero Labs DVN entirely).
 
-### Step 5: Set Receive Config (Optional)
+### Step 5: Execute SimpleDVN Flow
 
-If you want to use SimpleDVNMock as the only required DVN (bypassing LayerZero Labs DVN), update the destination chain's receive config:
-
-```
-pnpm hardhat --network arbitrum-testnet lz:simple-dvn:set-receive-config --src-eid 40232 --contract-name MyOFTMock
-```
-
-### Step 6: Execute SimpleDVN Flow
+Now you can test the SimpleDVN flow!
 
 **Use the `lz:simple-dvn:full` task to execute all three steps (verify → commit → execute) in one command:**
 
@@ -134,6 +141,20 @@ pnpm hardhat --network arbitrum-testnet lz:simple-dvn:lz-receive \
   --amount 1.5 \
   --dst-eid 40231
 ```
+
+### Optional: Add LayerZero Labs DVN Alongside SimpleDVNMock
+
+If you want to test with both LayerZero Labs DVN and SimpleDVNMock as required DVNs, you can modify the pathways configuration:
+
+```typescript
+// Change this line in your layerzero.config.ts:
+[['SimpleDVNMock'], []], // Only SimpleDVNMock required
+
+// To this:
+[['LayerZero Labs', 'SimpleDVNMock'], []], // Both LayerZero Labs and SimpleDVNMock required
+```
+
+**Note:** The default example configuration uses only SimpleDVNMock as the required DVN for simpler testing.
 
 ## Troubleshooting
 

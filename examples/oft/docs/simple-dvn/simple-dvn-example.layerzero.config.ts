@@ -21,30 +21,46 @@ const arbitrumContract: OmniPointHardhat = {
     contractName: 'MyOFTMock', // Note: change this to 'MyOFT' or your production contract name
 }
 
-// TODO: Fill in your SimpleDVNMock address from deployments/arbitrum-testnet/SimpleDVNMock.json
-const simpleDvnAddress = '' // e.g., '0xF1e41BaB1E9D09473fA048E09174EBA2669f7ea8'
+// TODO: Fill in your SimpleDVNMock addresses from deployment files
+const simpleDvnAddressOptimism = '' // from deployments/optimism-testnet/SimpleDVNMock.json
+const simpleDvnAddressArbitrum = '' // from deployments/arbitrum-testnet/SimpleDVNMock.json
 
 // Create a custom fetchMetadata implementation to add SimpleDVNMock
 const customFetchMetadata = async (): Promise<IMetadata> => {
     // Get the default metadata
     const defaultMetadata = await defaultFetchMetadata()
 
-    // Validate that SimpleDVN address is provided
-    if (!simpleDvnAddress) {
+    // Validate that SimpleDVN addresses are provided
+    if (!simpleDvnAddressOptimism || !simpleDvnAddressArbitrum) {
         throw new Error(
-            'SimpleDVN address is required. Please set simpleDvnAddress variable with the address from deployments/arbitrum-testnet/SimpleDVNMock.json'
+            'SimpleDVN addresses are required. Please set both simpleDvnAddressOptimism and simpleDvnAddressArbitrum variables with addresses from deployment files'
         )
     }
 
+    // Extend the Optimism Sepolia DVNs with SimpleDVNMock
+    const optimismSepoliaChain = defaultMetadata['optimism-sepolia']
+    if (!optimismSepoliaChain) {
+        throw new Error('Optimism Sepolia testnet not found in metadata')
+    }
+
+    const optimismSepoliaDVNsWithCustom: IMetadataDvns = {
+        ...optimismSepoliaChain.dvns,
+        [simpleDvnAddressOptimism]: {
+            version: 2,
+            canonicalName: 'SimpleDVNMock',
+            id: 'simple-dvn-mock',
+        },
+    }
+
     // Extend the Arbitrum Sepolia DVNs with SimpleDVNMock
-    const arbitrumSepoliaChain = defaultMetadata['arbitrum-sepolia-testnet']
+    const arbitrumSepoliaChain = defaultMetadata['arbitrum-sepolia']
     if (!arbitrumSepoliaChain) {
         throw new Error('Arbitrum Sepolia testnet not found in metadata')
     }
 
     const arbitrumSepoliaDVNsWithCustom: IMetadataDvns = {
         ...arbitrumSepoliaChain.dvns,
-        [simpleDvnAddress]: {
+        [simpleDvnAddressArbitrum]: {
             version: 2,
             canonicalName: 'SimpleDVNMock',
             id: 'simple-dvn-mock',
@@ -53,7 +69,11 @@ const customFetchMetadata = async (): Promise<IMetadata> => {
 
     return {
         ...defaultMetadata,
-        'arbitrum-sepolia-testnet': {
+        'optimism-sepolia': {
+            ...optimismSepoliaChain,
+            dvns: optimismSepoliaDVNsWithCustom,
+        },
+        'arbitrum-sepolia': {
             ...arbitrumSepoliaChain,
             dvns: arbitrumSepoliaDVNsWithCustom,
         },
@@ -75,13 +95,12 @@ const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
     },
 ]
 
-// With the config generator, pathways declared are automatically bidirectional
-// i.e. if you declare A,B there's no need to declare B,A
+// With SimpleDVNMock deployed on both chains, we can use it as the only required DVN
 const pathways: TwoWayConfig[] = [
     [
         optimismContract, // Chain A contract
         arbitrumContract, // Chain B contract
-        [['LayerZero Labs'], [['SimpleDVNMock'], 1]], // [ requiredDVN[], [ optionalDVN[], threshold ] ] - SimpleDVNMock as optional DVN
+        [['SimpleDVNMock'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ] - SimpleDVNMock as only required DVN
         [1, 1], // [A to B confirmations, B to A confirmations]
         [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain A enforcedOptions, Chain B enforcedOptions
     ],
