@@ -23,6 +23,9 @@
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1"
   },
+  "dependencies": {
+    "@layerzerolabs/protocol-devtools-evm": "workspace:~5.0.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.23.9",
     "@layerzerolabs/devtools": "~2.0.0",
@@ -38,6 +41,7 @@
     "@layerzerolabs/oapp-evm": "^0.3.2",
     "@layerzerolabs/oft-evm": "^3.2.0",
     "@layerzerolabs/prettier-config-next": "^2.3.39",
+    "@layerzerolabs/protocol-devtools-evm": "^5.0.0",
     "@layerzerolabs/script-devtools-evm-foundry": "^1.0.0",
     "@layerzerolabs/solhint-config": "^3.0.12",
     "@layerzerolabs/test-devtools-evm-foundry": "~7.0.0",
