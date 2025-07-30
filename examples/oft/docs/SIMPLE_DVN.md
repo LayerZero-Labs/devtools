@@ -39,8 +39,30 @@ Update the destination chain's receive config to use SimpleDVN as the only Requi
 pnpm hardhat --network arbitrum-testnet lz:simple-dvn:set-receive-config --src-eid 40232 --contract-name MyOFTMock
 ```
 
-Verify
+### Recommended: Execute Full Flow
 
+**Use the `lz:simple-dvn:full` task to execute all three steps (verify → commit → execute) in one command:**
+
+```
+pnpm hardhat --network arbitrum-testnet lz:simple-dvn:full \
+  --src-eid 40232 \
+  --src-oapp <SOURCE_OFT_ADDRESS> \
+  --nonce 1 \
+  --to-address <RECIPIENT_ADDRESS> \
+  --amount 1.5 \
+  --dst-eid 40231
+```
+
+This single command will:
+1. 📋 **Verify** the message payload and signatures
+2. 📝 **Commit** the verification result on-chain  
+3. 📦 **Execute** the cross-chain transaction via lzReceive
+
+### Alternative: Execute Individual Steps
+
+If you need more control or want to execute steps separately, you can use the individual tasks:
+
+**Step 1: Verify**
 ```
 pnpm hardhat --network arbitrum-testnet lz:simple-dvn:verify \
   --src-eid 40232 \
@@ -51,20 +73,18 @@ pnpm hardhat --network arbitrum-testnet lz:simple-dvn:verify \
   --dst-eid 40231
 ```
 
-Commit
-
+**Step 2: Commit**
 ```
 pnpm hardhat --network arbitrum-testnet lz:simple-dvn:commit \
   --src-eid 40232 \
-  --src-oapp <SOURCE_OFT_ADDRESS>
+  --src-oapp <SOURCE_OFT_ADDRESS> \
   --nonce 1 \
   --to-address <RECIPIENT_ADDRESS> \
   --amount 1.5 \
   --dst-eid 40231
 ```
 
-Now you can call lzReceive on the destination (execution)
-
+**Step 3: Execute (lzReceive)**
 ```
 pnpm hardhat --network arbitrum-testnet lz:simple-dvn:lz-receive \
   --src-eid 40232 \
