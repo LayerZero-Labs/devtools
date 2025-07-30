@@ -23,9 +23,6 @@
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1"
   },
-  "dependencies": {
-    "@layerzerolabs/protocol-devtools-evm": "workspace:~5.0.0"
-  },
   "devDependencies": {
     "@babel/core": "^7.23.9",
     "@layerzerolabs/devtools": "~2.0.0",
