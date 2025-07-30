@@ -44,11 +44,11 @@ Verify
 ```
 pnpm hardhat --network arbitrum-testnet lz:simple-dvn:verify \
   --src-eid 40232 \
-  --src-oapp <SOURCE_OFT_ADDRESS>
+  --src-oapp <SOURCE_OFT_ADDRESS> \
   --nonce 1 \
   --to-address <RECIPIENT_ADDRESS> \
   --amount 1.5 \
-  --dst-eid 40231 \
+  --dst-eid 40231
 ```
 
 Commit
@@ -60,7 +60,7 @@ pnpm hardhat --network arbitrum-testnet lz:simple-dvn:commit \
   --nonce 1 \
   --to-address <RECIPIENT_ADDRESS> \
   --amount 1.5 \
-  --dst-eid 40231 \
+  --dst-eid 40231
 ```
 
 Now you can call lzReceive on the destination (execution)
@@ -74,3 +74,7 @@ pnpm hardhat --network arbitrum-testnet lz:simple-dvn:lz-receive \
   --amount 1.5 \
   --dst-eid 40231
 ```
+
+## Troubleshooting
+
+If you run into error `0x0177e1ca` (when running commit) which decodes into `LZ_PathNotVerifiable()`, then it might be a nonce issue. If it is a nonce issue, it is due to you using a nonce that has already been used on the destination. To fix, verify with a nonce that is higher, then retry commit.

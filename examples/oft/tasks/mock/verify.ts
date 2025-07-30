@@ -43,15 +43,12 @@ task('lz:simple-dvn:verify', 'Call verify() on SimpleDVN to verify a message')
         // Parse amount using shared decimals
         const amountUnits = parseUnits(amount, sharedDecimals)
 
-        // Constants
-        const PT_SEND = 0
-
         // Format fields
         const srcOAppB32 = addressToBytes32(srcOapp)
         const toB32 = addressToBytes32(toAddress)
 
-        // Rebuild raw OFT send payload: PT_SEND || toB32 || amount (parsed)
-        const message = ethers.utils.solidityPack(['uint8', 'bytes32', 'uint64'], [PT_SEND, toB32, amountUnits])
+        // Rebuild raw OFT send payload - only bytes32 (to) and uint64 (amount)
+        const message = ethers.utils.solidityPack(['bytes32', 'uint64'], [toB32, amountUnits])
 
         console.log(`\nCalling verify:`)
         console.log(`  srcEid:       ${srcEid}`)

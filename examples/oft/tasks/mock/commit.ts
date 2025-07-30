@@ -43,12 +43,11 @@ task('lz:simple-dvn:commit', 'Call commit() on SimpleDVN to commit ULN verificat
         // Parse amount using shared decimals
         const amountUnits = parseUnits(amount, sharedDecimals)
 
-        const PT_SEND = 0
         const srcOAppB32 = addressToBytes32(srcOapp)
         const toB32 = addressToBytes32(toAddress)
 
-        // Rebuild message payload using parsed amount
-        const message = ethers.utils.solidityPack(['uint8', 'bytes32', 'uint64'], [PT_SEND, toB32, amountUnits])
+        // Rebuild message payload - only bytes32 (to) and uint64 (amount)
+        const message = ethers.utils.solidityPack(['bytes32', 'uint64'], [toB32, amountUnits])
 
         console.log(`\nCalling commit:`)
         console.log(`  srcEid:       ${srcEid}`)
