@@ -1,12 +1,12 @@
 // tasks/simple-dvn-mock/utils/verify.ts
 import { Contract } from 'ethers'
 
-import { SimpleDvnTaskArgs, logTaskInfo, processMessage } from './common'
+import { SimpleDvnMockTaskArgs, logTaskInfo, processMessage } from './common'
 
 /**
  * DVN verify operation
  */
-export async function verify(dvnContract: Contract, dstOftContract: Contract, args: SimpleDvnTaskArgs) {
+export async function verify(dvnContract: Contract, dstOftContract: Contract, args: SimpleDvnMockTaskArgs) {
     const { srcEid, nonce, dstEid } = args
 
     // Process message and common parameters

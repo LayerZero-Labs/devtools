@@ -27,13 +27,13 @@ The Simple DVN follows the same folow on the destination chain:
 
 Deploy your OFTs like usual. Follow the README.md through till you reach 'Next Steps'. You can then proceed with the below.
 
-Deploy SimpleDVN on the destination chain:
+Deploy SimpleDVNMock on the destination chain:
 
 ```
-pnpm hardhat --network arbitrum-testnet deploy --tags SimpleDVN
+pnpm hardhat --network arbitrum-testnet deploy --tags SimpleDVNMock
 ```
 
-Update the destination chain's receive config to use SimpleDVN as the only Required DVN:
+Update the destination chain's receive config to use SimpleDVNMock as the only Required DVN:
 
 ```
 pnpm hardhat --network arbitrum-testnet lz:simple-dvn:set-receive-config --src-eid 40232 --contract-name MyOFTMock

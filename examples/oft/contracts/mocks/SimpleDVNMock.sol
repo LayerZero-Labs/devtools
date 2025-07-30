@@ -8,11 +8,11 @@ import { IReceiveUlnE2 } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln
 // 1. verify -> 2. commit -> 3. execute
 
 /**
- * @title SimpleDVN
+ * @title SimpleDVNMock
  * @notice A minimal DVN for manually verifying messages, for development use on testnets. Not for production. Deploy this on the destination chain.
  * @dev We accept sender and receiver as bytes32 to handle arbitrary remote address formats.
  */
-contract SimpleDVN is Ownable {
+contract SimpleDVNMock is Ownable {
     error InvalidLocalEid(uint32 expected, uint32 got);
     event PayloadVerified(bytes32 indexed guid);
     event PayloadCommitted(bytes32 indexed guid);

@@ -58,7 +58,7 @@ export async function setReceiveConfig(
         address: receiveLibrary,
     })
 
-    // Configure ULN with SimpleDVN using V2 interface
+    // Configure ULN with SimpleDVNMock using V2 interface
     const ulnConfig = uln302.encodeUlnConfig({
         confirmations: BigInt(1),
         requiredDVNs: [dvnAddress],
@@ -83,7 +83,7 @@ export async function setReceiveConfig(
         console.log(`✅ setConfig txHash: ${receipt.transactionHash}`)
         console.log(`\n🎉 Receive configuration completed successfully!`)
         console.log(`   Source EID ${srcEid} → Local OApp ${contractName}`)
-        console.log(`   Using SimpleDVN: ${dvnAddress}`)
+        console.log(`   Using SimpleDVNMock: ${dvnAddress}`)
         console.log(`   Using Executor: ${executorAddress}\n`)
 
         return receipt

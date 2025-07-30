@@ -1,9 +1,9 @@
 // tasks/simple-dvn-mock/utils/lzReceive.ts
 import { Contract } from 'ethers'
 
-import { ProcessedMessage, SimpleDvnTaskArgs, generateGuid, logTaskInfo, processMessage } from './common'
+import { ProcessedMessage, SimpleDvnMockTaskArgs, generateGuid, logTaskInfo, processMessage } from './common'
 
-interface LzReceiveArgs extends SimpleDvnTaskArgs {
+interface LzReceiveArgs extends SimpleDvnMockTaskArgs {
     guid?: string
 }
 

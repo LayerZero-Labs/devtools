@@ -4,9 +4,9 @@ import { task, types } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { commit } from './utils/commit'
-import { SimpleDvnTaskArgs } from './utils/common'
+import { SimpleDvnMockTaskArgs } from './utils/common'
 
-task('lz:simple-dvn:commit', 'Call commit() on SimpleDVN to commit ULN verification for message')
+task('lz:simple-dvn:commit', 'Call commit() on SimpleDVNMock to commit ULN verification for message')
     .addParam('srcEid', 'Source chain EID', undefined, types.int)
     .addParam('srcOapp', 'Sender app on source chain (hex)', undefined, types.string)
     .addParam('nonce', 'Channel nonce (uint64)', undefined, types.string)
@@ -14,11 +14,11 @@ task('lz:simple-dvn:commit', 'Call commit() on SimpleDVN to commit ULN verificat
     .addParam('amount', 'Amount to send (human readable units, e.g. "1.5")', undefined, types.string)
     .addParam('dstEid', 'Destination chain EID', undefined, types.int)
     .addOptionalParam('dstContractName', 'Name of the destination chain OFT in deployments', 'MyOFTMock', types.string)
-    .setAction(async (args: SimpleDvnTaskArgs, hre: HardhatRuntimeEnvironment) => {
+    .setAction(async (args: SimpleDvnMockTaskArgs, hre: HardhatRuntimeEnvironment) => {
         const signer = (await hre.ethers.getSigners())[0]
 
-        // Get SimpleDVN contract
-        const dvnDep = await hre.deployments.get('SimpleDVN')
+        // Get SimpleDVNMock contract
+        const dvnDep = await hre.deployments.get('SimpleDVNMock')
         const dvnContract = new Contract(dvnDep.address, dvnDep.abi, signer)
 
         // Get destination OFT contract

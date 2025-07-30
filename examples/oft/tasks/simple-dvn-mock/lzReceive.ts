@@ -3,10 +3,10 @@ import { Contract } from 'ethers'
 import { task, types } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
-import { SimpleDvnTaskArgs } from './utils/common'
+import { SimpleDvnMockTaskArgs } from './utils/common'
 import { lzReceive } from './utils/lzReceive'
 
-interface LzReceiveArgs extends SimpleDvnTaskArgs {
+interface LzReceiveArgs extends SimpleDvnMockTaskArgs {
     guid?: string
 }
 

@@ -2,7 +2,7 @@ import { type DeployFunction } from 'hardhat-deploy/types'
 
 import { getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
 
-const contractName = 'SimpleDVN'
+const contractName = 'SimpleDVNMock'
 /*
 constructor(
     address _receiveUln,   // ReceiveUln302 address (e.g. EndpointV2.ReceiveUln)

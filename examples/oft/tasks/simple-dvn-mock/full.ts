@@ -4,15 +4,15 @@ import { task, types } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { commit } from './utils/commit'
-import { SimpleDvnTaskArgs } from './utils/common'
+import { SimpleDvnMockTaskArgs } from './utils/common'
 import { lzReceive } from './utils/lzReceive'
 import { verify } from './utils/verify'
 
-interface FullTaskArgs extends SimpleDvnTaskArgs {
+interface FullTaskArgs extends SimpleDvnMockTaskArgs {
     guid?: string
 }
 
-task('lz:simple-dvn:full', 'Execute the full SimpleDVN flow: verify -> commit -> lzReceive')
+task('lz:simple-dvn:full', 'Execute the full SimpleDVNMock flow: verify -> commit -> lzReceive')
     .addParam('srcEid', 'Source chain EID', undefined, types.int)
     .addParam('srcOapp', 'Sender app on source chain (hex)', undefined, types.string)
     .addParam('nonce', 'Channel nonce (uint64)', undefined, types.string)
@@ -22,12 +22,12 @@ task('lz:simple-dvn:full', 'Execute the full SimpleDVN flow: verify -> commit ->
     .addOptionalParam('dstContractName', 'Name of the destination chain OFT in deployments', 'MyOFTMock', types.string)
     .addOptionalParam('guid', 'Message GUID (if not provided, will be generated)', undefined, types.string)
     .setAction(async (args: FullTaskArgs, hre: HardhatRuntimeEnvironment) => {
-        console.log('\n🚀 Starting full SimpleDVN flow...\n')
+        console.log('\n🚀 Starting full SimpleDVNMock flow...\n')
 
         const signer = (await hre.ethers.getSigners())[0]
 
-        // Get SimpleDVN contract
-        const dvnDep = await hre.deployments.get('SimpleDVN')
+        // Get SimpleDVNMock contract
+        const dvnDep = await hre.deployments.get('SimpleDVNMock')
         const dvnContract = new Contract(dvnDep.address, dvnDep.abi, signer)
 
         // Get destination OFT contract
@@ -54,7 +54,7 @@ task('lz:simple-dvn:full', 'Execute the full SimpleDVN flow: verify -> commit ->
             await lzReceive(endpointContract, dstOftContract, args)
             console.log('✅ LzReceive completed\n')
 
-            console.log('🎉 Full SimpleDVN flow completed successfully!')
+            console.log('🎉 Full SimpleDVNMock flow completed successfully!')
         } catch (error) {
             console.error(`❌ Full flow failed:`, error)
             throw error

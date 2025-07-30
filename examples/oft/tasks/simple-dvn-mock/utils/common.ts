@@ -4,7 +4,7 @@ import { parseUnits } from 'ethers/lib/utils'
 
 import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 
-export interface SimpleDvnTaskArgs {
+export interface SimpleDvnMockTaskArgs {
     srcEid: number
     srcOapp: string
     nonce: string
@@ -27,7 +27,7 @@ export interface ProcessedMessage {
 /**
  * Process message parameters and build the message payload
  */
-export async function processMessage(dstOftContract: Contract, args: SimpleDvnTaskArgs): Promise<ProcessedMessage> {
+export async function processMessage(dstOftContract: Contract, args: SimpleDvnMockTaskArgs): Promise<ProcessedMessage> {
     const { srcOapp, toAddress, amount } = args
 
     const localOapp = dstOftContract.address
@@ -62,7 +62,7 @@ export async function processMessage(dstOftContract: Contract, args: SimpleDvnTa
  */
 export function logTaskInfo(
     operation: string,
-    args: SimpleDvnTaskArgs,
+    args: SimpleDvnMockTaskArgs,
     processed: ProcessedMessage,
     extraInfo?: Record<string, unknown>
 ) {
