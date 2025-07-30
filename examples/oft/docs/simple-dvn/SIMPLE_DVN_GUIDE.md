@@ -93,7 +93,7 @@ pnpm hardhat lz:oft:send \
   --src-eid 40232 \
   --dst-eid 40231 \
   --amount 1.0 \
-  --to $EVM_ADDY \
+  --to <RECIPIENT> \
   --simple-dvn
 ```
 
