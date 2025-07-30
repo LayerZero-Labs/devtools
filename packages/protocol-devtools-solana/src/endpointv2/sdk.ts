@@ -27,7 +27,7 @@ import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import { canAddInstruction, OmniSDK } from '@layerzerolabs/devtools-solana'
 import { Timeout } from '@layerzerolabs/protocol-devtools'
 import { Uln302SetExecutorConfig } from '@layerzerolabs/protocol-devtools'
-import { Logger, printJson } from '@layerzerolabs/io-devtools'
+import { Logger, printJson, printBoolean } from '@layerzerolabs/io-devtools'
 import {
     EndpointPDADeriver,
     EndpointProgram,
@@ -136,6 +136,16 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
             const config = await this.program.getSendLibrary(this.connection, new PublicKey(sender), dstEid)
             return config?.programId?.toBase58() ?? undefined
         } catch (error: any) {
+            // Handle the specific error for account not found
+            // This can happen when the send library configuration hasn't been initialized yet
+            if (error?.message?.includes('Unable to find') && error?.message?.includes('account')) {
+                this.logger.debug(
+                    `Send library configuration account not found for ${sender} to ${eidLabel}, likely not initialized yet`
+                )
+                // Return undefined to indicate uninitialized state
+                return undefined
+            }
+
             // Handle the specific error for sendLibInfo being null
             // This can happen when BlockedMessageLib is set
             if (error?.message?.includes('sendLibInfo should not be null')) {
@@ -171,6 +181,16 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
             )
             return [lib, isDefault]
         } catch (error: any) {
+            // Handle the specific error for account not found
+            // This can happen when the receive library configuration hasn't been initialized yet
+            if (error?.message?.includes('Unable to find') && error?.message?.includes('account')) {
+                this.logger.debug(
+                    `Receive library configuration account not found for ${receiver} from ${eidLabel}, likely not initialized yet`
+                )
+                // Return undefined to indicate uninitialized state
+                return [undefined, false]
+            }
+
             // Handle the specific error for messageLibInfo being null
             // This can happen when BlockedMessageLib is set
             if (error?.message?.includes('messageLibInfo should not be null')) {
@@ -223,20 +243,37 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
 
         this.logger.debug(`Checking default send library for eid ${dstEid} (${eidLabel}) and address ${sender}`)
 
-        const config = await mapError(
-            () => this.program.getSendLibrary(this.connection, new PublicKey(sender), dstEid),
-            (error) =>
-                new Error(
-                    `Failed to check the default send library for ${this.label} for ${sender} for ${eidLabel}: ${error}`
+        try {
+            const config = await this.program.getSendLibrary(this.connection, new PublicKey(sender), dstEid)
+            const isDefault = config?.isDefault ?? false
+            this.logger.debug(
+                `Checked default send library for eid ${dstEid} (${eidLabel}) and address ${sender}: ${printBoolean(isDefault)}`
+            )
+            return isDefault
+        } catch (error: any) {
+            // Handle the specific error for account not found
+            // This can happen when the send library configuration hasn't been initialized yet
+            if (error?.message?.includes('Unable to find') && error?.message?.includes('account')) {
+                this.logger.debug(
+                    `Send library configuration account not found for ${sender} to ${eidLabel}, likely not initialized yet`
                 )
-        )
+                // Return false to indicate it's not using the default library (because no library is set)
+                return false
+            }
 
-        const isDefault = config?.isDefault ?? false
-        this.logger.debug(
-            `Checked default send library for eid ${dstEid} (${eidLabel}) and address ${sender}: ${isDefault}`
-        )
+            // Handle the specific error for sendLibInfo being null
+            // This can happen when BlockedMessageLib is set
+            if (error?.message?.includes('sendLibInfo should not be null')) {
+                this.logger.debug(`Encountered sendLibInfo error, likely BlockedMessageLib is set`)
+                // Return false for blocked message lib
+                return false
+            }
 
-        return isDefault
+            // Re-throw the error if we couldn't handle it
+            throw new Error(
+                `Failed to check the default send library for ${this.label} for ${sender} for ${eidLabel}: ${error}`
+            )
+        }
     }
 
     async setDefaultSendLibrary(eid: EndpointId, uln: OmniAddress | null | undefined): Promise<OmniTransaction> {
