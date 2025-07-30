@@ -88,10 +88,10 @@ This will configure your contracts to use SimpleDVNMock as the only required DVN
 
 Now you can test the SimpleDVN flow!
 
-**Use the `lz:simple-dvn:full` task to execute all three steps (verify → commit → execute) in one command:**
+**Use the `lz:simple-dvn:process-receive` task to execute all three steps (verify → commit → execute) in one command:**
 
 ```
-pnpm hardhat --network arbitrum-testnet lz:simple-dvn:full \
+pnpm hardhat --network arbitrum-testnet lz:simple-dvn:process-receive \
   --src-eid 40232 \
   --src-oapp <SOURCE_OFT_ADDRESS> \
   --nonce 1 \
