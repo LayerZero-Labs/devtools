@@ -6,7 +6,7 @@ Simple DVN is a mock DVN for testnet uses.
 
 ## Simple DVN Flow
 
-The Simple DVN follows the same folow on the destination chain:
+The Simple DVN follows the same flow on the destination chain:
 
 ```
                     ┌──────────┐       ┌──────────┐       ┌──────────┐
