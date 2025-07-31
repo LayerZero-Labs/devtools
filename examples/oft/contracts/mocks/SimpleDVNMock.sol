@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { IReceiveUlnE2 } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IReceiveUlnE2.sol";
-import { ILayerZeroDVN } from "./interfaces/ILayerZeroDVN.sol";
+import { ILayerZeroDVN } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroDVN.sol";
 
 // A message on the destination chain has to go through three steps:
 // 1. verify -> 2. commit -> 3. execute
