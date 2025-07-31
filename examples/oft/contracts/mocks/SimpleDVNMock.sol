@@ -36,32 +36,32 @@ contract SimpleDVNMock is Ownable, ILayerZeroDVN {
 
     /**
      * @notice Get the fee for DVN services (mock implementation)
-     * @dev Returns a minimal fee for testing purposes
+     * @dev Returns a minimal fee for testing purposes. You can override this function to return a different fee or to implement a fee mechanism.
      */
     function getFee(
         uint32 _dstEid,
         uint64 _confirmations,
         address _sender,
         bytes calldata _options
-    ) external pure override returns (uint256 fee) {
+    ) external pure override virtual returns (uint256 fee) {
         // Suppress unused parameter warnings
         (_dstEid, _confirmations, _sender, _options);
-        // Return minimal fee for testing (1 wei)
-        return 1;
+        // Return 0 fee for testing
+        return 0;
     }
 
     /**
      * @notice Assign job and return fee (mock implementation)
-     * @dev Returns a minimal fee and doesn't actually assign any job
+     * @dev Returns a minimal fee and doesn't actually assign any job. You can override this function to return a different fee or to implement a fee mechanism.
      */
     function assignJob(
         AssignJobParam calldata _param,
         bytes calldata _options
-    ) external payable override returns (uint256 fee) {
+    ) external payable override virtual returns (uint256 fee) {
         // Suppress unused parameter warnings
         (_param, _options);
-        // Return minimal fee for testing (1 wei)
-        return 1;
+        // Return 0 fee for testing
+        return 0;
     }
 
     /**
