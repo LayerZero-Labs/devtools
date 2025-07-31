@@ -55,7 +55,8 @@ contract PrecompileTest is Test {
             HL_LZ_ENDPOINT_V2,
             address(oft),
             ALICE.coreIndexId,
-            ALICE.decimalDiff
+            ALICE.decimalDiff,
+            msg.sender
         );
         typeConversionTest = new TypeConversionTest();
     }
