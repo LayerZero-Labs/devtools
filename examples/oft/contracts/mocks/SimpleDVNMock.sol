@@ -43,7 +43,7 @@ contract SimpleDVNMock is Ownable, ILayerZeroDVN {
         uint64 _confirmations,
         address _sender,
         bytes calldata _options
-    ) external pure override virtual returns (uint256 fee) {
+    ) external pure virtual override returns (uint256 fee) {
         // Suppress unused parameter warnings
         (_dstEid, _confirmations, _sender, _options);
         // Return 0 fee for testing
@@ -57,7 +57,7 @@ contract SimpleDVNMock is Ownable, ILayerZeroDVN {
     function assignJob(
         AssignJobParam calldata _param,
         bytes calldata _options
-    ) external payable override virtual returns (uint256 fee) {
+    ) external payable virtual override returns (uint256 fee) {
         // Suppress unused parameter warnings
         (_param, _options);
         // Return 0 fee for testing
