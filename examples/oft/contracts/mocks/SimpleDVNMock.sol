@@ -34,8 +34,11 @@ contract SimpleDVNMock is Ownable, ILayerZeroDVN {
         localEid = _localEid;
     }
 
+    // hardcoded DVN fee. You can override getFee and assignJob if you want to implement a fee mechanism that is not hardcoded.
+    uint256 public constant DVN_FEE = 0;
+
     /**
-     * @notice Get the fee for DVN services (mock implementation)
+     * @notice Get the DVN fee (mock implementation)
      * @dev Returns a minimal fee for testing purposes. You can override this function to return a different fee or to implement a fee mechanism.
      */
     function getFee(
@@ -47,11 +50,11 @@ contract SimpleDVNMock is Ownable, ILayerZeroDVN {
         // Suppress unused parameter warnings
         (_dstEid, _confirmations, _sender, _options);
         // Return 0 fee for testing
-        return 0;
+        return DVN_FEE;
     }
 
     /**
-     * @notice Assign job and return fee (mock implementation)
+     * @notice Assign job and return DVN fee (mock implementation)
      * @dev Returns a minimal fee and doesn't actually assign any job. You can override this function to return a different fee or to implement a fee mechanism.
      */
     function assignJob(
@@ -61,7 +64,7 @@ contract SimpleDVNMock is Ownable, ILayerZeroDVN {
         // Suppress unused parameter warnings
         (_param, _options);
         // Return 0 fee for testing
-        return 0;
+        return DVN_FEE;
     }
 
     /**
