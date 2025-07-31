@@ -76,9 +76,10 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         /// @dev burn() on tokens when a user sends changes totalSupply() which the asset:share ratio depends on.
         if (!IOFT(SHARE_OFT).approvalRequired()) revert ShareOFTNotAdapter(SHARE_OFT);
 
-        /// @dev Approve the vault to spend the share and asset tokens held by this contract
-        IERC20(SHARE_ERC20).approve(_vault, type(uint256).max);
+        /// @dev Approve the vault to spend the asset tokens held by this contract
         IERC20(ASSET_ERC20).approve(_vault, type(uint256).max);
+        /// @dev Approving the vault for the share erc20 is not required when the vault is the share erc20
+        // IERC20(SHARE_ERC20).approve(_vault, type(uint256).max);
 
         /// @dev Approve the share adapter with the share tokens held by this contract
         IERC20(SHARE_ERC20).approve(_shareOFT, type(uint256).max);
