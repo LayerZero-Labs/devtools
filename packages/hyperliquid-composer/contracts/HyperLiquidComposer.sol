@@ -75,6 +75,8 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         address _executor,
         bytes calldata /*_extraData*/
     ) external payable virtual override {
+        if (gasleft() < MIN_GAS) revert IHyperLiquidComposerErrors.HyperLiquidComposer_NotEnoughGas(gasleft(), MIN_GAS);
+
         /// @dev The following reverts are for when the contract is incorrectly called.
         /// @dev There are no refunds involved in these reverts.
         // Validate the composeCall based on the docs - https://docs.layerzero.network/v2/developers/evm/oft/oft-patterns-extensions#receiving-compose
@@ -100,9 +102,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         /// @dev The slice ranges can be found in OFTComposeMsgCodec.sol
         /// @dev If the payload is invalid, the function will revert with the error message and there is no refunds
         try this.decode_message(composeMsgEncoded) returns (uint256 _minMsgValue, address _receiver) {
-            if (_minMsgValue > msg.value) {
-                revert IHyperLiquidComposerErrors.NotEnoughMsgValue(msg.value, _minMsgValue);
-            }
+            if (_minMsgValue > msg.value) revert IHyperLiquidComposerErrors.NotEnoughMsgValue(msg.value, _minMsgValue);
 
             receiver = _receiver;
         } catch {

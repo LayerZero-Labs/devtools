@@ -43,6 +43,7 @@ interface IHyperLiquidComposerCore {
     function oft() external view returns (IOFT);
     function token() external view returns (IERC20);
     function REFUND_ADDRESS() external view returns (address);
+    function MIN_GAS() external view returns (uint256);
 
     function HLP_CORE_WRITER() external view returns (address);
     function HLP_PRECOMPILE_READ_SPOT_BALANCE() external view returns (address);
