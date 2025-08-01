@@ -93,9 +93,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         address receiver;
 
         /// @dev Since these are populated by the OFT contract, we can safely assume they are always decodeable
-        uint32 srcEid = OFTComposeMsgCodec.srcEid(_message);
         uint256 amountLD = OFTComposeMsgCodec.amountLD(_message);
-        bytes32 sender = OFTComposeMsgCodec.composeFrom(_message);
         bytes memory composeMsgEncoded = OFTComposeMsgCodec.composeMsg(_message);
 
         /// @dev Checks if the payload contains a compose message that can be sliced to extract the amount, sender as bytes32, and receiver as bytes
@@ -112,12 +110,12 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
             /// @dev The excess will be transferred to the REFUND_ADDRESS
 
             SendParam memory refundSendParam;
-            refundSendParam.dstEid = srcEid;
-            refundSendParam.to = sender;
+            refundSendParam.dstEid = OFTComposeMsgCodec.srcEid(_message);
+            refundSendParam.to = OFTComposeMsgCodec.composeFrom(_message);
             refundSendParam.amountLD = amountLD;
 
             failedMessages[_guid] = FailedMessage({ refundSendParam: refundSendParam, msgValue: msg.value });
-            emit FailedMessageDecode(_guid, sender, msg.value, composeMsgEncoded);
+            emit FailedMessageDecode(_guid, refundSendParam.to, msg.value, composeMsgEncoded);
             return;
         }
 
