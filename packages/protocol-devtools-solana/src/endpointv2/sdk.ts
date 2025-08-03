@@ -201,7 +201,21 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         this.logger.debug(`Checking default send library for eid ${dstEid} (${eidLabel}) and address ${sender}`)
 
         const config = await mapError(
-            () => this.program.getSendLibrary(this.connection, new PublicKey(sender), dstEid),
+            async () => {
+                try {
+                    return await this.program.getSendLibrary(this.connection, new PublicKey(sender), dstEid)
+                } catch (err) {
+                    if (
+                        err instanceof Error &&
+                        err.message.includes('Unable to find defaultSendLibraryConfig/sendLibraryConfig account at')
+                    ) {
+                        // added to match the previous behavior of getSendLibrary returning null and not throwing when the default send library is not set
+                        // in the monorepo, the behavior was changed in PR #3056
+                        return null
+                    }
+                    throw err
+                }
+            },
             (error) =>
                 new Error(
                     `Failed to check the default send library for ${this.label} for ${sender} for ${eidLabel}: ${error}`
@@ -546,6 +560,11 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     @AsyncRetriable()
     isRegisteredLibrary(): Promise<boolean> {
         throw new TypeError(`isRegisteredLibrary() not implemented on Solana Endpoint SDK`)
+    }
+
+    @AsyncRetriable()
+    async isBlockedLibrary(): Promise<boolean> {
+        throw new TypeError(`isBlockedLibrary() not implemented on Solana Endpoint SDK`)
     }
 
     async registerLibrary(): Promise<OmniTransaction> {
