@@ -3020,10 +3020,6 @@ importers:
         version: 5.5.3
 
   examples/ovault-evm:
-    dependencies:
-      '@layerzerolabs/io-devtools':
-        specifier: workspace:^
-        version: link:../../packages/io-devtools
     devDependencies:
       '@babel/core':
         specifier: ^7.23.9
@@ -3034,6 +3030,9 @@ importers:
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
+      '@layerzerolabs/io-devtools':
+        specifier: ~0.3.0
+        version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
         version: 3.0.86
@@ -3062,7 +3061,7 @@ importers:
         specifier: ^3.1.2
         version: link:../../packages/oft-evm
       '@layerzerolabs/ovault-evm':
-        specifier: workspace:*
+        specifier: ^0.0.1
         version: link:../../packages/ovault-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
