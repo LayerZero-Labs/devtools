@@ -417,9 +417,20 @@ export class OFT extends OmniSDK implements IOApp {
         throw new TypeError(`getCallerBpsCap() not implemented on Solana OFT SDK`)
     }
 
-    public async sendConfigIsInitialized(_eid: EndpointId): Promise<boolean> {
+    public async sendConfigIsInitialized(eid: EndpointId): Promise<boolean> {
+        const oftStoreInfo = await this.umi.rpc.getAccount(this.umiPublicKey)
+        if (!oftStoreInfo.exists) {
+            return false
+        }
+        if (!(await this.isSendLibraryInitialized(eid))) {
+            return false
+        }
+
+        if (!(await this.isReceiveLibraryInitialized(eid))) {
+            return false
+        }
         const deriver = new MessageLibPDADeriver(UlnProgram.PROGRAM_ID)
-        const [sendConfig] = deriver.sendConfig(_eid, new PublicKey(this.point.address))
+        const [sendConfig] = deriver.sendConfig(eid, new PublicKey(this.point.address))
         const accountInfo = await this.connection.getAccountInfo(sendConfig)
         return accountInfo != null
     }
@@ -428,23 +439,39 @@ export class OFT extends OmniSDK implements IOApp {
         const delegateAddress = await this.getDelegate()
         // delegate may be undefined if it has not yet been set.  In this case, use admin, which must exist.
         const delegate = delegateAddress ? createNoopSigner(publicKey(delegateAddress)) : await this._getAdmin()
+        const oftStore = this.umiPublicKey
+        const instructions: WrappedInstruction[] = []
+
+        // Check if the OFT store account exists, if not, initialize it
+        if (!(await this.umi.rpc.getAccount(oftStore)).exists) {
+            instructions.push(
+                oft.initConfig(
+                    {
+                        admin: delegate,
+                        oftStore,
+                        payer: delegate,
+                    },
+                    eid,
+                    {
+                        msgLib: fromWeb3JsPublicKey(UlnProgram.PROGRAM_ID),
+                    }
+                )
+            )
+        }
+
+        if (!(await this.isSendLibraryInitialized(eid))) {
+            instructions.push(
+                oft.initSendLibrary({ admin: delegate, oftStore }, eid) // delegate
+            )
+        }
+        if (!(await this.isReceiveLibraryInitialized(eid))) {
+            instructions.push(
+                oft.initReceiveLibrary({ admin: delegate, oftStore }, eid) // delegate
+            )
+        }
         return {
-            ...(await this.createTransaction(
-                this._umiToWeb3Tx([
-                    oft.initConfig(
-                        {
-                            admin: delegate,
-                            oftStore: this.umiPublicKey,
-                            payer: delegate,
-                        },
-                        eid,
-                        {
-                            msgLib: fromWeb3JsPublicKey(UlnProgram.PROGRAM_ID),
-                        }
-                    ),
-                ])
-            )),
-            description: `oft.initConfig(${eid})`,
+            ...(await this.createTransaction(this._umiToWeb3Tx(instructions))),
+            description: `Initializing OFT config for eid ${eid} (${formatEid(eid)})`,
         }
     }
 
