@@ -16,7 +16,7 @@
     "lint:js": "eslint '**/*.{js,ts,json}' && prettier --check .",
     "lint:sol": "solhint 'contracts/**/*.sol'",
     "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat",
-    "test:forge": "forge test",
+    "test:forge": "FOUNDRY_PROFILE=CI forge test",
     "test:hardhat": "hardhat test"
   },
   "resolutions": {

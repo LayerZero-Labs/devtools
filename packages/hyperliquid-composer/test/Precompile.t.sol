@@ -70,7 +70,6 @@ contract PrecompileTest is Test {
         assertEq(HYPE.assetBridgeAddress.balance, balanceBefore + AMOUNT_TO_FUND);
     }
 
-    /// forge-config: default.fuzz.runs = 64
     function test_spotBalancePrecompile(uint64 _balance) public {
         SpotBalancePrecompileMock(HLP_PRECOMPILE_READ_SPOT_BALANCE).setSpotBalance(
             ALICE.assetBridgeAddress,
@@ -86,7 +85,6 @@ contract PrecompileTest is Test {
         assertEq(abi.decode(data, (uint64)), _balance);
     }
 
-    /// forge-config: default.fuzz.runs = 64
     function test_balanceOfHyperCore(address _address, bool _isOFT, uint64 _balance) public {
         IHyperAsset memory asset;
         if (_isOFT) {
@@ -106,7 +104,6 @@ contract PrecompileTest is Test {
         assertEq(balance, _balance);
     }
 
-    /// forge-config: default.fuzz.runs = 64
     function test_quoteHyperCoreAmount_decimal_diff_greater_zero(uint64 _amount, bool _isOFT) public view {
         uint64 maxTransferableAmount = type(uint64).max;
         IHyperAsset memory asset;

@@ -173,7 +173,6 @@ contract HyperLiquidComposerRefundTest is Test {
         assertEq(oft.balanceOf(userA), AMOUNT_TO_SEND);
     }
 
-    /// forge-config: default.fuzz.runs = 128
     function test_erc20_refund_receiver_excessive_amount(uint64 _exceedAmountBy) public {
         _exceedAmountBy = uint64(bound(_exceedAmountBy, 0, type(uint64).max - 10 ether));
 
@@ -211,7 +210,6 @@ contract HyperLiquidComposerRefundTest is Test {
         assertEq(oft.balanceOf(userB), _exceedAmountBy);
     }
 
-    /// forge-config: default.fuzz.runs = 128
     function test_native_refund_receiver_excessive_amount_no_fallback(uint64 _exceedAmountBy) public {
         _exceedAmountBy = uint64(bound(_exceedAmountBy, 0, type(uint64).max - 10 ether));
 
