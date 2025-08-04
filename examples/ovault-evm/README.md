@@ -33,7 +33,7 @@ Deploy **omnichain ERC-4626 vaults** that enable users to deposit assets from an
 Before using this example, you should understand:
 
 - [**OFT Standard**](https://docs.layerzero.network/v2/developers/evm/oft/quickstart): How to deploy and configure Omnichain Fungible Tokens
-- [**Composer Pattern**](https://docs.layerzero.network/v2/developers/evm/composer/overview): How to implement cross-chain compose messages  
+- [**Composer Pattern**](https://docs.layerzero.network/v2/developers/evm/composer/overview): How to implement cross-chain compose messages
 - [**ERC-4626 Vaults**](https://eips.ethereum.org/EIPS/eip-4626): How the tokenized vault standard interface works for deposit/redeem operations
 
 ## Introduction
@@ -85,27 +85,27 @@ Update `hardhat.config.ts` to include your desired networks. Example for 3-chain
 
 ```typescript
 const config: HardhatUserConfig = {
-    networks: {
-        // Hub chain (hosts vault + composer)
-        'arbitrum-sepolia': {
-            eid: EndpointId.ARBSEP_V2_TESTNET,
-            url: 'https://sepolia-rollup.arbitrum.io/rpc',
-            accounts,
-        },
-        // Spoke chains (asset/share origins)
-        'base-sepolia': {
-            eid: EndpointId.BASESEP_V2_TESTNET,
-            url: 'https://sepolia.base.org',
-            accounts,
-        },
-        'optimism-sepolia': {
-            eid: EndpointId.OPTSEP_V2_TESTNET,
-            url: 'https://sepolia.optimism.io',
-            accounts,
-        },
+  networks: {
+    // Hub chain (hosts vault + composer)
+    "arbitrum-sepolia": {
+      eid: EndpointId.ARBSEP_V2_TESTNET,
+      url: "https://sepolia-rollup.arbitrum.io/rpc",
+      accounts,
     },
-    // ... rest of config
-}
+    // Spoke chains (asset/share origins)
+    "base-sepolia": {
+      eid: EndpointId.BASESEP_V2_TESTNET,
+      url: "https://sepolia.base.org",
+      accounts,
+    },
+    "optimism-sepolia": {
+      eid: EndpointId.OPTSEP_V2_TESTNET,
+      url: "https://sepolia.optimism.io",
+      accounts,
+    },
+  },
+  // ... rest of config
+};
 ```
 
 ## Build
@@ -157,159 +157,175 @@ pnpm hardhat lz:deploy --tags share
 Set up your Asset OFT configuration in `layerzero.asset.config.ts`. The example uses the `TwoWayConfig` pattern for simplified bidirectional connections:
 
 ```typescript
-import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
-import { TwoWayConfig, generateConnectionsConfig } from '@layerzerolabs/metadata-tools'
-import { OAppEnforcedOption } from '@layerzerolabs/toolbox-hardhat'
+import { EndpointId } from "@layerzerolabs/lz-definitions";
+import { ExecutorOptionType } from "@layerzerolabs/lz-v2-utilities";
+import {
+  TwoWayConfig,
+  generateConnectionsConfig,
+} from "@layerzerolabs/metadata-tools";
+import { OAppEnforcedOption } from "@layerzerolabs/toolbox-hardhat";
 
 const optimismContract: OmniPointHardhat = {
-    eid: EndpointId.OPTIMISM_V2_MAINNET.valueOf(),
-    contractName: 'MyAssetOFT',
-}
+  eid: EndpointId.OPTIMISM_V2_MAINNET.valueOf(),
+  contractName: "MyAssetOFT",
+};
 
 const arbitrumContract: OmniPointHardhat = {
-    eid: EndpointId.ARBITRUM_V2_MAINNET.valueOf(),
-    contractName: 'MyAssetOFT',
-}
+  eid: EndpointId.ARBITRUM_V2_MAINNET.valueOf(),
+  contractName: "MyAssetOFT",
+};
 
 const baseContract: OmniPointHardhat = {
-    eid: EndpointId.BASE_V2_MAINNET.valueOf(),
-    contractName: 'MyAssetOFT',
-}
+  eid: EndpointId.BASE_V2_MAINNET.valueOf(),
+  contractName: "MyAssetOFT",
+};
 
 // Configure gas limits for message execution
 const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
-    {
-        msgType: 1,
-        optionType: ExecutorOptionType.LZ_RECEIVE,
-        gas: 100_000,
-        value: 0,
-    },
-    {
-        msgType: 2,
-        optionType: ExecutorOptionType.LZ_RECEIVE,
-        gas: 100_000,
-        value: 0,
-    },
-]
+  {
+    msgType: 1,
+    optionType: ExecutorOptionType.LZ_RECEIVE,
+    gas: 100_000,
+    value: 0,
+  },
+  {
+    msgType: 2,
+    optionType: ExecutorOptionType.LZ_RECEIVE,
+    gas: 100_000,
+    value: 0,
+  },
+];
 
 // Pathway configuration (automatically bidirectional)
 const pathways: TwoWayConfig[] = [
-    [
-        optimismContract,        // Chain A
-        arbitrumContract,        // Chain B  
-        [['LayerZero Labs'], []], // DVN configuration
-        [1, 1],                 // Confirmations [A→B, B→A]
-        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Gas options
-    ],
-    [
-        optimismContract,
-        baseContract,
-        [['LayerZero Labs'], []],
-        [1, 1],
-        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
-    ],
-    [
-        arbitrumContract,
-        baseContract,
-        [['LayerZero Labs'], []],
-        [1, 1],
-        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
-    ],
-]
+  [
+    optimismContract, // Chain A
+    arbitrumContract, // Chain B
+    [["LayerZero Labs"], []], // DVN configuration
+    [1, 1], // Confirmations [A→B, B→A]
+    [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Gas options
+  ],
+  [
+    optimismContract,
+    baseContract,
+    [["LayerZero Labs"], []],
+    [1, 1],
+    [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
+  ],
+  [
+    arbitrumContract,
+    baseContract,
+    [["LayerZero Labs"], []],
+    [1, 1],
+    [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
+  ],
+];
 
 export default async function () {
-    const connections = await generateConnectionsConfig(pathways)
-    return {
-        contracts: [{ contract: optimismContract }, { contract: arbitrumContract }, { contract: baseContract }],
-        connections,
-    }
+  const connections = await generateConnectionsConfig(pathways);
+  return {
+    contracts: [
+      { contract: optimismContract },
+      { contract: arbitrumContract },
+      { contract: baseContract },
+    ],
+    connections,
+  };
 }
 ```
 
 **To modify for your networks:**
+
 1. Update the contract definitions with your target chain EIDs
-2. Adjust gas limits in `EVM_ENFORCED_OPTIONS` based on your contract requirements  
+2. Adjust gas limits in `EVM_ENFORCED_OPTIONS` based on your contract requirements
 3. Configure DVN settings in pathways (currently using LayerZero Labs DVN)
 4. Update confirmations based on your security requirements
 
-### 2. Configure Share OFT Network  
+### 2. Configure Share OFT Network
 
 Set up your Share OFT configuration in `layerzero.share.config.ts`. **Critical**: The hub chain must use `MyShareOFTAdapter` (lockbox model):
 
 ```typescript
-import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
-import { TwoWayConfig, generateConnectionsConfig } from '@layerzerolabs/metadata-tools'
-import { OAppEnforcedOption } from '@layerzerolabs/toolbox-hardhat'
+import { EndpointId } from "@layerzerolabs/lz-definitions";
+import { ExecutorOptionType } from "@layerzerolabs/lz-v2-utilities";
+import {
+  TwoWayConfig,
+  generateConnectionsConfig,
+} from "@layerzerolabs/metadata-tools";
+import { OAppEnforcedOption } from "@layerzerolabs/toolbox-hardhat";
 
 const optimismContract: OmniPointHardhat = {
-    eid: EndpointId.OPTIMISM_V2_MAINNET.valueOf(),
-    contractName: 'MyShareOFT', // Standard OFT (spoke)
-}
+  eid: EndpointId.OPTIMISM_V2_MAINNET.valueOf(),
+  contractName: "MyShareOFT", // Standard OFT (spoke)
+};
 
 const arbitrumContract: OmniPointHardhat = {
-    eid: EndpointId.BASE_V2_MAINNET.valueOf(), // Note: Base is the hub chain
-    contractName: 'MyShareOFTAdapter', // Adapter (hub/lockbox)
-}
+  eid: EndpointId.BASE_V2_MAINNET.valueOf(), // Note: Base is the hub chain
+  contractName: "MyShareOFTAdapter", // Adapter (hub/lockbox)
+};
 
 const baseContract: OmniPointHardhat = {
-    eid: EndpointId.ARBITRUM_V2_MAINNET.valueOf(),
-    contractName: 'MyShareOFT', // Standard OFT (spoke)
-}
+  eid: EndpointId.ARBITRUM_V2_MAINNET.valueOf(),
+  contractName: "MyShareOFT", // Standard OFT (spoke)
+};
 
 // Same enforced options as asset config
 const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
-    {
-        msgType: 1,
-        optionType: ExecutorOptionType.LZ_RECEIVE,
-        gas: 100_000,
-        value: 0,
-    },
-    {
-        msgType: 2,
-        optionType: ExecutorOptionType.LZ_RECEIVE,
-        gas: 100_000,
-        value: 0,
-    },
-]
+  {
+    msgType: 1,
+    optionType: ExecutorOptionType.LZ_RECEIVE,
+    gas: 100_000,
+    value: 0,
+  },
+  {
+    msgType: 2,
+    optionType: ExecutorOptionType.LZ_RECEIVE,
+    gas: 100_000,
+    value: 0,
+  },
+];
 
 // Same pathway structure as asset config
 const pathways: TwoWayConfig[] = [
-    [
-        optimismContract,        // Spoke
-        arbitrumContract,        // Hub (Base chain with adapter)
-        [['LayerZero Labs'], []],
-        [1, 1],
-        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
-    ],
-    [
-        optimismContract,        // Spoke
-        baseContract,           // Spoke (Arbitrum)
-        [['LayerZero Labs'], []],
-        [1, 1],
-        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
-    ],
-    [
-        arbitrumContract,        // Hub (Base)
-        baseContract,           // Spoke (Arbitrum) 
-        [['LayerZero Labs'], []],
-        [1, 1],
-        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
-    ],
-]
+  [
+    optimismContract, // Spoke
+    arbitrumContract, // Hub (Base chain with adapter)
+    [["LayerZero Labs"], []],
+    [1, 1],
+    [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
+  ],
+  [
+    optimismContract, // Spoke
+    baseContract, // Spoke (Arbitrum)
+    [["LayerZero Labs"], []],
+    [1, 1],
+    [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
+  ],
+  [
+    arbitrumContract, // Hub (Base)
+    baseContract, // Spoke (Arbitrum)
+    [["LayerZero Labs"], []],
+    [1, 1],
+    [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
+  ],
+];
 
 export default async function () {
-    const connections = await generateConnectionsConfig(pathways)
-    return {
-        contracts: [{ contract: optimismContract }, { contract: arbitrumContract }, { contract: baseContract }],
-        connections,
-    }
+  const connections = await generateConnectionsConfig(pathways);
+  return {
+    contracts: [
+      { contract: optimismContract },
+      { contract: arbitrumContract },
+      { contract: baseContract },
+    ],
+    connections,
+  };
 }
 ```
 
 **Important Notes:**
-- **Hub Chain**: In this example, Base is the hub (uses `MyShareOFTAdapter`) 
+
+- **Hub Chain**: In this example, Base is the hub (uses `MyShareOFTAdapter`)
 - **Contract Types**: Only the hub chain uses `MyShareOFTAdapter`; all other chains use `MyShareOFT`
 - **Auto-Detection**: The `lz:ovault:send` task automatically detects the hub by finding the contract with "Adapter" in the name
 
@@ -327,7 +343,7 @@ pnpm hardhat lz:oapp:wire --oapp-config layerzero.asset.config.ts
 Configure and wire the Share OFT connections:
 
 ```bash
-# Wire Share OFT network  
+# Wire Share OFT network
 pnpm hardhat lz:oapp:wire --oapp-config layerzero.share.config.ts
 ```
 
@@ -336,14 +352,17 @@ pnpm hardhat lz:oapp:wire --oapp-config layerzero.share.config.ts
 To use different chains or network configurations:
 
 **For Testnet Deployment:**
+
 - Replace `EndpointId.OPTIMISM_V2_MAINNET` with `EndpointId.OPTSEP_V2_TESTNET`
-- Replace `EndpointId.BASE_V2_MAINNET` with `EndpointId.BASESEP_V2_TESTNET`  
+- Replace `EndpointId.BASE_V2_MAINNET` with `EndpointId.BASESEP_V2_TESTNET`
 - Replace `EndpointId.ARBITRUM_V2_MAINNET` with `EndpointId.ARBSEP_V2_TESTNET`
 
 **For Different Hub Chain:**
+
 - Move the `MyShareOFTAdapter` contract name to your hub chain deployment
 
 **For Additional Chains:**
+
 - Add new contract definitions with appropriate EIDs
 - Add pathway configurations between the new chain and existing chains
 - Deploy Asset OFTs and Share OFTs to the new chains
@@ -385,7 +404,7 @@ pnpm hardhat lz:ovault:send \
 ### Parameters
 
 - `--src-eid`: Source chain [Endpoint ID](https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts)
-- `--dst-eid`: Destination chain Endpoint ID  
+- `--dst-eid`: Destination chain Endpoint ID
 - `--amount`: Amount to send (human readable, e.g., "1.5")
 - `--to`: Recipient address (20-byte hex for EVM)
 - `--token-type`: Either `asset` or `share`
@@ -403,23 +422,27 @@ After completing your deployment:
 ## Production Deployment Checklist
 
 - [ ] **Security Stack Configuration**
+
   - [ ] Configure [DVNs](https://docs.layerzero.network/v2/developers/evm/configuration/dvn-executor-config) for your security requirements
-  - [ ] Set appropriate [confirmation blocks](https://docs.layerzero.network/v2/developers/evm/configuration/default-config#confirmation-blocks) 
+  - [ ] Set appropriate [confirmation blocks](https://docs.layerzero.network/v2/developers/evm/configuration/default-config#confirmation-blocks)
   - [ ] Configure [Executors](https://docs.layerzero.network/v2/developers/evm/configuration/dvn-executor-config#executors) with proper gas settings
 
-- [ ] **Gas & Options Configuration**  
+- [ ] **Gas & Options Configuration**
+
   - [ ] Profile gas usage with [Message Options](https://docs.layerzero.network/v2/developers/evm/configuration/options)
   - [ ] Set proper `lzReceive` gas limits for vault operations
   - [ ] Configure `lzCompose` gas limits for second hop transfers
   - [ ] Test gas estimation across all supported routes
 
 - [ ] **Vault Configuration**
+
   - [ ] Ensure Share OFT on hub uses OFTAdapter (lockbox model)
   - [ ] Configure appropriate slippage tolerances for vault volatility
   - [ ] Set up vault access controls and admin functions
   - [ ] Test vault preview functions (`previewDeposit`/`previewRedeem`)
 
 - [ ] **Error Recovery**
+
   - [ ] Document error recovery procedures for failed operations
   - [ ] Set up monitoring for failed compose messages
   - [ ] Test refund and retry mechanisms
@@ -427,7 +450,7 @@ After completing your deployment:
 
 - [ ] **Network Configuration**
   - [ ] Verify all peer configurations are correct
-  - [ ] Test message delivery on all supported routes  
+  - [ ] Test message delivery on all supported routes
   - [ ] Confirm rate limiting settings are appropriate
   - [ ] Validate pathway configurations
 
@@ -470,7 +493,7 @@ pnpm hardhat
 pnpm hardhat lz:oft:send           # Send OFT tokens cross-chain
 pnpm hardhat lz:ovault:send        # Send through OVault composer
 
-# OApp configuration tasks  
+# OApp configuration tasks
 pnpm hardhat lz:oapp:wire          # Wire OApp connections
 pnpm hardhat lz:oapp:config        # Set OApp configuration
 
@@ -483,14 +506,17 @@ pnpm hardhat lz:deploy             # Deploy contracts
 **Common Issues:**
 
 1. **"Share adapter must be lockbox" Error**
+
    - **Cause**: Share OFT on hub chain is not configured as OFTAdapter
    - **Solution**: Ensure `MyShareOFTAdapter` is deployed on hub, not `MyShareOFT`
 
 2. **Cross-chain vault operation fails**
+
    - **Diagnostic**: Check [LayerZero Scan](https://testnet.layerzeroscan.com) for message status
    - **Solutions**: Verify composer gas allowances, check vault liquidity, increase slippage tolerance
 
 3. **"Slippage exceeded during vault operation"**
+
    - **Cause**: Share price changed during cross-chain operation
    - **Solution**: Increase slippage tolerance with `--min-amount` parameter
 

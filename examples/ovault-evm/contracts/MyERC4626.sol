@@ -9,12 +9,7 @@ import { ERC4626 } from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.
 import { OFTAdapter } from "@layerzerolabs/oft-evm/contracts/OFTAdapter.sol";
 
 contract MyERC4626 is ERC4626 {
-    constructor(string memory _name, string memory _symbol, IERC20 _asset) 
-        ERC20(_name, _symbol) 
-        ERC4626(_asset) 
-    {
-        
-    }
+    constructor(string memory _name, string memory _symbol, IERC20 _asset) ERC20(_name, _symbol) ERC4626(_asset) {}
 }
 
 contract MyShareOFTAdapter is OFTAdapter {
