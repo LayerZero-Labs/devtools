@@ -6,17 +6,17 @@ import { OAppEnforcedOption } from '@layerzerolabs/toolbox-hardhat'
 import type { OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
 const optimismContract: OmniPointHardhat = {
-    eid: EndpointId.OPTSEP_V2_TESTNET.valueOf(),
+    eid: EndpointId.OPTIMISM_V2_MAINNET.valueOf(),
     contractName: 'MyShareOFT',
 }
 
-const arbitrumContract: OmniPointHardhat = {
-    eid: EndpointId.ARBSEP_V2_TESTNET.valueOf(),
+const baseContract: OmniPointHardhat = {
+    eid: EndpointId.BASE_V2_MAINNET.valueOf(),
     contractName: 'MyShareOFTAdapter',
 }
 
-const baseContract: OmniPointHardhat = {
-    eid: EndpointId.BASESEP_V2_TESTNET.valueOf(),
+const arbitrumContract: OmniPointHardhat = {
+    eid: EndpointId.ARBITRUM_V2_MAINNET.valueOf(),
     contractName: 'MyShareOFT',
 }
 

@@ -17,6 +17,9 @@
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1"
   },
+  "dependencies": {
+    "@layerzerolabs/io-devtools": "workspace:^"
+  },
   "devDependencies": {
     "@babel/core": "^7.23.9",
     "@layerzerolabs/devtools-evm-hardhat": "^3.0.0",
@@ -30,7 +33,7 @@
     "@layerzerolabs/metadata-tools": "^2.0.0",
     "@layerzerolabs/oapp-evm": "^0.3.1",
     "@layerzerolabs/oft-evm": "^3.1.2",
-    "@layerzerolabs/ovault-evm": "^0.0.1",
+    "@layerzerolabs/ovault-evm": "workspace:*",
     "@layerzerolabs/prettier-config-next": "^2.3.39",
     "@layerzerolabs/solhint-config": "^3.0.12",
     "@layerzerolabs/test-devtools-evm-foundry": "~6.0.2",

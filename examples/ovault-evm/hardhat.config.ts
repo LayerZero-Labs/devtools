@@ -13,6 +13,9 @@ import { HardhatUserConfig, HttpNetworkAccountsUserConfig } from 'hardhat/types'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
+import './tasks/sendOFT'
+import './tasks/sendOVaultComposer'
+
 // Set your preferred authentication method
 //
 // If you prefer using a mnemonic, set a MNEMONIC environment variable
@@ -52,19 +55,19 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
-        'optimism-sepolia': {
-            eid: EndpointId.OPTSEP_V2_TESTNET.valueOf(),
-            url: process.env.RPC_URL_OPTIMISM_SEPOLIA || 'https://sepolia.optimism.io',
+        optimism: {
+            eid: EndpointId.OPTIMISM_V2_MAINNET.valueOf(),
+            url: process.env.RPC_URL_OPTIMISM || 'https://optimism.gateway.tenderly.co',
             accounts,
         },
-        'arbitrum-sepolia': {
-            eid: EndpointId.ARBSEP_V2_TESTNET.valueOf(),
-            url: process.env.RPC_URL_ARBITRUM_SEPOLIA || 'https://sepolia-rollup.arbitrum.io/rpc',
+        base: {
+            eid: EndpointId.BASE_V2_MAINNET.valueOf(),
+            url: process.env.RPC_URL_BASE || 'https://base.gateway.tenderly.co',
             accounts,
         },
-        'base-sepolia': {
-            eid: EndpointId.BASESEP_V2_TESTNET.valueOf(),
-            url: process.env.RPC_URL_BASE_SEPOLIA || 'https://sepolia.base.org',
+        arbitrum: {
+            eid: EndpointId.ARBITRUM_V2_MAINNET.valueOf(),
+            url: process.env.RPC_URL_ARB || 'https://arbitrum.gateway.tenderly.co',
             accounts,
         },
         hardhat: {

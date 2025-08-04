@@ -2,11 +2,11 @@ import assert from 'assert'
 
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-import { ovaultContractName } from './MyOVault'
+import { ovaultContractName } from './MyERC4626'
 
 const shareOFTContractName = 'MyShareOFT'
-const tokenName = 'MyMockShareOFT'
-const tokenSymbol = 'MockShare'
+const tokenName = 'MyShareOFT'
+const tokenSymbol = 'SHARE'
 
 const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre

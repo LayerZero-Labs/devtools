@@ -3,8 +3,8 @@ import assert from 'assert'
 import { type DeployFunction } from 'hardhat-deploy/types'
 
 export const assetOFTContractName = 'MyAssetOFT'
-const tokenName = 'MyMockAssetOFT'
-const tokenSymbol = 'MockAsset'
+const tokenName = 'MyAssetOFT'
+const tokenSymbol = 'ASSET'
 
 const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
