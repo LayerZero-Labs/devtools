@@ -76,9 +76,10 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         /// @dev burn() on tokens when a user sends changes totalSupply() which the asset:share ratio depends on.
         if (!IOFT(SHARE_OFT).approvalRequired()) revert ShareOFTNotAdapter(SHARE_OFT);
 
-        /// @dev Approve the vault to spend the share and asset tokens held by this contract
-        IERC20(SHARE_ERC20).approve(_vault, type(uint256).max);
+        /// @dev Approve the vault to spend the asset tokens held by this contract
         IERC20(ASSET_ERC20).approve(_vault, type(uint256).max);
+        /// @dev Approving the vault for the share erc20 is not required when the vault is the share erc20
+        // IERC20(SHARE_ERC20).approve(_vault, type(uint256).max);
 
         /// @dev Approve the share adapter with the share tokens held by this contract
         IERC20(SHARE_ERC20).approve(_shareOFT, type(uint256).max);
@@ -90,26 +91,26 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @notice Handles LayerZero compose operations for vault transactions with automatic refund functionality
      * @dev This composer is designed to handle refunds to an EOA address and not a contract
      * @dev Any revert in handleCompose() causes a refund back to the src EXCEPT for InsufficientMsgValue
-     * @param _composeCaller The OFT contract address used for refunds, must be either ASSET_OFT or SHARE_OFT
+     * @param _composeSender The OFT contract address used for refunds, must be either ASSET_OFT or SHARE_OFT
      * @param _guid LayerZero's unique tx id (created on the source tx)
      * @param _message Decomposable bytes object into [composeHeader][composeMessage]
      */
     function lzCompose(
-        address _composeCaller, // The OFT used on refund, also the vaultIn token.
+        address _composeSender, // The OFT used on refund, also the vaultIn token.
         bytes32 _guid,
         bytes calldata _message, // expected to contain a composeMessage = abi.encode(SendParam hopSendParam,uint256 minMsgValue)
         address /*_executor*/,
         bytes calldata /*_extraData*/
     ) external payable virtual override {
         if (msg.sender != ENDPOINT) revert OnlyEndpoint(msg.sender);
-        if (_composeCaller != ASSET_OFT && _composeCaller != SHARE_OFT) revert OnlyValidComposeCaller(_composeCaller);
+        if (_composeSender != ASSET_OFT && _composeSender != SHARE_OFT) revert OnlyValidComposeCaller(_composeSender);
 
         bytes32 composeFrom = _message.composeFrom();
         uint256 amount = _message.amountLD();
         bytes memory composeMsg = _message.composeMsg();
 
         /// @dev try...catch to handle the compose operation. if it fails we refund the user
-        try this.handleCompose{ value: msg.value }(_composeCaller, composeFrom, composeMsg, amount) {
+        try this.handleCompose{ value: msg.value }(_composeSender, composeFrom, composeMsg, amount) {
             emit Sent(_guid);
         } catch (bytes memory _err) {
             /// @dev A revert where the msg.value passed is lower than the min expected msg.value is handled separately
@@ -120,7 +121,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
                 }
             }
 
-            _refund(_composeCaller, _message, amount, tx.origin);
+            _refund(_composeSender, _message, amount, tx.origin);
             emit Refunded(_guid);
         }
     }
@@ -272,23 +273,25 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
     /**
      * @notice Quotes the send operation for the given OFT and SendParam
      * @dev Revert on slippage will be thrown by the OFT and not _assertSlippage
-     * @param _oft The OFT contract address to quote
+     * @param _targetOFT The OFT contract address to quote
      * @param _vaultInAmount The amount of tokens to send to the vault
      * @param _sendParam The parameters for the send operation
      * @return MessagingFee The estimated fee for the send operation
      * @dev This function can be overridden to implement custom quoting logic
      */
     function quoteSend(
-        address _oft,
+        address _targetOFT,
         uint256 _vaultInAmount,
         SendParam memory _sendParam
     ) external view virtual returns (MessagingFee memory) {
-        if (_oft == ASSET_OFT) {
-            _sendParam.amountLD = VAULT.previewDeposit(_vaultInAmount);
-        } else {
+        /// @dev When quoting the asset OFT, the function input is shares and the SendParam.amountLD into quoteSend() should be assets (and vice versa)
+
+        if (_targetOFT == ASSET_OFT) {
             _sendParam.amountLD = VAULT.previewRedeem(_vaultInAmount);
+        } else {
+            _sendParam.amountLD = VAULT.previewDeposit(_vaultInAmount);
         }
-        return IOFT(_oft).quoteSend(_sendParam, false);
+        return IOFT(_targetOFT).quoteSend(_sendParam, false);
     }
 
     /**
@@ -304,7 +307,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
             /// @dev Can do this because _oft is validated before this function is called
             address erc20 = _oft == ASSET_OFT ? ASSET_ERC20 : SHARE_ERC20;
 
-            if (msg.value > 0) revert InsufficientMsgValue(0, msg.value);
+            if (msg.value > 0) revert NoMsgValueExpected();
             IERC20(erc20).safeTransfer(_sendParam.to.bytes32ToAddress(), _sendParam.amountLD);
         } else {
             // crosschain send

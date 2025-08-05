@@ -21,6 +21,7 @@ interface IVaultComposerSync is IOAppComposer {
     error OnlyValidComposeCaller(address caller); // 0x84fb3f0d
 
     error InsufficientMsgValue(uint256 expectedMsgValue, uint256 actualMsgValue); // 0x7cb769dc
+    error NoMsgValueExpected(); // 0x7578d2bd
 
     error SlippageExceeded(uint256 amountLD, uint256 minAmountLD); // 0x71c4efed
 
@@ -55,14 +56,14 @@ interface IVaultComposerSync is IOAppComposer {
 
     /**
      * @notice Quotes the send operation for the given OFT and SendParam
-     * @param oft The OFT contract address to quote
+     * @param targetOft The OFT contract address to quote
      * @param vaultInAmount The amount of tokens to send to the vault
      * @param sendParam The parameters for the send operation
      * @return MessagingFee The estimated fee for the send operation
      * @dev This function can be overridden to implement custom quoting logic
      */
     function quoteSend(
-        address oft,
+        address targetOft,
         uint256 vaultInAmount,
         SendParam memory sendParam
     ) external view returns (MessagingFee memory);
