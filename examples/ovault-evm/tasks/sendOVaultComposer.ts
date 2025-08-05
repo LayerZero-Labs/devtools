@@ -57,7 +57,12 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
     )
     .addOptionalParam('lzReceiveGas', 'Gas for lzReceive operation', undefined, types.int)
     .addOptionalParam('lzReceiveValue', 'Value for lzReceive operation (in wei)', undefined, types.string)
-    .addOptionalParam('lzComposeGas', 'Gas for lzCompose operation', 100000, types.int)
+    .addOptionalParam(
+        'lzComposeGas',
+        'Gas for lzCompose operation (defaults: 175k for hub destination, 375k for cross-chain)',
+        undefined,
+        types.int
+    )
     .addOptionalParam('lzComposeValue', 'Value for lzCompose operation (in wei)', undefined, types.string)
     .addOptionalParam(
         'oftAddress',
@@ -70,9 +75,6 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
         if (args.tokenType !== 'asset' && args.tokenType !== 'share') {
             throw new Error(`Invalid tokenType "${args.tokenType}". Must be "asset" or "share"`)
         }
-
-        // Set defaults
-        const lzComposeGas = 650000
 
         // Auto-detect hub chain from share config
         const shareConfigPath = args.shareOappConfig || 'layerzero.share.config.ts'
@@ -114,6 +116,18 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
         // Get OVaultComposer address from deployments on HUB
         const composerDeployment = await hubHre.deployments.get('MyOVaultComposer')
         const composerAddress = composerDeployment.address
+
+        // Set gas limits based on whether destination is hub chain
+        // If destination is hub, only local transfer is needed (no cross-chain messaging)
+        const lzComposeGas =
+            args.lzComposeGas ||
+            (args.dstEid === hubEid
+                ? 175000 // Lower gas for local transfer only
+                : 395000) // Higher gas for cross-chain messaging
+
+        if (!args.lzComposeGas) {
+            logger.info(`Using ${args.dstEid === hubEid ? 'local transfer' : 'cross-chain'} gas limit: ${lzComposeGas}`)
+        }
 
         const operationType = args.tokenType === 'asset' ? 'Deposit' : 'Redeem'
         const outputType = args.tokenType === 'asset' ? 'shares' : 'assets'
@@ -280,7 +294,6 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
             oftAddress: args.oftAddress,
         }
 
-        logger.info(`Sending transaction...`)
         const result: SendResult = await sendEvm(evmArgs, hre)
 
         const operationText = args.tokenType === 'asset' ? 'deposit (asset → shares)' : 'redeem (shares → assets)'
