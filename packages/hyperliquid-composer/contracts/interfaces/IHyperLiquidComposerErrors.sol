@@ -8,9 +8,13 @@ struct ErrorMessagePayload {
 }
 
 interface IHyperLiquidComposerErrors {
+    // 0x4d6766d6
+    error HyperLiquidComposer_NotEnoughGas(uint256 gasLeft, uint256 minGas);
+
     // 0xfb82c1f1
     error HyperLiquidComposer_InvalidArgument_EndpointShouldNotBeZeroAddress(address receivedEndpointAddress);
 
+    // 0x0b948634
     error FailedMessageNotFound(bytes32 guid);
 
     // 0x4f952033
@@ -23,8 +27,10 @@ interface IHyperLiquidComposerErrors {
     // 0x5950c85e
     error HyperLiquidComposer_InvalidCall_NotComposer(address notComposerAddress);
 
+    // 0x78770392
     error NotEnoughMsgValue(uint256 msgValue, uint256 requiredValue);
 
+    // 0x903b5a83
     error HyperLiquidComposer_ReceiverCannotBeZeroAddress(address receiver);
 
     // 0x00d4895a

@@ -75,6 +75,8 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         address _executor,
         bytes calldata /*_extraData*/
     ) external payable virtual override {
+        if (gasleft() < MIN_GAS) revert IHyperLiquidComposerErrors.HyperLiquidComposer_NotEnoughGas(gasleft(), MIN_GAS);
+
         /// @dev The following reverts are for when the contract is incorrectly called.
         /// @dev There are no refunds involved in these reverts.
         // Validate the composeCall based on the docs - https://docs.layerzero.network/v2/developers/evm/oft/oft-patterns-extensions#receiving-compose
@@ -93,18 +95,14 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         address receiver;
 
         /// @dev Since these are populated by the OFT contract, we can safely assume they are always decodeable
-        uint32 srcEid = OFTComposeMsgCodec.srcEid(_message);
         uint256 amountLD = OFTComposeMsgCodec.amountLD(_message);
-        bytes32 sender = OFTComposeMsgCodec.composeFrom(_message);
         bytes memory composeMsgEncoded = OFTComposeMsgCodec.composeMsg(_message);
 
         /// @dev Checks if the payload contains a compose message that can be sliced to extract the amount, sender as bytes32, and receiver as bytes
         /// @dev The slice ranges can be found in OFTComposeMsgCodec.sol
         /// @dev If the payload is invalid, the function will revert with the error message and there is no refunds
         try this.decode_message(composeMsgEncoded) returns (uint256 _minMsgValue, address _receiver) {
-            if (_minMsgValue > msg.value) {
-                revert IHyperLiquidComposerErrors.NotEnoughMsgValue(msg.value, _minMsgValue);
-            }
+            if (_minMsgValue > msg.value) revert IHyperLiquidComposerErrors.NotEnoughMsgValue(msg.value, _minMsgValue);
 
             receiver = _receiver;
         } catch {
@@ -112,12 +110,12 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
             /// @dev The excess will be transferred to the REFUND_ADDRESS
 
             SendParam memory refundSendParam;
-            refundSendParam.dstEid = srcEid;
-            refundSendParam.to = sender;
+            refundSendParam.dstEid = OFTComposeMsgCodec.srcEid(_message);
+            refundSendParam.to = OFTComposeMsgCodec.composeFrom(_message);
             refundSendParam.amountLD = amountLD;
 
             failedMessages[_guid] = FailedMessage({ refundSendParam: refundSendParam, msgValue: msg.value });
-            emit FailedMessageDecode(_guid, sender, msg.value, composeMsgEncoded);
+            emit FailedMessageDecode(_guid, refundSendParam.to, msg.value, composeMsgEncoded);
             return;
         }
 
