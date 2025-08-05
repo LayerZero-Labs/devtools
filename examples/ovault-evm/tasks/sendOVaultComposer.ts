@@ -24,6 +24,8 @@ interface OVaultComposerArgs {
     assetOappConfig?: string // Path to asset OFT config
     shareOappConfig?: string // Path to share OFT config (also used to detect hub)
     minAmount?: string
+    lzReceiveGas?: number
+    lzReceiveValue?: string
     lzComposeGas?: number
     lzComposeValue?: string
     oftAddress?: string // Override source OFT address
@@ -53,6 +55,8 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
         undefined,
         types.string
     )
+    .addOptionalParam('lzReceiveGas', 'Gas for lzReceive operation', undefined, types.int)
+    .addOptionalParam('lzReceiveValue', 'Value for lzReceive operation (in wei)', undefined, types.string)
     .addOptionalParam('lzComposeGas', 'Gas for lzCompose operation', 100000, types.int)
     .addOptionalParam('lzComposeValue', 'Value for lzCompose operation (in wei)', undefined, types.string)
     .addOptionalParam(
@@ -113,9 +117,11 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
 
         const operationType = args.tokenType === 'asset' ? 'Deposit' : 'Redeem'
         const outputType = args.tokenType === 'asset' ? 'shares' : 'assets'
-        logger.info(
-            `${operationType}: ${endpointIdToNetwork(args.srcEid)} → ${endpointIdToNetwork(hubEid)} → ${endpointIdToNetwork(args.dstEid)} (${args.tokenType} → ${outputType})`
-        )
+        const routeDescription =
+            args.dstEid === hubEid
+                ? `${endpointIdToNetwork(args.srcEid)} → ${endpointIdToNetwork(hubEid)}`
+                : `${endpointIdToNetwork(args.srcEid)} → ${endpointIdToNetwork(hubEid)} → ${endpointIdToNetwork(args.dstEid)}`
+        logger.info(`${operationType}: ${routeDescription} (${args.tokenType} → ${outputType})`)
 
         // Choose the appropriate config based on token type
         const configPath =
@@ -182,9 +188,10 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
         }
 
         // Quote the second hop (hub → destination) using hub chain RPC to get accurate compose value
+        // Only needed if the final destination is not the hub itself
         let lzComposeValue = args.lzComposeValue || '0'
 
-        if (!args.lzComposeValue) {
+        if (!args.lzComposeValue && args.dstEid !== hubEid) {
             // Determine which OFT to quote (opposite of what we're sending)
             const outputTokenConfig =
                 args.tokenType === 'asset'
@@ -226,6 +233,12 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
             }
         }
 
+        // If destination is the hub, no cross-chain message is needed, so no compose value
+        if (args.dstEid === hubEid) {
+            lzComposeValue = '0'
+            logger.info(`Destination is hub chain - no cross-chain compose needed`)
+        }
+
         // Create the final composeMsg with SendParam and minMsgValue
         // This must match exactly: struct SendParam { uint32 dstEid; bytes32 to; uint256 amountLD; uint256 minAmountLD; bytes extraOptions; bytes composeMsg; bytes oftCmd; }
         const composeMsg = hubHre.ethers.utils.defaultAbiCoder.encode(
@@ -247,6 +260,11 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
         // Create lzCompose options with proper gas limits and quoted value
         const extraLzComposeOptions = ['0', lzComposeGas.toString(), lzComposeValue]
 
+        // Create lzReceive options if provided
+        const extraLzReceiveOptions = args.lzReceiveGas
+            ? [args.lzReceiveGas.toString(), args.lzReceiveValue || '0']
+            : undefined
+
         // Call the existing sendEvm function with proper parameters
         const evmArgs: EvmArgs = {
             srcEid: args.srcEid,
@@ -255,7 +273,7 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
             to: composerAddress, // Send to composer
             oappConfig: configPath,
             minAmount: args.minAmount,
-            extraLzReceiveOptions: ['100000', '0'], // Basic lzReceive option (gas, value)
+            extraLzReceiveOptions: extraLzReceiveOptions, // Optional lzReceive options
             extraLzComposeOptions: extraLzComposeOptions,
             extraNativeDropOptions: undefined,
             composeMsg: composeMsg,
@@ -266,9 +284,14 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
         const result: SendResult = await sendEvm(evmArgs, hre)
 
         const operationText = args.tokenType === 'asset' ? 'deposit (asset → shares)' : 'redeem (shares → assets)'
+        const routeText =
+            args.dstEid === hubEid
+                ? `${endpointIdToNetwork(args.srcEid)} → ${endpointIdToNetwork(hubEid)}`
+                : `${endpointIdToNetwork(args.srcEid)} → ${endpointIdToNetwork(hubEid)} → ${endpointIdToNetwork(args.dstEid)}`
+
         DebugLogger.printLayerZeroOutput(
             KnownOutputs.SENT_VIA_OFT,
-            `Successfully sent ${args.amount} ${args.tokenType} for ${operationText}: ${endpointIdToNetwork(args.srcEid)} → ${endpointIdToNetwork(hubEid)} → ${endpointIdToNetwork(args.dstEid)}`
+            `Successfully sent ${args.amount} ${args.tokenType} for ${operationText}: ${routeText}`
         )
 
         // Print the explorer link for the srcEid
