@@ -113,6 +113,65 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
         const getHreByEid = createGetHreByEid(hre)
         const hubHre = await getHreByEid(hubEid)
 
+        // Check if we're already on the hub chain - if so, just do a normal OFT send
+        if (args.srcEid === hubEid) {
+            logger.info(`Source is already hub chain - performing direct OFT send without composer`)
+            logger.info(
+                `Direct transfer: ${endpointIdToNetwork(args.srcEid)} → ${endpointIdToNetwork(args.dstEid)} (${args.tokenType} tokens)`
+            )
+
+            // Choose the appropriate config based on token type
+            const configPath =
+                args.tokenType === 'asset'
+                    ? args.assetOappConfig || 'layerzero.asset.config.ts'
+                    : args.shareOappConfig || 'layerzero.share.config.ts'
+
+            // Call the existing sendEvm function with no compose message
+            const evmArgs: EvmArgs = {
+                srcEid: args.srcEid,
+                dstEid: args.dstEid,
+                amount: args.amount,
+                to: args.to, // Direct to recipient, not composer
+                oappConfig: configPath,
+                minAmount: args.minAmount,
+                extraLzReceiveOptions: args.lzReceiveGas
+                    ? [args.lzReceiveGas.toString(), args.lzReceiveValue || '0']
+                    : undefined,
+                extraLzComposeOptions: undefined, // No compose
+                extraNativeDropOptions: undefined,
+                composeMsg: undefined, // No compose message
+                oftAddress: args.oftAddress,
+            }
+
+            const result: SendResult = await sendEvm(evmArgs, hre)
+
+            // For direct sends from hub, it's just a token transfer, not deposit/redeem
+            const routeText = `${endpointIdToNetwork(args.srcEid)} → ${endpointIdToNetwork(args.dstEid)}`
+
+            DebugLogger.printLayerZeroOutput(
+                KnownOutputs.SENT_VIA_OFT,
+                `Successfully sent ${args.amount} ${args.tokenType} tokens: ${routeText}`
+            )
+
+            // Print the explorer link for the srcEid
+            const explorerLink = await getBlockExplorerLink(args.srcEid, result.txHash)
+            if (explorerLink) {
+                DebugLogger.printLayerZeroOutput(
+                    KnownOutputs.TX_HASH,
+                    `Explorer link for source chain ${endpointIdToNetwork(args.srcEid)}: ${explorerLink}`
+                )
+            }
+
+            // Print the LayerZero Scan link
+            DebugLogger.printLayerZeroOutput(
+                KnownOutputs.EXPLORER_LINK,
+                `LayerZero Scan link for tracking all cross-chain transaction details: ${result.scanLink}`
+            )
+
+            // Early return - skip all composer logic
+            return
+        }
+
         // Get OVaultComposer address from deployments on HUB
         const composerDeployment = await hubHre.deployments.get('MyOVaultComposer')
         const composerAddress = composerDeployment.address
