@@ -316,7 +316,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
     }
 
     /**
-     * @dev Internal function to refund excess payment of the LZ fees
+     * @dev Internal function to refund input tokens to sender on source during a failed transaction
      * @param _oft The OFT contract address used for refunding
      * @param _message The original message that was sent
      * @param _amount The amount of tokens to refund
