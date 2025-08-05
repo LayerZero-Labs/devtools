@@ -32,10 +32,10 @@ contract VaultComposerSyncProxySendTest is VaultComposerSyncBaseTest {
         assetOFT_arb.approve(address(VaultComposerSyncArb), TOKENS_TO_SEND);
         vault_arb.approve(address(VaultComposerSyncArb), TOKENS_TO_SEND);
 
-        vm.expectRevert(abi.encodeWithSelector(IVaultComposerSync.InsufficientMsgValue.selector, 0, 1));
+        vm.expectRevert(IVaultComposerSync.NoMsgValueExpected.selector);
         VaultComposerSyncArb.depositAndSend{ value: 1 wei }(TOKENS_TO_SEND, sendParam, userA);
 
-        vm.expectRevert(abi.encodeWithSelector(IVaultComposerSync.InsufficientMsgValue.selector, 0, 2));
+        vm.expectRevert(IVaultComposerSync.NoMsgValueExpected.selector);
         VaultComposerSyncArb.redeemAndSend{ value: 2 wei }(TOKENS_TO_SEND, sendParam, userA);
         vm.stopPrank();
     }
