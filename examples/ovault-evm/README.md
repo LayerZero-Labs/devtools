@@ -33,8 +33,8 @@ Deploy **omnichain ERC-4626 vaults** that enable users to deposit assets from an
 Before using this example, you should understand:
 
 - [**OFT Standard**](https://docs.layerzero.network/v2/developers/evm/oft/quickstart): How to deploy and configure Omnichain Fungible Tokens
-- [**Composer Pattern**](https://docs.layerzero.network/v2/developers/evm/composer/overview): How to implement cross-chain compose messages
-- [**ERC-4626 Vaults**](https://eips.ethereum.org/EIPS/eip-4626): How the tokenized vault standard interface works for deposit/redeem operations
+- [**Composer Pattern**](https://docs.layerzero.network/v2/developers/evm/composer/overview): How to implement cross-chain composer messages
+- [**ERC-4626 Vaults**](https://eips.ethereum.org/EIPS/eip-4626): How the tokenized vault standard interface works for `deposit`/`redeem` operations
 
 ## Introduction
 
@@ -43,7 +43,7 @@ OVault extends the ERC-4626 tokenized vault standard with LayerZero's omnichain 
 - **Hub Chain**: Hosts the ERC-4626 vault, OVault Composer, and Share OFT Adapter (lockbox model)
 - **Spoke Chains**: Host Asset OFTs and Share OFTs that connect to the hub
 
-Users can deposit assets from any chain and receive vault shares on any other chain in a single transaction through the composer pattern.
+OVault makes it extremely easy to move assets and shares between any supported chains, while also enabling cross-chain vault operations. Users can deposit assets from any chain to receive shares on any destination chain, redeem shares from any chain to receive assets on any destination chain, or simply transfer these tokens between chains - all through a unified interface.
 
 ## Requirements
 
@@ -55,8 +55,7 @@ Users can deposit assets from any chain and receive vault shares on any other ch
 ## Scaffold this Example
 
 ```bash
-pnpm dlx create-lz-oapp@latest my-ovault-project --example ovault-evm
-cd my-ovault-project
+npx create-lz-oapp@latest --example ovault-evm
 ```
 
 ## Helper Tasks
@@ -125,9 +124,6 @@ Deploy Asset OFTs across all chains (including hub):
 ```bash
 # Deploy MyAssetOFT to all networks
 pnpm hardhat lz:deploy --tags asset
-
-# Verify a specific deployment (optional)
-pnpm hardhat verify --network arbitrum-sepolia <CONTRACT_ADDRESS>
 ```
 
 ### 2. Deploy ERC4626 Vault System (Hub Chain Only)
@@ -136,7 +132,7 @@ Deploy the vault, composer, and ShareOFT adapter on your hub chain:
 
 ```bash
 # This creates: MyERC4626 vault + MyOVaultComposer + ShareOFT adapter
-pnpm hardhat lz:deploy --network arbitrum-sepolia --tags ovault
+pnpm hardhat lz:deploy --network base --tags ovault
 ```
 
 **Important**: The `deployERC4626` script automatically creates the ShareOFT Adapter using the vault as the inner token (lockbox model).
