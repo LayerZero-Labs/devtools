@@ -369,13 +369,17 @@ To use different chains or network configurations:
 
 ## Cross-Chain Operations
 
-### Asset Deposit (Asset → Shares)
+The `lz:ovault:send` task handles four different operation types automatically based on source and destination chains. Here's how to use each:
 
-Send assets from any chain to receive vault shares on any other chain:
+### 1. Cross-Chain Vault Operations (Different Chains)
+
+**Asset Deposit (Any Chain → Any Other Chain)**
+
+Send assets from any spoke chain to receive vault shares on any other chain:
 
 ```bash
 # Send 1.0 asset from Arbitrum to get shares on Optimism
-pnpm hardhat lz:ovault:send \
+npx hardhat lz:ovault:send \
   --src-eid 30110 \
   --dst-eid 30111 \
   --amount 1.0 \
@@ -385,13 +389,13 @@ pnpm hardhat lz:ovault:send \
 
 **Flow**: Arbitrum (asset) → Base Hub (vault deposit) → Optimism (shares)
 
-### Share Redemption (Shares → Assets)
+**Share Redemption (Any Chain → Any Other Chain)**
 
-Send shares from any chain to receive underlying assets on any other chain:
+Send shares from any spoke chain to receive underlying assets on any other chain:
 
 ```bash
 # Send 0.9 shares from Optimism to get assets on Arbitrum
-pnpm hardhat lz:ovault:send \
+npx hardhat lz:ovault:send \
   --src-eid 30111 \
   --dst-eid 30110 \
   --amount 0.9 \
@@ -401,14 +405,172 @@ pnpm hardhat lz:ovault:send \
 
 **Flow**: Optimism (shares) → Base Hub (vault redeem) → Arbitrum (assets)
 
-### Parameters
+### 2. Hub Chain Vault Operations (Same Chain)
+
+**Direct Vault Deposit (Hub → Hub)**
+
+Deposit assets directly into the vault on the hub chain:
+
+```bash
+# Deposit 2.0 assets into vault on hub chain (Base)
+npx hardhat lz:ovault:send \
+  --src-eid 30184 \
+  --dst-eid 30184 \
+  --amount 2.0 \
+  --to 0xYourRecipientAddress \
+  --token-type asset
+```
+
+**Flow**: Direct vault interaction (no LayerZero messaging)
+
+- Automatically handles ERC20 approval
+- Calls `vault.deposit()` directly
+- Most gas-efficient option
+
+**Direct Vault Redemption (Hub → Hub)**
+
+Redeem shares directly from the vault on the hub chain:
+
+```bash
+# Redeem 1.5 shares from vault on hub chain (Base)
+npx hardhat lz:ovault:send \
+  --src-eid 30184 \
+  --dst-eid 30184 \
+  --amount 1.5 \
+  --to 0xYourRecipientAddress \
+  --token-type share
+```
+
+**Flow**: Direct vault interaction (no LayerZero messaging)
+
+- Calls `vault.redeem()` directly
+- Most gas-efficient option
+
+### 3. Hub-to-Spoke Operations (Send from Hub)
+
+**Send Assets from Hub to Spoke Chain**
+
+Send asset tokens from the hub chain to any spoke chain:
+
+```bash
+# Send 1.0 asset tokens from hub (Base) to Arbitrum
+npx hardhat lz:ovault:send \
+  --src-eid 30184 \
+  --dst-eid 30110 \
+  --amount 1.0 \
+  --to 0xYourRecipientAddress \
+  --token-type asset
+```
+
+**Flow**: Direct OFT transfer (no composer needed)
+
+- More efficient than composer pattern
+- Standard LayerZero OFT send
+
+**Send Shares from Hub to Spoke Chain**
+
+Send share tokens from the hub chain to any spoke chain:
+
+```bash
+# Send 0.8 share tokens from hub (Base) to Optimism
+npx hardhat lz:ovault:send \
+  --src-eid 30184 \
+  --dst-eid 30111 \
+  --amount 0.8 \
+  --to 0xYourRecipientAddress \
+  --token-type share
+```
+
+**Flow**: Direct OFT transfer (no composer needed)
+
+### 4. Spoke-to-Hub Operations (With Vault Interaction)
+
+**Send Assets to Hub for Vault Deposit**
+
+Send assets from any spoke chain to the hub for vault deposit:
+
+```bash
+# Send 1.5 assets from Arbitrum to hub for vault deposit
+npx hardhat lz:ovault:send \
+  --src-eid 30110 \
+  --dst-eid 30184 \
+  --amount 1.5 \
+  --to 0xYourRecipientAddress \
+  --token-type asset
+```
+
+**Flow**: Arbitrum (asset) → Base Hub (vault deposit → shares to recipient)
+
+- Uses composer for vault interaction
+- Optimized gas limits for hub-only operations
+
+**Send Shares to Hub for Vault Redemption**
+
+Send shares from any spoke chain to the hub for vault redemption:
+
+```bash
+# Send 1.2 shares from Optimism to hub for vault redemption
+npx hardhat lz:ovault:send \
+  --src-eid 30111 \
+  --dst-eid 30184 \
+  --amount 1.2 \
+  --to 0xYourRecipientAddress \
+  --token-type share
+```
+
+**Flow**: Optimism (shares) → Base Hub (vault redeem → assets to recipient)
+
+- Uses composer for vault interaction
+- Optimized gas limits for hub-only operations
+
+### Advanced Parameters
+
+**Basic Parameters:**
 
 - `--src-eid`: Source chain [Endpoint ID](https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts)
 - `--dst-eid`: Destination chain Endpoint ID
 - `--amount`: Amount to send (human readable, e.g., "1.5")
 - `--to`: Recipient address (20-byte hex for EVM)
 - `--token-type`: Either `asset` or `share`
-- `--min-amount`: Optional slippage protection (defaults to 1% slippage)
+
+**Optional Parameters:**
+
+- `--min-amount`: Minimum amount to receive (slippage protection)
+- `--lz-receive-gas`: Gas for lzReceive operation
+- `--lz-receive-value`: Value for lzReceive operation (in wei)
+- `--lz-compose-gas`: Gas for lzCompose operation (auto-optimized by default)
+- `--lz-compose-value`: Value for lzCompose operation (in wei)
+- `--oft-address`: Override source OFT address
+
+**Gas Optimization:**
+
+The task automatically optimizes gas limits based on operation type:
+
+- **Hub-only operations**: 175,000 gas (local transfers)
+- **Cross-chain operations**: 395,000 gas (LayerZero messaging)
+- **No compose needed**: 0 gas (direct OFT sends)
+
+### Example Workflows
+
+**Complete Deposit Cycle:**
+
+```bash
+# 1. Deposit assets cross-chain (Arbitrum → Hub → Optimism)
+npx hardhat lz:ovault:send --src-eid 30110 --dst-eid 30111 --amount 10.0 --to 0xRecipient --token-type asset
+
+# 2. Later redeem shares back (Optimism → Hub → Arbitrum)
+npx hardhat lz:ovault:send --src-eid 30111 --dst-eid 30110 --amount 9.5 --to 0xRecipient --token-type share
+```
+
+**Hub Chain Management:**
+
+```bash
+# 1. Deposit directly on hub (most efficient)
+npx hardhat lz:ovault:send --src-eid 30184 --dst-eid 30184 --amount 5.0 --to 0xRecipient --token-type asset
+
+# 2. Send shares to other chains as needed
+npx hardhat lz:ovault:send --src-eid 30184 --dst-eid 30110 --amount 2.0 --to 0xRecipient --token-type share
+```
 
 ## Next Steps
 

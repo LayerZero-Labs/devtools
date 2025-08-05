@@ -113,6 +113,117 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
         const getHreByEid = createGetHreByEid(hre)
         const hubHre = await getHreByEid(hubEid)
 
+        // Check if all chains are the same (hub) - if so, just do direct vault interaction
+        if (args.srcEid === hubEid && args.dstEid === hubEid) {
+            logger.info(
+                `All chains are hub chain - performing direct vault ${args.tokenType === 'asset' ? 'deposit' : 'redeem'}`
+            )
+
+            // Get vault address and create contract instance
+            const vaultDeployment = await hubHre.deployments.get('MyERC4626')
+            const vaultAddress = vaultDeployment.address
+            const hubSigner = (await hubHre.ethers.getSigners())[0]
+
+            const ierc4626Artifact = await hubHre.artifacts.readArtifact('IERC4626')
+            const vault = await hubHre.ethers.getContractAt(ierc4626Artifact.abi, vaultAddress, hubSigner)
+
+            // Convert amounts to proper units
+            const inputAmountUnits = parseUnits(args.amount, 18)
+            let minAmountOut = inputAmountUnits // Default to input amount
+
+            if (args.minAmount) {
+                minAmountOut = parseUnits(args.minAmount, 18)
+            }
+
+            let txHash: string
+
+            if (args.tokenType === 'asset') {
+                // Deposit assets to get shares
+                logger.info(`Depositing ${args.amount} assets to vault...`)
+
+                // Get asset token address for approval check
+                const assetAddress = await vault.asset()
+                const ierc20Artifact = await hubHre.artifacts.readArtifact('IERC20')
+                const assetToken = await hubHre.ethers.getContractAt(ierc20Artifact.abi, assetAddress, hubSigner)
+
+                // Check allowance and approve if needed
+                const currentAllowance = await assetToken.allowance(hubSigner.address, vaultAddress)
+                if (currentAllowance.lt(inputAmountUnits)) {
+                    logger.info(`Approving vault to spend ${args.amount} assets...`)
+                    const approveTx = await assetToken.approve(vaultAddress, inputAmountUnits)
+                    await approveTx.wait()
+                    logger.info('Approval confirmed')
+                }
+
+                // Preview the deposit to show expected output
+                try {
+                    const previewedShares = await vault.previewDeposit(inputAmountUnits)
+                    logger.info(`Expected output: ${(parseInt(previewedShares.toString()) / 1e18).toFixed(6)} shares`)
+
+                    // Check if we need to handle slippage
+                    if (previewedShares.lt(minAmountOut)) {
+                        throw new Error(
+                            `Expected output ${previewedShares.toString()} is less than minimum ${minAmountOut.toString()}`
+                        )
+                    }
+                } catch (error) {
+                    logger.warn('Vault preview failed, proceeding with transaction...')
+                }
+
+                // Execute deposit: deposit(uint256 assets, address receiver)
+                const tx = await vault.deposit(inputAmountUnits, args.to)
+                const receipt = await tx.wait()
+                txHash = receipt.transactionHash
+
+                logger.info(`Deposit successful - shares sent to ${args.to}`)
+            } else {
+                // Redeem shares to get assets
+                logger.info(`Redeeming ${args.amount} shares from vault...`)
+
+                // Preview the redemption to show expected output
+                try {
+                    const previewedAssets = await vault.previewRedeem(inputAmountUnits)
+                    logger.info(`Expected output: ${(parseInt(previewedAssets.toString()) / 1e18).toFixed(6)} assets`)
+
+                    // Check if we need to handle slippage
+                    if (previewedAssets.lt(minAmountOut)) {
+                        throw new Error(
+                            `Expected output ${previewedAssets.toString()} is less than minimum ${minAmountOut.toString()}`
+                        )
+                    }
+                } catch (error) {
+                    logger.warn('Vault preview failed, proceeding with transaction...')
+                }
+
+                // Execute redeem: redeem(uint256 shares, address receiver, address owner)
+                const tx = await vault.redeem(inputAmountUnits, args.to, hubSigner.address)
+                const receipt = await tx.wait()
+                txHash = receipt.transactionHash
+
+                logger.info(`Redeem successful - assets sent to ${args.to}`)
+            }
+
+            const operationText = args.tokenType === 'asset' ? 'deposit' : 'redeem'
+            DebugLogger.printLayerZeroOutput(
+                KnownOutputs.SENT_VIA_OFT,
+                `Successfully completed vault ${operationText} of ${args.amount} ${args.tokenType} on ${endpointIdToNetwork(hubEid)}`
+            )
+
+            // Print the explorer link
+            const explorerLink = await getBlockExplorerLink(hubEid, txHash)
+            if (explorerLink) {
+                DebugLogger.printLayerZeroOutput(
+                    KnownOutputs.TX_HASH,
+                    `Explorer link for ${endpointIdToNetwork(hubEid)}: ${explorerLink}`
+                )
+            }
+
+            logger.info(`Vault ${operationText} completed successfully`)
+
+            // Early return - skip all LayerZero logic
+            return { txHash }
+        }
+
         // Check if we're already on the hub chain - if so, just do a normal OFT send
         if (args.srcEid === hubEid) {
             logger.info(`Source is already hub chain - performing direct OFT send without composer`)
