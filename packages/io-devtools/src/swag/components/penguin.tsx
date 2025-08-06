@@ -72,32 +72,35 @@ export const PenguinSpinner: React.FC<PenguinSpinnerProps> = ({
   title = "Sending Transactions",
 }) => {
   const [frameIndex, setFrameIndex] = useState(0);
+  const [isActive, setIsActive] = useState(true);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const mountedRef = useRef(true);
 
   useEffect(() => {
-    const startAnimation = () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+    if (!isActive) {
+      return;
+    }
 
-      intervalRef.current = setInterval(() => {
-        if (mountedRef.current) {
-          setFrameIndex((prev) => (prev + 1) % PENGUIN_FRAMES.length);
-        }
-      }, 500);
-    };
-
-    startAnimation();
+    intervalRef.current = setInterval(() => {
+      setFrameIndex((prev) => (prev + 1) % PENGUIN_FRAMES.length);
+    }, 500);
 
     return () => {
-      mountedRef.current = false;
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
     };
+  }, [isActive]);
+
+  useEffect(() => {
+    return () => {
+      setIsActive(false);
+    };
   }, []);
+
+  if (!isActive) {
+    return null;
+  }
 
   const currentFrame = PENGUIN_FRAMES[frameIndex] || PENGUIN_FRAMES[0]!;
 
