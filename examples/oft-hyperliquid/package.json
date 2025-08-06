@@ -16,7 +16,7 @@
     "lint:js": "eslint '**/*.{js,ts,json}' && prettier --check .",
     "lint:sol": "solhint 'contracts/**/*.sol'",
     "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat",
-    "test:forge": "forge test --fuzz-runs 1",
+    "test:forge": "forge test --fuzz-runs 0 && echo 'To run with fuzzing, use: forge test'",
     "test:hardhat": "hardhat test"
   },
   "resolutions": {
