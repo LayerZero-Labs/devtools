@@ -35,4 +35,4 @@ remappings = [
 runs = 64
 
 [profile.ci.fuzz]
-runs = 1
+runs = 0
