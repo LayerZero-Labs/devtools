@@ -90,6 +90,7 @@ services:
       - RPC_URL_SOLANA_MAINNET=${RPC_URL_SOLANA_MAINNET}
       - RPC_URL_SOLANA_TESTNET=${RPC_URL_SOLANA_TESTNET}
       - LZ_DEVTOOLS_ENABLE_SOLANA_TESTS=${LZ_DEVTOOLS_ENABLE_SOLANA_TESTS}
+      - FOUNDRY_PROFILE=${FOUNDRY_PROFILE}
     volumes:
       - ./node_modules/.cache/turbo:/app/node_modules/.cache/turbo
       # Hardhat has an issue with caching compilers inside a docker container,
