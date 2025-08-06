@@ -120,11 +120,6 @@ contract HyperLiquidComposerTest is Test {
     }
 
     function test_hypeIndexByChainId_testnet() public {
-        try vm.createSelectFork("https://rpc.hyperliquid-testnet.xyz/evm") {} catch {
-            console.log("Forking testnet https://rpc.hyperliquid-testnet.xyz/evm failed");
-            vm.skip(true);
-        }
-
         MyOFT oftTestnet = new MyOFT("test", "test", HL_LZ_ENDPOINT_V2_TESTNET, msg.sender);
         HyperLiquidComposer hypeComposerTestnet = new HyperLiquidComposer(
             HL_LZ_ENDPOINT_V2_TESTNET,
