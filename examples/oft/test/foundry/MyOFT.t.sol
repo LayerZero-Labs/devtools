@@ -23,9 +23,9 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Met
 import "forge-std/console.sol";
 
 // DevTools imports
-import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
+import { SlimLzTestHelper } from "@layerzerolabs/test-devtools-evm-foundry/contracts/SlimLzTestHelper.sol";
 
-contract MyOFTTest is TestHelperOz5 {
+contract MyOFTTest is SlimLzTestHelper {
     using OptionsBuilder for bytes;
 
     uint32 private aEid = 1;
@@ -43,7 +43,7 @@ contract MyOFTTest is TestHelperOz5 {
         vm.deal(userB, 1000 ether);
 
         super.setUp();
-        setUpEndpoints(2, LibraryType.UltraLightNode);
+        setUpEndpoints(2); //setUpEndpoints(2, LibraryType.UltraLightNode); also works
 
         aOFT = OFTMock(
             _deployOApp(type(OFTMock).creationCode, abi.encode("aOFT", "aOFT", address(endpoints[aEid]), address(this)))
@@ -64,7 +64,7 @@ contract MyOFTTest is TestHelperOz5 {
         bOFT.mint(userB, initialBalance);
     }
 
-    function test_constructor() public {
+    function test_constructor() public view {
         assertEq(aOFT.owner(), address(this));
         assertEq(bOFT.owner(), address(this));
 
