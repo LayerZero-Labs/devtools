@@ -75,7 +75,7 @@ interface CreateOFTTaskArgs {
     programId: string
 
     /**
-     * The seller fee basis points.
+     * The seller fee basis points for Metaplex's Token Metadata standard (not enforced on-chain). This is not related to OFT fees.
      */
     sellerFeeBasisPoints: number
 
@@ -133,7 +133,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
     .addParam('name', 'Token Name', 'MockOFT', devtoolsTypes.string)
     .addOptionalParam('mint', 'The Token mint public key (used for MABA only)', undefined, devtoolsTypes.string)
     .addParam('programId', 'The OFT Program id')
-    .addParam('sellerFeeBasisPoints', 'Seller fee basis points', 0, devtoolsTypes.int)
+    .addParam('sellerFeeBasisPoints', 'Seller fee basis points', 0, devtoolsTypes.int) // Note: This is for Metaplex's Token Metadata standard (not enforced on-chain). This is not related to OFT fees.
     .addParam('symbol', 'Token Symbol', 'MOFT', devtoolsTypes.string)
     .addParam('tokenMetadataIsMutable', 'Token metadata is mutable', true, devtoolsTypes.boolean)
     .addParam('additionalMinters', 'Comma-separated list of additional minters', undefined, devtoolsTypes.csv, true)
