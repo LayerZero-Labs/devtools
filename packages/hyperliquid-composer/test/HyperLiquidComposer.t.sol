@@ -43,11 +43,29 @@ contract HyperLiquidComposerTest is Test {
     uint64 public constant AMOUNT_TO_FUND = 100 gwei;
     uint64 public constant DUST = 1 wei;
 
+    uint256 forkId = tryForking();
+
+    function tryForking() public returns (uint256) {
+        try vm.createFork("https://rpc.hyperliquid-testnet.xyz/evm") returns (uint256 _forkId) {
+            return _forkId;
+        } catch {
+            return type(uint256).max;
+        }
+    }
+
+    function trySelectingFork() public {
+        try vm.selectFork(forkId) {} catch {
+            vm.skip(true);
+        }
+    }
+
     function setUp() public {
-        // Skip test if fork fails
-        try vm.createSelectFork("https://rpc.hyperliquid-testnet.xyz/evm") {} catch {
+        if (forkId == type(uint256).max) {
             console.log("Forking testnet https://rpc.hyperliquid-testnet.xyz/evm failed");
             vm.skip(true);
+            return;
+        } else {
+            trySelectingFork();
         }
 
         ALICE = IHyperAsset({
