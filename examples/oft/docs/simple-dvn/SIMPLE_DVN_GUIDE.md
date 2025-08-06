@@ -33,6 +33,12 @@ Replace your `layerzero.config.ts` file with the SimpleDVNMock configuration. Th
 
 **Simply copy the contents of [`simple-dvn-example.layerzero.config.ts`](./simple-dvn-example.layerzero.config.ts) and replace your entire `layerzero.config.ts` file.**
 
+You can either manually copy the contents or run the following to entirely replace the file:
+
+```
+cp docs/simple-dvn/simple-dvn-example.layerzero.config.ts layerzero.config.ts
+```
+
 The example configuration includes:
 
 - A custom `fetchMetadata` function that extends the default LayerZero metadata
