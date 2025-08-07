@@ -22,7 +22,7 @@ interface OVaultComposerArgs {
     to: string // receiver wallet address
     tokenType: 'asset' | 'share' // Whether we're sending asset or share
     assetOappConfig?: string // Path to asset OFT config
-    shareOappConfig?: string // Path to share OFT config (also used to detect hub)
+    shareOappConfig?: string // Path to share OFT config
     minAmount?: string
     lzReceiveGas?: number
     lzReceiveValue?: string
@@ -43,12 +43,7 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
         types.string
     )
     .addOptionalParam('assetOappConfig', 'Path to the Asset OFT config file', 'layerzero.asset.config.ts', types.string)
-    .addOptionalParam(
-        'shareOappConfig',
-        'Path to the Share OFT config file (to detect hub)',
-        'layerzero.share.config.ts',
-        types.string
-    )
+    .addOptionalParam('shareOappConfig', 'Path to the Share OFT config file', 'layerzero.share.config.ts', types.string)
     .addOptionalParam(
         'minAmount',
         'Minimum amount to receive in case of custom slippage or fees (human readable units, e.g. "1.5")',
@@ -76,28 +71,21 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
             throw new Error(`Invalid tokenType "${args.tokenType}". Must be "asset" or "share"`)
         }
 
-        // Auto-detect hub chain from share config
-        const shareConfigPath = args.shareOappConfig || 'layerzero.share.config.ts'
+        // Auto-detect hub chain from hardhat config
+        const hubNetwork = Object.entries(hre.config.networks).find(([networkName, networkConfig]) => {
+            const config = networkConfig as any
+            return config?.ovault?.isHubChain === true
+        })
 
-        const layerZeroShareConfig = (await import(path.resolve('./', shareConfigPath))).default
-        const { contracts } =
-            typeof layerZeroShareConfig === 'function' ? await layerZeroShareConfig() : layerZeroShareConfig
-
-        // Find the contract with ShareOFTAdapter (this is the hub)
-        const hubContract = contracts.find(
-            (c: { contract: OmniPointHardhat }) =>
-                c.contract.contractName &&
-                (c.contract.contractName.includes('ShareOFTAdapter') || c.contract.contractName.includes('Adapter'))
-        )
-
-        if (!hubContract) {
+        if (!hubNetwork) {
             throw new Error(
-                `Could not find ShareOFTAdapter in ${shareConfigPath}. Make sure the hub chain contract name includes "Adapter"`
+                'Could not find hub chain in hardhat config. Make sure one network has ovault.isHubChain: true'
             )
         }
 
-        const hubEid = hubContract.contract.eid
-        logger.info(`Hub: ${endpointIdToNetwork(hubEid)}`)
+        const [hubNetworkName, hubNetworkConfig] = hubNetwork
+        const hubEid = (hubNetworkConfig as any).eid
+        logger.info(`Hub: ${endpointIdToNetwork(hubEid)} (${hubNetworkName})`)
 
         // Validate chain types
         if (endpointIdToChainType(args.srcEid) !== ChainType.EVM) {
