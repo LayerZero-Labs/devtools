@@ -56,6 +56,7 @@ interface IVaultComposerSync is IOAppComposer {
 
     /**
      * @notice Quotes the send operation for the given OFT and SendParam
+     * @param from The "sender address" used for the quote
      * @param targetOft The OFT contract address to quote
      * @param vaultInAmount The amount of tokens to send to the vault
      * @param sendParam The parameters for the send operation
@@ -63,6 +64,7 @@ interface IVaultComposerSync is IOAppComposer {
      * @dev This function can be overridden to implement custom quoting logic
      */
     function quoteSend(
+        address from,
         address targetOft,
         uint256 vaultInAmount,
         SendParam memory sendParam
