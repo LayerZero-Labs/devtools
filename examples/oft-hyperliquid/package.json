@@ -16,7 +16,7 @@
     "lint:js": "eslint '**/*.{js,ts,json}' && prettier --check .",
     "lint:sol": "solhint 'contracts/**/*.sol'",
     "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat",
-    "test:forge": "echo 'forge test not supported via pnpm test. Please run `forge test` directly.'",
+    "test:forge": "echo 'Intentional: forge tests should be run directly (not via pnpm) to ensure correct environment and output. Please run `forge test` in your shell.'",
     "test:hardhat": "hardhat test"
   },
   "resolutions": {
