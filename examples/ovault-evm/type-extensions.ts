@@ -9,15 +9,15 @@ export interface OVaultConfig {
     /**
      * Whether this chain is the hub chain where the vault is deployed
      */
-    isHubChain: boolean
+    isHubChain?: boolean
     /**
-     * Asset token configuration (name and symbol)
+     * Asset token configuration (name and symbol) - only required for asset OFT deployment
      */
-    assetToken: TokenConfig
+    assetToken?: TokenConfig
     /**
-     * Share token configuration (name and symbol)
+     * Share token configuration (name and symbol) - only required for share OFT/vault deployment
      */
-    shareToken: TokenConfig
+    shareToken?: TokenConfig
 }
 
 declare module 'hardhat/types/config' {

@@ -21,8 +21,8 @@ const deploy: DeployFunction = async (hre) => {
     const networkConfig = hre.network.config as any
     const ovaultConfig = networkConfig.ovault as OVaultConfig
 
-    if (!ovaultConfig) {
-        throw new Error(`Missing ovault configuration for network '${hre.network.name}'`)
+    if (!ovaultConfig?.assetToken) {
+        throw new Error(`Missing ovault.assetToken configuration for network '${hre.network.name}'`)
     }
 
     const { name: tokenName, symbol: tokenSymbol } = ovaultConfig.assetToken

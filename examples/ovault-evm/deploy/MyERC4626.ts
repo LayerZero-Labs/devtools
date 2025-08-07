@@ -26,8 +26,8 @@ const deploy: DeployFunction = async (hre) => {
     const networkConfig = hre.network.config as any
     const ovaultConfig = networkConfig.ovault as OVaultConfig
 
-    if (!ovaultConfig) {
-        throw new Error(`Missing ovault configuration for network '${hre.network.name}'`)
+    if (!ovaultConfig?.shareToken) {
+        throw new Error(`Missing ovault.shareToken configuration for network '${hre.network.name}'`)
     }
 
     // Validate that vault contracts are deployed only on hub chain
