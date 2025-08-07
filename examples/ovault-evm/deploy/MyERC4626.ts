@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-import { OVaultConfig } from '../type-extensions'
+import { type NetworkConfigOvaultExtension } from '../type-extensions'
 
 import { assetOFTContractName } from './MyAssetOFT'
 
@@ -23,8 +23,8 @@ const deploy: DeployFunction = async (hre) => {
     console.log(`Deployer: ${deployer}`)
 
     // Get share token configuration from ovault config
-    const networkConfig = hre.network.config as any
-    const ovaultConfig = networkConfig.ovault as OVaultConfig
+    const networkConfig = hre.network.config as NetworkConfigOvaultExtension
+    const ovaultConfig = networkConfig.ovault
 
     if (!ovaultConfig?.shareToken) {
         throw new Error(`Missing ovault.shareToken configuration for network '${hre.network.name}'`)

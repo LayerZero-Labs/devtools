@@ -1,4 +1,4 @@
-import 'hardhat/types/config'
+import { NetworkConfig } from 'hardhat/types/config'
 
 export interface TokenConfig {
     name: string
@@ -36,4 +36,8 @@ declare module 'hardhat/types/config' {
     interface HttpNetworkConfig {
         ovault?: OVaultConfig
     }
+}
+
+export type NetworkConfigOvaultExtension = NetworkConfig & {
+    ovault?: OVaultConfig
 }
