@@ -14,12 +14,12 @@ import { OFTAdapter } from "@layerzerolabs/oft-evm/contracts/OFTAdapter.sol";
  * @dev SECURITY CONSIDERATIONS:
  *      - Donation/inflation attacks on empty or low-liquidity vaults
  *      - Share price manipulation via large donations before first deposit
- *      - Slippage during deposit/redeem operations in low-liquidity conditions  
+ *      - Slippage during deposit/redeem operations in low-liquidity conditions
  *      - First depositor advantage scenarios
- *      
+ *
  *      See OpenZeppelin ERC4626 documentation for full risk analysis:
  *      https://docs.openzeppelin.com/contracts/4.x/erc4626#inflation-attack
- *      
+ *
  *      MITIGATIONS:
  *      - OpenZeppelin v4.9+ includes virtual assets/shares to mitigate inflation attacks
  *      - Deployers should consider initial deposits to prevent manipulation
@@ -29,7 +29,7 @@ contract MyERC4626 is ERC4626 {
      * @notice Creates a new ERC4626 vault
      * @dev Initializes the vault with virtual assets/shares protection against inflation attacks
      * @param _name The name of the vault token
-     * @param _symbol The symbol of the vault token  
+     * @param _symbol The symbol of the vault token
      * @param _asset The underlying asset that the vault accepts
      */
     constructor(string memory _name, string memory _symbol, IERC20 _asset) ERC20(_name, _symbol) ERC4626(_asset) {}
@@ -38,7 +38,7 @@ contract MyERC4626 is ERC4626 {
 /**
  * @title MyShareOFTAdapter
  * @notice OFT adapter for vault shares enabling cross-chain transfers
- * @dev The share token MUST be an OFT adapter (lockbox). 
+ * @dev The share token MUST be an OFT adapter (lockbox).
  * @dev A mint-burn adapter would not work since it transforms `ShareERC20::totalSupply()`
  */
 contract MyShareOFTAdapter is OFTAdapter {
