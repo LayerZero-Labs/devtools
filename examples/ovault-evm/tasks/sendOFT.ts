@@ -28,7 +28,7 @@ interface MasterArgs {
     oftAddress?: string
 }
 
-task('lz:oft:send', 'Sends OFT tokens cross‐chain from EVM chains')
+task('lz:oft:send', 'Sends OFT tokens cross-chain from EVM chains')
     .addParam('srcEid', 'Source endpoint ID', undefined, types.int)
     .addParam('dstEid', 'Destination endpoint ID', undefined, types.int)
     .addParam('amount', 'Amount to send (human readable units, e.g. "1.5")', undefined, types.string)
