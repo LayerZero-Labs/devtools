@@ -120,7 +120,7 @@ jobs:
           RPC_URL_SOLANA_MAINNET: ${{ secrets.RPC_URL_SOLANA_MAINNET || 'https://rpc.ankr.com/solana' }}
           RPC_URL_SOLANA_TESTNET: ${{ secrets.RPC_URL_SOLANA_TESTNET || 'https://api.devnet.solana.com' }}
           FOUNDRY_PROFILE: "ci"
-          RPC_URL_HYPERLIQUID: "http://network-hyperliquid:8546"
+          RPC_URL_HYPERLIQUID: "http://127.0.0.1:8546"
           RPC_URL_HYPERLIQUID_UPSTREAM: ${{ secrets.RPC_URL_HYPERLIQUID_UPSTREAM || 'https://rpc.hyperliquid.xyz/evm' }}
 
       # We'll collect the docker compose logs from all containers on failure
