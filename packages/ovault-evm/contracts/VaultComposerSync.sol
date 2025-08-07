@@ -289,16 +289,16 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         /// @dev When quoting the asset OFT, the function input is shares and the SendParam.amountLD into quoteSend() should be assets (and vice versa)
 
         if (_targetOFT == ASSET_OFT) {
-            uint256 maxDeposit = VAULT.maxDeposit(_from);
-            if (_vaultInAmount > maxDeposit) {
-                revert ERC4626.ERC4626ExceededMaxDeposit(_from, _vaultInAmount, maxDeposit);
+            uint256 maxRedeem = VAULT.maxRedeem(_from);
+            if (_vaultInAmount > maxRedeem) {
+                revert ERC4626.ERC4626ExceededMaxRedeem(_from, _vaultInAmount, maxRedeem);
             }
 
             _sendParam.amountLD = VAULT.previewRedeem(_vaultInAmount);
         } else {
-            uint256 maxRedeem = VAULT.maxRedeem(_from);
-            if (_vaultInAmount > maxRedeem) {
-                revert ERC4626.ERC4626ExceededMaxRedeem(_from, _vaultInAmount, maxRedeem);
+            uint256 maxDeposit = VAULT.maxDeposit(_from);
+            if (_vaultInAmount > maxDeposit) {
+                revert ERC4626.ERC4626ExceededMaxDeposit(_from, _vaultInAmount, maxDeposit);
             }
 
             _sendParam.amountLD = VAULT.previewDeposit(_vaultInAmount);
