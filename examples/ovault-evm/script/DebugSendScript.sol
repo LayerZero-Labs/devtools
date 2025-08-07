@@ -3,7 +3,6 @@ pragma solidity ^0.8.0;
 
 import { AddressCast } from "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/AddressCast.sol";
 import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
-import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
 import { IOFT, SendParam, OFTReceipt, MessagingReceipt, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { OFT } from "@layerzerolabs/oft-evm/contracts/OFT.sol";
@@ -17,12 +16,12 @@ import { Script, console } from "forge-std/Script.sol";
 
 contract DebugSendScript is Script {
     using AddressCast for address;
+
     using OptionsBuilder for bytes;
 
-    address payable public address_composer;
+    address payable public addressComposer;
 
-    OFT public myOFT_SRC;
-    address public address_src_OFT;
+    OFT public srcOFT;
 
     mapping(uint256 => uint32) public chainIdToSrcEid;
     mapping(string => uint32) public chainNameToDstEid;
@@ -39,7 +38,7 @@ contract DebugSendScript is Script {
         chainNameToDstEid["base-sep"] = 40245; // base sep
         chainNameToDstEid["bad-eid"] = 100000; // bad eid
 
-        address_composer = payable(vm.envAddress("OVAULT_COMPOSER_ADDRESS"));
+        addressComposer = payable(vm.envAddress("OVAULT_COMPOSER_ADDRESS"));
     }
 
     function exec(
@@ -60,10 +59,10 @@ contract DebugSendScript is Script {
             revert("Destination chain is not Arbitrum Sepolia, Optimism Sepolia, or Base Sepolia");
         }
 
-        myOFT_SRC = OFT(_fromOFT);
+        srcOFT = OFT(_fromOFT);
 
         SendParam memory sendParam = buildSendParam(
-            address_composer,
+            addressComposer,
             msg.sender,
             _amount,
             _minAmount,
@@ -93,7 +92,7 @@ contract DebugSendScript is Script {
         bytes memory options;
         bytes memory composeMsg = "";
         uint32 dstEid = _dstEid;
-        bytes32 to = addressToBytes32(_receiver);
+        bytes32 to = _receiver.toBytes32();
 
         if (_lzComposeGas > 0) {
             options = OptionsBuilder.newOptions().addExecutorLzComposeOption(0, _lzComposeGas, _lzComposeValue);
@@ -107,7 +106,7 @@ contract DebugSendScript is Script {
                 oftCmd: hex""
             });
             composeMsg = abi.encode(hopSendParam);
-            to = addressToBytes32(_composer);
+            to = _composer.toBytes32();
             dstEid = HUB_EID;
         }
 
@@ -123,14 +122,10 @@ contract DebugSendScript is Script {
     }
 
     function quoteSend(SendParam memory _sendParam) public view returns (MessagingFee memory) {
-        return myOFT_SRC.quoteSend(_sendParam, false);
+        return srcOFT.quoteSend(_sendParam, false);
     }
 
     function _send(SendParam memory _sendParam, MessagingFee memory _fee) internal {
-        myOFT_SRC.send{ value: _fee.nativeFee }(_sendParam, _fee, msg.sender);
-    }
-
-    function addressToBytes32(address _addr) internal pure returns (bytes32) {
-        return bytes32(uint256(uint160(_addr)));
+        srcOFT.send{ value: _fee.nativeFee }(_sendParam, _fee, msg.sender);
     }
 }
