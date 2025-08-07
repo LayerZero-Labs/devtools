@@ -5,57 +5,21 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
 
 import { HyperLiquidComposerCodec } from "../../contracts/library/HyperLiquidComposerCodec.sol";
 
-import { IHyperLiquidComposerErrors, ErrorMessagePayload } from "../../contracts/interfaces/IHyperLiquidComposerErrors.sol";
-import { IHyperAsset, IHyperLiquidComposerCore } from "../../contracts/interfaces/IHyperLiquidComposerCore.sol";
+import { IHyperLiquidComposerErrors } from "../../contracts/interfaces/IHyperLiquidComposerErrors.sol";
 
 import { HyperLiquidComposer } from "../../contracts/HyperLiquidComposer.sol";
-import { OFTMock } from "../mocks/OFTMock.sol";
 
-import { Test, console } from "forge-std/Test.sol";
+import { HyperliquidBaseTest } from "../HyperliquidBase.t.sol";
 
-contract ComposeMessageTest is Test {
+import { console } from "forge-std/Test.sol";
+
+contract ComposeMessageTest is HyperliquidBaseTest {
     using HyperLiquidComposerCodec for bytes;
 
     uint256 public constant DEFAULT_AMOUNT = 1e18;
 
-    IHyperAsset public ALICE;
-    IHyperAsset public HYPE;
-    address public constant HL_LZ_ENDPOINT_V2 = 0xf9e1815F151024bDE4B7C10BAC10e8Ba9F6b53E1;
-
-    OFTMock public oft;
-    HyperLiquidComposer public hyperLiquidComposer;
-
-    address public sender;
-
-    function setUp() public {
-        // Skip test if fork fails
-        try vm.createSelectFork("https://rpc.hyperliquid-testnet.xyz/evm") {} catch {
-            console.log("Forking testnet https://rpc.hyperliquid-testnet.xyz/evm failed");
-            vm.skip(true);
-        }
-
-        sender = makeAddr("sender");
-
-        ALICE = IHyperAsset({
-            assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1231),
-            coreIndexId: 1231,
-            decimalDiff: 18 - 6
-        });
-
-        HYPE = IHyperAsset({
-            assetBridgeAddress: 0x2222222222222222222222222222222222222222,
-            coreIndexId: 1105,
-            decimalDiff: 18 - 10
-        });
-
-        oft = new OFTMock("test", "test", HL_LZ_ENDPOINT_V2, msg.sender);
-
-        hyperLiquidComposer = new HyperLiquidComposer(
-            HL_LZ_ENDPOINT_V2,
-            address(oft),
-            ALICE.coreIndexId,
-            ALICE.decimalDiff
-        );
+    function setUp() public override {
+        super.setUp();
     }
 
     function test_validateAndDecodeMessage_EncodingVariants(address _receiver, bool _useEncodePacked) public view {
@@ -77,7 +41,7 @@ contract ComposeMessageTest is Test {
         uint256 _amount,
         bytes memory _noise
     ) internal view returns (bytes memory) {
-        bytes memory payload = bytes.concat(addressToBytes32(sender), _receiver, _noise);
+        bytes memory payload = bytes.concat(addressToBytes32(userA), _receiver, _noise);
         return OFTComposeMsgCodec.encode(0, 0, _amount, payload);
     }
 
