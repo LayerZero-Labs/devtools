@@ -9,6 +9,8 @@ import { createLogger } from '@layerzerolabs/io-devtools'
 import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { Options, addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 
+import { NetworkConfigOvaultExtension } from '../type-extensions'
+
 import { EvmArgs, sendEvm } from './sendEvm'
 import { SendResult } from './types'
 import { DebugLogger, KnownOutputs, getBlockExplorerLink } from './utils'
@@ -73,7 +75,7 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
 
         // Auto-detect hub chain from hardhat config
         const hubNetwork = Object.entries(hre.config.networks).find(([networkName, networkConfig]) => {
-            const config = networkConfig as any
+            const config = networkConfig as NetworkConfigOvaultExtension
             return config?.ovault?.isHubChain === true
         })
 
@@ -84,7 +86,10 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
         }
 
         const [hubNetworkName, hubNetworkConfig] = hubNetwork
-        const hubEid = (hubNetworkConfig as any).eid
+        const hubEid = hubNetworkConfig.eid
+        if (!hubEid) {
+            throw new Error(`Hub chain ${hubNetworkName} does not have a valid endpoint ID (eid) configured`)
+        }
         logger.info(`Hub: ${endpointIdToNetwork(hubEid)} (${hubNetworkName})`)
 
         // Validate chain types
