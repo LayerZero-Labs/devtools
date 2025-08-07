@@ -50,7 +50,7 @@ OVault makes it extremely easy to move assets and shares between any supported c
 - **git**
 - **Node.js** ≥ 18.18
 - **pnpm** ≥ 8.0 (with `corepack` enabled)
-- **Testnet funds** on at least 2 chains (see [LayerZero Faucet](https://docs.layerzero.network/v2/developers/evm/tooling/faucets))
+- **Testnet funds** on at least 2 chains
 
 ## Scaffold this Example
 
@@ -80,32 +80,65 @@ MNEMONIC="your twelve word mnemonic here"
 
 ### 2. Network Configuration
 
-Update `hardhat.config.ts` to include your desired networks. Example for 3-chain setup:
+Update `hardhat.config.ts` to include your desired networks with required `ovault` configuration. Each network needs an `ovault` config object specifying which contracts to deploy and token details.
 
 ```typescript
 const config: HardhatUserConfig = {
   networks: {
-    // Hub chain (hosts vault + composer)
-    "arbitrum-sepolia": {
-      eid: EndpointId.ARBSEP_V2_TESTNET,
-      url: "https://sepolia-rollup.arbitrum.io/rpc",
+    base: {
+      eid: EndpointId.BASE_V2_MAINNET,
+      url: process.env.RPC_URL_BASE || "https://base.gateway.tenderly.co",
       accounts,
+      ovault: {
+        isHubChain: true,
+        assetToken: {
+          name: "MyAssetOFT",
+          symbol: "ASSET",
+        },
+        shareToken: {
+          name: "MyShareOFT",
+          symbol: "SHARE",
+        },
+      },
     },
-    // Spoke chains (asset/share origins)
-    "base-sepolia": {
-      eid: EndpointId.BASESEP_V2_TESTNET,
-      url: "https://sepolia.base.org",
+    arbitrum: {
+      eid: EndpointId.ARBITRUM_V2_MAINNET,
+      url: process.env.RPC_URL_ARB || "https://arbitrum.gateway.tenderly.co",
       accounts,
+      ovault: {
+        isHubChain: false,
+        assetToken: {
+          name: "MyAssetOFT",
+          symbol: "ASSET",
+        },
+        shareToken: {
+          name: "MyShareOFT",
+          symbol: "SHARE",
+        },
+      },
     },
-    "optimism-sepolia": {
-      eid: EndpointId.OPTSEP_V2_TESTNET,
-      url: "https://sepolia.optimism.io",
+    optimism: {
+      eid: EndpointId.OPTIMISM_V2_MAINNET,
+      url:
+        process.env.RPC_URL_OPTIMISM || "https://optimism.gateway.tenderly.co",
       accounts,
+      ovault: {
+        assetToken: {
+          name: "MyAssetOFT",
+          symbol: "ASSET",
+        },
+      },
     },
   },
   // ... rest of config
 };
 ```
+
+Asset and share token networks don't need to perfectly overlap. Configure based on your requirements:
+
+- `asset` tag requires `assetToken` config
+- `ovault` tag requires `isHubChain: true` and `shareToken` config
+- `share` tag requires `isHubChain: false` and `shareToken` config
 
 ## Build
 
@@ -119,32 +152,29 @@ pnpm compile
 
 ### 1. Deploy Asset OFTs
 
-Deploy Asset OFTs across all chains (including hub):
+Deploy Asset OFTs to networks with `assetToken` configuration:
 
 ```bash
-# Deploy MyAssetOFT to all networks
 pnpm hardhat lz:deploy --tags asset
 ```
 
 ### 2. Deploy ERC4626 Vault System (Hub Chain Only)
 
-Deploy the vault, composer, and ShareOFT adapter on your hub chain:
+Deploy the vault, composer, and ShareOFT adapter on networks with `isHubChain: true`:
 
 ```bash
-# This creates: MyERC4626 vault + MyOVaultComposer + ShareOFT adapter
 pnpm hardhat lz:deploy --network base --tags ovault
 ```
 
-**Important**: The `deployERC4626` script automatically creates the ShareOFT Adapter using the vault as the inner token (lockbox model).
-
 ### 3. Deploy Share OFTs (Spoke Chains Only)
 
-Deploy Share OFTs on non-hub chains:
+Deploy Share OFTs on networks with `isHubChain: false`:
 
 ```bash
-# Deploy standard Share OFTs (not adapters)
 pnpm hardhat lz:deploy --tags share
 ```
+
+The deploy scripts automatically validate your network configuration and will error if required config is missing or contracts are deployed on wrong chain types.
 
 ## Enable Messaging
 
