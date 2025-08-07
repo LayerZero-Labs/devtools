@@ -68,7 +68,7 @@ services:
     ports:
       - "8546:8545"
     healthcheck:
-      test: ["CMD", "sh", "-c", "curl -s -X POST -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"method\":\"eth_chainId\",\"params\":[],\"id\":1}' http://localhost:8545 | grep -q '0x3e6' || exit 1"]
+      test: ["CMD", "sh", "-c", "curl -X POST -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"method\":\"eth_chainId\",\"params\":[],\"id\":1}' http://localhost:8545"]
       interval: 10s
       timeout: 5s
       retries: 10

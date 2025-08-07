@@ -3,6 +3,15 @@ FROM ghcr.io/foundry-rs/foundry:latest
 
 WORKDIR /anvil
 
+# Install curl for healthcheck
+USER root
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+# Default environment variables (can be overridden by docker-compose)
+ENV FORK_URL="https://rpc.hyperliquid-testnet.xyz/evm"
+ENV HOST="0.0.0.0"
+ENV PORT="8545"
+
 ENTRYPOINT ["sh", "-c", "anvil --fork-url $FORK_URL --host $HOST --port $PORT"]
 
 EXPOSE 8545
