@@ -9,7 +9,7 @@ import { Script, console } from "forge-std/Script.sol";
 ///      The following points to the interface that the executor implements and has the errors documented.
 ///      https://github.com/LayerZero-Labs/devtools/blob/main/packages/ovault-evm/contracts/interfaces/IVaultComposerSync.sol
 /// @notice Most composer will be custom implementations so the above may not have all errors or events and you would have to reference the composer's implmentation.
-contract ExecutorCompose302Script is Script {
+contract DebugExecutorCompose302 is Script {
     address public executorCaller;
     address public executorContractAddress;
     address public fromAddress;
