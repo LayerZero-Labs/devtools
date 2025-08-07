@@ -2,7 +2,7 @@
 pragma solidity ^0.8.22;
 
 import { SafeERC20, IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
+import { ERC4626, IERC4626 } from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
 
 import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
@@ -273,6 +273,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
     /**
      * @notice Quotes the send operation for the given OFT and SendParam
      * @dev Revert on slippage will be thrown by the OFT and not _assertSlippage
+     * @param _from The "sender address" used for the quote
      * @param _targetOFT The OFT contract address to quote
      * @param _vaultInAmount The amount of tokens to send to the vault
      * @param _sendParam The parameters for the send operation
@@ -280,6 +281,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @dev This function can be overridden to implement custom quoting logic
      */
     function quoteSend(
+        address _from,
         address _targetOFT,
         uint256 _vaultInAmount,
         SendParam memory _sendParam
@@ -287,8 +289,18 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         /// @dev When quoting the asset OFT, the function input is shares and the SendParam.amountLD into quoteSend() should be assets (and vice versa)
 
         if (_targetOFT == ASSET_OFT) {
+            uint256 maxRedeem = VAULT.maxRedeem(_from);
+            if (_vaultInAmount > maxRedeem) {
+                revert ERC4626.ERC4626ExceededMaxRedeem(_from, _vaultInAmount, maxRedeem);
+            }
+
             _sendParam.amountLD = VAULT.previewRedeem(_vaultInAmount);
         } else {
+            uint256 maxDeposit = VAULT.maxDeposit(_from);
+            if (_vaultInAmount > maxDeposit) {
+                revert ERC4626.ERC4626ExceededMaxDeposit(_from, _vaultInAmount, maxDeposit);
+            }
+
             _sendParam.amountLD = VAULT.previewDeposit(_vaultInAmount);
         }
         return IOFT(_targetOFT).quoteSend(_sendParam, false);
