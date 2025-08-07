@@ -119,6 +119,7 @@ jobs:
           # LZ_DEVTOOLS_ENABLE_SOLANA_TESTS: 1
           RPC_URL_SOLANA_MAINNET: ${{ secrets.RPC_URL_SOLANA_MAINNET || 'https://rpc.ankr.com/solana' }}
           RPC_URL_SOLANA_TESTNET: ${{ secrets.RPC_URL_SOLANA_TESTNET || 'https://api.devnet.solana.com' }}
+          FOUNDRY_PROFILE: "ci"
 
       # We'll collect the docker compose logs from all containers on failure
       - name: Collect docker logs on failure
