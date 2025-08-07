@@ -3066,6 +3066,9 @@ importers:
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
         version: 2.3.44
+      '@layerzerolabs/script-devtools-evm-foundry':
+        specifier: ^1.0.0
+        version: link:../../packages/script-devtools-evm-foundry
       '@layerzerolabs/solhint-config':
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
@@ -9446,35 +9449,6 @@ packages:
 
   /@layerzerolabs/io-devtools@0.1.17(zod@3.22.4):
     resolution: {integrity: sha512-3Todi2pGZFNlkKGb758AQ4inZOcxiiZHMLRfZyfNIyjslHa2vna2yOh4fQNvfIAZVKjZ0y80XNf6jkgPXz5RsQ==}
-    peerDependencies:
-      ink: ^3.2.0
-      ink-gradient: ^2.0.0
-      ink-table: ^3.1.0
-      react: ^17.0.2
-      yoga-layout-prebuilt: ^1.9.6
-      zod: ^3.22.4
-    peerDependenciesMeta:
-      ink:
-        optional: true
-      ink-gradient:
-        optional: true
-      ink-table:
-        optional: true
-      react:
-        optional: true
-      yoga-layout-prebuilt:
-        optional: true
-    dependencies:
-      chalk: 4.1.2
-      logform: 2.6.0
-      prompts: 2.4.2
-      table: 6.8.2
-      winston: 3.11.0
-      zod: 3.22.4
-    dev: true
-
-  /@layerzerolabs/io-devtools@0.2.1(zod@3.22.4):
-    resolution: {integrity: sha512-NqENU8ixAhAyN2Wv8x7n/FVqjnY0Q2J0dIE64aSYNeLCyatINxsg8YSNVu2g7CjShTcqVPOtrU2zydxExDJ2Kw==}
     peerDependencies:
       ink: ^3.2.0
       ink-gradient: ^2.0.0
