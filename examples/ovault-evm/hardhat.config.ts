@@ -13,6 +13,7 @@ import { HardhatUserConfig, HttpNetworkAccountsUserConfig } from 'hardhat/types'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
+import './type-extensions'
 import './tasks/sendOFT'
 import './tasks/sendOVaultComposer'
 
@@ -59,16 +60,49 @@ const config: HardhatUserConfig = {
             eid: EndpointId.OPTIMISM_V2_MAINNET.valueOf(),
             url: process.env.RPC_URL_OPTIMISM || 'https://optimism.gateway.tenderly.co',
             accounts,
+            ovault: {
+                isHubChain: false, // Optimism as spoke chain
+                assetToken: {
+                    name: 'MyAssetOFT',
+                    symbol: 'ASSET',
+                },
+                shareToken: {
+                    name: 'MyShareOFT',
+                    symbol: 'SHARE',
+                },
+            },
         },
         base: {
             eid: EndpointId.BASE_V2_MAINNET.valueOf(),
             url: process.env.RPC_URL_BASE || 'https://base.gateway.tenderly.co',
             accounts,
+            ovault: {
+                isHubChain: true, // Hub chain
+                assetToken: {
+                    name: 'MyAssetOFT',
+                    symbol: 'ASSET',
+                },
+                shareToken: {
+                    name: 'MyShareOFT',
+                    symbol: 'SHARE',
+                },
+            },
         },
         arbitrum: {
             eid: EndpointId.ARBITRUM_V2_MAINNET.valueOf(),
             url: process.env.RPC_URL_ARB || 'https://arbitrum.gateway.tenderly.co',
             accounts,
+            ovault: {
+                isHubChain: false, // Spoke chain
+                assetToken: {
+                    name: 'MyAssetOFT',
+                    symbol: 'ASSET',
+                },
+                shareToken: {
+                    name: 'MyShareOFT',
+                    symbol: 'SHARE',
+                },
+            },
         },
         hardhat: {
             // Need this for testing because TestHelperOz5.sol is exceeding the compiled contract size limit

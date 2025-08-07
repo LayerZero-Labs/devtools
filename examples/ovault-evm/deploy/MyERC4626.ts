@@ -2,11 +2,11 @@ import assert from 'assert'
 
 import { type DeployFunction } from 'hardhat-deploy/types'
 
+import { OVaultConfig } from '../type-extensions'
+
 import { assetOFTContractName } from './MyAssetOFT'
 
 export const ovaultContractName = 'MyERC4626'
-const tokenName = 'MyShareOFT'
-const tokenSymbol = 'SHARE'
 
 const shareOFTAdapterContractName = 'MyShareOFTAdapter'
 const composerContractName = 'MyOVaultComposer'
@@ -21,6 +21,23 @@ const deploy: DeployFunction = async (hre) => {
 
     console.log(`Network: ${hre.network.name}`)
     console.log(`Deployer: ${deployer}`)
+
+    // Get share token configuration from ovault config
+    const networkConfig = hre.network.config as any
+    const ovaultConfig = networkConfig.ovault as OVaultConfig
+
+    if (!ovaultConfig) {
+        throw new Error(`Missing ovault configuration for network '${hre.network.name}'`)
+    }
+
+    // Validate that vault contracts are deployed only on hub chain
+    if (!ovaultConfig.isHubChain) {
+        throw new Error(
+            `Vault contracts can only be deployed on hub chain. Network '${hre.network.name}' is configured as spoke chain (isHubChain: false). Please deploy on a hub chain.`
+        )
+    }
+
+    const { name: tokenName, symbol: tokenSymbol } = ovaultConfig.shareToken
 
     const assetOFTDeployment = await hre.deployments.get(assetOFTContractName)
 
