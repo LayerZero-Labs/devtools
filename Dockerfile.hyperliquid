@@ -1,0 +1,8 @@
+# syntax=docker/dockerfile:1.4
+FROM ghcr.io/foundry-rs/foundry:latest
+
+WORKDIR /anvil
+
+ENTRYPOINT ["sh", "-c", "anvil --fork-url $FORK_URL --host $HOST --port $PORT"]
+
+EXPOSE 8545

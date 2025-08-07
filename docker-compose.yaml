@@ -53,6 +53,29 @@ services:
 
   # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
   #
+  #                       The HyperLiquid local fork node
+  #
+  # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+  network-hyperliquid:
+    build:
+      context: .
+      dockerfile: Dockerfile.hyperliquid
+    environment:
+      - FORK_URL=${RPC_URL_HYPERLIQUID_UPSTREAM:-https://rpc.hyperliquid.xyz/evm}
+      - HOST=0.0.0.0
+      - PORT=8545
+      - FOUNDRY_DISABLE_NIGHTLY_WARNING=1
+    ports:
+      - "8546:8545"
+    healthcheck:
+      test: ["CMD", "sh", "-c", "curl -s -X POST -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"method\":\"eth_chainId\",\"params\":[],\"id\":1}' http://localhost:8545 | grep -q '0x3e6' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
+  #
   #                       The actual tests
   #
   # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
@@ -68,6 +91,8 @@ services:
       network-tango:
         condition: service_healthy
       network-ton:
+        condition: service_healthy
+      network-hyperliquid:
         condition: service_healthy
     logging:
       driver: none
@@ -85,12 +110,14 @@ services:
       - NETWORK_URL_VENGABOYS=http://network-vengaboys:8545
       - NETWORK_URL_TANGO=http://network-tango:8545
       - NETWORK_URL_TON=http://network-ton:8081/jsonRPC
+      - NETWORK_URL_HYPERLIQUID=http://network-hyperliquid:8546
       - DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=$DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS
       # Passing environment variables that control the solana tests
       - RPC_URL_SOLANA_MAINNET=${RPC_URL_SOLANA_MAINNET}
       - RPC_URL_SOLANA_TESTNET=${RPC_URL_SOLANA_TESTNET}
       - LZ_DEVTOOLS_ENABLE_SOLANA_TESTS=${LZ_DEVTOOLS_ENABLE_SOLANA_TESTS}
       - FOUNDRY_PROFILE=${FOUNDRY_PROFILE}
+      - RPC_URL_HYPERLIQUID=${RPC_URL_HYPERLIQUID}
     volumes:
       - ./node_modules/.cache/turbo:/app/node_modules/.cache/turbo
       # Hardhat has an issue with caching compilers inside a docker container,
