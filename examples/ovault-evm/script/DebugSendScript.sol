@@ -2,28 +2,20 @@
 pragma solidity ^0.8.0;
 
 import { AddressCast } from "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/AddressCast.sol";
-
 import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
-
-import { IOFT, SendParam, OFTReceipt, MessagingReceipt, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
-
-import { Script, console } from "forge-std/Script.sol";
-import { OFT } from "@layerzerolabs/oft-evm/contracts/OFT.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
+import { IOFT, SendParam, OFTReceipt, MessagingReceipt, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
+import { OFT } from "@layerzerolabs/oft-evm/contracts/OFT.sol";
+
+import { Script, console } from "forge-std/Script.sol";
 /**
  * @title Lets the user send an LZ OFT transfer to transfer an amount of OFT from a source EVM chain to OVault testnet or mainnet
  * @notice There are 3 supported modes that correspond to <amount>, <gas>, <value> in the forge script below:
- * @notice forge script script/SendScript.s.sol --private-key $PRIVATE_KEY --rpc-url $RPC_URL_BASE_TESTNET --sig "exec(address,string,uint256,uint256,uint128,uint128)" $SHARE_OFT_BASE_SEP  "base-sep" 1ether 0 50000 [--broadcast]
-0  0.000025ether --broadcast
- * @notice 1. Send to HyperEVM 
-                - true, false, false
- * @notice 2. Send to HyperCore 
-                - true, true, false
- * @notice 3. Send to HyperCore + Fund HyperCore with HYPE 
-                - true, true, true
+ * @notice forge script script/SendScript.s.sol --private-key $PRIVATE_KEY --rpc-url $RPC_URL_BASE_TESTNET --sig "exec(address oft,string dstChain,uint256 amt,uint256 minAmt,uint128 lzComposeGas,uint128 lzComposeValue)" $SHARE_OFT_BASE_SEP  "base-sep" 1ether 500000 0.000025ether [--broadcast]
  */
-contract SendScript is Script {
+
+contract DebugSendScript is Script {
     using AddressCast for address;
     using OptionsBuilder for bytes;
 
@@ -47,7 +39,7 @@ contract SendScript is Script {
         chainNameToDstEid["base-sep"] = 40245; // base sep
         chainNameToDstEid["bad-eid"] = 100000; // bad eid
 
-        address_composer = payable(0xC629C57CFC8371819AB16963960E8c6FD497bb53);
+        address_composer = payable(vm.envAddress("OVAULT_COMPOSER_ADDRESS"));
     }
 
     function exec(
