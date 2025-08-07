@@ -12,6 +12,8 @@ contract MyERC4626 is ERC4626 {
     constructor(string memory _name, string memory _symbol, IERC20 _asset) ERC20(_name, _symbol) ERC4626(_asset) {}
 }
 
+/// @dev The share token MUST be an OFT adapter (lockbox style). 
+/// @dev A mint-burn adapter would not work since it affects `ShareERC20::totalSupply()`
 contract MyShareOFTAdapter is OFTAdapter {
     constructor(
         address _token,
