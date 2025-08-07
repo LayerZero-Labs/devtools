@@ -104,7 +104,7 @@ contract VaultComposerSyncProxySendTest is VaultComposerSyncBaseTest {
 
         MessagingFee memory fee = VaultComposerSyncArb.quoteSend(
             userA,
-            address(assetOFT_arb),
+            address(shareOFT_arb),
             TOKENS_TO_SEND,
             sendParam
         );
@@ -130,7 +130,7 @@ contract VaultComposerSyncProxySendTest is VaultComposerSyncBaseTest {
 
         MessagingFee memory fee = VaultComposerSyncArb.quoteSend(
             userA,
-            address(shareOFT_arb),
+            address(assetOFT_arb),
             TOKENS_TO_SEND,
             sendParam
         );
