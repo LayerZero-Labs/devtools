@@ -48,8 +48,8 @@
     "test:forge": "forge test"
   },
   "dependencies": {
-    "@layerzerolabs/lz-definitions": "^3.0.118",
-    "@layerzerolabs/lz-v2-utilities": "^3.0.118",
+    "@layerzerolabs/lz-definitions": "^3.0.75",
+    "@layerzerolabs/lz-v2-utilities": "^3.0.75",
     "@layerzerolabs/scan-client-v2": "^0.0.1",
     "redaxios": "^0.5.1",
     "viem": "^2.33.1"
