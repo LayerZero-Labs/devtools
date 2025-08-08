@@ -604,16 +604,15 @@ After completing your deployment:
 
 1. **Monitor Transactions**: Use [LayerZero Scan](https://testnet.layerzeroscan.com) to track cross-chain operations
 2. **Production Checklist**: Review the [Production Deployment Checklist](#production-deployment-checklist)
-3. **Security Configuration**: Set up [DVN and Executor configuration](https://docs.layerzero.network/v2/developers/evm/configuration/dvn-executor-config)
-4. **Advanced Features**: Explore [custom yield strategies and slippage configuration](./overview.md#advanced-configuration)
+3. **Security Configuration**: Set up [DVN and Executor configuration](https://docs.layerzero.network/v2/developers/evm/oft/quickstart#2-wire-messaging-libraries-and-configurations)
 
 ## Production Deployment Checklist
 
 - [ ] **Security Stack Configuration**
 
-  - [ ] Configure [DVNs](https://docs.layerzero.network/v2/developers/evm/configuration/dvn-executor-config) for your security requirements
-  - [ ] Set appropriate [confirmation blocks](https://docs.layerzero.network/v2/developers/evm/configuration/default-config#confirmation-blocks)
-  - [ ] Configure [Executors](https://docs.layerzero.network/v2/developers/evm/configuration/dvn-executor-config#executors) with proper gas settings
+  - [ ] Configure [DVNs](https://docs.layerzero.network/v2/developers/evm/oft/quickstart#2-wire-messaging-libraries-and-configurations) for your security requirements
+  - [ ] Set appropriate [confirmation blocks](https://docs.layerzero.network/v2/developers/evm/oft/quickstart#2-wire-messaging-libraries-and-configurations)
+  - [ ] Configure [Executors](https://docs.layerzero.network/v2/developers/evm/oft/quickstart#2-wire-messaging-libraries-and-configurations) with proper gas settings
 
 - [ ] **Gas & Options Configuration**
 
@@ -651,12 +650,6 @@ Run the test suite to verify your deployment:
 ```bash
 # Run all tests
 pnpm test
-
-# Run specific test file
-pnpm test test/ovault.test.ts
-
-# Run tests with gas reporting
-pnpm test:gas
 ```
 
 ### Adding Other Chains
@@ -683,7 +676,6 @@ pnpm hardhat lz:ovault:send        # Send through OVault composer
 
 # OApp configuration tasks
 pnpm hardhat lz:oapp:wire          # Wire OApp connections
-pnpm hardhat lz:oapp:config        # Set OApp configuration
 
 # General LayerZero tasks
 pnpm hardhat lz:deploy             # Deploy contracts
@@ -711,8 +703,6 @@ pnpm hardhat lz:deploy             # Deploy contracts
 4. **Gas estimation errors**
    - **Cause**: Insufficient gas limits for complex operations
    - **Solution**: Increase `lzReceive` and `lzCompose` gas limits in configuration
-
-For additional troubleshooting, see the [LayerZero Troubleshooting Guide](https://docs.layerzero.network/v2/developers/evm/troubleshooting).
 
 ---
 
