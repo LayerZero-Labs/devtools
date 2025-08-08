@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-import { assetToken } from './tokenConfig'
+import { assetOFT } from './tokenConfig'
 import { TokenDeployConfig, isContractAddress } from './types'
 
 const deploy: DeployFunction = async (hre) => {
@@ -16,12 +16,12 @@ const deploy: DeployFunction = async (hre) => {
     console.log(`Network: ${hre.network.name}`)
     console.log(`Deployer: ${deployer}`)
 
-    if (isContractAddress(assetToken)) {
-        console.log(`Found pre-deployed asset address: ${assetToken}`)
+    if (isContractAddress(assetOFT)) {
+        console.log(`Found pre-deployed asset address: ${assetOFT}`)
         return
     }
 
-    const { contractName, tokenName, tokenSymbol } = assetToken as TokenDeployConfig
+    const { contractName, tokenName, tokenSymbol } = assetOFT as TokenDeployConfig
 
     const endpointV2Deployment = await hre.deployments.get('EndpointV2')
 

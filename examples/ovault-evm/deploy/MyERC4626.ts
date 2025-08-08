@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-import { assetToken, oVault, shareToken } from './tokenConfig'
+import { assetOFT, oVault, shareOFT } from './tokenConfig'
 import {
     TokenDeployConfig,
     checkAddressOrGetDeployment,
@@ -32,12 +32,12 @@ const deploy: DeployFunction = async (hre) => {
         return
     }
 
-    const assetTokenAddress = await checkAddressOrGetDeployment(hre, assetToken)
+    const assetOFTAddress = await checkAddressOrGetDeployment(hre, assetOFT)
 
-    const shareTokenConfig = shareToken as TokenDeployConfig
+    const shareOFTConfig = shareOFT as TokenDeployConfig
     const { address: ovaultAddress } = await deploy(oVault.vault, {
         from: deployer,
-        args: [shareTokenConfig.tokenName, shareTokenConfig.tokenSymbol, assetTokenAddress],
+        args: [shareOFTConfig.tokenName, shareOFTConfig.tokenSymbol, assetOFTAddress],
         log: true,
         skipIfAlreadyDeployed: true,
     })

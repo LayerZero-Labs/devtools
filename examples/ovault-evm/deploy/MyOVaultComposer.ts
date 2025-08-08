@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-import { assetToken, oVault } from './tokenConfig'
+import { assetOFT, oVault } from './tokenConfig'
 import { checkAddressOrGetDeployment, isVaultChain, onlyDeployVault } from './types'
 
 /// @dev Since this script has `runAtTheEnd = true` it will run after the MyERC4626 script
@@ -28,7 +28,7 @@ const deploy: DeployFunction = async (hre) => {
     // That means we may not have a share OFT adapter to deploy to
     if (onlyDeployVault()) return
 
-    const assetOFTAddress = await checkAddressOrGetDeployment(hre, assetToken)
+    const assetOFTAddress = await checkAddressOrGetDeployment(hre, assetOFT)
     const shareOFTAdapterAddress = await checkAddressOrGetDeployment(hre, oVault.shareAdapterContractName)
     const vaultAddress = await checkAddressOrGetDeployment(hre, oVault.vault)
 

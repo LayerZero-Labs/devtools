@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-import { shareToken } from './tokenConfig'
+import { shareOFT } from './tokenConfig'
 import { TokenDeployConfig, isContractAddress, isVaultChain } from './types'
 
 const deploy: DeployFunction = async (hre) => {
@@ -22,11 +22,11 @@ const deploy: DeployFunction = async (hre) => {
         return
     }
 
-    if (isContractAddress(shareToken)) {
-        throw new Error(`Found contract address for share token. Expected TokenDeployConfig. Found: ${shareToken}`)
+    if (isContractAddress(shareOFT)) {
+        throw new Error(`Found contract address for share token. Expected TokenDeployConfig. Found: ${shareOFT}`)
     }
 
-    const { contractName, tokenName, tokenSymbol } = shareToken as TokenDeployConfig
+    const { contractName, tokenName, tokenSymbol } = shareOFT as TokenDeployConfig
 
     const endpointV2Deployment = await hre.deployments.get('EndpointV2')
 
