@@ -82,6 +82,8 @@ MNEMONIC="your twelve word mnemonic here"
 
 Update `hardhat.config.ts` to include your desired networks with required `ovault` configuration. Each network needs an `ovault` config object specifying which contracts to deploy and token details.
 
+> **Note**: If your asset is already an OFT, you do not need to deploy a separate mesh. The only requirement is that the asset OFT supports the hub chain you are deploying to.
+
 ```typescript
 const config: HardhatUserConfig = {
   networks: {
@@ -147,6 +149,10 @@ Compile your contracts:
 ```bash
 pnpm compile
 ```
+
+> **Testing Note**: If you're deploying the asset OFT from scratch for testing purposes, you'll need to mint an initial supply. Uncomment the `_mint` line in the `MyAssetOFT` constructor to provide initial liquidity. This ensures you have tokens to test deposit and cross-chain transfer functionality.
+> 
+> **⚠️ Warning**: Do NOT mint share tokens directly in `MyShareOFT`. Share tokens must only be minted by the vault contract during deposits to maintain the correct share-to-asset ratio. Manually minting share tokens breaks the vault's accounting and can lead to incorrect redemption values. The mint line in `MyShareOFT` should only be uncommented for UI/integration testing, never in production.
 
 ## Deploy
 
@@ -353,27 +359,8 @@ export default async function () {
 
 - **Hub Chain**: In this example, Base is the hub (uses `MyShareOFTAdapter`)
 - **Contract Types**: Only the hub chain uses `MyShareOFTAdapter`; all other chains use `MyShareOFT`
-- **Auto-Detection**: The `lz:ovault:send` task automatically detects the hub by finding the contract with "Adapter" in the name
 
-### 3. Wire Asset OFT Network
-
-Configure and wire the Asset OFT connections:
-
-```bash
-# Wire Asset OFT network
-pnpm hardhat lz:oapp:wire --oapp-config layerzero.asset.config.ts
-```
-
-### 4. Wire Share OFT Network
-
-Configure and wire the Share OFT connections:
-
-```bash
-# Wire Share OFT network
-pnpm hardhat lz:oapp:wire --oapp-config layerzero.share.config.ts
-```
-
-### 5. Customizing for Your Networks
+### 3. Customizing for Your Networks
 
 To use different chains or network configurations:
 
@@ -392,6 +379,25 @@ To use different chains or network configurations:
 - Add new contract definitions with appropriate EIDs
 - Add pathway configurations between the new chain and existing chains
 - Deploy Asset OFTs and Share OFTs to the new chains
+
+
+### 4. Wire Asset OFT Network
+
+Configure and wire the Asset OFT connections:
+
+```bash
+# Wire Asset OFT network
+pnpm hardhat lz:oapp:wire --oapp-config layerzero.asset.config.ts
+```
+
+### 5. Wire Share OFT Network
+
+Configure and wire the Share OFT connections:
+
+```bash
+# Wire Share OFT network
+pnpm hardhat lz:oapp:wire --oapp-config layerzero.share.config.ts
+```
 
 ## Cross-Chain Operations
 
@@ -627,19 +633,6 @@ After completing your deployment:
   - [ ] Configure appropriate slippage tolerances for vault volatility
   - [ ] Set up vault access controls and admin functions
   - [ ] Test vault preview functions (`previewDeposit`/`previewRedeem`)
-
-- [ ] **Error Recovery**
-
-  - [ ] Document error recovery procedures for failed operations
-  - [ ] Set up monitoring for failed compose messages
-  - [ ] Test refund and retry mechanisms
-  - [ ] Configure alerts for stuck transactions
-
-- [ ] **Network Configuration**
-  - [ ] Verify all peer configurations are correct
-  - [ ] Test message delivery on all supported routes
-  - [ ] Confirm rate limiting settings are appropriate
-  - [ ] Validate pathway configurations
 
 ## Appendix
 
