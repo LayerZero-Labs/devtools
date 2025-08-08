@@ -5,9 +5,10 @@ export interface TokenConfig {
         symbol: string
     }
     chains: number[]
+    existingAddress?: string
 }
 
-export interface HubConfig {
+export interface VaultConfig {
     eid: number
     contracts: {
         vault: string
@@ -17,7 +18,7 @@ export interface HubConfig {
 }
 
 export interface DeploymentConfig {
-    hub: HubConfig
+    vault: VaultConfig
     asset: TokenConfig
     share: TokenConfig
 }
