@@ -77,11 +77,7 @@ contract VaultComposerSyncBaseTest is TestHelperOz5 {
         /// Now the "expansion" is for the arb vault and share ofts on other networks.
         vault_arb = new MockVault("arbShare", "arbShare", address(assetOFT_arb));
         shareOFT_arb = new MockOFTAdapter(address(vault_arb), address(endpoints[ARB_EID]), address(this));
-        VaultComposerSyncArb = new VaultComposerSync(
-            address(vault_arb),
-            address(assetOFT_arb),
-            address(shareOFT_arb)
-        );
+        VaultComposerSyncArb = new VaultComposerSync(address(vault_arb), address(assetOFT_arb), address(shareOFT_arb));
 
         /// Deploy the Share OFTs on other networks - these are NOT lockbox adapters.
         shareOFT_eth = new MockOFT("ethShare", "ethShare", address(endpoints[ETH_EID]), address(this));
