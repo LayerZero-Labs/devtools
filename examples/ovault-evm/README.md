@@ -75,7 +75,7 @@ cp .env.example .env
 Fill in your `.env`:
 
 ```bash
-MNEMONIC="your twelve word mnemonic here"
+PRIVATE_KEY="YOUR_PRIVATE_KEY_HERE"
 ```
 
 ### 2. Network Configuration
