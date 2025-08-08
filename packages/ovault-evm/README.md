@@ -25,3 +25,101 @@ pnpm install @layerzerolabs/ovault-evm
 ```bash
 npm install @layerzerolabs/ovault-evm
 ```
+
+
+## Ovault SDK 
+
+This is an SDK to make depositing/redeeming on OVaults simple.
+
+Currently this only supports synchronous vault withdrawls.
+
+### Usage
+
+All information required can be retrieved by calling `OVaultMessageBuilder.generateOVaultInputs`. You need to pass in an object like:
+
+```typescript
+{
+  srcEid: number,
+  hubEid: number,
+  dstEid: number,
+  walletAddress: `0x${string}`,
+  dstAddress?: `0x${string}`, // If no dstAddress is supplied, it's assumed to be the same as the source wallet address
+  vaultAddress: `0x${string}`,
+  composerAddress: `0x${string}`,
+  hubChain: Chain, // This is a Viem chain definition
+  sourceChain: Chain, // This is a Viem chain definition
+  operation: OVaultOperations,
+  amount: bigint,
+  slippage: number, // such as 0.01 for 1% slippage
+  oftAddress: `0x${string}`,
+  tokenAddress?: `0x${string}`, // If the token address is not supplied, its assumed the OFT and the token are the same
+}
+```
+
+For full information about the input object check `GenerateOVaultSyncInputsProps` in `src/types.ts`
+
+You will then recieve an `OVaultInputs` object back containing all information you should need to create the transaction or display to users
+
+### Example
+
+Below is an example of how to deposit tokens using the Viem client on a server side environment.
+
+```typescript
+const input = {
+  srcEid: 40245, // eid for base-sepolia
+  hubEid: 40231, // eid for arbitrum-sepolia
+  dstEid: 40245, // eid for base-sepolia
+
+  // Optional. If dstAddress is not specified it will default to the walletAddress on the dst chain
+  dstAddress: "0x0000000000000000000000000000000000000000",
+  walletAddress: "0x0000000000000000000000000000000000000000",
+  vaultAddress: "0x0000000000000000000000000000000000000000",
+
+  // Address of the OVault Composer on the Hub Chain. Should implement IVaultComposerSync
+  composerAddress: "0x0000000000000000000000000000000000000000",
+
+  // Supply the Viem Chain Definitions for the hub and source chain. This is so the sdk can
+  // quote fees and perform read operations
+  hubChain: arbitrumSepolia,
+  sourceChain: baseSepolia,
+  operation: OVaultOperations.DEPOSIT,
+  amount: 100000000000000000n,
+  slippage: 0.01, // 1% slippage
+
+  // Address of the token/oft. The token is an ERC20. They can be the same address.
+  // If tokenAddress isn't specified it defaults to the oftAddress
+  tokenAddress: "0x0000000000000000000000000000000000000000",
+  oftAddress: "0x0000000000000000000000000000000000000000",
+} as const;
+
+const inputs = await OVaultMessageBuilder.generateOVaultInputs(input);
+const account = privateKeyToAccount("YOUR PRIVATE KEY HERE");
+
+const walletClient = createWalletClient({
+  account,
+  chain: srcChain.chain,
+  transport: http(),
+}).extend(publicActions);
+
+if (inputs.approval) {
+  // Approve token if required
+  const approvalTx = await walletClient.writeContract({
+    address: inputs.approval.tokenAddress,
+    abi: ERC20Abi,
+    functionName: "approve",
+    args: [inputs.approval.spender, inputs.approval.amount],
+  });
+  await walletClient.waitForTransactionReceipt({ hash: approvalTx });
+}
+
+const tx = await walletClient.writeContract({
+  address: inputs.contractAddress,
+  abi: inputs.abi,
+  value: inputs.messageFee.nativeFee,
+  functionName: inputs.contractFunctionName,
+  args: inputs.txArgs as any,
+});
+```
+
+For more example usage you can check `./test/sdk.test.ts`. It will run transactions against the deployed OVault contracts
+on Base-Sepolia and Arbitrum-Sepolia
