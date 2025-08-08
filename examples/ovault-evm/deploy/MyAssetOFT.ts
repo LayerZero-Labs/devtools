@@ -2,9 +2,8 @@ import assert from 'assert'
 
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-import { type NetworkConfigOvaultExtension } from '../type-extensions'
-
-export const assetOFTContractName = 'MyAssetOFT'
+import { assetToken } from './tokenConfig'
+import { TokenDeployConfig, isContractAddress } from './types'
 
 const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
@@ -17,19 +16,16 @@ const deploy: DeployFunction = async (hre) => {
     console.log(`Network: ${hre.network.name}`)
     console.log(`Deployer: ${deployer}`)
 
-    // Get asset token configuration from ovault config
-    const networkConfig = hre.network.config as NetworkConfigOvaultExtension
-    const ovaultConfig = networkConfig.ovault
-
-    if (!ovaultConfig?.assetToken) {
-        throw new Error(`Missing ovault.assetToken configuration for network '${hre.network.name}'`)
+    if (isContractAddress(assetToken)) {
+        console.log(`Found pre-deployed asset address: ${assetToken}`)
+        return
     }
 
-    const { name: tokenName, symbol: tokenSymbol } = ovaultConfig.assetToken
+    const { contractName, tokenName, tokenSymbol } = assetToken as TokenDeployConfig
 
     const endpointV2Deployment = await hre.deployments.get('EndpointV2')
 
-    const { address } = await deploy(assetOFTContractName, {
+    const { address } = await deploy(contractName, {
         from: deployer,
         args: [
             tokenName, // name
@@ -41,7 +37,7 @@ const deploy: DeployFunction = async (hre) => {
         skipIfAlreadyDeployed: true,
     })
 
-    console.log(`Deployed contract: ${assetOFTContractName}, network: ${hre.network.name}, address: ${address}`)
+    console.log(`Deployed contract: ${contractName}, network: ${hre.network.name}, address: ${address}`)
 }
 
 deploy.tags = ['asset']
