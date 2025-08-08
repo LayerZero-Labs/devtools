@@ -2,9 +2,9 @@ import assert from 'assert'
 
 import { type DeployFunction } from 'hardhat-deploy/types'
 
+import { type NetworkConfigOvaultExtension } from '../type-extensions'
+
 export const assetOFTContractName = 'MyAssetOFT'
-const tokenName = 'MyMockAssetOFT'
-const tokenSymbol = 'MockAsset'
 
 const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
@@ -16,6 +16,16 @@ const deploy: DeployFunction = async (hre) => {
 
     console.log(`Network: ${hre.network.name}`)
     console.log(`Deployer: ${deployer}`)
+
+    // Get asset token configuration from ovault config
+    const networkConfig = hre.network.config as NetworkConfigOvaultExtension
+    const ovaultConfig = networkConfig.ovault
+
+    if (!ovaultConfig?.assetToken) {
+        throw new Error(`Missing ovault.assetToken configuration for network '${hre.network.name}'`)
+    }
+
+    const { name: tokenName, symbol: tokenSymbol } = ovaultConfig.assetToken
 
     const endpointV2Deployment = await hre.deployments.get('EndpointV2')
 
