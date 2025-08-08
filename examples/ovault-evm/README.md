@@ -72,10 +72,12 @@ Copy and configure your environment:
 cp .env.example .env
 ```
 
-Fill in your `.env`:
+Fill in your `.env` with either MNEMONIC or PRIVATE_KEY:
 
 ```bash
-PRIVATE_KEY="YOUR_PRIVATE_KEY_HERE"
+MNEMONIC="your twelve word mnemonic here"
+# or
+PRIVATE_KEY="your private key here"
 ```
 
 ### 2. Network Configuration
