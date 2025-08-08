@@ -153,7 +153,7 @@ pnpm compile
 ```
 
 > **Testing Note**: If you're deploying the asset OFT from scratch for testing purposes, you'll need to mint an initial supply. Uncomment the `_mint` line in the `MyAssetOFT` constructor to provide initial liquidity. This ensures you have tokens to test deposit and cross-chain transfer functionality.
-> 
+>
 > **⚠️ Warning**: Do NOT mint share tokens directly in `MyShareOFT`. Share tokens must only be minted by the vault contract during deposits to maintain the correct share-to-asset ratio. Manually minting share tokens breaks the vault's accounting and can lead to incorrect redemption values. The mint line in `MyShareOFT` should only be uncommented for UI/integration testing, never in production.
 
 ## Deploy
@@ -381,7 +381,6 @@ To use different chains or network configurations:
 - Add new contract definitions with appropriate EIDs
 - Add pathway configurations between the new chain and existing chains
 - Deploy Asset OFTs and Share OFTs to the new chains
-
 
 ### 4. Wire Asset OFT Network
 
