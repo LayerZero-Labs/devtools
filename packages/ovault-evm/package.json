@@ -34,7 +34,8 @@
     "contracts/**/*",
     "test/**/*",
     "src/**/*",
-    "dist/**/*"
+    "dist/**/*",
+    "artifacts/**/*.{json,sol}"
   ],
   "scripts": {
     "clean": "rimraf .turbo cache out artifacts",
