@@ -2,15 +2,17 @@ import assert from 'assert'
 
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-import { type NetworkConfigOvaultExtension } from '../type-extensions'
+import { assetToken, oVault, shareToken } from './tokenConfig'
+import {
+    TokenDeployConfig,
+    checkAddressOrGetDeployment,
+    isContractAddress,
+    isVaultChain,
+    onlyDeployVault,
+} from './types'
 
-import { assetOFTContractName } from './MyAssetOFT'
-
-export const ovaultContractName = 'MyERC4626'
-
-const shareOFTAdapterContractName = 'MyShareOFTAdapter'
-const composerContractName = 'MyOVaultComposer'
-
+/// @dev It is possible to ONLY deploy the vault by setting the environment variable `ONLY_VAULT=1`
+/// ex: // `ONLY_VAULT=1 npx hardhat deploy --tags ovault`
 const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
 
@@ -22,37 +24,37 @@ const deploy: DeployFunction = async (hre) => {
     console.log(`Network: ${hre.network.name}`)
     console.log(`Deployer: ${deployer}`)
 
-    // Get share token configuration from ovault config
-    const networkConfig = hre.network.config as NetworkConfigOvaultExtension
-    const ovaultConfig = networkConfig.ovault
-
-    if (!ovaultConfig?.shareToken) {
-        throw new Error(`Missing ovault.shareToken configuration for network '${hre.network.name}'`)
-    }
-
     // Validate that vault contracts are deployed only on hub chain
-    if (!ovaultConfig.isHubChain) {
-        throw new Error(
+    if (!isVaultChain(hre.network.config)) {
+        console.error(
             `Vault contracts can only be deployed on hub chain. Network '${hre.network.name}' is configured as spoke chain (isHubChain: false). Please deploy on a hub chain.`
         )
+        return
     }
 
-    const { name: tokenName, symbol: tokenSymbol } = ovaultConfig.shareToken
+    const assetTokenAddress = await checkAddressOrGetDeployment(hre, assetToken)
 
-    const assetOFTDeployment = await hre.deployments.get(assetOFTContractName)
-
-    const { address: ovaultAddress } = await deploy(ovaultContractName, {
+    const shareTokenConfig = shareToken as TokenDeployConfig
+    const { address: ovaultAddress } = await deploy(oVault.vault, {
         from: deployer,
-        args: [tokenName, tokenSymbol, assetOFTDeployment.address],
+        args: [shareTokenConfig.tokenName, shareTokenConfig.tokenSymbol, assetTokenAddress],
         log: true,
         skipIfAlreadyDeployed: true,
     })
 
-    console.log(`Deployed contract: ${ovaultContractName}, network: ${hre.network.name}, address: ${ovaultAddress}`)
+    console.log(`Deployed contract: ${oVault.vault}, network: ${hre.network.name}, address: ${ovaultAddress}`)
+
+    // Early exit if we only want to deploy the vault
+    // Executing the same without 'ONLY_VAULT=1' will resume the share OFT adapter deployment.
+    if (onlyDeployVault()) return
+
+    const shareAdapterContractName = oVault.shareAdapterContractName
+    if (isContractAddress(shareAdapterContractName)) {
+        throw new Error(`Should be a contract name. Found: ${shareAdapterContractName}`)
+    }
 
     const endpointV2Deployment = await hre.deployments.get('EndpointV2')
-
-    const { address: shareOFTAdapterAddress } = await deploy(shareOFTAdapterContractName, {
+    const { address: shareOFTAdapterAddress } = await deploy(shareAdapterContractName, {
         from: deployer,
         args: [ovaultAddress, endpointV2Deployment.address, deployer],
         log: true,
@@ -60,17 +62,8 @@ const deploy: DeployFunction = async (hre) => {
     })
 
     console.log(
-        `Deployed contract: ${shareOFTAdapterContractName}, network: ${hre.network.name}, address: ${shareOFTAdapterAddress}`
+        `Deployed contract: ${shareAdapterContractName}, network: ${hre.network.name}, address: ${shareOFTAdapterAddress}`
     )
-
-    const { address: composerAddress } = await deploy(composerContractName, {
-        from: deployer,
-        args: [ovaultAddress, assetOFTDeployment.address, shareOFTAdapterAddress],
-        log: true,
-        skipIfAlreadyDeployed: true,
-    })
-
-    console.log(`Deployed contract: ${composerContractName}, network: ${hre.network.name}, address: ${composerAddress}`)
 }
 
 deploy.tags = ['ovault']
