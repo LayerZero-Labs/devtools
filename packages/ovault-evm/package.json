@@ -71,7 +71,7 @@
     "ts-mocha": "^11.1.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.3",
-    "typescript": "^5.8.2"
+    "typescript": "^5.4.4"
   },
   "peerDependencies": {
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.75",
