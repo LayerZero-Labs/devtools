@@ -1,5 +1,5 @@
 import { Box, Text } from "ink";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 
 export interface PenguinSpinnerProps {
   before?: string;
@@ -72,35 +72,13 @@ export const PenguinSpinner: React.FC<PenguinSpinnerProps> = ({
   title = "Sending Transactions",
 }) => {
   const [frameIndex, setFrameIndex] = useState(0);
-  const [isActive, setIsActive] = useState(true);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (!isActive) {
-      return;
-    }
-
-    intervalRef.current = setInterval(() => {
+    const id = setInterval(() => {
       setFrameIndex((prev) => (prev + 1) % PENGUIN_FRAMES.length);
     }, 500);
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    };
-  }, [isActive]);
-
-  useEffect(() => {
-    return () => {
-      setIsActive(false);
-    };
+    return () => clearInterval(id);
   }, []);
-
-  if (!isActive) {
-    return null;
-  }
 
   const currentFrame = PENGUIN_FRAMES[frameIndex] || PENGUIN_FRAMES[0]!;
 
