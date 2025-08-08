@@ -163,7 +163,7 @@ pnpm hardhat lz:deploy --tags asset
 Deploy the vault, composer, and ShareOFT adapter on networks with `isHubChain: true`:
 
 ```bash
-pnpm hardhat lz:deploy --network base --tags ovault
+pnpm hardhat lz:deploy --networks base --tags ovault
 ```
 
 ### 3. Deploy Share OFTs (Spoke Chains Only)
