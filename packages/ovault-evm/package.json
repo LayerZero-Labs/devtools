@@ -19,24 +19,28 @@
   "license": "MIT",
   "type": "module",
   "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/*.js",
+      "import": "./dist/index.js"
+    },
     "./package.json": "./package.json",
     "./artifacts/*.json": {
       "require": "./artifacts/*.json",
       "imports": "./artifacts/*.json"
-    },
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
     }
   },
   "files": [
     "contracts/**/*",
-    "test/**/*"
+    "test/**/*",
+    "src/**/*",
+    "dist/**/*"
   ],
   "scripts": {
     "clean": "rimraf .turbo cache out artifacts",
     "compile": "$npm_execpath compile:forge",
     "compile:forge": "forge build",
+    "prepublishOnly": "npm run sdk:build",
     "sdk:build": "tsc",
     "sdk:start": "tsx src/sdk.ts",
     "sdk:test": "tsx node_modules/mocha/bin/_mocha test/**/*.test.ts",
