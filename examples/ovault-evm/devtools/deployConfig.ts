@@ -1,6 +1,5 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
-// 🎯 Cleaner configuration structure
 export const DEPLOYMENT_CONFIG = {
     // Hub chain configuration
     hub: {
@@ -33,7 +32,6 @@ export const DEPLOYMENT_CONFIG = {
     },
 } as const
 
-// 🎯 Helper functions
 export const isHubChain = (eid: number): boolean => eid === DEPLOYMENT_CONFIG.hub.eid
 export const shouldDeployAsset = (eid: number): boolean => DEPLOYMENT_CONFIG.asset.chains.includes(eid)
 export const shouldDeployShare = (eid: number): boolean => DEPLOYMENT_CONFIG.share.chains.includes(eid)

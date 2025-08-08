@@ -1,4 +1,3 @@
-// 🎯 Cleaner, more focused types
 export interface TokenConfig {
     contract: string
     metadata: {
