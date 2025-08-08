@@ -11,3 +11,9 @@ artifacts/*
 # !artifacts/OFT.sol/
 # !artifacts/OFTAdapter.sol/
 # !artifacts/OFTCore.sol/
+
+
+# sdk 
+.env
+.op.env
+node_modules
