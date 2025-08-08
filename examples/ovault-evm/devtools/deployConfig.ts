@@ -1,43 +1,39 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
-import type { OFTConfigAsset, OFTConfigShare, TokenMetadata, TokenMetadataOrAddress, VaultConfig } from './types'
+// 🎯 Cleaner configuration structure
+export const DEPLOYMENT_CONFIG = {
+    // Hub chain configuration
+    hub: {
+        eid: EndpointId.ARBSEP_V2_TESTNET,
+        contracts: {
+            vault: 'MyERC4626',
+            shareAdapter: 'MyShareOFTAdapter',
+            composer: 'MyOVaultComposer',
+        },
+    },
 
-/// If you have different Assets or Shares per network then you can use an eid mapping to pick them and change deploy script
+    // Asset OFT configuration (deployed on all chains)
+    asset: {
+        contract: 'MyAssetOFT',
+        metadata: {
+            name: 'MyAssetOFT',
+            symbol: 'ASSET',
+        },
+        chains: [EndpointId.OPTSEP_V2_TESTNET, EndpointId.BASESEP_V2_TESTNET, EndpointId.ARBSEP_V2_TESTNET],
+    },
 
-/// @dev If using a pre-deployed OFT for say asset, then use:
-// const assetToken: Token = '0x0000000000000000000000000000000000000000'
-const assetOFT: TokenMetadataOrAddress = {
-    contractName: 'MyAssetOFT',
-    tokenName: 'MyAssetOFT',
-    tokenSymbol: 'ASSET',
-}
+    // Share OFT configuration (only on spoke chains)
+    share: {
+        contract: 'MyShareOFT',
+        metadata: {
+            name: 'MyShareOFT',
+            symbol: 'SHARE',
+        },
+        chains: [EndpointId.OPTSEP_V2_TESTNET, EndpointId.BASESEP_V2_TESTNET], // No hub chain
+    },
+} as const
 
-/// @dev Since the vault is a Share ERC20 it uses this tokenName and tokenSymbol
-const shareOFT: TokenMetadata = {
-    contractName: 'MyShareOFT',
-    tokenName: 'MyShareOFT',
-    tokenSymbol: 'SHARE',
-}
-
-/// @dev If using pre-deployed Vaults, then use the address instead of contractName
-const oVaultConfig: VaultConfig = {
-    eid: EndpointId.ARBSEP_V2_TESTNET,
-    vault: 'MyERC4626',
-    shareAdapterContractName: 'MyShareOFTAdapter',
-    composer: 'MyOVaultComposer',
-}
-
-const assetMesh = [EndpointId.OPTSEP_V2_TESTNET, EndpointId.BASESEP_V2_TESTNET, EndpointId.ARBSEP_V2_TESTNET]
-const shareMesh = [EndpointId.OPTSEP_V2_TESTNET, EndpointId.BASESEP_V2_TESTNET]
-
-const assetConfig: OFTConfigAsset = {
-    oft: assetOFT,
-    networks: assetMesh,
-}
-
-const shareConfig: OFTConfigShare = {
-    oft: shareOFT,
-    networks: shareMesh,
-}
-
-export { assetConfig, shareConfig, oVaultConfig }
+// 🎯 Helper functions
+export const isHubChain = (eid: number): boolean => eid === DEPLOYMENT_CONFIG.hub.eid
+export const shouldDeployAsset = (eid: number): boolean => DEPLOYMENT_CONFIG.asset.chains.includes(eid)
+export const shouldDeployShare = (eid: number): boolean => DEPLOYMENT_CONFIG.share.chains.includes(eid)
