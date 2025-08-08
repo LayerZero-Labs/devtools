@@ -2,9 +2,8 @@ import assert from 'assert'
 
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-import { type NetworkConfigOvaultExtension } from '../type-extensions'
-
-const shareOFTContractName = 'MyShareOFT'
+import { shareToken } from './tokenConfig'
+import { TokenDeployConfig, isContractAddress, isVaultChain } from './types'
 
 const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
@@ -18,25 +17,20 @@ const deploy: DeployFunction = async (hre) => {
     console.log(`Deployer: ${deployer}`)
 
     // Get share token configuration from ovault config
-    const networkConfig = hre.network.config as NetworkConfigOvaultExtension
-    const ovaultConfig = networkConfig.ovault
-
-    if (!ovaultConfig?.shareToken) {
-        throw new Error(`Missing ovault.shareToken configuration for network '${hre.network.name}'`)
+    if (isVaultChain(hre.network.config)) {
+        console.error(`Skipping ShareOFT deployment on vault network since it needs an OFTAdapter`)
+        return
     }
 
-    // Validate that standalone ShareOFT is deployed only on spoke chains
-    if (ovaultConfig.isHubChain) {
-        throw new Error(
-            `Standalone ShareOFT can only be deployed on spoke chains. Network '${hre.network.name}' is configured as hub chain (isHubChain: true). Please deploy on a spoke chain.`
-        )
+    if (isContractAddress(shareToken)) {
+        throw new Error(`Found contract address for share token. Expected TokenDeployConfig. Found: ${shareToken}`)
     }
 
-    const { name: tokenName, symbol: tokenSymbol } = ovaultConfig.shareToken
+    const { contractName, tokenName, tokenSymbol } = shareToken as TokenDeployConfig
 
     const endpointV2Deployment = await hre.deployments.get('EndpointV2')
 
-    const { address } = await deploy(shareOFTContractName, {
+    const { address } = await deploy(contractName, {
         from: deployer,
         args: [
             tokenName, // name
@@ -48,7 +42,7 @@ const deploy: DeployFunction = async (hre) => {
         skipIfAlreadyDeployed: true,
     })
 
-    console.log(`Deployed contract: ${shareOFTContractName}, network: ${hre.network.name}, address: ${address}`)
+    console.log(`Deployed contract: ${contractName}, network: ${hre.network.name}, address: ${address}`)
 }
 
 deploy.tags = ['share']
