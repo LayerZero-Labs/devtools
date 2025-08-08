@@ -13,6 +13,10 @@ import { HardhatUserConfig, HttpNetworkAccountsUserConfig } from 'hardhat/types'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
+import './type-extensions'
+import './tasks/sendOFT'
+import './tasks/sendOVaultComposer'
+
 // Set your preferred authentication method
 //
 // If you prefer using a mnemonic, set a MNEMONIC environment variable
@@ -52,21 +56,67 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
-        'optimism-sepolia': {
-            eid: EndpointId.OPTSEP_V2_TESTNET.valueOf(),
-            url: process.env.RPC_URL_OPTIMISM_SEPOLIA || 'https://sepolia.optimism.io',
+        optimism: {
+            eid: EndpointId.OPTIMISM_V2_MAINNET.valueOf(),
+            url: process.env.RPC_URL_OPTIMISM || 'https://optimism.gateway.tenderly.co',
             accounts,
+            ovault: {
+                isHubChain: false, // Optimism as spoke chain
+                assetToken: {
+                    name: 'MyAssetOFT',
+                    symbol: 'ASSET',
+                },
+                shareToken: {
+                    name: 'MyShareOFT',
+                    symbol: 'SHARE',
+                },
+            },
         },
-        'arbitrum-sepolia': {
-            eid: EndpointId.ARBSEP_V2_TESTNET.valueOf(),
-            url: process.env.RPC_URL_ARBITRUM_SEPOLIA || 'https://sepolia-rollup.arbitrum.io/rpc',
+        base: {
+            eid: EndpointId.BASE_V2_MAINNET.valueOf(),
+            url: process.env.RPC_URL_BASE || 'https://base.gateway.tenderly.co',
             accounts,
+            ovault: {
+                isHubChain: true, // Hub chain with vault
+                assetToken: {
+                    name: 'MyAssetOFT',
+                    symbol: 'ASSET',
+                },
+                shareToken: {
+                    name: 'MyShareOFT',
+                    symbol: 'SHARE',
+                },
+            },
         },
-        'base-sepolia': {
-            eid: EndpointId.BASESEP_V2_TESTNET.valueOf(),
-            url: process.env.RPC_URL_BASE_SEPOLIA || 'https://sepolia.base.org',
+        arbitrum: {
+            eid: EndpointId.ARBITRUM_V2_MAINNET.valueOf(),
+            url: process.env.RPC_URL_ARB || 'https://arbitrum.gateway.tenderly.co',
             accounts,
+            ovault: {
+                isHubChain: false, // Spoke chain with both asset and share OFTs
+                assetToken: {
+                    name: 'MyAssetOFT',
+                    symbol: 'ASSET',
+                },
+                shareToken: {
+                    name: 'MyShareOFT',
+                    symbol: 'SHARE',
+                },
+            },
         },
+        // Example: Share OFT only network (uncomment to use)
+        // polygon: {
+        //     eid: EndpointId.POLYGON_V2_MAINNET.valueOf(),
+        //     url: process.env.RPC_URL_POLYGON || 'https://polygon.gateway.tenderly.co',
+        //     accounts,
+        //     ovault: {
+        //         isHubChain: false, // Spoke chain with share OFT only
+        //         shareToken: {
+        //             name: 'MyShareOFT',
+        //             symbol: 'SHARE',
+        //         },
+        //     },
+        // },
         hardhat: {
             // Need this for testing because TestHelperOz5.sol is exceeding the compiled contract size limit
             allowUnlimitedContractSize: true,

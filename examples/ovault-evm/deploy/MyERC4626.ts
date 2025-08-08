@@ -2,16 +2,14 @@ import assert from 'assert'
 
 import { type DeployFunction } from 'hardhat-deploy/types'
 
+import { type NetworkConfigOvaultExtension } from '../type-extensions'
+
 import { assetOFTContractName } from './MyAssetOFT'
 
-export const ovaultContractName = 'MyOVault'
-const tokenName = 'MyMockShareOFT'
-const tokenSymbol = 'MockShare'
+export const ovaultContractName = 'MyERC4626'
 
 const shareOFTAdapterContractName = 'MyShareOFTAdapter'
 const composerContractName = 'MyOVaultComposer'
-
-const refundOverpayAddress = '0x0000000000000000000000000000000000000000'
 
 const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
@@ -24,11 +22,24 @@ const deploy: DeployFunction = async (hre) => {
     console.log(`Network: ${hre.network.name}`)
     console.log(`Deployer: ${deployer}`)
 
-    const assetOFTDeployment = await hre.deployments.get(assetOFTContractName)
+    // Get share token configuration from ovault config
+    const networkConfig = hre.network.config as NetworkConfigOvaultExtension
+    const ovaultConfig = networkConfig.ovault
 
-    if (refundOverpayAddress === '0x0000000000000000000000000000000000000000') {
-        throw new Error('Refund overpay address is not set')
+    if (!ovaultConfig?.shareToken) {
+        throw new Error(`Missing ovault.shareToken configuration for network '${hre.network.name}'`)
     }
+
+    // Validate that vault contracts are deployed only on hub chain
+    if (!ovaultConfig.isHubChain) {
+        throw new Error(
+            `Vault contracts can only be deployed on hub chain. Network '${hre.network.name}' is configured as spoke chain (isHubChain: false). Please deploy on a hub chain.`
+        )
+    }
+
+    const { name: tokenName, symbol: tokenSymbol } = ovaultConfig.shareToken
+
+    const assetOFTDeployment = await hre.deployments.get(assetOFTContractName)
 
     const { address: ovaultAddress } = await deploy(ovaultContractName, {
         from: deployer,
@@ -54,7 +65,7 @@ const deploy: DeployFunction = async (hre) => {
 
     const { address: composerAddress } = await deploy(composerContractName, {
         from: deployer,
-        args: [ovaultAddress, assetOFTDeployment.address, shareOFTAdapterAddress, refundOverpayAddress],
+        args: [ovaultAddress, assetOFTDeployment.address, shareOFTAdapterAddress],
         log: true,
         skipIfAlreadyDeployed: true,
     })

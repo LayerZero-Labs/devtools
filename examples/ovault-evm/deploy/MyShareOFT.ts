@@ -2,11 +2,9 @@ import assert from 'assert'
 
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-import { ovaultContractName } from './MyOVault'
+import { type NetworkConfigOvaultExtension } from '../type-extensions'
 
 const shareOFTContractName = 'MyShareOFT'
-const tokenName = 'MyMockShareOFT'
-const tokenSymbol = 'MockShare'
 
 const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
@@ -19,12 +17,22 @@ const deploy: DeployFunction = async (hre) => {
     console.log(`Network: ${hre.network.name}`)
     console.log(`Deployer: ${deployer}`)
 
-    const ovaultDeployment = await hre.deployments.getOrNull(ovaultContractName)
-    if (ovaultDeployment) {
+    // Get share token configuration from ovault config
+    const networkConfig = hre.network.config as NetworkConfigOvaultExtension
+    const ovaultConfig = networkConfig.ovault
+
+    if (!ovaultConfig?.shareToken) {
+        throw new Error(`Missing ovault.shareToken configuration for network '${hre.network.name}'`)
+    }
+
+    // Validate that standalone ShareOFT is deployed only on spoke chains
+    if (ovaultConfig.isHubChain) {
         throw new Error(
-            `OVault contract deployed on network ${hre.network.name}. This network can only support ShareOFTAdapter`
+            `Standalone ShareOFT can only be deployed on spoke chains. Network '${hre.network.name}' is configured as hub chain (isHubChain: true). Please deploy on a spoke chain.`
         )
     }
+
+    const { name: tokenName, symbol: tokenSymbol } = ovaultConfig.shareToken
 
     const endpointV2Deployment = await hre.deployments.get('EndpointV2')
 
