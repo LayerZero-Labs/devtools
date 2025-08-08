@@ -6,6 +6,7 @@ export async function deployContract(
     hre: HardhatRuntimeEnvironment,
     contractName: string,
     deployer: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     args: any[],
     options: {
         skipIfAlreadyDeployed?: boolean
