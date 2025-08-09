@@ -1,4 +1,3 @@
-// tasks/simple-dvn-mock/utils/lzReceive.ts
 import { Contract } from 'ethers'
 
 import { ProcessedMessage, SimpleDvnMockTaskArgs, generateGuid, logTaskInfo, processMessage } from './common'

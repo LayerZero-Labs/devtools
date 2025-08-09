@@ -21,19 +21,26 @@ const arbitrumContract: OmniPointHardhat = {
     contractName: 'MyOFTMock', // Note: change this to 'MyOFT' or your production contract name
 }
 
-// TODO: Fill in your SimpleDVNMock addresses from deployment files
+// TODO: Fill in your Simple Workers addresses from deployment files
 const simpleDvnAddressOptimism = '' // from deployments/optimism-testnet/SimpleDVNMock.json
 const simpleDvnAddressArbitrum = '' // from deployments/arbitrum-testnet/SimpleDVNMock.json
+const simpleExecutorAddressOptimism = '' // from deployments/optimism-testnet/SimpleExecutorMock.json
+const simpleExecutorAddressArbitrum = '' // from deployments/arbitrum-testnet/SimpleExecutorMock.json
 
-// Create a custom fetchMetadata implementation to add SimpleDVNMock
+// Create a custom fetchMetadata implementation to add Simple Workers (SimpleDVNMock and SimpleExecutorMock)
 const customFetchMetadata = async (): Promise<IMetadata> => {
     // Get the default metadata
     const defaultMetadata = await defaultFetchMetadata()
 
-    // Validate that SimpleDVN addresses are provided
-    if (!simpleDvnAddressOptimism || !simpleDvnAddressArbitrum) {
+    // Validate that Simple Workers addresses are provided
+    if (
+        !simpleDvnAddressOptimism ||
+        !simpleDvnAddressArbitrum ||
+        !simpleExecutorAddressOptimism ||
+        !simpleExecutorAddressArbitrum
+    ) {
         throw new Error(
-            'SimpleDVN addresses are required. Please set both simpleDvnAddressOptimism and simpleDvnAddressArbitrum variables with addresses from deployment files'
+            'Simple Workers addresses are required. Please set simpleDvnAddressOptimism, simpleDvnAddressArbitrum, simpleExecutorAddressOptimism, and simpleExecutorAddressArbitrum variables with addresses from deployment files'
         )
     }
 
@@ -72,10 +79,30 @@ const customFetchMetadata = async (): Promise<IMetadata> => {
         'optimism-sepolia': {
             ...optimismSepoliaChain,
             dvns: optimismSepoliaDVNsWithCustom,
+            deployments: [
+                ...(optimismSepoliaChain.deployments || []),
+                {
+                    eid: '40232',
+                    chainKey: 'optimism-sepolia',
+                    stage: 'testnet',
+                    version: 2,
+                    executor: { address: simpleExecutorAddressOptimism },
+                },
+            ],
         },
         'arbitrum-sepolia': {
             ...arbitrumSepoliaChain,
             dvns: arbitrumSepoliaDVNsWithCustom,
+            deployments: [
+                ...(arbitrumSepoliaChain.deployments || []),
+                {
+                    eid: '40231',
+                    chainKey: 'arbitrum-sepolia',
+                    stage: 'testnet',
+                    version: 2,
+                    executor: { address: simpleExecutorAddressArbitrum },
+                },
+            ],
         },
     }
 }

@@ -1,4 +1,3 @@
-// tasks/simple-dvn-mock/utils/setReceiveConfig.ts
 import { Contract, ethers } from 'ethers'
 
 import { Uln302 } from '@layerzerolabs/protocol-devtools-evm'

@@ -1,4 +1,3 @@
-// tasks/simple-dvn-mock/utils/processReceive.ts
 import { Contract } from 'ethers'
 
 import { commit } from './commit'

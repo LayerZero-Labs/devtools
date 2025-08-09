@@ -8,8 +8,8 @@ import { OmniPointHardhat, types as cliTypes, createGetHreByEid } from '@layerze
 import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 
 import { EvmArgs, sendEvm } from './sendEvm'
-import { SimpleDvnMockTaskArgs } from './simple-dvn-mock/utils/common'
-import { processReceive } from './simple-dvn-mock/utils/processReceive'
+import { SimpleDvnMockTaskArgs } from './simple-workers-mock/utils/common'
+import { processReceive } from './simple-workers-mock/utils/processReceive'
 import { SendResult } from './types'
 import { DebugLogger, KnownOutputs, KnownWarnings, getBlockExplorerLink } from './utils'
 

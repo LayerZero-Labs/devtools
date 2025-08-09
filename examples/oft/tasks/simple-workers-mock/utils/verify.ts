@@ -1,4 +1,3 @@
-// tasks/simple-dvn-mock/utils/verify.ts
 import { Contract } from 'ethers'
 
 import { SimpleDvnMockTaskArgs, logTaskInfo, processMessage } from './common'

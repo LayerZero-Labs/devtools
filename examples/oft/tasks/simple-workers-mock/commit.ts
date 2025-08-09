@@ -1,12 +1,11 @@
-// tasks/simple-dvn-mock/verify.ts
 import { Contract } from 'ethers'
 import { task, types } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
+import { commit } from './utils/commit'
 import { SimpleDvnMockTaskArgs } from './utils/common'
-import { verify } from './utils/verify'
 
-task('lz:simple-dvn:verify', 'Call verify() on SimpleDVNMock to verify a message')
+task('lz:simple-dvn:commit', 'Call commit() on SimpleDVNMock to commit ULN verification for message')
     .addParam('srcEid', 'Source chain EID', undefined, types.int)
     .addParam('srcOapp', 'Sender app on source chain (hex)', undefined, types.string)
     .addParam('nonce', 'Channel nonce (uint64)', undefined, types.string)
@@ -25,5 +24,5 @@ task('lz:simple-dvn:verify', 'Call verify() on SimpleDVNMock to verify a message
         const dstOappDep = await hre.deployments.get(args.dstContractName || 'MyOFTMock')
         const dstOftContract = new Contract(dstOappDep.address, dstOappDep.abi, signer)
 
-        await verify(dvnContract, dstOftContract, args)
+        await commit(dvnContract, dstOftContract, args)
     })

@@ -1,6 +1,4 @@
-// tasks/simple-dvn-mock/utils/common.ts
 import { Contract, ethers } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils'
 
 import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 
@@ -36,7 +34,7 @@ export async function processMessage(dstOftContract: Contract, args: SimpleDvnMo
     const sharedDecimals: number = await dstOftContract.sharedDecimals()
 
     // Parse amount using shared decimals
-    const amountUnits = parseUnits(amount, sharedDecimals)
+    const amountUnits = ethers.utils.parseUnits(amount, sharedDecimals)
 
     // Format addresses to bytes32
     const srcOAppB32 = addressToBytes32(srcOapp) as unknown as string
