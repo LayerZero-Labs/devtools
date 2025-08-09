@@ -9,6 +9,9 @@ export const DEPLOYMENT_CONFIG = {
             shareAdapter: 'MyShareOFTAdapter',
             composer: 'MyOVaultComposer',
         },
+        // IF YOU HAVE A PRE-DEPLOYED ASSET, SET THE ADDRESS HERE
+        // this will effectively skip the deployment of the asset OFT, and use this instead.
+        assetAddress: undefined, // Set to '0x...' to use existing asset
     },
 
     // Asset OFT configuration (deployed on all chains OR use existing address)
@@ -19,9 +22,6 @@ export const DEPLOYMENT_CONFIG = {
             symbol: 'ASSET',
         },
         chains: [EndpointId.OPTSEP_V2_TESTNET, EndpointId.BASESEP_V2_TESTNET, EndpointId.ARBSEP_V2_TESTNET],
-        // IF YOU HAVE A PRE-DEPLOYED ASSET, SET THE ADDRESS HERE
-        // this will effectively skip the deployment of the asset OFT, and use this instead.
-        existingAddress: undefined, // Set to '0x...' to use existing asset
     },
 
     // Share OFT configuration (only on spoke chains)
@@ -37,5 +37,5 @@ export const DEPLOYMENT_CONFIG = {
 
 export const isVaultChain = (eid: number): boolean => eid === DEPLOYMENT_CONFIG.vault.eid
 export const shouldDeployAsset = (eid: number): boolean =>
-    !DEPLOYMENT_CONFIG.asset.existingAddress && DEPLOYMENT_CONFIG.asset.chains.includes(eid)
+    !DEPLOYMENT_CONFIG.vault.assetAddress && DEPLOYMENT_CONFIG.asset.chains.includes(eid)
 export const shouldDeployShare = (eid: number): boolean => DEPLOYMENT_CONFIG.share.chains.includes(eid)

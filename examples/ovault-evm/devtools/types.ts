@@ -5,7 +5,6 @@ export interface TokenConfig {
         symbol: string
     }
     chains: number[]
-    existingAddress?: string
 }
 
 export interface VaultConfig {
@@ -15,6 +14,7 @@ export interface VaultConfig {
         shareAdapter: string
         composer: string
     }
+    assetAddress?: string // Optional pre-deployed asset address
 }
 
 export interface DeploymentConfig {

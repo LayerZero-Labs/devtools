@@ -69,8 +69,8 @@ const deploy: DeployFunction = async (hre) => {
         // 🎯 Get asset address (existing or deployed)
         let assetOFTAddress: string
 
-        if (DEPLOYMENT_CONFIG.asset.existingAddress) {
-            assetOFTAddress = DEPLOYMENT_CONFIG.asset.existingAddress
+        if (DEPLOYMENT_CONFIG.vault.assetAddress) {
+            assetOFTAddress = DEPLOYMENT_CONFIG.vault.assetAddress
             console.log(`Using existing asset address: ${assetOFTAddress}`)
         } else {
             // Use deployed address or get from deployments
