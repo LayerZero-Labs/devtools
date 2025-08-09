@@ -6,18 +6,18 @@ import { OAppEnforcedOption } from '@layerzerolabs/toolbox-hardhat'
 import type { OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
 const optimismContract: OmniPointHardhat = {
-    eid: EndpointId.OPTIMISM_V2_MAINNET.valueOf(),
+    eid: EndpointId.OPTSEP_V2_TESTNET,
     contractName: 'MyShareOFT',
 }
 
 const baseContract: OmniPointHardhat = {
-    eid: EndpointId.BASE_V2_MAINNET.valueOf(),
-    contractName: 'MyShareOFTAdapter',
+    eid: EndpointId.BASESEP_V2_TESTNET,
+    contractName: 'MyShareOFT',
 }
 
 const arbitrumContract: OmniPointHardhat = {
-    eid: EndpointId.ARBITRUM_V2_MAINNET.valueOf(),
-    contractName: 'MyShareOFT',
+    eid: EndpointId.ARBSEP_V2_TESTNET,
+    contractName: 'MyShareOFTAdapter',
 }
 
 // To connect all the above chains to each other, we need the following pathways:
