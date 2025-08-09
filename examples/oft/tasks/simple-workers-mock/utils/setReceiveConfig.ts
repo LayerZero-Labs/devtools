@@ -24,6 +24,15 @@ interface SetConfigParam {
     config: string
 }
 
+// Executor configuration
+interface ExecutorConfig {
+    maxMessageSize: number
+    executorAddress: string
+}
+
+const CONFIG_TYPE_EXECUTOR = 1
+const CONFIG_TYPE_ULN = 2
+
 /**
  * Receive configuration setup
  */
@@ -35,7 +44,7 @@ export async function setReceiveConfig(
     const { srcEid, contractName } = args
     const { oappAddress, receiveLibrary, dvnAddress, executorAddress, provider } = params
 
-    console.log(`\n📋 Setting up receive configuration for ${contractName}`)
+    console.log(`\n📋 Setting up executor receive configuration for ${contractName}`)
     console.log(`   OApp:           ${oappAddress}`)
     console.log(`   Source EID:     ${srcEid}`)
     console.log(`   Receive Lib:    ${receiveLibrary}`)
@@ -52,9 +61,16 @@ export async function setReceiveConfig(
     }
 
     // Set up ULN SDK
-    const uln302 = new Uln302(provider, {
+    const uln302 = new Uln302(provider as ethers.providers.BaseProvider, {
         eid: srcEid,
         address: receiveLibrary,
+    })
+
+    const MAX_MESSAGE_SIZE = 10000
+
+    const excutorConfig = uln302.encodeExecutorConfig({
+        maxMessageSize: MAX_MESSAGE_SIZE,
+        executor: executorAddress,
     })
 
     // Configure ULN with SimpleDVNMock using V2 interface
@@ -68,7 +84,12 @@ export async function setReceiveConfig(
     const setConfigParams: SetConfigParam[] = [
         {
             eid: srcEid,
-            configType: 2, // CONFIG_TYPE_ULN
+            configType: CONFIG_TYPE_EXECUTOR,
+            config: excutorConfig,
+        },
+        {
+            eid: srcEid,
+            configType: CONFIG_TYPE_ULN,
             config: ulnConfig,
         },
     ]
@@ -83,7 +104,7 @@ export async function setReceiveConfig(
         console.log(`\n🎉 Receive configuration completed successfully!`)
         console.log(`   Source EID ${srcEid} → Local OApp ${contractName}`)
         console.log(`   Using SimpleDVNMock: ${dvnAddress}`)
-        console.log(`   Using Executor: ${executorAddress}\n`)
+        console.log(`   Using SimpleExecutorMock: ${executorAddress}\n`)
 
         return receipt
     } catch (error: unknown) {

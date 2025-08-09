@@ -2,16 +2,14 @@ import { Contract } from 'ethers'
 import { task, types } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
-import { SetReceiveConfigArgs, setReceiveConfig } from './utils/setReceiveConfig'
+import { SetSendConfigArgs, setSendConfig } from './utils/setSendConfig'
 
-// note: this task should be removed after https://github.com/LayerZero-Labs/devtools/pull/1637 is merged
-// after the PR is merged, the executor can be set via LZ Config, just like DVN
-task('lz:simple-executor:set-receive-config', 'Set receive configuration for SimpleExecutorMock')
-    .addParam('srcEid', 'Source chain EID', undefined, types.int)
+task('lz:simple-executor:setSendConfig', 'Set send configuration for SimpleExecutorMock')
+    .addParam('dstEid', 'Destination chain EID', undefined, types.int)
     .addParam('contractName', 'Name of the contract in deployments', 'MyOFTMock', types.string)
     .addOptionalParam('dvn', 'DVN address (defaults to SimpleDVNMock)', undefined, types.string)
     .addOptionalParam('executorAddress', 'Executor address (defaults to SimpleExecutorMock)', undefined, types.string)
-    .setAction(async (args: SetReceiveConfigArgs, hre: HardhatRuntimeEnvironment) => {
+    .setAction(async (args: SetSendConfigArgs, hre: HardhatRuntimeEnvironment) => {
         const signer = (await hre.ethers.getSigners())[0]
 
         // Get contract deployment
@@ -22,9 +20,9 @@ task('lz:simple-executor:set-receive-config', 'Set receive configuration for Sim
         const endpointDep = await hre.deployments.get('EndpointV2')
         const endpointContract = new Contract(endpointDep.address, endpointDep.abi, signer)
 
-        // Get receive library (ReceiveUln302)
-        const receiveLibDep = await hre.deployments.get('ReceiveUln302')
-        const receiveLibrary = receiveLibDep.address
+        // Get send library (SendUln302)
+        const sendLibDep = await hre.deployments.get('SendUln302')
+        const sendLibrary = sendLibDep.address
 
         // Get DVN address (default to SimpleDVNMock)
         let dvnAddress = args.dvn
@@ -40,11 +38,11 @@ task('lz:simple-executor:set-receive-config', 'Set receive configuration for Sim
             executorAddress = executorDep.address
         }
 
-        await setReceiveConfig(
+        await setSendConfig(
             endpointContract,
             {
                 oappAddress: contract.address,
-                receiveLibrary,
+                sendLibrary,
                 dvnAddress,
                 executorAddress,
                 provider: hre.ethers.provider,
