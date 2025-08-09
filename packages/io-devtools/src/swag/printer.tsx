@@ -48,16 +48,11 @@ export const printRecord = (data: RecordData): void =>
  *
  * @see {@link printRecord}
  *
- * @param {RecordData[]} data Array of rows
+ * @param {TableRow} data Array of rows
  * @returns {void}
  */
-export const printRecords = (data: RecordData[]): void => {
-  const instance = render(<RecordList data={data} />, {
-    // Prevent clearing the terminal to preserve history
-    debug: true,
-  });
-  instance.unmount();
-};
+export const printRecords = (data: RecordData[]): void =>
+  render(<RecordList data={data} />).unmount();
 
 /**
  * Renders a standard, vertical table without any row labels:
