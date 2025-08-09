@@ -1,0 +1,88 @@
+{
+  "name": "@layerzerolabs/ovault-evm",
+  "version": "0.0.1",
+  "description": "LayerZero Labs reference EVM OVault + composer implementation",
+  "keywords": [
+    "LayerZero",
+    "OVault",
+    "ERC4626",
+    "Composer",
+    "OmniChain",
+    "EndpointV2",
+    "EVM"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LayerZero-Labs/devtools.git",
+    "directory": "packages/ovault-evm"
+  },
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/*.js",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json",
+    "./artifacts/*.json": {
+      "require": "./artifacts/*.json",
+      "imports": "./artifacts/*.json"
+    }
+  },
+  "files": [
+    "contracts/**/*",
+    "test/**/*",
+    "src/**/*",
+    "dist/**/*",
+    "artifacts/**/*.{json,sol}"
+  ],
+  "scripts": {
+    "clean": "rimraf .turbo cache out artifacts",
+    "compile": "$npm_execpath compile:forge",
+    "compile:forge": "forge build",
+    "prepublishOnly": "npm run sdk:build",
+    "sdk:build": "tsc",
+    "sdk:start": "tsx src/sdk.ts",
+    "sdk:test": "tsx node_modules/mocha/bin/_mocha test/**/*.test.ts",
+    "test": "$npm_execpath test:forge",
+    "test:forge": "forge test"
+  },
+  "dependencies": {
+    "@layerzerolabs/lz-definitions": "^3.0.75",
+    "@layerzerolabs/lz-v2-utilities": "^3.0.75",
+    "@layerzerolabs/scan-client-v2": "^0.0.1",
+    "redaxios": "^0.5.1",
+    "viem": "^2.33.1"
+  },
+  "devDependencies": {
+    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.75",
+    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.75",
+    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.75",
+    "@layerzerolabs/oapp-evm": "^0.3.2",
+    "@layerzerolabs/oft-evm": "^3.1.4",
+    "@layerzerolabs/test-devtools-evm-foundry": "~6.0.3",
+    "@layerzerolabs/toolbox-foundry": "^0.1.12",
+    "@openzeppelin/contracts": "^5.0.2",
+    "@openzeppelin/contracts-upgradeable": "^5.0.2",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.1.0",
+    "mocha": "^11.7.1",
+    "rimraf": "^5.0.5",
+    "ts-mocha": "^11.1.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
+    "typescript": "^5.4.4"
+  },
+  "peerDependencies": {
+    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.75",
+    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.75",
+    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.75",
+    "@layerzerolabs/oapp-evm": "^0.3.2",
+    "@openzeppelin/contracts": "^4.8.1 || ^5.0.0",
+    "@openzeppelin/contracts-upgradeable": "^4.8.1 || ^5.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
