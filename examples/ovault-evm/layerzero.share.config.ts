@@ -12,12 +12,12 @@ const optimismContract: OmniPointHardhat = {
 
 const baseContract: OmniPointHardhat = {
     eid: EndpointId.BASESEP_V2_TESTNET,
-    contractName: 'MyShareOFTAdapter',
+    contractName: 'MyShareOFT',
 }
 
 const arbitrumContract: OmniPointHardhat = {
     eid: EndpointId.ARBSEP_V2_TESTNET,
-    contractName: 'MyShareOFT',
+    contractName: 'MyShareOFTAdapter',
 }
 
 // To connect all the above chains to each other, we need the following pathways:
