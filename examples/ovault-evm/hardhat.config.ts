@@ -16,8 +16,6 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import './tasks/sendOFT'
 import './tasks/sendOVaultComposer'
 
-import { validateOVaultNetworks } from './type-extensions'
-
 // Set your preferred authentication method
 //
 // If you prefer using a mnemonic, set a MNEMONIC environment variable
@@ -56,28 +54,27 @@ const config: HardhatUserConfig = {
             },
         ],
     },
-    networks: validateOVaultNetworks({
+    networks: {
         optimism: {
-            eid: EndpointId.OPTIMISM_V2_MAINNET,
-            url: process.env.RPC_URL_OPTIMISM || 'https://optimism.gateway.tenderly.co',
+            eid: EndpointId.OPTSEP_V2_TESTNET,
+            url: process.env.RPC_URL_OPTIMISM_TESTNET || 'https://optimism.gateway.tenderly.co',
             accounts,
         },
         base: {
-            eid: EndpointId.BASE_V2_MAINNET,
-            url: process.env.RPC_URL_BASE || 'https://base.gateway.tenderly.co',
+            eid: EndpointId.BASESEP_V2_TESTNET,
+            url: process.env.RPC_URL_BASE_TESTNET || 'https://base.gateway.tenderly.co',
             accounts,
-            isVaultChain: true,
         },
         arbitrum: {
-            eid: EndpointId.ARBITRUM_V2_MAINNET,
-            url: process.env.RPC_URL_ARB || 'https://arbitrum.gateway.tenderly.co',
+            eid: EndpointId.ARBSEP_V2_TESTNET,
+            url: process.env.RPC_URL_ARBITRUM_TESTNET || 'https://arbitrum.gateway.tenderly.co',
             accounts,
         },
         hardhat: {
             // Need this for testing because TestHelperOz5.sol is exceeding the compiled contract size limit
             allowUnlimitedContractSize: true,
         },
-    }),
+    },
     namedAccounts: {
         deployer: {
             default: 0, // wallet address of index[0], of the mnemonic in .env
