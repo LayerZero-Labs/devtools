@@ -4,7 +4,12 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { SetSendConfigArgs, setSendConfig } from './utils/setSendConfig'
 
-task('lz:simple-executor:setSendConfig', 'Set send configuration for SimpleExecutorMock')
+// NOTE: This task is temporary and only needed while the https://github.com/LayerZero-Labs/devtools/pull/1637is being reviewed for merge.
+// Once the PR is merged, executors can be specified in the LZ Config, just like DVN
+task(
+    'lz:simple-workers:set-send-config',
+    'Set send configuration for Simple Workers (SimpleDVNMock and SimpleExecutorMock)'
+)
     .addParam('dstEid', 'Destination chain EID', undefined, types.int)
     .addParam('contractName', 'Name of the contract in deployments', 'MyOFTMock', types.string)
     .addOptionalParam('dvn', 'DVN address (defaults to SimpleDVNMock)', undefined, types.string)

@@ -93,13 +93,33 @@ const simpleExecutorAddressArbitrum = "0xdef0..."; // Your Arbitrum SimpleExecut
 
 Now you can run the wire command to configure your OFT connections with the Simple Workers:
 
-```
-pnpm hardhat lz:wire
+```bash
+pnpm hardhat lz:oapp:wire
 ```
 
 This will configure your contracts to use Simple Workers (SimpleDVNMock and SimpleExecutorMock) as the only required workers (bypassing LayerZero Labs DVN entirely).
 
-### Step 5: Send 1 OFT from **Optimism Sepolia** to **Arbitrum Sepolia**
+### Step 5: Configure Executor Settings
+
+Note that this task will not be needed to be run after https://github.com/LayerZero-Labs/devtools/pull/1637 is merged
+
+After wiring, you need to configure the executor settings for both send and receive operations on each chain:
+
+**Set Send Configuration (for outgoing messages):**
+
+```bash
+# On Optimism Sepolia (to send to Arbitrum)
+pnpm hardhat lz:simple-workers:set-send-config --dst-eid 40231 --contract-name MyOFTMock --network optimism-testnet
+
+# On Arbitrum Sepolia (to send to Optimism)
+pnpm hardhat lz:simple-workers:set-send-config --dst-eid 40232 --contract-name MyOFTMock --network arbitrum-testnet
+```
+
+These commands will:
+- Set up SimpleExecutorMock as the executor for message processing
+- Use 1 confirmation and appropriate gas limits for testing
+
+### Step 6: Send 1 OFT from **Optimism Sepolia** to **Arbitrum Sepolia**
 
 **Use the `lz:oft:send` task with the `--simple-workers` flag to send OFT tokens and automatically process them through SimpleWorkers:**
 

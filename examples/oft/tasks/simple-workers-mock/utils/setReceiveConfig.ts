@@ -82,11 +82,11 @@ export async function setReceiveConfig(
     })
 
     const setConfigParams: SetConfigParam[] = [
-        {
-            eid: srcEid,
-            configType: CONFIG_TYPE_EXECUTOR,
-            config: excutorConfig,
-        },
+        // {
+        //     eid: srcEid,
+        //     configType: CONFIG_TYPE_EXECUTOR,
+        //     config: excutorConfig,
+        // },
         {
             eid: srcEid,
             configType: CONFIG_TYPE_ULN,
@@ -94,7 +94,7 @@ export async function setReceiveConfig(
         },
     ]
 
-    console.log(`Setting ULN and Executor config...`)
+    console.log(`Setting ULN config...`)
 
     try {
         const tx = await endpointContract.setConfig(oappAddress, receiveLibrary, setConfigParams)

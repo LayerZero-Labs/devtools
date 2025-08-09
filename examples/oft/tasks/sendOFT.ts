@@ -56,7 +56,7 @@ interface MasterArgs {
     /** EVM: 20-byte hex address */
     oftAddress?: string
     /** DEVELOPMENT ONLY: Enable SimpleDVN manual verification flow (not for mainnet use) */
-    simpleDvn?: boolean
+    simpleWorkers?: boolean
 }
 
 task('lz:oft:send', 'Sends OFT tokens cross‐chain from EVM chains')
@@ -97,8 +97,8 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from EVM chains')
         types.string
     )
     .addFlag(
-        'simpleDvn',
-        'DEVELOPMENT ONLY: Enable SimpleDVN manual verification flow after sending (not for mainnet use)'
+        'simpleWorkers',
+        'DEVELOPMENT ONLY: Enable SimpleWorkers manual verification and execution flow after sending (not for mainnet use)'
     )
     .setAction(async (args: MasterArgs, hre: HardhatRuntimeEnvironment) => {
         const chainType = endpointIdToChainType(args.srcEid)
@@ -142,7 +142,7 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from EVM chains')
         )
 
         // SimpleDVN processing (development only) - runs at the very end
-        if (args.simpleDvn) {
+        if (args.simpleWorkers) {
             console.log('\n🧪 SimpleDVN Development Mode Enabled')
             console.log('⚠️  WARNING: This is for development/testing only. Do NOT use on mainnet.')
 

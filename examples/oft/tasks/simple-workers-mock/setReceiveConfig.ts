@@ -4,9 +4,12 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { SetReceiveConfigArgs, setReceiveConfig } from './utils/setReceiveConfig'
 
-// note: this task should be removed after https://github.com/LayerZero-Labs/devtools/pull/1637 is merged
-// after the PR is merged, the executor can be set via LZ Config, just like DVN
-task('lz:simple-executor:set-receive-config', 'Set receive configuration for SimpleExecutorMock')
+// NOTE: This task is temporary and only needed while https://github.com/LayerZero-Labs/devtools/pull/1637 is being reviewed for merge.
+// Once merged into the main devtools, this functionality will be integrated into the core tooling.
+task(
+    'lz:simple-workers:set-receive-config',
+    'Set receive configuration for Simple Workers (SimpleDVNMock and SimpleExecutorMock)'
+)
     .addParam('srcEid', 'Source chain EID', undefined, types.int)
     .addParam('contractName', 'Name of the contract in deployments', 'MyOFTMock', types.string)
     .addOptionalParam('dvn', 'DVN address (defaults to SimpleDVNMock)', undefined, types.string)
