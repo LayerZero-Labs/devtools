@@ -1,28 +1,32 @@
-type TokenMetadata = {
-    contractName: string
-    tokenName: string
-    tokenSymbol: string
+export interface TokenConfig {
+    contract: string
+    metadata: {
+        name: string
+        symbol: string
+    }
+    chains: number[]
 }
 
-type VaultConfig = {
+export interface VaultConfig {
     eid: number
-    vault: string
-    shareAdapterContractName: string
-    composer: string
+    contracts: {
+        vault: string
+        shareAdapter: string
+        composer: string
+    }
+    assetAddress?: string // Optional pre-deployed asset address
 }
 
-type OFTAddress = string
-
-type TokenMetadataOrAddress = TokenMetadata | OFTAddress
-
-type OFTConfigAsset = {
-    oft: TokenMetadataOrAddress
-    networks: Array<number>
+export interface DeploymentConfig {
+    vault: VaultConfig
+    asset: TokenConfig
+    share: TokenConfig
 }
 
-type OFTConfigShare = {
-    oft: TokenMetadata
-    networks: Array<number>
+export interface DeployedContracts {
+    assetOFT?: string
+    shareOFT?: string
+    vault?: string
+    shareAdapter?: string
+    composer?: string
 }
-
-export { OFTAddress, TokenMetadataOrAddress, TokenMetadata, VaultConfig, OFTConfigAsset, OFTConfigShare }

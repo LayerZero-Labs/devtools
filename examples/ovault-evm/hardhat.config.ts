@@ -56,18 +56,18 @@ const config: HardhatUserConfig = {
     },
     networks: {
         optimism: {
-            eid: EndpointId.OPTIMISM_V2_MAINNET,
-            url: process.env.RPC_URL_OPTIMISM_MAINNET || 'https://optimism.gateway.tenderly.co',
+            eid: EndpointId.OPTSEP_V2_TESTNET,
+            url: process.env.RPC_URL_OPTIMISM_TESTNET || 'https://optimism.gateway.tenderly.co',
             accounts,
         },
         base: {
-            eid: EndpointId.BASE_V2_MAINNET,
-            url: process.env.RPC_URL_BASE_MAINNET || 'https://base.gateway.tenderly.co',
+            eid: EndpointId.BASESEP_V2_TESTNET,
+            url: process.env.RPC_URL_BASE_TESTNET || 'https://base.gateway.tenderly.co',
             accounts,
         },
         arbitrum: {
-            eid: EndpointId.ARBITRUM_V2_MAINNET,
-            url: process.env.RPC_URL_ARBITRUM_MAINNET || 'https://arbitrum.gateway.tenderly.co',
+            eid: EndpointId.ARBSEP_V2_TESTNET,
+            url: process.env.RPC_URL_ARBITRUM_TESTNET || 'https://arbitrum.gateway.tenderly.co',
             accounts,
         },
         hardhat: {

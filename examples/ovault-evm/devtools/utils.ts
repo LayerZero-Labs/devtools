@@ -1,38 +1,48 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { DeployResult } from 'hardhat-deploy/types'
 
-import { OFTConfigAsset, OFTConfigShare } from './types'
-
-function shouldDeployOnNetwork(oftConfig: OFTConfigAsset | OFTConfigShare, networkEid: number): boolean {
-    return getConfigType(oftConfig) === 'TokenMetadata' && oftConfig.networks.includes(networkEid)
-}
-
-function getConfigType(token: OFTConfigAsset | OFTConfigShare): 'TokenMetadata' | 'OFTAddress' {
-    if (typeof token.oft === 'string') {
-        return 'OFTAddress'
-    } else {
-        return 'TokenMetadata'
-    }
-}
-
-async function deployContract(
+// Enhanced deployment helper with better logging
+export async function deployContract(
     hre: HardhatRuntimeEnvironment,
     contractName: string,
     deployer: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     args: any[],
-    skipIfAlreadyDeployed = true
+    options: {
+        skipIfAlreadyDeployed?: boolean
+        gasLimit?: number
+        log?: boolean
+    } = {}
 ): Promise<DeployResult> {
+    const { skipIfAlreadyDeployed = true, gasLimit, log = true } = options
+
+    console.log(`Deploying ${contractName}...`)
+    console.log(`   Args: ${JSON.stringify(args, null, 2)}`)
+
     const deployment = await hre.deployments.deploy(contractName, {
         from: deployer,
         args,
-        log: true,
+        log,
         skipIfAlreadyDeployed,
+        ...(gasLimit && { gasLimit }),
     })
 
-    console.log(`Deployed contract: ${contractName}, network: ${hre.network.name}, address: ${deployment.address}`)
+    if (deployment.newlyDeployed) {
+        console.log(`${contractName} deployed to: ${deployment.address}`)
+        console.log(`   Gas used: ${deployment.receipt?.gasUsed || 'N/A'}`)
+        console.log(`   Tx hash: ${deployment.transactionHash}`)
+    } else {
+        console.log(`${contractName} already deployed at: ${deployment.address}`)
+    }
 
     return deployment
 }
 
-export { shouldDeployOnNetwork, getConfigType, deployContract }
+// Network validation
+export function validateNetwork(hre: HardhatRuntimeEnvironment): { networkEid: number; deployer: string } {
+    const networkEid = hre.network.config?.eid
+    if (!networkEid) {
+        throw new Error(`Network ${hre.network.name} is missing 'eid' in config`)
+    }
+    return { networkEid, deployer: '' } // You'd get deployer from getNamedAccounts()
+}
