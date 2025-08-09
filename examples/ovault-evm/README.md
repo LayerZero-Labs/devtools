@@ -87,18 +87,23 @@ const config: HardhatUserConfig = {
   networks: {
     base: {
       eid: EndpointId.BASESEP_V2_TESTNET,
-      url: process.env.RPC_URL_BASESEP_TESTNET || "https://base-sepolia.gateway.tenderly.co",
+      url:
+        process.env.RPC_URL_BASESEP_TESTNET ||
+        "https://base-sepolia.gateway.tenderly.co",
       accounts,
     },
     arbitrum: {
       eid: EndpointId.ARBSEP_V2_TESTNET,
-      url: process.env.RPC_URL_ARBSEP_TESTNET || "https://arbitrum-sepolia.gateway.tenderly.co",
+      url:
+        process.env.RPC_URL_ARBSEP_TESTNET ||
+        "https://arbitrum-sepolia.gateway.tenderly.co",
       accounts,
     },
     optimism: {
       eid: EndpointId.OPTSEP_V2_TESTNET,
       url:
-        process.env.RPC_URL_OPTSEP_TESTNET || "https://optimism-sepolia.gateway.tenderly.co",
+        process.env.RPC_URL_OPTSEP_TESTNET ||
+        "https://optimism-sepolia.gateway.tenderly.co",
       accounts,
     },
   },
@@ -115,49 +120,49 @@ Configure your vault deployment in `devtools/deployConfig.ts`. This file control
 Asset and share token networks don't need to perfectly overlap. Configure based on your requirements:
 
 ```typescript
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { EndpointId } from "@layerzerolabs/lz-definitions";
 
 export const DEPLOYMENT_CONFIG = {
-    // Vault chain configuration (where the ERC4626 vault lives)
-    vault: {
-        eid: EndpointId.ARBSEP_V2_TESTNET,  // Your hub chain
-        contracts: {
-            vault: 'MyERC4626',
-            shareAdapter: 'MyShareOFTAdapter',
-            composer: 'MyOVaultComposer',
-        },
-        // IF YOU HAVE A PRE-DEPLOYED ASSET, SET THE ADDRESS HERE
-        assetAddress: undefined, // Set to '0x...' to use existing asset
+  // Vault chain configuration (where the ERC4626 vault lives)
+  vault: {
+    eid: EndpointId.ARBSEP_V2_TESTNET, // Your hub chain
+    contracts: {
+      vault: "MyERC4626",
+      shareAdapter: "MyShareOFTAdapter",
+      composer: "MyOVaultComposer",
     },
+    // IF YOU HAVE A PRE-DEPLOYED ASSET, SET THE ADDRESS HERE
+    assetAddress: undefined, // Set to '0x...' to use existing asset
+  },
 
-    // Asset OFT configuration (deployed on all chains)
-    asset: {
-        contract: 'MyAssetOFT',
-        metadata: {
-            name: 'MyAssetOFT',
-            symbol: 'ASSET',
-        },
-        chains: [
-            EndpointId.OPTSEP_V2_TESTNET,
-            EndpointId.BASESEP_V2_TESTNET,
-            EndpointId.ARBSEP_V2_TESTNET  // Include hub chain
-        ],
+  // Asset OFT configuration (deployed on all chains)
+  asset: {
+    contract: "MyAssetOFT",
+    metadata: {
+      name: "MyAssetOFT",
+      symbol: "ASSET",
     },
+    chains: [
+      EndpointId.OPTSEP_V2_TESTNET,
+      EndpointId.BASESEP_V2_TESTNET,
+      EndpointId.ARBSEP_V2_TESTNET, // Include hub chain
+    ],
+  },
 
-    // Share OFT configuration (only on spoke chains)
-    share: {
-        contract: 'MyShareOFT',
-        metadata: {
-            name: 'MyShareOFT',
-            symbol: 'SHARE',
-        },
-        chains: [
-            EndpointId.OPTSEP_V2_TESTNET,
-            EndpointId.BASESEP_V2_TESTNET,
-            // Do NOT include hub chain (it uses ShareOFTAdapter)
-        ],
+  // Share OFT configuration (only on spoke chains)
+  share: {
+    contract: "MyShareOFT",
+    metadata: {
+      name: "MyShareOFT",
+      symbol: "SHARE",
     },
-}
+    chains: [
+      EndpointId.OPTSEP_V2_TESTNET,
+      EndpointId.BASESEP_V2_TESTNET,
+      // Do NOT include hub chain (it uses ShareOFTAdapter)
+    ],
+  },
+};
 ```
 
 **Key Configuration Points:**
@@ -168,6 +173,7 @@ export const DEPLOYMENT_CONFIG = {
 - **Pre-deployed Asset**: Set `vault.assetAddress` if using an existing asset token
 
 The deployment scripts automatically determine what to deploy based on:
+
 - Vault contracts (ERC4626, ShareOFTAdapter, Composer) deploy only on the hub chain
 - Asset OFTs deploy on chains listed in `asset.chains` (unless using pre-deployed asset)
 - Share OFTs deploy on chains listed in `share.chains`
@@ -181,7 +187,7 @@ pnpm compile`
 ```
 
 > **Testing Note**: If you're deploying the asset OFT from scratch for testing purposes, you'll need to mint an initial supply. Uncomment the `_mint` line in the `MyAssetOFT` constructor to provide initial liquidity. This ensures you have tokens to test deposit and cross-chain transfer functionality.
-> 
+>
 > **⚠️ Warning**: Do NOT mint share tokens directly in `MyShareOFT`. Share tokens must only be minted by the vault contract during deposits to maintain the correct share-to-asset ratio. Manually minting share tokens breaks the vault's accounting and can lead to incorrect redemption values. The mint line in `MyShareOFT` should only be uncommented for UI/integration testing, never in production.
 
 ## Deploy
@@ -193,6 +199,7 @@ pnpm hardhat lz:deploy --tags ovault
 ```
 
 This single command will:
+
 - Deploy `AssetOFTs` to all chains in `deployConfig.asset.chains`
 - Deploy the vault system (`ERC4626`, `ShareOFTAdapter`, `Composer`) on the hub chain
 - Deploy `ShareOFTs` to all spoke chains in `deployConfig.share.chains`
@@ -200,6 +207,7 @@ This single command will:
 The deployment scripts automatically skip existing deployments, so you can safely run this command when expanding to new chains. Simply add the new chain endpoints to your `deployConfig.ts` and run the deploy command again.
 
 > **Tip**: To deploy to specific networks only, use the `--networks` flag:
+>
 > ```bash
 > pnpm hardhat lz:deploy --tags ovault --networks arbitrum,optimism
 > ```
@@ -401,7 +409,6 @@ To use different chains or network configurations:
 - Add new contract definitions with appropriate EIDs
 - Add pathway configurations between the new chain and existing chains
 - Deploy Asset OFTs and Share OFTs to the new chains
-
 
 ### 4. Wire Asset OFT Network
 
