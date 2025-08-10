@@ -51,19 +51,21 @@ The example configuration includes:
 
 Deploy Simple Workers (SimpleDVNMock and SimpleExecutorMock) on both networks:
 
-**Deploy on Optimism Sepolia:**
+**Deploy SimpleDVNMock:**
 
 ```
-pnpm hardhat --network optimism-testnet deploy --tags SimpleDVNMock
-pnpm hardhat --network optimism-testnet deploy --tags SimpleExecutorMock
+pnpm hardhat lz:deploy --tags SimpleDVNMock
 ```
 
-**Deploy on Arbitrum Sepolia:**
+Select both `arbitrum-testnet` and `optimism-testnet` and specify the contract name `SimpleDVNMock` as the tag.
+
+**Deploy on SimpleExecutorMock:**
 
 ```
-pnpm hardhat --network arbitrum-testnet deploy --tags SimpleDVNMock
-pnpm hardhat --network arbitrum-testnet deploy --tags SimpleExecutorMock
+pnpm hardhat lz:deploy --tags SimpleExecutorMock
 ```
+
+Select both `arbitrum-testnet` and `optimism-testnet` and specify the contract name `SimpleExecutorMock` as the tag.
 
 ### Step 3: Update Simple Workers Addresses
 

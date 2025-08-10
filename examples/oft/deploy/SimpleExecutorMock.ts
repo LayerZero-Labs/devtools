@@ -9,31 +9,36 @@ const deploy: DeployFunction = async ({ getNamedAccounts, deployments, network }
     console.log(`>>> your address: ${deployer}`)
 
     const endpointV2Address = (await deployments.get('EndpointV2')).address
-    const sendUln302Address = (await deployments.get('SendUln302')).address
+    const receiveUln302Address = (await deployments.get('ReceiveUln302')).address
+    const receiveUln302ViewAddress = (await deployments.get('ReceiveUln302View')).address // or endpointv2view
 
     if (!endpointV2Address) {
         throw new Error(`No EndpointV2 address found for network: ${network.name}`)
     }
 
-    if (!sendUln302Address) {
-        throw new Error(`No SendUln302 address found for network: ${network.name}`)
+    if (!receiveUln302Address) {
+        throw new Error(`No ReceiveUln302 address found for network: ${network.name}`)
     }
 
-    // Build message libs array - required by the Worker contract
-    const messageLibs = [sendUln302Address]
+    if (!receiveUln302ViewAddress) {
+        throw new Error(`No ReceiveUln302View address found for network: ${network.name}`)
+    }
 
     const result = await deploy(contractName, {
         from: deployer,
         args: [
+            receiveUln302Address, // _receiveUln302
+            receiveUln302ViewAddress, // _receiveUln302View
             endpointV2Address, // _endpoint
-            messageLibs, // _messageLibs
+            deployer, // _initialOwner
         ],
         log: true,
         waitConfirmations: 1,
     })
 
-    console.log(`✅ ${contractName} deployed at: ${result.address}`)
+    console.log(`✅ ${contractName} on ${network.name} deployed at: ${result.address}`)
 }
 
 deploy.tags = [contractName]
+
 export default deploy
