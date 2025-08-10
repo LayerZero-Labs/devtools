@@ -40,5 +40,6 @@ const deploy: DeployFunction = async ({ getNamedAccounts, deployments, network }
 }
 
 deploy.tags = [contractName]
+deploy.dependencies = ['EndpointV2', 'ReceiveUln302', 'ReceiveUln302View']
 
 export default deploy

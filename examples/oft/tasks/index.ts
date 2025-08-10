@@ -1,5 +1,6 @@
 import './sendOFT'
 import './simple-workers-mock/commit'
+import './simple-workers-mock/commitAndExecute'
 import './simple-workers-mock/verify'
 import './simple-workers-mock/lzReceive'
 import './simple-workers-mock/process-receive'
