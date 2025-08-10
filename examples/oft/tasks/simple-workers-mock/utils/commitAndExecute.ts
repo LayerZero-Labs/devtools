@@ -63,8 +63,30 @@ export async function commitAndExecute(
         console.warn('Failed to fetch nonce information:', error instanceof Error ? error.message : String(error))
     }
 
-    // Parse native drops from hex data (using empty array for simplified version)
-    const nativeDropParams: Array<{ _receiver: string; _amount: string }> = []
+    // Parse native drops from hex data
+    let nativeDropParams: Array<{ _receiver: string; _amount: string }> = []
+
+    if (params.nativeDrops && params.nativeDrops !== '0x' && params.nativeDrops.length > 2) {
+        try {
+            // Decode the hex-encoded native drop parameters
+            const decodedParams = ethers.utils.defaultAbiCoder.decode(
+                ['tuple(address _receiver, uint256 _amount)[]'],
+                params.nativeDrops
+            )
+            nativeDropParams = decodedParams[0].map((param: any) => ({
+                _receiver: param._receiver,
+                _amount: param._amount.toString(),
+            }))
+            console.log(`📦 Parsed ${nativeDropParams.length} native drop(s) for execution`)
+            nativeDropParams.forEach((param, index) => {
+                console.log(`  Drop ${index + 1}: ${ethers.utils.formatEther(param._amount)} ETH to ${param._receiver}`)
+            })
+        } catch (error) {
+            console.warn('⚠️  Failed to parse native drops from hex data:', error)
+            console.warn('⚠️  Using empty native drops due to parsing error')
+            nativeDropParams = []
+        }
+    }
 
     // Construct the LzReceiveParam struct
     const lzReceiveParam = {
@@ -83,20 +105,35 @@ export async function commitAndExecute(
 
     console.log('📦 Preparing commitAndExecute...')
 
+    // Calculate total native drop amount
+    const totalNativeDropAmount = nativeDropParams.reduce((sum, param) => {
+        return sum.add(ethers.BigNumber.from(param._amount))
+    }, ethers.BigNumber.from(0))
+
+    console.log(`💰 Total native drop amount: ${ethers.utils.formatEther(totalNativeDropAmount)} ETH`)
+
+    // Check signer balance
+    const signerBalance = await signer.getBalance()
+    if (signerBalance.lt(totalNativeDropAmount)) {
+        throw new Error(
+            `Insufficient balance. Signer has ${ethers.utils.formatEther(signerBalance)} ETH but needs ${ethers.utils.formatEther(totalNativeDropAmount)} ETH for native drops`
+        )
+    }
+
     try {
         // Estimate gas first
         const gasEstimate = await destinationExecutorMock.estimateGas.commitAndExecute(
             params.receiveLib,
             lzReceiveParam,
             nativeDropParams,
-            { value: '0' }
+            { value: totalNativeDropAmount }
         )
         console.log(`Estimated gas: ${gasEstimate.toString()}`)
 
         // Call commitAndExecute
         const tx = await destinationExecutorMock.commitAndExecute(params.receiveLib, lzReceiveParam, nativeDropParams, {
             gasLimit: gasEstimate.mul(120).div(100), // Add 20% buffer
-            value: '0',
+            value: totalNativeDropAmount,
         })
 
         console.log(`Transaction hash: ${tx.hash}`)

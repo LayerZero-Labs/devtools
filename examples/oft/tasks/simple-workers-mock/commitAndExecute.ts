@@ -11,6 +11,7 @@ task('lz:simple-workers:commit-and-execute', 'Call commitAndExecute on Destinati
     .addParam('nonce', 'Message nonce')
     .addParam('message', 'Message payload (hex string)')
     .addParam('dstEid', 'Destination endpoint ID')
+    .addOptionalParam('nativeDrops', 'Native drop parameters (hex-encoded)', '0x')
     .setAction(async (taskArgs: CommitAndExecuteParams, hre: HardhatRuntimeEnvironment) => {
         const { ethers, deployments } = hre
         const [signer] = await ethers.getSigners()
