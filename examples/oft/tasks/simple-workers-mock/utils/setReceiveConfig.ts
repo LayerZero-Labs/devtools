@@ -5,8 +5,6 @@ import { Uln302 } from '@layerzerolabs/protocol-devtools-evm'
 export interface SetReceiveConfigArgs {
     srcEid: number
     contractName: string
-    dvn?: string
-    executorAddress?: string
 }
 
 export interface SetReceiveConfigParams {

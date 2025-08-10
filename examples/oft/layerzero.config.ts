@@ -22,10 +22,12 @@ const arbitrumContract: OmniPointHardhat = {
 }
 
 // TODO: Fill in your Simple Workers addresses from deployment files
-const simpleDvnAddressOptimism = '0x2083dBf24a07FA4c37a9Dde0Acd248A5A7B60a3E' // from deployments/optimism-testnet/SimpleDVNMock.json
-const simpleDvnAddressArbitrum = '0xd1e780d97726a8A185ddc407A337CB402CF09e3C' // from deployments/arbitrum-testnet/SimpleDVNMock.json
-const simpleExecutorAddressOptimism = '0x1c3b35A4C22aee31fc67dFF2A30F8828B2439C41' // from deployments/optimism-testnet/SimpleExecutorMock.json
-const simpleExecutorAddressArbitrum = '0x6C7c6fF7F6A4ca472A59C16c75c13a77d4Ab24c2' // from deployments/arbitrum-testnet/SimpleExecutorMock.json
+const simpleDvnAddressOptimism = '0x5140E3E19B5A77bF1d04A3aE08F1c61FeC633914' // from deployments/optimism-testnet/SimpleDVNMock.json
+const simpleDvnAddressArbitrum = '0x076a37e0F8C06B6Ee5fD87152C73350f89e56bb1' // from deployments/arbitrum-testnet/SimpleDVNMock.json
+const simpleExecutorAddressOptimism = '0x2f211A36a0a680058DEfB9f5550ba7d08284CC75' // from deployments/optimism-testnet/SimpleExecutorMock.json
+const simpleExecutorAddressArbitrum = '0x4A559A3A4a137a43C00e9350507d801D8937F531' // from deployments/arbitrum-testnet/SimpleExecutorMock.json
+const destinationExecutorAddressOptimism = '0xF8e090CA5E328994Df1cA00FC7DFe2037ce634Fd' // from deployments/optimism-testnet/DestinationExecutorMock.json
+const destinationExecutorAddressArbitrum = '0xe5f4578301B52aA83748F89436D3803aEA1a3324' // from deployments/arbitrum-testnet/DestinationExecutorMock.json
 
 // Create a custom fetchMetadata implementation to add Simple Workers (SimpleDVNMock and SimpleExecutorMock)
 const customFetchMetadata = async (): Promise<IMetadata> => {
@@ -37,10 +39,12 @@ const customFetchMetadata = async (): Promise<IMetadata> => {
         !simpleDvnAddressOptimism ||
         !simpleDvnAddressArbitrum ||
         !simpleExecutorAddressOptimism ||
-        !simpleExecutorAddressArbitrum
+        !simpleExecutorAddressArbitrum ||
+        !destinationExecutorAddressOptimism ||
+        !destinationExecutorAddressArbitrum
     ) {
         throw new Error(
-            'Simple Workers addresses are required. Please set simpleDvnAddressOptimism, simpleDvnAddressArbitrum, simpleExecutorAddressOptimism, and simpleExecutorAddressArbitrum variables with addresses from deployment files'
+            'Simple Workers addresses are required. Please set simpleDvnAddressOptimism, simpleDvnAddressArbitrum, simpleExecutorAddressOptimism, simpleExecutorAddressArbitrum, destinationExecutorAddressOptimism, and destinationExecutorAddressArbitrum variables with addresses from deployment files'
         )
     }
 

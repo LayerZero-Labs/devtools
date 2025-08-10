@@ -12,7 +12,6 @@ task(
 )
     .addParam('dstEid', 'Destination chain EID', undefined, types.int)
     .addParam('contractName', 'Name of the contract in deployments', 'MyOFTMock', types.string)
-    .addOptionalParam('dvn', 'DVN address (defaults to SimpleDVNMock)', undefined, types.string)
     .addOptionalParam('executorAddress', 'Executor address (defaults to SimpleExecutorMock)', undefined, types.string)
     .setAction(async (args: SetSendConfigArgs, hre: HardhatRuntimeEnvironment) => {
         const signer = (await hre.ethers.getSigners())[0]
@@ -30,18 +29,10 @@ task(
         const sendLibrary = sendLibDep.address
 
         // Get DVN address (default to SimpleDVNMock)
-        let dvnAddress = args.dvn
-        if (!dvnAddress) {
-            const dvnDep = await hre.deployments.get('SimpleDVNMock')
-            dvnAddress = dvnDep.address
-        }
+        const dvnAddress = (await hre.deployments.get('SimpleDVNMock')).address
 
         // Get executor address (default to SimpleExecutorMock)
-        let executorAddress = args.executorAddress
-        if (!executorAddress) {
-            const executorDep = await hre.deployments.get('SimpleExecutorMock')
-            executorAddress = executorDep.address
-        }
+        const executorAddress = (await hre.deployments.get('SimpleExecutorMock')).address
 
         await setSendConfig(
             endpointContract,

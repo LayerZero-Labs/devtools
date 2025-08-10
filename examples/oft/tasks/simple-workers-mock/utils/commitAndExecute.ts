@@ -20,14 +20,14 @@ export interface CommitAndExecuteParams {
 
 export async function commitAndExecute(
     params: CommitAndExecuteParams,
-    simpleExecutorMock: Contract,
+    destinationExecutorMock: Contract,
     hre: HardhatRuntimeEnvironment
 ): Promise<void> {
     const { ethers } = hre
     const [signer] = await ethers.getSigners()
 
     console.log(`Calling commitAndExecute with signer: ${signer.address}`)
-    console.log(`SimpleExecutorMock address: ${simpleExecutorMock.address}`)
+    console.log(`DestinationExecutorMock address: ${destinationExecutorMock.address}`)
     console.log(`Nonce: ${params.nonce}`)
 
     // Get endpoint contract to check nonces
@@ -86,7 +86,7 @@ export async function commitAndExecute(
 
     try {
         // Estimate gas first
-        const gasEstimate = await simpleExecutorMock.estimateGas.commitAndExecute(
+        const gasEstimate = await destinationExecutorMock.estimateGas.commitAndExecute(
             params.receiveLib,
             lzReceiveParam,
             nativeDropParams,
@@ -95,7 +95,7 @@ export async function commitAndExecute(
         console.log(`Estimated gas: ${gasEstimate.toString()}`)
 
         // Call commitAndExecute
-        const tx = await simpleExecutorMock.commitAndExecute(params.receiveLib, lzReceiveParam, nativeDropParams, {
+        const tx = await destinationExecutorMock.commitAndExecute(params.receiveLib, lzReceiveParam, nativeDropParams, {
             gasLimit: gasEstimate.mul(120).div(100), // Add 20% buffer
             value: '0',
         })

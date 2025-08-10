@@ -6,17 +6,17 @@ import { SimpleDvnMockTaskArgs, generateGuid, processMessage } from './common'
 import { verify } from './verify'
 
 /**
- * Process received message through SimpleExecutorMock: verify -> commitAndExecute
+ * Process received message through DestinationExecutorMock: verify -> commitAndExecute
  */
 export async function processReceive(
     dvnContract: Contract,
     dstOftContract: Contract,
-    simpleExecutorMock: Contract,
+    destinationExecutorMock: Contract,
     receiveUln302Address: string,
     args: SimpleDvnMockTaskArgs,
     hre: HardhatRuntimeEnvironment
 ) {
-    console.log('\n🚀 Starting SimpleExecutorMock message processing...\n')
+    console.log('\n🚀 Starting DestinationExecutorMock message processing...\n')
 
     try {
         // Step 1: Verify
@@ -83,12 +83,12 @@ export async function processReceive(
                 value: '0',
                 nativeDrops: nativeDropsHex,
             },
-            simpleExecutorMock,
+            destinationExecutorMock,
             hre
         )
         console.log('✅ CommitAndExecute completed\n')
 
-        console.log('🎉 SimpleExecutorMock message processing completed successfully!')
+        console.log('🎉 DestinationExecutorMock message processing completed successfully!')
     } catch (error) {
         console.error(`❌ Message processing failed:`, error)
         throw error

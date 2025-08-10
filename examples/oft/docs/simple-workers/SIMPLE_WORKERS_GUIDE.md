@@ -2,11 +2,20 @@
 
 Do not use this in production.
 
-Simple Workers refers to mock implementations of LayerZero workers for testnet uses. This includes SimpleDVNMock and SimpleExecutorMock contracts.
+Simple Workers refers to mock implementations of LayerZero workers for testnet uses. This includes:
+
+- **SimpleDVNMock**: Data Verification Network for message verification
+- **SimpleExecutorMock**: Executor for send operations (source chain)
+- **DestinationExecutorMock**: Executor for commit and execute operations (destination chain)
 
 ## Simple Workers Flow
 
-Simple Workers (SimpleDVNMock and SimpleExecutorMock) follow the same flow on the destination chain:
+Simple Workers follow different flows depending on their role:
+
+**Send Operations (SimpleExecutorMock on source chain):**
+- Handles the initial send transaction and fee calculation
+
+**Destination Operations (SimpleDVNMock and DestinationExecutorMock on destination chain):**
 
 ```
                     ┌──────────┐       ┌──────────┐       ┌──────────┐
@@ -49,7 +58,7 @@ The example configuration includes:
 
 ### Step 2: Deploy Simple Workers
 
-Deploy Simple Workers (SimpleDVNMock and SimpleExecutorMock) on both networks:
+Deploy Simple Workers (SimpleDVNMock, SimpleExecutorMock, and DestinationExecutorMock) on both networks:
 
 **Deploy SimpleDVNMock:**
 
@@ -59,7 +68,7 @@ pnpm hardhat lz:deploy --tags SimpleDVNMock
 
 Select both `arbitrum-testnet` and `optimism-testnet` and specify the contract name `SimpleDVNMock` as the tag.
 
-**Deploy SimpleExecutorMock:**
+**Deploy SimpleExecutorMock (for send operations):**
 
 ```
 pnpm hardhat lz:deploy --tags SimpleExecutorMock
@@ -67,18 +76,26 @@ pnpm hardhat lz:deploy --tags SimpleExecutorMock
 
 Select both `arbitrum-testnet` and `optimism-testnet` and specify the contract name `SimpleExecutorMock` as the tag.
 
+**Deploy DestinationExecutorMock (for commit and execute operations):**
+
+```
+pnpm hardhat lz:deploy --tags DestinationExecutorMock
+```
+
+Select both `arbitrum-testnet` and `optimism-testnet` and specify the contract name `DestinationExecutorMock` as the tag.
+
 ### Step 3: Update Simple Workers Addresses
 
 After deploying on both networks, update the address variables in your `layerzero.config.ts` file:
 
 1. **For Optimism Sepolia:**
 
-   - Open `deployments/optimism-testnet/SimpleDVNMock.json` and `deployments/optimism-testnet/SimpleExecutorMock.json`
+   - Open `deployments/optimism-testnet/SimpleDVNMock.json`, `deployments/optimism-testnet/SimpleExecutorMock.json`, and `deployments/optimism-testnet/DestinationExecutorMock.json`
    - Copy the `address` field values
    - Paste them into the respective address variables
 
 2. **For Arbitrum Sepolia:**
-   - Open `deployments/arbitrum-testnet/SimpleDVNMock.json` and `deployments/arbitrum-testnet/SimpleExecutorMock.json`
+   - Open `deployments/arbitrum-testnet/SimpleDVNMock.json`, `deployments/arbitrum-testnet/SimpleExecutorMock.json`, and `deployments/arbitrum-testnet/DestinationExecutorMock.json`
    - Copy the `address` field values
    - Paste them into the respective address variables
 
@@ -89,23 +106,23 @@ const simpleDvnAddressOptimism = "0x1234..."; // Your Optimism SimpleDVNMock add
 const simpleDvnAddressArbitrum = "0x5678..."; // Your Arbitrum SimpleDVNMock address
 const simpleExecutorAddressOptimism = "0x9abc..."; // Your Optimism SimpleExecutorMock address
 const simpleExecutorAddressArbitrum = "0xdef0..."; // Your Arbitrum SimpleExecutorMock address
+const destinationExecutorAddressOptimism = "0x1111..."; // Your Optimism DestinationExecutorMock address
+const destinationExecutorAddressArbitrum = "0x2222..."; // Your Arbitrum DestinationExecutorMock address
 ```
 
 ### Step 4: Wire Your Contracts
 
-Now you can run the wire command to configure your OFT connections with the Simple Workers:
+Now you can run the wire command to configure your OFT connections:
 
 ```bash
 pnpm hardhat lz:oapp:wire
 ```
 
-This will configure your contracts to use Simple Workers (SimpleDVNMock and SimpleExecutorMock) as the only required workers (bypassing LayerZero Labs DVN entirely).
+⚠️ **Important**: This command will initially configure your contracts to use **default LayerZero workers** (DVN and Executor). This is expected! The next step will override these with your Simple Workers.
 
-### Step 5: Configure Executor Settings
+### Step 5: Override with Simple Workers Configuration
 
-Note that this task will not be needed to be run after https://github.com/LayerZero-Labs/devtools/pull/1637 is merged
-
-After wiring, you need to configure the executor settings for both send and receive operations on each chain:
+After wiring, you need to override the default worker configuration with your Simple Workers. This is the key step that switches from production LayerZero workers to your development Simple Workers.
 
 **Set Send Configuration (for outgoing messages):**
 
@@ -117,20 +134,13 @@ pnpm hardhat lz:simple-workers:set-send-config --dst-eid 40231 --contract-name M
 pnpm hardhat lz:simple-workers:set-send-config --dst-eid 40232 --contract-name MyOFTMock --network arbitrum-testnet
 ```
 
-**Set Receive Configuration (for incoming messages):**
-
-```bash
-# On Optimism Sepolia (to receive from Arbitrum)
-pnpm hardhat lz:simple-workers:set-receive-config --src-eid 40231 --contract-name MyOFTMock --network optimism-testnet
-
-# On Arbitrum Sepolia (to receive from Optimism)
-pnpm hardhat lz:simple-workers:set-receive-config --src-eid 40232 --contract-name MyOFTMock --network arbitrum-testnet
-```
-
 These commands will:
+- Override the default LayerZero workers with your Simple Workers
+- Set up SimpleDVNMock as the DVN for message verification  
 - Set up SimpleExecutorMock as the executor for message processing
 - Use 1 confirmation and appropriate gas limits for testing
-- Configure both outgoing and incoming message handling
+
+⚠️ **Important**: You must run these configuration commands **after** the `lz:oapp:wire` command, as the wire command will reset the configuration to use default LayerZero workers.
 
 ### Step 6: Send 1 OFT from **Optimism Sepolia** to **Arbitrum Sepolia**
 

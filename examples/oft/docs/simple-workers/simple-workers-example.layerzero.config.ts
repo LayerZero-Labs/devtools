@@ -26,6 +26,8 @@ const simpleDvnAddressOptimism = '' // from deployments/optimism-testnet/SimpleD
 const simpleDvnAddressArbitrum = '' // from deployments/arbitrum-testnet/SimpleDVNMock.json
 const simpleExecutorAddressOptimism = '' // from deployments/optimism-testnet/SimpleExecutorMock.json
 const simpleExecutorAddressArbitrum = '' // from deployments/arbitrum-testnet/SimpleExecutorMock.json
+const destinationExecutorAddressOptimism = '' // from deployments/optimism-testnet/DestinationExecutorMock.json
+const destinationExecutorAddressArbitrum = '' // from deployments/arbitrum-testnet/DestinationExecutorMock.json
 
 // Create a custom fetchMetadata implementation to add Simple Workers (SimpleDVNMock and SimpleExecutorMock)
 const customFetchMetadata = async (): Promise<IMetadata> => {
@@ -37,10 +39,12 @@ const customFetchMetadata = async (): Promise<IMetadata> => {
         !simpleDvnAddressOptimism ||
         !simpleDvnAddressArbitrum ||
         !simpleExecutorAddressOptimism ||
-        !simpleExecutorAddressArbitrum
+        !simpleExecutorAddressArbitrum ||
+        !destinationExecutorAddressOptimism ||
+        !destinationExecutorAddressArbitrum
     ) {
         throw new Error(
-            'Simple Workers addresses are required. Please set simpleDvnAddressOptimism, simpleDvnAddressArbitrum, simpleExecutorAddressOptimism, and simpleExecutorAddressArbitrum variables with addresses from deployment files'
+            'Simple Workers addresses are required. Please set simpleDvnAddressOptimism, simpleDvnAddressArbitrum, simpleExecutorAddressOptimism, simpleExecutorAddressArbitrum, destinationExecutorAddressOptimism, and destinationExecutorAddressArbitrum variables with addresses from deployment files'
         )
     }
 

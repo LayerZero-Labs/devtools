@@ -4,7 +4,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { CommitAndExecuteParams, commitAndExecute } from './utils/commitAndExecute'
 
-task('commitAndExecute', 'Call commitAndExecute on SimpleExecutorMock')
+task('commitAndExecute', 'Call commitAndExecute on DestinationExecutorMock')
     .addParam('srcEid', 'Source endpoint ID')
     .addParam('sender', 'Sender address (EVM address)')
     .addParam('receiver', 'Receiver address')
@@ -15,8 +15,8 @@ task('commitAndExecute', 'Call commitAndExecute on SimpleExecutorMock')
         const { ethers, deployments } = hre
         const [signer] = await ethers.getSigners()
 
-        // Get the deployed contracts
-        const simpleExecutorMockDeployment = await deployments.get('SimpleExecutorMock')
+        // Get DestinationExecutorMock contract
+        const simpleExecutorMockDeployment = await deployments.get('DestinationExecutorMock')
         const simpleExecutorMock = new Contract(
             simpleExecutorMockDeployment.address,
             simpleExecutorMockDeployment.abi,

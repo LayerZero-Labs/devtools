@@ -11,7 +11,7 @@ interface ProcessReceiveTaskArgs extends SimpleDvnMockTaskArgs {
 
 task(
     'lz:simple-workers:process-receive',
-    'Process received message through processReceive: SimpleDVNMock.verify -> SimpleExecutorMock.commitAndExecute'
+    'Process received message through processReceive: SimpleDVNMock.verify -> DestinationExecutorMock.commitAndExecute'
 )
     .addParam('srcEid', 'Source chain EID', undefined, types.int)
     .addParam('srcOapp', 'Sender app on source chain (hex)', undefined, types.string)
@@ -32,8 +32,8 @@ task(
         const dstOappDep = await hre.deployments.get(args.dstContractName || 'MyOFTMock')
         const dstOftContract = new Contract(dstOappDep.address, dstOappDep.abi, signer)
 
-        // Get SimpleExecutorMock contract
-        const simpleExecutorMockDep = await hre.deployments.get('SimpleExecutorMock')
+        // Get DestinationExecutorMock contract
+        const simpleExecutorMockDep = await hre.deployments.get('DestinationExecutorMock')
         const simpleExecutorMock = new Contract(simpleExecutorMockDep.address, simpleExecutorMockDep.abi, signer)
 
         // Get ReceiveUln302 address
