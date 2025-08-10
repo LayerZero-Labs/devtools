@@ -4,7 +4,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { CommitAndExecuteParams, commitAndExecute } from './utils/commitAndExecute'
 
-task('commitAndExecute', 'Call commitAndExecute on DestinationExecutorMock')
+task('lz:simple-workers:commit-and-execute', 'Call commitAndExecute on DestinationExecutorMock')
     .addParam('srcEid', 'Source endpoint ID')
     .addParam('sender', 'Sender address (EVM address)')
     .addParam('receiver', 'Receiver address')

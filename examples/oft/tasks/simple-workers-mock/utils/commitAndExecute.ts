@@ -81,8 +81,7 @@ export async function commitAndExecute(
         value: '0',
     }
 
-    console.log('LzReceiveParam:', JSON.stringify(lzReceiveParam, null, 2))
-    console.log('NativeDropParams:', JSON.stringify(nativeDropParams, null, 2))
+    console.log('📦 Preparing commitAndExecute...')
 
     try {
         // Estimate gas first
@@ -107,12 +106,9 @@ export async function commitAndExecute(
         console.log(`Transaction confirmed in block: ${receipt.blockNumber}`)
         console.log(`Gas used: ${receipt.gasUsed.toString()}`)
 
-        // Log events
+        // Log events (simplified)
         if (receipt.events && receipt.events.length > 0) {
-            console.log('Events emitted:')
-            receipt.events.forEach((event: unknown, index: number) => {
-                console.log(`  Event ${index}:`, event)
-            })
+            console.log(`✅ ${receipt.events.length} events emitted`)
         }
 
         console.log('✅ commitAndExecute completed successfully!')
