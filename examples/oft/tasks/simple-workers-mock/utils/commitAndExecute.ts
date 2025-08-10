@@ -2,6 +2,7 @@ import { Contract } from 'ethers'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 export interface CommitAndExecuteParams {
+    receiveLib: string
     srcEid: string
     sender: string
     receiver: string
@@ -17,7 +18,6 @@ export interface CommitAndExecuteParams {
 export async function commitAndExecute(
     params: CommitAndExecuteParams,
     simpleExecutorMock: Contract,
-    receiveUln302Address: string,
     hre: HardhatRuntimeEnvironment
 ): Promise<void> {
     const { ethers } = hre
@@ -26,13 +26,20 @@ export async function commitAndExecute(
     console.log(`Calling commitAndExecute with signer: ${signer.address}`)
     console.log(`SimpleExecutorMock address: ${simpleExecutorMock.address}`)
 
-    // Parse native drops if provided
+    // Parse native drops from hex data
     let nativeDropParams: Array<{ _receiver: string; _amount: string }> = []
-    if (params.nativeDrops && params.nativeDrops !== '[]') {
+    if (params.nativeDrops && params.nativeDrops !== '0x' && params.nativeDrops.length > 2) {
         try {
-            nativeDropParams = JSON.parse(params.nativeDrops)
+            // If it's hex data, decode it
+            // The hex data should be ABI-encoded NativeDropParam[]
+            const { ethers: hreEthers } = hre
+            const decoded = hreEthers.utils.defaultAbiCoder.decode(
+                ['tuple(address _receiver, uint256 _amount)[]'],
+                params.nativeDrops
+            )
+            nativeDropParams = decoded[0]
         } catch (error) {
-            console.error('Failed to parse nativeDrops JSON:', error)
+            console.error('Failed to decode nativeDrops hex data:', error)
             return
         }
     }
@@ -58,7 +65,7 @@ export async function commitAndExecute(
     try {
         // Estimate gas first
         const gasEstimate = await simpleExecutorMock.estimateGas.commitAndExecute(
-            receiveUln302Address,
+            params.receiveLib,
             lzReceiveParam,
             nativeDropParams,
             { value: params.value || '0' }
@@ -66,7 +73,7 @@ export async function commitAndExecute(
         console.log(`Estimated gas: ${gasEstimate.toString()}`)
 
         // Call commitAndExecute
-        const tx = await simpleExecutorMock.commitAndExecute(receiveUln302Address, lzReceiveParam, nativeDropParams, {
+        const tx = await simpleExecutorMock.commitAndExecute(params.receiveLib, lzReceiveParam, nativeDropParams, {
             value: params.value || '0',
             gasLimit: gasEstimate.mul(120).div(100), // Add 20% buffer
         })

@@ -14,7 +14,7 @@ task('commitAndExecute', 'Call commitAndExecute on SimpleExecutorMock')
     .addOptionalParam('extraData', 'Extra data (hex string)', '0x')
     .addOptionalParam('gas', 'Gas limit for lzReceive', '200000')
     .addOptionalParam('value', 'Value to send with lzReceive', '0')
-    .addOptionalParam('nativeDrops', 'Native drop parameters as JSON string', '[]')
+    .addOptionalParam('nativeDrops', 'Native drop parameters as ABI-encoded hex string', '0x')
     .setAction(async (taskArgs: CommitAndExecuteParams, hre: HardhatRuntimeEnvironment) => {
         const { ethers, deployments } = hre
         const [signer] = await ethers.getSigners()
@@ -30,5 +30,11 @@ task('commitAndExecute', 'Call commitAndExecute on SimpleExecutorMock')
         const receiveUln302Deployment = await deployments.get('ReceiveUln302')
         const receiveUln302Address = receiveUln302Deployment.address
 
-        await commitAndExecute(taskArgs, simpleExecutorMock, receiveUln302Address, hre)
+        // Add receiveLib to taskArgs
+        const paramsWithReceiveLib = {
+            ...taskArgs,
+            receiveLib: receiveUln302Address,
+        }
+
+        await commitAndExecute(paramsWithReceiveLib, simpleExecutorMock, hre)
     })
