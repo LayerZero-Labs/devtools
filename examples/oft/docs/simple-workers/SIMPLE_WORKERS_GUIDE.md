@@ -59,7 +59,7 @@ pnpm hardhat lz:deploy --tags SimpleDVNMock
 
 Select both `arbitrum-testnet` and `optimism-testnet` and specify the contract name `SimpleDVNMock` as the tag.
 
-**Deploy on SimpleExecutorMock:**
+**Deploy SimpleExecutorMock:**
 
 ```
 pnpm hardhat lz:deploy --tags SimpleExecutorMock
@@ -122,6 +122,12 @@ These commands will:
 - Use 1 confirmation and appropriate gas limits for testing
 
 ### Step 6: Send 1 OFT from **Optimism Sepolia** to **Arbitrum Sepolia**
+
+First, via the mock contract, let's mint on **Optimism Sepolia**:
+
+```
+cast send <OFT_ADDRESS> "mint(address,uint256)" <RECIPIENT_ADDRESS> 1000000000000000000 --private-key <PRIVATE_KEY> --rpc-url <OPTIMISM_SEPOLIA_RPC_URL>
+```
 
 **Use the `lz:oft:send` task with the `--simple-workers` flag to send OFT tokens and automatically process them through SimpleWorkers:**
 

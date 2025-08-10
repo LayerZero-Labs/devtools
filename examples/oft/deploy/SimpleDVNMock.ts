@@ -28,12 +28,14 @@ const deploy: DeployFunction = async ({ getNamedAccounts, deployments, network }
 
     const localEid = getEidForNetworkName(network.name)
 
-    await deploy(contractName, {
+    const deployment = await deploy(contractName, {
         from: deployer,
         args: [receiveUlnAddress, localEid],
         log: true,
         waitConfirmations: 1,
     })
+
+    console.log(`Contract deployed at address: ${deployment.address}`)
 }
 
 deploy.tags = [contractName]
