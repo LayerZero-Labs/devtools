@@ -101,10 +101,8 @@ export async function sendEvm(
     const dstEidHre = await getHreByEid(dstEid)
     const dstWrapperAddress = await getOAppAddressByEid(dstEid, oappConfig, dstEidHre, oftAddress)
 
-    // 🔗 Get outbound nonce, only for SimpleDVN process-receive mode
+    // We'll get the actual outbound nonce after the transaction is sent
     const dstWrapperBytes32 = addressToBytes32(dstWrapperAddress)
-    const currentOutboundNonce = await _endpointContract.outboundNonce(wrapperAddress, dstEid, dstWrapperBytes32)
-    const outboundNonce = currentOutboundNonce.toNumber() + 1
 
     // 3️⃣ fetch the underlying ERC-20
     const underlying = await oft.token()
@@ -220,6 +218,13 @@ export async function sendEvm(
         }
     }
 
+    // temporary code to test simple workers
+    // options.addExecutorNativeDropOption(
+    //     parseEther('0.000000123').toString(),
+    //     '0x999999cf1046e68e36E1aA2E0E07105eDDD1f08E' // random recipient address
+    // )
+    // end of temporary code
+
     const extraOptions = options.toHex()
 
     // 9️⃣ build sendParam and dispatch
@@ -245,6 +250,9 @@ export async function sendEvm(
         )
         throw error
     }
+    // Get the outbound nonce that will be used for this transaction (before sending)
+    const outboundNonce = (await _endpointContract.outboundNonce(wrapperAddress, dstEid, dstWrapperBytes32)).add(1)
+
     logger.info('Sending the transaction...')
     let tx: ContractTransaction
     try {
@@ -263,5 +271,5 @@ export async function sendEvm(
     const txHash = receipt.transactionHash
     const scanLink = getLayerZeroScanLink(txHash, srcEid >= 40_000 && srcEid < 50_000)
 
-    return { txHash, scanLink, outboundNonce: outboundNonce.toString() }
+    return { txHash, scanLink, outboundNonce: outboundNonce.toString(), extraOptions }
 }

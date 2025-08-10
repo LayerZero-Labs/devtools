@@ -117,16 +117,27 @@ pnpm hardhat lz:simple-workers:set-send-config --dst-eid 40231 --contract-name M
 pnpm hardhat lz:simple-workers:set-send-config --dst-eid 40232 --contract-name MyOFTMock --network arbitrum-testnet
 ```
 
+**Set Receive Configuration (for incoming messages):**
+
+```bash
+# On Optimism Sepolia (to receive from Arbitrum)
+pnpm hardhat lz:simple-workers:set-receive-config --src-eid 40231 --contract-name MyOFTMock --network optimism-testnet
+
+# On Arbitrum Sepolia (to receive from Optimism)
+pnpm hardhat lz:simple-workers:set-receive-config --src-eid 40232 --contract-name MyOFTMock --network arbitrum-testnet
+```
+
 These commands will:
 - Set up SimpleExecutorMock as the executor for message processing
 - Use 1 confirmation and appropriate gas limits for testing
+- Configure both outgoing and incoming message handling
 
 ### Step 6: Send 1 OFT from **Optimism Sepolia** to **Arbitrum Sepolia**
 
 First, via the mock contract, let's mint on **Optimism Sepolia**:
 
 ```
-cast send <OFT_ADDRESS> "mint(address,uint256)" <RECIPIENT_ADDRESS> 1000000000000000000 --private-key <PRIVATE_KEY> --rpc-url <OPTIMISM_SEPOLIA_RPC_URL>
+cast send <OFT_ADDRESS> "mint(address,uint256)" <RECIPIENT_ADDRESS> 1000000000000000000000 --private-key <PRIVATE_KEY> --rpc-url <OPTIMISM_SEPOLIA_RPC_URL>
 ```
 
 **Use the `lz:oft:send` task with the `--simple-workers` flag to send OFT tokens and automatically process them through SimpleWorkers:**

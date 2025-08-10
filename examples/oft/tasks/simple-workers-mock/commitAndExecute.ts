@@ -6,15 +6,11 @@ import { CommitAndExecuteParams, commitAndExecute } from './utils/commitAndExecu
 
 task('commitAndExecute', 'Call commitAndExecute on SimpleExecutorMock')
     .addParam('srcEid', 'Source endpoint ID')
-    .addParam('sender', 'Sender address (bytes32)')
+    .addParam('sender', 'Sender address (EVM address)')
     .addParam('receiver', 'Receiver address')
     .addParam('nonce', 'Message nonce')
-    .addParam('guid', 'Message GUID (bytes32)')
     .addParam('message', 'Message payload (hex string)')
-    .addOptionalParam('extraData', 'Extra data (hex string)', '0x')
-    .addOptionalParam('gas', 'Gas limit for lzReceive', '200000')
-    .addOptionalParam('value', 'Value to send with lzReceive', '0')
-    .addOptionalParam('nativeDrops', 'Native drop parameters as ABI-encoded hex string', '0x')
+    .addParam('dstEid', 'Destination endpoint ID')
     .setAction(async (taskArgs: CommitAndExecuteParams, hre: HardhatRuntimeEnvironment) => {
         const { ethers, deployments } = hre
         const [signer] = await ethers.getSigners()

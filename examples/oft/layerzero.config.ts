@@ -22,12 +22,10 @@ const arbitrumContract: OmniPointHardhat = {
 }
 
 // TODO: Fill in your Simple Workers addresses from deployment files
-const simpleDvnAddressOptimism = '0x7ecE3f21917D6A5d6788F7bD85160Adc01dD06F1' // from deployments/optimism-testnet/SimpleDVNMock.json
-const simpleDvnAddressArbitrum = '0x3044D198c6dd2c1AE722cC72F2Fb80824C230e77' // from deployments/arbitrum-testnet/SimpleDVNMock.json
-// NOTE: Simple Config does not currently support setting custom executor addresses. That is currently under review in this PR: https://github.com/LayerZero-Labs/devtools/pull/1637
-// Once the above PR is merged, we can remove the task for setting the executor config
-const simpleExecutorAddressOptimism = '0x0aF799670E6803F498314E094cCf9C3BD7282A05' // from deployments/optimism-testnet/SimpleExecutorMock.json
-const simpleExecutorAddressArbitrum = '0xC35836DD44382639e1354Ca037b685cffBEC07B4' // from deployments/arbitrum-testnet/SimpleExecutorMock.json
+const simpleDvnAddressOptimism = '0x2083dBf24a07FA4c37a9Dde0Acd248A5A7B60a3E' // from deployments/optimism-testnet/SimpleDVNMock.json
+const simpleDvnAddressArbitrum = '0xd1e780d97726a8A185ddc407A337CB402CF09e3C' // from deployments/arbitrum-testnet/SimpleDVNMock.json
+const simpleExecutorAddressOptimism = '0x1c3b35A4C22aee31fc67dFF2A30F8828B2439C41' // from deployments/optimism-testnet/SimpleExecutorMock.json
+const simpleExecutorAddressArbitrum = '0x6C7c6fF7F6A4ca472A59C16c75c13a77d4Ab24c2' // from deployments/arbitrum-testnet/SimpleExecutorMock.json
 
 // Create a custom fetchMetadata implementation to add Simple Workers (SimpleDVNMock and SimpleExecutorMock)
 const customFetchMetadata = async (): Promise<IMetadata> => {

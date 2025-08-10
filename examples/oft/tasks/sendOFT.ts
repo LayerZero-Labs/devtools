@@ -181,6 +181,7 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from EVM chains')
                 toAddress: args.to,
                 amount: args.amount,
                 dstContractName: dstOftInfo.contractName,
+                extraOptions: result.extraOptions,
             }
 
             await processReceive(

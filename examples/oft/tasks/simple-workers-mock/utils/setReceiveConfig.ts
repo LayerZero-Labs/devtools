@@ -24,13 +24,6 @@ interface SetConfigParam {
     config: string
 }
 
-// Executor configuration
-interface ExecutorConfig {
-    maxMessageSize: number
-    executorAddress: string
-}
-
-const CONFIG_TYPE_EXECUTOR = 1
 const CONFIG_TYPE_ULN = 2
 
 /**
@@ -66,13 +59,6 @@ export async function setReceiveConfig(
         address: receiveLibrary,
     })
 
-    const MAX_MESSAGE_SIZE = 10000
-
-    const excutorConfig = uln302.encodeExecutorConfig({
-        maxMessageSize: MAX_MESSAGE_SIZE,
-        executor: executorAddress,
-    })
-
     // Configure ULN with SimpleDVNMock using V2 interface
     const ulnConfig = uln302.encodeUlnConfig({
         confirmations: BigInt(1),
@@ -82,11 +68,6 @@ export async function setReceiveConfig(
     })
 
     const setConfigParams: SetConfigParam[] = [
-        // {
-        //     eid: srcEid,
-        //     configType: CONFIG_TYPE_EXECUTOR,
-        //     config: excutorConfig,
-        // },
         {
             eid: srcEid,
             configType: CONFIG_TYPE_ULN,
