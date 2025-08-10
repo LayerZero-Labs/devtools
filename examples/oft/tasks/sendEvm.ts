@@ -218,13 +218,6 @@ export async function sendEvm(
         }
     }
 
-    // temporary code to test simple workers
-    // options.addExecutorNativeDropOption(
-    //     parseEther('0.000000123').toString(),
-    //     '0x999999cf1046e68e36E1aA2E0E07105eDDD1f08E' // random recipient address
-    // )
-    // end of temporary code
-
     const extraOptions = options.toHex()
 
     // 9️⃣ build sendParam and dispatch
