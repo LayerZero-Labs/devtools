@@ -162,8 +162,12 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from EVM chains')
                 signer
             )
 
-            const endpointDep = await dstHre.deployments.get('EndpointV2')
-            const endpointContract = new Contract(endpointDep.address, endpointDep.abi, signer)
+            // Get SimpleExecutorMock and ReceiveUln302 deployments
+            const simpleExecutorMockDep = await dstHre.deployments.get('SimpleExecutorMock')
+            const simpleExecutorMock = new Contract(simpleExecutorMockDep.address, simpleExecutorMockDep.abi, signer)
+
+            const receiveUln302Dep = await dstHre.deployments.get('ReceiveUln302')
+            const receiveUln302Address = receiveUln302Dep.address
 
             // Get source OApp info from config
             const srcHre = await getHreByEid(args.srcEid)
@@ -179,6 +183,13 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from EVM chains')
                 dstContractName: dstOftInfo.contractName,
             }
 
-            await processReceive(dvnContract, dstOftContract, endpointContract, processArgs)
+            await processReceive(
+                dvnContract,
+                dstOftContract,
+                simpleExecutorMock,
+                receiveUln302Address,
+                processArgs,
+                dstHre
+            )
         }
     })

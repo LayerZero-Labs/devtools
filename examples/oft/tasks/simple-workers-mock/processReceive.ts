@@ -9,7 +9,10 @@ interface ProcessReceiveTaskArgs extends SimpleDvnMockTaskArgs {
     guid?: string
 }
 
-task('lz:simple-dvn:process-receive', 'Process received message through SimpleDVNMock: verify -> commit -> lzReceive')
+task(
+    'lz:simple-workers:process-receive',
+    'Process received message through processReceive: SimpleDVNMock.verify -> SimpleExecutorMock.commitAndExecute'
+)
     .addParam('srcEid', 'Source chain EID', undefined, types.int)
     .addParam('srcOapp', 'Sender app on source chain (hex)', undefined, types.string)
     .addParam('nonce', 'Channel nonce (uint64)', undefined, types.string)
@@ -29,9 +32,13 @@ task('lz:simple-dvn:process-receive', 'Process received message through SimpleDV
         const dstOappDep = await hre.deployments.get(args.dstContractName || 'MyOFTMock')
         const dstOftContract = new Contract(dstOappDep.address, dstOappDep.abi, signer)
 
-        // Get LayerZero endpoint contract
-        const endpointDep = await hre.deployments.get('EndpointV2')
-        const endpointContract = new Contract(endpointDep.address, endpointDep.abi, signer)
+        // Get SimpleExecutorMock contract
+        const simpleExecutorMockDep = await hre.deployments.get('SimpleExecutorMock')
+        const simpleExecutorMock = new Contract(simpleExecutorMockDep.address, simpleExecutorMockDep.abi, signer)
 
-        await processReceive(dvnContract, dstOftContract, endpointContract, args)
+        // Get ReceiveUln302 address
+        const receiveUln302Dep = await hre.deployments.get('ReceiveUln302')
+        const receiveUln302Address = receiveUln302Dep.address
+
+        await processReceive(dvnContract, dstOftContract, simpleExecutorMock, receiveUln302Address, args, hre)
     })
