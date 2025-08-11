@@ -35,7 +35,7 @@
     "@aptos-labs/ts-sdk": "^1.33.1",
     "@layerzerolabs/devtools-extensible-cli": "^0.0.7",
     "@layerzerolabs/devtools-move": "^1.0.9",
-    "@layerzerolabs/io-devtools": "^0.2.0",
+    "@layerzerolabs/io-devtools": "^0.3.0",
     "@layerzerolabs/lz-definitions": "^3.0.75",
     "@layerzerolabs/lz-v2-utilities": "^3.0.75",
     "@layerzerolabs/prettier-config-next": "^2.3.39",

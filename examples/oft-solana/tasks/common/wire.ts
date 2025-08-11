@@ -6,6 +6,7 @@ import { SUBTASK_LZ_SIGN_AND_SEND, types as devtoolsTypes } from '@layerzerolabs
 import { setTransactionSizeBuffer } from '@layerzerolabs/devtools-solana'
 import { type LogLevel, createLogger } from '@layerzerolabs/io-devtools'
 import { ChainType, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
+import { BlockedMessageLibProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { type IOApp, type OAppConfigurator, type OAppOmniGraph, configureOwnable } from '@layerzerolabs/ua-devtools'
 import {
     SUBTASK_LZ_OAPP_WIRE_CONFIGURE,
@@ -129,7 +130,10 @@ task(TASK_LZ_OAPP_WIRE)
                     for (const connection of graph.connections) {
                         // check if from Solana Endpoint
                         if (endpointIdToChainType(connection.vector.from.eid) === ChainType.SOLANA) {
-                            if (connection.config?.sendLibrary) {
+                            if (
+                                connection.config?.sendLibrary &&
+                                connection.config.sendLibrary !== BlockedMessageLibProgram.PROGRAM_ID.toString()
+                            ) {
                                 // if from Solana Endpoint, ensure the PeerConfig account was already initialized
                                 const solanaConnection = await connectionFactory(connection.vector.from.eid)
 

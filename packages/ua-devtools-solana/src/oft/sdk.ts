@@ -17,7 +17,7 @@ import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import { EndpointV2 } from '@layerzerolabs/protocol-devtools-solana'
 import { type Logger, printBoolean, printJson } from '@layerzerolabs/io-devtools'
 import { mapError, AsyncRetriable } from '@layerzerolabs/devtools'
-import { OmniSDK } from '@layerzerolabs/devtools-solana'
+import { assertValidSolanaAdmin, OmniSDK } from '@layerzerolabs/devtools-solana'
 import { Connection, PublicKey, Transaction, TransactionInstruction } from '@solana/web3.js'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import assert from 'assert'
@@ -121,6 +121,7 @@ export class OFT extends OmniSDK implements IOApp {
     }
 
     async setOwner(address: OmniAddress): Promise<OmniTransaction> {
+        await assertValidSolanaAdmin(this.connection, address)
         this.logger.debug(`Setting owner to ${address}`)
 
         return {
@@ -236,6 +237,7 @@ export class OFT extends OmniSDK implements IOApp {
     }
 
     async setDelegate(delegate: OmniAddress): Promise<OmniTransaction> {
+        await assertValidSolanaAdmin(this.connection, delegate)
         this.logger.debug(`Setting delegate to ${delegate}`)
         return {
             ...(await this.createTransaction(this._umiToWeb3Tx([await this._setOFTDelegateIx(delegate)]))),
@@ -415,34 +417,109 @@ export class OFT extends OmniSDK implements IOApp {
         throw new TypeError(`getCallerBpsCap() not implemented on Solana OFT SDK`)
     }
 
-    public async sendConfigIsInitialized(_eid: EndpointId): Promise<boolean> {
-        const deriver = new MessageLibPDADeriver(UlnProgram.PROGRAM_ID)
-        const [sendConfig] = deriver.sendConfig(_eid, new PublicKey(this.point.address))
-        const accountInfo = await this.connection.getAccountInfo(sendConfig)
-        return accountInfo != null
+    public async sendConfigIsInitialized(eid: EndpointId): Promise<boolean> {
+        // This method should check the same conditions that initConfig checks
+        // All components must be initialized: OFT store, send/receive libraries, and ULN config accounts
+
+        // Check OFT store exists
+        const oftStoreInfo = await this.umi.rpc.getAccount(this.umiPublicKey)
+        if (!oftStoreInfo.exists) {
+            return false
+        }
+
+        // Check OFT send/receive libraries are initialized
+        const sendLibInitialized = await this.isSendLibraryInitialized(eid)
+        const receiveLibInitialized = await this.isReceiveLibraryInitialized(eid)
+
+        if (!sendLibInitialized || !receiveLibInitialized) {
+            return false
+        }
+
+        // Check ULN config accounts using MessageLibPDADeriver (same as wire command)
+        try {
+            const deriver = new MessageLibPDADeriver(UlnProgram.PROGRAM_ID)
+            const [sendConfig, receiveConfig] = await Promise.all([
+                deriver.sendConfig(eid, new PublicKey(this.point.address)),
+                deriver.receiveConfig(eid, new PublicKey(this.point.address)),
+            ])
+
+            const [sendConfigInfo, receiveConfigInfo] = await Promise.all([
+                this.connection.getAccountInfo(sendConfig[0]),
+                this.connection.getAccountInfo(receiveConfig[0]),
+            ])
+
+            return sendConfigInfo != null && receiveConfigInfo != null
+        } catch (error) {
+            this.logger.debug(`ULN config check failed for eid ${eid}: ${error}`)
+            return false
+        }
     }
 
     public async initConfig(eid: EndpointId): Promise<OmniTransaction | undefined> {
+        // Check if everything is already initialized - if so, no action needed
+        if (await this.sendConfigIsInitialized(eid)) {
+            return undefined
+        }
+
         const delegateAddress = await this.getDelegate()
         // delegate may be undefined if it has not yet been set.  In this case, use admin, which must exist.
         const delegate = delegateAddress ? createNoopSigner(publicKey(delegateAddress)) : await this._getAdmin()
+        const oftStore = this.umiPublicKey
+        const instructions: WrappedInstruction[] = []
+
+        // Now check individual components to determine which instructions to add
+        const oftStoreExists = (await this.umi.rpc.getAccount(oftStore)).exists
+        const sendLibInitialized = await this.isSendLibraryInitialized(eid)
+        const receiveLibInitialized = await this.isReceiveLibraryInitialized(eid)
+
+        // Check ULN config accounts
+        const deriver = new MessageLibPDADeriver(UlnProgram.PROGRAM_ID)
+        const [sendConfig, receiveConfig] = await Promise.all([
+            deriver.sendConfig(eid, new PublicKey(this.point.address)),
+            deriver.receiveConfig(eid, new PublicKey(this.point.address)),
+        ])
+
+        const [sendConfigInfo, receiveConfigInfo] = await Promise.all([
+            this.connection.getAccountInfo(sendConfig[0]),
+            this.connection.getAccountInfo(receiveConfig[0]),
+        ])
+
+        const ulnConfigExists = sendConfigInfo != null && receiveConfigInfo != null
+
+        // Add oft.initConfig if either OFT store OR ULN config accounts don't exist
+        // This single instruction handles both the store creation and ULN config account initialization
+        if (!oftStoreExists || !ulnConfigExists) {
+            instructions.push(
+                oft.initConfig(
+                    {
+                        admin: delegate,
+                        oftStore,
+                        payer: delegate,
+                    },
+                    eid,
+                    {
+                        msgLib: fromWeb3JsPublicKey(UlnProgram.PROGRAM_ID),
+                    }
+                )
+            )
+        }
+
+        // Add send/receive library initialization if needed
+        if (!sendLibInitialized) {
+            instructions.push(oft.initSendLibrary({ admin: delegate, oftStore }, eid))
+        }
+
+        if (!receiveLibInitialized) {
+            instructions.push(oft.initReceiveLibrary({ admin: delegate, oftStore }, eid))
+        }
+
+        if (instructions.length === 0) {
+            return undefined
+        }
+
         return {
-            ...(await this.createTransaction(
-                this._umiToWeb3Tx([
-                    oft.initConfig(
-                        {
-                            admin: delegate,
-                            oftStore: this.umiPublicKey,
-                            payer: delegate,
-                        },
-                        eid,
-                        {
-                            msgLib: fromWeb3JsPublicKey(UlnProgram.PROGRAM_ID),
-                        }
-                    ),
-                ])
-            )),
-            description: `oft.initConfig(${eid})`,
+            ...(await this.createTransaction(this._umiToWeb3Tx(instructions))),
+            description: `Initializing OFT config for eid ${eid} (${formatEid(eid)})`,
         }
     }
 

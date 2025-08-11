@@ -98,13 +98,13 @@ APTOS_PRIVATE_KEY=<your-aptos-private-key>
 
 Then run `source .env` in order for your values to be mapped.
 
-> **Important:** If using Aptos CLI version >= 6.1.0 (required for Aptos chain), you need to uncomment the following lines in Move.toml and remove the existing AptosFramework dependency:
+> **Important:** If using Aptos CLI version 3.5.0 (required for Movement chain), you need to uncomment the following lines in Move.toml and remove the existing AptosFramework dependency:
 >
 > ```
 > # [dependencies.AptosFramework]
-> # git = "https://github.com/aptos-labs/aptos-framework.git"
-> # rev = "mainnet"
-> # subdir = "aptos-framework"
+> # git = "https://github.com/movementlabsxyz/aptos-core.git"
+> # rev = "movement-cli-v3.5.0"
+> # subdir = "aptos-move/framework/aptos-framework"
 > ```
 
 ## OApp Config Setup
@@ -206,13 +206,16 @@ Ensure that in move.layerzero.config.ts, all of your evm contracts have the owne
     ]
 ```
 
-If you are wiring solana to move-vm, create a file in `deployments/solana-mainnet/MyOFT.json` (solana-testnet if you are using testnet) and add the following field:
+If you are wiring your Move-VM OFT to Solana, in your config add:
 
-```json
-{
-    "address": <oft-store-address-from-solana-deployment-folder>
-}
+```ts
+const solanaContract: OmniPointHardhat = {
+  eid: EndpointId.SOLANA_V2_TESTNET as EndpointId,
+  address: "YOUR_SOLANA_OFT_STORE_ADDRESS",
+};
 ```
+
+Note: Solana OFT can only be deployed from the Solana example.
 
 ### To wire from EVM to Move-VM:
 

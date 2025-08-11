@@ -46,6 +46,19 @@ export const getExamples = (): Example[] => {
             directory: 'examples/onft721',
             ref,
         },
+        // OVault examples are feature flagged for the time being
+        ...(process.env.LZ_ENABLE_OVAULT_EXAMPLE
+            ? [
+                  {
+                      id: 'ovault-evm',
+                      label: 'OVault EVM',
+                      repository,
+                      directory: 'examples/ovault-evm',
+                      ref,
+                  },
+              ]
+            : []),
+
         // ZK-Solc examples are feature flagged for the time being
         ...(process.env.LZ_ENABLE_MIGRATION_EXAMPLE
             ? [
@@ -144,6 +157,17 @@ export const getExamples = (): Example[] => {
                       label: 'OFT (Solana)',
                       repository,
                       directory: 'examples/oft-solana',
+                      ref,
+                  },
+              ]
+            : []),
+        ...(process.env.LZ_ENABLE_SOLANA_OAPP_EXAMPLE
+            ? [
+                  {
+                      id: 'oapp-solana',
+                      label: 'OApp (Solana)',
+                      repository,
+                      directory: 'examples/oapp-solana',
                       ref,
                   },
               ]

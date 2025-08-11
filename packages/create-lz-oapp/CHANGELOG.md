@@ -1,5 +1,18 @@
 # create-lz-oapp
 
+## 0.8.1
+
+### Patch Changes
+
+- 500c25c: Add OVault evm example to create-lz-oapp
+- 500c25c: publishing ovault
+
+## 0.8.0
+
+### Minor Changes
+
+- 9b2c446: add Solana OApp example
+
 ## 0.7.5
 
 ### Patch Changes

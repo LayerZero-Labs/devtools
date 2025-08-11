@@ -1,5 +1,29 @@
 # @layerzerolabs/oft-example
 
+## 0.7.2
+
+### Patch Changes
+
+- f829409: Fixing comments on config files
+
+## 0.7.1
+
+### Patch Changes
+
+- 37f8cf0: Added useful forge scripts and updated forge-std to latest commit
+
+## 0.7.0
+
+### Minor Changes
+
+- 870deb2: revamp README, add mock deploy script, reduce to 2 chains
+
+## 0.6.0
+
+### Minor Changes
+
+- d103291: Adds a normalized send script that can be extended for other VMs
+
 ## 0.5.9
 
 ### Patch Changes

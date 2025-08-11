@@ -121,8 +121,8 @@ teardown() {
     cd "$DESTINATION"
     pnpm compile
     pnpm test
-    pnpm lint
     pnpm lint:fix
+    pnpm lint
 }
 
 @test "should work with pnpm & oft example in CI mode" {
@@ -132,8 +132,8 @@ teardown() {
     cd "$DESTINATION"
     pnpm compile
     pnpm test
-    pnpm lint
     pnpm lint:fix
+    pnpm lint
 }
 
 @test "should work with pnpm & onft721 example in CI mode" {
@@ -154,8 +154,8 @@ teardown() {
     cd "$DESTINATION"
     pnpm compile
     pnpm test
-    pnpm lint
     pnpm lint:fix
+    pnpm lint
 }
 
 @test "should work with pnpm & native-oft-adapter example in CI mode" {
@@ -184,6 +184,15 @@ teardown() {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft-solana"
 
     LZ_ENABLE_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
+    cd "$DESTINATION"
+    pnpm compile
+    pnpm test
+}
+
+@test "should work with pnpm & oapp solana example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp-solana"
+
+    LZ_ENABLE_SOLANA_OAPP_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oapp-solana --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test

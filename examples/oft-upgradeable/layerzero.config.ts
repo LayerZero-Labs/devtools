@@ -1,60 +1,52 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
+import { TwoWayConfig, generateConnectionsConfig } from '@layerzerolabs/metadata-tools'
+import { OAppEnforcedOption } from '@layerzerolabs/toolbox-hardhat'
 
-import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
+import type { OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
-const sepoliaContract: OmniPointHardhat = {
-    eid: EndpointId.SEPOLIA_V2_TESTNET,
-    contractName: 'MyOFTUpgradeable',
+const optimismContract: OmniPointHardhat = {
+    eid: EndpointId.OPTSEP_V2_TESTNET,
+    contractName: 'MyOFTUpgradeableMock', // Note: change this to 'MyOFTUpgradeable' or your production contract name
 }
 
-const fujiContract: OmniPointHardhat = {
-    eid: EndpointId.AVALANCHE_V2_TESTNET,
-    contractName: 'MyOFTUpgradeable',
+const arbitrumContract: OmniPointHardhat = {
+    eid: EndpointId.ARBSEP_V2_TESTNET,
+    contractName: 'MyOFTUpgradeableMock', // Note: change this to 'MyOFTUpgradeable' or your production contract name
 }
 
-const amoyContract: OmniPointHardhat = {
-    eid: EndpointId.AMOY_V2_TESTNET,
-    contractName: 'MyOFTUpgradeable',
-}
+// To connect all the above chains to each other, we need the following pathways:
+// Optimism <-> Arbitrum
 
-const config: OAppOmniGraphHardhat = {
-    contracts: [
-        {
-            contract: fujiContract,
-        },
-        {
-            contract: sepoliaContract,
-        },
-        {
-            contract: amoyContract,
-        },
+// For this example's simplicity, we will use the same enforced options values for sending to all chains
+// For production, you should ensure `gas` is set to the correct value through profiling the gas usage of calling OFT._lzReceive(...) on the destination chain
+// To learn more, read https://docs.layerzero.network/v2/concepts/applications/oapp-standard#execution-options-and-enforced-settings
+const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
+    {
+        msgType: 1,
+        optionType: ExecutorOptionType.LZ_RECEIVE,
+        gas: 80000,
+        value: 0,
+    },
+]
+// With the config generator, pathways declared are automatically bidirectional
+// i.e. if you declare A,B there's no need to declare B,A
+const pathways: TwoWayConfig[] = [
+    [
+        optimismContract, // Chain A contract
+        arbitrumContract, // Chain B contract
+        [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
+        [1, 1], // [A to B confirmations, B to A confirmations]
+        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain B enforcedOptions, Chain A enforcedOptions
     ],
-    connections: [
-        {
-            from: fujiContract,
-            to: sepoliaContract,
-        },
-        {
-            from: fujiContract,
-            to: amoyContract,
-        },
-        {
-            from: sepoliaContract,
-            to: fujiContract,
-        },
-        {
-            from: sepoliaContract,
-            to: amoyContract,
-        },
-        {
-            from: amoyContract,
-            to: sepoliaContract,
-        },
-        {
-            from: amoyContract,
-            to: fujiContract,
-        },
-    ],
-}
+]
+// Note: you should not use the values 1, 1 for confirmations. Choose the right number of confirmations based on the finalization that you require from the source/destination chains.
 
-export default config
+export default async function () {
+    // Generate the connections config based on the pathways
+    const connections = await generateConnectionsConfig(pathways)
+    return {
+        contracts: [{ contract: optimismContract }, { contract: arbitrumContract }],
+        connections,
+    }
+}

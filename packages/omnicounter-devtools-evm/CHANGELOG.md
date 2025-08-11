@@ -1,5 +1,18 @@
 # @layerzerolabs/omnicounter-devtools-evm
 
+## 7.0.0
+
+### Patch Changes
+
+- Updated dependencies [0aff8fb]
+  - @layerzerolabs/ua-devtools@5.0.0
+  - @layerzerolabs/devtools@2.0.0
+  - @layerzerolabs/devtools-evm@3.0.0
+  - @layerzerolabs/protocol-devtools@3.0.0
+  - @layerzerolabs/protocol-devtools-evm@5.0.0
+  - @layerzerolabs/ua-devtools-evm@7.0.0
+  - @layerzerolabs/omnicounter-devtools@5.0.0
+
 ## 6.0.0
 
 ### Patch Changes

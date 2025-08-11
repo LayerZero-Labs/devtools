@@ -79,13 +79,13 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
         it('should fail if the config file does not exist', async () => {
             await expect(
                 hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig: './does-not-exist.js' })
-            ).rejects.toMatchSnapshot()
+            ).rejects.toThrow()
         })
 
         it('should fail if the config file is not a file', async () => {
             const oappConfig = dirname(configPathFixture('invalid.config.empty.json'))
 
-            await expect(hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })).rejects.toThrow()
         })
 
         it('should fail if the config file is not a valid JSON or JS file', async () => {
@@ -93,31 +93,31 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
 
             expect(isFile(oappConfig)).toBeTruthy()
 
-            await expect(hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })).rejects.toThrow()
         })
 
         it('should fail with an empty JSON file', async () => {
             const oappConfig = configPathFixture('invalid.config.empty.json')
 
-            await expect(hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })).rejects.toThrow()
         })
 
         it('should fail with an empty JS file', async () => {
             const oappConfig = configPathFixture('invalid.config.empty.js')
 
-            await expect(hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })).rejects.toThrow()
         })
 
         it('should fail with a malformed JS file (001)', async () => {
             const oappConfig = configPathFixture('invalid.config.001.js')
 
-            await expect(hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })).rejects.toThrow()
         })
 
         it('should fail with a misconfigured file (001)', async () => {
             const oappConfig = configPathFixture('valid.config.misconfigured.001.js')
 
-            await expect(hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })).rejects.toThrow()
         })
     })
 

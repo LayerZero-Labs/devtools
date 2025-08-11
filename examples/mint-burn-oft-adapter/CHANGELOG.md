@@ -1,5 +1,17 @@
 # @layerzerolabs/mint-burn-oft-adapter-example
 
+## 0.1.1
+
+### Patch Changes
+
+- 870deb2: fix any type usage
+
+## 0.1.0
+
+### Minor Changes
+
+- d103291: Adds a send script and simple config to the MABA example
+
 ## 0.0.8
 
 ### Patch Changes

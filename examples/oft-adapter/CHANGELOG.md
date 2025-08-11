@@ -1,5 +1,23 @@
 # @layerzerolabs/oft-adapter-example
 
+## 0.5.1
+
+### Patch Changes
+
+- f829409: Fixing comments on config files
+
+## 0.5.0
+
+### Minor Changes
+
+- 870deb2: revamp README, add mock deploy script, reduce to 2 chains
+
+## 0.4.0
+
+### Minor Changes
+
+- d103291: Adds send task to oft-adapter
+
 ## 0.3.9
 
 ### Patch Changes

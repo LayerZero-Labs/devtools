@@ -1,5 +1,12 @@
 # @layerzerolabs/oapp-aptos-example
 
+## 1.0.7
+
+### Patch Changes
+
+- 01b201d: Patching rev of aptos framework dependency
+- 9cdfb5a: Patch rev for aptos framework to feb commit hash to reflect time of testing
+
 ## 1.0.6
 
 ### Patch Changes

@@ -1,21 +1,61 @@
 <p align="center">
   <a href="https://layerzero.network">
-    <img alt="LayerZero" style="width: 400px" src="https://docs.layerzero.network/img/LayerZero_Logo_White.svg"/>
+    <img alt="LayerZero" style="width: 400px" src="https://docs.layerzero.network/img/LayerZero_Logo_Black.svg"/>
   </a>
 </p>
 
 <p align="center">
-  <a href="https://layerzero.network" style="color: #a77dff">Homepage</a> | <a href="https://docs.layerzero.network/" style="color: #a77dff">Docs</a> | <a href="https://layerzero.network/developers" style="color: #a77dff">Developers</a>
+ <a href="https://docs.layerzero.network/" style="color: #a77dff">LayerZero Docs</a>
 </p>
 
-<h1 align="center">Omnichain Fungible Token (OFT) Upgradeable Example</h1>
+<h1 align="center">EVM-to-EVM Omnichain Fungible Token (OFT) Upgradeable Example</h1>
 
-<p align="center">
-  <a href="https://docs.layerzero.network/v2/developers/evm/oft/quickstart" style="color: #a77dff">Quickstart</a> | <a href="https://docs.layerzero.network/contracts/oapp-configuration" style="color: #a77dff">Configuration</a> | <a href="https://docs.layerzero.network/contracts/options" style="color: #a77dff">Message Execution Options</a> | <a href="https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts" style="color: #a77dff">Endpoint, MessageLib, & Executor Addresses</a> | <a
-href="https://docs.layerzero.network/v2/developers/evm/technical-reference/dvn-addresses" style="color: #a77dff">DVN Addresses</a>
-</p>
+<p align="center">Template project for an upgradeable cross-chain token (<a href="https://docs.layerzero.network/v2/concepts/applications/oft-standard">OFT</a>) powered by the LayerZero protocol. This example's config involves EVM chains, but the same OFT can be extended to involve other VM chains such as Solana, Aptos and Hyperliquid.</p>
 
-<p align="center">Template project for getting started with LayerZero's <code>OFT</code> contract standard.</p>
+## Table of Contents
+
+- [Prerequisite Knowledge](#prerequisite-knowledge)
+- [Requirements](#requirements)
+- [Scaffold this example](#scaffold-this-example)
+- [Helper Tasks](#helper-tasks)
+- [Setup](#setup)
+- [Build](#build)
+  - [Compiling your contracts](#compiling-your-contracts)
+- [Deploy](#deploy)
+- [Enable Messaging](#enable-messaging)
+- [Sending OFTs](#sending-ofts)
+- [Next Steps](#next-steps)
+- [Production Deployment Checklist](#production-deployment-checklist)
+  - [Profiling `lzReceive` and `lzCompose` Gas Usage](#profiling-lzreceive-and-lzcompose-gas-usage)
+  - [Available Commands](#available-commands)
+    - [`lzReceive`](#lzreceive)
+    - [`lzCompose`](#lzcompose)
+  - [Usage Examples](#usage-examples)
+  - [Notes](#notes)
+- [Appendix](#appendix)
+  - [Running Tests](#running-tests)
+  - [Adding other chains](#adding-other-chains)
+  - [Using Multisigs](#using-multisigs)
+  - [LayerZero Hardhat Helper Tasks](#layerzero-hardhat-helper-tasks)
+  - [Manual Configuration](#manual-configuration)
+  - [Contract Verification](#contract-verification)
+  - [Troubleshooting](#troubleshooting)
+
+## Prerequisite Knowledge
+
+- [What is an OFT (Omnichain Fungible Token) ?](https://docs.layerzero.network/v2/concepts/applications/oft-standard)
+- [What is an OApp (Omnichain Application) ?](https://docs.layerzero.network/v2/concepts/applications/oapp-standard)
+
+## Introduction
+
+This example contains 4 OFT variations:
+
+- `MyOFTAdapterFeeUpgradeable`
+- `MyOFTAdapterUpgradeable`
+- `MyOFTFeeUpgradeable`
+- `MyOFTUpgradeable`
+
+The walkthrough will use `MyOFTUpgradeable` but you can as easily swap out the `contractName` (in the [Deploy](#deploy) step onwards).
 
 :warning: With great power comes great responsibility. Upgradeable contracts are powerful, but they also come with
 risks. Please ensure you understand the risks before deploying an upgradeable contract. For more information on the
@@ -23,35 +63,309 @@ limitations of upgradeable contracts, please see the
 [OpenZeppelin documentation](https://docs.openzeppelin.com/contracts/5.x/upgradeable). Further, consider fully testing
 any and all upgrades thoroughly before deploying to production.
 
-<p align="left>
+## Requirements
 
-- [So What is an Omnichain Fungible Token?](#so-what-is-an-omnichain-fungible-token)
-- [Available Helpers in this Repo](#layerzero-hardhat-helper-tasks)
+- `Node.js` - ` >=18.16.0`
+- `pnpm` (recommended) - or another package manager of your choice (npm, yarn)
+- `forge` (optional) - `>=0.2.0` for testing, and if not using Hardhat for compilation
 
+## Scaffold this example
+
+Create your local copy of this example:
+
+```bash
+LZ_ENABLE_UPGRADEABLE_EXAMPLE=1 pnpm dlx create-lz-oapp@latest --example oft-upgradeable
+```
+
+Specify the directory, select `UpgradeableOFT` and proceed with the installation.
+
+Note that `create-lz-oapp` will also automatically run the dependencies install step for you.
+
+## Helper Tasks
+
+Throughout this walkthrough, helper tasks will be used. For the full list of available helper tasks, refer to the [LayerZero Hardhat Helper Tasks section](#layerzero-hardhat-helper-tasks). All commands can be run at the project root.
+
+## Setup
+
+- Copy `.env.example` into a new `.env`
+- Set up your deployer address/account via the `.env`
+
+  - You can specify either `MNEMONIC` or `PRIVATE_KEY`:
+
+    ```
+    MNEMONIC="test test test test test test test test test test test junk"
+    or...
+    PRIVATE_KEY="0xabc...def"
+    ```
+
+- Fund this deployer address/account with the native tokens of the chains you want to deploy to. This example by default will deploy to the following chains' testnets: **Optimism** and **Arbitrum**.
+
+## Build
+
+### Compiling your contracts
+
+<!-- TODO: consider moving this section to Appendix, since for Hardhat, the deploy task wil auto-run compile -->
+
+This project supports both `hardhat` and `forge` compilation. By default, the `compile` command will execute both:
+
+```bash
+pnpm compile
+```
+
+If you prefer one over the other, you can use the tooling-specific commands:
+
+```bash
+pnpm compile:forge
+pnpm compile:hardhat
+```
+
+## Deploy
+
+To deploy the OFT contracts to your desired blockchains, run the following command:
+
+```bash
+pnpm hardhat lz:deploy --tags MyOFTUpgradeableMock
+```
+
+> :information_source: MyOFTUpgradeableMock will be used as it provides a public mint function which we require for testing
+
+> If you would like to try any of the other 3 variants (`MyOFTAdapterFeeUpgradeable`, `MyOFTAdapterUpgradeable`, `MyOFTFeeUpgradeable`), replace `MyOFTUpgradeableMock` with the name of the variant you'd like to deploy.
+
+Select all the chains you want to deploy the OFT to.
+
+## Enable Messaging
+
+The OFT standard builds on top of the OApp standard, which enables generic message-passing between chains. After deploying the OFT on the respective chains, you enable messaging by running the [wiring](https://docs.layerzero.network/v2/concepts/glossary#wire--wiring) task.
+
+> :information_source: This example uses the [Simple Config Generator](https://docs.layerzero.network/v2/developers/evm/technical-reference/simple-config), which is recommended over manual configuration.
+
+> If you are deploying a variant other than `MyOFTUpgradeableMock`, you would need to update the `layerzero.config.ts` so that the contract object uses the correct `contractName` value.
+
+Run the wiring task:
+
+```bash
+pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts
+```
+
+Submit all the transactions to complete wiring. After all transactions confirm, your OApps are wired and can send messages to each other.
+
+## Sending OFTs
+
+With your OFTs wired, you can now send them cross chain.
+
+First, via the mock contract, let's mint on **Optimism Sepolia**:
+
+```
+cast send <OFT_ADDRESS> "mint(address,uint256)" <RECIPIENT_ADDRESS> 1000000000000000000 --private-key <PRIVATE_KEY> --rpc-url <OPTIMISM_SEPOLIA_RPC_URL>
+
+```
+
+> You can get the address of your OFT on Optimism Sepolia from the file at `./deployments/optimism-testnet/MyOFTUpgradeableMock.json`
+
+Send 1 OFT from **Optimism Sepolia** to **Arbitrum Sepolia**:
+
+```bash
+pnpm hardhat lz:oft:send --src-eid 40232 --dst-eid 40231 --amount 1 --to <EVM_ADDRESS>
+```
+
+> :information_source: `40232` and `40106` are the Endpoint IDs of Optimism Sepolia and Arbitrum Sepolia respectively. View the list of chains and their Endpoint IDs on the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.
+
+Upon a successful send, the script will provide you with the link to the message on LayerZero Scan.
+
+Once the message is delivered, you will be able to click on the destination transaction hash to verify that the OFT was sent.
+
+Congratulations, you have now sent an OFT cross-chain!
+
+> If you run into any issues, refer to [Troubleshooting](#troubleshooting).
+
+## Next Steps
+
+Now that you've gone through a simplified walkthrough, here are what you can do next.
+
+- If you are planning to deploy to production, go through the [Production Deployment Checklist](#production-deployment-checklist).
+- Read on [DVNs / Security Stack](https://docs.layerzero.network/v2/concepts/modular-security/security-stack-dvns)
+- Read on [Message Execution Options](https://docs.layerzero.network/v2/concepts/technical-reference/options-reference)
+
+## Production Deployment Checklist
+
+<!-- TODO: move to docs page, then just link -->
+
+Before deploying, ensure the following:
+
+- (required) you are not using `MyOFTUpgradeableMock`, which has a public `mint` function
+  - In `layerzero.config.ts`, ensure you are not using `MyOFTUpgradeableMock` as the `contractName` for any of the contract objects.
+- (recommended) you have profiled the gas usage of `lzReceive` on your destination chains
+<!-- TODO: mention https://docs.layerzero.network/v2/developers/evm/technical-reference/integration-checklist#set-security-and-executor-configurations after it has been updated to reference the CLI -->
+
+### Profiling `lzReceive` and `lzCompose` Gas Usage
+
+The optimal values you should specify for the `gas` parameter in the LZ Config depends on the destination chain, and requires profiling. This section walks through how to estimate the optimal `gas` value.
+
+This guide explains how to use the `pnpm` commands to estimate gas usage for LayerZero's `lzReceive` and `lzCompose` functions. These commands wrap Foundry scripts for easier invocation and allow you to pass the required arguments dynamically.
+
+### Available Commands
+
+1. **`gas:lzReceive`**
+
+   This command profiles the `lzReceive` function for estimating gas usage across multiple runs.
+
+   ```json
+   "gas:lzReceive": "forge script scripts/GasProfiler.s.sol:GasProfilerScript --via-ir --sig 'run_lzReceive(string,address,uint32,address,uint32,address,bytes,uint256,uint256)'"
+   ```
+
+2. **`gas:lzCompose`**
+
+   This command profiles the `lzCompose` function for estimating gas usage across multiple runs.
+
+   ```json
+   "gas:lzCompose": "forge script scripts/GasProfiler.s.sol:GasProfilerScript --via-ir --sig 'run_lzCompose(string,address,uint32,address,uint32,address,address,bytes,uint256,uint256)'"
+   ```
+
+### Usage Examples
+
+#### `lzReceive`
+
+To estimate the gas for the `lzReceive` function:
+
+```bash
+pnpm gas:lzReceive
+  <rpcUrl> \
+  <endpointAddress> \
+  <srcEid> \
+  <sender> \
+  <dstEid> \
+  <receiver> \
+  <message> \
+  <msg.value> \
+  <numOfRuns>
+```
+
+Where:
+
+- `rpcUrl`: The RPC URL for the target blockchain (e.g., Optimism, Arbitrum, etc.).
+- `endpointAddress`: The deployed LayerZero EndpointV2 contract address.
+- `srcEid`: The source endpoint ID (uint32).
+- `sender`: The sender's address (OApp).
+- `dstEid`: The destination endpoint ID (uint32).
+- `receiver`: The address intended to receive the message (OApp).
+- `message`: The message payload as a `bytes` array.
+- `msg.value`: The amount of Ether sent with the message (in wei).
+- `numOfRuns`: The number of test runs to execute.
+
+#### `lzCompose`
+
+To estimate the gas for the `lzCompose` function:
+
+```bash
+pnpm gas:lzCompose
+  <rpcUrl> \
+  <endpointAddress> \
+  <srcEid> \
+  <sender> \
+  <dstEid> \
+  <receiver> \
+  <composer> \
+  <composeMsg> \
+  <msg.value> \
+  <numOfRuns>
+```
+
+Where:
+
+- `rpcUrl`: The RPC URL for the target blockchain (e.g., Optimism, Arbitrum, etc.).
+- `endpointAddress`: The deployed LayerZero EndpointV2 contract address.
+- `srcEid`: The source endpoint ID (uint32).
+- `sender`: The originating OApp address.
+- `dstEid`: The destination endpoint ID (uint32).
+- `receiver`: The address intended to receive the message (OApp).
+- `composer`: The LayerZero Composer contract address.
+- `composeMsg`: The compose message payload as a `bytes` array.
+- `msgValue`: The amount of Ether sent with the message (in wei).
+- `numOfRuns`: The number of test runs to execute.
+
+#### Notes
+
+- Modify `numOfRuns` based on the level of accuracy or performance you require for gas profiling.
+- Log outputs will provide metrics such as the **average**, **median**, **minimum**, and **maximum** gas usage across all successful runs.
+
+This approach simplifies repetitive tasks and ensures consistent testing across various configurations.
+
+<p align="center">
+  Join our <a href="https://layerzero.network/community" style="color: #a77dff">community</a>! | Follow us on <a href="https://x.com/LayerZero_Labs" style="color: #a77dff">X (formerly Twitter)</a>
 </p>
 
-## So what is an Omnichain Fungible Token?
+# Appendix
 
-The Omnichain Fungible Token (OFT) Standard is an ERC20 token that can be transferred across multiple blockchains without asset wrapping or middlechains.
+## Running Tests
 
-<img alt="LayerZero" style="" src="https://docs.layerzero.network/assets/images/oft_mechanism_light-922b88c364b5156e26edc6def94069f1.jpg#gh-light-mode-only"/>
+Similar to the contract compilation, we support both `hardhat` and `forge` tests. By default, the `test` command will execute both:
 
-This standard works by combining the LayerZero OApp Contract Standard with the ERC20 [`_burn`](https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oft/OFT.sol#L80) method, to initiate omnichain send transfers on the source chain, sending a message via the LayerZero protocol, and delivering a function call to the destination contract to [`_mint`](https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oft/OFT.sol#L96) the same number of tokens burned, creating a unified supply across all networks connected.
+```bash
+pnpm test
+```
 
-Read more about what you can do with OFTs by reading the [OFT Quickstart](https://docs.layerzero.network/v2/developers/evm/oft/quickstart) in the LayerZero Documentation.
+If you prefer one over the other, you can use the tooling-specific commands:
+
+```bash
+pnpm test:forge
+pnpm test:hardhat
+```
+
+## Adding other chains
+
+<!-- TODO: host this section in docs and just link. Potentially under the Simple Config Generator section -->
+
+If you're adding another EVM chain, first, add it to the `hardhat.config.ts`. Adding non-EVM chains do not require modifying the `hardhat.config.ts`.
+
+<!-- TODO: mention how to add Solana -->
+
+Then, modify `layerzero.config.ts` with the following changes:
+
+- declare a new contract object (specifying the `eid` and `contractName`)
+- decide whether to use an existing EVM enforced options variable or declare a new one
+- create a new entry in the `pathways` variable
+- add the new contract into the `contracts` key of the `return` of the `export default` function
+
+After applying the desired changes, make sure you re-run the wiring task:
+
+```bash
+pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts
+```
+
+## Using Multisigs
+
+The wiring task supports the usage of Safe Multisigs.
+
+To use a Safe multisig as the signer for these transactions, add the following to each network in your `hardhat.config.ts` and add the `--safe` flag to `lz:oapp:wire --safe`:
+
+```typescript
+// hardhat.config.ts
+
+networks: {
+  // Include configurations for other networks as needed
+  fuji: {
+    /* ... */
+    // Network-specific settings
+    safeConfig: {
+      safeUrl: 'http://something', // URL of the Safe API, not the Safe itself
+      safeAddress: 'address'
+    }
+  }
+}
+```
 
 ## LayerZero Hardhat Helper Tasks
 
 LayerZero Devtools provides several helper hardhat tasks to easily deploy, verify, configure, connect, and send OFTs cross-chain.
 
 <details>
-<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/deploying"><code>npx hardhat lz:deploy</code></a> </summary>
+<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/deploying"><code>pnpm hardhat lz:deploy</code></a> </summary>
 
  <br>
 
 Deploys your contract to any of the available networks in your [`hardhat.config.ts`](./hardhat.config.ts) when given a deploy tag (by default contract name) and returns a list of available networks to select for the deployment. For specifics around all deployment options, please refer to the [Deploying Contracts](https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/deploying) section of the documentation. LayerZero's `lz:deploy` utilizes `hardhat-deploy`.
 
-```yml
+```typescript
 'arbitrum-sepolia': {
     eid: EndpointId.ARBSEP_V2_TESTNET,
     url: process.env.RPC_URL_ARBSEP_TESTNET,
@@ -64,10 +378,16 @@ Deploys your contract to any of the available networks in your [`hardhat.config.
 },
 ```
 
+More information about available CLI arguments can be found using the `--help` flag:
+
+```bash
+pnpm hardhat lz:deploy --help
+```
+
 </details>
 
 <details>
-<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/start"><code>npx hardhat lz:oapp:config:init --oapp-config YOUR_OAPP_CONFIG --contract-name CONTRACT_NAME</code></a> </summary>
+<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/start"><code>pnpm hardhat lz:oapp:config:init --oapp-config YOUR_OAPP_CONFIG --contract-name CONTRACT_NAME</code></a> </summary>
 
  <br>
 
@@ -76,84 +396,93 @@ Initializes a `layerzero.config.ts` file for all available pathways between your
 You can run this task by providing the `contract-name` you want to set for the config and `file-name` you want to generate:
 
 ```bash
-npx hardhat lz:oapp:config:init --contract-name CONTRACT_NAME --oapp-config FILE_NAME
+pnpm hardhat lz:oapp:config:init --contract-name CONTRACT_NAME --oapp-config FILE_NAME
 ```
 
 This will create a `layerzero.config.ts` in your working directory populated with your contract name and connections for every pathway possible between your hardhat networks:
 
-```yml
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+```typescript
+import { EndpointId } from "@layerzerolabs/lz-definitions";
 
 const arbsepContract = {
-    eid: EndpointId.ARBSEP_V2_TESTNET,
-    contractName: 'MyOFT',
-}
+  eid: EndpointId.ARBSEP_V2_TESTNET,
+  contractName: "MyOFT",
+};
 const sepoliaContract = {
-    eid: EndpointId.SEPOLIA_V2_TESTNET,
-    contractName: 'MyOFT',
-}
+  eid: EndpointId.SEPOLIA_V2_TESTNET,
+  contractName: "MyOFT",
+};
 
 export default {
-    contracts: [{ contract: arbsepContract }, { contract: sepoliaContract }],
-    connections: [
-        {
-            from: arbsepContract,
-            to: sepoliaContract,
-            config: {
-                sendLibrary: '0x4f7cd4DA19ABB31b0eC98b9066B9e857B1bf9C0E',
-                receiveLibraryConfig: { receiveLibrary: '0x75Db67CDab2824970131D5aa9CECfC9F69c69636', gracePeriod: 0 },
-                sendConfig: {
-                    executorConfig: { maxMessageSize: 10000, executor: '0x5Df3a1cEbBD9c8BA7F8dF51Fd632A9aef8308897' },
-                    ulnConfig: {
-                        confirmations: 1,
-                        requiredDVNs: ['0x53f488E93b4f1b60E8E83aa374dBe1780A1EE8a8'],
-                        optionalDVNs: [],
-                        optionalDVNThreshold: 0,
-                    },
-                },
-                // receiveConfig: {
-                //     ulnConfig: {
-                //         confirmations: 2,
-                //         requiredDVNs: ['0x53f488E93b4f1b60E8E83aa374dBe1780A1EE8a8'],
-                //         optionalDVNs: [],
-                //         optionalDVNThreshold: 0,
-                //     },
-                // },
-            },
+  contracts: [{ contract: arbsepContract }, { contract: sepoliaContract }],
+  connections: [
+    {
+      from: arbsepContract,
+      to: sepoliaContract,
+      config: {
+        sendLibrary: "0x4f7cd4DA19ABB31b0eC98b9066B9e857B1bf9C0E",
+        receiveLibraryConfig: {
+          receiveLibrary: "0x75Db67CDab2824970131D5aa9CECfC9F69c69636",
+          gracePeriod: 0,
         },
-        {
-            from: sepoliaContract,
-            to: arbsepContract,
-            config: {
-                sendLibrary: '0xcc1ae8Cf5D3904Cef3360A9532B477529b177cCE',
-                receiveLibraryConfig: { receiveLibrary: '0xdAf00F5eE2158dD58E0d3857851c432E34A3A851', gracePeriod: 0 },
-                // sendConfig: {
-                //     executorConfig: { maxMessageSize: 10000, executor: '0x718B92b5CB0a5552039B593faF724D182A881eDA' },
-                //     ulnConfig: {
-                //         confirmations: 2,
-                //         requiredDVNs: ['0x8eebf8b423B73bFCa51a1Db4B7354AA0bFCA9193'],
-                //         optionalDVNs: [],
-                //         optionalDVNThreshold: 0,
-                //     },
-                // },
-                receiveConfig: {
-                    ulnConfig: {
-                        confirmations: 1,
-                        requiredDVNs: ['0x8eebf8b423B73bFCa51a1Db4B7354AA0bFCA9193'],
-                        optionalDVNs: [],
-                        optionalDVNThreshold: 0,
-                    },
-                },
-            },
+        sendConfig: {
+          executorConfig: {
+            maxMessageSize: 10000,
+            executor: "0x5Df3a1cEbBD9c8BA7F8dF51Fd632A9aef8308897",
+          },
+          ulnConfig: {
+            confirmations: 1,
+            requiredDVNs: ["0x53f488E93b4f1b60E8E83aa374dBe1780A1EE8a8"],
+            optionalDVNs: [],
+            optionalDVNThreshold: 0,
+          },
         },
-    ],
-}
+        // receiveConfig: {
+        //     ulnConfig: {
+        //         confirmations: 2,
+        //         requiredDVNs: ['0x53f488E93b4f1b60E8E83aa374dBe1780A1EE8a8'],
+        //         optionalDVNs: [],
+        //         optionalDVNThreshold: 0,
+        //     },
+        // },
+      },
+    },
+    {
+      from: sepoliaContract,
+      to: arbsepContract,
+      config: {
+        sendLibrary: "0xcc1ae8Cf5D3904Cef3360A9532B477529b177cCE",
+        receiveLibraryConfig: {
+          receiveLibrary: "0xdAf00F5eE2158dD58E0d3857851c432E34A3A851",
+          gracePeriod: 0,
+        },
+        // sendConfig: {
+        //     executorConfig: { maxMessageSize: 10000, executor: '0x718B92b5CB0a5552039B593faF724D182A881eDA' },
+        //     ulnConfig: {
+        //         confirmations: 2,
+        //         requiredDVNs: ['0x8eebf8b423B73bFCa51a1Db4B7354AA0bFCA9193'],
+        //         optionalDVNs: [],
+        //         optionalDVNThreshold: 0,
+        //     },
+        // },
+        receiveConfig: {
+          ulnConfig: {
+            confirmations: 1,
+            requiredDVNs: ["0x8eebf8b423B73bFCa51a1Db4B7354AA0bFCA9193"],
+            optionalDVNs: [],
+            optionalDVNThreshold: 0,
+          },
+        },
+      },
+    },
+  ],
+};
 ```
 
 </details>
 
 <details>
-<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring"><code>npx hardhat lz:oapp:config:wire --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
+<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring"><code>pnpm hardhat lz:oapp:config:wire --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
 
  <br>
 
@@ -174,32 +503,14 @@ Running `lz:oapp:wire` will make the following function calls per pathway connec
 To use this task, run:
 
 ```bash
-npx hardhat lz:oapp:wire --oapp-config YOUR_LAYERZERO_CONFIG_FILE
+pnpm hardhat lz:oapp:wire --oapp-config YOUR_LAYERZERO_CONFIG_FILE
 ```
 
 Whenever you make changes to the configuration, run `lz:oapp:wire` again. The task will check your current configuration, and only apply NEW changes.
 
-To use a Gnosis Safe multisig as the signer for these transactions, add the following to each network in your `hardhat.config.ts` and add the `--safe` flag to `lz:oapp:wire --safe`:
-
-```yml
-// hardhat.config.ts
-
-networks: {
-  // Include configurations for other networks as needed
-  fuji: {
-    /* ... */
-    // Network-specific settings
-    safeConfig: {
-      safeUrl: 'http://something', // URL of the Safe API, not the Safe itself
-      safeAddress: 'address'
-    }
-  }
-}
-```
-
 </details>
 <details>
-<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring#checking-pathway-config"><code>npx hardhat lz:oapp:config:get --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
+<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring#checking-pathway-config"><code>pnpm hardhat lz:oapp:config:get --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
 
  <br>
 
@@ -264,7 +575,7 @@ If you do NOT explicitly set each configuration parameter, your OApp will fallba
 
 </details>
 <details>
-<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring#checking-pathway-executor"><code>npx hardhat lz:oapp:config:get:executor --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
+<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring#checking-pathway-executor"><code>pnpm hardhat lz:oapp:config:get:executor --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
 
  <br>
 
@@ -291,123 +602,13 @@ Returns the LayerZero Executor config for each network in your `hardhat.config.t
 
 </details>
 
-## Developing Contracts
+### Manual Configuration
 
-#### Installing dependencies
+<!-- TODO: link to docs, remove from here -->
 
-We recommend using `pnpm` as a package manager (but you can of course use a package manager of your choice):
+This section only applies if you would like to configure manually instead of using the Simple Config Generator.
 
-```bash
-pnpm install
-```
-
-#### Compiling your contracts
-
-This project supports both `hardhat` and `forge` compilation. By default, the `compile` command will execute both:
-
-```bash
-pnpm compile
-```
-
-If you prefer one over the other, you can use the tooling-specific commands:
-
-```bash
-pnpm compile:forge
-pnpm compile:hardhat
-```
-
-Or adjust the `package.json` to for example remove `forge` build:
-
-```diff
-- "compile": "$npm_execpath run compile:forge && $npm_execpath run compile:hardhat",
-- "compile:forge": "forge build",
-- "compile:hardhat": "hardhat compile",
-+ "compile": "hardhat compile"
-```
-
-#### Running tests
-
-Similarly to the contract compilation, we support both `hardhat` and `forge` tests. By default, the `test` command will execute both:
-
-```bash
-pnpm test
-```
-
-If you prefer one over the other, you can use the tooling-specific commands:
-
-```bash
-pnpm test:forge
-pnpm test:hardhat
-```
-
-Or adjust the `package.json` to for example remove `hardhat` tests:
-
-```diff
-- "test": "$npm_execpath test:forge && $npm_execpath test:hardhat",
-- "test:forge": "forge test",
-- "test:hardhat": "$npm_execpath hardhat test"
-+ "test": "forge test"
-```
-
-## Deploying Contracts
-
-Set up deployer wallet/account:
-
-- Rename `.env.example` -> `.env`
-- Choose your preferred means of setting up your deployer wallet/account:
-
-```
-MNEMONIC="test test test test test test test test test test test junk"
-or...
-PRIVATE_KEY="0xabc...def"
-```
-
-- Fund this address with the corresponding chain's native tokens you want to deploy to.
-
-To deploy your contracts to your desired blockchains, run the following command in your project's folder:
-
-```bash
-npx hardhat lz:deploy
-```
-
-More information about available CLI arguments can be found using the `--help` flag:
-
-```bash
-npx hardhat lz:deploy --help
-```
-
-By following these steps, you can focus more on creating innovative omnichain solutions and less on the complexities of cross-chain communication.
-
-<br></br>
-
-## Connecting Contracts
-
-### Ethereum Configurations
-
-Fill out your `layerzero.config.ts` with the contracts you want to connect. You can generate the default config file for your declared hardhat networks by running:
-
-```bash
-npx hardhat lz:oapp:config:init --contract-name [YOUR_CONTRACT_NAME] --oapp-config [CONFIG_NAME]
-```
-
-> [!NOTE]
-> You may need to change the contract name if you're deploying multiple OApp contracts on different chains (e.g., OFT and OFT Adapter).
-
-<br>
-
-```typescript
-const ethereumContract: OmniPointHardhat = {
-  eid: EndpointId.ETHEREUM_V2_MAINNET,
-  contractName: "MyOFTAdapter",
-};
-
-const arbitrumContract: OmniPointHardhat = {
-  eid: EndpointId.ARBITRUM_V2_MAINNET,
-  contractName: "MyOFT",
-};
-```
-
-Then define the pathway you want to create from and to each contract:
+Define the pathway you want to create from and to each contract:
 
 ```typescript
 connections: [
@@ -452,7 +653,7 @@ connections: [
           executor: contractsConfig.ethereum.executor,
         },
         ulnConfig: {
-          // The number of block confirmations to wait on BSC before emitting the message from the source chain.
+          // The number of block confirmations to wait on Ethereum before emitting the message from the source chain.
           confirmations: BigInt(15),
           // The address of the DVNs you will pay to verify a sent message on the source chain ).
           // The destination tx will wait until ALL `requiredDVNs` verify the message.
@@ -523,12 +724,14 @@ connections: [
 ];
 ```
 
-To set these config settings, run:
+### Contract Verification
+
+You can verify EVM chain contracts using the LayerZero helper package:
 
 ```bash
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts
+pnpm dlx @layerzerolabs/verify-contract -n <NETWORK_NAME> -u <API_URL> -k <API_KEY> --contracts <CONTRACT_NAME>
 ```
 
-<p align="center">
-  Join our <a href="https://layerzero.network/community" style="color: #a77dff">community</a>! | Follow us on <a href="https://x.com/LayerZero_Labs" style="color: #a77dff">X (formerly Twitter)</a>
-</p>
+### Troubleshooting
+
+Refer to [Debugging Messages](https://docs.layerzero.network/v2/developers/evm/troubleshooting/debugging-messages) or [Error Codes & Handling](https://docs.layerzero.network/v2/developers/evm/troubleshooting/error-messages).
