@@ -1,0 +1,12 @@
+# syntax=docker/dockerfile:1.4
+FROM ghcr.io/foundry-rs/foundry:latest
+
+WORKDIR /anvil
+
+# Install curl for healthcheck
+USER root
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+ENTRYPOINT ["sh", "-c", "anvil --fork-url $FORK_URL --host $HOST --port $PORT"]
+
+EXPOSE 8545

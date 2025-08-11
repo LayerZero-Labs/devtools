@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import { Test, console } from "forge-std/Test.sol";
+import { HyperliquidBaseTest } from "./HyperliquidBase.t.sol";
 
 import { HyperLiquidComposerCodec } from "../contracts/library/HyperLiquidComposerCodec.sol";
 
@@ -16,48 +17,9 @@ import { HypePrecompileMock } from "./mocks/HypePrecompileMock.sol";
 import { OFTMock } from "./mocks/OFTMock.sol";
 
 import { TypeConversionTest } from "./ComposerCodec/TypeConversion.t.sol";
-contract PrecompileTest is Test {
-    IHyperAsset public ALICE;
-    IHyperAsset public HYPE;
-    OFTMock public oft;
-    HyperLiquidComposer public hyperLiquidComposer;
-    TypeConversionTest public typeConversionTest;
-
-    address public constant HL_LZ_ENDPOINT_V2 = 0xf9e1815F151024bDE4B7C10BAC10e8Ba9F6b53E1;
-    address public constant HLP_CORE_WRITER = 0x3333333333333333333333333333333333333333;
-    address public constant HLP_PRECOMPILE_READ_SPOT_BALANCE = 0x0000000000000000000000000000000000000801;
-    uint64 public constant AMOUNT_TO_SEND = 1e18;
-    uint64 public constant AMOUNT_TO_FUND = 100 gwei;
-    uint64 public constant DUST = 1 wei;
-
-    function setUp() public {
-        // Skip test if fork fails
-        try vm.createSelectFork("https://rpc.hyperliquid-testnet.xyz/evm") {} catch {
-            console.log("Forking testnet https://rpc.hyperliquid-testnet.xyz/evm failed");
-            vm.skip(true);
-        }
-
-        ALICE = IHyperAsset({
-            assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1231),
-            coreIndexId: 1231,
-            decimalDiff: 18 - 6
-        });
-
-        HYPE = IHyperAsset({
-            assetBridgeAddress: 0x2222222222222222222222222222222222222222,
-            coreIndexId: 1105,
-            decimalDiff: 18 - 10
-        });
-
-        vm.etch(HLP_PRECOMPILE_READ_SPOT_BALANCE, address(new SpotBalancePrecompileMock()).code);
-        oft = new OFTMock("test", "test", HL_LZ_ENDPOINT_V2, msg.sender);
-        hyperLiquidComposer = new HyperLiquidComposer(
-            HL_LZ_ENDPOINT_V2,
-            address(oft),
-            ALICE.coreIndexId,
-            ALICE.decimalDiff
-        );
-        typeConversionTest = new TypeConversionTest();
+contract PrecompileTest is HyperliquidBaseTest {
+    function setUp() public override {
+        super.setUp();
     }
 
     function test_hype_precompile_fallback() public {
@@ -70,27 +32,25 @@ contract PrecompileTest is Test {
         assertEq(HYPE.assetBridgeAddress.balance, balanceBefore + AMOUNT_TO_FUND);
     }
 
-    /// forge-config: default.fuzz.runs = 64
     function test_spotBalancePrecompile(uint64 _balance) public {
         SpotBalancePrecompileMock(HLP_PRECOMPILE_READ_SPOT_BALANCE).setSpotBalance(
-            ALICE.assetBridgeAddress,
-            ALICE.coreIndexId,
+            ERC20.assetBridgeAddress,
+            ERC20.coreIndexId,
             _balance
         );
 
         (bool success, bytes memory data) = HLP_PRECOMPILE_READ_SPOT_BALANCE.staticcall(
-            abi.encode(ALICE.assetBridgeAddress, ALICE.coreIndexId)
+            abi.encode(ERC20.assetBridgeAddress, ERC20.coreIndexId)
         );
 
         assertEq(success, true, "Spot balance precompile call failed");
         assertEq(abi.decode(data, (uint64)), _balance);
     }
 
-    /// forge-config: default.fuzz.runs = 64
     function test_balanceOfHyperCore(address _address, bool _isOFT, uint64 _balance) public {
         IHyperAsset memory asset;
         if (_isOFT) {
-            asset = ALICE;
+            asset = ERC20;
         } else {
             asset = HYPE;
         }
@@ -106,12 +66,11 @@ contract PrecompileTest is Test {
         assertEq(balance, _balance);
     }
 
-    /// forge-config: default.fuzz.runs = 64
     function test_quoteHyperCoreAmount_decimal_diff_greater_zero(uint64 _amount, bool _isOFT) public view {
         uint64 maxTransferableAmount = type(uint64).max;
         IHyperAsset memory asset;
         if (_isOFT) {
-            asset = ALICE;
+            asset = ERC20;
         } else {
             asset = HYPE;
         }

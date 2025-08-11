@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-adapter-example
 
+## 0.5.1
+
+### Patch Changes
+
+- f829409: Fixing comments on config files
+
 ## 0.5.0
 
 ### Minor Changes

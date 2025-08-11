@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/hyperliquid-composer",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "LayerZero Labs reference EVM OmniChain Fungible Token (OFT) implementation for Hyperliquid",
   "keywords": [
     "LayerZero",
@@ -56,7 +56,7 @@
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
     "test": "$npm_execpath test:forge",
-    "test:forge": "forge test"
+    "test:forge": "FOUNDRY_PROFILE=CI forge test"
   },
   "dependencies": {
     "commander": "^11.1.0",

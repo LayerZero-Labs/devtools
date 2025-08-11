@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.7.2
+
+### Patch Changes
+
+- f829409: Fixing comments on config files
+
 ## 0.7.1
 
 ### Patch Changes
