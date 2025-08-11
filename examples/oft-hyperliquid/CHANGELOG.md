@@ -1,5 +1,12 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 0.0.11
+
+### Patch Changes
+
+- 9be22c2: change fork fuzzing to works off a forked anvil
+- 253612c: fuzz run 1 on ci
+
 ## 0.0.10
 
 ### Patch Changes
