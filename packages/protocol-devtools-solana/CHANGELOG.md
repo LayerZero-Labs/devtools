@@ -1,5 +1,11 @@
 # @layerzerolabs/protocol-devtools-solana
 
+## 8.0.1
+
+### Patch Changes
+
+- 49f5dcd: Fix the handling of initSendLibrary and initReceiveLibrary to properly initialize in the init step rather than during setPeer
+
 ## 8.0.0
 
 ### Patch Changes

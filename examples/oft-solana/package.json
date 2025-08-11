@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-solana-example",
-  "version": "0.11.2",
+  "version": "0.11.3",
   "private": true,
   "scripts": {
     "clean": "rm -rf target artifacts cache out .anchor",
@@ -44,7 +44,7 @@
     "@layerzerolabs/prettier-config-next": "^2.3.39",
     "@layerzerolabs/protocol-devtools": "^3.0.0",
     "@layerzerolabs/protocol-devtools-evm": "~5.0.0",
-    "@layerzerolabs/protocol-devtools-solana": "^8.0.0",
+    "@layerzerolabs/protocol-devtools-solana": "^8.0.1",
     "@layerzerolabs/solhint-config": "^3.0.12",
     "@layerzerolabs/test-devtools-evm-foundry": "~7.0.0",
     "@layerzerolabs/test-devtools-evm-hardhat": "~0.5.2",
@@ -53,7 +53,7 @@
     "@layerzerolabs/ua-devtools": "~5.0.0",
     "@layerzerolabs/ua-devtools-evm": "~7.0.0",
     "@layerzerolabs/ua-devtools-evm-hardhat": "~9.0.0",
-    "@layerzerolabs/ua-devtools-solana": "~8.0.0",
+    "@layerzerolabs/ua-devtools-solana": "~8.0.1",
     "@metaplex-foundation/mpl-token-metadata": "^3.2.1",
     "@metaplex-foundation/mpl-toolbox": "^0.9.4",
     "@metaplex-foundation/umi": "^0.9.2",
