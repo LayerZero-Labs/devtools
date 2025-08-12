@@ -6,53 +6,18 @@ import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.s
 import { AccessControl } from "@openzeppelin/contracts/access/AccessControl.sol";
 import { Pausable } from "@openzeppelin/contracts/utils/Pausable.sol";
 
-import { Origin } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
+import { ILayerZeroEndpointV2, Origin } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
+import { Transfer } from "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Transfer.sol";
+import { ExecutionState, EndpointV2View } from "@layerzerolabs/lz-evm-protocol-v2/contracts/EndpointV2View.sol";
 
 import { IExecutor } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutor.sol";
 import { IWorker } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IWorker.sol";
+import { VerificationState } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/uln302/ReceiveUln302View.sol";
+import { IReceiveUlnE2 } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IReceiveUlnE2.sol";
 
-interface ILayerZeroEndpointV2 {
-    function eid() external view returns (uint32);
-
-    function lzReceive(
-        Origin calldata _origin,
-        address _receiver,
-        bytes32 _guid,
-        bytes calldata _message,
-        bytes calldata _extraData
-    ) external payable;
-
-    function lzReceiveAlert(
-        Origin calldata _origin,
-        address _receiver,
-        bytes32 _guid,
-        uint256 _gas,
-        uint256 _value,
-        bytes calldata _message,
-        bytes calldata _extraData,
-        bytes calldata _reason
-    ) external;
-
-    function lzCompose(
-        address _from,
-        address _to,
-        bytes32 _guid,
-        uint16 _index,
-        bytes calldata _message,
-        bytes calldata _extraData
-    ) external payable;
-
-    function lzComposeAlert(
-        address _from,
-        address _to,
-        bytes32 _guid,
-        uint16 _index,
-        uint256 _gas,
-        uint256 _value,
-        bytes calldata _message,
-        bytes calldata _extraData,
-        bytes calldata _reason
-    ) external;
+// Lightweight view interface to query verifiability from the ReceiveUln view
+interface IReceiveUlnView {
+    function verifiable(bytes calldata _packetHeader, bytes32 _payloadHash) external view returns (VerificationState);
 }
 
 /**
@@ -75,7 +40,7 @@ interface ILayerZeroEndpointV2 {
  *   - sender: Original sender address as bytes32
  *   - nonce: Message sequence number for ordering/deduplication
  */
-contract SimpleExecutorMock is IWorker, AccessControl, Pausable, ReentrancyGuard, IExecutor {
+contract SimpleExecutorMock is IWorker, AccessControl, Pausable, ReentrancyGuard, IExecutor, EndpointV2View {
     bytes32 internal constant MESSAGE_LIB_ROLE = keccak256("MESSAGE_LIB_ROLE");
     bytes32 internal constant ALLOWLIST = keccak256("ALLOWLIST");
     bytes32 internal constant DENYLIST = keccak256("DENYLIST");
@@ -83,9 +48,16 @@ contract SimpleExecutorMock is IWorker, AccessControl, Pausable, ReentrancyGuard
 
     mapping(uint32 dstEid => DstConfig) public dstConfig;
 
-    // endpoint v2
-    address public endpoint;
+    // endpoint v2 (inherited from EndpointV2View)
     uint32 public localEidV2;
+
+    // Optional ULN receive lib to use (overrides _receiveLib when set)
+    address public receiveUln302;
+
+    // Mapping from receive lib to its view contract
+    mapping(address receiveLib => address receiveLibView) public receiveLibToView;
+
+    event ReceiveLibViewSet(address _receiveLib, address _receiveLibView);
 
     // Worker state variables
     address public workerFeeLib;
@@ -105,8 +77,8 @@ contract SimpleExecutorMock is IWorker, AccessControl, Pausable, ReentrancyGuard
         address _endpoint,
         address[] memory _messageLibs
     ) {
-        endpoint = _endpoint;
-        localEidV2 = ILayerZeroEndpointV2(_endpoint).eid();
+        endpoint = ILayerZeroEndpointV2(_endpoint);
+        localEidV2 = endpoint.eid();
         
         // Initialize Worker-like state
         defaultMultiplierBps = 12000;
@@ -260,28 +232,13 @@ contract SimpleExecutorMock is IWorker, AccessControl, Pausable, ReentrancyGuard
      * @dev Part of LayerZero V2 protocol - no ULN301 support
      */
     function execute302(ExecutionParams calldata _executionParams) external payable onlyRole(ADMIN_ROLE) nonReentrant {
-        try
-            ILayerZeroEndpointV2(endpoint).lzReceive{ value: msg.value, gas: _executionParams.gasLimit }(
-                _executionParams.origin,
-                _executionParams.receiver,
-                _executionParams.guid,
-                _executionParams.message,
-                _executionParams.extraData
-            )
-        {
-            // do nothing
-        } catch (bytes memory reason) {
-            ILayerZeroEndpointV2(endpoint).lzReceiveAlert(
-                _executionParams.origin,
-                _executionParams.receiver,
-                _executionParams.guid,
-                _executionParams.gasLimit,
-                msg.value,
-                _executionParams.message,
-                _executionParams.extraData,
-                reason
-            );
-        }
+        endpoint.lzReceive{ value: msg.value, gas: _executionParams.gasLimit }(
+            _executionParams.origin,
+            _executionParams.receiver,
+            _executionParams.guid,
+            _executionParams.message,
+            _executionParams.extraData
+        );
     }
 
     /**
@@ -305,30 +262,14 @@ contract SimpleExecutorMock is IWorker, AccessControl, Pausable, ReentrancyGuard
         bytes calldata _extraData,
         uint256 _gasLimit
     ) external payable onlyRole(ADMIN_ROLE) nonReentrant {
-        try
-            ILayerZeroEndpointV2(endpoint).lzCompose{ value: msg.value, gas: _gasLimit }(
-                _from,
-                _to,
-                _guid,
-                _index,
-                _message,
-                _extraData
-            )
-        {
-            // do nothing
-        } catch (bytes memory reason) {
-            ILayerZeroEndpointV2(endpoint).lzComposeAlert(
-                _from,
-                _to,
-                _guid,
-                _index,
-                _gasLimit,
-                msg.value,
-                _message,
-                _extraData,
-                reason
-            );
-        }
+        endpoint.lzCompose{ value: msg.value, gas: _gasLimit }(
+            _from,
+            _to,
+            _guid,
+            _index,
+            _message,
+            _extraData
+        );
     }
 
     /**
@@ -354,29 +295,96 @@ contract SimpleExecutorMock is IWorker, AccessControl, Pausable, ReentrancyGuard
         );
 
         uint256 value = msg.value - spent;
-        try
-            ILayerZeroEndpointV2(endpoint).lzReceive{ value: value, gas: _executionParams.gasLimit }(
-                _executionParams.origin,
-                _executionParams.receiver,
-                _executionParams.guid,
-                _executionParams.message,
-                _executionParams.extraData
-            )
-        {
-            // do nothing
-        } catch (bytes memory reason) {
-            ILayerZeroEndpointV2(endpoint).lzReceiveAlert(
-                _executionParams.origin,
-                _executionParams.receiver,
-                _executionParams.guid,
-                _executionParams.gasLimit,
-                value,
-                _executionParams.message,
-                _executionParams.extraData,
-                reason
-            );
-        }
+        endpoint.lzReceive{ value: value, gas: _executionParams.gasLimit }(
+            _executionParams.origin,
+            _executionParams.receiver,
+            _executionParams.guid,
+            _executionParams.message,
+            _executionParams.extraData
+        );
     }
+
+    // ============================ Admin (Views) ===================================
+    function setReceiveLibView(address _receiveLib, address _receiveLibView) external onlyRole(ADMIN_ROLE) {
+        receiveLibToView[_receiveLib] = _receiveLibView;
+        emit ReceiveLibViewSet(_receiveLib, _receiveLibView);
+    }
+
+    // ============================ External ===================================
+    /// @notice process for commit and execute
+    /// 1. check if executable, revert if executed, execute if executable
+    /// 2. check if verifiable, revert if verifying, commit if verifiable
+    /// 3. native drop
+    /// 4. try execute, will revert if not executable
+    struct LzReceiveParam {
+        Origin origin;
+        address receiver;
+        bytes32 guid;
+        bytes message;
+        bytes extraData;
+        uint256 gas;
+        uint256 value;
+    }
+
+    struct NativeDropParam {
+        address _receiver;
+        uint256 _amount;
+    }
+
+    function commitAndExecute(
+        address _receiveLib,
+        LzReceiveParam calldata _lzReceiveParam,
+        NativeDropParam[] calldata _nativeDropParams
+    ) external payable {
+        // 1. check if executable, revert if executed
+        ExecutionState executionState = executable(_lzReceiveParam.origin, _lzReceiveParam.receiver);
+        if (executionState == ExecutionState.Executed) revert LzExecutor_Executed();
+
+        // 2. if not executable, check if verifiable, revert if verifying, commit if verifiable
+        if (executionState != ExecutionState.Executable) {
+            address receiveLib = receiveUln302 == address(0x0) ? _receiveLib : address(receiveUln302);
+            bytes memory packetHeader = abi.encodePacked(
+                uint8(1), // packet version 1
+                _lzReceiveParam.origin.nonce,
+                _lzReceiveParam.origin.srcEid,
+                _lzReceiveParam.origin.sender,
+                localEidV2,
+                bytes32(uint256(uint160(_lzReceiveParam.receiver)))
+            );
+            bytes32 payloadHash = keccak256(abi.encodePacked(_lzReceiveParam.guid, _lzReceiveParam.message));
+
+            address receiveLibView = receiveLibToView[receiveLib];
+            if (receiveLibView == address(0x0)) revert LzExecutor_ReceiveLibViewNotSet();
+
+            VerificationState verificationState = IReceiveUlnView(receiveLibView).verifiable(packetHeader, payloadHash);
+            if (verificationState == VerificationState.Verifiable) {
+                // verification required
+                IReceiveUlnE2(receiveLib).commitVerification(packetHeader, payloadHash);
+            } else if (verificationState == VerificationState.Verifying) {
+                revert LzExecutor_Verifying();
+            }
+        }
+
+        // 3. native drop
+        for (uint256 i = 0; i < _nativeDropParams.length; i++) {
+            NativeDropParam calldata param = _nativeDropParams[i];
+            Transfer.native(param._receiver, param._amount);
+        }
+
+        // 4. try execute, will revert if not executable
+        endpoint.lzReceive{ gas: _lzReceiveParam.gas, value: _lzReceiveParam.value }(
+            _lzReceiveParam.origin,
+            _lzReceiveParam.receiver,
+            _lzReceiveParam.guid,
+            _lzReceiveParam.message,
+            _lzReceiveParam.extraData
+        );
+    }
+
+    // Errors mirrored from DestinationExecutorMock for parity
+    error LzExecutor_Executed();
+    error LzExecutor_Verifying();
+    error LzExecutor_ReceiveLibViewNotSet();
 
     // --- Message Lib (MOCKED - Returns 0 fees) ---
     /**
