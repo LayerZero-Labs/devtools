@@ -197,10 +197,6 @@ export async function noncePreflightCheck(
                 'Nonce mismatch detected. Please execute commitAndExecute with the correct nonce or process pending messages first.'
             )
         }
-
-        DebugLogger.header('✅ SimpleWorkers Nonce Preflight: OK')
-        DebugLogger.keyValue('Lazy inbound nonce', lazyNonce.toString())
-        DebugLogger.keyValue('Inbound nonce', inboundNonce.toString())
     } catch (err) {
         DebugLogger.header('Failed preflight nonce check (SimpleWorkers)')
         DebugLogger.keyValue('Error', err instanceof Error ? err.message : String(err))

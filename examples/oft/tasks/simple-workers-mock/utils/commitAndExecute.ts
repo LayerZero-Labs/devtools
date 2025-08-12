@@ -63,9 +63,6 @@ export async function commitAndExecute(
                 `⚠️  Lazy inbound nonce is not equal to inboundNonce + 1. You will run into an InvalidNonce error. You must execute commitAndExecute with nonce ${nextNonceToExecute} instead of ${lazyNonce.toString()}. Run 'npx hardhat lz:simple-workers:commit-and-execute' to execute the correct nonce.`
             )
         }
-        console.log(`Lazy inbound nonce: ${lazyNonce.toString()}`)
-        console.log(`Inbound nonce: ${inboundNonce.toString()}`)
-        console.log(`Message nonce: ${params.nonce}`)
     } catch (error) {
         console.warn('Failed to fetch nonce information:', error instanceof Error ? error.message : String(error))
     }
