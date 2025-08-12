@@ -8,7 +8,7 @@ import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzer
 import { EvmArgs, sendEvm } from './sendEvm'
 import { noncePreflightCheck, triggerProcessReceive } from './simple-workers-mock/utils/common'
 import { SendResult } from './types'
-import { DebugLogger, KnownOutputs, KnownWarnings, getBlockExplorerLink, getOAppInfoByEid } from './utils'
+import { DebugLogger, KnownOutputs, KnownWarnings, getBlockExplorerLink, getOftAddresses } from './utils'
 
 // getOAppInfoByEid moved to ./utils
 
@@ -84,9 +84,8 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from EVM chains')
         const getHreByEid = createGetHreByEid(hre)
         let dstHre: HardhatRuntimeEnvironment | null = null
         let srcHre: HardhatRuntimeEnvironment | null = null
-        type OAppInfo = Awaited<ReturnType<typeof getOAppInfoByEid>>
-        let dstOftInfo: OAppInfo | null = null
-        let srcOftInfo: OAppInfo | null = null
+        let srcOftAddress: string | null = null
+        let dstOftAddress: string | null = null
 
         if (args.oftAddress) {
             DebugLogger.printWarning(
@@ -103,14 +102,16 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from EVM chains')
                 if (!dstHre || !srcHre) {
                     throw new Error('Failed to resolve Hardhat runtimes for src/dst EIDs')
                 }
-                ;[dstOftInfo, srcOftInfo] = await Promise.all([
-                    getOAppInfoByEid(args.dstEid, args.oappConfig, dstHre, args.oftAddress),
-                    getOAppInfoByEid(args.srcEid, args.oappConfig, srcHre, args.oftAddress),
-                ])
-                if (!dstOftInfo || !srcOftInfo) {
-                    throw new Error('Failed to resolve OFT addresses for src/dst EIDs')
-                }
-                await noncePreflightCheck(dstHre, srcOftInfo.address, dstOftInfo.address, args.srcEid)
+                const addrs = await getOftAddresses(
+                    args.srcEid,
+                    args.dstEid,
+                    args.oappConfig,
+                    (eid: number) => Promise.resolve(createGetHreByEid(hre)(eid)),
+                    args.oftAddress
+                )
+                srcOftAddress = addrs.srcOft
+                dstOftAddress = addrs.dstOft
+                await noncePreflightCheck(dstHre, srcOftAddress, dstOftAddress, args.srcEid)
             }
 
             result = await sendEvm(args as EvmArgs, hre)
@@ -143,7 +144,7 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from EVM chains')
 
         // SimpleDVN processing (development only) - runs at the very end
         if (args.simpleWorkers) {
-            if (!dstHre || !srcHre || !dstOftInfo || !srcOftInfo) {
+            if (!dstHre || !srcHre || !dstOftAddress || !srcOftAddress) {
                 throw new Error('SimpleWorkers: Missing resolved hre or oft info')
             }
             await triggerProcessReceive(dstHre, srcHre, {
@@ -152,9 +153,9 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from EVM chains')
                 to: args.to,
                 amount: args.amount,
                 outboundNonce: result.outboundNonce,
-                srcOftAddress: srcOftInfo.address,
-                dstOftAddress: dstOftInfo.address,
-                dstContractName: dstOftInfo.contractName,
+                srcOftAddress,
+                dstOftAddress,
+                dstContractName: undefined,
                 extraOptions: result.extraOptions,
             })
         }

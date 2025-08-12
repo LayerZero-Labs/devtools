@@ -75,3 +75,22 @@ export async function getOAppInfoByEid(
 
     return { address, contractName }
 }
+
+/**
+ * Resolve OFT addresses for src/dst EIDs using the LayerZero config or an override.
+ * Returns only addresses to keep call sites simple.
+ */
+export async function getOftAddresses(
+    srcEid: number,
+    dstEid: number,
+    oappConfig: string,
+    getHreByEid: (eid: number) => Promise<HardhatRuntimeEnvironment>,
+    overrideAddress?: string
+): Promise<{ srcOft: string; dstOft: string }> {
+    const [srcHre, dstHre] = await Promise.all([getHreByEid(srcEid), getHreByEid(dstEid)])
+    const [srcInfo, dstInfo] = await Promise.all([
+        getOAppInfoByEid(srcEid, oappConfig, srcHre, overrideAddress),
+        getOAppInfoByEid(dstEid, oappConfig, dstHre, overrideAddress),
+    ])
+    return { srcOft: srcInfo.address, dstOft: dstInfo.address }
+}
