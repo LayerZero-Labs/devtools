@@ -4,7 +4,6 @@ pragma solidity ^0.8.20;
 
 import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import { AccessControl } from "@openzeppelin/contracts/access/AccessControl.sol";
-import { Pausable } from "@openzeppelin/contracts/utils/Pausable.sol";
 
 import { ILayerZeroEndpointV2, Origin } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 import { Transfer } from "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Transfer.sol";
@@ -40,7 +39,7 @@ interface IReceiveUlnView {
  *   - sender: Original sender address as bytes32
  *   - nonce: Message sequence number for ordering/deduplication
  */
-contract SimpleExecutorMock is IWorker, AccessControl, Pausable, ReentrancyGuard, IExecutor, EndpointV2View {
+contract SimpleExecutorMock is IWorker, AccessControl, ReentrancyGuard, IExecutor, EndpointV2View {
     bytes32 internal constant MESSAGE_LIB_ROLE = keccak256("MESSAGE_LIB_ROLE");
     bytes32 internal constant ALLOWLIST = keccak256("ALLOWLIST");
     bytes32 internal constant DENYLIST = keccak256("DENYLIST");
@@ -59,7 +58,7 @@ contract SimpleExecutorMock is IWorker, AccessControl, Pausable, ReentrancyGuard
 
     event ReceiveLibViewSet(address _receiveLib, address _receiveLibView);
 
-    // Worker state variables
+    // Worker state variables (kept minimal for tests)
     address public workerFeeLib;
     uint64 public allowlistSize;
     uint16 public defaultMultiplierBps;
@@ -96,6 +95,14 @@ contract SimpleExecutorMock is IWorker, AccessControl, Pausable, ReentrancyGuard
 
     // --- Worker Interface Implementation ---
     
+    function withdrawFee(address _lib, address _to, uint256 _amount) external onlyRole(ADMIN_ROLE) {
+        if (!hasRole(MESSAGE_LIB_ROLE, _lib)) revert Worker_OnlyMessageLib();
+        // Mock implementation - in real Worker this would call ISendLib(_lib).withdrawFee(_to, _amount);
+        emit Withdraw(_lib, _to, _amount);
+    }
+
+    // --- Worker-required functions (IWorker) ---
+
     function setPriceFeed(address _priceFeed) external onlyRole(ADMIN_ROLE) {
         priceFeed = _priceFeed;
         emit SetPriceFeed(_priceFeed);
@@ -104,12 +111,6 @@ contract SimpleExecutorMock is IWorker, AccessControl, Pausable, ReentrancyGuard
     function setDefaultMultiplierBps(uint16 _multiplierBps) external onlyRole(ADMIN_ROLE) {
         defaultMultiplierBps = _multiplierBps;
         emit SetDefaultMultiplierBps(_multiplierBps);
-    }
-
-    function withdrawFee(address _lib, address _to, uint256 _amount) external onlyRole(ADMIN_ROLE) {
-        if (!hasRole(MESSAGE_LIB_ROLE, _lib)) revert Worker_OnlyMessageLib();
-        // Mock implementation - in real Worker this would call ISendLib(_lib).withdrawFee(_to, _amount);
-        emit Withdraw(_lib, _to, _amount);
     }
 
     function setSupportedOptionTypes(uint32 _eid, uint8[] calldata _optionTypes) external onlyRole(ADMIN_ROLE) {
@@ -140,29 +141,6 @@ contract SimpleExecutorMock is IWorker, AccessControl, Pausable, ReentrancyGuard
         }
     }
 
-    function setPaused(bool _paused) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        if (_paused) {
-            _pause();
-        } else {
-            _unpause();
-        }
-    }
-
-    function setWorkerFeeLib(address _workerFeeLib) external onlyRole(ADMIN_ROLE) {
-        workerFeeLib = _workerFeeLib;
-        emit SetWorkerLib(_workerFeeLib);
-    }
-
-    function withdrawToken(address _token, address _to, uint256 _amount) external onlyRole(ADMIN_ROLE) {
-        // Mock implementation - in real Worker this would use Transfer.nativeOrToken
-        if (_token == address(0)) {
-            (bool sent, ) = _to.call{value: _amount}("");
-            require(sent, "Failed to send native token");
-        } else {
-            // For ERC20 tokens, this would need proper implementation
-            // For mock purposes, we'll just emit an event
-        }
-    }
 
     // Override AccessControl to handle allowlist counting
     function _grantRole(bytes32 _role, address _account) internal override returns (bool) {
@@ -305,10 +283,7 @@ contract SimpleExecutorMock is IWorker, AccessControl, Pausable, ReentrancyGuard
     }
 
     // ============================ Admin (Views) ===================================
-    function setReceiveLibView(address _receiveLib, address _receiveLibView) external onlyRole(ADMIN_ROLE) {
-        receiveLibToView[_receiveLib] = _receiveLibView;
-        emit ReceiveLibViewSet(_receiveLib, _receiveLibView);
-    }
+    
 
     // ============================ External ===================================
     /// @notice process for commit and execute
@@ -403,7 +378,7 @@ contract SimpleExecutorMock is IWorker, AccessControl, Pausable, ReentrancyGuard
         address _sender,
         uint256 _calldataSize,
         bytes calldata _options
-    ) external virtual onlyRole(MESSAGE_LIB_ROLE) onlyAcl(_sender) whenNotPaused returns (uint256 fee) {
+    ) external virtual onlyRole(MESSAGE_LIB_ROLE) onlyAcl(_sender) returns (uint256 fee) {
         fee = 0; // MOCK: Override for custom fee logic
     }
 
@@ -419,7 +394,7 @@ contract SimpleExecutorMock is IWorker, AccessControl, Pausable, ReentrancyGuard
     function assignJob(
         address _sender,
         bytes calldata _options
-    ) external virtual onlyRole(MESSAGE_LIB_ROLE) onlyAcl(_sender) whenNotPaused returns (uint256 fee) {
+    ) external virtual onlyRole(MESSAGE_LIB_ROLE) onlyAcl(_sender) returns (uint256 fee) {
         fee = 0; // MOCK: Override for custom fee logic
     }
 
@@ -440,7 +415,7 @@ contract SimpleExecutorMock is IWorker, AccessControl, Pausable, ReentrancyGuard
         address _sender,
         uint256 _calldataSize,
         bytes calldata _options
-    ) external view virtual onlyAcl(_sender) whenNotPaused returns (uint256 fee) {
+    ) external view virtual onlyAcl(_sender) returns (uint256 fee) {
         fee = 0; // MOCK: Override for custom fee logic
     }
 
@@ -456,7 +431,7 @@ contract SimpleExecutorMock is IWorker, AccessControl, Pausable, ReentrancyGuard
     function getFee(
         address _sender,
         bytes calldata _options
-    ) external view virtual onlyAcl(_sender) whenNotPaused returns (uint256 fee) {
+    ) external view virtual onlyAcl(_sender) returns (uint256 fee) {
         fee = 0; // MOCK: Override for custom fee logic
     }
 

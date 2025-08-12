@@ -91,30 +91,9 @@ contract SimpleExecutorTest is Test {
         simpleExecutor.assignJob(REMOTE_EID, user, 1000, hex"1234");
     }
 
-    function test_SimpleExecutor_assignJob_revertsWhenPaused() public {
-        vm.prank(admin);
-        simpleExecutor.setPaused(true);
+    // Removed paused-path test since setPaused is no longer exposed
 
-        vm.expectRevert();
-        vm.prank(address(0x123));
-        simpleExecutor.assignJob(REMOTE_EID, user, 1000, hex"1234");
-    }
-
-    function test_SimpleExecutor_setPaused() public {
-        vm.prank(admin);
-        simpleExecutor.setPaused(true);
-        assertTrue(simpleExecutor.paused());
-
-        vm.prank(admin);
-        simpleExecutor.setPaused(false);
-        assertFalse(simpleExecutor.paused());
-    }
-
-    function test_SimpleExecutor_setPaused_revertsWhenNotAdmin() public {
-        vm.expectRevert();
-        vm.prank(user);
-        simpleExecutor.setPaused(true);
-    }
+    // Removed setPaused tests since the function no longer exists
 
     // ============================ DestinationExecutorMock Critical Tests ============================
 
