@@ -75,7 +75,6 @@ export async function processMessage(dstOftContract: Contract, args: SimpleDvnMo
                         })
                     }
                 }
-                console.log(`📦 Decoded ${nativeDrops.length} native drop(s) from extraOptions`)
             }
         } catch (error) {
             console.warn('Failed to parse native drops from extraOptions:', error)

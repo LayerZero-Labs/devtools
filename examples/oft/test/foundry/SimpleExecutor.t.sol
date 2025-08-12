@@ -54,7 +54,12 @@ contract SimpleExecutorTest is Test {
         messageLibs[0] = address(0x123);
 
         vm.prank(admin);
-        simpleExecutor = new SimpleExecutorMock(address(mockEndpoint), messageLibs);
+        simpleExecutor = new SimpleExecutorMock(
+            address(mockEndpoint),
+            messageLibs,
+            address(mockReceiveUln),
+            address(mockReceiveUlnView)
+        );
 
         vm.prank(admin);
         destinationExecutor = new DestinationExecutorMock(

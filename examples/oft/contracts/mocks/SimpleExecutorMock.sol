@@ -74,7 +74,9 @@ contract SimpleExecutorMock is IWorker, AccessControl, ReentrancyGuard, IExecuto
      */
     constructor(
         address _endpoint,
-        address[] memory _messageLibs
+        address[] memory _messageLibs,
+        address _receiveUln302,
+        address _receiveUln302View
     ) {
         endpoint = ILayerZeroEndpointV2(_endpoint);
         localEidV2 = endpoint.eid();
@@ -91,6 +93,11 @@ contract SimpleExecutorMock is IWorker, AccessControl, ReentrancyGuard, IExecuto
         for (uint256 i = 0; i < _messageLibs.length; ++i) {
             _grantRole(MESSAGE_LIB_ROLE, _messageLibs[i]);
         }
+
+        // Initialize receive lib and its view for verification checks used in commitAndExecute
+        receiveUln302 = _receiveUln302;
+        receiveLibToView[_receiveUln302] = _receiveUln302View;
+        emit ReceiveLibViewSet(_receiveUln302, _receiveUln302View);
     }
 
     // --- Worker Interface Implementation ---

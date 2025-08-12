@@ -5,8 +5,7 @@ Do not use this in production.
 Simple Workers refers to mock implementations of LayerZero workers for testnet uses. This includes:
 
 - **SimpleDVNMock**: Data Verification Network for message verification
-- **SimpleExecutorMock**: Executor for send operations (source chain)
-- **DestinationExecutorMock**: Executor for commit and execute operations (destination chain)
+- **SimpleExecutorMock**: Executor mock used for both send and destination commit/execute operations
 
 ## Simple Workers Flow
 
@@ -15,7 +14,7 @@ Simple Workers follow different flows depending on their role:
 **Send Operations (SimpleExecutorMock on source chain):**
 - Handles the initial send transaction and fee calculation
 
-**Destination Operations (SimpleDVNMock and DestinationExecutorMock on destination chain):**
+**Destination Operations (SimpleDVNMock and SimpleExecutorMock on destination chain):**
 
 ```
                     ┌──────────┐       ┌──────────┐       ┌──────────┐
@@ -32,7 +31,7 @@ Simple Workers follow different flows depending on their role:
                                        execution
 ```
 
-Note: both `commit` and `execute` are permissionless. For simplicity, we combine the two into one function called `commitAndExecute` in `SimpleExecutorMock.sol`
+Note: both `commit` and `execute` are permissionless. For simplicity, we combine the two into one function called `commitAndExecute` in `SimpleExecutorMock.sol`.
 
 ## Instructions
 
@@ -60,7 +59,7 @@ The example configuration includes:
 
 ### Step 2: Deploy Simple Workers
 
-Deploy Simple Workers (SimpleDVNMock, SimpleExecutorMock, and DestinationExecutorMock) on both networks:
+Deploy Simple Workers (SimpleDVNMock and SimpleExecutorMock) on both networks:
 
 **Deploy SimpleDVNMock:**
 
@@ -78,13 +77,7 @@ pnpm hardhat lz:deploy --tags SimpleExecutorMock
 
 Select both `arbitrum-testnet` and `optimism-testnet` and specify the contract name `SimpleExecutorMock` as the tag.
 
-**Deploy DestinationExecutorMock (for commit and execute operations):**
-
-```
-pnpm hardhat lz:deploy --tags DestinationExecutorMock
-```
-
-Select both `arbitrum-testnet` and `optimism-testnet` and specify the contract name `DestinationExecutorMock` as the tag.
+> There is no longer a separate destination executor. Use `SimpleExecutorMock` for commit-and-execute on the destination chain.
 
 ### Step 3: Update Simple Workers Addresses
 
@@ -92,12 +85,12 @@ After deploying on both networks, update the address variables in your `layerzer
 
 1. **For Optimism Sepolia:**
 
-   - Open `deployments/optimism-testnet/SimpleDVNMock.json`, `deployments/optimism-testnet/SimpleExecutorMock.json`, and `deployments/optimism-testnet/DestinationExecutorMock.json`
+   - Open `deployments/optimism-testnet/SimpleDVNMock.json` and `deployments/optimism-testnet/SimpleExecutorMock.json`
    - Copy the `address` field values
    - Paste them into the respective address variables
 
 2. **For Arbitrum Sepolia:**
-   - Open `deployments/arbitrum-testnet/SimpleDVNMock.json`, `deployments/arbitrum-testnet/SimpleExecutorMock.json`, and `deployments/arbitrum-testnet/DestinationExecutorMock.json`
+   - Open `deployments/arbitrum-testnet/SimpleDVNMock.json` and `deployments/arbitrum-testnet/SimpleExecutorMock.json`
    - Copy the `address` field values
    - Paste them into the respective address variables
 
@@ -108,8 +101,7 @@ const simpleDvnAddressOptimism = "0x1234..."; // Your Optimism SimpleDVNMock add
 const simpleDvnAddressArbitrum = "0x5678..."; // Your Arbitrum SimpleDVNMock address
 const simpleExecutorAddressOptimism = "0x9abc..."; // Your Optimism SimpleExecutorMock address
 const simpleExecutorAddressArbitrum = "0xdef0..."; // Your Arbitrum SimpleExecutorMock address
-const destinationExecutorAddressOptimism = "0x1111..."; // Your Optimism DestinationExecutorMock address
-const destinationExecutorAddressArbitrum = "0x2222..."; // Your Arbitrum DestinationExecutorMock address
+// No separate DestinationExecutorMock needed anymore
 ```
 
 ### Step 4: Wire Your Contracts

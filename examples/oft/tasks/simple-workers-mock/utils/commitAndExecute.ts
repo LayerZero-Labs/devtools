@@ -20,14 +20,14 @@ export interface CommitAndExecuteParams {
 
 export async function commitAndExecute(
     params: CommitAndExecuteParams,
-    destinationExecutorMock: Contract,
+    simpleExecutorMock: Contract,
     hre: HardhatRuntimeEnvironment
 ): Promise<void> {
     const { ethers } = hre
     const [signer] = await ethers.getSigners()
 
     console.log(`Calling commitAndExecute with signer: ${signer.address}`)
-    console.log(`DestinationExecutorMock address: ${destinationExecutorMock.address}`)
+    console.log(`SimpleExecutorMock address: ${simpleExecutorMock.address}`)
     console.log(`Nonce: ${params.nonce}`)
 
     // Get endpoint contract to check nonces
@@ -56,6 +56,13 @@ export async function commitAndExecute(
     try {
         const lazyNonce = await endpoint.lazyInboundNonce(params.receiver, params.srcEid, senderB32)
         const inboundNonce = await endpoint.inboundNonce(params.receiver, params.srcEid, senderB32)
+        // warn if current message nonce is not equal to inboundNonce + 1
+        const nextNonceToExecute = inboundNonce.toNumber() + 1
+        if (params.nonce.toString() !== nextNonceToExecute.toString()) {
+            console.warn(
+                `⚠️  Lazy inbound nonce is not equal to inboundNonce + 1. You will run into an InvalidNonce error. You must execute commitAndExecute with nonce ${nextNonceToExecute} instead of ${lazyNonce.toString()}. Run 'npx hardhat lz:simple-workers:commit-and-execute' to execute the correct nonce.`
+            )
+        }
         console.log(`Lazy inbound nonce: ${lazyNonce.toString()}`)
         console.log(`Inbound nonce: ${inboundNonce.toString()}`)
         console.log(`Message nonce: ${params.nonce}`)
@@ -77,10 +84,6 @@ export async function commitAndExecute(
                 _receiver: param._receiver,
                 _amount: param._amount.toString(),
             }))
-            console.log(`📦 Parsed ${nativeDropParams.length} native drop(s) for execution`)
-            nativeDropParams.forEach((param, index) => {
-                console.log(`  Drop ${index + 1}: ${ethers.utils.formatEther(param._amount)} ETH to ${param._receiver}`)
-            })
         } catch (error) {
             console.warn('⚠️  Failed to parse native drops from hex data:', error)
             console.warn('⚠️  Using empty native drops due to parsing error')
@@ -122,7 +125,7 @@ export async function commitAndExecute(
 
     try {
         // Estimate gas first
-        const gasEstimate = await destinationExecutorMock.estimateGas.commitAndExecute(
+        const gasEstimate = await simpleExecutorMock.estimateGas.commitAndExecute(
             params.receiveLib,
             lzReceiveParam,
             nativeDropParams,
@@ -131,7 +134,7 @@ export async function commitAndExecute(
         console.log(`Estimated gas: ${gasEstimate.toString()}`)
 
         // Call commitAndExecute
-        const tx = await destinationExecutorMock.commitAndExecute(params.receiveLib, lzReceiveParam, nativeDropParams, {
+        const tx = await simpleExecutorMock.commitAndExecute(params.receiveLib, lzReceiveParam, nativeDropParams, {
             gasLimit: gasEstimate.mul(120).div(100), // Add 20% buffer
             value: totalNativeDropAmount,
         })
