@@ -16,7 +16,7 @@ export async function processReceive(
     args: SimpleDvnMockTaskArgs,
     hre: HardhatRuntimeEnvironment
 ) {
-    console.log('\n🚀 Starting SimpleExecutorMock message processing...\n')
+    console.log('\n🚀 Starting SimpleWorkers message processing...\n')
 
     try {
         // Step 1: Verify
@@ -78,7 +78,7 @@ export async function processReceive(
         )
         console.log('✅ CommitAndExecute completed\n')
 
-        console.log('🎉 SimpleExecutorMock message processing completed successfully!')
+        console.log('🎉 SimpleWorkers message processing completed successfully!')
     } catch (error) {
         console.error(`❌ Message processing failed:`, error)
         throw error

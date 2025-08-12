@@ -101,14 +101,6 @@ task('commitAndExecute', 'Call commitAndExecute on SimpleExecutorMock')
             console.log(`Transaction confirmed in block: ${receipt.blockNumber}`)
             console.log(`Gas used: ${receipt.gasUsed.toString()}`)
 
-            // Log events
-            if (receipt.events && receipt.events.length > 0) {
-                console.log('Events emitted:')
-                receipt.events.forEach((event: unknown, index: number) => {
-                    console.log(`  Event ${index}:`, event)
-                })
-            }
-
             console.log('✅ commitAndExecute completed successfully!')
         } catch (error: unknown) {
             const errorMessage = error instanceof Error ? error.message : String(error)
