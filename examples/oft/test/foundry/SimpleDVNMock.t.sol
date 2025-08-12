@@ -6,6 +6,7 @@ import { SimpleDVNMock } from "../../contracts/mocks/SimpleDVNMock.sol";
 import { IReceiveUlnE2 } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IReceiveUlnE2.sol";
 import { ILayerZeroDVN } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroDVN.sol";
 
+
 // Minimal mock for IReceiveUlnE2
 contract MockReceiveUln is IReceiveUlnE2 {
     bool public verifyCalled;
@@ -112,5 +113,33 @@ contract SimpleDVNMockTest is Test {
 
         vm.prank(owner);
         dvnMock.verify(SAMPLE_MESSAGE, SAMPLE_NONCE, REMOTE_EID, REMOTE_OAPP, wrongEid, LOCAL_OAPP);
+    }
+
+    // Test access control - only owner can call verify
+    function test_verify_revertsWhenNotOwner() public {
+        address nonOwner = makeAddr("nonOwner");
+
+        vm.expectRevert();
+        vm.prank(nonOwner);
+        dvnMock.verify(SAMPLE_MESSAGE, SAMPLE_NONCE, REMOTE_EID, REMOTE_OAPP, LOCAL_EID, LOCAL_OAPP);
+    }
+
+    // Test access control - only owner can call commit
+    function test_commit_revertsWhenNotOwner() public {
+        address nonOwner = makeAddr("nonOwner");
+
+        vm.expectRevert();
+        vm.prank(nonOwner);
+        dvnMock.commit(SAMPLE_MESSAGE, SAMPLE_NONCE, REMOTE_EID, REMOTE_OAPP, LOCAL_EID, LOCAL_OAPP);
+    }
+
+    // Test commit with invalid localEid
+    function test_commit_revertsOnInvalidLocalEid() public {
+        uint32 wrongEid = 999;
+
+        vm.expectRevert(abi.encodeWithSelector(SimpleDVNMock.InvalidLocalEid.selector, LOCAL_EID, wrongEid));
+
+        vm.prank(owner);
+        dvnMock.commit(SAMPLE_MESSAGE, SAMPLE_NONCE, REMOTE_EID, REMOTE_OAPP, wrongEid, LOCAL_OAPP);
     }
 }
