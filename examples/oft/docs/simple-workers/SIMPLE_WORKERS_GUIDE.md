@@ -32,6 +32,8 @@ Simple Workers follow different flows depending on their role:
                                        execution
 ```
 
+Note: both `commit` and `execute` are permissionless. For simplicity, we combine the two into one function called `commitAndExecute` in `SimpleExecutorMock.sol`
+
 ## Instructions
 
 Deploy your OFTs like usual, but **before running the wire command**, you need to configure Simple Workers (SimpleDVNMock and SimpleExecutorMock) as custom workers.
