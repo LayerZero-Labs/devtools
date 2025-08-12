@@ -6,7 +6,6 @@ import { SimpleDVNMock } from "../../contracts/mocks/SimpleDVNMock.sol";
 import { IReceiveUlnE2 } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IReceiveUlnE2.sol";
 import { ILayerZeroDVN } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroDVN.sol";
 
-
 // Minimal mock for IReceiveUlnE2
 contract MockReceiveUln is IReceiveUlnE2 {
     bool public verifyCalled;

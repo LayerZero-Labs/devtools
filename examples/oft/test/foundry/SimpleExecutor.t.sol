@@ -22,7 +22,12 @@ contract MockReceiveUln is IReceiveUlnE2 {
 }
 
 contract MockReceiveUlnView {
-    enum VerificationState { Verifiable, Verifying, Verified, Unverified }
+    enum VerificationState {
+        Verifiable,
+        Verifying,
+        Verified,
+        Unverified
+    }
     VerificationState public state = VerificationState.Verifiable;
 
     function verifiable(bytes calldata, bytes32) external view returns (VerificationState) {

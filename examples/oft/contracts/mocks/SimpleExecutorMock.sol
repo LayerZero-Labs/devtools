@@ -22,20 +22,20 @@ interface IReceiveUlnView {
 /**
  * @title SimpleExecutorMock
  * @notice Mock executor for development/testing ONLY - returns 0 fees
- * 
+ *
  * 🔧 DIFFERENCES FROM REAL EXECUTOR:
  * - Implements IWorker instead of inheriting Worker - avoids OpenZeppelin v4/v5 conflicts
- * - Constructor-based (not initialize()) 
+ * - Constructor-based (not initialize())
  * - NO price feed - hardcoded 0 fees (virtual methods for override)
  * - NO ULN301 support - V2 operations only
  * - NO real fee calculations or economic incentives
- * 
+ *
  * ⚠️ LIMITATIONS: Zero fees break economic model, cannot upgrade, no mainnet use
  * ✅ USE FOR: Local testing, unit tests, prototyping
  * ❌ DON'T USE: Production, mainnet, real transactions
- * 
+ *
  * 📝 NOTE: Origin struct contains cross-chain message provenance:
- *   - srcEid: Source chain endpoint ID (e.g., 40161 for Ethereum)  
+ *   - srcEid: Source chain endpoint ID (e.g., 40161 for Ethereum)
  *   - sender: Original sender address as bytes32
  *   - nonce: Message sequence number for ordering/deduplication
  */
@@ -72,23 +72,18 @@ contract SimpleExecutorMock is IWorker, AccessControl, ReentrancyGuard, IExecuto
      * @dev Deployer automatically gets both DEFAULT_ADMIN_ROLE and ADMIN_ROLE
      * @dev Uses address(0) for price feed since fees are mocked
      */
-    constructor(
-        address _endpoint,
-        address[] memory _messageLibs,
-        address _receiveUln302,
-        address _receiveUln302View
-    ) {
+    constructor(address _endpoint, address[] memory _messageLibs, address _receiveUln302, address _receiveUln302View) {
         endpoint = ILayerZeroEndpointV2(_endpoint);
         localEidV2 = endpoint.eid();
-        
+
         // Initialize Worker-like state
         defaultMultiplierBps = 12000;
         priceFeed = address(0);
-        
+
         // Grant roles to deployer
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(ADMIN_ROLE, msg.sender);
-        
+
         // Grant MESSAGE_LIB_ROLE to provided message libs
         for (uint256 i = 0; i < _messageLibs.length; ++i) {
             _grantRole(MESSAGE_LIB_ROLE, _messageLibs[i]);
@@ -101,7 +96,7 @@ contract SimpleExecutorMock is IWorker, AccessControl, ReentrancyGuard, IExecuto
     }
 
     // --- Worker Interface Implementation ---
-    
+
     function withdrawFee(address _lib, address _to, uint256 _amount) external onlyRole(ADMIN_ROLE) {
         if (!hasRole(MESSAGE_LIB_ROLE, _lib)) revert Worker_OnlyMessageLib();
         // Mock implementation - in real Worker this would call ISendLib(_lib).withdrawFee(_to, _amount);
@@ -147,7 +142,6 @@ contract SimpleExecutorMock is IWorker, AccessControl, ReentrancyGuard, IExecuto
             return false;
         }
     }
-
 
     // Override AccessControl to handle allowlist counting
     function _grantRole(bytes32 _role, address _account) internal override returns (bool) {
@@ -247,14 +241,7 @@ contract SimpleExecutorMock is IWorker, AccessControl, ReentrancyGuard, IExecuto
         bytes calldata _extraData,
         uint256 _gasLimit
     ) external payable onlyRole(ADMIN_ROLE) nonReentrant {
-        endpoint.lzCompose{ value: msg.value, gas: _gasLimit }(
-            _from,
-            _to,
-            _guid,
-            _index,
-            _message,
-            _extraData
-        );
+        endpoint.lzCompose{ value: msg.value, gas: _gasLimit }(_from, _to, _guid, _index, _message, _extraData);
     }
 
     /**
@@ -290,7 +277,6 @@ contract SimpleExecutorMock is IWorker, AccessControl, ReentrancyGuard, IExecuto
     }
 
     // ============================ Admin (Views) ===================================
-    
 
     // ============================ External ===================================
     /// @notice process for commit and execute

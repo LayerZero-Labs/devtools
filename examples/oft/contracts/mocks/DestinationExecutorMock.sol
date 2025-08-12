@@ -4,7 +4,6 @@ pragma solidity ^0.8.20;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
-
 import { IReceiveUlnE2 } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IReceiveUlnE2.sol";
 import { ILayerZeroEndpointV2, Origin } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 import { Transfer } from "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Transfer.sol";
@@ -53,7 +52,7 @@ contract DestinationExecutorMock is Ownable, EndpointV2View {
     ) Ownable(_initialOwner) {
         // Initialize EndpointV2View
         endpoint = ILayerZeroEndpointV2(_endpoint);
-        
+
         receiveUln302 = _receiveUln302;
         localEid = endpoint.eid();
         receiveLibToView[_receiveUln302] = _receiveUln302View;

@@ -12,6 +12,7 @@ Simple Workers refers to mock implementations of LayerZero workers for testnet u
 Simple Workers follow different flows depending on their role:
 
 **Send Operations (SimpleExecutorMock on source chain):**
+
 - Handles the initial send transaction and fee calculation
 
 **Destination Operations (SimpleDVNMock and SimpleExecutorMock on destination chain):**
@@ -129,8 +130,9 @@ pnpm hardhat lz:simple-workers:set-send-config --dst-eid 40232 --contract-name M
 ```
 
 These commands will:
+
 - Override the default LayerZero workers with your Simple Workers
-- Set up SimpleDVNMock as the DVN for message verification  
+- Set up SimpleDVNMock as the DVN for message verification
 - Set up SimpleExecutorMock as the executor for message processing
 - Use 1 confirmation and appropriate gas limits for testing
 
