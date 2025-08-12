@@ -4,6 +4,10 @@ import { SimpleDvnMockTaskArgs, logTaskInfo, processMessage } from './common'
 
 /**
  * DVN commit operation
+ *
+ * Note: In most cases you should not call `commit` and `lzReceive` directly.
+ * Prefer using `commitAndExecute`, which performs both steps atomically
+ * through `SimpleExecutorMock.commitAndExecute` for development/testing.
  */
 export async function commit(dvnContract: Contract, dstOftContract: Contract, args: SimpleDvnMockTaskArgs) {
     const { srcEid, nonce, dstEid } = args

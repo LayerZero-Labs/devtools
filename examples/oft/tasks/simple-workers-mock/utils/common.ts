@@ -2,6 +2,10 @@ import { Contract, ethers } from 'ethers'
 
 import { ExecutorNativeDropOption, Options, addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 
+import { DebugLogger } from '../../utils'
+
+import type { HardhatRuntimeEnvironment } from 'hardhat/types'
+
 export interface SimpleDvnMockTaskArgs {
     srcEid: number
     srcOapp: string
@@ -157,4 +161,106 @@ export function generateGuid(
             [nonce, srcEid, srcOappB32, dstEid, localOappB32]
         )
     )
+}
+
+/**
+ * Checks the inbound nonces on the destination EndpointV2 for the channel (srcOFT -> dstOFT, srcEid).
+ * Logs a warning if lazyInboundNonce !== inboundNonce + 1 which would cause InvalidNonce on manual execution.
+ */
+export async function noncePreflightCheck(
+    dstHre: HardhatRuntimeEnvironment,
+    srcOftAddress: string,
+    dstOftAddress: string,
+    srcEid: number
+): Promise<void> {
+    try {
+        const signer = (await dstHre.ethers.getSigners())[0]
+        const endpointDep = await dstHre.deployments.get('EndpointV2')
+        const endpoint = new dstHre.ethers.Contract(endpointDep.address, endpointDep.abi, signer)
+
+        const senderB32 = dstHre.ethers.utils.hexZeroPad(srcOftAddress, 32)
+
+        const [lazyNonce, inboundNonce] = await Promise.all([
+            endpoint.lazyInboundNonce(dstOftAddress, `${srcEid}`, senderB32),
+            endpoint.inboundNonce(dstOftAddress, `${srcEid}`, senderB32),
+        ])
+
+        const nextNonceToExecute = inboundNonce.toNumber() + 1
+        const nonceMismatch = lazyNonce.add(1).toString() !== nextNonceToExecute.toString()
+
+        if (nonceMismatch) {
+            DebugLogger.header('⚠️  SimpleWorkers Nonce Preflight: Mismatch')
+            DebugLogger.keyValue('Expected next nonce', nextNonceToExecute)
+            DebugLogger.keyValue('Lazy inbound nonce', lazyNonce.toString())
+            DebugLogger.keyValue('Inbound nonce', inboundNonce.toString())
+            throw new Error(
+                'Nonce mismatch detected. Please execute commitAndExecute with the correct nonce or process pending messages first.'
+            )
+        }
+
+        DebugLogger.header('✅ SimpleWorkers Nonce Preflight: OK')
+        DebugLogger.keyValue('Lazy inbound nonce', lazyNonce.toString())
+        DebugLogger.keyValue('Inbound nonce', inboundNonce.toString())
+    } catch (err) {
+        DebugLogger.header('Failed preflight nonce check (SimpleWorkers)')
+        DebugLogger.keyValue('Error', err instanceof Error ? err.message : String(err))
+        throw err
+    }
+}
+
+/**
+ * Resolve and trigger SimpleWorkers processReceive flow on destination chain.
+ */
+export async function triggerProcessReceive(
+    dstHre: HardhatRuntimeEnvironment,
+    srcHre: HardhatRuntimeEnvironment,
+    params: {
+        srcEid: number
+        dstEid: number
+        to: string
+        amount: string
+        outboundNonce: string
+        srcOftAddress: string
+        dstOftAddress: string
+        dstContractName?: string
+        extraOptions?: string
+    }
+): Promise<void> {
+    console.log('\n🧪 SimpleDVN Development Mode Enabled')
+    console.log('⚠️  WARNING: This is for development/testing only. Do NOT use on mainnet.')
+
+    const signer = (await dstHre.ethers.getSigners())[0]
+
+    // Nonce preflight check before manual processing
+    await noncePreflightCheck(dstHre, params.srcOftAddress, params.dstOftAddress, params.srcEid)
+
+    // Get required contracts on destination chain
+    const dvnDep = await dstHre.deployments.get('SimpleDVNMock')
+    const dvnContract = new Contract(dvnDep.address, dvnDep.abi, signer)
+
+    const dstOftContract = new Contract(
+        params.dstOftAddress,
+        await dstHre.artifacts.readArtifact('IOFT').then((a) => a.abi),
+        signer
+    )
+
+    const simpleExecutorMockDep = await dstHre.deployments.get('SimpleExecutorMock')
+    const simpleExecutorMock = new Contract(simpleExecutorMockDep.address, simpleExecutorMockDep.abi, signer)
+
+    const receiveUln302Dep = await dstHre.deployments.get('ReceiveUln302')
+    const receiveUln302Address = receiveUln302Dep.address
+
+    const processArgs: SimpleDvnMockTaskArgs = {
+        srcEid: params.srcEid,
+        dstEid: params.dstEid,
+        srcOapp: params.srcOftAddress,
+        nonce: params.outboundNonce,
+        toAddress: params.to,
+        amount: params.amount,
+        dstContractName: params.dstContractName,
+        extraOptions: params.extraOptions,
+    }
+
+    const { processReceive } = await import('./processReceive')
+    await processReceive(dvnContract, dstOftContract, simpleExecutorMock, receiveUln302Address, processArgs, dstHre)
 }

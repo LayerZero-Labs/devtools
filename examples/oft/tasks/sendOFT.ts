@@ -1,41 +1,16 @@
-import path from 'path'
-
-import { Contract } from 'ethers'
+//
 import { task, types } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
-import { OmniPointHardhat, types as cliTypes, createGetHreByEid } from '@layerzerolabs/devtools-evm-hardhat'
+import { types as cliTypes, createGetHreByEid } from '@layerzerolabs/devtools-evm-hardhat'
 import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 
 import { EvmArgs, sendEvm } from './sendEvm'
-import { SimpleDvnMockTaskArgs } from './simple-workers-mock/utils/common'
-import { processReceive } from './simple-workers-mock/utils/processReceive'
+import { noncePreflightCheck, triggerProcessReceive } from './simple-workers-mock/utils/common'
 import { SendResult } from './types'
-import { DebugLogger, KnownOutputs, KnownWarnings, getBlockExplorerLink } from './utils'
+import { DebugLogger, KnownOutputs, KnownWarnings, getBlockExplorerLink, getOAppInfoByEid } from './utils'
 
-/**
- * Get OApp contract info by EID from LayerZero config
- */
-async function getOAppInfoByEid(
-    eid: number,
-    oappConfig: string,
-    hre: HardhatRuntimeEnvironment,
-    overrideAddress?: string
-): Promise<{ address: string; contractName?: string }> {
-    if (overrideAddress) {
-        return { address: overrideAddress }
-    }
-
-    const layerZeroConfig = (await import(path.resolve('./', oappConfig))).default
-    const { contracts } = typeof layerZeroConfig === 'function' ? await layerZeroConfig() : layerZeroConfig
-    const wrapper = contracts.find((c: { contract: OmniPointHardhat }) => c.contract.eid === eid)
-    if (!wrapper) throw new Error(`No config for EID ${eid}`)
-
-    const contractName = wrapper.contract.contractName
-    const address = contractName ? (await hre.deployments.get(contractName)).address : wrapper.contract.address || ''
-
-    return { address, contractName }
-}
+// getOAppInfoByEid moved to ./utils
 
 interface MasterArgs {
     srcEid: number
@@ -103,6 +78,15 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from EVM chains')
     .setAction(async (args: MasterArgs, hre: HardhatRuntimeEnvironment) => {
         const chainType = endpointIdToChainType(args.srcEid)
         let result: SendResult
+        // SimpleWorkers-only context
+        // These variables are only used when args.simpleWorkers is true.
+        // They are populated once and reused across preflight (before send) and manual processing (after send).
+        const getHreByEid = createGetHreByEid(hre)
+        let dstHre: HardhatRuntimeEnvironment | null = null
+        let srcHre: HardhatRuntimeEnvironment | null = null
+        type OAppInfo = Awaited<ReturnType<typeof getOAppInfoByEid>>
+        let dstOftInfo: OAppInfo | null = null
+        let srcOftInfo: OAppInfo | null = null
 
         if (args.oftAddress) {
             DebugLogger.printWarning(
@@ -113,6 +97,22 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from EVM chains')
 
         // Only support EVM chains in this example
         if (chainType === ChainType.EVM) {
+            // SimpleWorkers nonce preflight check before sending. This prevents initiating sends that will lead to InvalidNonce errors.
+            if (args.simpleWorkers) {
+                ;[dstHre, srcHre] = await Promise.all([getHreByEid(args.dstEid), getHreByEid(args.srcEid)])
+                if (!dstHre || !srcHre) {
+                    throw new Error('Failed to resolve Hardhat runtimes for src/dst EIDs')
+                }
+                ;[dstOftInfo, srcOftInfo] = await Promise.all([
+                    getOAppInfoByEid(args.dstEid, args.oappConfig, dstHre, args.oftAddress),
+                    getOAppInfoByEid(args.srcEid, args.oappConfig, srcHre, args.oftAddress),
+                ])
+                if (!dstOftInfo || !srcOftInfo) {
+                    throw new Error('Failed to resolve OFT addresses for src/dst EIDs')
+                }
+                await noncePreflightCheck(dstHre, srcOftInfo.address, dstOftInfo.address, args.srcEid)
+            }
+
             result = await sendEvm(args as EvmArgs, hre)
         } else {
             throw new Error(
@@ -143,54 +143,19 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from EVM chains')
 
         // SimpleDVN processing (development only) - runs at the very end
         if (args.simpleWorkers) {
-            console.log('\n🧪 SimpleDVN Development Mode Enabled')
-            console.log('⚠️  WARNING: This is for development/testing only. Do NOT use on mainnet.')
-
-            const getHreByEid = createGetHreByEid(hre)
-            const dstHre = await getHreByEid(args.dstEid)
-            const signer = (await dstHre.ethers.getSigners())[0]
-
-            // Get required contracts on destination chain
-            const dvnDep = await dstHre.deployments.get('SimpleDVNMock')
-            const dvnContract = new Contract(dvnDep.address, dvnDep.abi, signer)
-
-            // Get destination OFT contract info from config
-            const dstOftInfo = await getOAppInfoByEid(args.dstEid, args.oappConfig, dstHre, args.oftAddress)
-            const dstOftContract = new Contract(
-                dstOftInfo.address,
-                await dstHre.artifacts.readArtifact('IOFT').then((a) => a.abi),
-                signer
-            )
-
-            // Get SimpleExecutorMock and ReceiveUln302 deployments
-            const simpleExecutorMockDep = await dstHre.deployments.get('SimpleExecutorMock')
-            const simpleExecutorMock = new Contract(simpleExecutorMockDep.address, simpleExecutorMockDep.abi, signer)
-
-            const receiveUln302Dep = await dstHre.deployments.get('ReceiveUln302')
-            const receiveUln302Address = receiveUln302Dep.address
-
-            // Get source OApp info from config
-            const srcHre = await getHreByEid(args.srcEid)
-            const srcOftInfo = await getOAppInfoByEid(args.srcEid, args.oappConfig, srcHre, args.oftAddress)
-
-            const processArgs: SimpleDvnMockTaskArgs = {
+            if (!dstHre || !srcHre || !dstOftInfo || !srcOftInfo) {
+                throw new Error('SimpleWorkers: Missing resolved hre or oft info')
+            }
+            await triggerProcessReceive(dstHre, srcHre, {
                 srcEid: args.srcEid,
                 dstEid: args.dstEid,
-                srcOapp: srcOftInfo.address,
-                nonce: result.outboundNonce,
-                toAddress: args.to,
+                to: args.to,
                 amount: args.amount,
+                outboundNonce: result.outboundNonce,
+                srcOftAddress: srcOftInfo.address,
+                dstOftAddress: dstOftInfo.address,
                 dstContractName: dstOftInfo.contractName,
                 extraOptions: result.extraOptions,
-            }
-
-            await processReceive(
-                dvnContract,
-                dstOftContract,
-                simpleExecutorMock,
-                receiveUln302Address,
-                processArgs,
-                dstHre
-            )
+            })
         }
     })

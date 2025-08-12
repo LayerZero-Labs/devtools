@@ -8,6 +8,10 @@ interface LzReceiveArgs extends SimpleDvnMockTaskArgs {
 
 /**
  * LayerZero lzReceive operation
+ *
+ * Note: In most cases you should not call `commit` and `lzReceive` directly.
+ * Prefer using `commitAndExecute`, which performs both steps atomically
+ * through `SimpleExecutorMock.commitAndExecute` for development/testing.
  */
 export async function lzReceive(endpointContract: Contract, dstOftContract: Contract, args: LzReceiveArgs) {
     const { srcEid, nonce, dstEid, guid } = args
