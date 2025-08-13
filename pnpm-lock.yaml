@@ -4403,6 +4403,9 @@ importers:
       '@layerzerolabs/oapp-evm':
         specifier: ^0.3.2
         version: link:../oapp-evm
+      '@layerzerolabs/oapp-evm-upgradeable':
+        specifier: ^0.1.2
+        version: link:../oapp-evm-upgradeable
       '@layerzerolabs/test-devtools-evm-foundry':
         specifier: ~7.0.0
         version: link:../test-devtools-evm-foundry
@@ -4492,9 +4495,15 @@ importers:
       '@layerzerolabs/oapp-evm':
         specifier: ^0.3.2
         version: link:../oapp-evm
+      '@layerzerolabs/oapp-evm-upgradeable':
+        specifier: ^0.1.2
+        version: link:../oapp-evm-upgradeable
       '@layerzerolabs/oft-evm':
         specifier: ^3.2.0
         version: link:../oft-evm
+      '@layerzerolabs/oft-evm-upgradeable':
+        specifier: ^3.1.0
+        version: link:../oft-evm-upgradeable
       '@layerzerolabs/test-devtools-evm-foundry':
         specifier: ~7.0.0
         version: link:../test-devtools-evm-foundry
