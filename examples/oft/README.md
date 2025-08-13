@@ -131,6 +131,7 @@ Select all the chains you want to deploy the OFT to.
 Some LayerZero testnets have default configurations, but no working DVNs (Decentralized Verifier Networks) or Executors. In these cases, you need to deploy and configure Simple Workers to enable message verification and execution.
 
 Simple Workers consist of:
+
 - **SimpleDVNMock**: A minimal DVN that allows manual message verification
 - **SimpleExecutorMock**: A mock executor that charges zero fees and enables manual message execution
 
@@ -142,7 +143,7 @@ Deploy the Simple Workers on **all chains** where you need them:
 # Deploy SimpleDVNMock
 pnpm hardhat lz:deploy --tags SimpleDVNMock
 
-# Deploy SimpleExecutorMock  
+# Deploy SimpleExecutorMock
 pnpm hardhat lz:deploy --tags SimpleExecutorMock
 ```
 
@@ -151,11 +152,13 @@ pnpm hardhat lz:deploy --tags SimpleExecutorMock
 After deployment, configure your OApps to use the Simple Workers:
 
 1. **Set Send Configuration** (on source chain):
+
 ```bash
 pnpm hardhat lz:simple-workers:set-send-config --dst-eid <DESTINATION_EID> --contract-name MyOFTMock
 ```
 
 2. **Set Receive Configuration** (on destination chain):
+
 ```bash
 pnpm hardhat lz:simple-workers:set-receive-config --src-eid <SOURCE_EID> --contract-name MyOFTMock
 ```
@@ -171,6 +174,7 @@ pnpm hardhat lz:oft:send --src-eid 40232 --dst-eid 40231 --amount 1 --to <EVM_AD
 ```
 
 With the `--simple-workers` flag, the task will:
+
 1. Send the OFT transaction as normal
 2. Automatically trigger the manual verification process on the destination chain
 3. Execute the message delivery through the Simple Workers
@@ -184,8 +188,9 @@ The manual verification flow involves three steps on the destination chain:
 3. **Execute**: SimpleExecutorMock executes the message delivery
 
 Without the `--simple-workers` flag, you would need to manually call these steps using the provided tasks:
+
 - `lz:simple-dvn:verify` - Verify the message with SimpleDVNMock
-- `lz:simple-dvn:commit` - Commit the verification to ULN  
+- `lz:simple-dvn:commit` - Commit the verification to ULN
 - `lz:simple-workers:commit-and-execute` - Execute the message delivery
 - `lz:simple-workers:skip` - Skip a stuck message (permanent action!)
 
@@ -203,6 +208,7 @@ Without the `--simple-workers` flag, you would need to manually call these steps
 LayerZero enforces ordered message delivery per channel (source → destination). Messages must be processed in the exact order they were sent. If a message fails or is skipped, all subsequent messages on that channel will be blocked.
 
 **Common Error: "InvalidNonce"**
+
 ```
 warn: Lazy inbound nonce is not equal to inboundNonce + 1. You will run into an InvalidNonce error.
 ```
@@ -214,6 +220,7 @@ This means there are pending messages that must be processed first.
 When a message is stuck, you have two options:
 
 **Option 1: Process the Pending Message**
+
 ```bash
 # Find the pending nonce from the error message, then:
 npx hardhat lz:simple-dvn:verify --src-eid <SRC_EID> --dst-eid <DST_EID> --nonce <PENDING_NONCE> --src-oapp <SRC_OAPP> --to-address <RECIPIENT> --amount <AMOUNT>
@@ -221,6 +228,7 @@ npx hardhat lz:simple-workers:commit-and-execute --src-eid <SRC_EID> --dst-eid <
 ```
 
 **Option 2: Skip the Message** (Cannot be undone!)
+
 ```bash
 # Skip a stuck message on the destination chain
 npx hardhat lz:simple-workers:skip --src-eid <SRC_EID> --src-oapp <SRC_OAPP> --nonce <NONCE_TO_SKIP> --receiver <RECEIVER_OAPP>
@@ -240,8 +248,9 @@ If your RPC connection fails during `--simple-workers` processing:
 #### Example: Multiple Pending Messages
 
 If nonce 6 fails because nonce 4 is pending:
+
 1. First process or skip nonce 4
-2. Then process or skip nonce 5  
+2. Then process or skip nonce 5
 3. Finally, you can process nonce 6
 
 Remember: All messages must be handled in order!
