@@ -1,14 +1,13 @@
 import type { OmniPointHardhat } from '@layerzerolabs/devtools-evm-hardhat'
 import type { OAppEnforcedOption } from '@layerzerolabs/ua-devtools'
 
-// [srcContract, dstContract, [requiredDVNs, [optionalDVNs, threshold]], [srcToDstConfirmations, dstToSrcConfirmations]], [enforcedOptionsSrcToDst, enforcedOptionsDstToSrc]
 export type TwoWayConfig = [
-    OmniPointHardhat, // srcContract
-    OmniPointHardhat, // dstContract
-    [string[], [string[], number] | []], // [requiredDVNs, [optionalDVNs, threshold]]
-    [number, number | undefined], // [srcToDstConfirmations, dstToSrcConfirmations]
-    [OAppEnforcedOption[] | undefined, OAppEnforcedOption[] | undefined], // [enforcedOptionsSrcToDst, enforcedOptionsDstToSrc]
-    string?, // customExecutor - optional custom executor for send config
+    srcContract: OmniPointHardhat,
+    dstContract: OmniPointHardhat,
+    dvnConfig: [string[], [string[], number] | []],
+    confirmations: [number, number | undefined],
+    enforcedOptions: [OAppEnforcedOption[] | undefined, OAppEnforcedOption[] | undefined],
+    customExecutor?: string,
 ]
 
 export interface IMetadataDvns {

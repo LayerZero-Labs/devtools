@@ -70,16 +70,15 @@ export function DVNsToAddresses(dvns: string[], chainKey: string, metadata: IMet
     return dvnAddresses.sort()
 }
 
-export function executorNameToAddress(executorName: string, chainKey: string, metadata: IMetadata): string {
+export function resolveExecutor(executorName: string, chainKey: string, metadata: IMetadata): string | null {
     // First check if it's already an address (starts with 0x)
     if (executorName.startsWith('0x')) {
         return executorName
     }
 
     if (!metadata[chainKey]?.executors) {
-        // If no custom executors defined, return the name as-is
-        // This allows backwards compatibility
-        return executorName
+        // If no custom executors defined, return null
+        return null
     }
 
     const metadataExecutors = Object.entries(metadata[chainKey].executors)
@@ -94,12 +93,38 @@ export function executorNameToAddress(executorName: string, chainKey: string, me
         }
     }
 
-    // If not found in custom executors, return as-is
-    return executorName
+    // If not found in custom executors, return null
+    return null
 }
 
 function isSolanaDeployment(deployment: { chainKey: string; executor?: { pda?: string; address?: string } }) {
     return deployment.chainKey.startsWith('solana')
+}
+
+function resolveExecutorForDeployment(
+    customExecutor: string | undefined,
+    deployment: { chainKey: string; executor?: { pda?: string; address?: string } },
+    metadata: IMetadata,
+    endpointEid: number
+): string {
+    if (customExecutor) {
+        // Use custom executor, resolving name to address if needed
+        const resolved = resolveExecutor(customExecutor, deployment.chainKey, metadata)
+        if (resolved) {
+            return resolved
+        }
+        // If custom executor specified but not found in metadata, use it as-is (for backwards compatibility)
+        return customExecutor
+    }
+
+    // Use default executor from deployment
+    const defaultExecutor = isSolanaDeployment(deployment) ? deployment.executor?.pda : deployment.executor?.address
+
+    if (!defaultExecutor) {
+        throw new Error(`Can't find executor for endpoint with eid: "${endpointEid}".`)
+    }
+
+    return defaultExecutor
 }
 
 export async function translatePathwayToConfig(
@@ -125,20 +150,12 @@ export async function translatePathwayToConfig(
     const sourceLZDeployment = getEndpointIdDeployment(sourceContract.eid, metadata)
     const destinationLZDeployment = getEndpointIdDeployment(destinationContract.eid, metadata)
 
-    let sourceExecutor: string | undefined
-    if (customExecutor) {
-        // Use custom executor, resolving name to address if needed
-        sourceExecutor = executorNameToAddress(customExecutor, sourceLZDeployment.chainKey, metadata)
-    } else {
-        // Use default executor from deployment
-        sourceExecutor = isSolanaDeployment(sourceLZDeployment)
-            ? sourceLZDeployment.executor?.pda
-            : sourceLZDeployment.executor?.address
-    }
-
-    if (!sourceExecutor) {
-        throw new Error(`Can't find executor for source endpoint with eid: "${sourceContract.eid}".`)
-    }
+    const sourceExecutor = resolveExecutorForDeployment(
+        customExecutor,
+        sourceLZDeployment,
+        metadata,
+        sourceContract.eid
+    )
 
     const sourceRequiredDVNs = DVNsToAddresses(requiredDVNs, sourceLZDeployment.chainKey, metadata)
     const destinationRequiredDVNs = DVNsToAddresses(requiredDVNs, destinationLZDeployment.chainKey, metadata)
@@ -213,20 +230,12 @@ export async function translatePathwayToConfig(
     }
 
     if (destinationToSourceConfirmations) {
-        let destinationExecutor: string | undefined
-        if (customExecutor) {
-            // Use custom executor, resolving name to address if needed
-            destinationExecutor = executorNameToAddress(customExecutor, destinationLZDeployment.chainKey, metadata)
-        } else {
-            // Use default executor from deployment
-            destinationExecutor = isSolanaDeployment(destinationLZDeployment)
-                ? destinationLZDeployment.executor?.pda
-                : destinationLZDeployment.executor?.address
-        }
-
-        if (!destinationExecutor) {
-            throw new Error(`Can't find executor for destination endpoint with eid: "${destinationContract.eid}".`)
-        }
+        const destinationExecutor = resolveExecutorForDeployment(
+            customExecutor,
+            destinationLZDeployment,
+            metadata,
+            destinationContract.eid
+        )
 
         sourceToDestinationConfig.config.receiveConfig = {
             ulnConfig: {

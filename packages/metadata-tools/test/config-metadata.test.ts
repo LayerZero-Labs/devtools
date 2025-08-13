@@ -1,6 +1,6 @@
 import {
     DVNsToAddresses,
-    executorNameToAddress,
+    resolveExecutor,
     generateConnectionsConfig,
     translatePathwayToConfig,
 } from '@/config-metadata'
@@ -164,7 +164,7 @@ describe('config-metadata', () => {
             expect(config[0]?.config?.sendConfig?.executorConfig?.executor).toBe(
                 '0x1234567890abcdef1234567890abcdef12345678'
             )
-            // Solana doesn't have custom executor defined, so it uses the name as-is
+            // Solana doesn't have custom executor defined, so it uses the name as-is (backward compatibility)
             expect(config[1]?.config?.sendConfig?.executorConfig?.executor).toBe('CustomExecutor')
         })
 
@@ -219,7 +219,7 @@ describe('config-metadata', () => {
             expect(configWithFujiExecutor[0]?.config?.sendConfig?.executorConfig?.executor).toBe(
                 '0xaaaa567890abcdef1234567890abcdef12345678'
             )
-            // Solana doesn't have FujiCustomExecutor defined, so it uses the name as-is
+            // Solana doesn't have FujiCustomExecutor defined, so it uses the name as-is (backward compatibility)
             expect(configWithFujiExecutor[1]?.config?.sendConfig?.executorConfig?.executor).toBe('FujiCustomExecutor')
         })
 
@@ -389,15 +389,15 @@ describe('config-metadata', () => {
         })
     })
 
-    describe('executorNameToAddress', () => {
+    describe('resolveExecutor', () => {
         it('should return the address as-is if it starts with 0x', () => {
-            expect(executorNameToAddress('0x1234567890abcdef1234567890abcdef12345678', 'fuji', metadata)).toBe(
+            expect(resolveExecutor('0x1234567890abcdef1234567890abcdef12345678', 'fuji', metadata)).toBe(
                 '0x1234567890abcdef1234567890abcdef12345678'
             )
         })
 
-        it('should return the name as-is if no executors are defined for the chain', () => {
-            expect(executorNameToAddress('CustomExecutor', 'fuji', metadata)).toBe('CustomExecutor')
+        it('should return null if no executors are defined for the chain', () => {
+            expect(resolveExecutor('CustomExecutor', 'fuji', metadata)).toBe(null)
         })
 
         it('should resolve executor name to address when custom executors are defined', () => {
@@ -420,15 +420,15 @@ describe('config-metadata', () => {
                 },
             }
 
-            expect(executorNameToAddress('CustomExecutor', 'fuji', metadataWithExecutors)).toBe(
+            expect(resolveExecutor('CustomExecutor', 'fuji', metadataWithExecutors)).toBe(
                 '0xaaaa567890abcdef1234567890abcdef12345678'
             )
-            expect(executorNameToAddress('AnotherExecutor', 'fuji', metadataWithExecutors)).toBe(
+            expect(resolveExecutor('AnotherExecutor', 'fuji', metadataWithExecutors)).toBe(
                 '0xbbbb567890abcdef1234567890abcdef12345678'
             )
         })
 
-        it('should return name as-is if executor name not found in custom executors', () => {
+        it('should return null if executor name not found in custom executors', () => {
             const metadataWithExecutors: IMetadata = {
                 ...metadata,
                 fuji: {
@@ -443,9 +443,7 @@ describe('config-metadata', () => {
                 },
             }
 
-            expect(executorNameToAddress('NonExistentExecutor', 'fuji', metadataWithExecutors)).toBe(
-                'NonExistentExecutor'
-            )
+            expect(resolveExecutor('NonExistentExecutor', 'fuji', metadataWithExecutors)).toBe(null)
         })
 
         it('should skip deprecated executors', () => {
@@ -470,7 +468,7 @@ describe('config-metadata', () => {
             }
 
             // Should return the non-deprecated one
-            expect(executorNameToAddress('CustomExecutor', 'fuji', metadataWithExecutors)).toBe(
+            expect(resolveExecutor('CustomExecutor', 'fuji', metadataWithExecutors)).toBe(
                 '0xbbbb567890abcdef1234567890abcdef12345678'
             )
         })
@@ -496,7 +494,7 @@ describe('config-metadata', () => {
             }
 
             // Should return the version 2 executor
-            expect(executorNameToAddress('CustomExecutor', 'fuji', metadataWithExecutors)).toBe(
+            expect(resolveExecutor('CustomExecutor', 'fuji', metadataWithExecutors)).toBe(
                 '0xbbbb567890abcdef1234567890abcdef12345678'
             )
         })
