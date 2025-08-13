@@ -16,7 +16,7 @@ abstract contract OFTAltUpgradeable is OFTAltCoreUpgradeable, ERC20Upgradeable {
      * @dev Constructor for the OFTAlt contract.
      * @param _lzEndpoint The LayerZero endpoint address.
      */
-    constructor(address _lzEndpoint) OFTAltCoreUpgradeable(18, _lzEndpoint) {}
+    constructor(address _lzEndpoint) OFTAltCoreUpgradeable(decimals(), _lzEndpoint) {}
 
     /**
      * @dev Initializes the OFTAlt with the provided name, symbol, and delegate.
