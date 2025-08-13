@@ -1,6 +1,9 @@
 import { Contract, ethers } from 'ethers'
 
+import { createLogger } from '@layerzerolabs/io-devtools'
 import { Uln302 } from '@layerzerolabs/protocol-devtools-evm'
+
+const logger = createLogger()
 
 export interface SetSendConfigArgs {
     dstEid: number
@@ -40,12 +43,12 @@ export async function setSendConfig(endpointContract: Contract, params: SetSendC
     const { dstEid, contractName } = args
     const { oappAddress, sendLibrary, dvnAddress, executorAddress, provider } = params
 
-    console.log(`\n📋 Setting up executor send configuration for ${contractName}`)
-    console.log(`   OApp:           ${oappAddress}`)
-    console.log(`   Destination EID: ${dstEid}`)
-    console.log(`   Send Lib:       ${sendLibrary}`)
-    console.log(`   DVN:            ${dvnAddress}`)
-    console.log(`   Executor:       ${executorAddress}\n`)
+    logger.info(`\nSetting up executor send configuration for ${contractName}`)
+    logger.info(`   OApp:           ${oappAddress}`)
+    logger.info(`   Destination EID: ${dstEid}`)
+    logger.info(`   Send Lib:       ${sendLibrary}`)
+    logger.info(`   DVN:            ${dvnAddress}`)
+    logger.info(`   Executor:       ${executorAddress}\n`)
 
     // Validate addresses
     if (!dvnAddress || dvnAddress === ethers.constants.AddressZero) {
@@ -90,21 +93,21 @@ export async function setSendConfig(endpointContract: Contract, params: SetSendC
         },
     ]
 
-    console.log(`Setting ULN and Executor config...`)
+    logger.info(`Setting ULN and Executor config...`)
 
     try {
         const tx = await endpointContract.setConfig(oappAddress, sendLibrary, setConfigParams)
         const receipt = await tx.wait()
 
-        console.log(`✅ setConfig txHash: ${receipt.transactionHash}`)
-        console.log(`\n🎉 Send configuration completed successfully!`)
-        console.log(`   Local OApp ${contractName} → Destination EID ${dstEid}`)
-        console.log(`   Using SimpleDVNMock: ${dvnAddress}`)
-        console.log(`   Using SimpleExecutorMock: ${executorAddress}\n`)
+        logger.info(`setConfig txHash: ${receipt.transactionHash}`)
+        logger.info(`\nSend configuration completed successfully!`)
+        logger.info(`   Local OApp ${contractName} → Destination EID ${dstEid}`)
+        logger.info(`   Using SimpleDVNMock: ${dvnAddress}`)
+        logger.info(`   Using SimpleExecutorMock: ${executorAddress}\n`)
 
         return receipt
     } catch (error: unknown) {
-        console.log(`❌ Error occurred:`, error)
+        logger.error(`Error occurred:`, error)
         throw error
     }
 }

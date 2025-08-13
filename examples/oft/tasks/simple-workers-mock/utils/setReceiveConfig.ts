@@ -1,6 +1,9 @@
 import { Contract, ethers } from 'ethers'
 
+import { createLogger } from '@layerzerolabs/io-devtools'
 import { Uln302 } from '@layerzerolabs/protocol-devtools-evm'
+
+const logger = createLogger()
 
 export interface SetReceiveConfigArgs {
     srcEid: number
@@ -35,12 +38,12 @@ export async function setReceiveConfig(
     const { srcEid, contractName } = args
     const { oappAddress, receiveLibrary, dvnAddress, executorAddress, provider } = params
 
-    console.log(`\n📋 Setting up executor receive configuration for ${contractName}`)
-    console.log(`   OApp:           ${oappAddress}`)
-    console.log(`   Source EID:     ${srcEid}`)
-    console.log(`   Receive Lib:    ${receiveLibrary}`)
-    console.log(`   DVN:            ${dvnAddress}`)
-    console.log(`   Executor:       ${executorAddress}\n`)
+    logger.info(`\nSetting up executor receive configuration for ${contractName}`)
+    logger.info(`   OApp:           ${oappAddress}`)
+    logger.info(`   Source EID:     ${srcEid}`)
+    logger.info(`   Receive Lib:    ${receiveLibrary}`)
+    logger.info(`   DVN:            ${dvnAddress}`)
+    logger.info(`   Executor:       ${executorAddress}\n`)
 
     // Validate addresses
     if (!dvnAddress || dvnAddress === ethers.constants.AddressZero) {
@@ -73,21 +76,21 @@ export async function setReceiveConfig(
         },
     ]
 
-    console.log(`Setting ULN config...`)
+    logger.info(`Setting ULN config...`)
 
     try {
         const tx = await endpointContract.setConfig(oappAddress, receiveLibrary, setConfigParams)
         const receipt = await tx.wait()
 
-        console.log(`✅ setConfig txHash: ${receipt.transactionHash}`)
-        console.log(`\n🎉 Receive configuration completed successfully!`)
-        console.log(`   Source EID ${srcEid} → Local OApp ${contractName}`)
-        console.log(`   Using SimpleDVNMock: ${dvnAddress}`)
-        console.log(`   Using SimpleExecutorMock: ${executorAddress}\n`)
+        logger.info(`setConfig txHash: ${receipt.transactionHash}`)
+        logger.info(`\nReceive configuration completed successfully!`)
+        logger.info(`   Source EID ${srcEid} → Local OApp ${contractName}`)
+        logger.info(`   Using SimpleDVNMock: ${dvnAddress}`)
+        logger.info(`   Using SimpleExecutorMock: ${executorAddress}\n`)
 
         return receipt
     } catch (error: unknown) {
-        console.log(`❌ Error occurred:`, error)
+        logger.error(`Error occurred:`, error)
         throw error
     }
 }

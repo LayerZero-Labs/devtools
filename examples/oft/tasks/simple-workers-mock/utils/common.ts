@@ -1,10 +1,13 @@
 import { Contract, ethers } from 'ethers'
 
+import { createLogger } from '@layerzerolabs/io-devtools'
 import { ExecutorNativeDropOption, Options, addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 
 import { DebugLogger } from '../../utils'
 
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
+
+const logger = createLogger()
 
 export interface SimpleDvnMockTaskArgs {
     srcEid: number
@@ -81,7 +84,7 @@ export async function processMessage(dstOftContract: Contract, args: SimpleDvnMo
                 }
             }
         } catch (error) {
-            console.warn('Failed to parse native drops from extraOptions:', error)
+            logger.warn('Failed to parse native drops from extraOptions:', error)
             // Fallback: no native drops if parsing fails
         }
     }
@@ -110,28 +113,28 @@ export function logTaskInfo(
     const { srcEid, srcOapp, nonce, toAddress, amount, dstEid } = args
     const { amountUnits, sharedDecimals, localOapp, nativeDrops } = processed
 
-    console.log(`\nCalling ${operation}:`)
-    console.log(`  srcEid:       ${srcEid}`)
-    console.log(`  srcOApp:      ${srcOapp}`)
-    console.log(`  nonce:        ${nonce}`)
-    console.log(`  toAddress:    ${toAddress}`)
-    console.log(`  amount:       ${amount} (${amountUnits.toString()} units, ${sharedDecimals} decimals)`)
-    console.log(`  dstEid:       ${dstEid}`)
-    console.log(`  localOApp:    ${localOapp}`)
+    logger.info(`\n${operation}:`)
+    logger.info(`  srcEid:       ${srcEid}`)
+    logger.info(`  srcOApp:      ${srcOapp}`)
+    logger.info(`  nonce:        ${nonce}`)
+    logger.info(`  toAddress:    ${toAddress}`)
+    logger.info(`  amount:       ${amount} (${amountUnits.toString()} units, ${sharedDecimals} decimals)`)
+    logger.info(`  dstEid:       ${dstEid}`)
+    logger.info(`  localOApp:    ${localOapp}`)
 
     if (nativeDrops.length > 0) {
-        console.log(`  nativeDrops:  ${nativeDrops.length} drop(s)`)
+        logger.info(`  nativeDrops:  ${nativeDrops.length} drop(s)`)
         nativeDrops.forEach((drop, index) => {
-            console.log(`    [${index}] ${drop.amount} wei -> ${drop.recipient}`)
+            logger.info(`    [${index}] ${drop.amount} wei -> ${drop.recipient}`)
         })
     }
 
     if (extraInfo) {
         Object.entries(extraInfo).forEach(([key, value]) => {
-            console.log(`  ${key}:${' '.repeat(Math.max(1, 12 - key.length))}${value}`)
+            logger.info(`  ${key}:${' '.repeat(Math.max(1, 12 - key.length))}${value}`)
         })
     }
-    console.log()
+    logger.info('')
 }
 
 /**
@@ -189,7 +192,7 @@ export async function noncePreflightCheck(
         const nonceMismatch = lazyNonce.add(1).toString() !== nextNonceToExecute.toString()
 
         if (nonceMismatch) {
-            DebugLogger.header('⚠️  SimpleWorkers Nonce Preflight: Mismatch')
+            DebugLogger.header('SimpleWorkers Nonce Preflight: Mismatch')
             DebugLogger.keyValue('Expected next nonce', nextNonceToExecute)
             DebugLogger.keyValue('Lazy inbound nonce', lazyNonce.toString())
             DebugLogger.keyValue('Inbound nonce', inboundNonce.toString())
@@ -222,8 +225,11 @@ export async function triggerProcessReceive(
         extraOptions?: string
     }
 ): Promise<void> {
-    console.log('\n🧪 SimpleDVN Development Mode Enabled')
-    console.log('⚠️  WARNING: This is for development/testing only. Do NOT use on mainnet.')
+    logger.info('\nSimpleDVN Development Mode Enabled')
+    logger.info('WARNING: This is for development/testing only. Do NOT use on mainnet.')
+    logger.info(
+        'NOTE: If RPC fails during processing, you must manually handle the in-flight nonce before sending new messages.'
+    )
 
     const signer = (await dstHre.ethers.getSigners())[0]
 
@@ -258,5 +264,17 @@ export async function triggerProcessReceive(
     }
 
     const { processReceive } = await import('./processReceive')
-    await processReceive(dvnContract, dstOftContract, simpleExecutorMock, receiveUln302Address, processArgs, dstHre)
+
+    try {
+        await processReceive(dvnContract, dstOftContract, simpleExecutorMock, receiveUln302Address, processArgs, dstHre)
+    } catch (error) {
+        // Add critical recovery information to help users resolve the in-flight nonce
+        logger.error(`\nFailed to process message with outbound nonce: ${params.outboundNonce}`)
+        logger.error(`Source chain EID: ${params.srcEid} | Destination chain EID: ${params.dstEid}`)
+        logger.error(`Source OFT: ${params.srcOftAddress}`)
+        logger.error(`Destination OFT: ${params.dstOftAddress}`)
+        logger.error(`Recipient: ${params.to} | Amount: ${params.amount}`)
+        logger.error('\nThis nonce must be processed before any new messages can be sent!')
+        throw error
+    }
 }

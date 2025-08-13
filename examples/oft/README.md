@@ -22,6 +22,14 @@
 - [Build](#build)
   - [Compiling your contracts](#compiling-your-contracts)
 - [Deploy](#deploy)
+- [Simple Workers (For Testnets Without Default Workers)](#simple-workers-for-testnets-without-default-workers)
+  - [When to Use Simple Workers](#when-to-use-simple-workers)
+  - [Deploying Simple Workers](#deploying-simple-workers)
+  - [Configuring Simple Workers](#configuring-simple-workers)
+  - [Using Simple Workers](#using-simple-workers)
+  - [Simple Workers Architecture](#simple-workers-architecture)
+  - [Important Limitations](#important-limitations)
+  - [Troubleshooting Simple Workers](#troubleshooting-simple-workers)
 - [Enable Messaging](#enable-messaging)
 - [Sending OFTs](#sending-ofts)
 - [Next Steps](#next-steps)
@@ -37,9 +45,9 @@
   - [Adding other chains](#adding-other-chains)
   - [Using Multisigs](#using-multisigs)
   - [LayerZero Hardhat Helper Tasks](#layerzero-hardhat-helper-tasks)
-  - [Manual Configuration](#manual-configuration)
-  - [Contract Verification](#contract-verification)
-  - [Troubleshooting](#troubleshooting)
+    - [Manual Configuration](#manual-configuration)
+    - [Contract Verification](#contract-verification)
+    - [Troubleshooting](#troubleshooting)
 
 ## Prerequisite Knowledge
 
@@ -113,6 +121,130 @@ pnpm hardhat lz:deploy --tags MyOFTMock
 > :information_source: MyOFTMock will be used as it provides a public mint function which we require for testing
 
 Select all the chains you want to deploy the OFT to.
+
+## Simple Workers (For Testnets Without Default Workers)
+
+> :warning: **Development Only**: Simple Workers are mock implementations for testing on testnets that lack DVNs and Executors. They should **NEVER** be used in production as they provide no security or service guarantees.
+
+### When to Use Simple Workers
+
+Some LayerZero testnets have default configurations, but no working DVNs (Decentralized Verifier Networks) or Executors. In these cases, you need to deploy and configure Simple Workers to enable message verification and execution.
+
+Simple Workers consist of:
+- **SimpleDVNMock**: A minimal DVN that allows manual message verification
+- **SimpleExecutorMock**: A mock executor that charges zero fees and enables manual message execution
+
+### Deploying Simple Workers
+
+Deploy the Simple Workers on **all chains** where you need them:
+
+```bash
+# Deploy SimpleDVNMock
+pnpm hardhat lz:deploy --tags SimpleDVNMock
+
+# Deploy SimpleExecutorMock  
+pnpm hardhat lz:deploy --tags SimpleExecutorMock
+```
+
+### Configuring Simple Workers
+
+After deployment, configure your OApps to use the Simple Workers:
+
+1. **Set Send Configuration** (on source chain):
+```bash
+pnpm hardhat lz:simple-workers:set-send-config --dst-eid <DESTINATION_EID> --contract-name MyOFTMock
+```
+
+2. **Set Receive Configuration** (on destination chain):
+```bash
+pnpm hardhat lz:simple-workers:set-receive-config --src-eid <SOURCE_EID> --contract-name MyOFTMock
+```
+
+> :information_source: These configuration tasks are temporary. Once [PR #1637](https://github.com/LayerZero-Labs/devtools/pull/1637) is merged, Simple Workers can be configured through the standard LayerZero config file.
+
+### Using Simple Workers
+
+When sending OFTs with Simple Workers, add the `--simple-workers` flag to enable the manual verification and execution flow:
+
+```bash
+pnpm hardhat lz:oft:send --src-eid 40232 --dst-eid 40231 --amount 1 --to <EVM_ADDRESS> --simple-workers
+```
+
+With the `--simple-workers` flag, the task will:
+1. Send the OFT transaction as normal
+2. Automatically trigger the manual verification process on the destination chain
+3. Execute the message delivery through the Simple Workers
+
+### Simple Workers Architecture
+
+The manual verification flow involves three steps on the destination chain:
+
+1. **Verify**: SimpleDVNMock verifies the message payload
+2. **Commit**: SimpleDVNMock commits the verification to the ULN
+3. **Execute**: SimpleExecutorMock executes the message delivery
+
+Without the `--simple-workers` flag, you would need to manually call these steps using the provided tasks:
+- `lz:simple-dvn:verify` - Verify the message with SimpleDVNMock
+- `lz:simple-dvn:commit` - Commit the verification to ULN  
+- `lz:simple-workers:commit-and-execute` - Execute the message delivery
+- `lz:simple-workers:skip` - Skip a stuck message (permanent action!)
+
+### Important Limitations
+
+- **Zero Fees**: Simple Workers charge no fees, breaking the economic security model
+- **No Real Verification**: Messages are manually verified without actual validation
+- **Testnet Only**: These mocks provide no security and must never be used on mainnet
+- **Manual Process**: Requires manual intervention or the `--simple-workers` flag for automation
+
+### Troubleshooting Simple Workers
+
+#### Ordered Message Delivery
+
+LayerZero enforces ordered message delivery per channel (source → destination). Messages must be processed in the exact order they were sent. If a message fails or is skipped, all subsequent messages on that channel will be blocked.
+
+**Common Error: "InvalidNonce"**
+```
+warn: Lazy inbound nonce is not equal to inboundNonce + 1. You will run into an InvalidNonce error.
+```
+
+This means there are pending messages that must be processed first.
+
+#### Recovery Options
+
+When a message is stuck, you have two options:
+
+**Option 1: Process the Pending Message**
+```bash
+# Find the pending nonce from the error message, then:
+npx hardhat lz:simple-dvn:verify --src-eid <SRC_EID> --dst-eid <DST_EID> --nonce <PENDING_NONCE> --src-oapp <SRC_OAPP> --to-address <RECIPIENT> --amount <AMOUNT>
+npx hardhat lz:simple-workers:commit-and-execute --src-eid <SRC_EID> --dst-eid <DST_EID> --nonce <PENDING_NONCE> ...
+```
+
+**Option 2: Skip the Message** (Cannot be undone!)
+```bash
+# Skip a stuck message on the destination chain
+npx hardhat lz:simple-workers:skip --src-eid <SRC_EID> --src-oapp <SRC_OAPP> --nonce <NONCE_TO_SKIP> --receiver <RECEIVER_OAPP>
+```
+
+> :warning: **Skipping is permanent!** Once skipped, the message cannot be recovered. The tokens/value in that message will be permanently lost.
+
+#### RPC Failures During Processing
+
+If your RPC connection fails during `--simple-workers` processing:
+
+1. The outbound message may already be sent but not verified/executed
+2. You'll see detailed recovery information in the error output
+3. You must handle this nonce before sending new messages
+4. Either wait for RPC limits to reset and complete processing, or skip the message
+
+#### Example: Multiple Pending Messages
+
+If nonce 6 fails because nonce 4 is pending:
+1. First process or skip nonce 4
+2. Then process or skip nonce 5  
+3. Finally, you can process nonce 6
+
+Remember: All messages must be handled in order!
 
 ## Enable Messaging
 

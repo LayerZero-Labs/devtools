@@ -1,7 +1,11 @@
 import { Contract } from 'ethers'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
+import { createLogger } from '@layerzerolabs/io-devtools'
+
 import { generateGuid } from './common'
+
+const logger = createLogger()
 
 export interface CommitAndExecuteParams {
     receiveLib: string
@@ -26,9 +30,7 @@ export async function commitAndExecute(
     const { ethers } = hre
     const [signer] = await ethers.getSigners()
 
-    console.log(`Calling commitAndExecute with signer: ${signer.address}`)
-    console.log(`SimpleExecutorMock address: ${simpleExecutorMock.address}`)
-    console.log(`Nonce: ${params.nonce}`)
+    logger.info(`Executor: ${simpleExecutorMock.address} (SimpleExecutorMock)`)
 
     // Get endpoint contract to check nonces
     const endpointDeployment = await hre.deployments.get('EndpointV2')
@@ -50,7 +52,6 @@ export async function commitAndExecute(
     }
 
     const guid = generateGuid(params.nonce, srcEidNum, senderB32, dstEidNum, receiverB32)
-    console.log(`Generated GUID: ${guid}`)
 
     // Check inbound nonces
     try {
@@ -59,12 +60,12 @@ export async function commitAndExecute(
         // warn if current message nonce is not equal to inboundNonce + 1
         const nextNonceToExecute = inboundNonce.toNumber() + 1
         if (params.nonce.toString() !== nextNonceToExecute.toString()) {
-            console.warn(
-                `⚠️  Lazy inbound nonce is not equal to inboundNonce + 1. You will run into an InvalidNonce error. You must execute commitAndExecute with nonce ${nextNonceToExecute} instead of ${lazyNonce.toString()}. Run 'npx hardhat lz:simple-workers:commit-and-execute' to execute the correct nonce.`
+            logger.warn(
+                `Lazy inbound nonce is not equal to inboundNonce + 1. You will run into an InvalidNonce error. You must execute commitAndExecute with nonce ${nextNonceToExecute} instead of ${lazyNonce.toString()}. Run 'npx hardhat lz:simple-workers:commit-and-execute' to execute the correct nonce.`
             )
         }
     } catch (error) {
-        console.warn('Failed to fetch nonce information:', error instanceof Error ? error.message : String(error))
+        logger.warn('Failed to fetch nonce information:', error instanceof Error ? error.message : String(error))
     }
 
     // Parse native drops from hex data
@@ -82,8 +83,8 @@ export async function commitAndExecute(
                 _amount: param._amount.toString(),
             }))
         } catch (error) {
-            console.warn('⚠️  Failed to parse native drops from hex data:', error)
-            console.warn('⚠️  Using empty native drops due to parsing error')
+            logger.warn('Failed to parse native drops from hex data:', error)
+            logger.warn('Using empty native drops due to parsing error')
             nativeDropParams = []
         }
     }
@@ -103,14 +104,16 @@ export async function commitAndExecute(
         value: '0',
     }
 
-    console.log('📦 Preparing commitAndExecute...')
+    logger.info('Preparing Executor commitAndExecute (commitVerification + lzReceive)...')
 
     // Calculate total native drop amount
     const totalNativeDropAmount = nativeDropParams.reduce((sum, param) => {
         return sum.add(ethers.BigNumber.from(param._amount))
     }, ethers.BigNumber.from(0))
 
-    console.log(`💰 Total native drop amount: ${ethers.utils.formatEther(totalNativeDropAmount)} ETH`)
+    if (totalNativeDropAmount.gt(0)) {
+        logger.info(`Total native drop amount: ${ethers.utils.formatEther(totalNativeDropAmount)} ETH`)
+    }
 
     // Check signer balance
     const signerBalance = await signer.getBalance()
@@ -128,7 +131,7 @@ export async function commitAndExecute(
             nativeDropParams,
             { value: totalNativeDropAmount }
         )
-        console.log(`Estimated gas: ${gasEstimate.toString()}`)
+        logger.info(`Estimated gas: ${gasEstimate.toString()}`)
 
         // Call commitAndExecute
         const tx = await simpleExecutorMock.commitAndExecute(params.receiveLib, lzReceiveParam, nativeDropParams, {
@@ -136,28 +139,27 @@ export async function commitAndExecute(
             value: totalNativeDropAmount,
         })
 
-        console.log(`Transaction hash: ${tx.hash}`)
+        logger.info(`Executor commitAndExecute transaction: ${tx.hash}`)
+        logger.info('(This transaction performs both commitVerification on ULN and lzReceive on Endpoint)')
 
         // Wait for confirmation
         const receipt = await tx.wait()
-        console.log(`Transaction confirmed in block: ${receipt.blockNumber}`)
-        console.log(`Gas used: ${receipt.gasUsed.toString()}`)
+        logger.info(`Transaction confirmed in block: ${receipt.blockNumber}`)
+        logger.info(`Gas used: ${receipt.gasUsed.toString()}`)
 
         // Log events (simplified)
         if (receipt.events && receipt.events.length > 0) {
-            console.log(`✅ ${receipt.events.length} events emitted`)
+            logger.info(`${receipt.events.length} events emitted`)
         }
-
-        console.log('✅ commitAndExecute completed successfully!')
     } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : String(error)
-        console.error('❌ Transaction failed:', errorMessage)
+        logger.error('Transaction failed:', errorMessage)
 
         if (error && typeof error === 'object' && 'reason' in error) {
-            console.error('Revert reason:', (error as { reason: string }).reason)
+            logger.error('Revert reason:', (error as { reason: string }).reason)
         }
         if (error && typeof error === 'object' && 'data' in error) {
-            console.error('Error data:', (error as { data: unknown }).data)
+            logger.error('Error data:', (error as { data: unknown }).data)
         }
 
         // Re-throw the error so the calling function knows it failed

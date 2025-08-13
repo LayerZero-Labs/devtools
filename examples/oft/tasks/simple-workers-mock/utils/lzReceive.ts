@@ -1,6 +1,10 @@
 import { Contract } from 'ethers'
 
+import { createLogger } from '@layerzerolabs/io-devtools'
+
 import { ProcessedMessage, SimpleDvnMockTaskArgs, generateGuid, logTaskInfo, processMessage } from './common'
+
+const logger = createLogger()
 
 interface LzReceiveArgs extends SimpleDvnMockTaskArgs {
     guid?: string
@@ -39,7 +43,7 @@ export async function lzReceive(endpointContract: Contract, dstOftContract: Cont
     const extraData = '0x'
 
     // Log operation details
-    logTaskInfo('endpoint.lzReceive', args, processed, {
+    logTaskInfo('Endpoint lzReceive', args, processed, {
         guid: messageGuid,
         endpoint: endpointContract.address,
     })
@@ -48,6 +52,6 @@ export async function lzReceive(endpointContract: Contract, dstOftContract: Cont
     const tx = await endpointContract.lzReceive(packet, processed.localOapp, messageGuid, message, extraData)
     const receipt = await tx.wait()
 
-    console.log(`✅ endpoint.lzReceive txn: ${receipt.transactionHash}\n`)
+    logger.info(`Endpoint lzReceive transaction: ${receipt.transactionHash}\n`)
     return receipt
 }

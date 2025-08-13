@@ -1,6 +1,10 @@
 import { Contract } from 'ethers'
 
+import { createLogger } from '@layerzerolabs/io-devtools'
+
 import { SimpleDvnMockTaskArgs, logTaskInfo, processMessage } from './common'
+
+const logger = createLogger()
 
 /**
  * DVN commit operation
@@ -17,12 +21,12 @@ export async function commit(dvnContract: Contract, dstOftContract: Contract, ar
     const { srcOAppB32, message, localOapp } = processed
 
     // Log operation details
-    logTaskInfo('commit', args, processed)
+    logTaskInfo('DVN commit', args, processed)
 
     // Execute commit transaction
     const tx = await dvnContract.commit(message, nonce, srcEid, srcOAppB32, dstEid, localOapp)
     const receipt = await tx.wait()
 
-    console.log(`✅ commit txn: ${receipt.transactionHash}\n`)
+    logger.info(`DVN commit transaction: ${receipt.transactionHash}\n`)
     return receipt
 }
