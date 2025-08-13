@@ -107,7 +107,7 @@ Select all the chains you want to deploy the OApp to.
 
 After deploying the OApp on the respective chains, you enable messaging by running the [wiring](https://docs.layerzero.network/v2/concepts/glossary#wire--wiring) task.
 
-> :information_source: This example uses the [Simple Config Generator](https://docs.layerzero.network/v2/developers/evm/technical-reference/simple-config), which is recommended over manual configuration.
+> :information_source: This example uses the [Simple Config Generator](https://docs.layerzero.network/v2/tools/simple-config), which is recommended over manual configuration.
 
 Run the wiring task:
 
