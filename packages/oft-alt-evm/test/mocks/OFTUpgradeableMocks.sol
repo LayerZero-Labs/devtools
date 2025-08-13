@@ -9,6 +9,7 @@ import { OFTUpgradeable } from "@layerzerolabs/oft-evm-upgradeable/contracts/oft
 /**
  * @title OFTUpgradeableBaseMock
  * @dev Base mock without UUPS restrictions for storage equivalency testing
+ * @dev To be equivalent to ERC1967Proxy
  */
 contract OFTUpgradeableBaseMock is OFTUpgradeable {
     constructor(address _lzEndpoint) OFTUpgradeable(_lzEndpoint) {}

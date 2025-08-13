@@ -9,6 +9,7 @@ import { OFTAltUpgradeable } from "../../contracts/OFTAltUpgradeable.sol";
 /**
  * @title OFTAltUpgradeableBaseMock
  * @dev Base mock without UUPS restrictions for storage equivalency testing
+ * @dev To be equivalent to ERC1967Proxy
  */
 contract OFTAltUpgradeableBaseMock is OFTAltUpgradeable {
     constructor(address _lzEndpoint) OFTAltUpgradeable(_lzEndpoint) {}
@@ -29,7 +30,9 @@ contract OFTAltUpgradeableBaseMock is OFTAltUpgradeable {
  * @dev Mock contract for Transparent Upgradeable Proxy (TUP) migration testing
  */
 contract OFTAltUpgradeableTUPMock is OFTAltUpgradeable {
-    constructor(address _lzEndpoint) OFTAltUpgradeable(_lzEndpoint) {}
+    constructor(address _lzEndpoint) OFTAltUpgradeable(_lzEndpoint) {
+        _disableInitializers();
+    }
 
     function initialize(string memory _name, string memory _symbol, address _delegate) external initializer {
         __OFTAlt_init(_name, _symbol, _delegate);
