@@ -1,7 +1,8 @@
 /**
  * @file aptos-move-send.ts
  * @description A script to demonstrate cross-chain messaging using LayerZero's OApp protocol.
- * This script sends a message from an Aptos chain to another blockchain (e.g., BSC testnet).
+ * This script sends a string message from an Aptos chain to another blockchain (e.g., EVM chains).
+ * The string is ABI-encoded on-chain for EVM compatibility.
  * It handles the entire flow of:
  * 1. Message preparation and fee quotation
  * 2. Balance verification
@@ -22,9 +23,8 @@ import {
     SimpleTransaction,
 } from '@aptos-labs/ts-sdk'
 import * as dotenv from 'dotenv'
-import { ethers } from 'ethers'
 
-import { Chain, EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 
 // Load environment variables from .env file
@@ -41,7 +41,7 @@ const ACCOUNT_ADDRESS = process.env.APTOS_ACCOUNT_ADDRESS
 
 // OApp configuration
 const OAPP_ADDRESS = '0x' // Set your OApp's address on Aptos
-const REMOTE_EID = EndpointId.SOLANA_V2_TESTNET // Destination chain endpoint ID
+const REMOTE_EID = EndpointId.BSC_V2_TESTNET // Destination chain endpoint ID (e.g., BSC testnet)
 const NETWORK = Network.TESTNET // Aptos network configuration
 
 // Initialize Aptos account and client
@@ -54,36 +54,24 @@ const aptos = new Aptos(new AptosConfig({ network: NETWORK }))
 
 /**
  * Sends a cross-chain message using LayerZero's OApp protocol.
- * This function demonstrates the complete flow of sending a message from Aptos to another chain.
+ * This function demonstrates the complete flow of sending a string message from Aptos to another chain.
+ * The string is ABI-encoded on-chain for EVM compatibility.
  */
 async function send() {
     // Configure message options with gas for execution
-    const options = Options.newOptions().addExecutorLzReceiveOption(BigInt(30000))
+    const options = Options.newOptions().addExecutorLzReceiveOption(BigInt(200000), 0)
     const extraOptions = options.toBytes()
 
-    let messageArray: Uint8Array
-    if (getNetworkForChainId(REMOTE_EID).chainName === Chain.SOLANA) {
-        const message = 'Hello, Solana!'
-
-        const messageHex = ethers.utils.solidityPack(
-            ['uint256', 'bytes'],
-            [ethers.utils.toUtf8Bytes(message).length, ethers.utils.toUtf8Bytes(message)]
-        )
-        // Convert hex string to Uint8Array
-        messageArray = ethers.utils.arrayify(messageHex)
-    } else {
-        const message = 'Hello, EVM!'
-        const messageBytes = new TextEncoder().encode(message)
-        messageArray = new Uint8Array(messageBytes)
-    }
-
-    // The Following is the code required for packaging a string message to be sent to Solana:
+    // The message to send - just a simple string!
+    // The on-chain function will handle ABI encoding for EVM compatibility
+    const message = 'Hello from Aptos!'
 
     // Get fee quote for the cross-chain message
+    // quote_send_string will ABI-encode the string internally to calculate accurate fees
     const quote = await aptos.view({
         payload: {
-            function: `${OAPP_ADDRESS}::oapp::example_message_quoter`,
-            functionArguments: [REMOTE_EID, messageArray, extraOptions],
+            function: `${OAPP_ADDRESS}::oapp::quote_send_string`,
+            functionArguments: [REMOTE_EID, message, extraOptions],
         },
     })
 
@@ -104,9 +92,10 @@ async function send() {
     }
 
     // Build the transaction payload
+    // send_string will ABI-encode the string on-chain before sending it cross-chain
     const payload: InputEntryFunctionData = {
-        function: `${OAPP_ADDRESS}::oapp::example_message_sender`,
-        functionArguments: [REMOTE_EID, messageArray, extraOptions, quote[0] as bigint],
+        function: `${OAPP_ADDRESS}::oapp::send_string`,
+        functionArguments: [REMOTE_EID, message, extraOptions, quote[0] as bigint],
     }
 
     // Create the transaction
@@ -130,7 +119,7 @@ async function send() {
     })
 
     console.log(`Transaction hash: ${executedTransaction.hash}`)
-    console.log('Message sent!')
+    console.log(`Message "${message}" sent to chain ${REMOTE_EID}!`)
 }
 
 // Execute the send function and handle any errors

@@ -9,9 +9,12 @@ module oapp::oapp {
     use std::option::Option;
     use std::primary_fungible_store;
     use std::signer::address_of;
+    use std::string::{String, utf8, bytes as string_bytes};
+    use std::vector;
 
     use endpoint_v2_common::bytes32::Bytes32;
     use endpoint_v2_common::native_token;
+    use endpoint_v2_common::serde::{extract_u256, append_u256};
     use oapp::oapp_core::{combine_options, lz_quote, lz_send, refund_fees};
     use oapp::oapp_store::OAPP_ADDRESS;
 
@@ -20,17 +23,68 @@ module oapp::oapp {
 
     const STANDARD_MESSAGE_TYPE: u16 = 1;
 
-    struct Counter has key {
-        value: u64
+    struct Message has key {
+        message: String
     }
 
     fun init_module(account: &signer) {
-        move_to(account, Counter { value: 0 });
+        move_to(account, Message { message: utf8(b"") });
     }
 
     #[view]
-    public fun get_counter(): u64 acquires Counter {
-        borrow_global<Counter>(@oapp).value
+    public fun get_message(): String acquires Message {
+        borrow_global<Message>(@oapp).message
+    }
+
+    /// Decodes an ABI-encoded string from bytes
+    /// ABI encoding format for string:
+    /// - First 32 bytes: offset to string data
+    /// - Next 32 bytes: length of the string
+    /// - Remaining bytes: the actual string data (padded to 32-byte chunks)
+    public fun decode_abi_string(data: vector<u8>): String {
+        let data_len = vector::length(&data);
+        assert!(data_len >= 64, EINVALID_ABI_ENCODING); // At least offset + length
+
+        // Read offset
+        let position = 0;
+        let offset = extract_u256(&data, &mut position);
+        assert!(offset == 32, EINVALID_ABI_ENCODING);
+
+        // Read string length
+        let str_len = extract_u256(&data, &mut position);
+
+        // Extract string bytes
+        let str_bytes = vector::empty<u8>();
+        let str_len_u64 = (str_len as u64);
+        for (i in 0..str_len_u64) {
+            vector::push_back(&mut str_bytes, *vector::borrow(&data, 64 + i));
+        };
+
+        utf8(str_bytes)
+    }
+
+    /// Encodes a string into ABI format
+    /// Returns bytes that can be decoded by Solidity's abi.decode(data, (string))
+    public fun encode_abi_string(str: String): vector<u8> {
+        let str_bytes = string_bytes(&str);
+        let str_len = vector::length(str_bytes);
+        let encoded = vector::empty<u8>();
+        
+        append_u256(&mut encoded, 32);
+        append_u256(&mut encoded, str_len as u256);
+
+        // Add string data
+        for (i in 0..str_len) {
+            vector::push_back(&mut encoded, *vector::borrow(str_bytes, i));
+        };
+        
+        // Add padding to next 32-byte boundary
+        let padding_needed = if (str_len % 32 == 0) { 0 } else { 32 - (str_len % 32) };
+        for (i in 0..padding_needed) {
+            vector::push_back(&mut encoded, 0);
+        };
+        
+        encoded
     }
 
     public(friend) fun lz_receive_impl(
@@ -41,23 +95,27 @@ module oapp::oapp {
         _message: vector<u8>,
         _extra_data: vector<u8>,
         receive_value: Option<FungibleAsset>,
-    ) acquires Counter {
+    ) acquires Message {
         // Deposit any received value
         option::destroy(receive_value, |value| primary_fungible_store::deposit(OAPP_ADDRESS(), value));
 
-        // Increment counter
-        let counter = borrow_global_mut<Counter>(@oapp);
-        counter.value = counter.value + 1;
+        // Decode the ABI-encoded string message
+        let decoded_string = decode_abi_string(_message);
+
+        // Store the decoded message
+        let msg_ref = borrow_global_mut<Message>(@oapp);
+        msg_ref.message = decoded_string;
 
         // todo: Perform any actions with received message here
     }
 
 
-    // todo: replicate the logic in here where sending a message must happen
-    public entry fun example_message_sender(
+    /// Send a string message to another chain (like an EVM chain)
+    /// The string will be ABI-encoded so EVM contracts can decode it
+    public entry fun send_string(
         account: &signer,
         dst_eid: u32,
-        message: vector<u8>,
+        message: String,
         extra_options: vector<u8>,
         native_fee: u64,
     ) {
@@ -71,10 +129,13 @@ module oapp::oapp {
         // No ZRO fee in this example
         let zro_fee_fa = option::none();
 
+        // ABI encode the string for EVM compatibility
+        let encoded_message = encode_abi_string(message);
+
         // Send the cross-chain message
         lz_send(
             dst_eid,
-            message,
+            encoded_message,
             combine_options(dst_eid, STANDARD_MESSAGE_TYPE, extra_options),
             &mut native_fee_fa,
             &mut zro_fee_fa,
@@ -85,19 +146,20 @@ module oapp::oapp {
     }
 
     #[view]
-    /// Quote the network fees for a particular send
+    /// Quote the network fees for sending a string message
     /// @return (native_fee, zro_fee)
-    // todo: replicate the logic in here where a quote is needed
-    public fun example_message_quoter(
+    public fun quote_send_string(
         dst_eid: u32,
-        message: vector<u8>,
+        message: String,
         extra_options: vector<u8>,
     ): (u64, u64) {
+        // ABI encode the string to get accurate quote
+        let encoded_message = encode_abi_string(message);
         let options = combine_options(dst_eid, STANDARD_MESSAGE_TYPE, extra_options);
 
         lz_quote(
             dst_eid,
-            message,
+            encoded_message,
             options,
             false,
         )
@@ -130,4 +192,6 @@ module oapp::oapp {
 
     const ECOMPOSE_NOT_IMPLEMENTED: u64 = 1;
     const EINSUFFICIENT_BALANCE: u64 = 2;
+    const EINVALID_ABI_ENCODING: u64 = 3;
+    const ESTRING_TOO_LARGE: u64 = 4;
 }

@@ -6,8 +6,8 @@ import 'dotenv/config'
 
 // ABI for the functions we need
 const ABI = [
-    'function quote(uint32 _dstEid, string memory _message, bytes memory _options, bool _payInLzToken) public view returns (tuple(uint256 nativeFee, uint256 lzTokenFee))',
-    'function send(uint32 _dstEid, string memory _message, bytes calldata _options) external payable returns (tuple(bytes32 guid, uint256 nonce, bytes32 messageId))',
+    'function quoteSendString(uint32 _dstEid, string memory _string, bytes memory _options, bool _payInLzToken) public view returns (tuple(uint256 nativeFee, uint256 lzTokenFee))',
+    'function sendString(uint32 _dstEid, string memory _string, bytes calldata _options) external payable',
 ]
 
 async function main() {
@@ -41,11 +41,11 @@ async function main() {
 
     try {
         // Get quote
-        const [nativeFee] = await myOApp.quote(aptosEid, message, options, false)
+        const [nativeFee] = await myOApp.quoteSendString(aptosEid, message, options, false)
         console.log(`Quote for message: ${nativeFee} ETH`)
 
         // Send message
-        const tx = await myOApp.send(aptosEid, message, options, {
+        const tx = await myOApp.sendString(aptosEid, message, options, {
             value: nativeFee.toString(),
         })
 
