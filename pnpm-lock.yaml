@@ -4568,6 +4568,39 @@ importers:
         specifier: ^5.0.5
         version: 5.0.9
 
+  packages/oft-hts:
+    devDependencies:
+      '@layerzerolabs/lz-evm-messagelib-v2':
+        specifier: ^3.0.75
+        version: 3.0.86(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.86)(@layerzerolabs/lz-evm-v1-0.7@3.0.86)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-protocol-v2':
+        specifier: ^3.0.75
+        version: 3.0.86(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-v1-0.7':
+        specifier: ^3.0.75
+        version: 3.0.86(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
+      '@layerzerolabs/oapp-evm':
+        specifier: ^0.3.2
+        version: link:../oapp-evm
+      '@layerzerolabs/oft-evm':
+        specifier: ^3.2.0
+        version: link:../oft-evm
+      '@layerzerolabs/test-devtools-evm-foundry':
+        specifier: ~7.0.0
+        version: link:../test-devtools-evm-foundry
+      '@layerzerolabs/toolbox-foundry':
+        specifier: ^0.1.12
+        version: link:../toolbox-foundry
+      '@openzeppelin/contracts':
+        specifier: ^5.0.2
+        version: 5.1.0
+      '@openzeppelin/contracts-upgradeable':
+        specifier: ^5.0.2
+        version: 5.1.0(@openzeppelin/contracts@5.1.0)
+      rimraf:
+        specifier: ^5.0.5
+        version: 5.0.9
+
   packages/oft-move:
     devDependencies:
       '@aptos-labs/ts-sdk':
