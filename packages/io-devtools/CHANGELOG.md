@@ -1,5 +1,11 @@
 # @layerzerolabs/io-devtools
 
+## 0.3.1
+
+### Patch Changes
+
+- b721ce7: Fixing animation clearing bug.
+
 ## 0.3.0
 
 ### Minor Changes
