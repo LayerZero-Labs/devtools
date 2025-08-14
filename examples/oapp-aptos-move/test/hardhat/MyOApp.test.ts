@@ -28,9 +28,7 @@ describe('MyOApp Test', function () {
         // Fetching the first three signers (accounts) from Hardhat's local Ethereum network
         const signers = await ethers.getSigners()
 
-        ownerA = signers[0]
-        ownerB = signers[1]
-        endpointOwner = signers[2]
+        ;[ownerA, ownerB, endpointOwner] = signers
 
         // The EndpointV2Mock contract comes from @layerzerolabs/test-devtools-evm-hardhat package
         // and its artifacts are connected as external artifacts to this project
@@ -63,22 +61,24 @@ describe('MyOApp Test', function () {
     })
 
     // A test case to verify message sending functionality
-    it('should increment counter when receiving a message', async function () {
-        // Assert initial counter state in both MyOApp instances
-        expect((await myOAppA.counter()).toNumber()).to.equal(0)
-        expect((await myOAppB.counter()).toNumber()).to.equal(0)
+    it('should send a string message to each destination OApp', async function () {
+        // Assert initial state of lastMessage in both MyOApp instances
+        expect(await myOAppA.lastMessage()).to.equal('')
+        expect(await myOAppB.lastMessage()).to.equal('')
 
         const options = Options.newOptions().addExecutorLzReceiveOption(200000, 0).toHex().toString()
+        const message = 'Test message.'
 
         // Define native fee and quote for the message send operation
         let nativeFee = 0
-        ;[nativeFee] = await myOAppA.quote(eidB, 'Test message.', options, false)
+        const messagingFee = await myOAppA.quoteSendString(eidB, message, options, false)
+        nativeFee = messagingFee.nativeFee
 
-        // Execute send operation from myOAppA
-        await myOAppA.send(eidB, 'Test message.', options, { value: nativeFee.toString() })
+        // Execute sendString operation from myOAppA
+        await myOAppA.sendString(eidB, message, options, { value: nativeFee.toString() })
 
-        // Assert the counter was incremented in the receiving app
-        expect((await myOAppA.counter()).toNumber()).to.equal(0)
-        expect((await myOAppB.counter()).toNumber()).to.equal(1)
+        // Assert the resulting state of lastMessage in both MyOApp instances
+        expect(await myOAppA.lastMessage()).to.equal('')
+        expect(await myOAppB.lastMessage()).to.equal('Test message.')
     })
 })
