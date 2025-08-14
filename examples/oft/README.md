@@ -149,21 +149,63 @@ pnpm hardhat lz:deploy --tags SimpleExecutorMock
 
 ### Configuring Simple Workers
 
-After deployment, configure your OApps to use the Simple Workers:
+You can now use custom DVNs and Executors with the standard `lz:oapp:wire` command by adding them to your metadata configuration.
 
-1. **Set Send Configuration** (on source chain):
+1. **Get your deployed addresses** from the deployment files:
 
-```bash
-pnpm hardhat lz:simple-workers:set-send-config --dst-eid <DESTINATION_EID> --contract-name MyOFTMock
+   - SimpleDVNMock: `./deployments/<network-name>/SimpleDVNMock.json`
+   - SimpleExecutorMock: `./deployments/<network-name>/SimpleExecutorMock.json`
+
+2. **Update your `layerzero.config.ts`** to include your deployed Simple Workers:
+
+   - **SECTION 1**: Add your contract definitions with the correct endpoint IDs
+   - **SECTION 4**: Add your Simple Worker addresses:
+
+```typescript
+// In layerzero.config.ts, SECTION 4: CUSTOM EXECUTOR AND DVN ADDRESSES
+const customExecutorsByEid: Record<number, { address: string }> = {
+  [EndpointId.OPTIMISM_V2_TESTNET]: { address: "0x..." }, // From deployments/optimism-testnet/SimpleExecutorMock.json
+  [EndpointId.ARBITRUM_V2_TESTNET]: { address: "0x..." }, // From deployments/arbitrum-testnet/SimpleExecutorMock.json
+  // Add for each chain where you deployed SimpleExecutorMock
+};
+
+const customDVNsByEid: Record<number, { address: string }> = {
+  [EndpointId.OPTIMISM_V2_TESTNET]: { address: "0x..." }, // From deployments/optimism-testnet/SimpleDVNMock.json
+  [EndpointId.ARBITRUM_V2_TESTNET]: { address: "0x..." }, // From deployments/arbitrum-testnet/SimpleDVNMock.json
+  // Add for each chain where you deployed SimpleDVNMock
+};
 ```
 
-2. **Set Receive Configuration** (on destination chain):
+3. **Use them in your pathways** (SECTION 5) by their canonical names:
 
-```bash
-pnpm hardhat lz:simple-workers:set-receive-config --src-eid <SOURCE_EID> --contract-name MyOFTMock
+```typescript
+// In layerzero.config.ts, SECTION 5: PATHWAY CONFIGURATION
+const pathways: TwoWayConfig[] = [
+  [
+    sourceContract,
+    destContract,
+    [["SimpleDVNMock"], []], // Use the DVN by name
+    [1, 1],
+    [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
+    "SimpleExecutorMock", // Use the executor by name
+  ],
+];
 ```
 
-> :information_source: These configuration tasks are temporary. Once [PR #1637](https://github.com/LayerZero-Labs/devtools/pull/1637) is merged, Simple Workers can be configured through the standard LayerZero config file.
+4. **Wire normally** using the standard command:
+
+```bash
+pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts
+```
+
+This command will automatically:
+
+- Detect pathways without DVN configurations in your LayerZero config
+- Configure SimpleDVNMock and SimpleExecutorMock for those pathways
+- Set both send and receive configurations on the appropriate chains
+- Skip pathways that already have DVN configurations
+
+> :information_source: The command only configures pathways with empty DVN arrays, preserving any existing configurations.
 
 ### Using Simple Workers
 
@@ -189,6 +231,7 @@ The manual verification flow involves three steps on the destination chain:
 
 Without the `--simple-workers` flag, you would need to manually call these steps using the provided tasks:
 
+- `lz:oapp:wire:simple-workers` - Configure Simple Workers for all pathways without DVN configurations
 - `lz:simple-dvn:verify` - Verify the message with SimpleDVNMock
 - `lz:simple-dvn:commit` - Commit the verification to ULN
 - `lz:simple-workers:commit-and-execute` - Execute the message delivery
@@ -261,6 +304,15 @@ The OFT standard builds on top of the OApp standard, which enables generic messa
 
 > :information_source: This example uses the [Simple Config Generator](https://docs.layerzero.network/v2/developers/evm/technical-reference/simple-config), which is recommended over manual configuration.
 
+The `layerzero.config.ts` file is organized into clear sections:
+
+- **SECTION 1**: Contract definitions (YOU MUST EDIT)
+- **SECTION 2**: Gas options (YOU MAY NEED TO EDIT)
+- **SECTION 3**: Metadata configuration (MOSTLY BOILERPLATE)
+- **SECTION 4**: Custom executor/DVN addresses (YOU MUST EDIT if using custom workers)
+- **SECTION 5**: Pathway configuration (YOU MUST EDIT)
+- **SECTION 6**: Export configuration
+
 Run the wiring task:
 
 ```bash
@@ -268,6 +320,31 @@ pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts
 ```
 
 Submit all the transactions to complete wiring. After all transactions confirm, your OApps are wired and can send messages to each other.
+
+### Using Custom Executors and DVNs
+
+> :information_source: For testnets without default workers, see the [Simple Workers section](#simple-workers-for-testnets-without-default-workers) above.
+
+For production deployments or advanced use cases, you can deploy and configure your own custom Executors and DVNs. This is useful when:
+
+- You need specific fee structures or execution logic
+- You want full control over message verification and execution
+- You're building a custom security stack
+
+The process is the same as documented in the Simple Workers section:
+
+1. **Deploy your custom contracts** on each chain
+2. **Add them to the metadata** in `layerzero.config.ts`:
+   - **SECTION 1**: Define your contracts
+   - **SECTION 4**: Add your custom executor/DVN addresses
+   - **SECTION 5**: Reference them by name in pathways
+3. **Wire normally** with `pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts`
+
+> :warning: **Important**: Custom executors and DVNs must be deployed on each chain where they're needed. The same canonical name can resolve to different addresses on different chains.
+
+> :book: **For detailed instructions**, see the [Custom Workers Configuration Guide](./CUSTOM_WORKERS_GUIDE.md) which shows exactly what to modify in your configuration.
+
+> :information_source: **Note**: For production, review **SECTION 2** in `layerzero.config.ts` to adjust gas limits based on your contract's actual usage.
 
 ## Sending OFTs
 
