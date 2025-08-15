@@ -178,7 +178,7 @@ After configuring:
 3. **Send messages** (the system will automatically use your custom workers):
 
    ```bash
-   pnpm hardhat lz:oft:send --src-eid 40232 --dst-eid 40231 --amount 1 --to <ADDRESS> --simple-workers
+   pnpm hardhat lz:oft:send --src-eid 30111 --dst-eid 30110 --amount 1 --to <ADDRESS> --simple-workers
    ```
 
    > :information_source: For Simple Workers, add the `--simple-workers` flag to enable manual verification flow
