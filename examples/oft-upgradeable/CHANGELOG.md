@@ -1,5 +1,17 @@
 # @layerzerolabs/oft-upgradeable-example
 
+## 0.3.2
+
+### Patch Changes
+
+- f974ed4: Update send.ts code comments to explain extra args
+
+## 0.3.1
+
+### Patch Changes
+
+- f829409: Fixing comments on config files
+
 ## 0.3.0
 
 ### Minor Changes

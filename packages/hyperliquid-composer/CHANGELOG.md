@@ -1,5 +1,19 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 0.0.18
+
+### Patch Changes
+
+- 9be22c2: change fork fuzzing to works off a forked anvil
+- 253612c: fuzz run 1 on ci
+
+## 0.0.17
+
+### Patch Changes
+
+- 26c44d4: hyperliquid corewriter variant
+  - @layerzerolabs/oapp-evm@0.3.2
+
 ## 0.0.16
 
 ### Patch Changes

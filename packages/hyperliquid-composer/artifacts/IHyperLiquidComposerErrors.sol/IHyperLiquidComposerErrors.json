@@ -98,12 +98,24 @@
       "inputs": [
         { "name": "errorMessage", "type": "bytes", "internalType": "bytes" }
       ]
+    },
+    {
+      "type": "error",
+      "name": "NotEnoughMsgValue",
+      "inputs": [
+        { "name": "msgValue", "type": "uint256", "internalType": "uint256" },
+        {
+          "name": "requiredValue",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
     }
   ],
   "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
   "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
   "methodIdentifiers": {},
-  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"errorMessage\",\"type\":\"bytes\"}],\"name\":\"ErrorMsg\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"tokenId\",\"type\":\"uint64\"}],\"name\":\"HyperLiquidComposerCore_SpotBalanceRead_Failed\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"message\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"length\",\"type\":\"uint256\"}],\"name\":\"HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"HyperLiquidComposer_FailedToRefund_HYPE\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"HyperLiquidComposer_FailedToSend_HYPE\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"receivedEndpointAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidArgument_EndpointShouldNotBeZeroAddress\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"notComposerAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotComposer\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"notEndpointAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"expectedEndpointAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotEndpoint\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"internalOFTAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"receivedOFTAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotOFT\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"errorMessage\",\"type\":\"bytes\"}],\"name\":\"HyperLiquidComposer_InvalidComposeMessage\",\"type\":\"error\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interfaces/IHyperLiquidComposerErrors.sol\":\"IHyperLiquidComposerErrors\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":hardhat/=node_modules/hardhat/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/interfaces/IHyperLiquidComposerErrors.sol\":{\"keccak256\":\"0x49a19161f2daf10880cd130bc098222d48774973b3a3df3cb4fbc30ba4015c10\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://265f8eaab7ba5c2aac6d4b71dd416b4b59f06f743e97fa3d4a6d6ffd69be23ec\",\"dweb:/ipfs/QmQKJRdAPvexsNtASwJozZNmV365kNP1ZVqknF1w8KprAJ\"]}},\"version\":1}",
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"errorMessage\",\"type\":\"bytes\"}],\"name\":\"ErrorMsg\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"tokenId\",\"type\":\"uint64\"}],\"name\":\"HyperLiquidComposerCore_SpotBalanceRead_Failed\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"message\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"length\",\"type\":\"uint256\"}],\"name\":\"HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"HyperLiquidComposer_FailedToRefund_HYPE\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"HyperLiquidComposer_FailedToSend_HYPE\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"receivedEndpointAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidArgument_EndpointShouldNotBeZeroAddress\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"notComposerAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotComposer\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"notEndpointAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"expectedEndpointAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotEndpoint\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"internalOFTAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"receivedOFTAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotOFT\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"errorMessage\",\"type\":\"bytes\"}],\"name\":\"HyperLiquidComposer_InvalidComposeMessage\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"msgValue\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"requiredValue\",\"type\":\"uint256\"}],\"name\":\"NotEnoughMsgValue\",\"type\":\"error\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interfaces/IHyperLiquidComposerErrors.sol\":\"IHyperLiquidComposerErrors\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":hardhat/=node_modules/hardhat/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/interfaces/IHyperLiquidComposerErrors.sol\":{\"keccak256\":\"0xfbb9fa220593e734e10b07fb241aec6413cb22f2d83b767ded733def5a954d81\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://906b57c75d3d9ed33021021fa26d25c30d2b8c434a4f881ca68d577b1bdcd291\",\"dweb:/ipfs/QmTVy3W5aXN8GS5Cbh1VgMMAJ2pz5WeYKgdio8pgnakWDA\"]}},\"version\":1}",
   "metadata": {
     "compiler": { "version": "0.8.22+commit.4fc1097e" },
     "language": "Solidity",
@@ -207,6 +219,22 @@
           ],
           "type": "error",
           "name": "HyperLiquidComposer_InvalidComposeMessage"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "msgValue",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "requiredValue",
+              "type": "uint256"
+            }
+          ],
+          "type": "error",
+          "name": "NotEnoughMsgValue"
         }
       ],
       "devdoc": { "kind": "dev", "methods": {}, "version": 1 },
@@ -231,10 +259,10 @@
     },
     "sources": {
       "contracts/interfaces/IHyperLiquidComposerErrors.sol": {
-        "keccak256": "0x49a19161f2daf10880cd130bc098222d48774973b3a3df3cb4fbc30ba4015c10",
+        "keccak256": "0xfbb9fa220593e734e10b07fb241aec6413cb22f2d83b767ded733def5a954d81",
         "urls": [
-          "bzz-raw://265f8eaab7ba5c2aac6d4b71dd416b4b59f06f743e97fa3d4a6d6ffd69be23ec",
-          "dweb:/ipfs/QmQKJRdAPvexsNtASwJozZNmV365kNP1ZVqknF1w8KprAJ"
+          "bzz-raw://906b57c75d3d9ed33021021fa26d25c30d2b8c434a4f881ca68d577b1bdcd291",
+          "dweb:/ipfs/QmTVy3W5aXN8GS5Cbh1VgMMAJ2pz5WeYKgdio8pgnakWDA"
         ],
         "license": "MIT"
       }

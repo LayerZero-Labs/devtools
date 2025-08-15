@@ -62,7 +62,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
     /// @dev This function is called by the OFTCore contract when a message is sent
     ///
     /// @param _oft The address of the OFT contract.
-    /// @param _message The encoded message content, expected to contain a composeMsg that decodes to type: (address receiver).
+    /// @param _message The encoded message content, expected to contain a composeMsg that decodes to type: (address receiver, uint256 msgValue).
     /// @param _executor The address that called EndpointV2::lzCompose()
     function lzCompose(
         address _oft,
@@ -89,7 +89,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         address receiver;
         uint256 amountLD;
         bytes32 maybeEVMSender;
-        bytes memory maybeEVMReceiver;
+        bytes memory composeMsg;
 
         /// @dev Checks if the payload contains a compose message that can be sliced to extract the amount, sender as bytes32, and receiver as bytes
         /// @dev The slice ranges can be found in OFTComposeMsgCodec.sol
@@ -97,11 +97,11 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         try this.validate_message(_message) returns (
             uint256 _amountLD,
             bytes32 _maybeSenderBytes32,
-            bytes memory _maybeEVMReceiver
+            bytes memory _composeMsg
         ) {
             amountLD = _amountLD;
             maybeEVMSender = _maybeSenderBytes32;
-            maybeEVMReceiver = _maybeEVMReceiver;
+            composeMsg = _composeMsg;
         } catch (bytes memory _err) {
             revert IHyperLiquidComposerErrors.HyperLiquidComposer_InvalidComposeMessage(_err);
         }
@@ -109,7 +109,12 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         /// @dev Checks if the receiver and sender are valid addresses
         /// @dev If the addresses are invalid, the function will emit an error message and try a complete refund to the sender
         /// @dev If developers want custom error messages they need to implement their own custom revert messages
-        try this.validate_addresses_or_refund(maybeEVMReceiver, maybeEVMSender, amountLD) returns (address _receiver) {
+        try this.validate_msg_or_refund(composeMsg, maybeEVMSender, amountLD) returns (
+            uint256 _minMsgValue,
+            address _receiver
+        ) {
+            if (msg.value < _minMsgValue) revert IHyperLiquidComposerErrors.NotEnoughMsgValue(msg.value, _minMsgValue);
+
             receiver = _receiver;
         } catch (bytes memory _err) {
             bytes memory errMsg = completeRefund(_err, _executor);
@@ -121,13 +126,22 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         /// @dev If the message is being sent with a value, we fund the address on HyperCore
         if (msg.value > 0) {
             try this.fundAddressOnHyperCore(receiver, msg.value, _executor) {} catch (bytes memory _err) {
+                /// @dev The gas token on HyperCore is USDC at the moment, the outcome of a failed HYPE transfer is invariant of the ERC20 transfer
+                /// @dev When HYPE is the gas token on HyperCore, we MAY want to stop execution and perform a completeRefund()
+                /// @dev This would require composer redeployment
                 try this.refundNativeTokens{ value: msg.value }(receiver) {} catch {
-                    _err = completeRefund(_err, _executor);
+                    /// @dev When we can not refund the receiver, we refund the tx.origin
+                    /// @dev If this fails, we do not revert as we still want to transfer the ERC20 to hypercore
+                    (bool succ, bytes memory data) = (tx.origin).call{ value: msg.value }("");
+                    if (!succ) {
+                        emit ErrorMessage(data);
+                    }
                 }
                 emit ErrorMessage(_err);
             }
         }
 
+        /// @dev We always want to transfer the ERC20 tokens to HyperCore
         try this.sendAssetToHyperCore(receiver, amountLD) {} catch (bytes memory _err) {
             this.refundERC20(receiver, amountLD);
             emit ErrorSpot_FailedToSend(receiver, oftAsset.coreIndexId, amountLD, _err);
@@ -218,6 +232,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
                     emit ExcessHYPE_Refund(_executor, amounts.dust);
                 } else {
                     // Finally refund the transaction origin - we know this is an eoa and can accept tokens
+                    /// @dev If this fails we are fine with the tokens staying the composer contract
                     (success, ) = tx.origin.call{ value: amounts.dust }("");
                     emit ExcessHYPE_Refund(tx.origin, amounts.dust);
                 }

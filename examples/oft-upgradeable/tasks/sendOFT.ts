@@ -42,19 +42,19 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from EVM chains')
     )
     .addOptionalParam(
         'extraLzReceiveOptions',
-        'Array of extra lzReceive options in format "gas,value" (e.g. ["200000,0", "100000,1000000000000000000"])',
+        'Array of lzReceive options as comma-separated values "gas,value"',
         undefined,
         cliTypes.csv
     )
     .addOptionalParam(
         'extraLzComposeOptions',
-        'Array of extra lzCompose options in format "index,gas,value" (e.g. ["0,500000,0", "1,300000,1000000000000000000"])',
+        'Array of lzCompose options as comma-separated values "index,gas,value"',
         undefined,
         cliTypes.csv
     )
     .addOptionalParam(
         'extraNativeDropOptions',
-        'Array of extra native drop options in format "amount,recipient" (e.g. ["1000000000000000000,0x1234..."])',
+        'Array of native drop options as comma-separated values "amount,recipient"',
         undefined,
         cliTypes.csv
     )

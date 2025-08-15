@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oapp-solana-example",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -50,7 +50,7 @@
     "@layerzerolabs/protocol-devtools": "^3.0.0",
     "@layerzerolabs/protocol-devtools-solana": "^8.0.0",
     "@layerzerolabs/solhint-config": "^3.0.12",
-    "@layerzerolabs/test-devtools-evm-foundry": "~6.0.3",
+    "@layerzerolabs/test-devtools-evm-foundry": "~7.0.0",
     "@layerzerolabs/toolbox-foundry": "~0.1.12",
     "@layerzerolabs/toolbox-hardhat": "~0.6.12",
     "@layerzerolabs/ua-devtools": "~5.0.0",
