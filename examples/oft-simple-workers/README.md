@@ -65,7 +65,7 @@
 Create your local copy of this example:
 
 ```bash
-pnpm dlx create-lz-oapp@latest --example oft
+pnpm dlx create-lz-oapp@latest --example oft-simple-workers
 ```
 
 Specify the directory, select `OFT` and proceed with the installation.
