@@ -55,7 +55,7 @@ OVault makes it extremely easy to move assets and shares between any supported c
 ## Scaffold this Example
 
 ```bash
-npx create-lz-oapp@latest --example ovault-evm
+LZ_ENABLE_OVAULT_EXAMPLE=1 npx create-lz-oapp@latest --example ovault-evm
 ```
 
 ## Helper Tasks
