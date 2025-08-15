@@ -1157,6 +1157,9 @@ importers:
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
         version: 2.3.44
+      '@layerzerolabs/protocol-devtools-evm':
+        specifier: ^5.0.0
+        version: link:../../packages/protocol-devtools-evm
       '@layerzerolabs/script-devtools-evm-foundry':
         specifier: ^1.0.0
         version: link:../../packages/script-devtools-evm-foundry
