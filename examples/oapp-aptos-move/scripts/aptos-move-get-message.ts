@@ -1,7 +1,7 @@
 /**
- * @file aptos-move-get-count.ts
- * @description A script to get the current counter value from the OApp on Aptos.
- * This counter increments each time a message is successfully received by the OApp,
+ * @file aptos-move-get-message.ts
+ * @description A script to get the last received message from the OApp on Aptos.
+ * This message is updated each time a new cross-chain message is successfully received,
  * providing a simple way to confirm that cross-chain communication is working.
  */
 
@@ -19,29 +19,29 @@ const NETWORK = Network.TESTNET // Aptos network configuration
 const aptos = new Aptos(new AptosConfig({ network: NETWORK }))
 
 /**
- * Gets the current counter value from the OApp contract on Aptos.
+ * Gets the last received message from the OApp contract on Aptos.
  * This function demonstrates how to call a view function on an Aptos contract.
  */
-async function getCount() {
+async function getMessage() {
     try {
-        // Call the view function to get the counter value
-        const counter = await aptos.view({
+        // Call the view function to get the last received message
+        const message = await aptos.view({
             payload: {
-                function: `${OAPP_ADDRESS}::oapp::get_counter`,
+                function: `${OAPP_ADDRESS}::oapp::get_message`,
                 functionArguments: [],
             },
         })
 
-        console.log('Current counter value:', counter)
-        return counter
+        console.log('Last received message:', message[0])
+        return message[0]
     } catch (error) {
-        console.error('Error getting counter value:', error)
+        console.error('Error getting message:', error)
         throw error
     }
 }
 
-// Execute the getCount function and handle any errors
-getCount().catch((error) => {
+// Execute the getMessage function and handle any errors
+getMessage().catch((error) => {
     console.error(error)
     process.exit(1)
 })

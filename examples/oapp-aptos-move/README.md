@@ -254,6 +254,42 @@ pnpm run lz:sdk:move:transfer-object-owner --oapp-config move.layerzero.config.t
 
 Note: The object owner has the upgrade authority for the Object.
 
+## Using the Example Scripts
+
+After deploying and wiring your OApp, you can test cross-chain messaging using the provided scripts located in the `scripts/` directory:
+
+### Available Scripts
+
+- **`aptos-move-send.ts`** - Send a string message from Aptos to an EVM chain (e.g., BSC testnet)
+- **`aptos-move-get-message.ts`** - Read the last received message on Aptos
+- **`evm-send.ts`** - Send a string message from EVM to Aptos
+- **`evm-read-message.ts`** - Read the last received message on EVM
+
+### Running the Scripts
+
+First, ensure you have the required environment variables set in your `.env` file:
+
+- `APTOS_PRIVATE_KEY` and `APTOS_ACCOUNT_ADDRESS` for Aptos scripts
+- `EVM_PRIVATE_KEY` for EVM scripts
+
+Then run the scripts using ts-node:
+
+```bash
+# Send message from Aptos to EVM
+npx ts-node scripts/aptos-move-send.ts
+
+# Read message on Aptos
+npx ts-node scripts/aptos-move-get-message.ts
+
+# Send message from EVM to Aptos
+npx ts-node scripts/evm-send.ts
+
+# Read message on EVM
+npx ts-node scripts/evm-read-message.ts
+```
+
+The scripts handle ABI encoding/decoding automatically - you just work with plain strings!
+
 ## Help
 
 ```bash
