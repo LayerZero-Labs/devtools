@@ -148,6 +148,7 @@ pnpm hardhat lz:deploy --tags SimpleExecutorMock
 ```
 
 ### Configuring Simple Workers
+> Note: If you are NOT using simple workers then use layerzero.config.ts and you can skip this step
 
 You can now use custom DVNs and Executors with the standard `lz:oapp:wire` command by adding them to your metadata configuration.
 
@@ -193,9 +194,9 @@ const pathways: TwoWayConfig[] = [
 ```
 
 4. **Wire normally** using the standard command:
-
+> Note: If you are NOT using simple workers then use layerzero.config.ts
 ```bash
-pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts
+pnpm hardhat lz:oapp:wire --oapp-config layerzero.simple-worker.config.ts
 ```
 
 This command will automatically:
