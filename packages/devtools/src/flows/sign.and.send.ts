@@ -15,7 +15,7 @@ import {
     printJson,
     promptToContinue,
 } from '@layerzerolabs/io-devtools'
-import { createProgressBar, printRecords, render } from '@layerzerolabs/io-devtools/swag'
+import { createPenguinSpinner, printRecords, render } from '@layerzerolabs/io-devtools/swag'
 
 export interface SignAndSendFlowArgs {
     transactions: OmniTransaction[]
@@ -86,30 +86,45 @@ export const createSignAndSendFlow =
         //      - in the interactive mode, if the user decides not to retry the failed transactions
         //      - in the non-interactive mode
         //
+        let penguinSpinner: any = null
+
         // eslint-disable-next-line no-constant-condition
         while (true) {
-            // Now we render a progressbar to monitor the task progress
-            const progressBar = render(
-                createProgressBar({ before: 'Signing... ', after: ` 0/${transactionsToSign.length}` })
+            // Clean up any previous spinner instance
+            if (penguinSpinner !== null) {
+                penguinSpinner.unmount()
+                penguinSpinner = null
+            }
+
+            penguinSpinner = render(
+                createPenguinSpinner({ before: 'Signing... ', after: ` 0/${transactionsToSign.length}` })
             )
 
-            subtaskLogger.verbose(`Sending the transactions`)
-            const [successfulBatch, errorsBatch, pendingBatch] = await signAndSend(
-                transactionsToSign,
-                (result, results) => {
-                    // We'll keep updating the progressbar as we sign the transactions
-                    progressBar.rerender(
-                        createProgressBar({
-                            progress: results.length / transactionsToSign.length,
+            let successfulBatch: OmniTransactionWithReceipt[] = []
+            let errorsBatch: OmniTransactionWithError[] = []
+            let pendingBatch: OmniTransaction[] = []
+
+            try {
+                subtaskLogger.verbose(`Sending the transactions`)
+                const transactionBatchResults = await signAndSend(transactionsToSign, (result, results) => {
+                    penguinSpinner!.rerender(
+                        createPenguinSpinner({
                             before: 'Signing... ',
                             after: ` ${results.length}/${transactionsToSign.length}`,
                         })
                     )
+                })
+                successfulBatch = transactionBatchResults[0]
+                errorsBatch = transactionBatchResults[1]
+                pendingBatch = transactionBatchResults[2]
+            } finally {
+                // Always unmount the spinner and clear the spinner, even if an error occurs
+                if (penguinSpinner) {
+                    penguinSpinner.clear()
+                    penguinSpinner.unmount()
+                    penguinSpinner = null
                 }
-            )
-
-            // And finally we drop the progressbar and continue
-            progressBar.clear()
+            }
 
             // Now let's update the accumulators
             //

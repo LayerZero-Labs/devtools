@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.6.0
+
+### Minor Changes
+
+- 870deb2: reduce to 2 chains and revamp README
+
 ## 0.5.10
 
 ### Patch Changes

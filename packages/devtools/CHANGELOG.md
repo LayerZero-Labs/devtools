@@ -1,5 +1,29 @@
 # @layerzerolabs/devtools
 
+## 2.0.1
+
+### Patch Changes
+
+- b721ce7: Fixing animation clearing bug.
+- Updated dependencies [b721ce7]
+  - @layerzerolabs/io-devtools@0.3.1
+
+## 2.0.0
+
+### Patch Changes
+
+- Updated dependencies [0aff8fb]
+  - @layerzerolabs/io-devtools@0.3.0
+
+## 1.0.1
+
+### Patch Changes
+
+- feb000c: Add chunking of the multisig batching
+- 3ee845c: Adding penguin logo prinout and penguin spinner to contract signing.
+- Updated dependencies [3ee845c]
+  - @layerzerolabs/io-devtools@0.2.1
+
 ## 1.0.0
 
 ### Patch Changes

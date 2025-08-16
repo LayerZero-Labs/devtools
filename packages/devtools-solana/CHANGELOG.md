@@ -1,5 +1,17 @@
 # @layerzerolabs/devtools-solana
 
+## 3.0.0
+
+### Minor Changes
+
+- 0aff8fb: validate solana owner or delegate is valid before proceeding to set
+
+### Patch Changes
+
+- Updated dependencies [0aff8fb]
+  - @layerzerolabs/io-devtools@0.3.0
+  - @layerzerolabs/devtools@2.0.0
+
 ## 2.1.0
 
 ### Minor Changes

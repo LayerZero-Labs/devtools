@@ -73,33 +73,35 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
         bytes32 maybeSenderBytes32 = OFTComposeMsgCodec.composeFrom(_composeMessage);
 
         /// @dev This is an unbounded slice range without type casting thereby having the least chance of erroring
-        bytes memory maybeReceiver = OFTComposeMsgCodec.composeMsg(_composeMessage);
+        bytes memory composeMsg = OFTComposeMsgCodec.composeMsg(_composeMessage);
 
-        return (amountLD, maybeSenderBytes32, maybeReceiver);
+        return (amountLD, maybeSenderBytes32, composeMsg);
     }
 
-    function validate_addresses_or_refund(
-        bytes memory _maybeReceiver,
+    function validate_msg_or_refund(
+        bytes memory _composeMsg,
         bytes32 _senderBytes32,
         uint256 _amountLD
-    ) external pure returns (address) {
+    ) external pure returns (uint256, address) {
+        (uint256 _minMsgValue, bytes memory maybeReceiver) = abi.decode(_composeMsg, (uint256, bytes));
+
         /// @dev Test the conversion of the below (i.e. bytes and bytes32 into address)
         /// @dev This function returns address(0) if the sender is not a valid evm address
         address sender = _senderBytes32.into_evmAddress_or_zero();
-        address receiver = _maybeReceiver.into_evmAddress_or_zero();
+        address receiver = maybeReceiver.into_evmAddress_or_zero();
 
         /// @dev Initiate refund if the receiver is not a valid evm adress
         /// @dev Handling the if sender is not a valid evm address in the refund function
         if (receiver == address(0)) {
             bytes memory errMsg = abi.encodeWithSelector(
                 IHyperLiquidComposerErrors.HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength.selector,
-                _maybeReceiver,
-                _maybeReceiver.length
+                maybeReceiver,
+                maybeReceiver.length
             );
             revert IHyperLiquidComposerErrors.ErrorMsg(errMsg.createErrorMessage(sender, _amountLD));
         }
 
-        return receiver;
+        return (_minMsgValue, receiver);
     }
 
     /// @notice External function to quote the conversion of evm tokens to hypercore tokens

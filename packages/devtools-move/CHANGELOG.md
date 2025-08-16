@@ -1,5 +1,17 @@
 # @layerzerolabs/devtools-move
 
+## 1.0.11
+
+### Patch Changes
+
+- a532d9e: Fix export of bigint
+
+## 1.0.10
+
+### Patch Changes
+
+- 6a5d25e: fix move CLI version checks
+
 ## 1.0.9
 
 ### Patch Changes

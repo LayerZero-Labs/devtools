@@ -64,11 +64,14 @@ dvn = "0x100002"
 # Note for Aptos CLI version >= 6.1.0 (the version supported by Aptos), use the following dependencies
 [dependencies.AptosFramework]
 git = "https://github.com/aptos-labs/aptos-framework.git"
-rev = "mainnet"
+# Note: rev is set to a stable commit hash of the aptos-framework package that we have tested our code with.
+# https://github.com/aptos-labs/aptos-framework/commit/99f5e915b6d231d0ffbc1aff282d36148d2a8b24 @ Feb 4
+
+rev = "99f5e915b6d231d0ffbc1aff282d36148d2a8b24"
 subdir = "aptos-framework"
 
 # Note: For using Aptos CLI version <= 3.5.0 (the version supported by Movement), use the following dependencies:
-# [dependencies.AptosFramework]
+# [dependencies.AptosFramework] 
 # git = "https://github.com/movementlabsxyz/aptos-core.git"
 # rev = "movement-cli-v3.5.0"
 # subdir = "aptos-move/framework/aptos-framework"

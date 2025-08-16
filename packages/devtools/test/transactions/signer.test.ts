@@ -537,6 +537,281 @@ describe('transactions/signer', () => {
                         })
                     )
                 })
+
+                describe('chunked batching', () => {
+                    it('should chunk transactions when they exceed LZ_BATCH_SIZE', async () => {
+                        const originalBatchSize = process.env.LZ_BATCH_SIZE
+                        process.env.LZ_BATCH_SIZE = '3'
+
+                        try {
+                            // Create 7 transactions for the same EID to ensure chunking
+                            const eid = 30101
+                            const transactions = Array.from({ length: 7 }, (_, i) => ({
+                                point: { eid, address: `0x${i}` },
+                                data: `0x${i}`,
+                            }))
+
+                            const receipt = { transactionHash: '0x0' }
+                            const wait = jest.fn().mockResolvedValue(receipt)
+                            const response: OmniTransactionResponse = {
+                                transactionHash: '0x0',
+                                wait,
+                            }
+
+                            const signAndSendBatch = jest.fn().mockResolvedValue(response)
+                            const signAndSend = jest.fn().mockRejectedValue('Oh god no')
+                            const sign = jest.fn().mockRejectedValue('Oh god no')
+                            const signerFactory: OmniSignerFactory = jest
+                                .fn()
+                                .mockResolvedValue({ signAndSend, signAndSendBatch, sign })
+                            const signAndSendTransactions = createSignAndSend(signerFactory)
+
+                            const [successful, errors, pending] = await signAndSendTransactions(transactions)
+
+                            // Should have 3 calls to signAndSendBatch: [3, 3, 1]
+                            expect(signAndSendBatch).toHaveBeenCalledTimes(3)
+                            expect(signAndSendBatch).toHaveBeenNthCalledWith(1, transactions.slice(0, 3))
+                            expect(signAndSendBatch).toHaveBeenNthCalledWith(2, transactions.slice(3, 6))
+                            expect(signAndSendBatch).toHaveBeenNthCalledWith(3, transactions.slice(6, 7))
+
+                            expect(successful).toHaveLength(7)
+                            expect(errors).toEqual([])
+                            expect(pending).toEqual([])
+                        } finally {
+                            process.env.LZ_BATCH_SIZE = originalBatchSize
+                        }
+                    })
+
+                    it('should use default batch size when LZ_BATCH_SIZE is not set', async () => {
+                        const originalBatchSize = process.env.LZ_BATCH_SIZE
+                        delete process.env.LZ_BATCH_SIZE
+
+                        try {
+                            // Create 25 transactions for the same EID (more than default batch size of 20)
+                            const eid = 30101
+                            const transactions = Array.from({ length: 25 }, (_, i) => ({
+                                point: { eid, address: `0x${i}` },
+                                data: `0x${i}`,
+                            }))
+
+                            const receipt = { transactionHash: '0x0' }
+                            const wait = jest.fn().mockResolvedValue(receipt)
+                            const response: OmniTransactionResponse = {
+                                transactionHash: '0x0',
+                                wait,
+                            }
+
+                            const signAndSendBatch = jest.fn().mockResolvedValue(response)
+                            const signAndSend = jest.fn().mockRejectedValue('Oh god no')
+                            const sign = jest.fn().mockRejectedValue('Oh god no')
+                            const signerFactory: OmniSignerFactory = jest
+                                .fn()
+                                .mockResolvedValue({ signAndSend, signAndSendBatch, sign })
+                            const signAndSendTransactions = createSignAndSend(signerFactory)
+
+                            const [successful, errors, pending] = await signAndSendTransactions(transactions)
+
+                            // Should have 2 calls to signAndSendBatch: [20, 5] (default batch size is 20)
+                            expect(signAndSendBatch).toHaveBeenCalledTimes(2)
+                            expect(signAndSendBatch).toHaveBeenNthCalledWith(1, transactions.slice(0, 20))
+                            expect(signAndSendBatch).toHaveBeenNthCalledWith(2, transactions.slice(20, 25))
+
+                            expect(successful).toHaveLength(25)
+                            expect(errors).toEqual([])
+                            expect(pending).toEqual([])
+                        } finally {
+                            process.env.LZ_BATCH_SIZE = originalBatchSize
+                        }
+                    })
+
+                    it('should not chunk when transactions are within batch size limit', async () => {
+                        const originalBatchSize = process.env.LZ_BATCH_SIZE
+                        process.env.LZ_BATCH_SIZE = '10'
+
+                        try {
+                            // Create 5 transactions for the same EID (less than batch size)
+                            const eid = 30101
+                            const transactions = Array.from({ length: 5 }, (_, i) => ({
+                                point: { eid, address: `0x${i}` },
+                                data: `0x${i}`,
+                            }))
+
+                            const receipt = { transactionHash: '0x0' }
+                            const wait = jest.fn().mockResolvedValue(receipt)
+                            const response: OmniTransactionResponse = {
+                                transactionHash: '0x0',
+                                wait,
+                            }
+
+                            const signAndSendBatch = jest.fn().mockResolvedValue(response)
+                            const signAndSend = jest.fn().mockRejectedValue('Oh god no')
+                            const sign = jest.fn().mockRejectedValue('Oh god no')
+                            const signerFactory: OmniSignerFactory = jest
+                                .fn()
+                                .mockResolvedValue({ signAndSend, signAndSendBatch, sign })
+                            const signAndSendTransactions = createSignAndSend(signerFactory)
+
+                            const [successful, errors, pending] = await signAndSendTransactions(transactions)
+
+                            // Should have 1 call to signAndSendBatch with all 5 transactions
+                            expect(signAndSendBatch).toHaveBeenCalledTimes(1)
+                            expect(signAndSendBatch).toHaveBeenNthCalledWith(1, transactions)
+
+                            expect(successful).toHaveLength(5)
+                            expect(errors).toEqual([])
+                            expect(pending).toEqual([])
+                        } finally {
+                            process.env.LZ_BATCH_SIZE = originalBatchSize
+                        }
+                    })
+
+                    it('should stop processing batches when one batch fails', async () => {
+                        const originalBatchSize = process.env.LZ_BATCH_SIZE
+                        process.env.LZ_BATCH_SIZE = '3'
+
+                        try {
+                            // Create 9 transactions for the same EID to ensure chunking
+                            const eid = 30101
+                            const transactions = Array.from({ length: 9 }, (_, i) => ({
+                                point: { eid, address: `0x${i}` },
+                                data: `0x${i}`,
+                            }))
+
+                            const receipt = { transactionHash: '0x0' }
+                            const wait = jest.fn().mockResolvedValue(receipt)
+                            const successResponse: OmniTransactionResponse = {
+                                transactionHash: '0x0',
+                                wait,
+                            }
+
+                            const error = new Error('Batch failed')
+                            const signAndSendBatch = jest
+                                .fn()
+                                .mockResolvedValueOnce(successResponse) // First batch succeeds
+                                .mockRejectedValueOnce(error) // Second batch fails
+                                .mockResolvedValue(successResponse) // Third batch would succeed but shouldn't be called
+
+                            const signAndSend = jest.fn().mockRejectedValue('Oh god no')
+                            const sign = jest.fn().mockRejectedValue('Oh god no')
+                            const signerFactory: OmniSignerFactory = jest
+                                .fn()
+                                .mockResolvedValue({ signAndSend, signAndSendBatch, sign })
+                            const signAndSendTransactions = createSignAndSend(signerFactory)
+
+                            const [successful, errors, pending] = await signAndSendTransactions(transactions)
+
+                            // Should have 2 calls to signAndSendBatch (first succeeds, second fails, third not called)
+                            expect(signAndSendBatch).toHaveBeenCalledTimes(2)
+                            expect(signAndSendBatch).toHaveBeenNthCalledWith(1, transactions.slice(0, 3))
+                            expect(signAndSendBatch).toHaveBeenNthCalledWith(2, transactions.slice(3, 6))
+
+                            // First batch should succeed
+                            expect(successful).toHaveLength(3)
+                            expect(successful).toContainAllValues(
+                                transactions.slice(0, 3).map((transaction) => ({ transaction, receipt }))
+                            )
+
+                            // Second batch should fail
+                            expect(errors).toHaveLength(3)
+                            expect(errors).toContainAllValues(
+                                transactions.slice(3, 6).map((transaction) => ({ transaction, error }))
+                            )
+
+                            // Third batch should be pending
+                            expect(pending).toContainAllValues(transactions.slice(3, 9))
+                        } finally {
+                            process.env.LZ_BATCH_SIZE = originalBatchSize
+                        }
+                    })
+
+                    it('should handle chunking across multiple EIDs correctly', async () => {
+                        const originalBatchSize = process.env.LZ_BATCH_SIZE
+                        process.env.LZ_BATCH_SIZE = '2'
+
+                        try {
+                            // Create transactions for different EIDs
+                            const transactions = [
+                                { point: { eid: 30101, address: '0x1' }, data: '0x1' },
+                                { point: { eid: 30101, address: '0x2' }, data: '0x2' },
+                                { point: { eid: 30101, address: '0x3' }, data: '0x3' },
+                                { point: { eid: 30102, address: '0x4' }, data: '0x4' },
+                                { point: { eid: 30102, address: '0x5' }, data: '0x5' },
+                                { point: { eid: 30102, address: '0x6' }, data: '0x6' },
+                            ]
+
+                            const receipt = { transactionHash: '0x0' }
+                            const wait = jest.fn().mockResolvedValue(receipt)
+                            const response: OmniTransactionResponse = {
+                                transactionHash: '0x0',
+                                wait,
+                            }
+
+                            const signAndSendBatch = jest.fn().mockResolvedValue(response)
+                            const signAndSend = jest.fn().mockRejectedValue('Oh god no')
+                            const sign = jest.fn().mockRejectedValue('Oh god no')
+                            const signerFactory: OmniSignerFactory = jest
+                                .fn()
+                                .mockResolvedValue({ signAndSend, signAndSendBatch, sign })
+                            const signAndSendTransactions = createSignAndSend(signerFactory)
+
+                            const [successful, errors, pending] = await signAndSendTransactions(transactions)
+
+                            // Should chunk per EID:
+                            // EID 30101: 3 transactions -> 2 batches [2, 1]
+                            // EID 30102: 3 transactions -> 2 batches [2, 1]
+                            // Total: 4 calls to signAndSendBatch
+                            expect(signAndSendBatch).toHaveBeenCalledTimes(4)
+
+                            expect(successful).toHaveLength(6)
+                            expect(errors).toEqual([])
+                            expect(pending).toEqual([])
+                        } finally {
+                            process.env.LZ_BATCH_SIZE = originalBatchSize
+                        }
+                    })
+
+                    it('should handle edge case of exact multiple of batch size', async () => {
+                        const originalBatchSize = process.env.LZ_BATCH_SIZE
+                        process.env.LZ_BATCH_SIZE = '3'
+
+                        try {
+                            // Create exactly 6 transactions (2 * batch size)
+                            const eid = 30101
+                            const transactions = Array.from({ length: 6 }, (_, i) => ({
+                                point: { eid, address: `0x${i}` },
+                                data: `0x${i}`,
+                            }))
+
+                            const receipt = { transactionHash: '0x0' }
+                            const wait = jest.fn().mockResolvedValue(receipt)
+                            const response: OmniTransactionResponse = {
+                                transactionHash: '0x0',
+                                wait,
+                            }
+
+                            const signAndSendBatch = jest.fn().mockResolvedValue(response)
+                            const signAndSend = jest.fn().mockRejectedValue('Oh god no')
+                            const sign = jest.fn().mockRejectedValue('Oh god no')
+                            const signerFactory: OmniSignerFactory = jest
+                                .fn()
+                                .mockResolvedValue({ signAndSend, signAndSendBatch, sign })
+                            const signAndSendTransactions = createSignAndSend(signerFactory)
+
+                            const [successful, errors, pending] = await signAndSendTransactions(transactions)
+
+                            // Should have exactly 2 calls to signAndSendBatch with 3 transactions each
+                            expect(signAndSendBatch).toHaveBeenCalledTimes(2)
+                            expect(signAndSendBatch).toHaveBeenNthCalledWith(1, transactions.slice(0, 3))
+                            expect(signAndSendBatch).toHaveBeenNthCalledWith(2, transactions.slice(3, 6))
+
+                            expect(successful).toHaveLength(6)
+                            expect(errors).toEqual([])
+                            expect(pending).toEqual([])
+                        } finally {
+                            process.env.LZ_BATCH_SIZE = originalBatchSize
+                        }
+                    })
+                })
             })
         })
     })

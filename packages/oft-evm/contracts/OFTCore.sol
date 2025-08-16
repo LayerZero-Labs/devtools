@@ -357,9 +357,14 @@ abstract contract OFTCore is IOFT, OApp, OAppPreCrimeSimulator, OAppOptionsType3
      * @dev Internal function to convert an amount from local decimals into shared decimals.
      * @param _amountLD The amount in local decimals.
      * @return amountSD The amount in shared decimals.
+     *
+     * @dev Reverts if the _amountLD in shared decimals overflows uint64.
+     * @dev eg. uint(2**64 + 123) with a conversion rate of 1 wraps around 2**64 to uint(123).
      */
     function _toSD(uint256 _amountLD) internal view virtual returns (uint64 amountSD) {
-        return uint64(_amountLD / decimalConversionRate);
+        uint256 _amountSD = _amountLD / decimalConversionRate;
+        if (_amountSD > type(uint64).max) revert AmountSDOverflowed(_amountSD);
+        return uint64(_amountSD);
     }
 
     /**
