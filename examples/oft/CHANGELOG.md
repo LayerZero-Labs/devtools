@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.7.3
+
+### Patch Changes
+
+- f974ed4: Update LayerZero OFT example to support simple config custom DVNs and Executors.
+
 ## 0.7.2
 
 ### Patch Changes
