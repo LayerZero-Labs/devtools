@@ -1,6 +1,6 @@
 {
-  "name": "@layerzerolabs/oft-simple-workers-example",
-  "version": "0.0.1",
+  "name": "@layerzerolabs/oft-example",
+  "version": "0.7.3",
   "private": true,
   "license": "MIT",
   "scripts": {
