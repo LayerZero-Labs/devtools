@@ -105,7 +105,7 @@ export class OVaultSyncMessageBuilder {
      * @returns The message fee for the hub chain.
      */
     static async calculateHubChainFee(input: SendParamsInput) {
-        const { operation, amount, composerAddress, hubChain, dstEid, hubEid } = input
+        const { operation, amount, composerAddress, hubChain, dstEid, hubEid, walletAddress } = input
 
         // If the dst chain is the same as the hub chain, then we don't need to calculate the fee
         // as we are already on the hub chain, so "send" on the OFT will not be called.
@@ -134,7 +134,7 @@ export class OVaultSyncMessageBuilder {
             address: composerAddress,
             abi: OVaultComposerSyncAbi,
             functionName: 'quoteSend',
-            args: [hubOftAddress, amount, hubSendParams],
+            args: [walletAddress, hubOftAddress, amount, hubSendParams],
         })
 
         return messageFee
