@@ -15,7 +15,7 @@ contract SimulateReceive is Script {
     using stdJson for string;
     using Base58Decoder for string;
 
-    function run() public {
+    function run() public virtual {
         bool mainnet = vm.envBool("MAINNET"); // Set to false for testnet
         string memory sourceChainTXHash = vm.envString("SOURCE_CHAIN_TX_HASH");
 
