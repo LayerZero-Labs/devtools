@@ -107,3 +107,78 @@ const connections = await generateConnectionsConfig(pathways, { fetchMetadata: c
 ```
 
 In the above example, we extended the result of the default `fetchMetadata` with our own DVN entries - under the respective chains. We added a DVN with the `canonicalName` of `SuperCustomDVN` and id `super-custom-dvn`. The `canonicalName` and `id` can be arbitrary, but they must be consistent for all pathways that require that DVN. In our case, since we have a pathway between Fuji and Amoy, we extended the DVNs entry in both Fuji and Amoy.
+
+#### With custom Executor
+
+To add a custom Executor with the name 'CustomExecutor' for your chains, you can extend the metadata similarly to DVNs:
+
+```typescript
+import { generateConnectionsConfig, defaultFetchMetadata, IMetadata, IMetadataExecutors } from "@layerzerolabs/metadata-tools";
+
+// create a custom fetchMetadata implementation with custom executor
+const customFetchMetadata = async (): Promise<IMetadata> => {
+    // get the default metadata
+    const defaultMetadata = await defaultFetchMetadata() 
+
+    // extend the Amoy metadata with custom executor
+    const amoyExecutors: IMetadataExecutors = {
+        '0x1234567890abcdef1234567890abcdef12345678': {
+            version: 2,
+            canonicalName: 'CustomExecutor',
+            id: 'custom-executor',
+        },
+    }
+    
+    // extend the Fuji metadata with custom executor (can be different address)
+    const fujiExecutors: IMetadataExecutors = {
+        '0xabcdef1234567890abcdef1234567890abcdef12': {
+            version: 2,
+            canonicalName: 'CustomExecutor',  // Same name, different address
+            id: 'custom-executor-fuji',
+        },
+    }
+
+    return {
+        ...defaultMetadata,
+        'amoy-testnet': {
+            ...defaultMetadata['amoy-testnet']!,
+            executors: amoyExecutors,
+        },
+        fuji: {
+            ...defaultMetadata.fuji!,
+            executors: fujiExecutors,
+        },
+    }
+}
+
+// declare enforced options like before
+const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
+    {
+        msgType: 1,
+        optionType: ExecutorOptionType.LZ_RECEIVE,
+        gas: 80000,
+        value: 0,
+    },
+]
+
+// Use custom executor in pathway configuration
+const pathways = [
+    [
+        avalancheContract, 
+        polygonContract, 
+        [['LayerZero Labs'], []], // DVN configuration
+        [1, 1], // confirmations
+        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // enforced options
+        'CustomExecutor' // Optional: custom executor name
+    ],
+]
+
+const connections = await generateConnectionsConfig(pathways, { fetchMetadata: customFetchMetadata })
+```
+
+In this example:
+- We extended the metadata with custom executors for each chain
+- The same executor name ('CustomExecutor') can resolve to different addresses on different chains
+- The executor is only used for send configurations (not receive)
+- If no custom executor is specified in the pathway, the default executor from the deployment will be used
+- If an executor name cannot be resolved on a chain, it will be passed through as-is
