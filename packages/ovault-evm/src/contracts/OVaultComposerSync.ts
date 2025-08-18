@@ -386,7 +386,12 @@ export const OVaultComposerSyncAbi = [
         inputs: [
             {
                 internalType: 'address',
-                name: '_oft',
+                name: '_from',
+                type: 'address',
+            },
+            {
+                internalType: 'address',
+                name: '_targetOft',
                 type: 'address',
             },
             {
