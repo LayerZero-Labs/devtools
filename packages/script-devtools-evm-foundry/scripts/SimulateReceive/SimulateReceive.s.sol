@@ -3,7 +3,7 @@ pragma solidity ^0.8.22;
 
 import {Script, console} from "forge-std/Script.sol";
 import "forge-std/StdJson.sol";
-import {Base58Decoder} from "./Base58decoder.sol";
+import {Base58Decoder} from "./Base58Decoder.sol";
 
 import { IOAppCore } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol";
 import { SendParam, OFTReceipt } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
