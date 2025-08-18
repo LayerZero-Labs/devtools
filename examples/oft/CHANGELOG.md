@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.7.5
+
+### Patch Changes
+
+- 2358dd5: Add prompt when sending tokens without extra options and no enforced options.
+
 ## 0.7.4
 
 ### Patch Changes
