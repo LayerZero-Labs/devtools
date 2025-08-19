@@ -76,22 +76,22 @@ export async function sendEvm(
     try {
         srcEidHre = await getHreByEid(srcEid)
     } catch (error) {
-        DebugLogger.printErrorAndFixSuggestion(
-            KnownErrors.ERROR_GETTING_HRE,
-            `For network: ${endpointIdToNetwork(srcEid)}, OFT: ${oftAddress}`
-        )
+        const errorMessage = oftAddress
+            ? `For network: ${endpointIdToNetwork(srcEid)}, OFT: ${oftAddress}`
+            : `For network: ${endpointIdToNetwork(srcEid)}`
+        DebugLogger.printErrorAndFixSuggestion(KnownErrors.ERROR_GETTING_HRE, errorMessage)
         throw error
     }
     const signer = (await srcEidHre.ethers.getSigners())[0]
 
     // 1️⃣ resolve the OFT wrapper address
-    const wrapperAddress = await getOAppAddressByEid(srcEid, oappConfig, srcEidHre, oftAddress)
+    const oftWrapperAddress = await getOAppAddressByEid(srcEid, oappConfig, srcEidHre, oftAddress)
 
     // 2️⃣ load IOFT ABI, extend it with token()
     const oftArtifact = await srcEidHre.artifacts.readArtifact('OFT')
 
     // now attach
-    const oft = await srcEidHre.ethers.getContractAt(oftArtifact.abi, wrapperAddress, signer)
+    const oft = await srcEidHre.ethers.getContractAt(oftArtifact.abi, oftWrapperAddress, signer)
 
     // 🔗 Get LayerZero endpoint contract
     const endpointDep = await srcEidHre.deployments.get('EndpointV2')
@@ -121,13 +121,13 @@ export async function sendEvm(
             logger.info('OFT Adapter detected - checking ERC20 allowance...')
 
             // Check current allowance
-            const currentAllowance = await erc20.allowance(signer.address, wrapperAddress)
+            const currentAllowance = await erc20.allowance(signer.address, oftWrapperAddress)
             logger.info(`Current allowance: ${currentAllowance.toString()}`)
             logger.info(`Required amount: ${amountUnits.toString()}`)
 
             if (currentAllowance.lt(amountUnits)) {
                 logger.info('Insufficient allowance - approving ERC20 tokens...')
-                const approveTx = await erc20.approve(wrapperAddress, amountUnits)
+                const approveTx = await erc20.approve(oftWrapperAddress, amountUnits)
                 logger.info(`Approval transaction hash: ${approveTx.hash}`)
                 await approveTx.wait()
                 logger.info('ERC20 approval confirmed')
@@ -259,12 +259,12 @@ export async function sendEvm(
     } catch (error) {
         DebugLogger.printErrorAndFixSuggestion(
             KnownErrors.ERROR_QUOTING_NATIVE_GAS_COST,
-            `For network: ${endpointIdToNetwork(srcEid)}, OFT: ${oftAddress}`
+            `For network: ${endpointIdToNetwork(srcEid)}, OFT: ${oftWrapperAddress}`
         )
         throw error
     }
     // Get the outbound nonce that will be used for this transaction (before sending)
-    const outboundNonce = (await _endpointContract.outboundNonce(wrapperAddress, dstEid, dstWrapperBytes32)).add(1)
+    const outboundNonce = (await _endpointContract.outboundNonce(oftWrapperAddress, dstEid, dstWrapperBytes32)).add(1)
 
     logger.info('Sending the transaction...')
     let tx: ContractTransaction
@@ -275,7 +275,7 @@ export async function sendEvm(
     } catch (error) {
         DebugLogger.printErrorAndFixSuggestion(
             KnownErrors.ERROR_SENDING_TRANSACTION,
-            `For network: ${endpointIdToNetwork(srcEid)}, OFT: ${oftAddress}`
+            `For network: ${endpointIdToNetwork(srcEid)}, OFT: ${oftWrapperAddress}`
         )
         throw error
     }
