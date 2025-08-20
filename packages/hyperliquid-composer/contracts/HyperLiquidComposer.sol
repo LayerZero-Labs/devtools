@@ -75,6 +75,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         address _executor,
         bytes calldata /*_extraData*/
     ) external payable virtual override {
+        /// @dev Proxy gas check for enforced options. Can be retried from the endpoint with sufficient gas.
         if (gasleft() < MIN_GAS) revert IHyperLiquidComposerErrors.HyperLiquidComposer_NotEnoughGas(gasleft(), MIN_GAS);
 
         /// @dev The following reverts are for when the contract is incorrectly called.
