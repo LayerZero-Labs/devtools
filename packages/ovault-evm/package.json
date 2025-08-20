@@ -56,6 +56,7 @@
     "viem": "^2.33.1"
   },
   "devDependencies": {
+    "@bonadocs/docgen": "^1.0.0",
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.75",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.75",
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.75",
@@ -63,10 +64,13 @@
     "@layerzerolabs/oft-evm": "^3.1.4",
     "@layerzerolabs/test-devtools-evm-foundry": "~6.0.3",
     "@layerzerolabs/toolbox-foundry": "^0.1.12",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.1.0",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.22.2",
     "mocha": "^11.7.1",
     "rimraf": "^5.0.5",
     "ts-mocha": "^11.1.0",

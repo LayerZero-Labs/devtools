@@ -18,13 +18,17 @@
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
   },
   "devDependencies": {
+    "@bonadocs/docgen": "^1.0.0",
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.75",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.75",
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.75",
     "@layerzerolabs/toolbox-foundry": "^0.1.12",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
     "@types/node": "~18.18.14",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.22.2",
     "solidity-bytes-utils": "^0.8.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.4"
