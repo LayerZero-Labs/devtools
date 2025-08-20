@@ -8,7 +8,6 @@ import { IOAppComposer } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces
 
 import { HyperLiquidComposerCodec } from "./library/HyperLiquidComposerCodec.sol";
 
-import { IHyperLiquidComposerErrors } from "./interfaces/IHyperLiquidComposerErrors.sol";
 import { ICoreWriter } from "./interfaces/ICoreWriter.sol";
 
 import { HyperLiquidComposerCore, IHyperAsset, IHyperAssetAmount, FailedMessage } from "./HyperLiquidComposerCore.sol";
@@ -64,18 +63,18 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         bytes calldata /*_extraData*/
     ) external payable virtual override {
         /// @dev Proxy gas check for enforced options. Can be retried from the endpoint with sufficient gas.
-        if (gasleft() < MIN_GAS) revert IHyperLiquidComposerErrors.InsufficientGas(gasleft(), MIN_GAS);
+        if (gasleft() < MIN_GAS) revert InsufficientGas(gasleft(), MIN_GAS);
 
         /// @dev The following reverts are for when the contract is incorrectly called.
         /// @dev There are no refunds involved in these reverts.
         // Validate the composeCall based on the docs - https://docs.layerzero.network/v2/developers/evm/oft/oft-patterns-extensions#receiving-compose
 
         if (address(endpoint) != msg.sender) {
-            revert IHyperLiquidComposerErrors.NotEndpoint(address(endpoint), msg.sender);
+            revert NotEndpoint(address(endpoint), msg.sender);
         }
 
         if (address(oft) != _oft) {
-            revert IHyperLiquidComposerErrors.NotOFT(address(oft), _oft);
+            revert NotOFT(address(oft), _oft);
         }
 
         address receiver;
@@ -88,8 +87,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         /// @dev The slice ranges can be found in OFTComposeMsgCodec.sol
         /// @dev If the payload is invalid, the function will revert with the error message and there is no refunds
         try this.decode_message(composeMsgEncoded) returns (uint256 _minMsgValue, address _receiver) {
-            if (_minMsgValue > msg.value)
-                revert IHyperLiquidComposerErrors.InsufficientMsgValue(msg.value, _minMsgValue);
+            if (_minMsgValue > msg.value) revert InsufficientMsgValue(msg.value, _minMsgValue);
 
             receiver = _receiver;
         } catch {
@@ -194,7 +192,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         /// Transfers the HYPE tokens to the composer address on HyperCore
         (bool success, ) = payable(hypeAsset.assetBridgeAddress).call{ value: amounts.evm }("");
         if (!success) {
-            revert IHyperLiquidComposerErrors.HyperLiquidComposer_FailedToSend_HYPE(_amount);
+            revert HyperLiquidComposer_FailedToSend_HYPE(_amount);
         }
 
         bytes memory action = abi.encode(_receiver, hypeAsset.coreIndexId, amounts.core);

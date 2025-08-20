@@ -5,6 +5,8 @@ import { IOAppComposer } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces
 import { IOFT, SendParam } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
+import { IHyperLiquidComposerErrors } from "./IHyperLiquidComposerErrors.sol";
+
 struct IHyperAsset {
     address assetBridgeAddress;
     uint64 coreIndexId;
@@ -22,7 +24,7 @@ struct FailedMessage {
     uint256 msgValue;
 }
 
-interface IHyperLiquidComposerCore {
+interface IHyperLiquidComposerCore is IHyperLiquidComposerErrors {
     event RefundSuccessful(bytes32 indexed guid);
 
     // 0xeb907f6e

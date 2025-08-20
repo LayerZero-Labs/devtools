@@ -4,11 +4,12 @@ pragma solidity ^0.8.20;
 import { IOFT, SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { SafeERC20, IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-import { HyperLiquidComposerCodec } from "./library/HyperLiquidComposerCodec.sol";
-import { IHyperLiquidComposerErrors, ErrorMessagePayload } from "./interfaces/IHyperLiquidComposerErrors.sol";
-import { IHyperLiquidReadPrecompile } from "./interfaces/IHyperLiquidReadPrecompile.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
+import { HyperLiquidComposerCodec } from "./library/HyperLiquidComposerCodec.sol";
+
+import { IHyperLiquidReadPrecompile } from "./interfaces/IHyperLiquidReadPrecompile.sol";
 import { IHyperLiquidComposerCore, IHyperAsset, IHyperAssetAmount, FailedMessage } from "./interfaces/IHyperLiquidComposerCore.sol";
+import { ErrorMessagePayload } from "./interfaces/IHyperLiquidComposerErrors.sol";
 
 contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     using SafeERC20 for IERC20;
@@ -19,7 +20,7 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
 
     modifier onlyComposer() {
         if (msg.sender != address(this)) {
-            revert IHyperLiquidComposerErrors.NotComposer(msg.sender);
+            revert NotComposer(msg.sender);
         }
         _;
     }
@@ -57,7 +58,7 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
 
     constructor(address _endpoint, address _oft) {
         if (_endpoint == address(0)) {
-            revert IHyperLiquidComposerErrors.InvalidEndpoint(_endpoint);
+            revert InvalidEndpoint(_endpoint);
         }
         endpoint = _endpoint;
 
@@ -85,15 +86,12 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
         bytes calldata _composeMessage
     ) external pure returns (uint256 minMsgValue, address receiver) {
         if (_composeMessage.length != HyperLiquidComposerCodec.COMPOSE_MSG_LENGTH) {
-            revert IHyperLiquidComposerErrors.HyperLiquidComposer_ComposeMsgNot64Byte(
-                _composeMessage,
-                _composeMessage.length
-            );
+            revert HyperLiquidComposer_ComposeMsgNot64Byte(_composeMessage, _composeMessage.length);
         }
         (minMsgValue, receiver) = abi.decode(_composeMessage, (uint256, address));
 
         if (receiver == address(0)) {
-            revert IHyperLiquidComposerErrors.HyperLiquidComposer_ReceiverCannotBeZeroAddress(receiver);
+            revert HyperLiquidComposer_ReceiverCannotBeZeroAddress(receiver);
         }
     }
 
@@ -139,7 +137,7 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
         bytes memory result;
         (success, result) = HLP_PRECOMPILE_READ_SPOT_BALANCE.staticcall(abi.encode(_user, _tokenId));
         if (!success) {
-            revert IHyperLiquidComposerErrors.HyperLiquidComposerCore_SpotBalanceRead_Failed(_user, _tokenId);
+            revert HyperLiquidComposerCore_SpotBalanceRead_Failed(_user, _tokenId);
         }
         return abi.decode(result, (IHyperLiquidReadPrecompile.SpotBalance)).total;
     }
@@ -172,7 +170,7 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
         if (msg.value > 0 && _refundAddress != address(0)) {
             (bool success, ) = _refundAddress.call{ value: msg.value }("");
             if (!success) {
-                revert IHyperLiquidComposerErrors.HyperLiquidComposer_FailedToRefund_HYPE(_refundAddress, msg.value);
+                revert HyperLiquidComposer_FailedToRefund_HYPE(_refundAddress, msg.value);
             }
         }
     }
@@ -180,7 +178,7 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
     function refund(bytes32 _guid) external payable virtual {
         FailedMessage memory failedMessage = failedMessages[_guid];
         if (failedMessage.refundSendParam.to == bytes32(0)) {
-            revert IHyperLiquidComposerErrors.FailedMessageNotFound(_guid);
+            revert FailedMessageNotFound(_guid);
         }
         delete failedMessages[_guid];
 
@@ -191,8 +189,6 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
 
         /// @dev Emits the RefundSuccessful event
         emit RefundSuccessful(_guid);
-
-        /// @dev Deletes the failed message from storage
     }
 
     function getOFTAsset() external view returns (IHyperAsset memory) {
@@ -201,16 +197,5 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
 
     function getHypeAsset() external view returns (IHyperAsset memory) {
         return hypeAsset;
-    }
-
-    /// @notice Extracts the error payload from a bytes array
-    /// @notice This function is called by the HyperLiquidComposer contract
-    /// @dev Strips out the revert message to extract the payload ErrorMsg(bytes errorMessage) - ('0x' + 32 bytes) * 2 = 64 bytes
-    ///
-    /// @param _err The bytes array to extract the error payload from
-    ///
-    /// @return The error payload
-    function getErrorPayload(bytes calldata _err) external pure returns (bytes memory) {
-        return _err.extractErrorPayload();
     }
 }

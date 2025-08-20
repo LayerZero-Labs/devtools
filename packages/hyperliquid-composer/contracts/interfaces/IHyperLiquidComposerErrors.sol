@@ -12,12 +12,6 @@ interface IHyperLiquidComposerErrors {
 
     error InvalidEndpoint(address receivedEndpointAddress);
 
-    // 0x0b948634
-    error FailedMessageNotFound(bytes32 guid);
-
-    // 0x4f952033
-    error ErrorMsg(bytes errorMessage);
-
     error NotEndpoint(address notEndpointAddress, address expectedEndpointAddress);
     error NotOFT(address internalOFTAddress, address receivedOFTAddress);
     error NotComposer(address notComposerAddress);
@@ -38,4 +32,7 @@ interface IHyperLiquidComposerErrors {
     error HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength(bytes message, uint256 length);
     // 0xa91ed721
     error HyperLiquidComposerCore_SpotBalanceRead_Failed(address user, uint64 tokenId);
+
+    // 0x0b948634
+    error FailedMessageNotFound(bytes32 guid);
 }
