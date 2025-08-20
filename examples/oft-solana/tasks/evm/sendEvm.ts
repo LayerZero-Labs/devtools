@@ -5,15 +5,14 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { makeBytes32 } from '@layerzerolabs/devtools'
 import { createGetHreByEid } from '@layerzerolabs/devtools-evm-hardhat'
-import { createLogger } from '@layerzerolabs/io-devtools'
+import { createLogger, promptToContinue } from '@layerzerolabs/io-devtools'
 import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 
 import layerzeroConfig from '../../layerzero.config'
 import { SendResult } from '../common/types'
-import { DebugLogger, KnownErrors } from '../common/utils'
+import { DebugLogger, KnownErrors, MSG_TYPE, isEmptyOptionsEvm } from '../common/utils'
 import { getLayerZeroScanLink } from '../solana'
 const logger = createLogger()
-
 export interface EvmArgs {
     srcEid: number
     dstEid: number
@@ -24,7 +23,6 @@ export interface EvmArgs {
     composeMsg?: string
     oftAddress?: string
 }
-
 export async function sendEvm(
     { srcEid, dstEid, amount, to, minAmount, extraOptions, composeMsg, oftAddress }: EvmArgs,
     hre: HardhatRuntimeEnvironment
@@ -32,7 +30,6 @@ export async function sendEvm(
     if (endpointIdToChainType(srcEid) !== ChainType.EVM) {
         throw new Error(`non-EVM srcEid (${srcEid}) not supported here`)
     }
-
     const getHreByEid = createGetHreByEid(hre)
     let srcEidHre: HardhatRuntimeEnvironment
     try {
@@ -45,7 +42,6 @@ export async function sendEvm(
         throw error
     }
     const signer = await srcEidHre.ethers.getNamedSigner('deployer')
-
     // 1️⃣ resolve the OFT wrapper address
     let wrapperAddress: string
     if (oftAddress) {
@@ -58,23 +54,16 @@ export async function sendEvm(
             ? (await srcEidHre.deployments.get(wrapper.contract.contractName)).address
             : wrapper.contract.address!
     }
-
-    // 2️⃣ load IOFT ABI, extend it with token()
-    const ioftArtifact = await srcEidHre.artifacts.readArtifact('IOFT')
-
-    // now attach
-    const oft = await srcEidHre.ethers.getContractAt(ioftArtifact.abi, wrapperAddress, signer)
-
+    // 2️⃣ load OFT ABI
+    const oftArtifact = await srcEidHre.artifacts.readArtifact('OFT')
+    const oft = await srcEidHre.ethers.getContractAt(oftArtifact.abi, wrapperAddress, signer)
     // 3️⃣ fetch the underlying ERC-20
     const underlying = await oft.token()
-
     // 4️⃣ fetch decimals from the underlying token
     const erc20 = await srcEidHre.ethers.getContractAt('ERC20', underlying, signer)
     const decimals: number = await erc20.decimals()
-
     // 5️⃣ normalize the user-supplied amount
     const amountUnits: BigNumber = parseUnits(amount, decimals)
-
     // Decide how to encode `to` based on target chain:
     const dstChain = endpointIdToChainType(dstEid)
     let toBytes: string
@@ -85,7 +74,6 @@ export async function sendEvm(
         // hex string → Uint8Array → zero-pad to 32 bytes
         toBytes = makeBytes32(to)
     }
-
     // 6️⃣ build sendParam and dispatch
     const sendParam = {
         dstEid,
@@ -95,6 +83,27 @@ export async function sendEvm(
         extraOptions: extraOptions ? extraOptions.toString() : '0x',
         composeMsg: composeMsg ? composeMsg.toString() : '0x',
         oftCmd: '0x',
+    }
+
+    // Check whether there are extra options or enforced options. If not, warn the user.
+    // Read on Message Options: https://docs.layerzero.network/v2/concepts/message-options
+    if (!extraOptions) {
+        try {
+            const enforcedOptions = composeMsg
+                ? await oft.enforcedOptions(dstEid, MSG_TYPE.SEND_AND_CALL)
+                : await oft.enforcedOptions(dstEid, MSG_TYPE.SEND)
+
+            if (isEmptyOptionsEvm(enforcedOptions)) {
+                const proceed = await promptToContinue(
+                    'No extra options were included and OFT has no set enforced options. Your quote / send will most likely fail. Continue?'
+                )
+                if (!proceed) {
+                    throw new Error('Aborted due to missing options')
+                }
+            }
+        } catch (error) {
+            logger.debug(`Failed to check enforced options: ${error}`)
+        }
     }
 
     // 6️⃣ Quote (MessagingFee = { nativeFee, lzTokenFee })
@@ -123,9 +132,7 @@ export async function sendEvm(
         throw error
     }
     const receipt = await tx.wait()
-
     const txHash = receipt.transactionHash
     const scanLink = getLayerZeroScanLink(txHash, srcEid >= 40_000 && srcEid < 50_000)
-
     return { txHash, scanLink }
 }
