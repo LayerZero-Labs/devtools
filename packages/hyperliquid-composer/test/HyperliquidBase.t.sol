@@ -47,6 +47,7 @@ contract HyperliquidBaseTest is Test {
 
     address public userA = makeAddr("userA");
     address public userB = makeAddr("userB");
+    address public recovery = makeAddr("recovery");
 
     uint32 public ETH_EID;
     uint32 public HLP_EID;
@@ -97,7 +98,8 @@ contract HyperliquidBaseTest is Test {
             HL_LZ_ENDPOINT_V2,
             address(oft),
             ERC20.coreIndexId,
-            ERC20.decimalDiff
+            ERC20.decimalDiff,
+            recovery
         );
         typeConversionTest = new TypeConversionTest();
 

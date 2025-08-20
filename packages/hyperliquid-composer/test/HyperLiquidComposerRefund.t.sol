@@ -74,7 +74,7 @@ contract HyperLiquidComposerRefundTest is HyperliquidBaseTest {
 
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
             0,
-            SRC_EID,
+            ETH_EID,
             AMOUNT_TO_SEND,
             abi.encodePacked(addressToBytes32(address(userA)), composeMsg)
         );
