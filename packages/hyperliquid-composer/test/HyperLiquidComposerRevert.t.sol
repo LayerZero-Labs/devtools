@@ -35,7 +35,7 @@ contract HyperLiquidComposerRevertTest is HyperliquidBaseTest {
 
     function test_unauthorized_call_not_endpoint() public {
         bytes memory revertMessage = abi.encodeWithSelector(
-            IHyperLiquidComposerErrors.HyperLiquidComposer_InvalidCall_NotEndpoint.selector,
+            IHyperLiquidComposerErrors.NotEndpoint.selector,
             address(HL_LZ_ENDPOINT_V2),
             address(this)
         );
@@ -46,7 +46,7 @@ contract HyperLiquidComposerRevertTest is HyperliquidBaseTest {
 
     function test_unauthorized_call_not_oft() public {
         bytes memory revertMessage = abi.encodeWithSelector(
-            IHyperLiquidComposerErrors.HyperLiquidComposer_InvalidCall_NotOFT.selector,
+            IHyperLiquidComposerErrors.NotOFT.selector,
             address(oft),
             address(0)
         );

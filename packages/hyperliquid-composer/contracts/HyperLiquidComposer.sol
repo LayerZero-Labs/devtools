@@ -83,14 +83,11 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         // Validate the composeCall based on the docs - https://docs.layerzero.network/v2/developers/evm/oft/oft-patterns-extensions#receiving-compose
 
         if (address(endpoint) != msg.sender) {
-            revert IHyperLiquidComposerErrors.HyperLiquidComposer_InvalidCall_NotEndpoint(
-                address(endpoint),
-                msg.sender
-            );
+            revert IHyperLiquidComposerErrors.NotEndpoint(address(endpoint), msg.sender);
         }
 
         if (address(oft) != _oft) {
-            revert IHyperLiquidComposerErrors.HyperLiquidComposer_InvalidCall_NotOFT(address(oft), _oft);
+            revert IHyperLiquidComposerErrors.NotOFT(address(oft), _oft);
         }
 
         address receiver;
@@ -103,7 +100,8 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, IOAppComposer {
         /// @dev The slice ranges can be found in OFTComposeMsgCodec.sol
         /// @dev If the payload is invalid, the function will revert with the error message and there is no refunds
         try this.decode_message(composeMsgEncoded) returns (uint256 _minMsgValue, address _receiver) {
-            if (_minMsgValue > msg.value) revert IHyperLiquidComposerErrors.NotEnoughMsgValue(msg.value, _minMsgValue);
+            if (_minMsgValue > msg.value)
+                revert IHyperLiquidComposerErrors.InsufficientMsgValue(msg.value, _minMsgValue);
 
             receiver = _receiver;
         } catch {
