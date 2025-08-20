@@ -19,7 +19,7 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
 
     modifier onlyComposer() {
         if (msg.sender != address(this)) {
-            revert IHyperLiquidComposerErrors.HyperLiquidComposer_InvalidCall_NotComposer(msg.sender);
+            revert IHyperLiquidComposerErrors.NotComposer(msg.sender);
         }
         _;
     }

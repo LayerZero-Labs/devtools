@@ -20,15 +20,10 @@ interface IHyperLiquidComposerErrors {
     // 0x4f952033
     error ErrorMsg(bytes errorMessage);
 
-    // 0xefa9309d
-    error HyperLiquidComposer_InvalidCall_NotEndpoint(address notEndpointAddress, address expectedEndpointAddress);
-    // 0x86fee0c0
-    error HyperLiquidComposer_InvalidCall_NotOFT(address internalOFTAddress, address receivedOFTAddress);
-    // 0x5950c85e
-    error HyperLiquidComposer_InvalidCall_NotComposer(address notComposerAddress);
-
-    // 0x78770392
-    error NotEnoughMsgValue(uint256 msgValue, uint256 requiredValue);
+    error NotEndpoint(address notEndpointAddress, address expectedEndpointAddress);
+    error NotOFT(address internalOFTAddress, address receivedOFTAddress);
+    error NotComposer(address notComposerAddress);
+    error InsufficientMsgValue(uint256 msgValue, uint256 requiredValue);
 
     // 0x903b5a83
     error HyperLiquidComposer_ReceiverCannotBeZeroAddress(address receiver);
