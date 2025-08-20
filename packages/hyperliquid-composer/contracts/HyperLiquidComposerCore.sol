@@ -67,6 +67,18 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
 
         hypeIndexByChainId[HYPE_CHAIN_ID_TESTNET] = HYPE_INDEX_TESTNET;
         hypeIndexByChainId[HYPE_CHAIN_ID_MAINNET] = HYPE_INDEX_MAINNET;
+
+        /// @dev HYPE Core Spot address on HyperLiquid L1 - is a special address which is a precompile and has it's own asset bridge address which can be found here:
+        /// @dev https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers#system-addresses
+        /// @dev The following contains information about the HYPE Core Spot:
+        /// @dev https://app.hyperliquid-testnet.xyz/explorer/token/0x7317beb7cceed72ef0b346074cc8e7ab
+        hypeAsset = IHyperAsset({
+            assetBridgeAddress: 0x2222222222222222222222222222222222222222,
+            coreIndexId: hypeIndexByChainId[block.chainid],
+            /// @dev 18 is the number of decimals in the HYPE token on HyperEVM
+            /// @dev 8 is the number of decimals in the HYPE Core Spot on HyperLiquid L1
+            decimalDiff: 18 - 8
+        });
     }
 
     function decode_message(
