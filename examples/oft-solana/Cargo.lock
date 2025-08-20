@@ -222,15 +222,15 @@ dependencies = [
 [[package]]
 name = "anchor-spl"
 version = "0.31.1"
-source = "git+https://github.com/ziming-zung/anchor.git?branch=0.31.1-token2022v8#9d7653d40a8271cf821e0b2e5720fb90300b456c"
+source = "git+https://github.com/LayerZero-Labs/anchor.git?branch=0.31.1-token2022v8#73a7d7d486fd79cb10efe0116724a637049915dc"
 dependencies = [
  "anchor-lang",
  "spl-associated-token-account",
  "spl-pod",
  "spl-token",
  "spl-token-2022",
- "spl-token-group-interface 0.5.0",
- "spl-token-metadata-interface 0.6.0",
+ "spl-token-group-interface",
+ "spl-token-metadata-interface",
 ]
 
 [[package]]
@@ -530,7 +530,7 @@ checksum = "7c74b8349d32d297c9134b8c88677813a227df8f779daa29bfc29c183fe3dca6"
 [[package]]
 name = "cpi-helper"
 version = "0.1.0"
-source = "git+https://github.com/ziming-zung/LayerZero-v2.git?branch=anchor-0.31.1#0393eea55157a39b75c46608740962c44cbe97f4"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=200cda254120375f40ed0a7e89931afb897b8891#200cda254120375f40ed0a7e89931afb897b8891"
 dependencies = [
  "bs58",
  "proc-macro2",
@@ -637,14 +637,13 @@ checksum = "3dca9240753cf90908d7e4aac30f630662b02aebaa1b58a3cadabdb23385b58b"
 [[package]]
 name = "endpoint-interface"
 version = "0.1.0"
-source = "git+https://github.com/ziming-zung/LayerZero-v2.git?branch=anchor-0.31.1#0393eea55157a39b75c46608740962c44cbe97f4"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=200cda254120375f40ed0a7e89931afb897b8891#200cda254120375f40ed0a7e89931afb897b8891"
 dependencies = [
  "anchor-lang",
  "cpi-helper",
- "messagelib-interface",
+ "messagelib-interface-latest",
  "solana-helper",
- "solana-program",
- "utils",
+ "utils-latest",
 ]
 
 [[package]]
@@ -925,9 +924,9 @@ dependencies = [
 ]
 
 [[package]]
-name = "messagelib-interface"
+name = "messagelib-interface-latest"
 version = "0.1.0"
-source = "git+https://github.com/ziming-zung/LayerZero-v2.git?branch=anchor-0.31.1#0393eea55157a39b75c46608740962c44cbe97f4"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=200cda254120375f40ed0a7e89931afb897b8891#200cda254120375f40ed0a7e89931afb897b8891"
 dependencies = [
  "anchor-lang",
 ]
@@ -994,9 +993,9 @@ dependencies = [
 ]
 
 [[package]]
-name = "oapp"
+name = "oapp-latest"
 version = "0.2.0"
-source = "git+https://github.com/ziming-zung/LayerZero-v2.git?branch=anchor-0.31.1#0393eea55157a39b75c46608740962c44cbe97f4"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=200cda254120375f40ed0a7e89931afb897b8891#200cda254120375f40ed0a7e89931afb897b8891"
 dependencies = [
  "anchor-lang",
  "endpoint-interface",
@@ -1008,9 +1007,9 @@ version = "0.1.0"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
- "oapp",
+ "oapp-latest",
  "solana-helper",
- "utils",
+ "utils-latest",
 ]
 
 [[package]]
@@ -2441,7 +2440,7 @@ dependencies = [
  "spl-discriminator",
  "spl-pod",
  "spl-program-error",
- "spl-type-length-value 0.8.0",
+ "spl-type-length-value",
  "thiserror 2.0.12",
 ]
 
@@ -2510,10 +2509,10 @@ dependencies = [
  "spl-token-confidential-transfer-ciphertext-arithmetic",
  "spl-token-confidential-transfer-proof-extraction",
  "spl-token-confidential-transfer-proof-generation",
- "spl-token-group-interface 0.6.0",
- "spl-token-metadata-interface 0.7.0",
+ "spl-token-group-interface",
+ "spl-token-metadata-interface",
  "spl-transfer-hook-interface",
- "spl-type-length-value 0.8.0",
+ "spl-type-length-value",
  "thiserror 2.0.12",
 ]
 
@@ -2562,25 +2561,6 @@ dependencies = [
 
 [[package]]
 name = "spl-token-group-interface"
-version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d595667ed72dbfed8c251708f406d7c2814a3fa6879893b323d56a10bedfc799"
-dependencies = [
- "bytemuck",
- "num-derive",
- "num-traits",
- "solana-decode-error",
- "solana-instruction",
- "solana-msg",
- "solana-program-error",
- "solana-pubkey",
- "spl-discriminator",
- "spl-pod",
- "thiserror 1.0.69",
-]
-
-[[package]]
-name = "spl-token-group-interface"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5597b4cd76f85ce7cd206045b7dc22da8c25516573d42d267c8d1fd128db5129"
@@ -2600,27 +2580,6 @@ dependencies = [
 
 [[package]]
 name = "spl-token-metadata-interface"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dfb9c89dbc877abd735f05547dcf9e6e12c00c11d6d74d8817506cab4c99fdbb"
-dependencies = [
- "borsh 1.5.7",
- "num-derive",
- "num-traits",
- "solana-borsh",
- "solana-decode-error",
- "solana-instruction",
- "solana-msg",
- "solana-program-error",
- "solana-pubkey",
- "spl-discriminator",
- "spl-pod",
- "spl-type-length-value 0.7.0",
- "thiserror 1.0.69",
-]
-
-[[package]]
-name = "spl-token-metadata-interface"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "304d6e06f0de0c13a621464b1fd5d4b1bebf60d15ca71a44d3839958e0da16ee"
@@ -2636,7 +2595,7 @@ dependencies = [
  "solana-pubkey",
  "spl-discriminator",
  "spl-pod",
- "spl-type-length-value 0.8.0",
+ "spl-type-length-value",
  "thiserror 2.0.12",
 ]
 
@@ -2661,26 +2620,8 @@ dependencies = [
  "spl-pod",
  "spl-program-error",
  "spl-tlv-account-resolution",
- "spl-type-length-value 0.8.0",
+ "spl-type-length-value",
  "thiserror 2.0.12",
-]
-
-[[package]]
-name = "spl-type-length-value"
-version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ba70ef09b13af616a4c987797870122863cba03acc4284f226a4473b043923f9"
-dependencies = [
- "bytemuck",
- "num-derive",
- "num-traits",
- "solana-account-info",
- "solana-decode-error",
- "solana-msg",
- "solana-program-error",
- "spl-discriminator",
- "spl-pod",
- "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -2877,9 +2818,9 @@ dependencies = [
 ]
 
 [[package]]
-name = "utils"
+name = "utils-latest"
 version = "0.1.0"
-source = "git+https://github.com/ziming-zung/LayerZero-v2.git?branch=anchor-0.31.1#0393eea55157a39b75c46608740962c44cbe97f4"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=200cda254120375f40ed0a7e89931afb897b8891#200cda254120375f40ed0a7e89931afb897b8891"
 dependencies = [
  "anchor-lang",
 ]

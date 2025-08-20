@@ -22,15 +22,9 @@ codegen-units = 1
 
 [workspace.dependencies]
 anchor-lang = "=0.31.1"
-anchor-spl = { git = "https://github.com/ziming-zung/anchor.git", branch = "0.31.1-token2022v8" }
+anchor-spl = { git = "https://github.com/LayerZero-Labs/anchor.git", branch = "0.31.1-token2022v8" }
 solana-program = "=2.3.0"
 solana-helper = "0.1.0"
-cpi-helper = { git = "https://github.com/ziming-zung/LayerZero-v2.git", branch = "anchor-0.31.1" }
-oapp = { git = "https://github.com/ziming-zung/LayerZero-v2.git", branch = "anchor-0.31.1" }
-utils = { git = "https://github.com/ziming-zung/LayerZero-v2.git", branch = "anchor-0.31.1" }
-
-# cargo update -p ahash --precise 0.8.7
-# cargo update -p spl-token-2022 --precise 7.0.0
-# oapp = { git = "https://github.com/LayerZero-Labs/LayerZero-v2.git", rev = "34321ac15e47e0dafd25d66659e2f3d1b9b6db8f" }
-# utils = { git = "https://github.com/LayerZero-Labs/LayerZero-v2.git", rev = "34321ac15e47e0dafd25d66659e2f3d1b9b6db8f" }
-# anchor-spl = "=0.31.1"
+cpi-helper = { git = "https://github.com/LayerZero-Labs/LayerZero-v2.git", rev = "200cda254120375f40ed0a7e89931afb897b8891" }
+oapp = { git = "https://github.com/LayerZero-Labs/LayerZero-v2.git", rev = "200cda254120375f40ed0a7e89931afb897b8891", package = "oapp-latest" }
+utils = { git = "https://github.com/LayerZero-Labs/LayerZero-v2.git", rev = "200cda254120375f40ed0a7e89931afb897b8891", package = "utils-latest" }
