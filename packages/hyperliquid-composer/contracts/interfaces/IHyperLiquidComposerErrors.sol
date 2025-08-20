@@ -8,11 +8,9 @@ struct ErrorMessagePayload {
 }
 
 interface IHyperLiquidComposerErrors {
-    // 0x4d6766d6
-    error HyperLiquidComposer_NotEnoughGas(uint256 gasLeft, uint256 minGas);
+    error InsufficientGas(uint256 gasLeft, uint256 minGas);
 
-    // 0xfb82c1f1
-    error HyperLiquidComposer_InvalidArgument_EndpointShouldNotBeZeroAddress(address receivedEndpointAddress);
+    error InvalidEndpoint(address receivedEndpointAddress);
 
     // 0x0b948634
     error FailedMessageNotFound(bytes32 guid);

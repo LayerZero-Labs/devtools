@@ -57,9 +57,7 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
 
     constructor(address _endpoint, address _oft) {
         if (_endpoint == address(0)) {
-            revert IHyperLiquidComposerErrors.HyperLiquidComposer_InvalidArgument_EndpointShouldNotBeZeroAddress(
-                _endpoint
-            );
+            revert IHyperLiquidComposerErrors.InvalidEndpoint(_endpoint);
         }
         endpoint = _endpoint;
 
