@@ -53,7 +53,8 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
             HL_LZ_ENDPOINT_V2_TESTNET,
             address(oftTestnet),
             ERC20.coreIndexId,
-            ERC20.decimalDiff
+            ERC20.decimalDiff,
+            recovery
         );
 
         assertEq(hypeComposerTestnet.hypeIndexByChainId(998), 1105);
@@ -77,7 +78,8 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
             HL_LZ_ENDPOINT_V2_MAINNET,
             address(oftMainnet),
             ERC20.coreIndexId,
-            ERC20.decimalDiff
+            ERC20.decimalDiff,
+            recovery
         );
 
         assertEq(hypeComposerMainnet.hypeIndexByChainId(999), 150);
