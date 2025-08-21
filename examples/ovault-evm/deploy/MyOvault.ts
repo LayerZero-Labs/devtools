@@ -79,21 +79,30 @@ const deploy: DeployFunction = async (hre) => {
             console.log(`Using deployed asset address: ${assetOFTAddress}`)
         }
 
-        // Deploy ERC4626 Vault
-        const vault = await deployments.deploy(DEPLOYMENT_CONFIG.vault.contracts.vault, {
-            from: deployer,
-            args: [DEPLOYMENT_CONFIG.share.metadata.name, DEPLOYMENT_CONFIG.share.metadata.symbol, assetOFTAddress],
-            log: true,
-            skipIfAlreadyDeployed: true,
-        })
-        console.log(
-            `Deployed contract: ${DEPLOYMENT_CONFIG.vault.contracts.vault}, network: ${hre.network.name}, address: ${vault.address}`
-        )
+        // Get vault address (existing or deploy new)
+        let vaultAddress: string
+
+        if (DEPLOYMENT_CONFIG.vault.vaultAddress) {
+            vaultAddress = DEPLOYMENT_CONFIG.vault.vaultAddress
+            console.log(`Using existing vault address: ${vaultAddress}`)
+        } else {
+            // Deploy ERC4626 Vault
+            const vault = await deployments.deploy(DEPLOYMENT_CONFIG.vault.contracts.vault, {
+                from: deployer,
+                args: [DEPLOYMENT_CONFIG.share.metadata.name, DEPLOYMENT_CONFIG.share.metadata.symbol, assetOFTAddress],
+                log: true,
+                skipIfAlreadyDeployed: true,
+            })
+            vaultAddress = vault.address
+            console.log(
+                `Deployed contract: ${DEPLOYMENT_CONFIG.vault.contracts.vault}, network: ${hre.network.name}, address: ${vaultAddress}`
+            )
+        }
 
         // Deploy Share Adapter
         const shareAdapter = await deployments.deploy(DEPLOYMENT_CONFIG.vault.contracts.shareAdapter, {
             from: deployer,
-            args: [vault.address, endpointV2.address, deployer],
+            args: [vaultAddress, endpointV2.address, deployer],
             log: true,
             skipIfAlreadyDeployed: true,
         })
@@ -104,7 +113,7 @@ const deploy: DeployFunction = async (hre) => {
         // Deploy OVault Composer
         const composer = await deployments.deploy(DEPLOYMENT_CONFIG.vault.contracts.composer, {
             from: deployer,
-            args: [vault.address, assetOFTAddress, shareAdapter.address],
+            args: [vaultAddress, assetOFTAddress, shareAdapter.address],
             log: true,
             skipIfAlreadyDeployed: true,
         })
@@ -112,7 +121,7 @@ const deploy: DeployFunction = async (hre) => {
             `Deployed contract: ${DEPLOYMENT_CONFIG.vault.contracts.composer}, network: ${hre.network.name}, address: ${composer.address}`
         )
 
-        deployedContracts.vault = vault.address
+        deployedContracts.vault = vaultAddress
         deployedContracts.shareAdapter = shareAdapter.address
         deployedContracts.composer = composer.address
     }
