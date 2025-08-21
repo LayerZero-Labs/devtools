@@ -3,11 +3,11 @@ import { PublicKey } from '@solana/web3.js'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
 
+import { normalizePeer } from '@layerzerolabs/devtools'
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { EndpointPDADeriver } from '@layerzerolabs/lz-solana-sdk-v2'
 import { EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2/umi'
-import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 
 import { deriveConnection, getExplorerTxLink } from './index'
 
@@ -30,13 +30,12 @@ task('lz:oft:solana:skip', 'Skip a message on Solana')
         const { umi, connection, umiWalletSigner } = await deriveConnection(eid)
         const endpoint = new EndpointProgram.Endpoint(EndpointProgram.ENDPOINT_PROGRAM_ID)
 
-        // Convert sender to bytes array
-        const senderBytes = Buffer.from(sender.replace('0x', ''), 'hex')
+        const senderNormalized = normalizePeer(sender, srcEid)
 
         // Convert receiver to Umi PublicKey
         const receiverUmiPublicKey = umiPublicKey(receiver)
         const epDeriver = new EndpointPDADeriver(new PublicKey(EndpointProgram.ENDPOINT_PROGRAM_ID))
-        const [nonceAccount] = epDeriver.nonce(new PublicKey(receiver), srcEid, addressToBytes32(sender))
+        const [nonceAccount] = epDeriver.nonce(new PublicKey(receiver), srcEid, senderNormalized)
         const accountInfo = await connection.getAccountInfo(nonceAccount)
         if (!accountInfo) {
             console.warn('Nonce account not found at address', nonceAccount.toBase58())
@@ -44,7 +43,7 @@ task('lz:oft:solana:skip', 'Skip a message on Solana')
         }
 
         const instruction = endpoint.skip(umiWalletSigner, {
-            sender: senderBytes,
+            sender: senderNormalized,
             receiver: receiverUmiPublicKey,
             srcEid,
             nonce: BigInt(nonce),
