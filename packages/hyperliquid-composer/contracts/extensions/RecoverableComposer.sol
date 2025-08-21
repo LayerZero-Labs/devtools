@@ -27,11 +27,9 @@ abstract contract RecoverableComposer is HyperLiquidComposer {
     uint64 public constant USDC_CORE_INDEX = 0;
 
     address public immutable RECOVERY_ADDRESS;
-    IERC20 public immutable innerToken;
 
-    constructor(address _oft, address _recoveryAddress) {
+    constructor(address _recoveryAddress) {
         RECOVERY_ADDRESS = _recoveryAddress;
-        innerToken = IERC20(IOFT(_oft).token());
     }
 
     function retrieveCoreERC20(uint64 _coreAmount) public onlyRecoveryAddress {
@@ -64,9 +62,9 @@ abstract contract RecoverableComposer is HyperLiquidComposer {
     }
 
     function recoverEvmERC20(uint256 _evmAmount, address _to) public onlyRecoveryAddress {
-        uint256 recoverAmt = _evmAmount == FULL_TRANSFER ? innerToken.balanceOf(address(this)) : _evmAmount;
+        uint256 recoverAmt = _evmAmount == FULL_TRANSFER ? IERC20(TOKEN).balanceOf(address(this)) : _evmAmount;
 
-        innerToken.safeTransfer(_to, recoverAmt);
+        IERC20(TOKEN).safeTransfer(_to, recoverAmt);
         emit Recovered(_to, recoverAmt);
     }
 
