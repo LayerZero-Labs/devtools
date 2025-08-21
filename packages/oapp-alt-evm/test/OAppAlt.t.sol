@@ -61,7 +61,7 @@ contract OAppAltTest is TestHelperOz5 {
         options = bytes("");
     }
 
-    function test_constructor() public {
+    function test_constructor() public view {
         assertEq(aOApp.owner(), address(this));
         assertEq(bOApp.owner(), address(this));
 
