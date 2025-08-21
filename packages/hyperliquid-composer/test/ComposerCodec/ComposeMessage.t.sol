@@ -60,12 +60,4 @@ contract ComposeMessageTest is HyperliquidBaseTest {
     function addressToBytes32(address _addr) internal pure returns (bytes32) {
         return bytes32(uint256(uint160(_addr)));
     }
-
-    function createErrorMessage(address _to, uint256 _amount, bytes memory _reason) public pure returns (bytes memory) {
-        return
-            abi.encodeWithSelector(
-                IHyperLiquidComposerErrors.ErrorMsg.selector,
-                _reason.createErrorMessage(_to, _amount)
-            );
-    }
 }

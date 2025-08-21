@@ -1,0 +1,146 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "CORE_WRITER_VERSION",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "bytes1", "internalType": "bytes1" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "SPOT_SEND_ACTION_ID",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "bytes3", "internalType": "bytes3" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "SPOT_SEND_HEADER",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "bytes4", "internalType": "bytes4" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "spotBalance",
+      "inputs": [
+        { "name": "user", "type": "address", "internalType": "address" },
+        { "name": "token", "type": "uint64", "internalType": "uint64" }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct SpotBalance",
+          "components": [
+            { "name": "total", "type": "uint64", "internalType": "uint64" },
+            { "name": "hold", "type": "uint64", "internalType": "uint64" },
+            { "name": "entryNtl", "type": "uint64", "internalType": "uint64" }
+          ]
+        }
+      ],
+      "stateMutability": "view"
+    }
+  ],
+  "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "methodIdentifiers": {
+    "CORE_WRITER_VERSION()": "22dbe29c",
+    "SPOT_SEND_ACTION_ID()": "0d1995e0",
+    "SPOT_SEND_HEADER()": "1f8164d9",
+    "spotBalance(address,uint64)": "a69610d1"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"CORE_WRITER_VERSION\",\"outputs\":[{\"internalType\":\"bytes1\",\"name\":\"\",\"type\":\"bytes1\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SPOT_SEND_ACTION_ID\",\"outputs\":[{\"internalType\":\"bytes3\",\"name\":\"\",\"type\":\"bytes3\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SPOT_SEND_HEADER\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"token\",\"type\":\"uint64\"}],\"name\":\"spotBalance\",\"outputs\":[{\"components\":[{\"internalType\":\"uint64\",\"name\":\"total\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"hold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"entryNtl\",\"type\":\"uint64\"}],\"internalType\":\"struct SpotBalance\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/HyperLiquidCore.sol\":\"HyperLiquidCore\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":hardhat/=node_modules/hardhat/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/HyperLiquidCore.sol\":{\"keccak256\":\"0x6fb3703e24c415cda57228092bf4b77e651de12ec7c27229bd28ec840f3e6bdb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://06f7271857cffd11e669a1524f22af5b7a69b353b860faa0cd4a15d41c1da5f7\",\"dweb:/ipfs/QmWWToz7R8SyTLmkwjRA6TT3QyBkftPQ37tPkYUvHiMsDd\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.22+commit.4fc1097e" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "CORE_WRITER_VERSION",
+          "outputs": [
+            { "internalType": "bytes1", "name": "", "type": "bytes1" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "SPOT_SEND_ACTION_ID",
+          "outputs": [
+            { "internalType": "bytes3", "name": "", "type": "bytes3" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "SPOT_SEND_HEADER",
+          "outputs": [
+            { "internalType": "bytes4", "name": "", "type": "bytes4" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "user", "type": "address" },
+            { "internalType": "uint64", "name": "token", "type": "uint64" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "spotBalance",
+          "outputs": [
+            {
+              "internalType": "struct SpotBalance",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                { "internalType": "uint64", "name": "total", "type": "uint64" },
+                { "internalType": "uint64", "name": "hold", "type": "uint64" },
+                {
+                  "internalType": "uint64",
+                  "name": "entryNtl",
+                  "type": "uint64"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "devdoc": { "kind": "dev", "methods": {}, "version": 1 },
+      "userdoc": { "kind": "user", "methods": {}, "version": 1 }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/=node_modules/@layerzerolabs/",
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/",
+        "hardhat/=node_modules/hardhat/",
+        "solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 20000 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "contracts/HyperLiquidCore.sol": "HyperLiquidCore"
+      },
+      "evmVersion": "shanghai",
+      "libraries": {}
+    },
+    "sources": {
+      "contracts/HyperLiquidCore.sol": {
+        "keccak256": "0x6fb3703e24c415cda57228092bf4b77e651de12ec7c27229bd28ec840f3e6bdb",
+        "urls": [
+          "bzz-raw://06f7271857cffd11e669a1524f22af5b7a69b353b860faa0cd4a15d41c1da5f7",
+          "dweb:/ipfs/QmWWToz7R8SyTLmkwjRA6TT3QyBkftPQ37tPkYUvHiMsDd"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 2
+}

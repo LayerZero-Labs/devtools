@@ -95,7 +95,6 @@ contract HyperliquidBaseTest is Test {
         vm.etch(HLP_PRECOMPILE_READ_SPOT_BALANCE, address(new SpotBalancePrecompileMock()).code);
         oft = new OFTMock("test", "test", HL_LZ_ENDPOINT_V2, msg.sender);
         hyperLiquidComposer = new HyperLiquidComposer(
-            HL_LZ_ENDPOINT_V2,
             address(oft),
             ERC20.coreIndexId,
             ERC20.decimalDiff,
