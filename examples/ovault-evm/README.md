@@ -138,7 +138,7 @@ export const DEPLOYMENT_CONFIG = {
     },
     // IF YOU HAVE EXISTING CONTRACTS, SET THE ADDRESSES HERE
     vaultAddress: undefined, // Set to '0x...' to use existing vault
-    assetAddress: undefined, // Set to '0x...' to use existing asset
+    assetOFTAddress: undefined, // Set to '0x...' to use existing asset OFT
   },
 
   // Asset OFT configuration (deployed on specified chains OR use existing address)
@@ -169,8 +169,8 @@ export const DEPLOYMENT_CONFIG = {
 
    ```typescript
    vault: {
-     vaultAddress: "0x123...", // Your existing vault
-     assetAddress: "0x456...", // Your existing asset (e.g., USDC)
+     vaultAddress: "0x123...", // Your existing 4626 vault
+     assetOFTAddress: "0x456...", // Your existing asset OFT address, not underlying ERC20 token address (e.g., USDT0)
    }
    ```
 
@@ -180,26 +180,39 @@ export const DEPLOYMENT_CONFIG = {
 
    ```typescript
    vault: {
-     vaultAddress: undefined,  // Will deploy new vault
-     assetAddress: "0x456...", // Your existing asset
+     vaultAddress: undefined,  // Will deploy new 4626 vault
+     assetOFTAddress: "0x456...", // Your existing asset OFT address, not underlying ERC20 token address (e.g., USDT0)
    }
    ```
 
    - Deploys new vault, ShareAdapter, Composer, and ShareOFTs
 
 3. **Everything New** (Testing/New Projects):
+
    ```typescript
    vault: {
-     vaultAddress: undefined, // Will deploy new vault
-     assetAddress: undefined, // Will deploy new AssetOFTs
+     vaultAddress: undefined, // Will deploy new 4626 vault
+     assetOFTAddress: undefined, // Will deploy new AssetOFTs
    }
    ```
+
    - Deploys all contracts across all chains
+
+4. **Existing ShareOFT Only**:
+   ```typescript
+   vault: {
+     vaultAddress: undefined,       // Vault already deployed via other process
+     assetOFTAddress: undefined,    // Asset OFT already deployed
+     shareOFTAddress: "0x789...", // Your existing ShareOFT address
+   }
+   ```
+   - Skips deployment of ShareOFTAdapter and ShareOFT
+   - Only deploys Composer on the hub chain
 
 **Key Configuration Points:**
 
 - **Hub Chain**: Set `vault.eid` to your chosen hub chain's endpoint ID
-- **Asset Deployment**: AssetOFTs deploy to chains in `asset.deploymentEids` only if `vault.assetAddress` is not set
+- **Asset Deployment**: AssetOFTs deploy to chains in `asset.deploymentEids` only if `vault.assetOFTAddress` is not set
 - **Share Deployment**: ShareOFTs always deploy to chains in `share.deploymentEids`
 - **ShareOFTAdapter and Composer**: Always deploy on hub chain regardless of existing contracts
 
@@ -241,7 +254,7 @@ The deployment scripts automatically skip existing deployments, so you can safel
 
 ### 1. Configure Asset OFT Network (Only if Deployed)
 
-> **Note**: Skip this section if using an existing asset (i.e., `vault.assetAddress` is set in your deployment config). Asset OFT configuration is only needed if you deployed new AssetOFTs.
+> **Note**: Skip this section if using an existing asset OFT (i.e., `vault.assetOFTAddress` is set in your deployment config). Asset OFT configuration is only needed if you deployed new AssetOFTs.
 
 Set up your Asset OFT configuration in `layerzero.asset.config.ts`. The example uses the `TwoWayConfig` pattern for simplified bidirectional connections:
 

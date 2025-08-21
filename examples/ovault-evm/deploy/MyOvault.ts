@@ -28,11 +28,11 @@ const deploy: DeployFunction = async (hre) => {
 
     // Deploy Asset OFT (on all configured chains)
     if (shouldDeployAsset(networkEid)) {
-        const assetOFT = await deployments.deploy(DEPLOYMENT_CONFIG.asset.contract, {
+        const assetOFT = await deployments.deploy(DEPLOYMENT_CONFIG.AssetOFT.contract, {
             from: deployer,
             args: [
-                DEPLOYMENT_CONFIG.asset.metadata.name,
-                DEPLOYMENT_CONFIG.asset.metadata.symbol,
+                DEPLOYMENT_CONFIG.AssetOFT.metadata.name,
+                DEPLOYMENT_CONFIG.AssetOFT.metadata.symbol,
                 endpointV2.address,
                 deployer,
             ],
@@ -41,17 +41,17 @@ const deploy: DeployFunction = async (hre) => {
         })
         deployedContracts.assetOFT = assetOFT.address
         console.log(
-            `Deployed contract: ${DEPLOYMENT_CONFIG.asset.contract}, network: ${hre.network.name}, address: ${assetOFT.address}`
+            `Deployed contract: ${DEPLOYMENT_CONFIG.AssetOFT.contract}, network: ${hre.network.name}, address: ${assetOFT.address}`
         )
     }
 
     // Deploy Share OFT (only on spoke chains)
     if (shouldDeployShare(networkEid)) {
-        const shareOFT = await deployments.deploy(DEPLOYMENT_CONFIG.share.contract, {
+        const shareOFT = await deployments.deploy(DEPLOYMENT_CONFIG.ShareOFT.contract, {
             from: deployer,
             args: [
-                DEPLOYMENT_CONFIG.share.metadata.name,
-                DEPLOYMENT_CONFIG.share.metadata.symbol,
+                DEPLOYMENT_CONFIG.ShareOFT.metadata.name,
+                DEPLOYMENT_CONFIG.ShareOFT.metadata.symbol,
                 endpointV2.address,
                 deployer,
             ],
@@ -60,8 +60,12 @@ const deploy: DeployFunction = async (hre) => {
         })
         deployedContracts.shareOFT = shareOFT.address
         console.log(
-            `Deployed contract: ${DEPLOYMENT_CONFIG.share.contract}, network: ${hre.network.name}, address: ${shareOFT.address}`
+            `Deployed contract: ${DEPLOYMENT_CONFIG.ShareOFT.contract}, network: ${hre.network.name}, address: ${shareOFT.address}`
         )
+    } else if (DEPLOYMENT_CONFIG.vault.shareOFTAddress && !isVaultChain(networkEid)) {
+        // Use existing ShareOFT on this spoke chain
+        deployedContracts.shareOFT = DEPLOYMENT_CONFIG.vault.shareOFTAddress
+        console.log(`→ Using existing ShareOFT: ${deployedContracts.shareOFT}`)
     }
 
     // Deploy Vault Chain Components (vault, adapter, composer)
@@ -69,14 +73,19 @@ const deploy: DeployFunction = async (hre) => {
         // 🎯 Get asset address (existing or deployed)
         let assetOFTAddress: string
 
-        if (DEPLOYMENT_CONFIG.vault.assetAddress) {
-            assetOFTAddress = DEPLOYMENT_CONFIG.vault.assetAddress
+        if (DEPLOYMENT_CONFIG.vault.assetOFTAddress) {
+            assetOFTAddress = DEPLOYMENT_CONFIG.vault.assetOFTAddress
             console.log(`Using existing asset address: ${assetOFTAddress}`)
         } else {
             // Use deployed address or get from deployments
             assetOFTAddress =
-                deployedContracts.assetOFT || (await hre.deployments.get(DEPLOYMENT_CONFIG.asset.contract)).address
+                deployedContracts.assetOFT || (await hre.deployments.get(DEPLOYMENT_CONFIG.AssetOFT.contract)).address
             console.log(`Using deployed asset address: ${assetOFTAddress}`)
+            // Fetch underlying ERC20 token address from the OFT using the IOFT artifact
+            const IOFTArtifact = await hre.artifacts.readArtifact('IOFT')
+            const oftContract = await hre.ethers.getContractAt(IOFTArtifact.abi, assetOFTAddress)
+            const assetTokenAddress = await oftContract.token()
+            console.log(`Underlying ERC20 token address: ${assetTokenAddress}`)
         }
 
         // Get vault address (existing or deploy new)
@@ -89,7 +98,11 @@ const deploy: DeployFunction = async (hre) => {
             // Deploy ERC4626 Vault
             const vault = await deployments.deploy(DEPLOYMENT_CONFIG.vault.contracts.vault, {
                 from: deployer,
-                args: [DEPLOYMENT_CONFIG.share.metadata.name, DEPLOYMENT_CONFIG.share.metadata.symbol, assetOFTAddress],
+                args: [
+                    DEPLOYMENT_CONFIG.ShareOFT.metadata.name,
+                    DEPLOYMENT_CONFIG.ShareOFT.metadata.symbol,
+                    assetOFTAddress,
+                ],
                 log: true,
                 skipIfAlreadyDeployed: true,
             })
@@ -99,21 +112,30 @@ const deploy: DeployFunction = async (hre) => {
             )
         }
 
-        // Deploy Share Adapter
-        const shareAdapter = await deployments.deploy(DEPLOYMENT_CONFIG.vault.contracts.shareAdapter, {
-            from: deployer,
-            args: [vaultAddress, endpointV2.address, deployer],
-            log: true,
-            skipIfAlreadyDeployed: true,
-        })
-        console.log(
-            `Deployed contract: ${DEPLOYMENT_CONFIG.vault.contracts.shareAdapter}, network: ${hre.network.name}, address: ${shareAdapter.address}`
-        )
+        // Deploy or use existing Share Adapter
+        let shareAdapterAddress: string
+        if (!DEPLOYMENT_CONFIG.vault.shareOFTAddress) {
+            const shareAdapter = await deployments.deploy(DEPLOYMENT_CONFIG.vault.contracts.shareAdapter, {
+                from: deployer,
+                args: [vaultAddress, endpointV2.address, deployer],
+                log: true,
+                skipIfAlreadyDeployed: true,
+            })
+            shareAdapterAddress = shareAdapter.address
+            console.log(
+                `Deployed contract: ${DEPLOYMENT_CONFIG.vault.contracts.shareAdapter}, network: ${hre.network.name}, address: ${shareAdapterAddress}`
+            )
+        } else {
+            // Use existing Share Adapter
+            const existingAdapter = await hre.deployments.get(DEPLOYMENT_CONFIG.vault.contracts.shareAdapter)
+            shareAdapterAddress = existingAdapter.address
+            console.log(`Using existing adapter: ${shareAdapterAddress}`)
+        }
 
         // Deploy OVault Composer
         const composer = await deployments.deploy(DEPLOYMENT_CONFIG.vault.contracts.composer, {
             from: deployer,
-            args: [vaultAddress, assetOFTAddress, shareAdapter.address],
+            args: [vaultAddress, assetOFTAddress, shareAdapterAddress],
             log: true,
             skipIfAlreadyDeployed: true,
         })
@@ -122,7 +144,7 @@ const deploy: DeployFunction = async (hre) => {
         )
 
         deployedContracts.vault = vaultAddress
-        deployedContracts.shareAdapter = shareAdapter.address
+        deployedContracts.shareAdapter = shareAdapterAddress
         deployedContracts.composer = composer.address
     }
 

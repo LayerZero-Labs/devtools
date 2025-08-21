@@ -15,13 +15,14 @@ export interface VaultConfig {
         composer: string
     }
     vaultAddress?: string // Optional pre-deployed vault address
-    assetAddress?: string // Optional pre-deployed asset address
+    assetOFTAddress?: string // Optional pre-deployed asset OFT address
+    shareOFTAddress?: string // Optional pre-deployed Share OFT address
 }
 
 export interface DeploymentConfig {
     vault: VaultConfig
-    asset: TokenConfig
-    share: TokenConfig
+    AssetOFT: TokenConfig
+    ShareOFT: TokenConfig
 }
 
 export interface DeployedContracts {
