@@ -80,6 +80,7 @@
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
     "@types/node": "^22.15.3",
     "axios": "^1.7.2",
+    "cli-table3": "^0.6.5",
     "dotenv": "^16.4.7",
     "ethers": "^5.7.2",
     "ethers-v6": "npm:ethers@^6.13.5",
