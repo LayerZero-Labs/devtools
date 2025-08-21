@@ -128,20 +128,21 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, ReentrancyGuard, IOAppC
     ) external payable returns (uint256 dustHYPE, uint256 dustERC20) {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
-        dustERC20 = transferERC20HyperCore(_receiver, _amount);
+        dustERC20 = _checkTransferERC20HyperCore(_receiver, _amount);
 
         if (msg.value > 0) {
-            dustHYPE = transferNativeHyperCore(_receiver);
+            dustHYPE = _transferNativeHyperCore(_receiver);
         }
     }
 
     /**
      * @notice Transfers ERC20 tokens to HyperCore
+     * @notice Checks if the receiver's address is activated on HyperCore
      * @param _receiver The address to receive tokens on HyperCore
      * @param _amountLD The amount of tokens to transfer in LayerZero decimals
      * @return The dust amount to be refunded on HyperEVM
      */
-    function transferERC20HyperCore(address _receiver, uint256 _amountLD) internal virtual returns (uint256) {
+    function _checkTransferERC20HyperCore(address _receiver, uint256 _amountLD) internal virtual returns (uint256) {
         IHyperAssetAmount memory amounts = quoteHyperCoreAmount(_amountLD, true);
         uint64 coreAmount = _getFinalCoreAmount(_receiver, amounts.core);
 
@@ -161,7 +162,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, ReentrancyGuard, IOAppC
      * @param _receiver The address to receive tokens on HyperCore
      * @return The dust amount to be refunded on HyperEVM
      */
-    function transferNativeHyperCore(address _receiver) internal virtual returns (uint256) {
+    function _transferNativeHyperCore(address _receiver) internal virtual returns (uint256) {
         IHyperAssetAmount memory amounts = quoteHyperCoreAmount(msg.value, false);
 
         if (amounts.evm != 0) {
@@ -179,6 +180,13 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, ReentrancyGuard, IOAppC
         return amounts.dust;
     }
 
+    /**
+     * @notice Checks if the receiver's address is activated on HyperCore
+     * @dev Default behavior is to revert if the user's account is NOT activated
+     * @param _to The address to check
+     * @param _coreAmount The core amount to transfer
+     * @return The final core amount to transfer (same as _coreAmount in default impl)
+     */
     function _getFinalCoreAmount(address _to, uint64 _coreAmount) internal view virtual returns (uint64) {
         if (!coreUserExists(_to).exists) revert CoreUserNotActivated();
         return _coreAmount;
