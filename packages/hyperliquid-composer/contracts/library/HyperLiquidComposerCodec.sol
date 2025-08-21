@@ -9,8 +9,6 @@ library HyperLiquidComposerCodec {
     /// @dev This is the largest possible token supply on HyperCore
     uint64 public constant EVM_MAX_TRANSFERABLE_INTO_CORE_PER_TX = type(uint64).max;
 
-    uint256 public constant COMPOSE_MSG_LENGTH = 64; // abi.encode(uint256, address)
-
     /// @dev The base asset bridge address is the address of the HyperLiquid L1 contract
     /// @dev This is the address that the OFT contract will transfer the tokens to when we want to send tokens to HyperLiquid L1
     /// @dev https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers#system-addresses

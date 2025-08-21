@@ -9,175 +9,135 @@ import { HyperLiquidComposerCodec } from "./library/HyperLiquidComposerCodec.sol
 
 import { IHyperLiquidReadPrecompile } from "./interfaces/IHyperLiquidReadPrecompile.sol";
 import { IHyperLiquidComposerCore, IHyperAsset, IHyperAssetAmount, FailedMessage } from "./interfaces/IHyperLiquidComposerCore.sol";
-import { ErrorMessagePayload } from "./interfaces/IHyperLiquidComposerErrors.sol";
 
-contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
+import { ICoreWriter } from "./interfaces/ICoreWriter.sol";
+import { IOAppCore } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol";
+
+import { HyperLiquidConstants } from "./HyperLiquidConstants.sol";
+
+/**
+ * @title Hyperliquid Composer Core
+ * @notice Core functionality for Hyperliquid composer operations
+ * @dev Base contract providing core functionality for transferring tokens between HyperEVM and HyperCore
+ */
+contract HyperLiquidComposerCore is HyperLiquidConstants, IHyperLiquidComposerCore {
     using SafeERC20 for IERC20;
 
     using HyperLiquidComposerCodec for bytes32;
     using HyperLiquidComposerCodec for bytes;
     using HyperLiquidComposerCodec for uint256;
 
-    modifier onlyComposer() {
-        if (msg.sender != address(this)) {
-            revert NotComposer(msg.sender);
-        }
-        _;
-    }
-
-    bytes public constant CORE_WRITER_VERSION = hex"01";
-    bytes public constant SPOT_SEND_ACTION_ID = hex"000006";
-    bytes public constant SPOT_SEND_HEADER = abi.encodePacked(CORE_WRITER_VERSION, SPOT_SEND_ACTION_ID); // 0x01000006
-
     uint256 public constant MIN_GAS = 150_000;
+    uint256 public constant NATIVE_TRANSFER_GAS = 2_300;
 
-    address public constant HLP_CORE_WRITER = 0x3333333333333333333333333333333333333333;
-    address public constant HLP_PRECOMPILE_READ_SPOT_BALANCE = 0x0000000000000000000000000000000000000801;
-
-    // https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm#mainnet
-    uint256 public constant HYPE_CHAIN_ID_TESTNET = 998;
-    uint256 public constant HYPE_CHAIN_ID_MAINNET = 999;
-
-    // https://app.hyperliquid-testnet.xyz/explorer/token/0x7317beb7cceed72ef0b346074cc8e7ab
-    uint64 public constant HYPE_INDEX_TESTNET = 1105;
-    // https://app.hyperliquid.xyz/explorer/token/0x0d01dc56dcaaca66ad901c959b4011ec
-    uint64 public constant HYPE_INDEX_MAINNET = 150;
+    uint256 public constant VALID_COMPOSE_MSG_LEN = 64; /// abi.encode(uint256,address) = 32+32
 
     mapping(uint256 => uint64) public hypeIndexByChainId;
     mapping(bytes32 => FailedMessage) public failedMessages;
 
-    address public immutable endpoint;
-
-    IOFT public immutable oft;
-    IERC20 public immutable token;
+    address public immutable ENDPOINT;
+    address public immutable OFT;
+    address public immutable TOKEN;
 
     address public immutable REFUND_ADDRESS;
 
     IHyperAsset public oftAsset;
     IHyperAsset public hypeAsset;
 
-    constructor(address _endpoint, address _oft) {
-        if (_endpoint == address(0)) {
-            revert InvalidEndpoint(_endpoint);
-        }
-        endpoint = _endpoint;
-
-        // _oft address is validated by it returning token()
-        oft = IOFT(_oft);
-        token = IERC20(oft.token());
-
+    /**
+     * @notice Constructor for HyperLiquidComposerCore
+     * @param _oft The OFT contract address
+     */
+    constructor(address _oft) {
         hypeIndexByChainId[HYPE_CHAIN_ID_TESTNET] = HYPE_INDEX_TESTNET;
         hypeIndexByChainId[HYPE_CHAIN_ID_MAINNET] = HYPE_INDEX_MAINNET;
 
-        /// @dev HYPE Core Spot address on HyperLiquid L1 - is a special address which is a precompile and has it's own asset bridge address which can be found here:
-        /// @dev https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers#system-addresses
-        /// @dev The following contains information about the HYPE Core Spot:
-        /// @dev https://app.hyperliquid-testnet.xyz/explorer/token/0x7317beb7cceed72ef0b346074cc8e7ab
+        if (_oft == address(0)) revert InvalidOFTAddress();
+
+        ENDPOINT = address(IOAppCore(_oft).endpoint());
+
+        OFT = _oft;
+        TOKEN = IOFT(OFT).token();
+
+        uint64 hypeIndex = hypeIndexByChainId[block.chainid];
+        if (hypeIndex == 0) revert UnsupportedChainId(block.chainid);
+
+        /// @dev HYPE system contract address for Core<->EVM transfers
         hypeAsset = IHyperAsset({
-            assetBridgeAddress: 0x2222222222222222222222222222222222222222,
-            coreIndexId: hypeIndexByChainId[block.chainid],
-            /// @dev 18 is the number of decimals in the HYPE token on HyperEVM
-            /// @dev 8 is the number of decimals in the HYPE Core Spot on HyperLiquid L1
-            decimalDiff: 18 - 8
+            decimalDiff: HYPE_DECIMAL_DIFF,
+            coreIndexId: hypeIndex,
+            assetBridgeAddress: HYPE_SYSTEM_CONTRACT
         });
     }
 
-    function decode_message(
-        bytes calldata _composeMessage
-    ) external pure returns (uint256 minMsgValue, address receiver) {
-        if (_composeMessage.length != HyperLiquidComposerCodec.COMPOSE_MSG_LENGTH) {
-            revert HyperLiquidComposer_ComposeMsgNot64Byte(_composeMessage, _composeMessage.length);
-        }
-        (minMsgValue, receiver) = abi.decode(_composeMessage, (uint256, address));
-
-        if (receiver == address(0)) {
-            revert HyperLiquidComposer_ReceiverCannotBeZeroAddress(receiver);
-        }
-    }
-
-    /// @notice External function to quote the conversion of evm tokens to hypercore tokens
-    ///
-    /// @param _amount The amount of tokens to send
-    /// @param _isOFT Whether the amount is an OFT amount or a HYPE amount
-    ///
-    /// @return IHyperAssetAmount - The amount of tokens to send to HyperCore (scaled on evm), dust (to be refunded), and the swap amount (of the tokens scaled on hypercore)
+    /**
+     * @notice External function to quote the conversion of evm tokens to hypercore tokens
+     * @param _amount The amount of tokens to send
+     * @param _isOFT Whether the amount is an OFT amount or a HYPE amount
+     * @return IHyperAssetAmount - The amount of tokens to send to HyperCore (scaled on evm), dust (to be refunded), and the swap amount (of the tokens scaled on hypercore)
+     */
     function quoteHyperCoreAmount(uint256 _amount, bool _isOFT) public view returns (IHyperAssetAmount memory) {
-        IHyperAsset memory asset;
-        uint64 coreBalanceOfAssetBridge;
-
-        if (_isOFT) {
-            asset = oftAsset;
-            coreBalanceOfAssetBridge = _balanceOfHyperCore(oftAsset.assetBridgeAddress, oftAsset.coreIndexId);
-        } else {
-            asset = hypeAsset;
-            coreBalanceOfAssetBridge = _balanceOfHyperCore(hypeAsset.assetBridgeAddress, hypeAsset.coreIndexId);
-        }
-
-        return _amount.into_hyperAssetAmount(coreBalanceOfAssetBridge, asset);
+        IHyperAsset memory asset = _isOFT ? oftAsset : hypeAsset;
+        uint64 coreBalance = _balanceOfHyperCore(asset.assetBridgeAddress, asset.coreIndexId);
+        return _amount.into_hyperAssetAmount(coreBalance, asset);
     }
 
-    /// @notice External function to read the balance of the user in the hypercore
-    ///
-    /// @param _user The address of the user
-    /// @param _tokenId The token id of the hypercore
-    ///
-    /// @return The balance of the user in the hypercore
+    /**
+     * @notice External function to read the balance of the user in the hypercore
+     * @param _user The address of the user
+     * @param _tokenId The token id of the hypercore
+     * @return The balance of the user in the hypercore
+     */
     function balanceOfHyperCore(address _user, uint64 _tokenId) external view returns (uint64) {
         return _balanceOfHyperCore(_user, _tokenId);
     }
 
-    /// @notice Internal function to read the balance of the user in the hypercore
-    ///
-    /// @param _user The address of the user
-    /// @param _tokenId The token id of the hypercore
-    ///
-    /// @return The balance of the user in the hypercore
+    /**
+     * @notice Internal function to read the balance of the user in the hypercore
+     * @param _user The address of the user
+     * @param _tokenId The token id of the hypercore
+     * @return The balance of the user in the hypercore
+     */
     function _balanceOfHyperCore(address _user, uint64 _tokenId) internal view returns (uint64) {
         bool success;
         bytes memory result;
         (success, result) = HLP_PRECOMPILE_READ_SPOT_BALANCE.staticcall(abi.encode(_user, _tokenId));
-        if (!success) {
-            revert HyperLiquidComposerCore_SpotBalanceRead_Failed(_user, _tokenId);
-        }
+        if (!success) revert SpotBalanceReadFailed(_user, _tokenId);
+
         return abi.decode(result, (IHyperLiquidReadPrecompile.SpotBalance)).total;
     }
 
-    /// @notice Refunds the ERC20 tokens to the refund address
-    /// @notice This function is called by the refundTokens function
-    ///
-    /// @dev If the refund address is set to the zero address - it means that the transaction sender is a non-evm address and the receiver is malformed.
-    /// @dev In this case, the tokens are locked in the composer.
-    ///
-    /// @param _refundAddress The address to refund the ERC20 tokens to
-    /// @param _amount The amount of tokens to refund
-    function refundERC20(address _refundAddress, uint256 _amount) external onlyComposer {
-        if (_amount > 0 && _refundAddress != address(0)) {
-            token.safeTransfer(_refundAddress, _amount);
-        }
-    }
-
-    /// @notice Refunds the native tokens to the refund address
-    /// @notice This function is called by the refundTokens function
-    ///
-    /// @dev It is possible that the refund address is a contract without fallback or receive functions - in that case the transfer fails and tokens will be locked in the contract.
-    /// @dev Since this is an external function - the msg.value can be different to the msg.value sent to the lzCompose function by tx.origin
-    /// @dev It is different in the case of a partial refund where the call is:
-    /// @dev `this.refundNativeTokens{ value: amounts.dust }(_receiver)`
-    /// @dev In this case, the msg.value is the amount of the dust and not the msg.value sent to the lzCompose function by tx.origin
-    ///
-    /// @param _refundAddress The address to refund the native tokens to
-    function refundNativeTokens(address _refundAddress) external payable onlyComposer {
-        if (msg.value > 0 && _refundAddress != address(0)) {
-            (bool success, ) = _refundAddress.call{ value: msg.value }("");
-            if (!success) {
-                revert HyperLiquidComposer_FailedToRefund_HYPE(_refundAddress, msg.value);
+    /**
+     * @notice Handles refunds on HyperEVM for both HYPE and ERC20 tokens
+     * @dev Since this is an external function - the msg.value can be different to the msg.value sent to the lzCompose function by tx.origin
+     * @dev It is different in the case of a partial refund where the call is:
+     * @dev `this.refundNativeTokens{ value: amounts.dust }(_receiver)`
+     * @dev In this case, the msg.value is the amount of the dust and not the msg.value sent to the lzCompose function by tx.origin
+     * @param _refundAddress The address to refund tokens to
+     * @param _hypeAmt The amount of HYPE tokens to refund
+     * @param _erc20Amt The amount of ERC20 tokens to refund
+     */
+    function _hyperevmRefund(address _refundAddress, uint256 _hypeAmt, uint256 _erc20Amt) internal {
+        if (_hypeAmt > 0) {
+            (bool success1, ) = _refundAddress.call{ value: _hypeAmt, gas: NATIVE_TRANSFER_GAS }("");
+            if (!success1) {
+                (bool success2, ) = tx.origin.call{ value: _hypeAmt }("");
+                if (!success2) revert NativeTransferFailed(tx.origin, _hypeAmt);
             }
         }
+
+        if (_erc20Amt > 0) {
+            IERC20(TOKEN).safeTransfer(_refundAddress, _erc20Amt);
+        }
     }
 
-    function refund(bytes32 _guid) external payable virtual {
+    /**
+     * @notice Refunds failed messages to the source chain
+     * @param _guid The GUID of the failed message to refund
+     */
+    function refundToSrc(bytes32 _guid) external payable virtual {
         FailedMessage memory failedMessage = failedMessages[_guid];
-        if (failedMessage.refundSendParam.to == bytes32(0)) {
+        if (failedMessage.refundSendParam.dstEid == 0) {
             revert FailedMessageNotFound(_guid);
         }
         delete failedMessages[_guid];
@@ -185,17 +145,26 @@ contract HyperLiquidComposerCore is IHyperLiquidComposerCore {
         uint256 totalMsgValue = failedMessage.msgValue + msg.value;
 
         /// @dev Refunds the OFT contract with the refundSendParam
-        oft.send{ value: totalMsgValue }(failedMessage.refundSendParam, MessagingFee(totalMsgValue, 0), REFUND_ADDRESS);
+        IOFT(OFT).send{ value: totalMsgValue }(
+            failedMessage.refundSendParam,
+            MessagingFee(totalMsgValue, 0),
+            REFUND_ADDRESS
+        );
 
         /// @dev Emits the RefundSuccessful event
         emit RefundSuccessful(_guid);
     }
 
-    function getOFTAsset() external view returns (IHyperAsset memory) {
-        return oftAsset;
-    }
-
-    function getHypeAsset() external view returns (IHyperAsset memory) {
-        return hypeAsset;
+    /**
+     * @notice Transfers tokens on HyperCore using the CoreWriter precompile
+     * @param _receiver The address to receive tokens on HyperCore
+     * @param coreIndex The core index of the token
+     * @param coreAmt The amount to transfer on HyperCore
+     */
+    function _transferCore(address _receiver, uint64 coreIndex, uint64 coreAmt) internal virtual {
+        bytes memory action = abi.encode(_receiver, coreIndex, coreAmt);
+        bytes memory payload = abi.encodePacked(SPOT_SEND_HEADER, action);
+        /// Transfers HYPE tokens from the composer address on HyperCore to the _receiver via the SpotSend precompile
+        ICoreWriter(HLP_CORE_WRITER).sendRawAction(payload);
     }
 }
