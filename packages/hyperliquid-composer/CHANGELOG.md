@@ -1,5 +1,11 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 0.0.19
+
+### Patch Changes
+
+- af83bac: spotClearingHouse used to print active users and core balances
+
 ## 0.0.18
 
 ### Patch Changes
