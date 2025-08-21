@@ -157,14 +157,14 @@ contract HyperLiquidComposerCore is HyperLiquidConstants, IHyperLiquidComposerCo
 
     /**
      * @notice Transfers tokens on HyperCore using the CoreWriter precompile
-     * @param _receiver The address to receive tokens on HyperCore
-     * @param coreIndex The core index of the token
-     * @param coreAmt The amount to transfer on HyperCore
+     * @param _to The address to receive tokens on HyperCore
+     * @param _coreIndex The core index of the token
+     * @param _coreAmount The amount to transfer on HyperCore
      */
-    function _transferCore(address _receiver, uint64 coreIndex, uint64 coreAmt) internal virtual {
-        bytes memory action = abi.encode(_receiver, coreIndex, coreAmt);
+    function _submitCoreWriterTransfer(address _to, uint64 _coreIndex, uint64 _coreAmount) internal virtual {
+        bytes memory action = abi.encode(_to, _coreIndex, _coreAmount);
         bytes memory payload = abi.encodePacked(SPOT_SEND_HEADER, action);
-        /// Transfers HYPE tokens from the composer address on HyperCore to the _receiver via the SpotSend precompile
+        /// Transfers HYPE tokens from the composer address on HyperCore to the _to via the SpotSend precompile
         ICoreWriter(HLP_CORE_WRITER).sendRawAction(payload);
     }
 }

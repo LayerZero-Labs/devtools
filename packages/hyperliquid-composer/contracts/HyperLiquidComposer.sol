@@ -147,7 +147,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, ReentrancyGuard, IOAppC
         if (amounts.evm != 0) {
             // Transfer the tokens to the composer's address on HyperCore
             IERC20(TOKEN).safeTransfer(oftAsset.assetBridgeAddress, amounts.evm);
-            _transferCore(_receiver, oftAsset.coreIndexId, amounts.core);
+            _submitCoreWriterTransfer(_receiver, oftAsset.coreIndexId, amounts.core);
         }
 
         return amounts.dust;
@@ -167,7 +167,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, ReentrancyGuard, IOAppC
             (bool success, ) = payable(to).call{ value: amounts.evm, gas: NATIVE_TRANSFER_GAS }("");
             if (!success) revert NativeTransferFailed(to, amounts.evm);
 
-            _transferCore(_receiver, hypeAsset.coreIndexId, amounts.core);
+            _submitCoreWriterTransfer(_receiver, hypeAsset.coreIndexId, amounts.core);
         }
 
         return amounts.dust;
