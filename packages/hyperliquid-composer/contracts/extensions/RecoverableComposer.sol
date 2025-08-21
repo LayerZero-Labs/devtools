@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.22;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
 
 import { SafeERC20, IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
@@ -11,7 +11,7 @@ import { HyperLiquidComposer } from "../HyperLiquidComposer.sol";
 
 abstract contract RecoverableComposer is HyperLiquidComposer {
     modifier onlyRecoveryAddress() {
-        require(msg.sender == RECOVERY_ADDRESS, "Not recovery address");
+        if (msg.sender != RECOVERY_ADDRESS) revert NotRecoveryAddress();
         _;
     }
 
@@ -19,6 +19,7 @@ abstract contract RecoverableComposer is HyperLiquidComposer {
     using HyperLiquidComposerCodec for uint64;
 
     error MaxRetrieveAmountExceeded(uint256 maxAmount, uint256 requestedAmount);
+    error NotRecoveryAddress();
 
     event Retrieved(uint64 indexed coreIndexId, uint256 amount, address indexed to);
     event Recovered(address indexed to, uint256 amount);
