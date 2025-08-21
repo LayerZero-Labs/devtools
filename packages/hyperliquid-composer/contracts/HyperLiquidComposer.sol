@@ -143,13 +143,14 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, ReentrancyGuard, IOAppC
      */
     function transferERC20HyperCore(address _receiver, uint256 _amountLD) internal virtual returns (uint256) {
         IHyperAssetAmount memory amounts = quoteHyperCoreAmount(_amountLD, true);
+        uint64 coreAmount = _getFinalCoreAmount(_receiver, amounts.core);
 
         if (amounts.evm != 0) {
             // Cache oftAsset to avoid multiple SLOAD operations
             IHyperAsset memory asset = oftAsset;
             // Transfer the tokens to the composer's address on HyperCore
             IERC20(TOKEN).safeTransfer(asset.assetBridgeAddress, amounts.evm);
-            _submitCoreWriterTransfer(_receiver, asset.coreIndexId, amounts.core);
+            _submitCoreWriterTransfer(_receiver, asset.coreIndexId, coreAmount);
         }
 
         return amounts.dust;
@@ -176,6 +177,11 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, ReentrancyGuard, IOAppC
         }
 
         return amounts.dust;
+    }
+
+    function _getFinalCoreAmount(address _to, uint64 _coreAmount) internal view virtual returns (uint64) {
+        if (!coreUserExists(_to).exists) revert CoreUserNotActivated();
+        return _coreAmount;
     }
 
     receive() external payable {}
