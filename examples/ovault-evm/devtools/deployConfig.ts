@@ -43,9 +43,9 @@ export const DEPLOYMENT_CONFIG: DeploymentConfig = {
         // This will skip deployment and use your existing hubEid contract deployments instead
         // This must be the address of the ERC4626 vault
         vaultAddress: undefined, // Set to '0xabc...' to use existing vault
-        // This must be the address of the asset OFT, not the underlying ERC20 token
+        // This must be the address of the asset OFT (not all OFT addresses are the same as the ERC20 contract)
         assetOFTAddress: undefined, // Set to '0xdef...' to use existing asset OFT
-        // This must be the address of the share OFT, not the underlying ERC20 token
+        // This must be the address of the share OFT (not all OFT addresses are the same as the ERC20 contract)
         shareOFTAddress: undefined, // Set to '0xghi...' to use existing share OFT
     },
 
