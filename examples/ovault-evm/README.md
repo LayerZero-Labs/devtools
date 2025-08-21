@@ -121,8 +121,11 @@ Configure your vault deployment in `devtools/deployConfig.ts`. This file control
 import { EndpointId } from "@layerzerolabs/lz-definitions";
 
 // Define the chains we're deploying to
-const _hubEid = EndpointId.ARBSEP_V2_TESTNET
-const _spokeEids = [EndpointId.OPTSEP_V2_TESTNET, EndpointId.BASESEP_V2_TESTNET]
+const _hubEid = EndpointId.ARBSEP_V2_TESTNET;
+const _spokeEids = [
+  EndpointId.OPTSEP_V2_TESTNET,
+  EndpointId.BASESEP_V2_TESTNET,
+];
 
 export const DEPLOYMENT_CONFIG = {
   // Vault chain configuration (where the ERC4626 vault lives)
@@ -163,21 +166,25 @@ export const DEPLOYMENT_CONFIG = {
 **Common Deployment Scenarios:**
 
 1. **Existing Vault & Asset** (Most Common):
+
    ```typescript
    vault: {
      vaultAddress: "0x123...", // Your existing vault
      assetAddress: "0x456...", // Your existing asset (e.g., USDC)
    }
    ```
+
    - Only deploys MyShareOFTAdapter, MyOVaultComposer, and MyShareOFT
 
 2. **Existing Asset, New Vault**:
+
    ```typescript
    vault: {
      vaultAddress: undefined,  // Will deploy new vault
      assetAddress: "0x456...", // Your existing asset
    }
    ```
+
    - Deploys new vault, ShareAdapter, Composer, and ShareOFTs
 
 3. **Everything New** (Testing/New Projects):
