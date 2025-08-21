@@ -1,11 +1,11 @@
-import { toWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
-import { Transaction, sendAndConfirmTransaction } from '@solana/web3.js'
+import { TransactionBuilder, publicKey as umiPublicKey } from '@metaplex-foundation/umi'
+import { Keypair, PublicKey, Transaction } from '@solana/web3.js'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
 
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { Endpoint } from '@layerzerolabs/lz-solana-sdk-v2'
+import { EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2/umi'
 
 import { deriveConnection, getExplorerTxLink } from './index'
 
@@ -25,22 +25,23 @@ task('lz:oft:solana:skip', 'Skip a message on Solana')
     .addParam('srcEid', 'The source endpoint ID', undefined, devtoolsTypes.int)
     .addParam('nonce', 'The nonce', undefined, devtoolsTypes.string)
     .setAction(async ({ eid, sender, receiver, srcEid, nonce }: SkipTaskArgs) => {
-        if (!process.env.SOLANA_PRIVATE_KEY) {
-            throw new Error('SOLANA_PRIVATE_KEY is not defined in the environment variables.')
-        }
+        const { umi, connection, umiWalletKeyPair, umiWalletSigner } = await deriveConnection(eid)
+        const endpoint = new EndpointProgram.Endpoint(EndpointProgram.ENDPOINT_PROGRAM_ID)
 
-        const { connection, umiWalletKeyPair } = await deriveConnection(eid)
-        const signer = toWeb3JsKeypair(umiWalletKeyPair)
-        const endpoint = new Endpoint(connection, eid)
-
-        // Convert sender from hex to PublicKey
+        // Convert sender from hex to PublicKey then to Umi PublicKey
         const senderBytes = Buffer.from(sender.replace('0x', ''), 'hex')
-        const senderPublicKey = new (await import('@solana/web3.js')).PublicKey(senderBytes)
+        const senderWeb3Pk = new PublicKey(senderBytes)
+        const senderUmiPublicKey = umiPublicKey(senderWeb3Pk.toBase58())
 
-        // Convert receiver from base58 to PublicKey
-        const receiverPublicKey = new (await import('@solana/web3.js')).PublicKey(receiver)
+        // Convert receiver to Umi PublicKey
+        const receiverUmiPublicKey = umiPublicKey(receiver)
 
-        const instruction = await endpoint.skip(signer.publicKey, senderPublicKey, receiverPublicKey, srcEid, nonce)
+        const instruction = endpoint.skip(umiWalletSigner, {
+            sender: senderUmiPublicKey,
+            receiver: receiverUmiPublicKey,
+            srcEid,
+            nonce: nonce,
+        })
 
         if (!instruction) {
             console.log('No instruction returned - message may not need to be skipped')
@@ -48,26 +49,19 @@ task('lz:oft:solana:skip', 'Skip a message on Solana')
         }
 
         const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash()
+        const keypair = Keypair.fromSecretKey(umiWalletKeyPair.secretKey)
         const tx = new Transaction({
-            feePayer: signer.publicKey,
+            feePayer: keypair.publicKey,
             blockhash,
             lastValidBlockHeight,
         })
 
-        tx.add(instruction)
-
-        const keypair = (await import('@solana/web3.js')).Keypair.fromSecretKey(
-            bs58.decode(process.env.SOLANA_PRIVATE_KEY)
-        )
-        tx.sign(keypair)
-
-        const signature = await sendAndConfirmTransaction(connection, tx, [keypair], {
-            skipPreflight: true,
-        })
+        const builder = new TransactionBuilder([instruction])
+        const { signature } = await builder.sendAndConfirm(umi)
 
         console.log(
             `Skip transaction successful! View here: ${getExplorerTxLink(
-                signature.toString(),
+                bs58.encode(signature),
                 eid === EndpointId.SOLANA_V2_TESTNET
             )}`
         )

@@ -1,11 +1,12 @@
-import { toWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
-import { Transaction, sendAndConfirmTransaction } from '@solana/web3.js'
+import { TransactionBuilder, publicKey as umiPublicKey } from '@metaplex-foundation/umi'
+import { toWeb3JsInstruction } from '@metaplex-foundation/umi-web3js-adapters'
+import { Keypair, Transaction } from '@solana/web3.js'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
 
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { Endpoint, instructions } from '@layerzerolabs/lz-solana-sdk-v2'
+import { EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2/umi'
 
 import { deriveConnection, getExplorerTxLink } from './index'
 
@@ -29,13 +30,8 @@ task('lz:oft:solana:clear', 'Clear a payload on Solana')
     .addParam('guid', 'The GUID (hex format)', undefined, devtoolsTypes.string)
     .addParam('message', 'The message payload (hex format)', undefined, devtoolsTypes.string)
     .setAction(async ({ eid, sender, receiver, srcEid, nonce, guid, message }: ClearTaskArgs) => {
-        if (!process.env.SOLANA_PRIVATE_KEY) {
-            throw new Error('SOLANA_PRIVATE_KEY is not defined in the environment variables.')
-        }
-
-        const { connection, umiWalletKeyPair } = await deriveConnection(eid)
-        const signer = toWeb3JsKeypair(umiWalletKeyPair)
-        const endpoint = new Endpoint(connection, eid)
+        const { umi, connection, umiWalletKeyPair, umiWalletSigner } = await deriveConnection(eid)
+        const endpoint = new EndpointProgram.Endpoint(EndpointProgram.ENDPOINT_PROGRAM_ID)
 
         // Convert sender from hex to bytes32
         const senderBytes = Buffer.from(sender.replace('0x', ''), 'hex')
@@ -43,8 +39,8 @@ task('lz:oft:solana:clear', 'Clear a payload on Solana')
             throw new Error('Sender must be 32 bytes (64 hex characters)')
         }
 
-        // Convert receiver from base58 to PublicKey
-        const receiverPublicKey = new (await import('@solana/web3.js')).PublicKey(receiver)
+        // Convert receiver to Umi PublicKey
+        const receiverUmiPublicKey = umiPublicKey(receiver)
 
         // Convert GUID from hex to bytes
         const guidBytes = Buffer.from(guid.replace('0x', ''), 'hex')
@@ -55,16 +51,17 @@ task('lz:oft:solana:clear', 'Clear a payload on Solana')
         // Convert message from hex to bytes
         const messageBytes = Buffer.from(message.replace('0x', ''), 'hex')
 
-        const instruction = instructions.clear(
+        // using EndpointProgram.instruction as there's no clear method on EndpointProgram.Endpoint, unlike burn (OAppBurnNonce), nilify (oAppNilify), skip (skip)
+        const instruction = EndpointProgram.instructions.clear(
             { programs: endpoint.programRepo },
             {
-                signer,
-                oappRegistry: endpoint.pda.oappRegistry(receiverPublicKey),
-                nonce: endpoint.pda.nonce(receiverPublicKey, srcEid, Array.from(senderBytes)),
+                signer: umiWalletSigner,
+                oappRegistry: endpoint.pda.oappRegistry(receiverUmiPublicKey),
+                nonce: endpoint.pda.nonce(receiverUmiPublicKey, srcEid, new Uint8Array(senderBytes)),
                 payloadHash: endpoint.pda.payloadHash(
-                    receiverPublicKey,
+                    receiverUmiPublicKey,
                     srcEid,
-                    Array.from(senderBytes),
+                    new Uint8Array(senderBytes),
                     BigInt(nonce)
                 ),
                 endpoint: endpoint.pda.setting(),
@@ -72,36 +69,30 @@ task('lz:oft:solana:clear', 'Clear a payload on Solana')
                 program: endpoint.programId,
             },
             {
-                receiver: receiverPublicKey,
+                receiver: receiverUmiPublicKey,
                 srcEid,
-                sender: Array.from(senderBytes),
+                sender: new Uint8Array(senderBytes),
                 nonce: BigInt(nonce),
-                guid: Array.from(guidBytes),
-                message: Array.from(messageBytes),
+                guid: new Uint8Array(guidBytes),
+                message: new Uint8Array(messageBytes),
             }
         ).items[0]
 
         const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash()
+        const keypair = Keypair.fromSecretKey(umiWalletKeyPair.secretKey)
         const tx = new Transaction({
-            feePayer: signer.publicKey,
+            feePayer: keypair.publicKey,
             blockhash,
             lastValidBlockHeight,
         })
 
-        tx.add(instruction)
-
-        const keypair = (await import('@solana/web3.js')).Keypair.fromSecretKey(
-            bs58.decode(process.env.SOLANA_PRIVATE_KEY)
-        )
-        tx.sign(keypair)
-
-        const signature = await sendAndConfirmTransaction(connection, tx, [keypair], {
-            skipPreflight: true,
-        })
+        const builder = new TransactionBuilder([instruction])
+        const { signature } = await builder.sendAndConfirm(umi)
+        builder.getInstructions().forEach((ix) => tx.add(toWeb3JsInstruction(ix)))
 
         console.log(
             `Clear transaction successful! View here: ${getExplorerTxLink(
-                signature.toString(),
+                bs58.encode(signature),
                 eid === EndpointId.SOLANA_V2_TESTNET
             )}`
         )

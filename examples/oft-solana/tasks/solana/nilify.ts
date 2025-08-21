@@ -1,11 +1,11 @@
-import { toWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
-import { Transaction, sendAndConfirmTransaction } from '@solana/web3.js'
+import { TransactionBuilder, publicKey as umiPublicKey } from '@metaplex-foundation/umi'
+import { Keypair, Transaction } from '@solana/web3.js'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
 
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { Endpoint } from '@layerzerolabs/lz-solana-sdk-v2'
+import { EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2/umi'
 
 import { deriveConnection, getExplorerTxLink } from './index'
 
@@ -27,13 +27,8 @@ task('lz:oft:solana:nilify', 'Nilify a nonce on Solana')
     .addParam('nonce', 'The nonce', undefined, devtoolsTypes.string)
     .addParam('payloadHash', 'The payload hash (hex format)', undefined, devtoolsTypes.string)
     .setAction(async ({ eid, sender, receiver, srcEid, nonce, payloadHash }: NilifyTaskArgs) => {
-        if (!process.env.SOLANA_PRIVATE_KEY) {
-            throw new Error('SOLANA_PRIVATE_KEY is not defined in the environment variables.')
-        }
-
-        const { connection, umiWalletKeyPair } = await deriveConnection(eid)
-        const signer = toWeb3JsKeypair(umiWalletKeyPair)
-        const endpoint = new Endpoint(connection, eid)
+        const { umi, connection, umiWalletKeyPair, umiWalletSigner } = await deriveConnection(eid)
+        const endpoint = new EndpointProgram.Endpoint(EndpointProgram.ENDPOINT_PROGRAM_ID)
 
         // Convert sender from hex to bytes32
         const senderBytes = Buffer.from(sender.replace('0x', ''), 'hex')
@@ -41,8 +36,8 @@ task('lz:oft:solana:nilify', 'Nilify a nonce on Solana')
             throw new Error('Sender must be 32 bytes (64 hex characters)')
         }
 
-        // Convert receiver from base58 to PublicKey
-        const receiverPublicKey = new (await import('@solana/web3.js')).PublicKey(receiver)
+        // Convert receiver to Umi PublicKey
+        const receiverUmiPublicKey = umiPublicKey(receiver)
 
         // Convert payload hash from hex to bytes
         const payloadHashBytes = Buffer.from(payloadHash.replace('0x', ''), 'hex')
@@ -50,35 +45,28 @@ task('lz:oft:solana:nilify', 'Nilify a nonce on Solana')
             throw new Error('Payload hash must be 32 bytes (64 hex characters)')
         }
 
-        const instruction = endpoint.oAppNilify(signer, {
+        const instruction = endpoint.oAppNilify(umiWalletSigner, {
             nonce: BigInt(nonce),
-            receiver: receiverPublicKey,
-            sender: Array.from(senderBytes),
+            receiver: receiverUmiPublicKey,
+            sender: new Uint8Array(senderBytes),
             srcEid,
-            payloadHash: Array.from(payloadHashBytes),
+            payloadHash: new Uint8Array(payloadHashBytes),
         })
 
         const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash()
+        const keypair = Keypair.fromSecretKey(umiWalletKeyPair.secretKey)
         const tx = new Transaction({
-            feePayer: signer.publicKey,
+            feePayer: keypair.publicKey,
             blockhash,
             lastValidBlockHeight,
         })
 
-        tx.add(instruction)
-
-        const keypair = (await import('@solana/web3.js')).Keypair.fromSecretKey(
-            bs58.decode(process.env.SOLANA_PRIVATE_KEY)
-        )
-        tx.sign(keypair)
-
-        const signature = await sendAndConfirmTransaction(connection, tx, [keypair], {
-            skipPreflight: true,
-        })
+        const builder = new TransactionBuilder([instruction])
+        const { signature } = await builder.sendAndConfirm(umi)
 
         console.log(
             `Nilify transaction successful! View here: ${getExplorerTxLink(
-                signature.toString(),
+                bs58.encode(signature),
                 eid === EndpointId.SOLANA_V2_TESTNET
             )}`
         )
