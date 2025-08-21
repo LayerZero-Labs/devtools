@@ -145,9 +145,11 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, ReentrancyGuard, IOAppC
         IHyperAssetAmount memory amounts = quoteHyperCoreAmount(_amountLD, true);
 
         if (amounts.evm != 0) {
+            // Cache oftAsset to avoid multiple SLOAD operations
+            IHyperAsset memory asset = oftAsset;
             // Transfer the tokens to the composer's address on HyperCore
-            IERC20(TOKEN).safeTransfer(oftAsset.assetBridgeAddress, amounts.evm);
-            _submitCoreWriterTransfer(_receiver, oftAsset.coreIndexId, amounts.core);
+            IERC20(TOKEN).safeTransfer(asset.assetBridgeAddress, amounts.evm);
+            _submitCoreWriterTransfer(_receiver, asset.coreIndexId, amounts.core);
         }
 
         return amounts.dust;
@@ -162,12 +164,15 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, ReentrancyGuard, IOAppC
         IHyperAssetAmount memory amounts = quoteHyperCoreAmount(msg.value, false);
 
         if (amounts.evm != 0) {
-            address to = hypeAsset.assetBridgeAddress;
+            // Cache hypeAsset to avoid multiple SLOAD operations
+            IHyperAsset memory asset = hypeAsset;
             // Transfer the HYPE tokens to the composer's address on HyperCore
-            (bool success, ) = payable(to).call{ value: amounts.evm, gas: NATIVE_TRANSFER_GAS }("");
-            if (!success) revert NativeTransferFailed(to, amounts.evm);
+            (bool success, ) = payable(asset.assetBridgeAddress).call{ value: amounts.evm, gas: NATIVE_TRANSFER_GAS }(
+                ""
+            );
+            if (!success) revert NativeTransferFailed(asset.assetBridgeAddress, amounts.evm);
 
-            _submitCoreWriterTransfer(_receiver, hypeAsset.coreIndexId, amounts.core);
+            _submitCoreWriterTransfer(_receiver, asset.coreIndexId, amounts.core);
         }
 
         return amounts.dust;

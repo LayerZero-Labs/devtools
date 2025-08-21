@@ -13,17 +13,19 @@ abstract contract HyperLiquidConstants {
     // https://app.hyperliquid.xyz/explorer/token/0x0d01dc56dcaaca66ad901c959b4011ec
     uint64 internal constant HYPE_INDEX_MAINNET = 150;
 
-    // Decimal Constants
+    // Decimal Constants - Pre-computed for gas efficiency
     uint8 internal constant HYPE_EVM_DECIMALS = 18;
     uint8 internal constant HYPE_CORE_DECIMALS = 8;
-    int64 internal constant HYPE_DECIMAL_DIFF = int64(uint64(HYPE_EVM_DECIMALS - HYPE_CORE_DECIMALS));
+    int64 internal constant HYPE_DECIMAL_DIFF = 10; // Pre-computed: 18 - 8
+    uint256 internal constant HYPE_SCALE_FACTOR = 10 ** 10; // Pre-computed: 10^(18-8)
 
     // Precompile Addresses
     address internal constant HLP_CORE_WRITER = 0x3333333333333333333333333333333333333333;
     address internal constant HLP_PRECOMPILE_READ_SPOT_BALANCE = 0x0000000000000000000000000000000000000801;
     address internal constant HYPE_SYSTEM_CONTRACT = 0x2222222222222222222222222222222222222222;
 
-    bytes public constant CORE_WRITER_VERSION = hex"01";
-    bytes public constant SPOT_SEND_ACTION_ID = hex"000006";
-    bytes public constant SPOT_SEND_HEADER = abi.encodePacked(CORE_WRITER_VERSION, SPOT_SEND_ACTION_ID); // 0x01000006
+    // Pre-computed headers for gas efficiency
+    bytes1 public constant CORE_WRITER_VERSION = 0x01;
+    bytes3 public constant SPOT_SEND_ACTION_ID = 0x000006;
+    bytes4 public constant SPOT_SEND_HEADER = 0x01000006; // Pre-computed concatenation
 }

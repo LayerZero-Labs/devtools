@@ -8,9 +8,9 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IHyperLiquidComposerErrors } from "./IHyperLiquidComposerErrors.sol";
 
 struct IHyperAsset {
-    int64 decimalDiff;
-    uint64 coreIndexId;
-    address assetBridgeAddress;
+    uint64 coreIndexId; // 8 bytes
+    int64 decimalDiff; // 8 bytes
+    address assetBridgeAddress; // 20 bytes (fits in same slot)
 }
 
 struct IHyperAssetAmount {
@@ -41,8 +41,8 @@ interface IHyperLiquidComposerCore is IHyperLiquidComposerErrors {
     function TOKEN() external view returns (address);
     function REFUND_ADDRESS() external view returns (address);
 
-    function oftAsset() external view returns (int64, uint64, address);
-    function hypeAsset() external view returns (int64, uint64, address);
+    function oftAsset() external view returns (uint64, int64, address);
+    function hypeAsset() external view returns (uint64, int64, address);
 
     function hypeIndexByChainId(uint256 _chainId) external view returns (uint64);
 
