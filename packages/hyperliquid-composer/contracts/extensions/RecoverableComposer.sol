@@ -123,7 +123,7 @@ abstract contract RecoverableComposer is HyperLiquidComposer, IRecoverableCompos
      * @return The actual amount that can be transferred
      */
     function _getMaxTransferAmount(uint64 _coreIndexId, uint64 _coreAmount) internal view returns (uint64) {
-        uint64 maxTransferAmt = _balanceOfHyperCore(address(this), _coreIndexId);
+        uint64 maxTransferAmt = spotBalance(address(this), _coreIndexId).total;
         if (_coreAmount > maxTransferAmt) {
             revert MaxRetrieveAmountExceeded(maxTransferAmt, _coreAmount);
         }

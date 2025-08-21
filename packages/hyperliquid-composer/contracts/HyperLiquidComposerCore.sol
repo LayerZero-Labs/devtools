@@ -7,20 +7,19 @@ import { SafeERC20, IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/Saf
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 import { HyperLiquidComposerCodec } from "./library/HyperLiquidComposerCodec.sol";
 
-import { IHyperLiquidReadPrecompile } from "./interfaces/IHyperLiquidReadPrecompile.sol";
 import { IHyperLiquidComposerCore, IHyperAsset, IHyperAssetAmount, FailedMessage } from "./interfaces/IHyperLiquidComposerCore.sol";
 
 import { ICoreWriter } from "./interfaces/ICoreWriter.sol";
 import { IOAppCore } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol";
 
-import { HyperLiquidConstants } from "./HyperLiquidConstants.sol";
+import { HyperLiquidCore } from "./HyperLiquidCore.sol";
 
 /**
  * @title Hyperliquid Composer Core
  * @notice Core functionality for Hyperliquid composer operations
  * @dev Base contract providing core functionality for transferring tokens between HyperEVM and HyperCore
  */
-contract HyperLiquidComposerCore is HyperLiquidConstants, IHyperLiquidComposerCore {
+contract HyperLiquidComposerCore is HyperLiquidCore, IHyperLiquidComposerCore {
     using SafeERC20 for IERC20;
 
     using HyperLiquidComposerCodec for bytes32;
@@ -78,33 +77,8 @@ contract HyperLiquidComposerCore is HyperLiquidConstants, IHyperLiquidComposerCo
      */
     function quoteHyperCoreAmount(uint256 _amount, bool _isOFT) public view returns (IHyperAssetAmount memory) {
         IHyperAsset memory asset = _isOFT ? oftAsset : hypeAsset;
-        uint64 coreBalance = _balanceOfHyperCore(asset.assetBridgeAddress, asset.coreIndexId);
+        uint64 coreBalance = spotBalance(asset.assetBridgeAddress, asset.coreIndexId).total;
         return _amount.into_hyperAssetAmount(coreBalance, asset);
-    }
-
-    /**
-     * @notice External function to read the balance of the user in the hypercore
-     * @param _user The address of the user
-     * @param _tokenId The token id of the hypercore
-     * @return The balance of the user in the hypercore
-     */
-    function balanceOfHyperCore(address _user, uint64 _tokenId) external view returns (uint64) {
-        return _balanceOfHyperCore(_user, _tokenId);
-    }
-
-    /**
-     * @notice Internal function to read the balance of the user in the hypercore
-     * @param _user The address of the user
-     * @param _tokenId The token id of the hypercore
-     * @return The balance of the user in the hypercore
-     */
-    function _balanceOfHyperCore(address _user, uint64 _tokenId) internal view returns (uint64) {
-        bool success;
-        bytes memory result;
-        (success, result) = HLP_PRECOMPILE_READ_SPOT_BALANCE.staticcall(abi.encode(_user, _tokenId));
-        if (!success) revert SpotBalanceReadFailed(_user, _tokenId);
-
-        return abi.decode(result, (IHyperLiquidReadPrecompile.SpotBalance)).total;
     }
 
     /**

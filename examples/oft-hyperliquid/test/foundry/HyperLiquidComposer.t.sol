@@ -173,7 +173,7 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
             _balance
         );
 
-        uint64 balance = hyperLiquidComposer.balanceOfHyperCore(HYPE.assetBridgeAddress, HYPE.coreIndexId);
+        uint64 balance = hyperLiquidComposer.spotBalance(HYPE.assetBridgeAddress, HYPE.coreIndexId).total;
         assertEq(balance, _balance);
     }
 

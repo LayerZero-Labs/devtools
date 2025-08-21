@@ -49,5 +49,4 @@ interface IHyperLiquidComposerCore is IHyperLiquidComposerErrors {
     function refundToSrc(bytes32 guid) external payable;
 
     function quoteHyperCoreAmount(uint256 _amount, bool _isOFT) external returns (IHyperAssetAmount memory);
-    function balanceOfHyperCore(address _user, uint64 _tokenId) external view returns (uint64);
 }

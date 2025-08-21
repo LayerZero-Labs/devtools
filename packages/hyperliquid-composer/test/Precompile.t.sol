@@ -61,7 +61,7 @@ contract PrecompileTest is HyperliquidBaseTest {
             _balance
         );
 
-        uint64 balance = hyperLiquidComposer.balanceOfHyperCore(_address, asset.coreIndexId);
+        uint64 balance = hyperLiquidComposer.spotBalance(_address, asset.coreIndexId).total;
 
         assertEq(balance, _balance);
     }
