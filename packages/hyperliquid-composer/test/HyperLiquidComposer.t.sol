@@ -23,13 +23,13 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
     }
 
     function test_deployment() public view {
-        (int64 decimalDiff, uint64 coreIndexId, address assetBridgeAddress) = hyperLiquidComposer.hypeAsset();
+        (uint64 coreIndexId, int64 decimalDiff, address assetBridgeAddress) = hyperLiquidComposer.hypeAsset();
         assertEq(assetBridgeAddress, 0x2222222222222222222222222222222222222222);
         uint256 expectedHypeCoreIndexId = block.chainid == 998 ? 1105 : 150;
         assertEq(coreIndexId, expectedHypeCoreIndexId);
         assertEq(decimalDiff, 10);
 
-        (int64 oftDecimalDiff, uint64 oftCoreIndexId, address oftAssetBridgeAddress) = hyperLiquidComposer.oftAsset();
+        (uint64 oftCoreIndexId, int64 oftDecimalDiff, address oftAssetBridgeAddress) = hyperLiquidComposer.oftAsset();
         assertEq(oftAssetBridgeAddress, ERC20.assetBridgeAddress);
         assertEq(oftCoreIndexId, ERC20.coreIndexId);
         assertEq(oftDecimalDiff, ERC20.decimalDiff);
