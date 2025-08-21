@@ -17,7 +17,7 @@ interface SkipTaskArgs {
     nonce: string // The nonce.
 }
 
-// Example: npx hardhat lz:oft:solana:skip --eid 40168 --sender <SENDER_OAPP> --receiver <RECEIVER_OAPP> --srcEid 30168 --nonce <NONCE>
+// Example: pnpm hardhat lz:oft:solana:skip --eid 40168 --sender <SENDER_OAPP> --receiver <RECEIVER_OAPP> --src-eid 30168 --nonce <NONCE>
 task('lz:oft:solana:skip', 'Skip a message on Solana')
     .addParam('eid', 'Solana mainnet (30168) or testnet (40168) eid', undefined, devtoolsTypes.eid)
     .addParam('sender', 'The sender address (hex format)', undefined, devtoolsTypes.string)
