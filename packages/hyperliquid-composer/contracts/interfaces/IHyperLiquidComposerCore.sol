@@ -34,6 +34,7 @@ interface IHyperLiquidComposerCore is IHyperLiquidComposerErrors {
 
     function MIN_GAS() external view returns (uint256);
     function NATIVE_TRANSFER_GAS() external view returns (uint256);
+    function VALID_COMPOSE_MSG_LEN() external view returns (uint256);
 
     function ENDPOINT() external view returns (address);
     function OFT() external view returns (address);
