@@ -20,7 +20,7 @@ interface ClearTaskArgs {
     message: string // The message payload (hex format).
 }
 
-// Example: pnpm hardhat lz:oft:solana:clear --eid 40168 --sender <SENDER_OAPP> --receiver <RECEIVER_OAPP> --src-eid 30168 --nonce <NONCE> --guid <GUID> --message <MESSAGE_PAYLOAD>
+// Example: pnpm hardhat lz:oft:solana:clear --eid 40168 --sender <SENDER_OAPP> --receiver <RECEIVER_OAPP> --src-eid 4016140161 --nonce <NONCE> --guid <GUID> --message <MESSAGE_PAYLOAD>
 task('lz:oft:solana:clear', 'Clear a payload on Solana')
     .addParam('eid', 'Solana mainnet (30168) or testnet (40168) eid', undefined, devtoolsTypes.eid)
     .addParam('sender', 'The sender address (hex format)', undefined, devtoolsTypes.string)

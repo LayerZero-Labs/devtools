@@ -18,7 +18,7 @@ interface NilifyTaskArgs {
     payloadHash: string // The payload hash (hex format).
 }
 
-// Example: pnpm hardhat lz:oft:solana:nilify --eid 40168 --sender <SENDER_OAPP> --receiver <RECEIVER_OAPP> --src-eid 30168 --nonce <NONCE> --payload-hash <PAYLOAD_HASH>
+// Example: pnpm hardhat lz:oft:solana:nilify --eid 40168 --sender <SENDER_OAPP> --receiver <RECEIVER_OAPP> --src-eid 4016140161 --nonce <NONCE> --payload-hash <PAYLOAD_HASH>
 task('lz:oft:solana:nilify', 'Nilify a nonce on Solana')
     .addParam('eid', 'Solana mainnet (30168) or testnet (40168) eid', undefined, devtoolsTypes.eid)
     .addParam('sender', 'The sender address (hex format)', undefined, devtoolsTypes.string)

@@ -1,11 +1,13 @@
 import { TransactionBuilder, publicKey as umiPublicKey } from '@metaplex-foundation/umi'
-import { Keypair, PublicKey, Transaction } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
 
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { EndpointPDADeriver } from '@layerzerolabs/lz-solana-sdk-v2'
 import { EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2/umi'
+import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 
 import { deriveConnection, getExplorerTxLink } from './index'
 
@@ -17,7 +19,7 @@ interface SkipTaskArgs {
     nonce: string // The nonce.
 }
 
-// Example: pnpm hardhat lz:oft:solana:skip --eid 40168 --sender <SENDER_OAPP> --receiver <RECEIVER_OAPP> --src-eid 30168 --nonce <NONCE>
+// Example: pnpm hardhat lz:oft:solana:skip --eid 40168 --sender <SENDER_OAPP> --receiver <RECEIVER_OAPP> --src-eid 40161 --nonce <NONCE>
 task('lz:oft:solana:skip', 'Skip a message on Solana')
     .addParam('eid', 'Solana mainnet (30168) or testnet (40168) eid', undefined, devtoolsTypes.eid)
     .addParam('sender', 'The sender address (hex format)', undefined, devtoolsTypes.string)
@@ -25,35 +27,27 @@ task('lz:oft:solana:skip', 'Skip a message on Solana')
     .addParam('srcEid', 'The source endpoint ID', undefined, devtoolsTypes.int)
     .addParam('nonce', 'The nonce', undefined, devtoolsTypes.string)
     .setAction(async ({ eid, sender, receiver, srcEid, nonce }: SkipTaskArgs) => {
-        const { umi, connection, umiWalletKeyPair, umiWalletSigner } = await deriveConnection(eid)
+        const { umi, connection, umiWalletSigner } = await deriveConnection(eid)
         const endpoint = new EndpointProgram.Endpoint(EndpointProgram.ENDPOINT_PROGRAM_ID)
 
-        // Convert sender from hex to PublicKey then to Umi PublicKey
+        // Convert sender to bytes array
         const senderBytes = Buffer.from(sender.replace('0x', ''), 'hex')
-        const senderWeb3Pk = new PublicKey(senderBytes)
-        const senderUmiPublicKey = umiPublicKey(senderWeb3Pk.toBase58())
 
         // Convert receiver to Umi PublicKey
         const receiverUmiPublicKey = umiPublicKey(receiver)
-
-        const instruction = endpoint.skip(umiWalletSigner, {
-            sender: senderUmiPublicKey,
-            receiver: receiverUmiPublicKey,
-            srcEid,
-            nonce: nonce,
-        })
-
-        if (!instruction) {
-            console.log('No instruction returned - message may not need to be skipped')
+        const epDeriver = new EndpointPDADeriver(new PublicKey(EndpointProgram.ENDPOINT_PROGRAM_ID))
+        const [nonceAccount] = epDeriver.nonce(new PublicKey(receiver), srcEid, addressToBytes32(sender))
+        const accountInfo = await connection.getAccountInfo(nonceAccount)
+        if (!accountInfo) {
+            console.warn('Nonce account not found at address', nonceAccount.toBase58())
             return
         }
 
-        const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash()
-        const keypair = Keypair.fromSecretKey(umiWalletKeyPair.secretKey)
-        const tx = new Transaction({
-            feePayer: keypair.publicKey,
-            blockhash,
-            lastValidBlockHeight,
+        const instruction = endpoint.skip(umiWalletSigner, {
+            sender: senderBytes,
+            receiver: receiverUmiPublicKey,
+            srcEid,
+            nonce: BigInt(nonce),
         })
 
         const builder = new TransactionBuilder([instruction])
