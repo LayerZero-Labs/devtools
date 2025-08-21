@@ -16,7 +16,7 @@ export interface VaultConfig {
     }
     vaultAddress?: string // Optional pre-deployed vault address
     assetOFTAddress?: string // Optional pre-deployed asset OFT address
-    shareOFTAddress?: string // Optional pre-deployed Share OFT address
+    shareOFTAdapterAddress?: string // Optional pre-deployed ShareOFTAdapter address
 }
 
 export interface DeploymentConfig {

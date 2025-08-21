@@ -45,8 +45,8 @@ export const DEPLOYMENT_CONFIG: DeploymentConfig = {
         vaultAddress: undefined, // Set to '0xabc...' to use existing vault
         // This must be the address of the asset OFT (not all OFT addresses are the same as the ERC20 contract)
         assetOFTAddress: undefined, // Set to '0xdef...' to use existing asset OFT
-        // This must be the address of the share OFT (not all OFT addresses are the same as the ERC20 contract)
-        shareOFTAddress: undefined, // Set to '0xghi...' to use existing share OFT
+        // This must be the address of the ShareOFTAdapter
+        shareOFTAdapterAddress: undefined, // Set to '0xghi...' to use existing ShareOFTAdapter
     },
 
     // Share OFT configuration (only on spoke chains)
@@ -75,4 +75,7 @@ export const shouldDeployVault = (eid: number): boolean => isVaultChain(eid) && 
 export const shouldDeployAsset = (eid: number): boolean =>
     !DEPLOYMENT_CONFIG.vault.assetOFTAddress && DEPLOYMENT_CONFIG.AssetOFT.deploymentEids.includes(eid)
 export const shouldDeployShare = (eid: number): boolean =>
-    !DEPLOYMENT_CONFIG.vault.shareOFTAddress && DEPLOYMENT_CONFIG.ShareOFT.deploymentEids.includes(eid)
+    !DEPLOYMENT_CONFIG.vault.shareOFTAdapterAddress && DEPLOYMENT_CONFIG.ShareOFT.deploymentEids.includes(eid)
+
+export const shouldDeployShareAdapter = (eid: number): boolean =>
+    isVaultChain(eid) && !DEPLOYMENT_CONFIG.vault.shareOFTAdapterAddress

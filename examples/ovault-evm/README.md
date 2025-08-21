@@ -198,16 +198,17 @@ export const DEPLOYMENT_CONFIG = {
 
    - Deploys all contracts across all chains
 
-4. **Existing ShareOFT Only**:
+4. **Existing Share Adapter Only**:
    ```typescript
    vault: {
-     vaultAddress: undefined,       // Vault already deployed via other process
-     assetOFTAddress: undefined,    // Asset OFT already deployed
-     shareOFTAddress: "0x789...", // Your existing ShareOFT address
+     vaultAddress: undefined,          // Vault already deployed
+     assetOFTAddress: undefined,       // Asset OFT already deployed
+     shareAdapterAddress: "0x789...", // Your existing ShareOFTAdapter address
    }
    ```
-   - Skips deployment of ShareOFTAdapter and ShareOFT
-   - Only deploys Composer on the hub chain
+
+- Skips deployment of ShareOFTAdapter and ShareOFT
+- Only deploys Composer on the hub chain
 
 **Key Configuration Points:**
 

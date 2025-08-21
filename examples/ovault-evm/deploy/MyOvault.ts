@@ -43,6 +43,10 @@ const deploy: DeployFunction = async (hre) => {
         console.log(
             `Deployed contract: ${DEPLOYMENT_CONFIG.AssetOFT.contract}, network: ${hre.network.name}, address: ${assetOFT.address}`
         )
+    } else if (DEPLOYMENT_CONFIG.vault.assetOFTAddress) {
+        console.log(
+            'Skipping asset deployment since Asset OFT mesh already exists. Existing meshes need to be managed outside of this repo; this script only handles new mesh deployments.'
+        )
     }
 
     // Deploy Share OFT (only on spoke chains)
@@ -62,10 +66,12 @@ const deploy: DeployFunction = async (hre) => {
         console.log(
             `Deployed contract: ${DEPLOYMENT_CONFIG.ShareOFT.contract}, network: ${hre.network.name}, address: ${shareOFT.address}`
         )
-    } else if (DEPLOYMENT_CONFIG.vault.shareOFTAddress && !isVaultChain(networkEid)) {
-        // Use existing ShareOFT on this spoke chain
-        deployedContracts.shareOFT = DEPLOYMENT_CONFIG.vault.shareOFTAddress
-        console.log(`→ Using existing ShareOFT: ${deployedContracts.shareOFT}`)
+    } else if (DEPLOYMENT_CONFIG.vault.shareOFTAdapterAddress && !isVaultChain(networkEid)) {
+        // Use existing ShareOFTAdapter on this spoke chain
+        deployedContracts.shareOFT = DEPLOYMENT_CONFIG.vault.shareOFTAdapterAddress
+        console.log(
+            'Skipping share deployment since Share OFT mesh already exists. Existing meshes need to be managed outside of this repo; this script only handles new mesh deployments.'
+        )
     }
 
     // Deploy Vault Chain Components (vault, adapter, composer)
@@ -114,7 +120,7 @@ const deploy: DeployFunction = async (hre) => {
 
         // Deploy or use existing Share Adapter
         let shareAdapterAddress: string
-        if (!DEPLOYMENT_CONFIG.vault.shareOFTAddress) {
+        if (!DEPLOYMENT_CONFIG.vault.shareOFTAdapterAddress) {
             const shareAdapter = await deployments.deploy(DEPLOYMENT_CONFIG.vault.contracts.shareAdapter, {
                 from: deployer,
                 args: [vaultAddress, endpointV2.address, deployer],
@@ -126,10 +132,12 @@ const deploy: DeployFunction = async (hre) => {
                 `Deployed contract: ${DEPLOYMENT_CONFIG.vault.contracts.shareAdapter}, network: ${hre.network.name}, address: ${shareAdapterAddress}`
             )
         } else {
-            // Use existing Share Adapter
+            // Skip ShareOFTAdapter deployment when pre-deployed
             const existingAdapter = await hre.deployments.get(DEPLOYMENT_CONFIG.vault.contracts.shareAdapter)
             shareAdapterAddress = existingAdapter.address
-            console.log(`Using existing adapter: ${shareAdapterAddress}`)
+            console.log(
+                'Skipping Share Adapter deployment since Share OFT mesh already exists. Existing meshes need to be managed outside of this repo; this script only handles new mesh deployments.'
+            )
         }
 
         // Deploy OVault Composer
