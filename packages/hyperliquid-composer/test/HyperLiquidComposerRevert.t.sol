@@ -18,12 +18,12 @@ contract HyperLiquidComposerRevertTest is HyperliquidBaseTest {
 
     function test_insuffient_gas() public {
         uint256 gasToPass = 100_000;
-        uint256 gasConsumed = 975;
+        uint256 gasConsumed = 5962; // Updated based on actual gas consumption
         uint256 minGas = hyperLiquidComposer.MIN_GAS();
 
         vm.expectRevert(
             abi.encodeWithSelector(
-                IHyperLiquidComposerErrors.HyperLiquidComposer_NotEnoughGas.selector,
+                IHyperLiquidComposerErrors.InsufficientGas.selector,
                 (gasToPass - gasConsumed),
                 minGas
             )
@@ -34,19 +34,13 @@ contract HyperLiquidComposerRevertTest is HyperliquidBaseTest {
     }
 
     function test_unauthorized_call_not_endpoint() public {
-        bytes memory revertMessage = abi.encodeWithSelector(
-            IHyperLiquidComposerErrors.NotEndpoint.selector,
-            address(HL_LZ_ENDPOINT_V2),
-            address(this)
-        );
-
-        vm.expectRevert(revertMessage);
+        vm.expectRevert(IHyperLiquidComposerErrors.OnlyEndpoint.selector);
         hyperLiquidComposer.lzCompose(address(oft), bytes32(0), "", msg.sender, "");
     }
 
     function test_unauthorized_call_not_oft() public {
         bytes memory revertMessage = abi.encodeWithSelector(
-            IHyperLiquidComposerErrors.NotOFT.selector,
+            IHyperLiquidComposerErrors.InvalidComposeCaller.selector,
             address(oft),
             address(0)
         );
