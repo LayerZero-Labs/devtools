@@ -6,17 +6,15 @@ import { HyperLiquidComposer } from "@layerzerolabs/hyperliquid-composer/contrac
 contract MyHyperLiquidComposer is HyperLiquidComposer {
     /// @notice Constructor for the HyperLiquidComposer
     ///
-    /// @param _lzEndpoint The address of the LayerZero endpoint
     /// @param _oft The address of the OFT
     /// @param _hlIndexId The HyperLiquid core spot's index value
     /// @param _assetDecimalDiff The difference in decimals between the HyperEVM's ERC20 and the HyperLiquid HIP-1 token
     ///                 (i.e. 18 decimals on evm and 6 on HyperLiquid would be 18 - 6 = 12)
     /// @param _REFUND_ADDRESS The address to which refunds are sent
     constructor(
-        address _lzEndpoint,
         address _oft,
         uint64 _hlIndexId,
         int64 _assetDecimalDiff,
         address _REFUND_ADDRESS
-    ) HyperLiquidComposer(_lzEndpoint, _oft, _hlIndexId, _assetDecimalDiff, _REFUND_ADDRESS) {}
+    ) HyperLiquidComposer(_oft, _hlIndexId, _assetDecimalDiff, _REFUND_ADDRESS) {}
 }
