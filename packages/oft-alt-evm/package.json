@@ -36,6 +36,7 @@
     "test": "forge test"
   },
   "devDependencies": {
+    "@bonadocs/docgen": "^1.0.0",
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.75",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.75",
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.75",
@@ -44,8 +45,11 @@
     "@layerzerolabs/oft-evm": "^3.2.0",
     "@layerzerolabs/test-devtools-evm-foundry": "~7.0.0",
     "@layerzerolabs/toolbox-foundry": "^0.1.12",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@openzeppelin/contracts": "^5.0.2",
-    "@openzeppelin/contracts-upgradeable": "^5.0.2"
+    "@openzeppelin/contracts-upgradeable": "^5.0.2",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.22.2"
   },
   "peerDependencies": {
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.75",

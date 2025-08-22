@@ -1,0 +1,32 @@
+# {{projectName}}
+
+{{#if projectDescription}}
+{{projectDescription}}
+{{/if}}
+
+## Contract Categories
+
+{{#each groups}}
+### {{@key}}
+
+{{#each this}}
+- [`{{name}}`](./{{@../key}}/{{name}}.md) - {{#if natspec.title}}{{natspec.title}}{{else}}{{name}} contract{{/if}}
+{{/each}}
+
+{{/each}}
+
+## Quick Links
+
+- [Core Interfaces](./core-interfaces/) - Essential LayerZero protocol interfaces
+- [OApp Standard](./oapp-standard/) - Omnichain Application contracts and interfaces
+- [Token Standards](./token-standards/) - OFT (Fungible) and ONFT (Non-Fungible) token implementations
+- [Advanced Features](./advanced-features/) - Vault composers and specialized features
+
+## Integration Guide
+
+For detailed integration instructions, visit the [LayerZero Documentation](https://docs.layerzero.network/).
+
+## Contract Verification
+
+All contracts are open source and verified on block explorers. Source code is available at:
+- [LayerZero Devtools](https://github.com/LayerZero-Labs/devtools)

@@ -1,0 +1,170 @@
+# {{name}}
+
+{{#if natspec.title}}
+> {{natspec.title}}
+{{/if}}
+
+{{#if natspec.notice}}
+{{natspec.notice}}
+{{/if}}
+
+{{#if natspec.dev}}
+## Developer Notes
+{{natspec.dev}}
+{{/if}}
+
+{{#if abi}}
+## Contract ABI
+
+<details>
+<summary>Download ABI JSON</summary>
+
+```json
+{{{stringify abi}}}
+```
+
+</details>
+{{/if}}
+
+{{#if functions}}
+## Functions
+
+{{#each functions}}
+### {{name}}
+{{#if selector}}`selector: {{selector}}`{{/if}}
+
+{{#if natspec.notice}}
+> {{natspec.notice}}
+{{/if}}
+
+#### Signature
+```solidity
+{{signature}}
+```
+
+#### Inputs
+{{#if inputs.length}}
+| Name | Type | Description |
+|------|------|-------------|
+{{#each inputs}}
+| `{{name}}` | `{{type}}` | {{#if natspec.params.[name]}}{{natspec.params.[name]}}{{else}}-{{/if}} |
+{{/each}}
+{{else}}
+_No parameters_
+{{/if}}
+
+#### Outputs
+{{#if outputs.length}}
+| Name | Type | Description |
+|------|------|-------------|
+{{#each outputs}}
+| `{{#if name}}{{name}}{{else}}output{{@index}}{{/if}}` | `{{type}}` | {{#if natspec.returns.[name]}}{{natspec.returns.[name]}}{{else}}-{{/if}} |
+{{/each}}
+{{else}}
+_No return values_
+{{/if}}
+
+---
+
+{{/each}}
+{{/if}}
+
+{{#if events}}
+## Events
+
+{{#each events}}
+### {{name}}
+```solidity
+{{signature}}
+```
+
+{{#if natspec.notice}}
+> {{natspec.notice}}
+{{/if}}
+
+{{#if inputs.length}}
+| Name | Type | Indexed | Description |
+|------|------|---------|-------------|
+{{#each inputs}}
+| `{{name}}` | `{{type}}` | {{#if indexed}}✓{{else}}✗{{/if}} | {{#if natspec.params.[name]}}{{natspec.params.[name]}}{{else}}-{{/if}} |
+{{/each}}
+{{/if}}
+
+---
+
+{{/each}}
+{{/if}}
+
+{{#if errors}}
+## Custom Errors
+
+{{#each errors}}
+### {{name}}
+{{#if selector}}`selector: {{selector}}`{{/if}}
+
+```solidity
+{{signature}}
+```
+
+{{#if natspec.notice}}
+> {{natspec.notice}}
+{{/if}}
+
+{{#if inputs.length}}
+| Name | Type | Description |
+|------|------|-------------|
+{{#each inputs}}
+| `{{name}}` | `{{type}}` | {{#if natspec.params.[name]}}{{natspec.params.[name]}}{{else}}-{{/if}} |
+{{/each}}
+{{/if}}
+
+---
+
+{{/each}}
+{{/if}}
+
+{{#if structs}}
+## Structs
+
+{{#each structs}}
+### {{name}}
+
+```solidity
+struct {{name}} {
+{{#each members}}
+    {{type}} {{name}};{{#if natspec}} // {{natspec}}{{/if}}
+{{/each}}
+}
+```
+
+{{#if natspec.notice}}
+> {{natspec.notice}}
+{{/if}}
+
+---
+
+{{/each}}
+{{/if}}
+
+{{#if enums}}
+## Enums
+
+{{#each enums}}
+### {{name}}
+
+```solidity
+enum {{name}} {
+{{#each members}}
+    {{this}}{{#unless @last}},{{/unless}}
+{{/each}}
+}
+```
+
+{{#if natspec.notice}}
+> {{natspec.notice}}
+{{/if}}
+
+---
+
+{{/each}}
+{{/if}}

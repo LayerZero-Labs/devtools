@@ -1,0 +1,416 @@
+{
+  "contracts": {
+    "HyperLiquidComposer": {
+      "package": "hyperliquid-composer",
+      "packageName": "@layerzerolabs/hyperliquid-composer",
+      "path": "HyperLiquidComposer.sol",
+      "fullPath": "packages/hyperliquid-composer/contracts/HyperLiquidComposer.sol"
+    },
+    "HyperLiquidComposerCore": {
+      "package": "hyperliquid-composer",
+      "packageName": "@layerzerolabs/hyperliquid-composer",
+      "path": "HyperLiquidComposerCore.sol",
+      "fullPath": "packages/hyperliquid-composer/contracts/HyperLiquidComposerCore.sol"
+    },
+    "OAppAlt": {
+      "package": "oapp-alt-evm",
+      "packageName": "@layerzerolabs/oapp-alt-evm",
+      "path": "oapp/OAppAlt.sol",
+      "fullPath": "packages/oapp-alt-evm/contracts/oapp/OAppAlt.sol"
+    },
+    "OAppSenderAlt": {
+      "package": "oapp-alt-evm",
+      "packageName": "@layerzerolabs/oapp-alt-evm",
+      "path": "oapp/OAppSenderAlt.sol",
+      "fullPath": "packages/oapp-alt-evm/contracts/oapp/OAppSenderAlt.sol"
+    },
+    "OApp": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "oapp/OApp.sol",
+      "fullPath": "packages/oapp-evm/contracts/oapp/OApp.sol"
+    },
+    "OAppCore": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "oapp/OAppCore.sol",
+      "fullPath": "packages/oapp-evm/contracts/oapp/OAppCore.sol"
+    },
+    "OAppRead": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "oapp/OAppRead.sol",
+      "fullPath": "packages/oapp-evm/contracts/oapp/OAppRead.sol"
+    },
+    "OAppReceiver": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "oapp/OAppReceiver.sol",
+      "fullPath": "packages/oapp-evm/contracts/oapp/OAppReceiver.sol"
+    },
+    "OAppSender": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "oapp/OAppSender.sol",
+      "fullPath": "packages/oapp-evm/contracts/oapp/OAppSender.sol"
+    },
+    "OAppOptionsType3": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "oapp/libs/OAppOptionsType3.sol",
+      "fullPath": "packages/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol"
+    },
+    "RateLimiter": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "oapp/utils/RateLimiter.sol",
+      "fullPath": "packages/oapp-evm/contracts/oapp/utils/RateLimiter.sol"
+    },
+    "OAppPreCrimeSimulator": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "precrime/OAppPreCrimeSimulator.sol",
+      "fullPath": "packages/oapp-evm/contracts/precrime/OAppPreCrimeSimulator.sol"
+    },
+    "PreCrime": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "precrime/PreCrime.sol",
+      "fullPath": "packages/oapp-evm/contracts/precrime/PreCrime.sol"
+    },
+    "OAppCoreUpgradeable": {
+      "package": "oapp-evm-upgradeable",
+      "packageName": "@layerzerolabs/oapp-evm-upgradeable",
+      "path": "oapp/OAppCoreUpgradeable.sol",
+      "fullPath": "packages/oapp-evm-upgradeable/contracts/oapp/OAppCoreUpgradeable.sol"
+    },
+    "OAppReceiverUpgradeable": {
+      "package": "oapp-evm-upgradeable",
+      "packageName": "@layerzerolabs/oapp-evm-upgradeable",
+      "path": "oapp/OAppReceiverUpgradeable.sol",
+      "fullPath": "packages/oapp-evm-upgradeable/contracts/oapp/OAppReceiverUpgradeable.sol"
+    },
+    "OAppSenderUpgradeable": {
+      "package": "oapp-evm-upgradeable",
+      "packageName": "@layerzerolabs/oapp-evm-upgradeable",
+      "path": "oapp/OAppSenderUpgradeable.sol",
+      "fullPath": "packages/oapp-evm-upgradeable/contracts/oapp/OAppSenderUpgradeable.sol"
+    },
+    "OAppUpgradeable": {
+      "package": "oapp-evm-upgradeable",
+      "packageName": "@layerzerolabs/oapp-evm-upgradeable",
+      "path": "oapp/OAppUpgradeable.sol",
+      "fullPath": "packages/oapp-evm-upgradeable/contracts/oapp/OAppUpgradeable.sol"
+    },
+    "OAppOptionsType3Upgradeable": {
+      "package": "oapp-evm-upgradeable",
+      "packageName": "@layerzerolabs/oapp-evm-upgradeable",
+      "path": "oapp/libs/OAppOptionsType3Upgradeable.sol",
+      "fullPath": "packages/oapp-evm-upgradeable/contracts/oapp/libs/OAppOptionsType3Upgradeable.sol"
+    },
+    "OAppPreCrimeSimulatorUpgradeable": {
+      "package": "oapp-evm-upgradeable",
+      "packageName": "@layerzerolabs/oapp-evm-upgradeable",
+      "path": "precrime/OAppPreCrimeSimulatorUpgradeable.sol",
+      "fullPath": "packages/oapp-evm-upgradeable/contracts/precrime/OAppPreCrimeSimulatorUpgradeable.sol"
+    },
+    "PreCrimeUpgradeable": {
+      "package": "oapp-evm-upgradeable",
+      "packageName": "@layerzerolabs/oapp-evm-upgradeable",
+      "path": "precrime/PreCrimeUpgradeable.sol",
+      "fullPath": "packages/oapp-evm-upgradeable/contracts/precrime/PreCrimeUpgradeable.sol"
+    },
+    "PreCrimeE1Upgradeable": {
+      "package": "oapp-evm-upgradeable",
+      "packageName": "@layerzerolabs/oapp-evm-upgradeable",
+      "path": "precrime/extensions/PreCrimeE1Upgradeable.sol",
+      "fullPath": "packages/oapp-evm-upgradeable/contracts/precrime/extensions/PreCrimeE1Upgradeable.sol"
+    },
+    "OFTAdapterAlt": {
+      "package": "oft-alt-evm",
+      "packageName": "@layerzerolabs/oft-alt-evm",
+      "path": "OFTAdapterAlt.sol",
+      "fullPath": "packages/oft-alt-evm/contracts/OFTAdapterAlt.sol"
+    },
+    "OFTAlt": {
+      "package": "oft-alt-evm",
+      "packageName": "@layerzerolabs/oft-alt-evm",
+      "path": "OFTAlt.sol",
+      "fullPath": "packages/oft-alt-evm/contracts/OFTAlt.sol"
+    },
+    "OFTAltCore": {
+      "package": "oft-alt-evm",
+      "packageName": "@layerzerolabs/oft-alt-evm",
+      "path": "OFTAltCore.sol",
+      "fullPath": "packages/oft-alt-evm/contracts/OFTAltCore.sol"
+    },
+    "Fee": {
+      "package": "oft-evm",
+      "packageName": "@layerzerolabs/oft-evm",
+      "path": "Fee.sol",
+      "fullPath": "packages/oft-evm/contracts/Fee.sol"
+    },
+    "MintBurnOFTAdapter": {
+      "package": "oft-evm",
+      "packageName": "@layerzerolabs/oft-evm",
+      "path": "MintBurnOFTAdapter.sol",
+      "fullPath": "packages/oft-evm/contracts/MintBurnOFTAdapter.sol"
+    },
+    "NativeOFTAdapter": {
+      "package": "oft-evm",
+      "packageName": "@layerzerolabs/oft-evm",
+      "path": "NativeOFTAdapter.sol",
+      "fullPath": "packages/oft-evm/contracts/NativeOFTAdapter.sol"
+    },
+    "OFT": {
+      "package": "oft-evm",
+      "packageName": "@layerzerolabs/oft-evm",
+      "path": "OFT.sol",
+      "fullPath": "packages/oft-evm/contracts/OFT.sol"
+    },
+    "OFTAdapter": {
+      "package": "oft-evm",
+      "packageName": "@layerzerolabs/oft-evm",
+      "path": "OFTAdapter.sol",
+      "fullPath": "packages/oft-evm/contracts/OFTAdapter.sol"
+    },
+    "OFTCore": {
+      "package": "oft-evm",
+      "packageName": "@layerzerolabs/oft-evm",
+      "path": "OFTCore.sol",
+      "fullPath": "packages/oft-evm/contracts/OFTCore.sol"
+    },
+    "FeeUpgradeable": {
+      "package": "oft-evm-upgradeable",
+      "packageName": "@layerzerolabs/oft-evm-upgradeable",
+      "path": "oft/FeeUpgradeable.sol",
+      "fullPath": "packages/oft-evm-upgradeable/contracts/oft/FeeUpgradeable.sol"
+    },
+    "OFTAdapterFeeUpgradeable": {
+      "package": "oft-evm-upgradeable",
+      "packageName": "@layerzerolabs/oft-evm-upgradeable",
+      "path": "oft/OFTAdapterFeeUpgradeable.sol",
+      "fullPath": "packages/oft-evm-upgradeable/contracts/oft/OFTAdapterFeeUpgradeable.sol"
+    },
+    "OFTAdapterUpgradeable": {
+      "package": "oft-evm-upgradeable",
+      "packageName": "@layerzerolabs/oft-evm-upgradeable",
+      "path": "oft/OFTAdapterUpgradeable.sol",
+      "fullPath": "packages/oft-evm-upgradeable/contracts/oft/OFTAdapterUpgradeable.sol"
+    },
+    "OFTCoreUpgradeable": {
+      "package": "oft-evm-upgradeable",
+      "packageName": "@layerzerolabs/oft-evm-upgradeable",
+      "path": "oft/OFTCoreUpgradeable.sol",
+      "fullPath": "packages/oft-evm-upgradeable/contracts/oft/OFTCoreUpgradeable.sol"
+    },
+    "OFTFeeUpgradeable": {
+      "package": "oft-evm-upgradeable",
+      "packageName": "@layerzerolabs/oft-evm-upgradeable",
+      "path": "oft/OFTFeeUpgradeable.sol",
+      "fullPath": "packages/oft-evm-upgradeable/contracts/oft/OFTFeeUpgradeable.sol"
+    },
+    "OFTUpgradeable": {
+      "package": "oft-evm-upgradeable",
+      "packageName": "@layerzerolabs/oft-evm-upgradeable",
+      "path": "oft/OFTUpgradeable.sol",
+      "fullPath": "packages/oft-evm-upgradeable/contracts/oft/OFTUpgradeable.sol"
+    },
+    "ONFT721": {
+      "package": "onft-evm",
+      "packageName": "@layerzerolabs/onft-evm",
+      "path": "onft721/ONFT721.sol",
+      "fullPath": "packages/onft-evm/contracts/onft721/ONFT721.sol"
+    },
+    "ONFT721Adapter": {
+      "package": "onft-evm",
+      "packageName": "@layerzerolabs/onft-evm",
+      "path": "onft721/ONFT721Adapter.sol",
+      "fullPath": "packages/onft-evm/contracts/onft721/ONFT721Adapter.sol"
+    },
+    "ONFT721Core": {
+      "package": "onft-evm",
+      "packageName": "@layerzerolabs/onft-evm",
+      "path": "onft721/ONFT721Core.sol",
+      "fullPath": "packages/onft-evm/contracts/onft721/ONFT721Core.sol"
+    },
+    "ONFT721Enumerable": {
+      "package": "onft-evm",
+      "packageName": "@layerzerolabs/onft-evm",
+      "path": "onft721/ONFT721Enumerable.sol",
+      "fullPath": "packages/onft-evm/contracts/onft721/ONFT721Enumerable.sol"
+    },
+    "VaultComposerSync": {
+      "package": "ovault-evm",
+      "packageName": "@layerzerolabs/ovault-evm",
+      "path": "VaultComposerSync.sol",
+      "fullPath": "packages/ovault-evm/contracts/VaultComposerSync.sol"
+    }
+  },
+  "interfaces": {
+    "ICoreWriter": {
+      "package": "hyperliquid-composer",
+      "packageName": "@layerzerolabs/hyperliquid-composer",
+      "path": "interfaces/ICoreWriter.sol",
+      "fullPath": "packages/hyperliquid-composer/contracts/interfaces/ICoreWriter.sol"
+    },
+    "IHYPEPrecompile": {
+      "package": "hyperliquid-composer",
+      "packageName": "@layerzerolabs/hyperliquid-composer",
+      "path": "interfaces/IHYPEPrecompile.sol",
+      "fullPath": "packages/hyperliquid-composer/contracts/interfaces/IHYPEPrecompile.sol"
+    },
+    "IHyperLiquidComposerCore": {
+      "package": "hyperliquid-composer",
+      "packageName": "@layerzerolabs/hyperliquid-composer",
+      "path": "interfaces/IHyperLiquidComposerCore.sol",
+      "fullPath": "packages/hyperliquid-composer/contracts/interfaces/IHyperLiquidComposerCore.sol"
+    },
+    "IHyperLiquidComposerErrors": {
+      "package": "hyperliquid-composer",
+      "packageName": "@layerzerolabs/hyperliquid-composer",
+      "path": "interfaces/IHyperLiquidComposerErrors.sol",
+      "fullPath": "packages/hyperliquid-composer/contracts/interfaces/IHyperLiquidComposerErrors.sol"
+    },
+    "IHyperLiquidReadPrecompile": {
+      "package": "hyperliquid-composer",
+      "packageName": "@layerzerolabs/hyperliquid-composer",
+      "path": "interfaces/IHyperLiquidReadPrecompile.sol",
+      "fullPath": "packages/hyperliquid-composer/contracts/interfaces/IHyperLiquidReadPrecompile.sol"
+    },
+    "IOAppComposer": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "oapp/interfaces/IOAppComposer.sol",
+      "fullPath": "packages/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol"
+    },
+    "IOAppCore": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "oapp/interfaces/IOAppCore.sol",
+      "fullPath": "packages/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol"
+    },
+    "IOAppMapper": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "oapp/interfaces/IOAppMapper.sol",
+      "fullPath": "packages/oapp-evm/contracts/oapp/interfaces/IOAppMapper.sol"
+    },
+    "IOAppMsgInspector": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "oapp/interfaces/IOAppMsgInspector.sol",
+      "fullPath": "packages/oapp-evm/contracts/oapp/interfaces/IOAppMsgInspector.sol"
+    },
+    "IOAppOptionsType3": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "oapp/interfaces/IOAppOptionsType3.sol",
+      "fullPath": "packages/oapp-evm/contracts/oapp/interfaces/IOAppOptionsType3.sol"
+    },
+    "IOAppReceiver": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "oapp/interfaces/IOAppReceiver.sol",
+      "fullPath": "packages/oapp-evm/contracts/oapp/interfaces/IOAppReceiver.sol"
+    },
+    "IOAppReducer": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "oapp/interfaces/IOAppReducer.sol",
+      "fullPath": "packages/oapp-evm/contracts/oapp/interfaces/IOAppReducer.sol"
+    },
+    "IOAppPreCrimeSimulator": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "precrime/interfaces/IOAppPreCrimeSimulator.sol",
+      "fullPath": "packages/oapp-evm/contracts/precrime/interfaces/IOAppPreCrimeSimulator.sol"
+    },
+    "IPreCrime": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "precrime/interfaces/IPreCrime.sol",
+      "fullPath": "packages/oapp-evm/contracts/precrime/interfaces/IPreCrime.sol"
+    },
+    "IFee": {
+      "package": "oft-evm",
+      "packageName": "@layerzerolabs/oft-evm",
+      "path": "interfaces/IFee.sol",
+      "fullPath": "packages/oft-evm/contracts/interfaces/IFee.sol"
+    },
+    "IMintableBurnable": {
+      "package": "oft-evm",
+      "packageName": "@layerzerolabs/oft-evm",
+      "path": "interfaces/IMintableBurnable.sol",
+      "fullPath": "packages/oft-evm/contracts/interfaces/IMintableBurnable.sol"
+    },
+    "IOFT": {
+      "package": "oft-evm",
+      "packageName": "@layerzerolabs/oft-evm",
+      "path": "interfaces/IOFT.sol",
+      "fullPath": "packages/oft-evm/contracts/interfaces/IOFT.sol"
+    },
+    "IONFT721": {
+      "package": "onft-evm",
+      "packageName": "@layerzerolabs/onft-evm",
+      "path": "onft721/interfaces/IONFT721.sol",
+      "fullPath": "packages/onft-evm/contracts/onft721/interfaces/IONFT721.sol"
+    },
+    "IVaultComposerSync": {
+      "package": "ovault-evm",
+      "packageName": "@layerzerolabs/ovault-evm",
+      "path": "interfaces/IVaultComposerSync.sol",
+      "fullPath": "packages/ovault-evm/contracts/interfaces/IVaultComposerSync.sol"
+    }
+  },
+  "libraries": {
+    "HyperLiquidComposerCodec": {
+      "package": "hyperliquid-composer",
+      "packageName": "@layerzerolabs/hyperliquid-composer",
+      "path": "library/HyperLiquidComposerCodec.sol",
+      "fullPath": "packages/hyperliquid-composer/contracts/library/HyperLiquidComposerCodec.sol"
+    },
+    "OptionsBuilder": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "oapp/libs/OptionsBuilder.sol",
+      "fullPath": "packages/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol"
+    },
+    "ReadCodecV1": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "oapp/libs/ReadCodecV1.sol",
+      "fullPath": "packages/oapp-evm/contracts/oapp/libs/ReadCodecV1.sol"
+    },
+    "Packet": {
+      "package": "oapp-evm",
+      "packageName": "@layerzerolabs/oapp-evm",
+      "path": "precrime/libs/Packet.sol",
+      "fullPath": "packages/oapp-evm/contracts/precrime/libs/Packet.sol"
+    },
+    "OFTComposeMsgCodec": {
+      "package": "oft-evm",
+      "packageName": "@layerzerolabs/oft-evm",
+      "path": "libs/OFTComposeMsgCodec.sol",
+      "fullPath": "packages/oft-evm/contracts/libs/OFTComposeMsgCodec.sol"
+    },
+    "OFTMsgCodec": {
+      "package": "oft-evm",
+      "packageName": "@layerzerolabs/oft-evm",
+      "path": "libs/OFTMsgCodec.sol",
+      "fullPath": "packages/oft-evm/contracts/libs/OFTMsgCodec.sol"
+    },
+    "ONFTComposeMsgCodec": {
+      "package": "onft-evm",
+      "packageName": "@layerzerolabs/onft-evm",
+      "path": "libs/ONFTComposeMsgCodec.sol",
+      "fullPath": "packages/onft-evm/contracts/libs/ONFTComposeMsgCodec.sol"
+    },
+    "ONFT721MsgCodec": {
+      "package": "onft-evm",
+      "packageName": "@layerzerolabs/onft-evm",
+      "path": "onft721/libs/ONFT721MsgCodec.sol",
+      "fullPath": "packages/onft-evm/contracts/onft721/libs/ONFT721MsgCodec.sol"
+    }
+  }
+}

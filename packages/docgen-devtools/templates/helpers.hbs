@@ -1,0 +1,36 @@
+{{!-- Helper for rendering parameter tables --}}
+{{#*inline "paramTable"}}
+{{#if params.length}}
+| Name | Type | Description |
+|------|------|-------------|
+{{#each params}}
+| `{{name}}` | `{{type}}` | {{#if description}}{{description}}{{else}}-{{/if}} |
+{{/each}}
+{{else}}
+{{emptyText}}
+{{/if}}
+{{/inline}}
+
+{{!-- Helper for rendering struct members --}}
+{{#*inline "structMembers"}}
+{{#each members}}
+    {{type}} {{name}};{{#if description}} // {{description}}{{/if}}
+{{/each}}
+{{/inline}}
+
+{{!-- Helper for rendering modifiers --}}
+{{#*inline "modifiers"}}
+{{#if modifiers.length}}
+**Modifiers:** {{#each modifiers}}`{{this}}`{{#unless @last}}, {{/unless}}{{/each}}
+{{/if}}
+{{/inline}}
+
+{{!-- Helper for rendering visibility --}}
+{{#*inline "visibility"}}
+{{#if visibility}}**Visibility:** `{{visibility}}`{{/if}}
+{{/inline}}
+
+{{!-- Helper for rendering state mutability --}}
+{{#*inline "stateMutability"}}
+{{#if stateMutability}}**State Mutability:** `{{stateMutability}}`{{/if}}
+{{/inline}}
