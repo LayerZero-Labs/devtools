@@ -8,7 +8,7 @@ export interface TokenConfig {
 }
 
 export interface VaultConfig {
-    eid: number
+    deploymentEid: number
     contracts: {
         vault: string
         shareAdapter: string

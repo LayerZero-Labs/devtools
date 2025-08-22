@@ -33,7 +33,7 @@ const _spokeEids = [EndpointId.OPTSEP_V2_TESTNET, EndpointId.BASESEP_V2_TESTNET]
 export const DEPLOYMENT_CONFIG: DeploymentConfig = {
     // Vault chain configuration (where the ERC4626 vault lives)
     vault: {
-        eid: _hubEid,
+        deploymentEid: _hubEid,
         contracts: {
             vault: 'MyERC4626',
             shareAdapter: 'MyShareOFTAdapter',
@@ -70,7 +70,7 @@ export const DEPLOYMENT_CONFIG: DeploymentConfig = {
     },
 } as const
 
-export const isVaultChain = (eid: number): boolean => eid === DEPLOYMENT_CONFIG.vault.eid
+export const isVaultChain = (eid: number): boolean => eid === DEPLOYMENT_CONFIG.vault.deploymentEid
 export const shouldDeployVault = (eid: number): boolean => isVaultChain(eid) && !DEPLOYMENT_CONFIG.vault.vaultAddress
 export const shouldDeployAsset = (eid: number): boolean =>
     !DEPLOYMENT_CONFIG.vault.assetOFTAddress && DEPLOYMENT_CONFIG.assetOFT.deploymentEids.includes(eid)
