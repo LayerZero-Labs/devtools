@@ -1,5 +1,4 @@
 import { TransactionBuilder, publicKey as umiPublicKey } from '@metaplex-foundation/umi'
-import { Keypair, Transaction } from '@solana/web3.js'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
 
@@ -39,7 +38,7 @@ task('lz:oft:solana:burn', 'Burn a nonce on Solana')
     .addOptionalParam('guid', 'The GUID (hex string, 32 bytes)', undefined, devtoolsTypes.string)
     .addOptionalParam('message', 'The message payload (hex string)', undefined, devtoolsTypes.string)
     .setAction(async ({ eid, sender, receiver, srcEid, nonce, payloadHash, guid, message }: BurnTaskArgs) => {
-        const { umi, connection, umiWalletKeyPair, umiWalletSigner } = await deriveConnection(eid)
+        const { umi, umiWalletSigner } = await deriveConnection(eid)
         const endpoint = new EndpointProgram.Endpoint(EndpointProgram.ENDPOINT_PROGRAM_ID)
 
         // Validate inputs and resolve payload hash bytes
@@ -61,14 +60,6 @@ task('lz:oft:solana:burn', 'Burn a nonce on Solana')
             sender: new Uint8Array(senderBytes),
             srcEid,
             payloadHash: new Uint8Array(payloadHashBytes),
-        })
-
-        const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash()
-        const keypair = Keypair.fromSecretKey(umiWalletKeyPair.secretKey)
-        const tx = new Transaction({
-            feePayer: keypair.publicKey,
-            blockhash,
-            lastValidBlockHeight,
         })
 
         const builder = new TransactionBuilder([instruction])
