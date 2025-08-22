@@ -1,6 +1,5 @@
 import { TransactionBuilder, publicKey as umiPublicKey } from '@metaplex-foundation/umi'
-import { toWeb3JsInstruction, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
-import { Keypair, Transaction } from '@solana/web3.js'
+import { toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
 
@@ -11,29 +10,30 @@ import { EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2/umi'
 
 import { deriveConnection, getExplorerTxLink } from '../index'
 
-import { encodeOFTMessage, generateGuid, getInboundNonce } from './endpointUtils'
+import { getInboundNonce } from './endpointUtils'
 
 interface ClearTaskArgs {
     eid: EndpointId // The endpoint ID for the Solana network.
     sender: string // The sender address (hex format).
     receiver: string // The receiver address (base58 format).
-    amountSd: string // The amount to send (human readable units, e.g. "1.5"). // TODO: accept human readable units, e.g. "1.5" instead of amountSD
     srcEid: number // The source endpoint ID.
     nonce: string // The nonce.
-    composeMsg?: string // The message payload (hex format).
+    guid: string // The GUID (hex string, 32 bytes)
+    message: string // The message payload (hex string)
 }
 
-// Example: pnpm hardhat lz:oft:solana:clear --eid 40168 --sender <SENDER_OAPP> --receiver <RECEIVER_OAPP> --src-eid 40161 --nonce <NONCE> --message <MESSAGE_PAYLOAD>
+// Example: pnpm hardhat lz:oft:solana:clear --eid 40168 --sender <SENDER_OAPP> --receiver <RECEIVER_OAPP> --src-eid 40161 --nonce <NONCE> --guid <GUID_HEX_32B> --message <MESSAGE_HEX>
+// Note: for GUID and message, you can refer to layerzeroscan.com and search via the source transaction hash to get the values
 task('lz:oft:solana:clear', 'Clear a payload on Solana')
     .addParam('eid', 'Solana mainnet (30168) or testnet (40168) eid', undefined, devtoolsTypes.eid)
     .addParam('sender', 'The sender address (hex format)', undefined, devtoolsTypes.string)
     .addParam('receiver', 'The receiver address (base58 format)', undefined, devtoolsTypes.string)
-    .addParam('amountSd', 'The amount to send (human readable units, e.g. "1.5")', undefined, devtoolsTypes.string)
     .addParam('srcEid', 'The source endpoint ID', undefined, devtoolsTypes.int)
     .addParam('nonce', 'The nonce', undefined, devtoolsTypes.string)
-    .addOptionalParam('composeMsg', 'The message payload (hex format)', undefined, devtoolsTypes.string)
-    .setAction(async ({ eid, sender, receiver, amountSd, srcEid, nonce, composeMsg }: ClearTaskArgs) => {
-        const { umi, connection, umiWalletKeyPair, umiWalletSigner } = await deriveConnection(eid)
+    .addParam('guid', 'The GUID (hex string, 32 bytes)', undefined, devtoolsTypes.string)
+    .addParam('message', 'The message payload (hex string)', undefined, devtoolsTypes.string)
+    .setAction(async ({ eid, sender, receiver, srcEid, nonce, guid, message }: ClearTaskArgs) => {
+        const { umi, connection, umiWalletSigner } = await deriveConnection(eid)
         const endpoint = new EndpointProgram.Endpoint(EndpointProgram.ENDPOINT_PROGRAM_ID)
 
         // Convert sender from hex to bytes32
@@ -58,39 +58,47 @@ task('lz:oft:solana:clear', 'Clear a payload on Solana')
         }
         // EOF nonce value validation
 
-        const guid = generateGuid(nonce, srcEid, sender, srcEid, receiver)
-
         // Convert GUID from hex to bytes
         const guidBytes = Buffer.from(guid.replace('0x', ''), 'hex')
         if (guidBytes.length !== 32) {
             throw new Error('GUID must be 32 bytes (64 hex characters)')
         }
-        // TODO: take in amount in human readable units, e.g. "1.5" instead of amountSD and convert to amountSD
+        // Convert message from hex to bytes
+        const messageBytes = Buffer.from(message.replace('0x', ''), 'hex')
 
-        const messageBytes = encodeOFTMessage(receiver, BigInt(amountSd), sender, composeMsg)
-
-        // initVerifyIxn
-        const initVerifyIxn = endpoint.initVerify(umiWalletSigner, {
+        // Derive PDAs
+        const [endpointPda] = endpoint.pda.setting()
+        const [noncePda] = endpoint.pda.nonce(receiverUmiPublicKey, srcEid, new Uint8Array(senderNormalized))
+        const [oappRegistryPda] = endpoint.pda.oappRegistry(receiverUmiPublicKey)
+        const [payloadHashPda] = endpoint.pda.payloadHash(
+            receiverUmiPublicKey,
             srcEid,
-            sender: senderNormalized,
-            receiver: receiverUmiPublicKey,
-            nonce: BigInt(nonce),
-        })
+            new Uint8Array(senderNormalized),
+            Number(nonce)
+        )
 
-        // using EndpointProgram.instruction as there's no clear method on EndpointProgram.Endpoint, unlike burn (OAppBurnNonce), nilify (oAppNilify), skip (skip)
+        // Check payload hash account existence; only init if missing
+        const payloadAccountInfo = await umi.rpc.getAccount(payloadHashPda)
+        const ixns = [] as ReturnType<typeof EndpointProgram.instructions.clear>['items']
+
+        if (!payloadAccountInfo.exists) {
+            const initVerifyIxn = endpoint.initVerify(umiWalletSigner, {
+                srcEid,
+                sender: senderNormalized,
+                receiver: receiverUmiPublicKey,
+                nonce: BigInt(nonce),
+            })
+            ixns.push(initVerifyIxn)
+        }
+
         const clearIxn = EndpointProgram.instructions.clear(
             { programs: endpoint.programRepo },
             {
                 signer: umiWalletSigner,
-                oappRegistry: endpoint.pda.oappRegistry(receiverUmiPublicKey),
-                nonce: endpoint.pda.nonce(receiverUmiPublicKey, srcEid, new Uint8Array(senderNormalized)),
-                payloadHash: endpoint.pda.payloadHash(
-                    receiverUmiPublicKey,
-                    srcEid,
-                    new Uint8Array(senderNormalized),
-                    BigInt(nonce)
-                ),
-                endpoint: endpoint.pda.setting(),
+                oappRegistry: oappRegistryPda,
+                nonce: noncePda,
+                payloadHash: payloadHashPda,
+                endpoint: endpointPda,
                 eventAuthority: endpoint.eventAuthority,
                 program: endpoint.programId,
             },
@@ -100,21 +108,12 @@ task('lz:oft:solana:clear', 'Clear a payload on Solana')
                 sender: new Uint8Array(senderNormalized),
                 nonce: BigInt(nonce),
                 guid: new Uint8Array(guidBytes),
-                message: new Uint8Array(Buffer.from(messageBytes, 'hex')),
+                message: new Uint8Array(messageBytes),
             }
         ).items[0]
 
-        const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash()
-        const keypair = Keypair.fromSecretKey(umiWalletKeyPair.secretKey)
-        const tx = new Transaction({
-            feePayer: keypair.publicKey,
-            blockhash,
-            lastValidBlockHeight,
-        })
-
-        const builder = new TransactionBuilder([clearIxn])
+        const builder = new TransactionBuilder([...ixns, clearIxn])
         const { signature } = await builder.sendAndConfirm(umi)
-        builder.getInstructions().forEach((ix) => tx.add(toWeb3JsInstruction(ix)))
 
         console.log(
             `Clear transaction successful! View here: ${getExplorerTxLink(
