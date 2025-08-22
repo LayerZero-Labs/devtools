@@ -1,4 +1,5 @@
 import { TransactionBuilder, publicKey as umiPublicKey } from '@metaplex-foundation/umi'
+import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { PublicKey } from '@solana/web3.js'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
@@ -31,9 +32,9 @@ task('lz:oft:solana:skip', 'Skip a message on Solana')
         const endpoint = new EndpointProgram.Endpoint(EndpointProgram.ENDPOINT_PROGRAM_ID)
 
         const senderNormalized = normalizePeer(sender, srcEid)
-
         // Convert receiver to Umi PublicKey
         const receiverUmiPublicKey = umiPublicKey(receiver)
+        // we use EndpointPDADeriver + getAccountInfo  so that we can print the expected Nonce PDA if it's not found
         const epDeriver = new EndpointPDADeriver(new PublicKey(EndpointProgram.ENDPOINT_PROGRAM_ID))
         const [nonceAccount] = epDeriver.nonce(new PublicKey(receiver), srcEid, senderNormalized)
         const accountInfo = await connection.getAccountInfo(nonceAccount)
@@ -41,15 +42,37 @@ task('lz:oft:solana:skip', 'Skip a message on Solana')
             console.warn('Nonce account not found at address', nonceAccount.toBase58())
             return
         }
+        const nonceAccountInfo = await EndpointProgram.accounts.fetchNonce(umi, fromWeb3JsPublicKey(nonceAccount))
+        const inboundNonce = nonceAccountInfo.inboundNonce
+        // print inboundNonce
+        console.log('inboundNonce: ', inboundNonce.toString())
+        // warn if nonce is not greater than inboundNonce
+        if (BigInt(nonce) <= inboundNonce) {
+            console.warn('Nonce is not greater than inboundNonce')
+            return
+        }
+        // warn if nonce is greather than sliding window
+        const PENDING_INBOUND_NONCE_MAX_LEN = BigInt(256)
+        if (BigInt(nonce) > inboundNonce + PENDING_INBOUND_NONCE_MAX_LEN) {
+            console.warn('Nonce is greater than sliding window')
+            return
+        }
 
-        const instruction = endpoint.skip(umiWalletSigner, {
+        const initVerifyIxn = endpoint.initVerify(umiWalletSigner, {
+            srcEid,
+            sender: senderNormalized,
+            receiver: receiverUmiPublicKey,
+            nonce: BigInt(nonce),
+        })
+
+        const skipIxn = endpoint.skip(umiWalletSigner, {
             sender: senderNormalized,
             receiver: receiverUmiPublicKey,
             srcEid,
             nonce: BigInt(nonce),
         })
 
-        const builder = new TransactionBuilder([instruction])
+        const builder = new TransactionBuilder([initVerifyIxn, skipIxn])
         const { signature } = await builder.sendAndConfirm(umi)
 
         console.log(
