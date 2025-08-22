@@ -9,7 +9,7 @@ import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 
 import { deriveConnection, getExplorerTxLink } from '../index'
 
-import { generatePayloadHash } from './endpointUtils'
+import { resolvePayloadHashBytes } from './endpointUtils'
 
 interface NilifyTaskArgs {
     eid: EndpointId // The endpoint ID for the Solana network.
@@ -41,19 +41,8 @@ task('lz:oft:solana:nilify', 'Nilify a nonce on Solana')
         const { umi, umiWalletSigner } = await deriveConnection(eid)
         const endpoint = new EndpointProgram.Endpoint(EndpointProgram.ENDPOINT_PROGRAM_ID)
 
-        // Validate args: either payloadHash OR (guid + message). No overlap or partials.
-        const hasPayloadHash = typeof payloadHash === 'string' && payloadHash.length > 0
-        const hasGuid = typeof guid === 'string' && guid.length > 0
-        const hasMessage = typeof message === 'string' && message.length > 0
-        if ((hasGuid || hasMessage) && hasPayloadHash) {
-            throw new Error('Provide either payloadHash OR guid+message, not both')
-        }
-        if (hasGuid !== hasMessage) {
-            throw new Error('Both guid and message are required together')
-        }
-        if (!hasPayloadHash && !(hasGuid && hasMessage)) {
-            throw new Error('Provide either payloadHash or guid+message')
-        }
+        // Validate inputs and resolve payload hash bytes
+        const payloadHashBytes = resolvePayloadHashBytes(payloadHash, guid, message)
 
         // Convert sender from hex to bytes32
         const senderBytes = addressToBytes32(sender)
@@ -64,14 +53,7 @@ task('lz:oft:solana:nilify', 'Nilify a nonce on Solana')
         // Convert receiver to Umi PublicKey
         const receiverUmiPublicKey = umiPublicKey(receiver)
 
-        // Determine payload hash
-        const payloadHashHex = hasPayloadHash
-            ? (payloadHash as string)
-            : generatePayloadHash(guid as string, message as string)
-        const payloadHashBytes = Buffer.from(payloadHashHex.replace('0x', ''), 'hex')
-        if (payloadHashBytes.length !== 32) {
-            throw new Error('Payload hash must be 32 bytes (64 hex characters)')
-        }
+        // payloadHashBytes already validated and resolved
 
         const instruction = endpoint.oAppNilify(umiWalletSigner, {
             nonce: BigInt(nonce),

@@ -39,3 +39,33 @@ export function generatePayloadHash(guid: string, message: string): string {
     // Hash using keccak256 (equivalent to Solana's hashv)
     return keccak256(hexlify(payloadBytes))
 }
+
+/**
+ * Validate inputs and resolve payload hash bytes from either:
+ * - payloadHash (hex string), or
+ * - guid + message (both hex strings)
+ */
+export function resolvePayloadHashBytes(payloadHash?: string, guid?: string, message?: string): Uint8Array {
+    const hasPayloadHash = typeof payloadHash === 'string' && payloadHash.length > 0
+    const hasGuid = typeof guid === 'string' && guid.length > 0
+    const hasMessage = typeof message === 'string' && message.length > 0
+
+    if ((hasGuid || hasMessage) && hasPayloadHash) {
+        throw new Error('Provide either payloadHash OR guid+message, not both')
+    }
+    if (hasGuid !== hasMessage) {
+        throw new Error('Both guid and message are required together')
+    }
+    if (!hasPayloadHash && !(hasGuid && hasMessage)) {
+        throw new Error('Provide either payloadHash or guid+message')
+    }
+
+    const payloadHashHex = hasPayloadHash
+        ? (payloadHash as string)
+        : generatePayloadHash(guid as string, message as string)
+    const bytes = arrayify(payloadHashHex)
+    if (bytes.length !== 32) {
+        throw new Error('Payload hash must be 32 bytes (64 hex characters)')
+    }
+    return bytes
+}
