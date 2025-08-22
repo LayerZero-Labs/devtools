@@ -10,7 +10,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { EndpointPDADeriver } from '@layerzerolabs/lz-solana-sdk-v2'
 import { EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2/umi'
 
-import { deriveConnection, getExplorerTxLink } from './index'
+import { deriveConnection, getExplorerTxLink } from '../index'
 
 interface SkipTaskArgs {
     eid: EndpointId // The endpoint ID for the Solana network.
