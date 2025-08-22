@@ -91,7 +91,7 @@ const deploy: DeployFunction = async (hre) => {
             const IOFTArtifact = await hre.artifacts.readArtifact('IOFT')
             const oftContract = await hre.ethers.getContractAt(IOFTArtifact.abi, assetOFTAddress)
             const assetTokenAddress = await oftContract.token()
-            console.log(`Underlying ERC20 token address: ${assetTokenAddress}`)
+            console.log(`Underlying ERC20 token address found from OFT deployment: ${assetTokenAddress}`)
         }
 
         // Get vault address (existing or deploy new)
