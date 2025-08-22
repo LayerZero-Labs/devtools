@@ -46,16 +46,14 @@ task('lz:oft:solana:skip', 'Skip a message on Solana')
         const inboundNonce = nonceAccountInfo.inboundNonce
         // print inboundNonce
         console.log('inboundNonce: ', inboundNonce.toString())
-        // warn if nonce is not greater than inboundNonce
+        // throw if nonce is not greater than inboundNonce
         if (BigInt(nonce) <= inboundNonce) {
-            console.warn('Nonce is not greater than inboundNonce')
-            return
+            throw new Error('Nonce must be greater than inboundNonce')
         }
-        // warn if nonce is greather than sliding window
+        // throw if nonce is greather than sliding window
         const PENDING_INBOUND_NONCE_MAX_LEN = BigInt(256)
         if (BigInt(nonce) > inboundNonce + PENDING_INBOUND_NONCE_MAX_LEN) {
-            console.warn('Nonce is greater than sliding window')
-            return
+            throw new Error('Nonce must not be greater than inboundNonce + sliding window range (256)')
         }
 
         const initVerifyIxn = endpoint.initVerify(umiWalletSigner, {
