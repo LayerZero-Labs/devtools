@@ -1,16 +1,16 @@
 import { TransactionBuilder, publicKey as umiPublicKey } from '@metaplex-foundation/umi'
-import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
-import { PublicKey } from '@solana/web3.js'
+import { toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
 
 import { normalizePeer } from '@layerzerolabs/devtools'
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { EndpointPDADeriver } from '@layerzerolabs/lz-solana-sdk-v2'
 import { EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2/umi'
 
 import { deriveConnection, getExplorerTxLink } from '../index'
+
+import { getInboundNonce } from './endpointUtils'
 
 interface SkipTaskArgs {
     eid: EndpointId // The endpoint ID for the Solana network.
@@ -32,20 +32,19 @@ task('lz:oft:solana:skip', 'Skip a message on Solana')
         const endpoint = new EndpointProgram.Endpoint(EndpointProgram.ENDPOINT_PROGRAM_ID)
 
         const senderNormalized = normalizePeer(sender, srcEid)
-        // Convert receiver to Umi PublicKey
-        const receiverUmiPublicKey = umiPublicKey(receiver)
-        // we use EndpointPDADeriver + getAccountInfo  so that we can print the expected Nonce PDA if it's not found
-        const epDeriver = new EndpointPDADeriver(new PublicKey(EndpointProgram.ENDPOINT_PROGRAM_ID))
-        const [nonceAccount] = epDeriver.nonce(new PublicKey(receiver), srcEid, senderNormalized)
-        const accountInfo = await connection.getAccountInfo(nonceAccount)
-        if (!accountInfo) {
-            console.warn('Nonce account not found at address', nonceAccount.toBase58())
-            return
-        }
-        const nonceAccountInfo = await EndpointProgram.accounts.fetchNonce(umi, fromWeb3JsPublicKey(nonceAccount))
-        const inboundNonce = nonceAccountInfo.inboundNonce
+        const receiverUmiPublicKey = umiPublicKey(receiver) // Convert receiver from string to Umi PublicKey
+
+        const inboundNonce = await getInboundNonce(
+            umi,
+            connection,
+            toWeb3JsPublicKey(receiverUmiPublicKey),
+            srcEid,
+            senderNormalized
+        )
         // print inboundNonce
         console.log('inboundNonce: ', inboundNonce.toString())
+
+        // BOF nonce value validation
         // throw if nonce is not greater than inboundNonce
         if (BigInt(nonce) <= inboundNonce) {
             throw new Error('Nonce must be greater than inboundNonce')
@@ -55,6 +54,7 @@ task('lz:oft:solana:skip', 'Skip a message on Solana')
         if (BigInt(nonce) > inboundNonce + PENDING_INBOUND_NONCE_MAX_LEN) {
             throw new Error('Nonce must not be greater than inboundNonce + sliding window range (256)')
         }
+        // EOF nonce value validation
 
         const initVerifyIxn = endpoint.initVerify(umiWalletSigner, {
             srcEid,
