@@ -7,6 +7,10 @@ struct SpotBalance {
     uint64 entryNtl;
 }
 
+struct CoreUserExists {
+    bool exists;
+}
+
 abstract contract HyperLiquidCore {
     // Chain IDs
     // https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm#mainnet
@@ -43,5 +47,13 @@ abstract contract HyperLiquidCore {
         (success, result) = SPOT_BALANCE_PRECOMPILE_ADDRESS.staticcall(abi.encode(user, token));
         require(success, "SpotBalance precompile call failed");
         return abi.decode(result, (SpotBalance));
+    }
+
+    function coreUserExists(address user) public view returns (CoreUserExists memory) {
+        bool success;
+        bytes memory result;
+        (success, result) = CORE_USER_EXISTS_PRECOMPILE_ADDRESS.staticcall(abi.encode(user));
+        require(success, "Core user exists precompile call failed");
+        return abi.decode(result, (CoreUserExists));
     }
 }

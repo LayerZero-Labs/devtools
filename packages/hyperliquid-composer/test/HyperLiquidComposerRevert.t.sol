@@ -17,8 +17,8 @@ contract HyperLiquidComposerRevertTest is HyperliquidBaseTest {
     }
 
     function test_insuffient_gas() public {
-        uint256 gasToPass = 100_000;
-        uint256 gasConsumed = 5962; // Updated based on actual gas consumption
+        uint256 gasToPass = 150_000;
+        uint256 gasConsumed = 5_984;
         uint256 minGas = hyperLiquidComposer.MIN_GAS();
 
         vm.expectRevert(

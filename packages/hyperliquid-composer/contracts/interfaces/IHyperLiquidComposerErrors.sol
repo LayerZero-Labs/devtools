@@ -20,6 +20,8 @@ interface IHyperLiquidComposerErrors {
     error InsufficientMsgValue(uint256 msgValue, uint256 requiredValue);
     error ComposeMsgLengthNot64Bytes(uint256 length);
 
+    error CoreUserNotActivated();
+
     error NativeTransferFailed(address receiver, uint256 amount);
 
     error SpotBalanceReadFailed(address user, uint64 tokenId);
