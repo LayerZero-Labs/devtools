@@ -28,11 +28,11 @@ const deploy: DeployFunction = async (hre) => {
 
     // Deploy Asset OFT (on all configured chains)
     if (shouldDeployAsset(networkEid)) {
-        const assetOFT = await deployments.deploy(DEPLOYMENT_CONFIG.AssetOFT.contract, {
+        const assetOFT = await deployments.deploy(DEPLOYMENT_CONFIG.assetOFT.contract, {
             from: deployer,
             args: [
-                DEPLOYMENT_CONFIG.AssetOFT.metadata.name,
-                DEPLOYMENT_CONFIG.AssetOFT.metadata.symbol,
+                DEPLOYMENT_CONFIG.assetOFT.metadata.name,
+                DEPLOYMENT_CONFIG.assetOFT.metadata.symbol,
                 endpointV2.address,
                 deployer,
             ],
@@ -41,7 +41,7 @@ const deploy: DeployFunction = async (hre) => {
         })
         deployedContracts.assetOFT = assetOFT.address
         console.log(
-            `Deployed contract: ${DEPLOYMENT_CONFIG.AssetOFT.contract}, network: ${hre.network.name}, address: ${assetOFT.address}`
+            `Deployed contract: ${DEPLOYMENT_CONFIG.assetOFT.contract}, network: ${hre.network.name}, address: ${assetOFT.address}`
         )
     } else if (DEPLOYMENT_CONFIG.vault.assetOFTAddress) {
         console.log(
@@ -51,11 +51,11 @@ const deploy: DeployFunction = async (hre) => {
 
     // Deploy Share OFT (only on spoke chains)
     if (shouldDeployShare(networkEid)) {
-        const shareOFT = await deployments.deploy(DEPLOYMENT_CONFIG.ShareOFT.contract, {
+        const shareOFT = await deployments.deploy(DEPLOYMENT_CONFIG.shareOFT.contract, {
             from: deployer,
             args: [
-                DEPLOYMENT_CONFIG.ShareOFT.metadata.name,
-                DEPLOYMENT_CONFIG.ShareOFT.metadata.symbol,
+                DEPLOYMENT_CONFIG.shareOFT.metadata.name,
+                DEPLOYMENT_CONFIG.shareOFT.metadata.symbol,
                 endpointV2.address,
                 deployer,
             ],
@@ -64,7 +64,7 @@ const deploy: DeployFunction = async (hre) => {
         })
         deployedContracts.shareOFT = shareOFT.address
         console.log(
-            `Deployed contract: ${DEPLOYMENT_CONFIG.ShareOFT.contract}, network: ${hre.network.name}, address: ${shareOFT.address}`
+            `Deployed contract: ${DEPLOYMENT_CONFIG.shareOFT.contract}, network: ${hre.network.name}, address: ${shareOFT.address}`
         )
     } else if (DEPLOYMENT_CONFIG.vault.shareOFTAdapterAddress && !isVaultChain(networkEid)) {
         // Use existing ShareOFTAdapter on this spoke chain
@@ -76,7 +76,7 @@ const deploy: DeployFunction = async (hre) => {
 
     // Deploy Vault Chain Components (vault, adapter, composer)
     if (isVaultChain(networkEid)) {
-        // 🎯 Get asset address (existing or deployed)
+        // Get asset address (existing or deployed)
         let assetOFTAddress: string
 
         if (DEPLOYMENT_CONFIG.vault.assetOFTAddress) {
@@ -85,7 +85,7 @@ const deploy: DeployFunction = async (hre) => {
         } else {
             // Use deployed address or get from deployments
             assetOFTAddress =
-                deployedContracts.assetOFT || (await hre.deployments.get(DEPLOYMENT_CONFIG.AssetOFT.contract)).address
+                deployedContracts.assetOFT || (await hre.deployments.get(DEPLOYMENT_CONFIG.assetOFT.contract)).address
             console.log(`Using deployed asset address: ${assetOFTAddress}`)
             // Fetch underlying ERC20 token address from the OFT using the IOFT artifact
             const IOFTArtifact = await hre.artifacts.readArtifact('IOFT')
@@ -105,8 +105,8 @@ const deploy: DeployFunction = async (hre) => {
             const vault = await deployments.deploy(DEPLOYMENT_CONFIG.vault.contracts.vault, {
                 from: deployer,
                 args: [
-                    DEPLOYMENT_CONFIG.ShareOFT.metadata.name,
-                    DEPLOYMENT_CONFIG.ShareOFT.metadata.symbol,
+                    DEPLOYMENT_CONFIG.shareOFT.metadata.name,
+                    DEPLOYMENT_CONFIG.shareOFT.metadata.symbol,
                     assetOFTAddress,
                 ],
                 log: true,

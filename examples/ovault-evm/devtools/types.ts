@@ -21,8 +21,8 @@ export interface VaultConfig {
 
 export interface DeploymentConfig {
     vault: VaultConfig
-    AssetOFT: TokenConfig
-    ShareOFT: TokenConfig
+    assetOFT: TokenConfig
+    shareOFT: TokenConfig
 }
 
 export interface DeployedContracts {

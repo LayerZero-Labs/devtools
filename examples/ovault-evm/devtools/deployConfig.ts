@@ -50,7 +50,7 @@ export const DEPLOYMENT_CONFIG: DeploymentConfig = {
     },
 
     // Share OFT configuration (only on spoke chains)
-    ShareOFT: {
+    shareOFT: {
         contract: 'MyShareOFT',
         metadata: {
             name: 'MyShareOFT',
@@ -60,7 +60,7 @@ export const DEPLOYMENT_CONFIG: DeploymentConfig = {
     },
 
     // Asset OFT configuration (deployed on specified chains OR use existing address)
-    AssetOFT: {
+    assetOFT: {
         contract: 'MyAssetOFT',
         metadata: {
             name: 'MyAssetOFT',
@@ -73,9 +73,9 @@ export const DEPLOYMENT_CONFIG: DeploymentConfig = {
 export const isVaultChain = (eid: number): boolean => eid === DEPLOYMENT_CONFIG.vault.eid
 export const shouldDeployVault = (eid: number): boolean => isVaultChain(eid) && !DEPLOYMENT_CONFIG.vault.vaultAddress
 export const shouldDeployAsset = (eid: number): boolean =>
-    !DEPLOYMENT_CONFIG.vault.assetOFTAddress && DEPLOYMENT_CONFIG.AssetOFT.deploymentEids.includes(eid)
+    !DEPLOYMENT_CONFIG.vault.assetOFTAddress && DEPLOYMENT_CONFIG.assetOFT.deploymentEids.includes(eid)
 export const shouldDeployShare = (eid: number): boolean =>
-    !DEPLOYMENT_CONFIG.vault.shareOFTAdapterAddress && DEPLOYMENT_CONFIG.ShareOFT.deploymentEids.includes(eid)
+    !DEPLOYMENT_CONFIG.vault.shareOFTAdapterAddress && DEPLOYMENT_CONFIG.shareOFT.deploymentEids.includes(eid)
 
 export const shouldDeployShareAdapter = (eid: number): boolean =>
     isVaultChain(eid) && !DEPLOYMENT_CONFIG.vault.shareOFTAdapterAddress
