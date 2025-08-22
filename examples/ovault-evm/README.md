@@ -117,36 +117,39 @@ Configure your vault deployment in `devtools/deployConfig.ts`. This file control
 
 > **Note**: If your asset is already an OFT, you do not need to deploy a separate mesh. The only requirement is that the asset OFT supports the hub chain you are deploying to.
 
-Asset and share token networks don't need to perfectly overlap. Configure based on your requirements:
-
 ```typescript
 import { EndpointId } from "@layerzerolabs/lz-definitions";
+
+// Define the chains we're deploying to
+const _hubEid = EndpointId.ARBSEP_V2_TESTNET;
+const _spokeEids = [
+  EndpointId.OPTSEP_V2_TESTNET,
+  EndpointId.BASESEP_V2_TESTNET,
+];
 
 export const DEPLOYMENT_CONFIG = {
   // Vault chain configuration (where the ERC4626 vault lives)
   vault: {
-    eid: EndpointId.ARBSEP_V2_TESTNET, // Your hub chain
+    eid: _hubEid,
     contracts: {
       vault: "MyERC4626",
       shareAdapter: "MyShareOFTAdapter",
       composer: "MyOVaultComposer",
     },
-    // IF YOU HAVE A PRE-DEPLOYED ASSET, SET THE ADDRESS HERE
-    assetAddress: undefined, // Set to '0x...' to use existing asset
+    // IF YOU HAVE EXISTING CONTRACTS, SET THE ADDRESSES HERE
+    vaultAddress: undefined, // Set to '0x...' to use existing vault
+    assetOFTAddress: undefined, // Set to '0x...' to use existing asset OFT
+    shareOFTAdapterAddress: undefined, // Set to '0x...' to use existing ShareOFTAdapter (lockbox ONLY)
   },
 
-  // Asset OFT configuration (deployed on all chains)
+  // Asset OFT configuration (deployed on specified chains OR use existing address)
   asset: {
     contract: "MyAssetOFT",
     metadata: {
       name: "MyAssetOFT",
       symbol: "ASSET",
     },
-    chains: [
-      EndpointId.OPTSEP_V2_TESTNET,
-      EndpointId.BASESEP_V2_TESTNET,
-      EndpointId.ARBSEP_V2_TESTNET, // Include hub chain
-    ],
+    deploymentEids: [_hubEid, ..._spokeEids],
   },
 
   // Share OFT configuration (only on spoke chains)
@@ -156,27 +159,67 @@ export const DEPLOYMENT_CONFIG = {
       name: "MyShareOFT",
       symbol: "SHARE",
     },
-    chains: [
-      EndpointId.OPTSEP_V2_TESTNET,
-      EndpointId.BASESEP_V2_TESTNET,
-      // Do NOT include hub chain (it uses ShareOFTAdapter)
-    ],
+    deploymentEids: _spokeEids,
   },
 };
 ```
 
+**Common Deployment Scenarios:**
+
+1. **Existing Vault & Asset** (Most Common):
+
+   ```typescript
+   vault: {
+     vaultAddress: "0x123...", // Your existing 4626 vault
+     assetOFTAddress: "0x456...", // Your existing asset OFT address, not underlying ERC20 token address (e.g., USDT0)
+     shareOFTAdapterAddress: undefined
+   }
+   ```
+
+   - Only deploys MyShareOFTAdapter, MyOVaultComposer, and MyShareOFT
+
+2. **Existing Asset, New Vault**:
+
+   ```typescript
+   vault: {
+     vaultAddress: undefined,  // Will deploy new 4626 vault
+     assetOFTAddress: "0x456...", // Your existing asset OFT address, not underlying ERC20 token address (e.g., USDT0)
+     shareOFTAdapterAddress: undefined
+   }
+   ```
+
+   - Deploys new vault, ShareAdapter, Composer, and ShareOFTs
+
+3. **Everything New** (Testing/New Projects):
+
+   ```typescript
+   vault: {
+     vaultAddress: undefined, // Will deploy new 4626 vault
+     assetOFTAddress: undefined, // Will deploy new AssetOFTs
+     shareOFTAdapterAddress: undefined
+   }
+   ```
+
+   - Deploys all contracts across all chains
+
+4. **Existing Share Adapter Only**:
+   ```typescript
+   vault: {
+     vaultAddress: undefined,          // Vault already deployed
+     assetOFTAddress: undefined,       // Asset OFT already deployed
+     shareOFTAdapterAddress: "0x789...", // Your existing ShareOFTAdapter address
+   }
+   ```
+
+- Skips deployment of ShareOFTAdapter and ShareOFT
+- Only deploys Composer on the hub chain
+
 **Key Configuration Points:**
 
 - **Hub Chain**: Set `vault.eid` to your chosen hub chain's endpoint ID
-- **Asset Chains**: Include all chains where you want asset OFTs (including the hub chain)
-- **Share Chains**: Include only spoke chains (exclude hub, which uses the ShareOFTAdapter)
-- **Pre-deployed Asset**: Set `vault.assetAddress` if using an existing asset token
-
-The deployment scripts automatically determine what to deploy based on:
-
-- Vault contracts (ERC4626, ShareOFTAdapter, Composer) deploy only on the hub chain
-- Asset OFTs deploy on chains listed in `asset.chains` (unless using pre-deployed asset)
-- Share OFTs deploy on chains listed in `share.chains`
+- **Asset Deployment**: AssetOFTs deploy to chains in `asset.deploymentEids` only if `vault.assetOFTAddress` is not set
+- **Share Deployment**: ShareOFTs always deploy to chains in `share.deploymentEids`
+- **ShareOFTAdapter and Composer**: Always deploy on hub chain regardless of existing contracts
 
 ## Build
 
@@ -200,9 +243,9 @@ pnpm hardhat lz:deploy --tags ovault
 
 This single command will:
 
-- Deploy `AssetOFTs` to all chains in `deployConfig.asset.chains`
-- Deploy the vault system (`ERC4626`, `ShareOFTAdapter`, `Composer`) on the hub chain
-- Deploy `ShareOFTs` to all spoke chains in `deployConfig.share.chains`
+- Deploy `AssetOFTs` to all chains in `asset.deploymentEids` (if no existing asset)
+- Deploy the vault system (`ERC4626`, `ShareOFTAdapter`, `Composer`) on the hub chain (if no existing vault)
+- Deploy `ShareOFTs` to all spoke chains in `share.deploymentEids`
 
 The deployment scripts automatically skip existing deployments, so you can safely run this command when expanding to new chains. Simply add the new chain endpoints to your `deployConfig.ts` and run the deploy command again.
 
@@ -214,7 +257,9 @@ The deployment scripts automatically skip existing deployments, so you can safel
 
 ## Enable Messaging
 
-### 1. Configure Asset OFT Network
+### 1. Configure Asset OFT Network (Only if Deployed)
+
+> **Note**: Skip this section if using an existing asset OFT (i.e., `vault.assetOFTAddress` is set in your deployment config). Asset OFT configuration is only needed if you deployed new AssetOFTs.
 
 Set up your Asset OFT configuration in `layerzero.asset.config.ts`. The example uses the `TwoWayConfig` pattern for simplified bidirectional connections:
 
@@ -410,12 +455,14 @@ To use different chains or network configurations:
 - Add pathway configurations between the new chain and existing chains
 - Deploy Asset OFTs and Share OFTs to the new chains
 
-### 4. Wire Asset OFT Network
+### 4. Wire Asset OFT Network (Only if Deployed)
+
+> **Note**: Skip this step if using an existing asset. Only run this if you deployed new AssetOFTs.
 
 Configure and wire the Asset OFT connections:
 
 ```bash
-# Wire Asset OFT network
+# Wire Asset OFT network (only for new deployments)
 pnpm hardhat lz:oapp:wire --oapp-config layerzero.asset.config.ts
 ```
 
