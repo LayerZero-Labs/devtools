@@ -22,8 +22,8 @@ interface NilifyTaskArgs {
     message?: string // The message payload (hex string)
 }
 
-// Example: pnpm hardhat lz:oft:solana:nilify --eid 40168 --sender <SENDER_OAPP> --receiver <RECEIVER_OAPP> --src-eid 4016140161 --nonce <NONCE> --payload-hash 0x<PAYLOAD_HASH>
-//    or: pnpm hardhat lz:oft:solana:nilify --eid 40168 --sender <SENDER_OAPP> --receiver <RECEIVER_OAPP> --src-eid 4016140161 --nonce <NONCE> --guid 0x<64-hex> --message 0x<hex>
+// Example: pnpm hardhat lz:oft:solana:nilify --eid 40168 --sender <SENDER_OAPP> --receiver <RECEIVER_OAPP> --src-eid 40161 --nonce <NONCE> --payload-hash <PAYLOAD_HASH>
+//    or: pnpm hardhat lz:oft:solana:nilify --eid 40168 --sender <SENDER_OAPP> --receiver <RECEIVER_OAPP> --src-eid 40161 --nonce <NONCE> --guid <GUID> --message <MESSAGE>
 // Note: either provide payloadHash OR (guid + message). No overlap or partials.
 // Note: for GUID and message, you can refer to layerzeroscan.com and search via the source transaction hash to get the values
 // Note: to retrieve the payload hash, view/curl https://scan-testnet.layerzero-api.com/v1/messages/tx/<SOURCE_TX_HASH> and search for 'payloadHash'
