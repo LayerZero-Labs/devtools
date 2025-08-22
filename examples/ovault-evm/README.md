@@ -139,6 +139,7 @@ export const DEPLOYMENT_CONFIG = {
     // IF YOU HAVE EXISTING CONTRACTS, SET THE ADDRESSES HERE
     vaultAddress: undefined, // Set to '0x...' to use existing vault
     assetOFTAddress: undefined, // Set to '0x...' to use existing asset OFT
+    shareOFTAdapterAddress: undefined, // Set to '0x...' to use existing ShareOFTAdapter (lockbox ONLY)
   },
 
   // Asset OFT configuration (deployed on specified chains OR use existing address)
@@ -171,6 +172,7 @@ export const DEPLOYMENT_CONFIG = {
    vault: {
      vaultAddress: "0x123...", // Your existing 4626 vault
      assetOFTAddress: "0x456...", // Your existing asset OFT address, not underlying ERC20 token address (e.g., USDT0)
+     shareOFTAdapterAddress: undefined
    }
    ```
 
@@ -182,6 +184,7 @@ export const DEPLOYMENT_CONFIG = {
    vault: {
      vaultAddress: undefined,  // Will deploy new 4626 vault
      assetOFTAddress: "0x456...", // Your existing asset OFT address, not underlying ERC20 token address (e.g., USDT0)
+     shareOFTAdapterAddress: undefined
    }
    ```
 
@@ -193,6 +196,7 @@ export const DEPLOYMENT_CONFIG = {
    vault: {
      vaultAddress: undefined, // Will deploy new 4626 vault
      assetOFTAddress: undefined, // Will deploy new AssetOFTs
+     shareOFTAdapterAddress: undefined
    }
    ```
 
@@ -203,7 +207,7 @@ export const DEPLOYMENT_CONFIG = {
    vault: {
      vaultAddress: undefined,          // Vault already deployed
      assetOFTAddress: undefined,       // Asset OFT already deployed
-     shareAdapterAddress: "0x789...", // Your existing ShareOFTAdapter address
+     shareOFTAdapterAddress: "0x789...", // Your existing ShareOFTAdapter address
    }
    ```
 
