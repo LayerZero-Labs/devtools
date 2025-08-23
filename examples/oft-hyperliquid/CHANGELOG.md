@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 0.0.12
+
+### Patch Changes
+
+- af83bac: spotClearingHouse used to print active users and core balances
+
 ## 0.0.11
 
 ### Patch Changes

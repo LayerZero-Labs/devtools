@@ -55,17 +55,17 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
-        optimism: {
+        'optimism-sepolia': {
             eid: EndpointId.OPTSEP_V2_TESTNET,
             url: process.env.RPC_URL_OPTIMISM_TESTNET || 'https://optimism-sepolia.gateway.tenderly.co',
             accounts,
         },
-        base: {
+        'base-sepolia': {
             eid: EndpointId.BASESEP_V2_TESTNET,
             url: process.env.RPC_URL_BASE_TESTNET || 'https://base-sepolia.gateway.tenderly.co',
             accounts,
         },
-        arbitrum: {
+        'arbitrum-sepolia': {
             eid: EndpointId.ARBSEP_V2_TESTNET,
             url: process.env.RPC_URL_ARBITRUM_TESTNET || 'https://arbitrum-sepolia.gateway.tenderly.co',
             accounts,
