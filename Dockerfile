@@ -10,7 +10,8 @@
 # 
 # This issue does not affect users, it's only related to the test runner
 # so the code will still work on node 18.16.0
-ARG NODE_VERSION=20.10.0
+# Removed the patch version so that NODE_VERSION works with $NODE-VERSION-trixie and $NODE-VERSION-alpine
+ARG NODE_VERSION=20.19
 
 # We will allow consumers to override build stages with prebuilt images
 # 
@@ -65,7 +66,7 @@ ARG INITIA_NODE_IMAGE=node-initia-localnet
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM node:$NODE_VERSION AS machine
+FROM node:$NODE_VERSION-trixie AS machine
 
 ENV PATH="/root/.cargo/bin:$PATH"
 
@@ -223,18 +224,17 @@ FROM machine AS avm
 
 WORKDIR /app/avm
 
-ENV RUST_TOOLCHAIN_VERSION_ANCHOR=1.83.0
+ENV RUST_TOOLCHAIN_VERSION_ANCHOR=nightly-2025-05-01
 RUN rustup default ${RUST_TOOLCHAIN_VERSION_ANCHOR}
-ARG ANCHOR_VERSION=0.29.0
+ARG ANCHOR_VERSION=0.31.1
 
 # Configure cargo. We want to provide a way of limiting cargo resources
 # on the github runner since it is not large enough to support multiple cargo builds
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
-RUN cargo +${RUST_TOOLCHAIN_VERSION_ANCHOR} install --git https://github.com/coral-xyz/anchor avm
+RUN cargo +${RUST_TOOLCHAIN_VERSION_ANCHOR} install --git https://github.com/solana-foundation/anchor avm
 
-# Install AVM - Anchor version manager for Solana
 RUN avm install ${ANCHOR_VERSION}
 RUN avm use ${ANCHOR_VERSION}
 
@@ -255,9 +255,9 @@ FROM machine AS solana
 
 WORKDIR /app/solana
 
-ENV RUST_TOOLCHAIN_VERSION_SOLANA=1.75.0
-ARG SOLANA_VERSION=1.18.26
-ARG PLATFORM_TOOLS_VERSION=1.41
+ENV RUST_TOOLCHAIN_VERSION_SOLANA=nightly-2025-05-01
+ARG SOLANA_VERSION=2.2.20
+ARG PLATFORM_TOOLS_VERSION=1.48
 
 RUN rustup default ${RUST_TOOLCHAIN_VERSION_SOLANA}
 
@@ -433,7 +433,7 @@ COPY --from=initia /root/.initia/lib /root/.initia/lib
 RUN echo "/root/.initia/lib" > /etc/ld.so.conf.d/initia.conf && ldconfig
 
 # Get solana tooling
-COPY --from=avm /root/.cargo/bin/anchor /root/.cargo/bin/anchor
+# COPY --from=avm /root/.cargo/bin/anchor /root/.cargo/bin/anchor
 COPY --from=avm /root/.cargo/bin/avm /root/.cargo/bin/avm
 COPY --from=avm /root/.avm /root/.avm
 
