@@ -236,12 +236,17 @@ ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 RUN cargo +${RUST_TOOLCHAIN_VERSION_ANCHOR} install --git https://github.com/solana-foundation/anchor avm
 
-## Install Anchor: prebuilt on amd64, compile on arm64
-# clean any leftovers to avoid "binary `anchor` already exists in destination"
-RUN rm -f /root/.avm/bin/anchor* /root/.cargo/bin/anchor || true
+## Anchor install: prebuilt on amd64, compile-from-source on arm64
 RUN arch="$(dpkg --print-architecture)"; \
-  if [ "$arch" = "arm64" ] || [ "$arch" = "aarch64" ]; then \
-    CARGO_INSTALL_ROOT=/root/.avm avm install ${ANCHOR_VERSION} --from-source --force; \
+ rm -rf /root/.avm/bin && mkdir -p /root/.avm/bin && rm -f /root/.cargo/bin/anchor; \
+ if [ "$arch" = "arm64" ] || [ "$arch" = "aarch64" ]; then \
+    cargo +${RUST_TOOLCHAIN_VERSION_ANCHOR} install \
+      --git https://github.com/coral-xyz/anchor \
+      --tag v${ANCHOR_VERSION} \
+      --locked anchor-cli \
+      --root /root/.avm \
+      --force; \
+    mv /root/.avm/bin/anchor /root/.avm/bin/anchor-${ANCHOR_VERSION}; \
   else \
     avm install ${ANCHOR_VERSION}; \
   fi
