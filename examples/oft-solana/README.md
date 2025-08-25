@@ -209,7 +209,6 @@ Rent-exempt minimum: 3.87415872 SOL
 
 To deploy a Solana OFT, you need to both deploy an OFT Program and also create the OFT Store, alongside the other configuration steps that are handled by the provided tasks. To understand the relationship between the OFT Program and the OFT Store, read the section ['The OFT Program'](https://docs.layerzero.network/v2/developers/solana/oft/account#the-oft-program) on the LayerZero docs.
 
-
 #### (Recommended) Deploying with a priority fee
 
 The `deploy` command will run with a priority fee. Read the section on ['Deploying Solana programs with a priority fee'](https://docs.layerzero.network/v2/developers/solana/technical-reference/solana-guidance#deploying-solana-programs-with-a-priority-fee) to learn more.
@@ -227,7 +226,6 @@ solana program deploy --program-id target/deploy/oft-keypair.json target/verifia
 :warning: If the deployment is slow, it could be that the network is congested and you might need to increase the priority fee.
 
 </details>
-
 
 ### Create the Solana OFT
 
@@ -530,6 +528,7 @@ const solanaContract: OmniPointHardhat = {
 :warning: Ensure that you `address` is specified only for the solana contract object. Do not specify addresses for the EVM chain contract objects. Under the hood, we use `hardhat-deploy` to retrieve the contract addresses of the deployed EVM chain contracts. You will run into an error if you specify `address` for an EVM chain contract object.
 
 ### Mint OFT on Solana
+
 <!-- TODO: move this into docs and just link to there -->
 
 This is only relevant for **OFT**. If you opted to include the `--amount` flag in the create step, that means you already have minted some Solana OFT and you can skip this section.
