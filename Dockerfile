@@ -235,9 +235,9 @@ ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 RUN cargo +${RUST_TOOLCHAIN_VERSION_ANCHOR} install --git https://github.com/solana-foundation/anchor avm
 
 # Install AVM - Anchor version manager for Solana
-RUN rm -f /root/.cargo/bin/anchor /root/.avm/bin/anchor* || true
-# --from-source to get around glibc 2.38 not available in the machine image
-RUN avm install ${ANCHOR_VERSION} --from-source --force
+RUN rm -f /root/.avm/bin/anchor* /root/.cargo/bin/anchor || true
+# Give cargo a clean install root only for this command to avoid the "binary `anchor` already exists in destination" error.
+RUN CARGO_INSTALL_ROOT=/root/.cargo-avm avm install ${ANCHOR_VERSION} --from-source --force
 RUN avm use ${ANCHOR_VERSION}
 
 ENV PATH="/root/.avm/bin:$PATH"
