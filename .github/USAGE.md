@@ -21,3 +21,5 @@ This also means we need to select the right image for the user's architecture.
 We can do this by using the `matrix` keyword in the workflow.
 
 Original image: <https://github.com/LayerZero-Labs/devtools/pkgs/container/devtools-dev-base/304693620>
+
+See `.github/IMAGE_GUIDE.md` for the base image update procedure.
