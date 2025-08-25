@@ -235,7 +235,7 @@ ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 RUN cargo +${RUST_TOOLCHAIN_VERSION_ANCHOR} install --git https://github.com/solana-foundation/anchor avm
 
 # Install AVM - Anchor version manager for Solana
-RUN avm install ${ANCHOR_VERSION} --from-source
+RUN avm install ${ANCHOR_VERSION} --from-source --force
 RUN avm use ${ANCHOR_VERSION}
 
 ENV PATH="/root/.avm/bin:$PATH"
