@@ -23,7 +23,7 @@
     "hardhat-deploy": "^0.12.1"
   },
   "devDependencies": {
-    "@coral-xyz/anchor": "^0.29.0",
+    "@coral-xyz/anchor": "^0.31.1",
     "@ethersproject/bytes": "^5.7.0",
     "@layerzerolabs/devtools": "~2.0.0",
     "@layerzerolabs/devtools-evm": "~3.0.0",

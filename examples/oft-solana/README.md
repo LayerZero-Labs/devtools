@@ -44,9 +44,9 @@
 
 ## Requirements
 
-- Rust `v1.75.0`
-- Anchor `v0.29`
-- Solana CLI `v1.17.31`
+- Rust `nightly-2025-05-01`
+- Anchor `0.31.1`
+- Solana CLI `2.2.20`
 - Docker `28.3.0`
 - Node.js `>=18.16.0`
 - `pnpm` (recommended) - or another package manager of your choice (npm, yarn)
@@ -70,8 +70,6 @@ Throughout this walkthrough, helper tasks will be used. For the full list of ava
 
 ## Setup
 
-:warning: You need Anchor version `0.29` and solana version `1.17.31` specifically to compile the build artifacts. Using higher Anchor and Solana versions can introduce unexpected issues during compilation. After compiling the correct build artifacts, you can change the Solana version to higher versions.
-
 <details>
 <summary> Docker</summary>
 <br>
@@ -92,21 +90,21 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 </details>
 
 <details>
-<summary>Install Solana <code>1.17.31</code></summary>
+<summary>Install Solana <code>2.2.20</code></summary>
 <br>
 
 ```bash
-sh -c "$(curl -sSfL https://release.anza.xyz/v1.17.31/install)"
+sh -c "$(curl -sSfL https://release.anza.xyz/v2.2.20/install)"
 ```
 
 </details>
 
 <details>
-<summary>Install Anchor <code>0.29</code> </summary>
+<summary>Install Anchor <code>0.31.1</code> </summary>
 <br>
 
 ```bash
-cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 anchor-cli --locked
+cargo install --git https://github.com/solana-foundation/anchor --tag v0.31.1 anchor-cli --locked
 ```
 
 </details>
@@ -211,17 +209,6 @@ Rent-exempt minimum: 3.87415872 SOL
 
 To deploy a Solana OFT, you need to both deploy an OFT Program and also create the OFT Store, alongside the other configuration steps that are handled by the provided tasks. To understand the relationship between the OFT Program and the OFT Store, read the section ['The OFT Program'](https://docs.layerzero.network/v2/developers/solana/oft/account#the-oft-program) on the LayerZero docs.
 
-### Deploy the Solana OFT Program
-
-While for building, we must use Solana `v1.17.31`, for deploying, we will be using `v1.18.26` as it provides an improved program deployment experience (i.e. ability to attach priority fees and also exact-sized on-chain program length which prevents needing to provide 2x the rent as in `v1.17.31`).
-
-#### Temporarily switch to Solana `v1.18.26`
-
-First, we switch to Solana `v1.18.26` (remember to switch back to `v1.17.31` later)
-
-```bash
-sh -c "$(curl -sSfL https://release.anza.xyz/v1.18.26/install)"
-```
 
 #### (Recommended) Deploying with a priority fee
 
@@ -241,13 +228,6 @@ solana program deploy --program-id target/deploy/oft-keypair.json target/verifia
 
 </details>
 
-#### Switch back to Solana `1.17.31`
-
-:warning: After deploying, make sure to switch back to v1.17.31 after deploying. If you need to rebuild artifacts, you must use Solana CLI version `1.17.31` and Anchor version `0.29.0`
-
-```bash
-sh -c "$(curl -sSfL https://release.anza.xyz/v1.17.31/install)"
-```
 
 ### Create the Solana OFT
 
@@ -550,6 +530,7 @@ const solanaContract: OmniPointHardhat = {
 :warning: Ensure that you `address` is specified only for the solana contract object. Do not specify addresses for the EVM chain contract objects. Under the hood, we use `hardhat-deploy` to retrieve the contract addresses of the deployed EVM chain contracts. You will run into an error if you specify `address` for an EVM chain contract object.
 
 ### Mint OFT on Solana
+<!-- TODO: move this into docs and just link to there -->
 
 This is only relevant for **OFT**. If you opted to include the `--amount` flag in the create step, that means you already have minted some Solana OFT and you can skip this section.
 
