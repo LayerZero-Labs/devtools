@@ -10,7 +10,7 @@
 # 
 # This issue does not affect users, it's only related to the test runner
 # so the code will still work on node 18.16.0
-# Removed the patch version so that NODE_VERSION works with $NODE-VERSION-trixie and $NODE-VERSION-alpine
+# Removed the patch version so that NODE_VERSION works with $NODE-VERSION-trixie and $NODE-VERSION-alpine (each is only available for differing patch versions)
 ARG NODE_VERSION=20.19
 
 # We will allow consumers to override build stages with prebuilt images
@@ -66,6 +66,7 @@ ARG INITIA_NODE_IMAGE=node-initia-localnet
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+# -trixie is needed due to anchor 0.31.1 needing glibc 2.38. Without -trixie, only glibc 2.36 is available.
 FROM node:$NODE_VERSION-trixie AS machine
 
 ENV PATH="/root/.cargo/bin:$PATH"
