@@ -65,7 +65,7 @@ ARG INITIA_NODE_IMAGE=node-initia-localnet
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM node:$NODE_VERSION AS machine
+FROM node:$NODE_VERSION-trixie AS machine
 
 ENV PATH="/root/.cargo/bin:$PATH"
 
