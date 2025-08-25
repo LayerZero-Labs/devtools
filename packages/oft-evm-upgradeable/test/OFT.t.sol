@@ -108,7 +108,7 @@ contract OFTTest is TestHelperOz5 {
         return address(new TransparentUpgradeableProxy(addr, proxyAdmin, _initializeArgs));
     }
 
-    function test_constructor() public view {
+    function test_constructor() public view virtual {
         assertEq(aOFT.owner(), address(this));
         assertEq(bOFT.owner(), address(this));
         assertEq(cOFTAdapter.owner(), address(this));
@@ -128,7 +128,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(interfaceId, expectedId);
     }
 
-    function test_send_oft() public {
+    function test_send_oft() public virtual {
         uint256 tokensToSend = 1 ether;
         bytes memory options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
         SendParam memory sendParam = SendParam(
@@ -153,7 +153,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(bOFT.balanceOf(userB), initialBalance + tokensToSend);
     }
 
-    function test_send_oft_compose_msg() public {
+    function test_send_oft_compose_msg() public virtual {
         uint256 tokensToSend = 1 ether;
 
         OFTComposerMock composer = new OFTComposerMock();
@@ -296,7 +296,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(aOFT.balanceOf(address(this)), 0);
     }
 
-    function test_oft_credit() public {
+    function test_oft_credit() public virtual {
         uint256 amountToCreditLD = 1 ether;
         uint32 srcEid = aEid;
 
@@ -366,7 +366,7 @@ contract OFTTest is TestHelperOz5 {
         composeMsg = OFTMsgCodec.composeMsg(message);
     }
 
-    function test_oft_build_msg() public view {
+    function test_oft_build_msg() public view virtual {
         uint32 dstEid = bEid;
         bytes32 to = addressToBytes32(userA);
         uint256 amountToSendLD = 1.23456789 ether;
@@ -399,7 +399,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(composeMsg_, expectedComposeMsg);
     }
 
-    function test_oft_build_msg_no_compose_msg() public view {
+    function test_oft_build_msg_no_compose_msg() public view virtual {
         uint32 dstEid = bEid;
         bytes32 to = addressToBytes32(userA);
         uint256 amountToSendLD = 1.23456789 ether;
@@ -431,7 +431,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(composeMsg_, "");
     }
 
-    function test_set_enforced_options() public {
+    function test_set_enforced_options() public virtual {
         uint32 eid = 1;
 
         bytes memory optionsTypeOne = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
@@ -447,7 +447,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(aOFT.enforcedOptions(eid, 2), optionsTypeTwo);
     }
 
-    function test_assert_options_type3_revert() public {
+    function test_assert_options_type3_revert() public virtual {
         uint32 eid = 1;
         EnforcedOptionParam[] memory enforcedOptions = new EnforcedOptionParam[](1);
 
@@ -467,7 +467,7 @@ contract OFTTest is TestHelperOz5 {
         aOFT.setEnforcedOptions(enforcedOptions); // doesnt revert cus option type 3
     }
 
-    function test_combine_options() public {
+    function test_combine_options() public virtual {
         uint32 eid = 1;
         uint16 msgType = 1;
 
@@ -490,7 +490,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(combinedOptions, expectedOptions);
     }
 
-    function test_combine_options_no_extra_options() public {
+    function test_combine_options_no_extra_options() public virtual {
         uint32 eid = 1;
         uint16 msgType = 1;
 
@@ -505,7 +505,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(combinedOptions, expectedOptions);
     }
 
-    function test_combine_options_no_enforced_options() public view {
+    function test_combine_options_no_enforced_options() public view virtual {
         uint32 eid = 1;
         uint16 msgType = 1;
 
@@ -523,7 +523,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(combinedOptions, expectedOptions);
     }
 
-    function test_oapp_inspector_inspect() public {
+    function test_oapp_inspector_inspect() public virtual {
         uint32 dstEid = bEid;
         bytes32 to = addressToBytes32(userA);
         uint256 amountToSendLD = 1.23456789 ether;
