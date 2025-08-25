@@ -38,7 +38,6 @@ We recommend using `pnpm` as a package manager (but you can of course use a pack
 [Docker](https://docs.docker.com/get-started/get-docker/) is required to build using anchor. We highly recommend that you use the most up-to-date Docker version to avoid any issues with anchor
 builds.
 
-
 ### Install Rust
 
 ```bash
