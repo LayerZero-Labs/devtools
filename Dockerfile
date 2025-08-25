@@ -102,8 +102,8 @@ RUN apt-get install --yes \
 ### Setup rust
 # Install rust and set the default toolchain to 1.75.0
 ARG RUST_TOOLCHAIN_VERSION=1.75.0
-ENV RUSTUP_VERSION=${RUST_TOOLCHAIN_VERSION}
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${RUST_TOOLCHAIN_VERSION}
+# ENV RUSTUP_VERSION=${RUST_TOOLCHAIN_VERSION}
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${RUST_TOOLCHAIN_VERSION} --profile minimal
 RUN rustc --version
 
 ### Setup go
