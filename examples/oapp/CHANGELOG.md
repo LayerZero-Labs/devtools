@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.6.1
+
+### Patch Changes
+
+- bf7cb01: update link to simple config
+
 ## 0.6.0
 
 ### Minor Changes
