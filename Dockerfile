@@ -225,7 +225,7 @@ WORKDIR /app/avm
 
 ENV RUST_TOOLCHAIN_VERSION_ANCHOR=1.83.0
 RUN rustup default ${RUST_TOOLCHAIN_VERSION_ANCHOR}
-ARG ANCHOR_VERSION=0.29.0
+ARG ANCHOR_VERSION=0.31.1
 
 # Configure cargo. We want to provide a way of limiting cargo resources
 # on the github runner since it is not large enough to support multiple cargo builds
