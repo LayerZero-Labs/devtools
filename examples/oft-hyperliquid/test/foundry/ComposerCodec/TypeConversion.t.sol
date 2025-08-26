@@ -41,7 +41,7 @@ contract TypeConversionTest is Test {
         console.log(scale);
         vm.assume(maxAmountTransferable >= scale);
 
-        IHyperAsset memory oftAsset = IHyperAsset({
+        IHyperAsset memory tokenAsset = IHyperAsset({
             assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1),
             coreIndexId: 1,
             decimalDiff: evmExtraWeiDecimals
@@ -50,7 +50,7 @@ contract TypeConversionTest is Test {
         IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyperAssetAmount(
             amount,
             maxAmountTransferable,
-            oftAsset
+            tokenAsset
         );
 
         console.log(amounts.dust);
@@ -75,7 +75,7 @@ contract TypeConversionTest is Test {
         // [1, 2 ** 64 * 10 ** (weiDifference))
         amount = uint64(bound(amount, scale, type(uint64).max * scale - 1));
 
-        IHyperAsset memory oftAsset = IHyperAsset({
+        IHyperAsset memory tokenAsset = IHyperAsset({
             assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1),
             coreIndexId: 1,
             decimalDiff: evmExtraWeiDecimals
@@ -84,7 +84,7 @@ contract TypeConversionTest is Test {
         IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyperAssetAmount(
             amount,
             maxAmountTransferable,
-            oftAsset
+            tokenAsset
         );
 
         uint256 expectedDust = amount % scale;

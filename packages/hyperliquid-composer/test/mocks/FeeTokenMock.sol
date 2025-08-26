@@ -13,7 +13,7 @@ contract FeeTokenMock is FeeToken {
     ) HyperLiquidComposer(_oft, _coreIndexId, _assetDecimalDiff, _REFUND_ADDRESS) {}
 
     function createRawActionPayloadERC20(address _to, uint64 _coreAmount) public view returns (bytes memory payload) {
-        bytes memory action = abi.encode(_to, oftAsset.coreIndexId, _coreAmount);
+        bytes memory action = abi.encode(_to, tokenAsset.coreIndexId, _coreAmount);
         payload = abi.encodePacked(SPOT_SEND_HEADER, action);
     }
 }

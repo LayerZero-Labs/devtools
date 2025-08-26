@@ -35,7 +35,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, ReentrancyGuard, IOAppC
     ) HyperLiquidComposerCore(_oft) {
         /// @dev Asset bridge address is the prefix (0x2000...0000) + the core index id
         /// @dev This is used to transfer tokens between the ERC20 and CoreSpot
-        oftAsset = IHyperAsset({
+        tokenAsset = IHyperAsset({
             decimalDiff: _assetDecimalDiff,
             coreIndexId: _coreIndexId,
             assetBridgeAddress: _coreIndexId.into_assetBridgeAddress()
@@ -147,8 +147,8 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, ReentrancyGuard, IOAppC
         uint64 coreAmount = _getFinalCoreAmount(_receiver, amounts.core);
 
         if (amounts.evm != 0) {
-            // Cache oftAsset to avoid multiple SLOAD operations
-            IHyperAsset memory asset = oftAsset;
+            // Cache tokenAsset to avoid multiple SLOAD operations
+            IHyperAsset memory asset = tokenAsset;
             // Transfer the tokens to the composer's address on HyperCore
             IERC20(TOKEN).safeTransfer(asset.assetBridgeAddress, amounts.evm);
             _submitCoreWriterTransfer(_receiver, asset.coreIndexId, coreAmount);

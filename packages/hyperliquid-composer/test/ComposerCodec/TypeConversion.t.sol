@@ -42,7 +42,7 @@ contract TypeConversionTest is Test {
 
         uint256 scale = 10 ** uint8(-1 * evmExtraWeiDecimals);
 
-        IHyperAsset memory oftAsset = IHyperAsset({
+        IHyperAsset memory tokenAsset = IHyperAsset({
             assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1),
             coreIndexId: 1,
             decimalDiff: evmExtraWeiDecimals
@@ -51,7 +51,7 @@ contract TypeConversionTest is Test {
         IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyperAssetAmount(
             amount,
             bridgeSupply,
-            oftAsset
+            tokenAsset
         );
 
         assertEq(amounts.evm, amounts.core / scale, "evm and core amounts should differ by a factor of scale");
@@ -67,7 +67,7 @@ contract TypeConversionTest is Test {
         evmExtraWeiDecimals = int8(bound(evmExtraWeiDecimals, 1, MAX_DECIMAL_DIFF));
         uint256 scale = 10 ** uint8(evmExtraWeiDecimals);
 
-        IHyperAsset memory oftAsset = IHyperAsset({
+        IHyperAsset memory tokenAsset = IHyperAsset({
             assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1),
             coreIndexId: 1,
             decimalDiff: evmExtraWeiDecimals
@@ -76,7 +76,7 @@ contract TypeConversionTest is Test {
         IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyperAssetAmount(
             amount,
             bridgeSupply,
-            oftAsset
+            tokenAsset
         );
 
         assertEq(amounts.evm / scale, amounts.core, "evm and core amounts should differ by a factor of scale");

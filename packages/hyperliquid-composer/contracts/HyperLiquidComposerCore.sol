@@ -39,7 +39,7 @@ contract HyperLiquidComposerCore is HyperLiquidCore, IHyperLiquidComposerCore {
 
     address public immutable REFUND_ADDRESS;
 
-    IHyperAsset public oftAsset;
+    IHyperAsset public tokenAsset;
     IHyperAsset public hypeAsset;
 
     /**
@@ -71,9 +71,9 @@ contract HyperLiquidComposerCore is HyperLiquidCore, IHyperLiquidComposerCore {
      * @return IHyperAssetAmount - The amount of tokens to send to HyperCore (scaled on evm), dust (to be refunded), and the swap amount (of the tokens scaled on hypercore)
      */
     function quoteHyperCoreAmount(uint256 _amount, bool _isOFT) public view returns (IHyperAssetAmount memory) {
-        IHyperAsset memory asset = _isOFT ? oftAsset : hypeAsset;
-        uint64 coreBalance = spotBalance(asset.assetBridgeAddress, asset.coreIndexId).total;
-        return _amount.into_hyperAssetAmount(coreBalance, asset);
+        IHyperAsset memory asset = _isOFT ? tokenAsset : hypeAsset;
+        uint64 assetBridgeBalance = spotBalance(asset.assetBridgeAddress, asset.coreIndexId).total;
+        return _amount.into_hyperAssetAmount(assetBridgeBalance, asset);
     }
 
     /**

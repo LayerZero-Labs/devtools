@@ -40,7 +40,7 @@ interface IHyperLiquidComposerCore is IHyperLiquidComposerErrors {
     function TOKEN() external view returns (address);
     function REFUND_ADDRESS() external view returns (address);
 
-    function oftAsset() external view returns (uint64, int64, address);
+    function tokenAsset() external view returns (uint64, int64, address);
     function hypeAsset() external view returns (uint64, int64, address);
 
     function refundToSrc(bytes32 guid) external payable;
