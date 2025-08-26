@@ -91,12 +91,12 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
             }
         }
 
-        // throw if user specified extraOptions and we also need to set conditionalValue
+        // throw if user specified extraOptions and conditionalValue is non-zero
         if (args.extraOptions && conditionalValue > 0) {
             throw new Error('extraOptions and conditionalValue cannot be set at the same time')
             // hint: do not pass in extraOptions via params
         }
-        // if there's conditionalValue, we build the extraOptions
+        // if there's conditionalValue, we build the extraOptions to be passed in
         if (conditionalValue > 0) {
             args.extraOptions = Options.newOptions().addExecutorLzReceiveOption(0, conditionalValue).toHex()
         }
