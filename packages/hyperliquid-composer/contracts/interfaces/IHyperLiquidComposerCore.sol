@@ -8,9 +8,9 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IHyperLiquidComposerErrors } from "./IHyperLiquidComposerErrors.sol";
 
 struct IHyperAsset {
-    uint64 coreIndexId; // 8 bytes
-    int64 decimalDiff; // 8 bytes
-    address assetBridgeAddress; // 20 bytes (fits in same slot)
+    uint64 coreIndexId; /// 8 bytes
+    int64 decimalDiff; /// 8 bytes : @dev is computed as evm decimals - core decimals
+    address assetBridgeAddress; /// 20 bytes (fits in same slot)
 }
 
 struct IHyperAssetAmount {
