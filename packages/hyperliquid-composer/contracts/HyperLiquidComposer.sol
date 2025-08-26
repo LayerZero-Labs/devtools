@@ -86,22 +86,22 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, ReentrancyGuard, IOAppC
         }
 
         uint256 refundHYPE;
-        uint256 refundERC20;
+        uint256 refundToken;
 
         /// @dev If HyperEVM -> HyperCore fails for HYPE OR ERC20 then we do a complete refund to the receiver on hyperevm
         try this.handleCoreTransfers{ value: msg.value }(receiver, amount) returns (
             uint256 dustHYPE,
-            uint256 dustERC20
+            uint256 dustToken
         ) {
             refundHYPE = dustHYPE;
-            refundERC20 = dustERC20;
+            refundToken = dustToken;
         } catch {
             refundHYPE = msg.value;
-            refundERC20 = amount;
+            refundToken = amount;
         }
 
         /// @dev multi-utility function that either refunds dust (evm and core decimal difference) or a complete refund
-        _hyperevmRefund(receiver, refundHYPE, refundERC20);
+        _hyperevmRefund(receiver, refundHYPE, refundToken);
     }
 
     /**
@@ -125,10 +125,10 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, ReentrancyGuard, IOAppC
     function handleCoreTransfers(
         address _receiver,
         uint256 _amount
-    ) external payable returns (uint256 dustHYPE, uint256 dustERC20) {
+    ) external payable returns (uint256 dustHYPE, uint256 dustToken) {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
-        dustERC20 = _checkTransferERC20HyperCore(_receiver, _amount);
+        dustToken = _checkTransferERC20HyperCore(_receiver, _amount);
 
         if (msg.value > 0) {
             dustHYPE = _transferNativeHyperCore(_receiver);
