@@ -69,6 +69,8 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
             )
         }
 
+        // NOTE: the conditionalValue block below assumes that in layerzeroconfig.ts, in the SOLANA_ENFORCED_OPTIONS, you have set the value to 0
+        // Setting value both in the SOLANA_ENFORCED_OPTIONS and in the conditionalValue block below will result in redundant value being sent
         let conditionalValue = 0
         // if sending to Solana, check if the recipient already has an associated token account
         // refer to https://docs.layerzero.network/v2/developers/solana/oft/account#setting-enforced-options-inbound-to-solana
@@ -92,7 +94,7 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
         // throw if user specified extraOptions and we also need to set conditionalValue
         if (args.extraOptions && conditionalValue > 0) {
             throw new Error('extraOptions and conditionalValue cannot be set at the same time')
-            // hint: do not pass in extraOptions
+            // hint: do not pass in extraOptions via params
         }
         // if there's conditionalValue, we build the extraOptions
         if (conditionalValue > 0) {
