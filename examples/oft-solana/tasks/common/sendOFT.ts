@@ -75,15 +75,20 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
         if (dstChainType === ChainType.SOLANA) {
             const solanaDeployment = getSolanaDeployment(args.dstEid)
             const recipient = args.to
+            // note that there may still exist a race condition
+            // if the first cross-chain send to a Solana recipient has not been executed yet, and a second send is initiated
+            // then the second send will still attach the rent value since the ATA does not exist yet
             const { ataExists, tokenType } = await checkAssociatedTokenAccountExists({
                 eid: args.dstEid,
                 mint: solanaDeployment.mint,
                 owner: recipient,
             })
+
             if (!ataExists && tokenType === SolanaTokenType.SPL) {
                 conditionalValue = SPL_TOKEN_ACCOUNT_RENT_VALUE
             }
         }
+
         // throw if user specified extraOptions and we also need to set conditionalValue
         if (args.extraOptions && conditionalValue > 0) {
             throw new Error('extraOptions and conditionalValue cannot be set at the same time')
