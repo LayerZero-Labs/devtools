@@ -16,7 +16,7 @@ import {
 import { deriveConnection } from './index'
 
 export const SPL_TOKEN_ACCOUNT_RENT_VALUE = 2_039_280 // This figure represents lamports (https://solana.com/docs/references/terminology#lamport) on Solana. Read below for more details.
-export const TOKEN_2022_ACCOUNT_RENT_VALUE = 2_500_000 // NOTE: The actual value needed depends on which extensions are enabled. You would need to determine this value based on your own Token2022 token.
+export const TOKEN_2022_ACCOUNT_RENT_VALUE = 2_500_000 // NOTE: The actual value needed depends on which specific extensions you have enabled for your Token2022 token. You would need to determine this value based on your own Token2022 token.
 
 export const findSolanaEndpointIdInGraph = async (
     hre: HardhatRuntimeEnvironment,
