@@ -33,7 +33,6 @@ interface IHyperLiquidComposerCore is IHyperLiquidComposerErrors {
     event RefundHyperEVM(address indexed receiver, uint256 indexed amountERC20, uint256 indexed amountHYPE);
 
     function MIN_GAS() external view returns (uint256);
-    function NATIVE_TRANSFER_GAS() external view returns (uint256);
     function VALID_COMPOSE_MSG_LEN() external view returns (uint256);
 
     function ENDPOINT() external view returns (address);

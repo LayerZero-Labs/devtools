@@ -26,8 +26,8 @@ contract HyperLiquidComposerCore is HyperLiquidCore, IHyperLiquidComposerCore {
     using HyperLiquidComposerCodec for bytes;
     using HyperLiquidComposerCodec for uint256;
 
+    /// @dev Minimum gas to be supplied to the composer contract for execution to prevent Out of Gas.
     uint256 public constant MIN_GAS = 150_000;
-    uint256 public constant NATIVE_TRANSFER_GAS = 2_300;
 
     uint256 public constant VALID_COMPOSE_MSG_LEN = 64; /// abi.encode(uint256,address) = 32+32
 
@@ -93,7 +93,7 @@ contract HyperLiquidComposerCore is HyperLiquidCore, IHyperLiquidComposerCore {
      */
     function _hyperevmRefund(address _refundAddress, uint256 _hypeAmt, uint256 _erc20Amt) internal {
         if (_hypeAmt > 0) {
-            (bool success1, ) = _refundAddress.call{ value: _hypeAmt, gas: NATIVE_TRANSFER_GAS }("");
+            (bool success1, ) = _refundAddress.call{ value: _hypeAmt }("");
             if (!success1) {
                 (bool success2, ) = tx.origin.call{ value: _hypeAmt }("");
                 if (!success2) revert NativeTransferFailed(tx.origin, _hypeAmt);

@@ -169,9 +169,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, ReentrancyGuard, IOAppC
             // Cache hypeAsset to avoid multiple SLOAD operations
             IHyperAsset memory asset = hypeAsset;
             // Transfer the HYPE tokens to the composer's address on HyperCore
-            (bool success, ) = payable(asset.assetBridgeAddress).call{ value: amounts.evm, gas: NATIVE_TRANSFER_GAS }(
-                ""
-            );
+            (bool success, ) = payable(asset.assetBridgeAddress).call{ value: amounts.evm }("");
             if (!success) revert NativeTransferFailed(asset.assetBridgeAddress, amounts.evm);
 
             _submitCoreWriterTransfer(_receiver, asset.coreIndexId, amounts.core);
