@@ -71,7 +71,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, ReentrancyGuard, IOAppC
         address receiver;
 
         /// @dev Decode message to get receiver, store in failedMessages if decode fails
-        try this.decode_message(composeMsgEncoded) returns (uint256 _minMsgValue, address _receiver) {
+        try this.decodeMessage(composeMsgEncoded) returns (uint256 _minMsgValue, address _receiver) {
             if (msg.value < _minMsgValue) revert InsufficientMsgValue(msg.value, _minMsgValue);
             receiver = _receiver;
         } catch {
@@ -110,7 +110,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, ReentrancyGuard, IOAppC
      * @return minMsgValue The minimum message value required
      * @return receiver The receiver address
      */
-    function decode_message(
+    function decodeMessage(
         bytes calldata _composeMessage
     ) external pure returns (uint256 minMsgValue, address receiver) {
         if (_composeMessage.length != VALID_COMPOSE_MSG_LEN) revert ComposeMsgLengthNot64Bytes(_composeMessage.length);
