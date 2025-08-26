@@ -57,7 +57,9 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
             recovery
         );
 
-        assertEq(hypeComposerTestnet.hypeIndexByChainId(998), 1105);
+        (uint64 coreIndexId, , ) = hypeComposerTestnet.hypeAsset();
+
+        assertEq(coreIndexId, 1105);
     }
 
     function test_hypeIndexByChainId_mainnet() public {
@@ -81,7 +83,9 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
             recovery
         );
 
-        assertEq(hypeComposerMainnet.hypeIndexByChainId(999), 150);
+        (uint64 coreIndexId, , ) = hypeComposerMainnet.hypeAsset();
+
+        assertEq(coreIndexId, 150);
     }
 
     function test_SendSpot_no_FundAddress() public {

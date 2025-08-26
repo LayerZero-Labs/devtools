@@ -50,7 +50,7 @@ contract ComposeMessageTest is HyperliquidBaseTest {
         bytes memory _msg = OFTComposeMsgCodec.composeMsg(_message);
 
         amountLD = OFTComposeMsgCodec.amountLD(_message);
-        (minMsgValue, receiver) = hyperLiquidComposer.decode_message(_msg);
+        (minMsgValue, receiver) = hyperLiquidComposer.decodeMessage(_msg);
     }
 
     function composeMsg(bytes calldata _message) public pure returns (bytes memory) {
