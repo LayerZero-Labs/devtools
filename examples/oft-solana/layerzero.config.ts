@@ -44,7 +44,7 @@ const SOLANA_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
         optionType: ExecutorOptionType.LZ_RECEIVE,
         gas: SOLANA_CU_LIMIT,
         // value: SPL_TOKEN_ACCOUNT_RENT_VALUE, // If you enable this, all sends regardless of whether the recipient already has the Associated Token Account will include the rent value, which might be wasteful.
-        value: 0, // value will be set where quote/send is called. In this example, it is set in ./tasks/evm/sendEvm.ts
+        value: 0, // value will be set where quote/send is called. In this example, it is set in ./tasks/common/sendOFT.ts
     },
 ]
 
