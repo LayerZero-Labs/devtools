@@ -121,6 +121,7 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, ReentrancyGuard, IOAppC
     /**
      * @dev Transfers native and erc20 to HyperCore via asset bridge, then to receiver via CoreWriter. Returns dust to HyperEVM.
      * @dev If either fails then we complete refund the user on HyperEVM
+     * @dev Default behavior checks if the user is activated on HyperCore in ERC20 transfer, if not then revert this call
      */
     function handleCoreTransfers(
         address _receiver,
@@ -138,14 +139,19 @@ contract HyperLiquidComposer is HyperLiquidComposerCore, ReentrancyGuard, IOAppC
     /**
      * @notice Transfers ERC20 tokens to HyperCore
      * @notice Checks if the receiver's address is activated on HyperCore
+     * @notice To be overriden on FeeToken or other implementations since this can be used to activate tokens
      * @param _receiver The address to receive tokens on HyperCore
      * @param _amountLD The amount of tokens to transfer in LayerZero decimals
      * @return The dust amount to be refunded on HyperEVM
      */
     function _checkTransferERC20HyperCore(address _receiver, uint256 _amountLD) internal virtual returns (uint256) {
         IHyperAssetAmount memory amounts = quoteHyperCoreAmount(_amountLD, true);
+
+        /// @dev This reverts if the user is not activated in the default case, else it simply returns `amounts.core`
         uint64 coreAmount = _getFinalCoreAmount(_receiver, amounts.core);
 
+        /// @dev Moving tokens to asset bridge credits the coreAccount of composer with the tokens.
+        /// @dev The write call then moves coreSpot tokens from the composer to receiver
         if (amounts.evm != 0) {
             // Cache tokenAsset to avoid multiple SLOAD operations
             IHyperAsset memory asset = tokenAsset;
