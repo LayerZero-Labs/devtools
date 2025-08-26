@@ -4,6 +4,7 @@ import { generateConnectionsConfig } from '@layerzerolabs/metadata-tools'
 import { OAppEnforcedOption, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
 import { getOftStoreAddress } from './tasks/solana'
+// import { SPL_TOKEN_ACCOUNT_RENT_VALUE } from './tasks/solana/utils'
 
 // Note:  Do not use address for EVM OmniPointHardhat contracts.  Contracts are loaded using hardhat-deploy.
 // If you do use an address, ensure artifacts exists.
@@ -27,7 +28,6 @@ const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
 ]
 
 const SOLANA_CU_LIMIT = 200_000 // This represents the CU limit for executing the `lz_receive` function on Solana.
-// const SPL_TOKEN_ACCOUNT_RENT_VALUE = 2039280 // This figure represents lamports (https://solana.com/docs/references/terminology#lamport) on Solana. Read below for more details.
 
 /*
  * Inbound to Solana enforced options:

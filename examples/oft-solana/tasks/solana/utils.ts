@@ -1,3 +1,6 @@
+import { findAssociatedTokenPda, safeFetchMint, safeFetchToken } from '@metaplex-foundation/mpl-toolbox'
+import { PublicKey, Umi, publicKey } from '@metaplex-foundation/umi'
+import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { Connection } from '@solana/web3.js'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
@@ -9,6 +12,10 @@ import {
     SubtaskLoadConfigTaskArgs,
     TASK_LZ_OAPP_CONFIG_GET,
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
+
+import { deriveConnection } from './index'
+
+export const SPL_TOKEN_ACCOUNT_RENT_VALUE = 2_039_280 // This figure represents lamports (https://solana.com/docs/references/terminology#lamport) on Solana. Read below for more details.
 
 export const findSolanaEndpointIdInGraph = async (
     hre: HardhatRuntimeEnvironment,
@@ -72,8 +79,9 @@ export function parseDecimalToUnits(amount: string, decimals: number): bigint {
  * that mentions the 429 retry.
  */
 export function silenceSolana429(connection: Connection): void {
-    const origWrite = process.stderr.write.bind(process.stderr)
-    process.stderr.write = ((chunk: any, ...args: any[]) => {
+    type WriteFn = (chunk: string | Buffer, ...args: unknown[]) => boolean
+    const origWrite = process.stderr.write.bind(process.stderr) as WriteFn
+    process.stderr.write = ((chunk: string | Buffer, ...args: unknown[]) => {
         const str = Buffer.isBuffer(chunk) ? chunk.toString('utf8') : chunk
         if (typeof str === 'string' && str.includes('429 Too Many Requests')) {
             // swallow it
@@ -82,4 +90,45 @@ export function silenceSolana429(connection: Connection): void {
         // otherwise pass through
         return origWrite(chunk, ...args)
     }) as typeof process.stderr.write
+}
+
+export enum SolanaTokenType {
+    SPL = 'spl',
+    TOKEN2022 = 'token2022',
+}
+
+/**
+ * Check if an Associated Token Account (ATA) exists for a given mint and owner.
+ * Returns the derived ATA and a boolean indicating existence.
+ */
+export async function checkAssociatedTokenAccountExists(args: {
+    umi?: Umi
+    eid: EndpointId
+    mint: PublicKey | string
+    owner: PublicKey | string
+}): Promise<{ ata: string; ataExists: boolean; tokenType: SolanaTokenType | null }> {
+    const { umi: providedUmi, eid, mint, owner } = args
+    const umi = providedUmi ?? (await deriveConnection(eid, true)).umi
+
+    const mintPk = typeof mint === 'string' ? publicKey(mint) : mint
+    const ownerPk = typeof owner === 'string' ? publicKey(owner) : owner
+
+    const ata = findAssociatedTokenPda(umi, { mint: mintPk, owner: ownerPk })
+    const account = await safeFetchToken(umi, ata)
+    const mintAccount = await safeFetchMint(umi, mintPk)
+    // check header.owner to determine if the token is SPL or Token2022 using switch
+    let tokenType: SolanaTokenType | null = null
+
+    switch (mintAccount?.header.owner) {
+        case TOKEN_PROGRAM_ID.toBase58():
+            tokenType = SolanaTokenType.SPL
+            break
+        case TOKEN_2022_PROGRAM_ID.toBase58():
+            tokenType = SolanaTokenType.TOKEN2022
+            break
+        default:
+            throw new Error(`Unknown token type: ${account?.header.owner}`)
+    }
+
+    return { ata: ata[0], ataExists: !!account, tokenType }
 }

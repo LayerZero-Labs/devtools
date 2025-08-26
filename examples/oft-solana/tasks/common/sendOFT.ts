@@ -2,9 +2,12 @@ import { task, types } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
+import { Options } from '@layerzerolabs/lz-v2-utilities'
 
 import { EvmArgs, sendEvm } from '../evm/sendEvm'
+import { getSolanaDeployment } from '../solana'
 import { SolanaArgs, sendSolana } from '../solana/sendSolana'
+import { SPL_TOKEN_ACCOUNT_RENT_VALUE, SolanaTokenType, checkAssociatedTokenAccountExists } from '../solana/utils'
 
 import { SendResult } from './types'
 import { DebugLogger, KnownOutputs, KnownWarnings, getBlockExplorerLink } from './utils'
@@ -55,7 +58,8 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
     .addOptionalParam('tokenProgram', 'Solana Token Program pubkey', undefined, types.string)
     .addOptionalParam('computeUnitPriceScaleFactor', 'Solana compute unit price scale factor', 4, types.float)
     .setAction(async (args: MasterArgs, hre: HardhatRuntimeEnvironment) => {
-        const chainType = endpointIdToChainType(args.srcEid)
+        const srcChainType = endpointIdToChainType(args.srcEid)
+        const dstChainType = endpointIdToChainType(args.dstEid)
         let result: SendResult
 
         if (args.oftAddress || args.oftProgramId) {
@@ -65,13 +69,38 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
             )
         }
 
-        // route to the correct function based on the chain type
-        if (chainType === ChainType.EVM) {
+        let conditionalValue = 0
+        // if sending to Solana, check if the recipient already has an associated token account
+        // refer to https://docs.layerzero.network/v2/developers/solana/oft/account#setting-enforced-options-inbound-to-solana
+        if (dstChainType === ChainType.SOLANA) {
+            const solanaDeployment = getSolanaDeployment(args.dstEid)
+            const recipient = args.to
+            const { ataExists, tokenType } = await checkAssociatedTokenAccountExists({
+                eid: args.dstEid,
+                mint: solanaDeployment.mint,
+                owner: recipient,
+            })
+            if (!ataExists && tokenType === SolanaTokenType.SPL) {
+                conditionalValue = SPL_TOKEN_ACCOUNT_RENT_VALUE
+            }
+        }
+        // throw if user specified extraOptions and we also need to set conditionalValue
+        if (args.extraOptions && conditionalValue > 0) {
+            throw new Error('extraOptions and conditionalValue cannot be set at the same time')
+            // hint: do not pass in extraOptions
+        }
+        // if there's conditionalValue, we build the extraOptions
+        if (conditionalValue > 0) {
+            args.extraOptions = Options.newOptions().addExecutorLzReceiveOption(0, conditionalValue).toHex()
+        }
+
+        // route to the correct send function based on the source chain type
+        if (srcChainType === ChainType.EVM) {
             result = await sendEvm(args as EvmArgs, hre)
-        } else if (chainType === ChainType.SOLANA) {
+        } else if (srcChainType === ChainType.SOLANA) {
             result = await sendSolana(args as SolanaArgs)
         } else {
-            throw new Error(`The chain type ${chainType} is not implemented in sendOFT for this example`)
+            throw new Error(`The chain type ${srcChainType} is not implemented in sendOFT for this example`)
         }
 
         DebugLogger.printLayerZeroOutput(
