@@ -7,7 +7,7 @@ import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { EvmArgs, sendEvm } from '../evm/sendEvm'
 import { getSolanaDeployment } from '../solana'
 import { SolanaArgs, sendSolana } from '../solana/sendSolana'
-import { SPL_TOKEN_ACCOUNT_RENT_VALUE, SolanaTokenType, checkAssociatedTokenAccountExists } from '../solana/utils'
+import { getConditionalValueForSendToSolana } from '../solana/utils'
 
 import { SendResult } from './types'
 import { DebugLogger, KnownOutputs, KnownWarnings, getBlockExplorerLink } from './utils'
@@ -72,23 +72,14 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
         // NOTE: the conditionalValue block below assumes that in layerzeroconfig.ts, in the SOLANA_ENFORCED_OPTIONS, you have set the value to 0
         // Setting value both in the SOLANA_ENFORCED_OPTIONS and in the conditionalValue block below will result in redundant value being sent
         let conditionalValue = 0
-        // if sending to Solana, check if the recipient already has an associated token account
-        // refer to https://docs.layerzero.network/v2/developers/solana/oft/account#setting-enforced-options-inbound-to-solana
+        // If sending to Solana, compute conditional value for ATA creation
         if (dstChainType === ChainType.SOLANA) {
             const solanaDeployment = getSolanaDeployment(args.dstEid)
-            const recipient = args.to
-            // note that there may still exist a race condition
-            // if the first cross-chain send to a Solana recipient has not been executed yet, and a second send is initiated
-            // then the second send will still attach the rent value since the ATA does not exist yet
-            const { ataExists, tokenType } = await checkAssociatedTokenAccountExists({
+            conditionalValue = await getConditionalValueForSendToSolana({
                 eid: args.dstEid,
+                recipient: args.to,
                 mint: solanaDeployment.mint,
-                owner: recipient,
             })
-
-            if (!ataExists && tokenType === SolanaTokenType.SPL) {
-                conditionalValue = SPL_TOKEN_ACCOUNT_RENT_VALUE
-            }
         }
 
         // throw if user specified extraOptions and conditionalValue is non-zero

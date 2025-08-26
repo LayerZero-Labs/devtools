@@ -16,6 +16,7 @@ import {
 import { deriveConnection } from './index'
 
 export const SPL_TOKEN_ACCOUNT_RENT_VALUE = 2_039_280 // This figure represents lamports (https://solana.com/docs/references/terminology#lamport) on Solana. Read below for more details.
+export const TOKEN_2022_ACCOUNT_RENT_VALUE = 2_500_000 // NOTE: The actual value needed depends on which extensions are enabled. You would need to determine this value based on your own Token2022 token.
 
 export const findSolanaEndpointIdInGraph = async (
     hre: HardhatRuntimeEnvironment,
@@ -131,4 +132,33 @@ export async function checkAssociatedTokenAccountExists(args: {
     }
 
     return { ata: ata[0], ataExists: !!account, tokenType }
+}
+
+/**
+ * Compute the per-transaction msg.value to attach when sending to Solana.
+ * Returns 0 if the recipient ATA already exists or if the mint is Token2022.
+ * Returns SPL_TOKEN_ACCOUNT_RENT_VALUE if the recipient ATA is missing and the mint is SPL.
+ */
+export async function getConditionalValueForSendToSolana(args: {
+    eid: EndpointId
+    recipient: string
+    mint: string | PublicKey
+    umi?: Umi
+}): Promise<number> {
+    const { eid, recipient, mint, umi } = args
+    const { ataExists, tokenType } = await checkAssociatedTokenAccountExists({
+        eid,
+        owner: recipient,
+        mint,
+        umi,
+    })
+    if (!ataExists && tokenType === SolanaTokenType.SPL) {
+        return SPL_TOKEN_ACCOUNT_RENT_VALUE
+    } else if (!ataExists && tokenType === SolanaTokenType.TOKEN2022) {
+        console.warn(
+            'Ensure that the TOKEN_2022_ACCOUNT_RENT_VALUE has been updated according to your actual token account size'
+        )
+        return TOKEN_2022_ACCOUNT_RENT_VALUE
+    }
+    return 0
 }
