@@ -43,8 +43,6 @@ interface IHyperLiquidComposerCore is IHyperLiquidComposerErrors {
     function oftAsset() external view returns (uint64, int64, address);
     function hypeAsset() external view returns (uint64, int64, address);
 
-    function hypeIndexByChainId(uint256 _chainId) external view returns (uint64);
-
     function refundToSrc(bytes32 guid) external payable;
 
     function quoteHyperCoreAmount(uint256 _amount, bool _isOFT) external returns (IHyperAssetAmount memory);

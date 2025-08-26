@@ -31,7 +31,6 @@ contract HyperLiquidComposerCore is HyperLiquidCore, IHyperLiquidComposerCore {
 
     uint256 public constant VALID_COMPOSE_MSG_LEN = 64; /// abi.encode(uint256,address) = 32+32
 
-    mapping(uint256 => uint64) public hypeIndexByChainId;
     mapping(bytes32 => FailedMessage) public failedMessages;
 
     address public immutable ENDPOINT;
@@ -48,9 +47,6 @@ contract HyperLiquidComposerCore is HyperLiquidCore, IHyperLiquidComposerCore {
      * @param _oft The OFT contract address
      */
     constructor(address _oft) {
-        hypeIndexByChainId[HYPE_CHAIN_ID_TESTNET] = HYPE_INDEX_TESTNET;
-        hypeIndexByChainId[HYPE_CHAIN_ID_MAINNET] = HYPE_INDEX_MAINNET;
-
         if (_oft == address(0)) revert InvalidOFTAddress();
 
         ENDPOINT = address(IOAppCore(_oft).endpoint());
@@ -58,8 +54,7 @@ contract HyperLiquidComposerCore is HyperLiquidCore, IHyperLiquidComposerCore {
         OFT = _oft;
         TOKEN = IOFT(OFT).token();
 
-        uint64 hypeIndex = hypeIndexByChainId[block.chainid];
-        if (hypeIndex == 0) revert UnsupportedChainId(block.chainid);
+        uint64 hypeIndex = block.chainid == HYPE_CHAIN_ID_MAINNET ? HYPE_INDEX_MAINNET : HYPE_INDEX_TESTNET;
 
         /// @dev HYPE system contract address for Core<->EVM transfers
         hypeAsset = IHyperAsset({

@@ -11,7 +11,6 @@ interface IHyperLiquidComposerErrors {
     error InsufficientGas(uint256 gasLeft, uint256 minGas);
 
     error InvalidOFTAddress();
-    error UnsupportedChainId(uint256 chainId);
 
     error OnlyEndpoint();
     error InvalidComposeCaller(address internalOFTAddress, address receivedOFTAddress);
