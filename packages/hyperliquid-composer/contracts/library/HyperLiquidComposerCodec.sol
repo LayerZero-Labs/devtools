@@ -84,7 +84,7 @@ library HyperLiquidComposerCodec {
      * @notice This function is called by the HyperLiquidComposer contract
      * @param _amount The amount to convert
      * @param _maxTransferableCoreAmount The maximum transferrable amount capped by the asset bridge has range [0,u64.max]
-     * @param _extraWeiDecimals The decimal difference between HyperEVM and HyperCore
+     * @param _decimalDiff The decimal difference between HyperEVM and HyperCore
      * @return amountEVM The EVM amount
      * @return dust The dust amount
      * @return amountCore The core amount
@@ -92,24 +92,22 @@ library HyperLiquidComposerCodec {
     function into_hyperAssetAmount_decimal_difference_gt_zero(
         uint256 _amount,
         uint64 _maxTransferableCoreAmount,
-        uint64 _extraWeiDecimals
+        uint64 _decimalDiff
     ) internal pure returns (uint256 amountEVM, uint256 dust, uint64 amountCore) {
-        uint256 scale = 10 ** _extraWeiDecimals;
+        uint256 scale = 10 ** _decimalDiff;
         uint256 maxEvmAmountFromCoreMax = _maxTransferableCoreAmount * scale;
 
-        /// @dev Strip out the dust from _amount so that _amount and maxEvmAmountFromCoreMax have a maximum of _extraWeiDecimals starting 0s
-        dust = _amount % scale;
         unchecked {
-            _amount = _amount - dust; // Safe: dust = _amount % scale, so dust <= _amount
-        }
+            /// @dev Strip out dust from _amount so that _amount and maxEvmAmountFromCoreMax have a maximum of _decimalDiff starting 0s
+            uint256 amountDustless = _amount - (_amount % scale); // Safe: dustAmt = _amount % scale, so dust <= _amount
 
-        /// @dev Safe: Bound amountEvm to the range of [0, evmscaled u64.max]
-        /// @dev If _amount is larger then we have an overflow. Limit the tokens to u64.max and overflow into the dust
-        amountEVM = min_u256(_amount, maxEvmAmountFromCoreMax);
-        unchecked {
-            dust = dust + (_amount - amountEVM);
+            /// @dev Safe: Bound amountEvm to the range of [0, evmscaled u64.max]
+            /// @dev If amountDustless is larger then we have an overflow. Limit the tokens to u64.max and overflow into the dust
+            amountEVM = min_u256(amountDustless, maxEvmAmountFromCoreMax);
+
             /// @dev Safe: Guaranteed to be in the range of [0, u64.max] because it is upperbounded by uint64 _maxTransferableCoreAmount
             amountCore = uint64(amountEVM / scale);
+            dust = _amount - amountEVM;
         }
     }
 
@@ -118,7 +116,7 @@ library HyperLiquidComposerCodec {
      * @notice This function is called by the HyperLiquidComposer contract
      * @param _amount The amount to convert
      * @param _maxTransferableCoreAmount The maximum transferrable amount capped by the asset bridge
-     * @param _extraWeiDecimals The decimal difference between HyperEVM and HyperCore
+     * @param _decimalDiff The decimal difference between HyperEVM and HyperCore
      * @return amountEVM The EVM amount
      * @return dust The dust amount
      * @return amountCore The core amount
@@ -126,22 +124,20 @@ library HyperLiquidComposerCodec {
     function into_hyperAssetAmount_decimal_difference_leq_zero(
         uint256 _amount,
         uint64 _maxTransferableCoreAmount,
-        uint64 _extraWeiDecimals
+        uint64 _decimalDiff
     ) internal pure returns (uint256 amountEVM, uint256 dust, uint64 amountCore) {
-        uint256 scale = 10 ** _extraWeiDecimals;
-        uint256 maxEvmAmountFromCoreMax;
-        unchecked {
-            maxEvmAmountFromCoreMax = _maxTransferableCoreAmount / scale; // Safe: division
-        }
+        uint256 scale = 10 ** _decimalDiff;
+        uint256 maxEvmAmountFromCoreMax = _maxTransferableCoreAmount / scale;
 
-        /// @dev When `Core > EVM` there will be no opening dust to strip out since all tokens in evm can be represented on core
-        /// @dev Safe: Bound amountEvm to the range of [0, evmscaled u64.max]
-        /// @dev Overflow the excess into dust
-        amountEVM = min_u256(_amount, maxEvmAmountFromCoreMax);
         unchecked {
-            dust = _amount - amountEVM;
+            /// @dev When `Core > EVM` there will be no opening dust to strip out since all tokens in evm can be represented on core
+            /// @dev Safe: Bound amountEvm to the range of [0, evmscaled u64.max]
+            /// @dev Overflow the excess into dust
+            amountEVM = min_u256(_amount, maxEvmAmountFromCoreMax);
+
             /// @dev Safe: Guaranteed to be in the range of [0, u64.max] because it is upperbounded by uint64 _maxTransferableCoreAmount
             amountCore = uint64(amountEVM * scale);
+            dust = _amount - amountEVM;
         }
     }
 
