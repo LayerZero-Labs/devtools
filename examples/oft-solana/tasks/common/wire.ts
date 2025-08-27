@@ -7,7 +7,6 @@ import { setTransactionSizeBuffer } from '@layerzerolabs/devtools-solana'
 import { type LogLevel, createLogger } from '@layerzerolabs/io-devtools'
 import { DebugLogger, KnownErrors } from '@layerzerolabs/io-devtools'
 import { ChainType, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
-import { BlockedMessageLibProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { type IOApp, type OAppConfigurator, type OAppOmniGraph, configureOwnable } from '@layerzerolabs/ua-devtools'
 import {
     SUBTASK_LZ_OAPP_WIRE_CONFIGURE,
