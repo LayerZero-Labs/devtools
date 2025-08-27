@@ -24,7 +24,7 @@ struct FailedMessage {
     uint256 msgValue;
 }
 
-interface IHyperLiquidComposerCore is IHyperLiquidComposerErrors {
+interface IHyperLiquidComposer is IHyperLiquidComposerErrors {
     event RefundSuccessful(bytes32 indexed guid);
 
     event FailedMessageDecode(bytes32 indexed guid, bytes32 sender, uint256 msgValue, bytes composeMessage);
@@ -40,10 +40,13 @@ interface IHyperLiquidComposerCore is IHyperLiquidComposerErrors {
     function TOKEN() external view returns (address);
     function REFUND_ADDRESS() external view returns (address);
 
-    function tokenAsset() external view returns (uint64, int64, address);
+    function erc20Asset() external view returns (uint64, int64, address);
     function hypeAsset() external view returns (uint64, int64, address);
 
+    function decodeMessage(bytes calldata composeMessage) external pure returns (uint256 minMsgValue, address receiver);
     function refundToSrc(bytes32 guid) external payable;
-
-    function quoteHyperCoreAmount(uint256 _amount, bool _isOFT) external returns (IHyperAssetAmount memory);
+    function quoteHyperCoreAmount(
+        uint256 _amount,
+        IHyperAsset memory _asset
+    ) external view returns (IHyperAssetAmount memory);
 }

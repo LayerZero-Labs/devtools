@@ -55,10 +55,10 @@ abstract contract RecoverableComposer is HyperLiquidComposer, IRecoverableCompos
      * @param _coreAmount Amount of tokens to retrieve in HyperCore decimals, or FULL_TRANSFER for all
      */
     function retrieveCoreERC20(uint64 _coreAmount) public onlyRecoveryAddress {
-        uint64 maxTransferAmt = _getMaxTransferAmount(tokenAsset.coreIndexId, _coreAmount);
+        uint64 maxTransferAmt = _getMaxTransferAmount(erc20Asset.coreIndexId, _coreAmount);
 
-        _submitCoreWriterTransfer(tokenAsset.assetBridgeAddress, tokenAsset.coreIndexId, maxTransferAmt);
-        emit Retrieved(tokenAsset.coreIndexId, maxTransferAmt, tokenAsset.assetBridgeAddress);
+        _submitCoreWriterTransfer(erc20Asset.assetBridgeAddress, erc20Asset.coreIndexId, maxTransferAmt);
+        emit Retrieved(erc20Asset.coreIndexId, maxTransferAmt, erc20Asset.assetBridgeAddress);
     }
 
     /**

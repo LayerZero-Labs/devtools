@@ -20,7 +20,7 @@ abstract contract FeeToken is HyperLiquidComposer {
 
     constructor() {
         uint8 decimals = IERC20Metadata(TOKEN).decimals();
-        int8 decimalDiff = int8(tokenAsset.decimalDiff);
+        int8 decimalDiff = int8(erc20Asset.decimalDiff);
 
         /// @dev decimals = 18, decimalDiff = 10 => CORE_SPOT_DECIMALS = 8
         /// @dev decimals =  6, decimalDiff = -2 => CORE_SPOT_DECIMALS = 8

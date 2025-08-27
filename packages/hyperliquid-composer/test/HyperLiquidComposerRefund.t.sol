@@ -6,8 +6,7 @@ import { SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interf
 
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
-import { IHyperLiquidComposerErrors } from "../contracts/interfaces/IHyperLiquidComposerErrors.sol";
-import { IHyperLiquidComposerCore } from "../contracts/interfaces/IHyperLiquidComposerCore.sol";
+import { IHyperLiquidComposer, IHyperLiquidComposerErrors } from "../contracts/interfaces/IHyperLiquidComposer.sol";
 
 import { NoFallback } from "./mocks/NoFallback.sol";
 import { SpotBalancePrecompileMock } from "./mocks/SpotBalancePrecompileMock.sol";

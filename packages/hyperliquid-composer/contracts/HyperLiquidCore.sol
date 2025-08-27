@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
+import { ICoreWriter } from "./interfaces/ICoreWriter.sol";
+
 struct SpotBalance {
     uint64 total;
     uint64 hold;
@@ -31,8 +33,8 @@ abstract contract HyperLiquidCore {
 
     // Precompile Addresses
     address internal constant HLP_CORE_WRITER = 0x3333333333333333333333333333333333333333;
-    address constant SPOT_BALANCE_PRECOMPILE_ADDRESS = 0x0000000000000000000000000000000000000801;
-    address constant CORE_USER_EXISTS_PRECOMPILE_ADDRESS = 0x0000000000000000000000000000000000000810;
+    address internal constant SPOT_BALANCE_PRECOMPILE_ADDRESS = 0x0000000000000000000000000000000000000801;
+    address internal constant CORE_USER_EXISTS_PRECOMPILE_ADDRESS = 0x0000000000000000000000000000000000000810;
 
     address internal constant HYPE_SYSTEM_CONTRACT = 0x2222222222222222222222222222222222222222;
 
@@ -55,5 +57,18 @@ abstract contract HyperLiquidCore {
         (success, result) = CORE_USER_EXISTS_PRECOMPILE_ADDRESS.staticcall(abi.encode(user));
         require(success, "Core user exists precompile call failed");
         return abi.decode(result, (CoreUserExists));
+    }
+
+    /**
+     * @notice Transfers tokens on HyperCore using the CoreWriter precompile
+     * @param _to The address to receive tokens on HyperCore
+     * @param _coreIndex The core index of the token
+     * @param _coreAmount The amount to transfer on HyperCore
+     */
+    function _submitCoreWriterTransfer(address _to, uint64 _coreIndex, uint64 _coreAmount) internal virtual {
+        bytes memory action = abi.encode(_to, _coreIndex, _coreAmount);
+        bytes memory payload = abi.encodePacked(SPOT_SEND_HEADER, action);
+        /// Transfers HYPE tokens from the composer address on HyperCore to the _to via the SpotSend precompile
+        ICoreWriter(HLP_CORE_WRITER).sendRawAction(payload);
     }
 }

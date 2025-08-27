@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import { HyperLiquidComposerCodec } from "@layerzerolabs/hyperliquid-composer/contracts/library/HyperLiquidComposerCodec.sol";
-import { IHyperAsset, IHyperAssetAmount } from "@layerzerolabs/hyperliquid-composer/contracts/interfaces/IHyperLiquidComposerCore.sol";
+import { IHyperAsset, IHyperAssetAmount } from "@layerzerolabs/hyperliquid-composer/contracts/interfaces/IHyperLiquidComposer.sol";
 
 import { Test, console } from "forge-std/Test.sol";
 
@@ -41,7 +41,7 @@ contract TypeConversionTest is Test {
         console.log(scale);
         vm.assume(maxAmountTransferable >= scale);
 
-        IHyperAsset memory tokenAsset = IHyperAsset({
+        IHyperAsset memory erc20Asset = IHyperAsset({
             assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1),
             coreIndexId: 1,
             decimalDiff: evmExtraWeiDecimals
@@ -50,7 +50,7 @@ contract TypeConversionTest is Test {
         IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyperAssetAmount(
             amount,
             maxAmountTransferable,
-            tokenAsset
+            erc20Asset
         );
 
         console.log(amounts.dust);
@@ -75,7 +75,7 @@ contract TypeConversionTest is Test {
         // [1, 2 ** 64 * 10 ** (weiDifference))
         amount = uint64(bound(amount, scale, type(uint64).max * scale - 1));
 
-        IHyperAsset memory tokenAsset = IHyperAsset({
+        IHyperAsset memory erc20Asset = IHyperAsset({
             assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1),
             coreIndexId: 1,
             decimalDiff: evmExtraWeiDecimals
@@ -84,7 +84,7 @@ contract TypeConversionTest is Test {
         IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyperAssetAmount(
             amount,
             maxAmountTransferable,
-            tokenAsset
+            erc20Asset
         );
 
         uint256 expectedDust = amount % scale;

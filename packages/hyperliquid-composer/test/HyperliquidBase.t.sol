@@ -5,8 +5,7 @@ import { Test, console } from "forge-std/Test.sol";
 
 import { HyperLiquidComposerCodec } from "../contracts/library/HyperLiquidComposerCodec.sol";
 
-import { IHyperAsset } from "../contracts/interfaces/IHyperLiquidComposerCore.sol";
-import { IHyperLiquidComposerCore } from "../contracts/interfaces/IHyperLiquidComposerCore.sol";
+import { IHyperLiquidComposer, IHyperAsset } from "../contracts/interfaces/IHyperLiquidComposer.sol";
 
 import { HyperLiquidComposer } from "../contracts/HyperLiquidComposer.sol";
 

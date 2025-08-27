@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import { ErrorMessagePayload, IHyperLiquidComposerErrors } from "../interfaces/IHyperLiquidComposerErrors.sol";
-import { IHyperAsset, IHyperAssetAmount } from "../interfaces/IHyperLiquidComposerCore.sol";
+import { IHyperAsset, IHyperAssetAmount } from "../interfaces/IHyperLiquidComposer.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
 /**
