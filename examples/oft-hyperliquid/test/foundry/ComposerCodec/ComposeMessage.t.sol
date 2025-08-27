@@ -5,8 +5,6 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
 
 import { HyperLiquidComposerCodec } from "@layerzerolabs/hyperliquid-composer/contracts/library/HyperLiquidComposerCodec.sol";
 
-import { IHyperLiquidComposerErrors } from "@layerzerolabs/hyperliquid-composer/contracts/interfaces/IHyperLiquidComposerErrors.sol";
-
 import { HyperLiquidComposer } from "@layerzerolabs/hyperliquid-composer/contracts/HyperLiquidComposer.sol";
 
 import { HyperliquidBaseTest } from "@layerzerolabs/hyperliquid-composer/test/HyperliquidBase.t.sol";

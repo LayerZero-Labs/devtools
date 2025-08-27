@@ -54,8 +54,7 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
         HyperLiquidComposer hypeComposerTestnet = new HyperLiquidComposer(
             address(oftTestnet),
             ERC20.coreIndexId,
-            ERC20.decimalDiff,
-            recovery
+            ERC20.decimalDiff
         );
 
         (uint64 coreIndexId, , ) = hypeComposerTestnet.hypeAsset();
@@ -80,8 +79,7 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
         HyperLiquidComposer hypeComposerMainnet = new HyperLiquidComposer(
             address(oftMainnet),
             ERC20.coreIndexId,
-            ERC20.decimalDiff,
-            recovery
+            ERC20.decimalDiff
         );
 
         (uint64 coreIndexId, , ) = hypeComposerMainnet.hypeAsset();
@@ -96,13 +94,13 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
             0,
             ETH_EID,
-            AMOUNT_TO_SEND + DUST,
+            AMOUNT_TO_SEND,
             abi.encodePacked(addressToBytes32(userA), composeMsg)
         );
 
-        deal(address(oft), address(hyperLiquidComposer), AMOUNT_TO_SEND + DUST);
+        deal(address(oft), address(hyperLiquidComposer), AMOUNT_TO_SEND);
 
-        assertEq(oft.balanceOf(address(hyperLiquidComposer)), AMOUNT_TO_SEND + DUST);
+        assertEq(oft.balanceOf(address(hyperLiquidComposer)), AMOUNT_TO_SEND);
 
         // Expect the Transfer event to be emitted
         vm.expectEmit(address(oft));
@@ -129,7 +127,7 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
         vm.stopPrank();
 
         assertEq(oft.balanceOf(address(hyperLiquidComposer)), 0);
-        assertEq(oft.balanceOf(userB), balanceBefore + DUST);
+        assertEq(oft.balanceOf(userB), balanceBefore);
     }
 
     function test_SendSpot_and_FundAddress() public {
@@ -173,18 +171,12 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
         uint256 balanceBeforeUserB = userB.balance;
 
         vm.startPrank(HL_LZ_ENDPOINT_V2);
-        hyperLiquidComposer.lzCompose{ value: AMOUNT_TO_FUND + DUST }(
-            address(oft),
-            bytes32(0),
-            composerMsg_,
-            msg.sender,
-            ""
-        );
+        hyperLiquidComposer.lzCompose{ value: AMOUNT_TO_FUND }(address(oft), bytes32(0), composerMsg_, msg.sender, "");
         vm.stopPrank();
 
         assertEq(oft.balanceOf(address(hyperLiquidComposer)), 0);
         assertEq(HYPE.assetBridgeAddress.balance, balanceBeforeBridge + AMOUNT_TO_FUND);
-        assertEq(userB.balance, balanceBeforeUserB + DUST);
+        assertEq(userB.balance, balanceBeforeUserB);
     }
 
     function test_getBalanceOfHyperCore(uint64 _balance) public {

@@ -77,7 +77,7 @@ contract SendScript is Script {
 
         if (_lzComposeGas > 0) {
             options = OptionsBuilder.newOptions().addExecutorLzComposeOption(0, _lzComposeGas, _lzComposeValue);
-            composeMsg = abi.encode(_tokenAmount, addressToBytes32(_receiver));
+            composeMsg = abi.encode(_lzComposeValue, addressToBytes32(_receiver));
             to = addressToBytes32(_composer);
         }
 

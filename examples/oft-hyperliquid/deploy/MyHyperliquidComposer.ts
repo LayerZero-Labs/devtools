@@ -47,23 +47,6 @@ const deploy: DeployFunction = async (hre) => {
     // Validates and returns the native spot
     const hip1Token = getCoreSpotDeployment(coreSpotIndex, isTestnet)
 
-    // This is an external deployment pulled in from @layerzerolabs/lz-evm-sdk-v2
-    //
-    // @layerzerolabs/toolbox-hardhat takes care of plugging in the external deployments
-    // from @layerzerolabs packages based on the configuration in your hardhat config
-    //
-    // For this to work correctly, your network config must define an eid property
-    // set to `EndpointId` as defined in @layerzerolabs/lz-definitions
-    //
-    // For example:
-    //
-    // networks: {
-    //   fuji: {
-    //     ...
-    //     eid: EndpointId.AVALANCHE_V2_TESTNET
-    //   }
-    // }
-    const endpointV2Deployment = await hre.deployments.get('EndpointV2')
     const { address: address_oft } = await hre.deployments.get(contractName_oft).catch(async () => {
         console.log(`Deployment file for ${contractName_oft}.json in deployments/${networkName} not found`)
         const { proceedWithOFTAddress } = await inquirer.prompt([
@@ -105,7 +88,6 @@ const deploy: DeployFunction = async (hre) => {
     const { address: address_composer } = await deploy(contractName_composer, {
         from: deployer,
         args: [
-            endpointV2Deployment.address, // LayerZero's EndpointV2 address
             address_oft, // OFT address
             hip1Token.coreSpot.index, // Core index id
             hip1Token.txData.weiDiff,

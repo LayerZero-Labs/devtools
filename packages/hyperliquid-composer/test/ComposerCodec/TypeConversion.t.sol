@@ -55,7 +55,6 @@ contract TypeConversionTest is Test {
         );
 
         assertEq(amounts.evm, amounts.core / scale, "evm and core amounts should differ by a factor of scale");
-        assertEq(amounts.dust + amounts.evm, amount, "dust + evm is not equal to the input amount");
     }
 
     function test_into_hyperAssetAmount_decimal_diff_gt_zero(
@@ -80,6 +79,5 @@ contract TypeConversionTest is Test {
         );
 
         assertEq(amounts.evm / scale, amounts.core, "evm and core amounts should differ by a factor of scale");
-        assertEq(amounts.dust + amounts.evm, amount, "dust + evm is not equal to the input amount");
     }
 }

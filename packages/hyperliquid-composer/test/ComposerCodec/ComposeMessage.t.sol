@@ -5,7 +5,7 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
 
 import { HyperLiquidComposerCodec } from "../../contracts/library/HyperLiquidComposerCodec.sol";
 
-import { IHyperLiquidComposerErrors } from "../../contracts/interfaces/IHyperLiquidComposerErrors.sol";
+import { IHyperLiquidComposer } from "../../contracts/interfaces/IHyperLiquidComposer.sol";
 
 import { HyperLiquidComposer } from "../../contracts/HyperLiquidComposer.sol";
 

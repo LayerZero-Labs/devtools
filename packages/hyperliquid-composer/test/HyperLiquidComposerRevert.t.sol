@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import { IHyperLiquidComposerErrors } from "../contracts/interfaces/IHyperLiquidComposerErrors.sol";
+import { IHyperLiquidComposer } from "../contracts/interfaces/IHyperLiquidComposer.sol";
 
 import { HyperLiquidComposer } from "../contracts/HyperLiquidComposer.sol";
 
@@ -23,7 +23,7 @@ contract HyperLiquidComposerRevertTest is HyperliquidBaseTest {
         // uint256 gasConsumed = 5_984;
         // uint256 minGas = hyperLiquidComposer.MIN_GAS();
         // vm.expectRevert(abi.encodeWithSelector(
-        //         IHyperLiquidComposerErrors.InsufficientGas.selector,
+        //         IHyperLiquidComposer.InsufficientGas.selector,
         //         (gasToPass - gasConsumed),
         //         minGas
         //     ))
@@ -35,13 +35,13 @@ contract HyperLiquidComposerRevertTest is HyperliquidBaseTest {
     }
 
     function test_unauthorized_call_not_endpoint() public {
-        vm.expectRevert(IHyperLiquidComposerErrors.OnlyEndpoint.selector);
+        vm.expectRevert(IHyperLiquidComposer.OnlyEndpoint.selector);
         hyperLiquidComposer.lzCompose(address(oft), bytes32(0), "", msg.sender, "");
     }
 
     function test_unauthorized_call_not_oft() public {
         bytes memory revertMessage = abi.encodeWithSelector(
-            IHyperLiquidComposerErrors.InvalidComposeCaller.selector,
+            IHyperLiquidComposer.InvalidComposeCaller.selector,
             address(oft),
             address(0)
         );

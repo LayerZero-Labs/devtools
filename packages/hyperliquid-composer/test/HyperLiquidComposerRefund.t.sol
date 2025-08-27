@@ -6,7 +6,7 @@ import { SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interf
 
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
-import { IHyperLiquidComposer, IHyperLiquidComposerErrors } from "../contracts/interfaces/IHyperLiquidComposer.sol";
+import { IHyperLiquidComposer } from "../contracts/interfaces/IHyperLiquidComposer.sol";
 
 import { NoFallback } from "./mocks/NoFallback.sol";
 import { SpotBalancePrecompileMock } from "./mocks/SpotBalancePrecompileMock.sol";
@@ -18,11 +18,9 @@ import { HyperliquidBaseTest } from "./HyperliquidBase.t.sol";
 import { console } from "forge-std/Test.sol";
 
 contract HyperLiquidComposerRefundTest is HyperliquidBaseTest {
-    uint64 public constant AMOUNT_TO_SEND_OVERFLOW = 1 wei;
-
     function setUp() public override {
         super.setUp();
-        AMOUNT_TO_FUND = 100 gwei + AMOUNT_TO_SEND_OVERFLOW;
+        AMOUNT_TO_FUND = 100 gwei;
     }
 
     function test_malformed_payload() public {
@@ -89,10 +87,10 @@ contract HyperLiquidComposerRefundTest is HyperliquidBaseTest {
         assertEq(msgValue, 0);
     }
 
-    function test_erc20_refund_receiver_excessive_amount(uint64 _exceedAmountBy) public {
-        _exceedAmountBy = uint64(bound(_exceedAmountBy, 0, type(uint64).max - 10 ether));
+    function test_erc20_refund_receiver_excessive_amount(uint64 _dust) public {
+        _dust = uint64(bound(_dust, 0, type(uint64).max - 10 ether));
 
-        uint256 totalTransferAmount = AMOUNT_TO_SEND + _exceedAmountBy;
+        uint256 totalTransferAmount = AMOUNT_TO_SEND + _dust;
         deal(address(oft), address(hyperLiquidComposer), totalTransferAmount);
 
         uint256 scaleERC20DecimalDiff = 10 ** uint64(ERC20.decimalDiff);
@@ -113,23 +111,18 @@ contract HyperLiquidComposerRefundTest is HyperliquidBaseTest {
 
         vm.expectEmit(address(oft));
         emit IERC20.Transfer(address(hyperLiquidComposer), ERC20.assetBridgeAddress, AMOUNT_TO_SEND);
-        // Triggers when dust > 0
-        if (_exceedAmountBy > 0) {
-            emit IERC20.Transfer(address(hyperLiquidComposer), userB, _exceedAmountBy);
-        }
 
         vm.startPrank(HL_LZ_ENDPOINT_V2);
         hyperLiquidComposer.lzCompose(address(oft), bytes32(0), composerMsg_, msg.sender, "");
         vm.stopPrank();
 
-        assertEq(oft.balanceOf(address(hyperLiquidComposer)), 0);
-        assertEq(oft.balanceOf(userB), _exceedAmountBy);
+        assertEq(oft.balanceOf(address(hyperLiquidComposer)), _dust);
     }
 
-    function test_native_refund_receiver_excessive_amount_no_fallback(uint64 _exceedAmountBy) public {
-        _exceedAmountBy = uint64(bound(_exceedAmountBy, 0, type(uint64).max - 10 ether));
+    function test_native_refund_receiver_excessive_amount_no_fallback(uint64 _dust) public {
+        _dust = uint64(bound(_dust, 0, type(uint64).max - 10 ether));
 
-        uint256 totalTransferAmount = AMOUNT_TO_SEND + _exceedAmountBy;
+        uint256 totalTransferAmount = AMOUNT_TO_SEND + _dust;
         deal(address(oft), address(hyperLiquidComposer), totalTransferAmount);
 
         address noFallback = address(new NoFallback());
@@ -153,31 +146,25 @@ contract HyperLiquidComposerRefundTest is HyperliquidBaseTest {
 
         vm.expectEmit(address(oft));
         emit IERC20.Transfer(address(hyperLiquidComposer), ERC20.assetBridgeAddress, AMOUNT_TO_SEND);
-        // Triggers when dust > 0
-        if (_exceedAmountBy > 0) {
-            emit IERC20.Transfer(address(hyperLiquidComposer), noFallback, _exceedAmountBy);
-        }
 
         vm.startPrank(HL_LZ_ENDPOINT_V2);
         uint256 preBalance_txOrigin = tx.origin.balance;
         hyperLiquidComposer.lzCompose{ value: AMOUNT_TO_FUND }(address(oft), bytes32(0), composerMsg_, msg.sender, "");
-        assertEq(tx.origin.balance, preBalance_txOrigin + AMOUNT_TO_SEND_OVERFLOW);
+        assertEq(tx.origin.balance, preBalance_txOrigin);
         vm.stopPrank();
-
-        assertEq(oft.balanceOf(noFallback), _exceedAmountBy);
 
         assertEq(address(hyperLiquidComposer).balance, 0);
         assertEq(noFallback.balance, 0);
     }
 
-    function test_native_refund_receiver_not_activated(uint64 _exceedAmountBy) public {
-        _exceedAmountBy = uint64(bound(_exceedAmountBy, 0, type(uint64).max - 10 ether));
+    function test_native_refund_receiver_not_activated(uint64 _dust) public {
+        _dust = uint64(bound(_dust, 0, type(uint64).max - 10 ether));
 
-        uint256 totalTransferAmount = AMOUNT_TO_SEND + _exceedAmountBy;
+        uint256 totalTransferAmount = AMOUNT_TO_SEND + _dust;
         deal(address(oft), address(hyperLiquidComposer), totalTransferAmount);
 
         address unactivatedAddress = vm.randomAddress();
-        CoreUserExistsMock(HLP_PRECOMPILE_READ_USER_EXISTS).setUserExists(unactivatedAddress, true);
+        CoreUserExistsMock(HLP_PRECOMPILE_READ_USER_EXISTS).setUserExists(unactivatedAddress, false);
 
         uint256 scaleERC20DecimalDiff = 10 ** uint64(ERC20.decimalDiff);
 
@@ -196,20 +183,15 @@ contract HyperLiquidComposerRefundTest is HyperliquidBaseTest {
         );
 
         vm.expectEmit(address(oft));
-        emit IERC20.Transfer(address(hyperLiquidComposer), ERC20.assetBridgeAddress, AMOUNT_TO_SEND);
-        // Triggers when dust > 0
-        if (_exceedAmountBy > 0) {
-            emit IERC20.Transfer(address(hyperLiquidComposer), unactivatedAddress, _exceedAmountBy);
-        }
+        emit IERC20.Transfer(address(hyperLiquidComposer), unactivatedAddress, totalTransferAmount);
 
         vm.startPrank(HL_LZ_ENDPOINT_V2);
         hyperLiquidComposer.lzCompose{ value: AMOUNT_TO_FUND }(address(oft), bytes32(0), composerMsg_, msg.sender, "");
         vm.stopPrank();
 
-        assertEq(unactivatedAddress.balance, AMOUNT_TO_SEND_OVERFLOW);
-        assertEq(oft.balanceOf(unactivatedAddress), _exceedAmountBy);
-
         assertEq(address(hyperLiquidComposer).balance, 0);
+        assertEq(unactivatedAddress.balance, AMOUNT_TO_FUND);
+        assertEq(oft.balanceOf(address(unactivatedAddress)), totalTransferAmount);
     }
 
     function addressToBytes32(address _addr) internal pure returns (bytes32) {

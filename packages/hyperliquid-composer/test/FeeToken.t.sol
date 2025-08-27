@@ -31,7 +31,7 @@ contract FeeTokenTest is HyperliquidBaseTest {
         super.setUp();
 
         // Deploy FeeToken extension
-        feeToken = new FeeTokenMock(address(oft), ERC20.coreIndexId, ERC20.decimalDiff, recovery);
+        feeToken = new FeeTokenMock(address(oft), ERC20.coreIndexId, ERC20.decimalDiff);
 
         // Set up user states in the mock
         CoreUserExistsMock(HLP_PRECOMPILE_READ_USER_EXISTS).setUserExists(activatedUser, true);
@@ -48,23 +48,20 @@ contract FeeTokenTest is HyperliquidBaseTest {
     function test_deployment() public view {
         assertEq(feeToken.CORE_SPOT_DECIMALS(), 8);
 
-        assertEq(feeToken.TOKEN(), address(oft));
-        assertEq(feeToken.REFUND_ADDRESS(), recovery);
+        assertEq(feeToken.ERC20(), address(oft));
     }
 
     function test_sendSpot_activatedUser() public {
         bytes memory composeMsg = abi.encode(0, activatedUser);
 
-        uint256 evmAmount = TRANSFER_AMOUNT_EVM + DUST;
-
         bytes memory composerMsg = OFTComposeMsgCodec.encode(
             0,
             ETH_EID,
-            evmAmount,
+            TRANSFER_AMOUNT_EVM,
             abi.encodePacked(addressToBytes32(userA), composeMsg)
         );
 
-        deal(address(oft), address(feeToken), evmAmount);
+        deal(address(oft), address(feeToken), TRANSFER_AMOUNT_EVM);
 
         bytes memory rawActionPayload = feeToken.createRawActionPayloadERC20(activatedUser, TRANSFER_AMOUNT_CORE);
 
@@ -76,43 +73,32 @@ contract FeeTokenTest is HyperliquidBaseTest {
         vm.expectEmit(HLP_CORE_WRITER);
         emit ICoreWriter.RawAction(address(feeToken), rawActionPayload);
 
-        // Expect transfer of dust back to user
-        vm.expectEmit(address(oft));
-        emit Transfer(address(feeToken), activatedUser, DUST);
-
         vm.prank(HL_LZ_ENDPOINT_V2);
         feeToken.lzCompose(address(oft), bytes32(0), composerMsg, msg.sender, "");
-
-        assertEq(oft.balanceOf(activatedUser), DUST);
     }
 
     function test_sendSpot_newUser() public {
         bytes memory composeMsg = abi.encode(0, newUser);
 
-        uint256 evmAmount = TRANSFER_AMOUNT_EVM;
-
         bytes memory composerMsg = OFTComposeMsgCodec.encode(
             0,
             ETH_EID,
-            evmAmount,
+            TRANSFER_AMOUNT_EVM,
             abi.encodePacked(addressToBytes32(userA), composeMsg)
         );
 
-        deal(address(oft), address(feeToken), evmAmount);
+        deal(address(oft), address(feeToken), TRANSFER_AMOUNT_EVM);
 
         (uint64 coreIndexId, int64 decimalDiff, address assetBridgeAddress) = feeToken.erc20Asset();
 
+        IHyperAsset memory erc20Asset = IHyperAsset({
+            coreIndexId: coreIndexId,
+            decimalDiff: decimalDiff,
+            assetBridgeAddress: assetBridgeAddress
+        });
+
         // For new users, the core amount should be reduced by activation fee
-        uint64 baseCoreAmount = feeToken
-            .quoteHyperCoreAmount(
-                TRANSFER_AMOUNT_EVM,
-                IHyperAsset({
-                    coreIndexId: coreIndexId,
-                    decimalDiff: decimalDiff,
-                    assetBridgeAddress: assetBridgeAddress
-                })
-            )
-            .core;
+        uint64 baseCoreAmount = feeToken.quoteHyperCoreAmount(TRANSFER_AMOUNT_EVM, erc20Asset).core;
         uint64 expectedCoreAmount = baseCoreAmount - ACTIVATION_FEE;
         bytes memory rawActionPayload = feeToken.createRawActionPayloadERC20(newUser, expectedCoreAmount);
 

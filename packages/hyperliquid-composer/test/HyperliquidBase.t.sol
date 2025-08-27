@@ -39,9 +39,8 @@ contract HyperliquidBaseTest is Test {
         uint64 hype;
     }
 
-    uint64 public AMOUNT_TO_SEND = 1e18;
-    uint64 public AMOUNT_TO_FUND = 100 gwei;
-    uint64 public DUST = 1 wei;
+    uint64 public AMOUNT_TO_SEND = 1 ether;
+    uint64 public AMOUNT_TO_FUND = 0.001 ether;
 
     mapping(uint256 => Eids) public eidFromChainId;
     mapping(uint256 => CoreSpot) public coreSpotFromChainId;
@@ -97,7 +96,7 @@ contract HyperliquidBaseTest is Test {
         });
 
         oft = new OFTMock("test", "test", HL_LZ_ENDPOINT_V2, msg.sender);
-        hyperLiquidComposer = new HyperLiquidComposer(address(oft), ERC20.coreIndexId, ERC20.decimalDiff, recovery);
+        hyperLiquidComposer = new HyperLiquidComposer(address(oft), ERC20.coreIndexId, ERC20.decimalDiff);
         typeConversionTest = new TypeConversionTest();
 
         SpotBalancePrecompileMock(HLP_PRECOMPILE_READ_SPOT_BALANCE).setSpotBalance(
