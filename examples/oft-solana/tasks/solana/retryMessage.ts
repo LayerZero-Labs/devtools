@@ -24,7 +24,7 @@ interface Args {
     withPriorityFee: number
 }
 
-task('lz:oft:solana:retry-payload', 'Retry a stored payload on Solana')
+task('lz:oft:solana:retry-message', 'Retry a stored message on Solana')
     .addParam('srcEid', 'The source EndpointId', undefined, types.eid)
     .addParam('nonce', 'The nonce of the payload', undefined, types.bigint)
     .addParam('sender', 'The source OApp address (hex)', undefined, types.string)
@@ -68,12 +68,9 @@ task('lz:oft:solana:retry-payload', 'Retry a stored payload on Solana')
                     nonce: nonce.toString(),
                     srcEid,
                     sender: makeBytes32(sender),
-                    dstEid,
                     receiver,
-                    payload: '', // unused;  just added to satisfy typing
                     guid,
                     message: payload, // referred to as "payload" in scan-api
-                    version: 1, // unused;  just added to satisfy typing
                 },
                 Uint8Array.from([computeUnits, lamports]),
                 'confirmed'
