@@ -84,9 +84,6 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
         address /*_executor*/,
         bytes calldata /*_extraData*/
     ) external payable virtual override nonReentrant {
-        /// @dev Proxy gas check for enforced options. Can be retried from the endpoint with sufficient gas.
-        if (gasleft() < MIN_GAS) revert InsufficientGas(gasleft(), MIN_GAS);
-
         if (msg.sender != ENDPOINT) revert OnlyEndpoint();
         if (OFT != _oft) revert InvalidComposeCaller(address(OFT), _oft);
 
@@ -94,12 +91,18 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
         uint256 amount = OFTComposeMsgCodec.amountLD(_message);
         bytes memory composeMsgEncoded = OFTComposeMsgCodec.composeMsg(_message);
 
-        address receiver;
-
-        /// @dev Decode message to get receiver, store in failedMessages if decode fails
+        /// @dev Decode message to get receiver and perform hypercore transfers, store in failedMessages if decode fails
         try this.decodeMessage(composeMsgEncoded) returns (uint256 _minMsgValue, address _receiver) {
             if (msg.value < _minMsgValue) revert InsufficientMsgValue(msg.value, _minMsgValue);
-            receiver = _receiver;
+
+            /// @dev Gas check before executing hypercore precompile operations. Can be retried from the endpoint with sufficient gas.
+            if (gasleft() < MIN_GAS) revert InsufficientGas(gasleft(), MIN_GAS);
+
+            /// @dev If HyperEVM -> HyperCore fails for HYPE OR ERC20 then we do a complete refund to the receiver on hyperevm
+            /// @dev try...catch to safeguard against possible breaking hyperliquid pre-compile changes
+            try this.handleCoreTransfers{ value: msg.value }(_receiver, amount) {} catch {
+                _hyperevmRefund(_receiver, amount);
+            }
         } catch {
             SendParam memory refundSendParam;
             refundSendParam.dstEid = OFTComposeMsgCodec.srcEid(_message);
@@ -108,12 +111,6 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
 
             failedMessages[_guid] = FailedMessage({ refundSendParam: refundSendParam, msgValue: msg.value });
             emit FailedMessageDecode(_guid, refundSendParam.to, msg.value, composeMsgEncoded);
-            return;
-        }
-
-        /// @dev If HyperEVM -> HyperCore fails for HYPE OR ERC20 then we do a complete refund to the receiver on hyperevm
-        try this.handleCoreTransfers{ value: msg.value }(receiver, amount) {} catch {
-            _hyperevmRefund(receiver, amount);
         }
     }
 
