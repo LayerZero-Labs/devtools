@@ -22,48 +22,43 @@ import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.s
  */
 contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidComposer, IOAppComposer {
     using SafeERC20 for IERC20;
-    using HyperLiquidComposerCodec for bytes;
-    using HyperLiquidComposerCodec for bytes32;
-    using HyperLiquidComposerCodec for uint64;
-    using HyperLiquidComposerCodec for uint256;
+    using HyperLiquidComposerCodec for *; /// @dev applies to bytes, bytes32, uint256, uint64
 
     /// @dev Minimum gas to be supplied to the composer contract for execution to prevent Out of Gas.
     uint256 public constant MIN_GAS = 150_000;
-
     uint256 public constant VALID_COMPOSE_MSG_LEN = 64; /// @dev abi.encode(uint256,address) = 32+32
-
-    mapping(bytes32 => FailedMessage) public failedMessages;
 
     address public immutable ENDPOINT;
     address public immutable OFT;
-    address public immutable TOKEN;
+    address public immutable ERC20;
 
-    address public immutable REFUND_ADDRESS;
-
-    IHyperAsset public erc20Asset; /// @dev the EVM token as core spot
+    IHyperAsset public erc20Asset; /// @dev EVM token
     IHyperAsset public hypeAsset; /// @dev Hype token
+
+    mapping(bytes32 => FailedMessage) public failedMessages;
 
     /**
      * @param _oft The OFT contract address associated with this composer
      * @param _coreIndexId The core index id of the HyperLiquid L1 contract
      * @param _assetDecimalDiff The difference in decimals between the HyperEVM OFT deployment and HyperLiquid L1 HIP-1 listing
-     * @param _REFUND_ADDRESS Address that receives excess tokens after a refund(). it MUST be able to receive native tokens.
      */
-    constructor(address _oft, uint64 _coreIndexId, int64 _assetDecimalDiff, address _REFUND_ADDRESS) {
+    constructor(address _oft, uint64 _coreIndexId, int64 _assetDecimalDiff) {
         if (_oft == address(0)) revert InvalidOFTAddress();
 
         ENDPOINT = address(IOAppCore(_oft).endpoint());
 
         OFT = _oft;
-        TOKEN = IOFT(OFT).token();
+        ERC20 = IOFT(OFT).token();
 
-        uint64 hypeIndex = block.chainid == HYPE_CHAIN_ID_MAINNET ? HYPE_INDEX_MAINNET : HYPE_INDEX_TESTNET;
+        uint64 hypeCoreIndex = block.chainid == HYPE_CHAIN_ID_MAINNET
+            ? HYPE_CORE_INDEX_MAINNET
+            : HYPE_CORE_INDEX_TESTNET;
 
         /// @dev HYPE system contract address for Core<->EVM transfers
         hypeAsset = IHyperAsset({
             decimalDiff: HYPE_DECIMAL_DIFF,
-            coreIndexId: hypeIndex,
-            assetBridgeAddress: HYPE_SYSTEM_CONTRACT
+            coreIndexId: hypeCoreIndex,
+            assetBridgeAddress: HYPE_ASSET_BRIDGE
         });
 
         /// @dev Asset bridge address is the prefix (0x2000...0000) + the core index id
@@ -73,8 +68,6 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
             coreIndexId: _coreIndexId,
             assetBridgeAddress: _coreIndexId.into_assetBridgeAddress()
         });
-
-        REFUND_ADDRESS = _REFUND_ADDRESS;
     }
 
     /**
@@ -95,7 +88,7 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
         if (gasleft() < MIN_GAS) revert InsufficientGas(gasleft(), MIN_GAS);
 
         if (msg.sender != ENDPOINT) revert OnlyEndpoint();
-        if (address(OFT) != _oft) revert InvalidComposeCaller(address(OFT), _oft);
+        if (OFT != _oft) revert InvalidComposeCaller(address(OFT), _oft);
 
         /// @dev Since these are populated by the OFT contract, we can safely assume they are always decodeable
         uint256 amount = OFTComposeMsgCodec.amountLD(_message);
@@ -118,23 +111,10 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
             return;
         }
 
-        uint256 refundNativeAmt;
-        uint256 refundERC20Amt;
-
         /// @dev If HyperEVM -> HyperCore fails for HYPE OR ERC20 then we do a complete refund to the receiver on hyperevm
-        try this.handleCoreTransfers{ value: msg.value }(receiver, amount) returns (
-            uint256 dustNativeAmt,
-            uint256 dustERC20Amt
-        ) {
-            refundNativeAmt = dustNativeAmt;
-            refundERC20Amt = dustERC20Amt;
-        } catch {
-            refundNativeAmt = msg.value;
-            refundERC20Amt = amount;
+        try this.handleCoreTransfers{ value: msg.value }(receiver, amount) {} catch {
+            _hyperevmRefund(receiver, amount);
         }
-
-        /// @dev multi-utility function that either refunds dust (evm and core decimal difference) or a complete refund
-        _hyperevmRefund(receiver, refundNativeAmt, refundERC20Amt);
     }
 
     /**
@@ -155,17 +135,15 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
      * @dev Transfers native and erc20 to HyperCore via asset bridge, then to receiver via CoreWriter. Returns dust to HyperEVM.
      * @dev If either fails then we complete refund the user on HyperEVM
      * @dev Default behavior checks if the user is activated on HyperCore in ERC20 transfer, if not then revert this call
+     * @dev If the user requests for more funds than the asset bridge's balance we revert
      */
-    function handleCoreTransfers(
-        address _receiver,
-        uint256 _amount
-    ) external payable returns (uint256 dustNative, uint256 dustERC20) {
+    function handleCoreTransfers(address _receiver, uint256 _amount) external payable {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
-        dustERC20 = _checkTransferERC20HyperCore(_receiver, _amount);
+        _checkAndTransferERC20HyperCore(_receiver, _amount);
 
         if (msg.value > 0) {
-            dustNative = _transferNativeHyperCore(_receiver);
+            _transferNativeHyperCore(_receiver);
         }
     }
 
@@ -173,38 +151,38 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
      * @notice Transfers ERC20 tokens to HyperCore
      * @notice Checks if the receiver's address is activated on HyperCore
      * @notice To be overriden on FeeToken or other implementations since this can be used to activate tokens
+     * @notice If the user requests for more funds than the asset bridge's balance we revert
      * @param _receiver The address to receive tokens on HyperCore
      * @param _amountLD The amount of tokens to transfer in LayerZero decimals
-     * @return The dust amount to be refunded on HyperEVM
      */
-    function _checkTransferERC20HyperCore(address _receiver, uint256 _amountLD) internal virtual returns (uint256) {
+    function _checkAndTransferERC20HyperCore(address _receiver, uint256 _amountLD) internal virtual {
         // Cache erc20Asset to avoid multiple SLOAD operations
         IHyperAsset memory asset = erc20Asset;
         IHyperAssetAmount memory amounts = quoteHyperCoreAmount(_amountLD, asset);
-
         /// @dev This reverts if the user is not activated in the default case, else it simply returns `amounts.core`
         uint64 coreAmount = _getFinalCoreAmount(_receiver, amounts.core);
+
+        if (amounts.core > amounts.coreBalanceAssetBridge) revert TransferAmtExceedsAssetBridgeBalance(amounts);
 
         /// @dev Moving tokens to asset bridge credits the coreAccount of composer with the tokens.
         /// @dev The write call then moves coreSpot tokens from the composer to receiver
         if (amounts.evm != 0) {
             // Transfer the tokens to the composer's address on HyperCore
-            IERC20(TOKEN).safeTransfer(asset.assetBridgeAddress, amounts.evm);
+            IERC20(ERC20).safeTransfer(asset.assetBridgeAddress, amounts.evm);
             _submitCoreWriterTransfer(_receiver, asset.coreIndexId, coreAmount);
         }
-
-        return amounts.dust;
     }
 
     /**
      * @notice Transfers native HYPE tokens to HyperCore
+     * @notice If the user requests for more funds than the asset bridge's balance we revert
      * @param _receiver The address to receive tokens on HyperCore
-     * @return The dust amount to be refunded on HyperEVM
      */
-    function _transferNativeHyperCore(address _receiver) internal virtual returns (uint256) {
+    function _transferNativeHyperCore(address _receiver) internal virtual {
         // Cache hypeAsset to avoid multiple SLOAD operations
         IHyperAsset memory asset = hypeAsset;
         IHyperAssetAmount memory amounts = quoteHyperCoreAmount(msg.value, asset);
+        if (amounts.core > amounts.coreBalanceAssetBridge) revert TransferAmtExceedsAssetBridgeBalance(amounts);
 
         if (amounts.evm != 0) {
             // Transfer the HYPE tokens to the composer's address on HyperCore
@@ -213,8 +191,6 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
 
             _submitCoreWriterTransfer(_receiver, asset.coreIndexId, amounts.core);
         }
-
-        return amounts.dust;
     }
 
     /**
@@ -236,21 +212,18 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
      * @dev `this.refundNativeTokens{ value: amounts.dust }(_receiver)`
      * @dev In this case, the msg.value is the amount of the dust and not the msg.value sent to the lzCompose function by tx.origin
      * @param _refundAddress The address to refund tokens to
-     * @param _nativeAmt The amount of HYPE tokens to refund
      * @param _erc20Amt The amount of ERC20 tokens to refund
      */
-    function _hyperevmRefund(address _refundAddress, uint256 _nativeAmt, uint256 _erc20Amt) internal {
-        if (_nativeAmt > 0) {
-            (bool success1, ) = _refundAddress.call{ value: _nativeAmt }("");
+    function _hyperevmRefund(address _refundAddress, uint256 _erc20Amt) internal {
+        if (msg.value != 0) {
+            (bool success1, ) = _refundAddress.call{ value: msg.value }("");
             if (!success1) {
-                (bool success2, ) = tx.origin.call{ value: _nativeAmt }("");
-                if (!success2) revert NativeTransferFailed(tx.origin, _nativeAmt);
+                (bool success2, ) = tx.origin.call{ value: msg.value }("");
+                if (!success2) revert NativeTransferFailed(tx.origin, msg.value);
             }
         }
 
-        if (_erc20Amt > 0) {
-            IERC20(TOKEN).safeTransfer(_refundAddress, _erc20Amt);
-        }
+        if (_erc20Amt != 0) IERC20(ERC20).safeTransfer(_refundAddress, _erc20Amt);
     }
 
     /**
@@ -273,18 +246,18 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
      */
     function refundToSrc(bytes32 _guid) external payable virtual {
         FailedMessage memory failedMessage = failedMessages[_guid];
-        if (failedMessage.refundSendParam.dstEid == 0) {
-            revert FailedMessageNotFound(_guid);
-        }
+        if (failedMessage.refundSendParam.dstEid == 0) revert FailedMessageNotFound(_guid);
+
         delete failedMessages[_guid];
 
         uint256 totalMsgValue = failedMessage.msgValue + msg.value;
 
-        /// @dev Refunds the OFT contract with the refundSendParam
+        /// @dev Triggers a refund via the OFT with the refundSendParam for the ERC20 amt
+        /// @dev msg.value, if any was passed is used to pay the layerzero message fee and excess refunded to tx.origin
         IOFT(OFT).send{ value: totalMsgValue }(
             failedMessage.refundSendParam,
             MessagingFee(totalMsgValue, 0),
-            REFUND_ADDRESS
+            tx.origin
         );
 
         /// @dev Emits the RefundSuccessful event

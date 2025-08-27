@@ -95,9 +95,9 @@ abstract contract RecoverableComposer is HyperLiquidComposer, IRecoverableCompos
      * @param _evmAmount Amount of ERC20 tokens to recover in EVM decimals, or FULL_TRANSFER for all
      */
     function recoverEvmERC20(uint256 _evmAmount) public onlyRecoveryAddress {
-        uint256 recoverAmt = _evmAmount == FULL_TRANSFER ? IERC20(TOKEN).balanceOf(address(this)) : _evmAmount;
+        uint256 recoverAmt = _evmAmount == FULL_TRANSFER ? IERC20(ERC20).balanceOf(address(this)) : _evmAmount;
 
-        IERC20(TOKEN).safeTransfer(RECOVERY_ADDRESS, recoverAmt);
+        IERC20(ERC20).safeTransfer(RECOVERY_ADDRESS, recoverAmt);
         emit Recovered(RECOVERY_ADDRESS, recoverAmt);
     }
 

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import { ErrorMessagePayload, IHyperLiquidComposerErrors } from "../interfaces/IHyperLiquidComposerErrors.sol";
 import { IHyperAsset, IHyperAssetAmount } from "../interfaces/IHyperLiquidComposer.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
@@ -11,9 +10,6 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
  * @notice Library for computing hyperliquid asset bridges, and converting between EVM and HyperCore amounts
  */
 library HyperLiquidComposerCodec {
-    /// @dev This is the largest possible token supply on HyperCore
-    uint64 public constant EVM_MAX_TRANSFERABLE_INTO_CORE_PER_TX = type(uint64).max;
-
     /// @dev The base asset bridge address is the address of the HyperLiquid L1 contract
     /// @dev This is the address that the OFT contract will transfer the tokens to when we want to send tokens to HyperLiquid L1
     /// @dev https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers#system-addresses
@@ -54,29 +50,26 @@ library HyperLiquidComposerCodec {
         IHyperAsset memory _asset
     ) internal pure returns (IHyperAssetAmount memory) {
         uint256 amountEVM;
-        uint256 dust;
         uint64 amountCore;
-
-        uint64 maxTransferableCoreAmount = min_u64(_assetBridgeSupply, EVM_MAX_TRANSFERABLE_INTO_CORE_PER_TX);
 
         /// @dev HyperLiquid decimal conversion: Scale EVM (u256,evmDecimals) -> Core (u64,coreDecimals)
         /// @dev Dust contains the "dust" from scaling and is used for refund.
         /// @dev Core amount is guaranteed to be within u64 range.
         if (_asset.decimalDiff > 0) {
-            (amountEVM, dust, amountCore) = into_hyperAssetAmount_decimal_difference_gt_zero(
+            (amountEVM, amountCore) = into_hyperAssetAmount_decimal_difference_gt_zero(
                 _amount,
-                maxTransferableCoreAmount,
+                _assetBridgeSupply,
                 uint64(_asset.decimalDiff)
             );
         } else {
-            (amountEVM, dust, amountCore) = into_hyperAssetAmount_decimal_difference_leq_zero(
+            (amountEVM, amountCore) = into_hyperAssetAmount_decimal_difference_leq_zero(
                 _amount,
-                maxTransferableCoreAmount,
+                _assetBridgeSupply,
                 uint64(-1 * _asset.decimalDiff)
             );
         }
 
-        return IHyperAssetAmount({ evm: amountEVM, dust: dust, core: amountCore });
+        return IHyperAssetAmount({ evm: amountEVM, core: amountCore, coreBalanceAssetBridge: _assetBridgeSupply });
     }
 
     /**
@@ -86,14 +79,13 @@ library HyperLiquidComposerCodec {
      * @param _maxTransferableCoreAmount The maximum transferrable amount capped by the asset bridge has range [0,u64.max]
      * @param _decimalDiff The decimal difference between HyperEVM and HyperCore
      * @return amountEVM The EVM amount
-     * @return dust The dust amount
      * @return amountCore The core amount
      */
     function into_hyperAssetAmount_decimal_difference_gt_zero(
         uint256 _amount,
         uint64 _maxTransferableCoreAmount,
         uint64 _decimalDiff
-    ) internal pure returns (uint256 amountEVM, uint256 dust, uint64 amountCore) {
+    ) internal pure returns (uint256 amountEVM, uint64 amountCore) {
         uint256 scale = 10 ** _decimalDiff;
         uint256 maxEvmAmountFromCoreMax = _maxTransferableCoreAmount * scale;
 
@@ -107,7 +99,6 @@ library HyperLiquidComposerCodec {
 
             /// @dev Safe: Guaranteed to be in the range of [0, u64.max] because it is upperbounded by uint64 _maxTransferableCoreAmount
             amountCore = uint64(amountEVM / scale);
-            dust = _amount - amountEVM;
         }
     }
 
@@ -118,14 +109,13 @@ library HyperLiquidComposerCodec {
      * @param _maxTransferableCoreAmount The maximum transferrable amount capped by the asset bridge
      * @param _decimalDiff The decimal difference between HyperEVM and HyperCore
      * @return amountEVM The EVM amount
-     * @return dust The dust amount
      * @return amountCore The core amount
      */
     function into_hyperAssetAmount_decimal_difference_leq_zero(
         uint256 _amount,
         uint64 _maxTransferableCoreAmount,
         uint64 _decimalDiff
-    ) internal pure returns (uint256 amountEVM, uint256 dust, uint64 amountCore) {
+    ) internal pure returns (uint256 amountEVM, uint64 amountCore) {
         uint256 scale = 10 ** _decimalDiff;
         uint256 maxEvmAmountFromCoreMax = _maxTransferableCoreAmount / scale;
 
@@ -137,21 +127,10 @@ library HyperLiquidComposerCodec {
 
             /// @dev Safe: Guaranteed to be in the range of [0, u64.max] because it is upperbounded by uint64 _maxTransferableCoreAmount
             amountCore = uint64(amountEVM * scale);
-            dust = _amount - amountEVM;
         }
     }
 
     function min_u256(uint256 a, uint256 b) internal pure returns (uint256 result) {
-        /// @solidity memory-safe-assembly
-        assembly {
-            result := sub(a, mul(sub(a, b), lt(b, a)))
-        }
-    }
-
-    function min_u64(uint64 a, uint64 b) internal pure returns (uint64 result) {
-        /// @solidity memory-safe-assembly
-        assembly {
-            result := sub(a, mul(sub(a, b), lt(b, a)))
-        }
+        return a < b ? a : b;
     }
 }
