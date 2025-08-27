@@ -100,7 +100,7 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
 
             /// @dev If HyperEVM -> HyperCore fails for HYPE OR ERC20 then we do a complete refund to the receiver on hyperevm
             /// @dev try...catch to safeguard against possible breaking hyperliquid pre-compile changes
-            try this.handleCoreTransfers{ value: msg.value }(_to, amount) {} catch {
+            try this.handleTransferToHyperCore{ value: msg.value }(_to, amount) {} catch {
                 _refundToHyperEvm(_to, amount);
             }
         } catch {
@@ -132,13 +132,13 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
      * @dev Default behavior checks if the user is activated on HyperCore in ERC20 transfer, if not then revert this call
      * @dev If the user requests for more funds than the asset bridge's balance we revert
      */
-    function handleCoreTransfers(address _to, uint256 _amount) external payable {
+    function handleTransferToHyperCore(address _to, uint256 _amount) external payable {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
-        _checkAndTransferERC20HyperCore(_to, _amount);
+        _transferERC20ToHyperCore(_to, _amount);
 
         if (msg.value > 0) {
-            _transferNativeHyperCore(_to);
+            _transferNativeToHyperCore(_to);
         }
     }
 
@@ -150,7 +150,7 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
      * @param _to The address to receive tokens on HyperCore
      * @param _amountLD The amount of tokens to transfer in LayerZero decimals
      */
-    function _checkAndTransferERC20HyperCore(address _to, uint256 _amountLD) internal virtual {
+    function _transferERC20ToHyperCore(address _to, uint256 _amountLD) internal virtual {
         // Cache erc20Asset to avoid multiple SLOAD operations
         IHyperAsset memory asset = erc20Asset;
         IHyperAssetAmount memory amounts = quoteHyperCoreAmount(_amountLD, asset);
@@ -173,7 +173,7 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
      * @notice If the user requests for more funds than the asset bridge's balance we revert
      * @param _to The address to receive tokens on HyperCore
      */
-    function _transferNativeHyperCore(address _to) internal virtual {
+    function _transferNativeToHyperCore(address _to) internal virtual {
         // Cache hypeAsset to avoid multiple SLOAD operations
         IHyperAsset memory asset = hypeAsset;
         IHyperAssetAmount memory amounts = quoteHyperCoreAmount(msg.value, asset);
