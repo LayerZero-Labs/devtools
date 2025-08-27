@@ -117,15 +117,13 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
     /**
      * @notice Decodes the compose message to extract minMsgValue and receiver address
      * @param _composeMessage The encoded compose message
-     * @return minMsgValue The minimum message value required
-     * @return receiver The receiver address
+     * @return minMsgValue - The minimum message value required
+     * @return to - The receiver address
      */
-    function decodeMessage(
-        bytes calldata _composeMessage
-    ) external pure returns (uint256 minMsgValue, address receiver) {
+    function decodeMessage(bytes calldata _composeMessage) external pure returns (uint256 minMsgValue, address to) {
         if (_composeMessage.length != VALID_COMPOSE_MSG_LEN) revert ComposeMsgLengthNot64Bytes(_composeMessage.length);
 
-        (minMsgValue, receiver) = abi.decode(_composeMessage, (uint256, address));
+        (minMsgValue, to) = abi.decode(_composeMessage, (uint256, address));
     }
 
     /**
