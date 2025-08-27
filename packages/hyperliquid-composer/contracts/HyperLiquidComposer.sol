@@ -101,7 +101,7 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
             /// @dev If HyperEVM -> HyperCore fails for HYPE OR ERC20 then we do a complete refund to the receiver on hyperevm
             /// @dev try...catch to safeguard against possible breaking hyperliquid pre-compile changes
             try this.handleCoreTransfers{ value: msg.value }(_to, amount) {} catch {
-                _hyperevmRefund(_to, amount);
+                _refundToHyperEvm(_to, amount);
             }
         } catch {
             SendParam memory refundSendParam;
@@ -201,27 +201,6 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
     }
 
     /**
-     * @notice Handles refunds on HyperEVM for both HYPE and ERC20 tokens
-     * @dev Since this is an external function - the msg.value can be different to the msg.value sent to the lzCompose function by tx.origin
-     * @dev It is different in the case of a partial refund where the call is:
-     * @dev `this.refundNativeTokens{ value: amounts.dust }(_to)`
-     * @dev In this case, the msg.value is the amount of the dust and not the msg.value sent to the lzCompose function by tx.origin
-     * @param _refundAddress The address to refund tokens to
-     * @param _erc20Amt The amount of ERC20 tokens to refund
-     */
-    function _hyperevmRefund(address _refundAddress, uint256 _erc20Amt) internal {
-        if (msg.value != 0) {
-            (bool success1, ) = _refundAddress.call{ value: msg.value }("");
-            if (!success1) {
-                (bool success2, ) = tx.origin.call{ value: msg.value }("");
-                if (!success2) revert NativeTransferFailed(tx.origin, msg.value);
-            }
-        }
-
-        if (_erc20Amt != 0) IERC20(ERC20).safeTransfer(_refundAddress, _erc20Amt);
-    }
-
-    /**
      * @notice External function to quote the conversion of evm tokens to hypercore tokens
      * @param _amount The amount of tokens to send
      * @param _asset The asset type (OFT or HYPE)
@@ -233,6 +212,23 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
     ) public view returns (IHyperAssetAmount memory) {
         uint64 assetBridgeBalance = spotBalance(_asset.assetBridgeAddress, _asset.coreIndexId).total;
         return _amount.into_hyperAssetAmount(assetBridgeBalance, _asset);
+    }
+
+    /**
+     * @notice Handles refunds to HyperEVM for both HYPE and ERC20 tokens to the initial recipient
+     * @param _refundAddress The address to refund tokens to
+     * @param _erc20Amt The amount of ERC20 tokens to refund
+     */
+    function _refundToHyperEvm(address _refundAddress, uint256 _erc20Amt) internal {
+        if (msg.value != 0) {
+            (bool success1, ) = _refundAddress.call{ value: msg.value }("");
+            if (!success1) {
+                (bool success2, ) = tx.origin.call{ value: msg.value }("");
+                if (!success2) revert NativeTransferFailed(tx.origin, msg.value);
+            }
+        }
+
+        if (_erc20Amt != 0) IERC20(ERC20).safeTransfer(_refundAddress, _erc20Amt);
     }
 
     /**
@@ -255,7 +251,6 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
             tx.origin
         );
 
-        /// @dev Emits the RefundSuccessful event
         emit RefundSuccessful(_guid);
     }
 
