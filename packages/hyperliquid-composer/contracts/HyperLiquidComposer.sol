@@ -132,11 +132,11 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
      * @dev Default behavior checks if the user is activated on HyperCore in ERC20 transfer, if not then revert this call
      * @dev If the user requests for more funds than the asset bridge's balance we revert
      */
-    function handleTransfersToHyperCore(address _to, uint256 _amount) external payable {
+    function handleTransfersToHyperCore(address _to, uint256 _amountLD) external payable {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
         /// @dev Move ERC20 tokens into hyper core.
-        _transferERC20ToHyperCore(_to, _amount);
+        _transferERC20ToHyperCore(_to, _amountLD);
 
         /// @dev Move native funds into hyper core.
         if (msg.value > 0) _transferNativeToHyperCore(_to);
@@ -202,16 +202,16 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
 
     /**
      * @notice External function to quote the conversion of evm tokens to hypercore tokens
-     * @param _evmAmt The number of tokens that the composer received (pre-dusted) that we are trying to send
+     * @param _amountLD The number of tokens that the composer received (pre-dusted) that we are trying to send
      * @param _asset The asset type (OFT or HYPE)
      * @return IHyperAssetAmount - The amount of tokens to send to HyperCore (scaled on evm), dust (to be refunded), and the swap amount (of the tokens scaled on hypercore)
      */
     function quoteHyperCoreAmount(
-        uint256 _evmAmt,
+        uint256 _amountLD,
         IHyperAsset memory _asset
     ) public view returns (IHyperAssetAmount memory) {
         uint64 assetBridgeBalance = spotBalance(_asset.assetBridgeAddress, _asset.coreIndexId).total;
-        return _evmAmt.into_hyperAssetAmount(assetBridgeBalance, _asset.decimalDiff);
+        return _amountLD.into_hyperAssetAmount(assetBridgeBalance, _asset.decimalDiff);
     }
 
     /**
