@@ -3,12 +3,6 @@ pragma solidity ^0.8.20;
 
 import { SendParam } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 
-struct IHyperAsset {
-    uint64 coreIndexId; /// 8 bytes
-    int64 decimalDiff; /// 8 bytes : @dev is computed as evm decimals - core decimals
-    address assetBridgeAddress; /// 20 bytes (fits in same slot)
-}
-
 struct IHyperAssetAmount {
     uint256 evm;
     uint64 core;
@@ -43,7 +37,7 @@ interface IHyperLiquidComposer {
 
     error CoreUserNotActivated();
     error TransferAmtExceedsAssetBridgeBalance(IHyperAssetAmount amounts);
-    error NativeTransferFailed(address receiver, uint256 amount);
+    error NativeTransferFailed(uint256 amount);
 
     error SpotBalanceReadFailed(address user, uint64 tokenId);
 
@@ -57,13 +51,12 @@ interface IHyperLiquidComposer {
     function OFT() external view returns (address);
     function ERC20() external view returns (address);
 
-    function erc20Asset() external view returns (uint64 coreIndexId, int64 decimalDiff, address assetBridgeAddress);
-    function hypeAsset() external view returns (uint64 coreIndexId, int64 decimalDiff, address assetBridgeAddress);
-
     function decodeMessage(bytes calldata composeMessage) external pure returns (uint256 minMsgValue, address receiver);
     function refundToSrc(bytes32 guid) external payable;
     function quoteHyperCoreAmount(
-        uint256 evmAmountIn,
-        IHyperAsset memory asset
+        uint64 coreIndexId,
+        int64 decimalDiff,
+        address bridgeAddress,
+        uint256 amountLD
     ) external view returns (IHyperAssetAmount memory);
 }

@@ -4,7 +4,6 @@ pragma solidity ^0.8.0;
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
-import { IHyperAsset } from "../contracts/interfaces/IHyperLiquidComposer.sol";
 import { ICoreWriter } from "../contracts/interfaces/ICoreWriter.sol";
 
 import { FeeTokenMock } from "./mocks/FeeTokenMock.sol";
@@ -89,16 +88,14 @@ contract FeeTokenTest is HyperliquidBaseTest {
 
         deal(address(oft), address(feeToken), TRANSFER_AMOUNT_EVM);
 
-        (uint64 coreIndexId, int64 decimalDiff, address assetBridgeAddress) = feeToken.erc20Asset();
-
-        IHyperAsset memory erc20Asset = IHyperAsset({
-            coreIndexId: coreIndexId,
-            decimalDiff: decimalDiff,
-            assetBridgeAddress: assetBridgeAddress
-        });
+        uint64 coreIndexId = feeToken.ERC20_CORE_INDEX_ID();
+        int64 decimalDiff = feeToken.ERC20_DECIMAL_DIFF();
+        address assetBridgeAddress = feeToken.ERC20_ASSET_BRIDGE();
 
         // For new users, the core amount should be reduced by activation fee
-        uint64 baseCoreAmount = feeToken.quoteHyperCoreAmount(TRANSFER_AMOUNT_EVM, erc20Asset).core;
+        uint64 baseCoreAmount = feeToken
+            .quoteHyperCoreAmount(coreIndexId, decimalDiff, assetBridgeAddress, TRANSFER_AMOUNT_EVM)
+            .core;
         uint64 expectedCoreAmount = baseCoreAmount - ACTIVATION_FEE;
         bytes memory rawActionPayload = feeToken.createRawActionPayloadERC20(newUser, expectedCoreAmount);
 

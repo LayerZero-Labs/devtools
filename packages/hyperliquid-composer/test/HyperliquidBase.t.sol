@@ -5,7 +5,7 @@ import { Test, console } from "forge-std/Test.sol";
 
 import { HyperLiquidComposerCodec } from "../contracts/library/HyperLiquidComposerCodec.sol";
 
-import { IHyperLiquidComposer, IHyperAsset } from "../contracts/interfaces/IHyperLiquidComposer.sol";
+import { IHyperLiquidComposer } from "../contracts/interfaces/IHyperLiquidComposer.sol";
 
 import { HyperLiquidComposer } from "../contracts/HyperLiquidComposer.sol";
 
@@ -16,6 +16,12 @@ import { OFTMock } from "./mocks/OFTMock.sol";
 import { TypeConversionTest } from "./ComposerCodec/TypeConversion.t.sol";
 
 contract HyperliquidBaseTest is Test {
+    struct IHyperAsset {
+        uint64 coreIndexId;
+        int8 decimalDiff;
+        address assetBridgeAddress;
+    }
+
     IHyperAsset public ERC20;
     IHyperAsset public HYPE;
     OFTMock public oft;

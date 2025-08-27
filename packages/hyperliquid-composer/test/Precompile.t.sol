@@ -6,7 +6,7 @@ import { HyperliquidBaseTest } from "./HyperliquidBase.t.sol";
 
 import { HyperLiquidComposerCodec } from "../contracts/library/HyperLiquidComposerCodec.sol";
 
-import { IHyperLiquidComposer, IHyperAsset, IHyperAssetAmount } from "../contracts/interfaces/IHyperLiquidComposer.sol";
+import { IHyperLiquidComposer, IHyperAssetAmount } from "../contracts/interfaces/IHyperLiquidComposer.sol";
 import { IHYPEPrecompile } from "../contracts/interfaces/IHYPEPrecompile.sol";
 
 import { HyperLiquidComposer } from "../contracts/HyperLiquidComposer.sol";

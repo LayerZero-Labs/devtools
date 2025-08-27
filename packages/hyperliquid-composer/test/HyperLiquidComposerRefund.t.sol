@@ -93,7 +93,7 @@ contract HyperLiquidComposerRefundTest is HyperliquidBaseTest {
         uint256 totalTransferAmount = AMOUNT_TO_SEND + _dust;
         deal(address(oft), address(hyperLiquidComposer), totalTransferAmount);
 
-        uint256 scaleERC20DecimalDiff = 10 ** uint64(ERC20.decimalDiff);
+        uint256 scaleERC20DecimalDiff = 10 ** uint8(ERC20.decimalDiff);
 
         SpotBalancePrecompileMock(HLP_PRECOMPILE_READ_SPOT_BALANCE).setSpotBalance(
             ERC20.assetBridgeAddress,
@@ -128,7 +128,7 @@ contract HyperLiquidComposerRefundTest is HyperliquidBaseTest {
         address noFallback = address(new NoFallback());
         CoreUserExistsMock(HLP_PRECOMPILE_READ_USER_EXISTS).setUserExists(noFallback, true);
 
-        uint256 scaleERC20DecimalDiff = 10 ** uint64(ERC20.decimalDiff);
+        uint256 scaleERC20DecimalDiff = 10 ** uint8(ERC20.decimalDiff);
 
         SpotBalancePrecompileMock(HLP_PRECOMPILE_READ_SPOT_BALANCE).setSpotBalance(
             ERC20.assetBridgeAddress,
@@ -166,7 +166,7 @@ contract HyperLiquidComposerRefundTest is HyperliquidBaseTest {
         address unactivatedAddress = vm.randomAddress();
         CoreUserExistsMock(HLP_PRECOMPILE_READ_USER_EXISTS).setUserExists(unactivatedAddress, false);
 
-        uint256 scaleERC20DecimalDiff = 10 ** uint64(ERC20.decimalDiff);
+        uint256 scaleERC20DecimalDiff = 10 ** uint8(ERC20.decimalDiff);
 
         SpotBalancePrecompileMock(HLP_PRECOMPILE_READ_SPOT_BALANCE).setSpotBalance(
             ERC20.assetBridgeAddress,

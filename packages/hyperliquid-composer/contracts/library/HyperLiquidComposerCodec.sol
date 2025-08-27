@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import { IHyperAsset, IHyperAssetAmount } from "../interfaces/IHyperLiquidComposer.sol";
+import { IHyperAssetAmount } from "../interfaces/IHyperLiquidComposer.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
 /**

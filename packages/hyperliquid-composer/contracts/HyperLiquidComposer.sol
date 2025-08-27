@@ -10,7 +10,7 @@ import { HyperLiquidCore } from "./HyperLiquidCore.sol";
 
 import { HyperLiquidComposerCodec } from "./library/HyperLiquidComposerCodec.sol";
 
-import { IHyperLiquidComposer, IHyperAsset, IHyperAssetAmount, FailedMessage } from "./interfaces/IHyperLiquidComposer.sol";
+import { IHyperLiquidComposer, IHyperAssetAmount, FailedMessage } from "./interfaces/IHyperLiquidComposer.sol";
 
 import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
@@ -30,10 +30,15 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
 
     address public immutable ENDPOINT;
     address public immutable OFT;
-    address public immutable ERC20;
 
-    IHyperAsset public erc20Asset; /// @dev EVM token
-    IHyperAsset public hypeAsset; /// @dev Hype token
+    address public immutable NATIVE_ASSET_BRIDGE;
+    int64 public immutable NATIVE_DECIMAL_DIFF;
+    uint64 public immutable NATIVE_CORE_INDEX_ID;
+
+    address public immutable ERC20;
+    address public immutable ERC20_ASSET_BRIDGE;
+    int64 public immutable ERC20_DECIMAL_DIFF;
+    uint64 public immutable ERC20_CORE_INDEX_ID;
 
     mapping(bytes32 guid => FailedMessage) public failedMessages;
 
@@ -48,26 +53,19 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
         ENDPOINT = address(IOAppCore(_oft).endpoint());
 
         OFT = _oft;
-        ERC20 = IOFT(OFT).token();
 
         uint64 hypeCoreIndex = block.chainid == HYPE_CHAIN_ID_MAINNET
             ? HYPE_CORE_INDEX_MAINNET
             : HYPE_CORE_INDEX_TESTNET;
 
-        /// @dev HYPE system contract address for Core<->EVM transfers
-        hypeAsset = IHyperAsset({
-            decimalDiff: HYPE_DECIMAL_DIFF,
-            coreIndexId: hypeCoreIndex,
-            assetBridgeAddress: HYPE_ASSET_BRIDGE
-        });
+        NATIVE_ASSET_BRIDGE = HYPE_ASSET_BRIDGE;
+        NATIVE_DECIMAL_DIFF = HYPE_DECIMAL_DIFF;
+        NATIVE_CORE_INDEX_ID = hypeCoreIndex;
 
-        /// @dev Asset bridge address is the prefix (0x2000...0000) + the core index id
-        /// @dev This is used to transfer tokens between the ERC20 and CoreSpot
-        erc20Asset = IHyperAsset({
-            decimalDiff: _assetDecimalDiff,
-            coreIndexId: _coreIndexId,
-            assetBridgeAddress: _coreIndexId.into_assetBridgeAddress()
-        });
+        ERC20 = IOFT(OFT).token();
+        ERC20_ASSET_BRIDGE = _coreIndexId.into_assetBridgeAddress();
+        ERC20_DECIMAL_DIFF = _assetDecimalDiff;
+        ERC20_CORE_INDEX_ID = _coreIndexId;
     }
 
     /**
@@ -145,26 +143,30 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
     /**
      * @notice Transfers ERC20 tokens to HyperCore
      * @notice Checks if the receiver's address is activated on HyperCore
-     * @notice To be overriden on FeeToken or other implementations since this can be used to activate tokens
      * @notice If the user requests for more funds than the asset bridge's balance we revert
      * @param _to The address to receive tokens on HyperCore
      * @param _amountLD The amount of tokens to transfer in LayerZero decimals
      */
     function _transferERC20ToHyperCore(address _to, uint256 _amountLD) internal virtual {
-        // Cache erc20Asset to avoid multiple SLOAD operations
-        IHyperAsset memory asset = erc20Asset;
-        IHyperAssetAmount memory amounts = quoteHyperCoreAmount(_amountLD, asset);
-        /// @dev This reverts if the user is not activated in the default case, else it simply returns `amounts.core`
-        uint64 coreAmount = _getFinalCoreAmount(_to, amounts.core);
+        IHyperAssetAmount memory amounts = quoteHyperCoreAmount(
+            ERC20_CORE_INDEX_ID,
+            ERC20_DECIMAL_DIFF,
+            ERC20_ASSET_BRIDGE,
+            _amountLD
+        );
 
         if (amounts.core > amounts.coreBalanceAssetBridge) revert TransferAmtExceedsAssetBridgeBalance(amounts);
 
         /// @dev Moving tokens to asset bridge credits the coreAccount of composer with the tokens.
         /// @dev The write call then moves coreSpot tokens from the composer to receiver
         if (amounts.evm != 0) {
+            /// @dev This reverts if the user is not activated in the default case, else it simply returns `amounts.core`
+            uint64 coreAmount = _getFinalCoreAmount(_to, amounts.core);
+
             // Transfer the tokens to the composer's address on HyperCore
-            IERC20(ERC20).safeTransfer(asset.assetBridgeAddress, amounts.evm);
-            _submitCoreWriterTransfer(_to, asset.coreIndexId, coreAmount);
+            IERC20(ERC20).safeTransfer(ERC20_ASSET_BRIDGE, amounts.evm);
+
+            _submitCoreWriterTransfer(_to, ERC20_CORE_INDEX_ID, coreAmount);
         }
     }
 
@@ -174,22 +176,27 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
      * @param _to The address to receive tokens on HyperCore
      */
     function _transferNativeToHyperCore(address _to) internal virtual {
-        // Cache hypeAsset to avoid multiple SLOAD operations
-        IHyperAsset memory asset = hypeAsset;
-        IHyperAssetAmount memory amounts = quoteHyperCoreAmount(msg.value, asset);
+        IHyperAssetAmount memory amounts = quoteHyperCoreAmount(
+            NATIVE_CORE_INDEX_ID,
+            NATIVE_DECIMAL_DIFF,
+            NATIVE_ASSET_BRIDGE,
+            msg.value
+        );
+
         if (amounts.core > amounts.coreBalanceAssetBridge) revert TransferAmtExceedsAssetBridgeBalance(amounts);
 
         if (amounts.evm != 0) {
             // Transfer the HYPE tokens to the composer's address on HyperCore
-            (bool success, ) = payable(asset.assetBridgeAddress).call{ value: amounts.evm }("");
-            if (!success) revert NativeTransferFailed(asset.assetBridgeAddress, amounts.evm);
+            (bool success, ) = payable(NATIVE_ASSET_BRIDGE).call{ value: amounts.evm }("");
+            if (!success) revert NativeTransferFailed(amounts.evm);
 
-            _submitCoreWriterTransfer(_to, asset.coreIndexId, amounts.core);
+            _submitCoreWriterTransfer(_to, NATIVE_CORE_INDEX_ID, amounts.core);
         }
     }
 
     /**
      * @notice Checks if the receiver's address is activated on HyperCore
+     * @notice To be overriden on FeeToken or other implementations since this can be used to activate tokens
      * @dev Default behavior is to revert if the user's account is NOT activated
      * @param _to The address to check
      * @param _coreAmount The core amount to transfer
@@ -202,33 +209,37 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
 
     /**
      * @notice External function to quote the conversion of evm tokens to hypercore tokens
+     * @param _coreIndexId The core index id of the token to transfer
+     * @param _decimalDiff The decimal difference of evmDecimals - coreDecimals
+     * @param _bridgeAddress The asset bridge address of the token to transfer
      * @param _amountLD The number of tokens that the composer received (pre-dusted) that we are trying to send
-     * @param _asset The asset type (OFT or HYPE)
      * @return IHyperAssetAmount - The amount of tokens to send to HyperCore (scaled on evm), dust (to be refunded), and the swap amount (of the tokens scaled on hypercore)
      */
     function quoteHyperCoreAmount(
-        uint256 _amountLD,
-        IHyperAsset memory _asset
+        uint64 _coreIndexId,
+        int64 _decimalDiff,
+        address _bridgeAddress,
+        uint256 _amountLD
     ) public view returns (IHyperAssetAmount memory) {
-        uint64 assetBridgeBalance = spotBalance(_asset.assetBridgeAddress, _asset.coreIndexId).total;
-        return _amountLD.into_hyperAssetAmount(assetBridgeBalance, _asset.decimalDiff);
+        uint64 bridgeBalance = spotBalance(_bridgeAddress, _coreIndexId).total;
+        return _amountLD.into_hyperAssetAmount(bridgeBalance, _decimalDiff);
     }
 
     /**
      * @notice Handles refunds to HyperEVM for both HYPE and ERC20 tokens to the initial recipient
      * @param _refundAddress The address to refund tokens to
-     * @param _erc20Amt The amount of ERC20 tokens to refund
+     * @param _amountLD The amount of ERC20 tokens to refund
      */
-    function _refundToHyperEvm(address _refundAddress, uint256 _erc20Amt) internal {
+    function _refundToHyperEvm(address _refundAddress, uint256 _amountLD) internal {
         if (msg.value != 0) {
             (bool success1, ) = _refundAddress.call{ value: msg.value }("");
             if (!success1) {
                 (bool success2, ) = tx.origin.call{ value: msg.value }("");
-                if (!success2) revert NativeTransferFailed(tx.origin, msg.value);
+                if (!success2) revert NativeTransferFailed(msg.value);
             }
         }
 
-        if (_erc20Amt != 0) IERC20(ERC20).safeTransfer(_refundAddress, _erc20Amt);
+        if (_amountLD != 0) IERC20(ERC20).safeTransfer(_refundAddress, _amountLD);
     }
 
     /**

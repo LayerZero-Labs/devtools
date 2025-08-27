@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import { HyperLiquidComposerCodec } from "@layerzerolabs/hyperliquid-composer/contracts/library/HyperLiquidComposerCodec.sol";
-import { IHyperAsset, IHyperAssetAmount } from "@layerzerolabs/hyperliquid-composer/contracts/interfaces/IHyperLiquidComposer.sol";
+import { IHyperAssetAmount } from "@layerzerolabs/hyperliquid-composer/contracts/interfaces/IHyperLiquidComposer.sol";
 
 import { Test, console } from "forge-std/Test.sol";
 
@@ -42,16 +42,10 @@ contract TypeConversionTest is Test {
 
         uint256 scale = 10 ** uint8(-1 * evmExtraWeiDecimals);
 
-        IHyperAsset memory erc20Asset = IHyperAsset({
-            assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1),
-            coreIndexId: 1,
-            decimalDiff: evmExtraWeiDecimals
-        });
-
         IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyperAssetAmount(
             amount,
             bridgeSupply,
-            erc20Asset.decimalDiff
+            evmExtraWeiDecimals
         );
 
         assertEq(amounts.evm, amounts.core / scale, "evm and core amounts should differ by a factor of scale");
@@ -66,16 +60,10 @@ contract TypeConversionTest is Test {
         evmExtraWeiDecimals = int8(bound(evmExtraWeiDecimals, 1, MAX_DECIMAL_DIFF));
         uint256 scale = 10 ** uint8(evmExtraWeiDecimals);
 
-        IHyperAsset memory erc20Asset = IHyperAsset({
-            assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1),
-            coreIndexId: 1,
-            decimalDiff: evmExtraWeiDecimals
-        });
-
         IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyperAssetAmount(
             amount,
             bridgeSupply,
-            erc20Asset.decimalDiff
+            evmExtraWeiDecimals
         );
 
         assertEq(amounts.evm / scale, amounts.core, "evm and core amounts should differ by a factor of scale");

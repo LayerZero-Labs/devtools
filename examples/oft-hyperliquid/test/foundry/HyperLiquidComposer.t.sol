@@ -5,7 +5,6 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
-import { IHyperAsset } from "@layerzerolabs/hyperliquid-composer/contracts/interfaces/IHyperLiquidComposer.sol";
 import { IHYPEPrecompile } from "@layerzerolabs/hyperliquid-composer/contracts/interfaces/IHYPEPrecompile.sol";
 import { ICoreWriter } from "@layerzerolabs/hyperliquid-composer/contracts/interfaces/ICoreWriter.sol";
 
@@ -23,17 +22,14 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
     }
 
     function test_deployment() public view {
-        (uint64 coreIndexId, int64 decimalDiff, address hypeAssetBridgeAddress) = hyperLiquidComposer.hypeAsset();
-        assertEq(hypeAssetBridgeAddress, 0x2222222222222222222222222222222222222222);
+        assertEq(hyperLiquidComposer.NATIVE_ASSET_BRIDGE(), 0x2222222222222222222222222222222222222222);
         uint256 expectedHypeCoreIndexId = block.chainid == 998 ? 1105 : 150;
-        assertEq(coreIndexId, expectedHypeCoreIndexId);
-        assertEq(decimalDiff, 10);
+        assertEq(hyperLiquidComposer.NATIVE_CORE_INDEX_ID(), expectedHypeCoreIndexId);
+        assertEq(hyperLiquidComposer.NATIVE_DECIMAL_DIFF(), 10);
 
-        (uint64 oftCoreIndexId, int64 oftDecimalDiff, address erc20AssetBridgeAddress) = hyperLiquidComposer
-            .erc20Asset();
-        assertEq(erc20AssetBridgeAddress, ERC20.assetBridgeAddress);
-        assertEq(oftCoreIndexId, ERC20.coreIndexId);
-        assertEq(oftDecimalDiff, ERC20.decimalDiff);
+        assertEq(hyperLiquidComposer.ERC20_ASSET_BRIDGE(), ERC20.assetBridgeAddress);
+        assertEq(hyperLiquidComposer.ERC20_CORE_INDEX_ID(), ERC20.coreIndexId);
+        assertEq(hyperLiquidComposer.ERC20_DECIMAL_DIFF(), ERC20.decimalDiff);
     }
 
     function test_hypeIndexByChainId_testnet() public {
@@ -57,7 +53,7 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
             ERC20.decimalDiff
         );
 
-        (uint64 coreIndexId, , ) = hypeComposerTestnet.hypeAsset();
+        uint64 coreIndexId = hypeComposerTestnet.NATIVE_CORE_INDEX_ID();
 
         assertEq(coreIndexId, 1105);
     }
@@ -82,7 +78,7 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
             ERC20.decimalDiff
         );
 
-        (uint64 coreIndexId, , ) = hypeComposerMainnet.hypeAsset();
+        uint64 coreIndexId = hypeComposerMainnet.NATIVE_CORE_INDEX_ID();
 
         assertEq(coreIndexId, 150);
     }
@@ -106,15 +102,13 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
         vm.expectEmit(address(oft));
         emit IERC20.Transfer(address(hyperLiquidComposer), ERC20.assetBridgeAddress, AMOUNT_TO_SEND);
 
-        (uint64 coreIndexId, int64 decimalDiff, address assetBridgeAddress) = hyperLiquidComposer.erc20Asset();
+        uint64 coreIndexId = hyperLiquidComposer.ERC20_CORE_INDEX_ID();
+        int64 decimalDiff = hyperLiquidComposer.ERC20_DECIMAL_DIFF();
+        address assetBridgeAddress = hyperLiquidComposer.ERC20_ASSET_BRIDGE();
 
-        IHyperAsset memory erc20Asset = IHyperAsset({
-            assetBridgeAddress: assetBridgeAddress,
-            coreIndexId: coreIndexId,
-            decimalDiff: decimalDiff
-        });
-
-        uint64 coreAmount = hyperLiquidComposer.quoteHyperCoreAmount(AMOUNT_TO_SEND, erc20Asset).core;
+        uint64 coreAmount = hyperLiquidComposer
+            .quoteHyperCoreAmount(coreIndexId, decimalDiff, assetBridgeAddress, AMOUNT_TO_SEND)
+            .core;
         bytes memory action = abi.encode(userB, ERC20.coreIndexId, coreAmount);
         bytes memory payload = abi.encodePacked(hyperLiquidComposer.SPOT_SEND_HEADER(), action);
         vm.expectEmit(HLP_CORE_WRITER);
@@ -148,22 +142,20 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
         vm.expectEmit(address(oft));
         emit IERC20.Transfer(address(hyperLiquidComposer), ERC20.assetBridgeAddress, AMOUNT_TO_SEND);
 
-        (uint64 coreIndexId, int64 decimalDiff, address assetBridgeAddress) = hyperLiquidComposer.erc20Asset();
+        uint64 coreIndexId = hyperLiquidComposer.ERC20_CORE_INDEX_ID();
+        int64 decimalDiff = hyperLiquidComposer.ERC20_DECIMAL_DIFF();
+        address assetBridgeAddress = hyperLiquidComposer.ERC20_ASSET_BRIDGE();
 
-        IHyperAsset memory erc20Asset = IHyperAsset({
-            assetBridgeAddress: assetBridgeAddress,
-            coreIndexId: coreIndexId,
-            decimalDiff: decimalDiff
-        });
-
-        uint64 coreAmount = hyperLiquidComposer.quoteHyperCoreAmount(AMOUNT_TO_SEND, erc20Asset).core;
+        uint64 coreAmount = hyperLiquidComposer
+            .quoteHyperCoreAmount(coreIndexId, decimalDiff, assetBridgeAddress, AMOUNT_TO_SEND)
+            .core;
         bytes memory action = abi.encode(userB, ERC20.coreIndexId, coreAmount);
         bytes memory payload = abi.encodePacked(hyperLiquidComposer.SPOT_SEND_HEADER(), action);
         vm.expectEmit(HLP_CORE_WRITER);
         emit ICoreWriter.RawAction(address(hyperLiquidComposer), payload);
 
         // Expect the Received event to be emitted - this is for the HYPE precompile
-        (, , address hypeAssetBridge) = hyperLiquidComposer.hypeAsset();
+        address hypeAssetBridge = hyperLiquidComposer.NATIVE_ASSET_BRIDGE();
         vm.expectEmit(hypeAssetBridge);
         emit IHYPEPrecompile.Received(address(hyperLiquidComposer), AMOUNT_TO_FUND);
 

@@ -55,10 +55,10 @@ abstract contract RecoverableComposer is HyperLiquidComposer, IRecoverableCompos
      * @param _coreAmount Amount of tokens to retrieve in HyperCore decimals, or FULL_TRANSFER for all
      */
     function retrieveCoreERC20(uint64 _coreAmount) public onlyRecoveryAddress {
-        uint64 maxTransferAmt = _getMaxTransferAmount(erc20Asset.coreIndexId, _coreAmount);
+        uint64 maxTransferAmt = _getMaxTransferAmount(ERC20_CORE_INDEX_ID, _coreAmount);
 
-        _submitCoreWriterTransfer(erc20Asset.assetBridgeAddress, erc20Asset.coreIndexId, maxTransferAmt);
-        emit Retrieved(erc20Asset.coreIndexId, maxTransferAmt, erc20Asset.assetBridgeAddress);
+        _submitCoreWriterTransfer(ERC20_ASSET_BRIDGE, ERC20_CORE_INDEX_ID, maxTransferAmt);
+        emit Retrieved(ERC20_CORE_INDEX_ID, maxTransferAmt, ERC20_ASSET_BRIDGE);
     }
 
     /**
@@ -68,10 +68,10 @@ abstract contract RecoverableComposer is HyperLiquidComposer, IRecoverableCompos
      * @param _coreAmount Amount of HYPE tokens to retrieve in HyperCore decimals, or FULL_TRANSFER for all
      */
     function retrieveCoreHYPE(uint64 _coreAmount) public onlyRecoveryAddress {
-        uint64 maxTransferAmt = _getMaxTransferAmount(hypeAsset.coreIndexId, _coreAmount);
+        uint64 maxTransferAmt = _getMaxTransferAmount(NATIVE_CORE_INDEX_ID, _coreAmount);
 
-        _submitCoreWriterTransfer(hypeAsset.assetBridgeAddress, hypeAsset.coreIndexId, maxTransferAmt);
-        emit Retrieved(hypeAsset.coreIndexId, maxTransferAmt, hypeAsset.assetBridgeAddress);
+        _submitCoreWriterTransfer(NATIVE_ASSET_BRIDGE, NATIVE_CORE_INDEX_ID, maxTransferAmt);
+        emit Retrieved(NATIVE_CORE_INDEX_ID, maxTransferAmt, NATIVE_ASSET_BRIDGE);
     }
 
     /**
