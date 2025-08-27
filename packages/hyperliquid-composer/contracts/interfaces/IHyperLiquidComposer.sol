@@ -63,7 +63,7 @@ interface IHyperLiquidComposer {
     function decodeMessage(bytes calldata composeMessage) external pure returns (uint256 minMsgValue, address receiver);
     function refundToSrc(bytes32 guid) external payable;
     function quoteHyperCoreAmount(
-        uint256 amount,
+        uint256 evmAmountIn,
         IHyperAsset memory asset
     ) external view returns (IHyperAssetAmount memory);
 }

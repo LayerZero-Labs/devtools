@@ -51,7 +51,7 @@ contract TypeConversionTest is Test {
         IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyperAssetAmount(
             amount,
             bridgeSupply,
-            erc20Asset
+            erc20Asset.decimalDiff
         );
 
         assertEq(amounts.evm, amounts.core / scale, "evm and core amounts should differ by a factor of scale");
@@ -75,7 +75,7 @@ contract TypeConversionTest is Test {
         IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyperAssetAmount(
             amount,
             bridgeSupply,
-            erc20Asset
+            erc20Asset.decimalDiff
         );
 
         assertEq(amounts.evm / scale, amounts.core, "evm and core amounts should differ by a factor of scale");

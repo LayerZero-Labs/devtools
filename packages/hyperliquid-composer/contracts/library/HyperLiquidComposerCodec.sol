@@ -41,13 +41,13 @@ library HyperLiquidComposerCodec {
      * @notice This function is called by the HyperLiquidComposer contract
      * @param _amount The amount to convert
      * @param _assetBridgeSupply The maximum amount transferable capped by the number of tokens located on the HyperCore's side of the asset bridge
-     * @param _asset The asset to convert
+     * @param _decimalDiff The decimal difference of evmDecimals - coreDecimals
      * @return IHyperAssetAmount memory - The evm amount, core amount, and dust
      */
     function into_hyperAssetAmount(
         uint256 _amount,
         uint64 _assetBridgeSupply,
-        IHyperAsset memory _asset
+        int64 _decimalDiff
     ) internal pure returns (IHyperAssetAmount memory) {
         uint256 amountEVM;
         uint64 amountCore;
@@ -55,17 +55,17 @@ library HyperLiquidComposerCodec {
         /// @dev HyperLiquid decimal conversion: Scale EVM (u256,evmDecimals) -> Core (u64,coreDecimals)
         /// @dev Dust contains the "dust" from scaling and is used for refund.
         /// @dev Core amount is guaranteed to be within u64 range.
-        if (_asset.decimalDiff > 0) {
+        if (_decimalDiff > 0) {
             (amountEVM, amountCore) = into_hyperAssetAmount_decimal_difference_gt_zero(
                 _amount,
                 _assetBridgeSupply,
-                uint64(_asset.decimalDiff)
+                uint64(_decimalDiff)
             );
         } else {
             (amountEVM, amountCore) = into_hyperAssetAmount_decimal_difference_leq_zero(
                 _amount,
                 _assetBridgeSupply,
-                uint64(-1 * _asset.decimalDiff)
+                uint64(-1 * _decimalDiff)
             );
         }
 

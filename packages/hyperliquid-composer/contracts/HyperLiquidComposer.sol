@@ -202,16 +202,16 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
 
     /**
      * @notice External function to quote the conversion of evm tokens to hypercore tokens
-     * @param _amount The amount of tokens to send
+     * @param _evmAmt The number of tokens that the composer received (pre-dusted) that we are trying to send
      * @param _asset The asset type (OFT or HYPE)
      * @return IHyperAssetAmount - The amount of tokens to send to HyperCore (scaled on evm), dust (to be refunded), and the swap amount (of the tokens scaled on hypercore)
      */
     function quoteHyperCoreAmount(
-        uint256 _amount,
+        uint256 _evmAmt,
         IHyperAsset memory _asset
     ) public view returns (IHyperAssetAmount memory) {
         uint64 assetBridgeBalance = spotBalance(_asset.assetBridgeAddress, _asset.coreIndexId).total;
-        return _amount.into_hyperAssetAmount(assetBridgeBalance, _asset);
+        return _evmAmt.into_hyperAssetAmount(assetBridgeBalance, _asset.decimalDiff);
     }
 
     /**
