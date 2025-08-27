@@ -18,20 +18,20 @@ interface Args {
     dstEid: EndpointId
     receiver: string
     guid: string
-    payload: string
+    message: string
     computeUnits: number
     lamports: number
     withPriorityFee: number
 }
 
-task('lz:oft:solana:retry-payload', 'Retry a stored payload on Solana')
+task('lz:oft:solana:retry-message', 'Retry a stored message on Solana')
     .addParam('srcEid', 'The source EndpointId', undefined, types.eid)
-    .addParam('nonce', 'The nonce of the payload', undefined, types.bigint)
+    .addParam('nonce', 'The nonce of the message', undefined, types.bigint)
     .addParam('sender', 'The source OApp address (hex)', undefined, types.string)
     .addParam('dstEid', 'The destination EndpointId (Solana chain)', undefined, types.eid)
     .addParam('receiver', 'The receiver address on the destination Solana chain (bytes58)', undefined, types.string)
     .addParam('guid', 'The GUID of the message (hex)', undefined, types.string)
-    .addParam('payload', 'The message payload (hex)', undefined, types.string)
+    .addParam('message', 'The message data in hex format', undefined, types.string)
     .addParam('computeUnits', 'The CU for the lzReceive instruction', undefined, types.int)
     .addParam('lamports', 'The lamports for the lzReceive instruction', undefined, types.int)
     .addParam('withPriorityFee', 'The priority fee in microLamports', undefined, types.int)
@@ -43,7 +43,7 @@ task('lz:oft:solana:retry-payload', 'Retry a stored payload on Solana')
             dstEid,
             receiver,
             guid,
-            payload,
+            message,
             computeUnits,
             lamports,
             withPriorityFee,
@@ -68,12 +68,9 @@ task('lz:oft:solana:retry-payload', 'Retry a stored payload on Solana')
                     nonce: nonce.toString(),
                     srcEid,
                     sender: makeBytes32(sender),
-                    dstEid,
                     receiver,
-                    payload: '', // unused;  just added to satisfy typing
                     guid,
-                    message: payload, // referred to as "payload" in scan-api
-                    version: 1, // unused;  just added to satisfy typing
+                    message,
                 },
                 Uint8Array.from([computeUnits, lamports]),
                 'confirmed'
