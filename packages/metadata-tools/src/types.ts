@@ -1,13 +1,17 @@
 import type { OmniPointHardhat } from '@layerzerolabs/devtools-evm-hardhat'
 import type { OAppEnforcedOption } from '@layerzerolabs/ua-devtools'
+import { BLOCKED_MESSAGE_LIB_INDICATOR } from './constants'
 
+export type CUSTOM_MESSAGE_LIBRARY_TYPE = typeof BLOCKED_MESSAGE_LIB_INDICATOR
+
+// [AContract, BContract, [requiredDVNs, [optionalDVNs, threshold]], [AToBConfirmations, BToAConfirmations]], [enforcedOptionsAToB, enforcedOptionsBToA], customExecutor?]
 export type TwoWayConfig = [
-    srcContract: OmniPointHardhat,
-    dstContract: OmniPointHardhat,
-    dvnConfig: [string[], [string[], number] | []],
-    confirmations: [number, number | undefined],
-    enforcedOptions: [OAppEnforcedOption[] | undefined, OAppEnforcedOption[] | undefined],
-    customExecutor?: string,
+    OmniPointHardhat, // AContract
+    OmniPointHardhat, // BContract
+    [string[], [string[], number] | []], // [requiredDVNs, [optionalDVNs, threshold]]
+    [number | [number, CUSTOM_MESSAGE_LIBRARY_TYPE], number | [number, CUSTOM_MESSAGE_LIBRARY_TYPE] | undefined], // [AToBConfirmations, BToAConfirmations]
+    [OAppEnforcedOption[] | undefined, OAppEnforcedOption[] | undefined], // [enforcedOptionsAToB, enforcedOptionsBToA]
+    string?, // customExecutor (optional)
 ]
 
 export interface IMetadataDvns {
@@ -49,6 +53,7 @@ export interface IMetadata {
             deadDVN?: { address: string }
             endpointV2?: { address: string }
             sendUln302?: { address: string }
+            blockedMessageLib?: { address: string }
             lzExecutor?: { address: string }
             sendUln301?: { address: string }
             receiveUln301?: { address: string }

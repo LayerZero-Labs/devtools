@@ -2,7 +2,7 @@ import type { OmniEdgeHardhat } from '@layerzerolabs/devtools-evm-hardhat'
 import type { OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
 import { IMetadata } from './types'
 import { TwoWayConfig } from './types'
-import { METADATA_URL } from './constants'
+import { BLOCKED_MESSAGE_LIB_INDICATOR, METADATA_URL, NIL_DVN_COUNT } from './constants'
 
 function getEndpointIdDeployment(eid: number, metadata: IMetadata) {
     const srcEidString = eid.toString()
@@ -133,11 +133,11 @@ export async function translatePathwayToConfig(
 ): Promise<OmniEdgeHardhat<OAppEdgeConfig | undefined>[]> {
     const configs: OmniEdgeHardhat<OAppEdgeConfig | undefined>[] = []
 
-    const sourceContract = pathway[0]
-    const destinationContract = pathway[1]
+    const AContract = pathway[0]
+    const BContract = pathway[1]
     const [requiredDVNs, optionalDVNConfig] = pathway[2]
-    const [sourceToDestinationConfirmations, destinationToSourceConfirmations] = pathway[3]
-    const [enforcedOptionsSrcToDst, enforcedOptionsDstToSrc] = pathway[4]
+    const [AToBConfirmationsDefinition, BToAConfirmationsDefinition] = pathway[3]
+    const [enforcedOptionsAToB, enforcedOptionsBToA] = pathway[4]
     const customExecutor = pathway[5]
 
     const optionalDVNs = optionalDVNConfig[0]
@@ -147,123 +147,169 @@ export async function translatePathwayToConfig(
         throw new Error(`Optional DVN threshold is greater than the number of optional DVNs.`)
     }
 
-    const sourceLZDeployment = getEndpointIdDeployment(sourceContract.eid, metadata)
-    const destinationLZDeployment = getEndpointIdDeployment(destinationContract.eid, metadata)
+    const ALZDeployment = getEndpointIdDeployment(AContract.eid, metadata)
+    const BLZDeployment = getEndpointIdDeployment(BContract.eid, metadata)
 
-    const sourceExecutor = resolveExecutorForDeployment(
-        customExecutor,
-        sourceLZDeployment,
-        metadata,
-        sourceContract.eid
-    )
+    const AExecutor = resolveExecutorForDeployment(customExecutor, ALZDeployment, metadata, AContract.eid)
 
-    const sourceRequiredDVNs = DVNsToAddresses(requiredDVNs, sourceLZDeployment.chainKey, metadata)
-    const destinationRequiredDVNs = DVNsToAddresses(requiredDVNs, destinationLZDeployment.chainKey, metadata)
+    const ARequiredDVNs = DVNsToAddresses(requiredDVNs, ALZDeployment.chainKey, metadata)
+    const BRequiredDVNs = DVNsToAddresses(requiredDVNs, BLZDeployment.chainKey, metadata)
+    const requiredDVNCount = requiredDVNs.length > 0 ? requiredDVNs.length : NIL_DVN_COUNT
 
-    let sourceOptionalDVNs: string[] = []
-    let destinationOptionalDVNs: string[] = []
+    let AOptionalDVNs: string[] = []
+    let BOptionalDVNs: string[] = []
 
     if (optionalDVNs) {
-        sourceOptionalDVNs = DVNsToAddresses(optionalDVNs, sourceLZDeployment.chainKey, metadata)
-        destinationOptionalDVNs = DVNsToAddresses(optionalDVNs, destinationLZDeployment.chainKey, metadata)
+        AOptionalDVNs = DVNsToAddresses(optionalDVNs, ALZDeployment.chainKey, metadata)
+        BOptionalDVNs = DVNsToAddresses(optionalDVNs, BLZDeployment.chainKey, metadata)
     }
 
-    if (!sourceLZDeployment.sendUln302 || !sourceLZDeployment.receiveUln302 || !sourceLZDeployment.executor) {
-        throw new Error(
-            `Can't find sendUln302, receiveUln302 or executor for source endpoint with eid: "${sourceContract.eid}".`
-        )
+    const AToBConfirmations: number =
+        typeof AToBConfirmationsDefinition === 'number' ? AToBConfirmationsDefinition : AToBConfirmationsDefinition[0]
+    const BToAConfirmations: number | undefined =
+        typeof BToAConfirmationsDefinition === 'number' ? BToAConfirmationsDefinition : BToAConfirmationsDefinition?.[0]
+
+    const blockSendAToB: boolean = Boolean(
+        AToBConfirmationsDefinition &&
+            typeof AToBConfirmationsDefinition !== 'number' &&
+            AToBConfirmationsDefinition[1] === BLOCKED_MESSAGE_LIB_INDICATOR
+    )
+    const blockSendBToA: boolean = Boolean(
+        BToAConfirmationsDefinition &&
+            typeof BToAConfirmationsDefinition !== 'number' &&
+            BToAConfirmationsDefinition[1] === BLOCKED_MESSAGE_LIB_INDICATOR
+    )
+
+    const sendLibraryAToBMetadataKey = blockSendAToB
+        ? isSolanaDeployment(ALZDeployment)
+            ? 'blocked_messagelib'
+            : 'blockedMessageLib'
+        : 'sendUln302'
+    const sendLibraryBToAMetadataKey = blockSendBToA
+        ? isSolanaDeployment(BLZDeployment)
+            ? 'blocked_messagelib'
+            : 'blockedMessageLib'
+        : 'sendUln302'
+
+    const receiveLibraryBFromAMetadataKey = blockSendAToB
+        ? isSolanaDeployment(BLZDeployment)
+            ? 'blocked_messagelib'
+            : 'blockedMessageLib'
+        : 'receiveUln302'
+    const receiveLibraryAFromBMetadataKey = blockSendBToA
+        ? isSolanaDeployment(ALZDeployment)
+            ? 'blocked_messagelib'
+            : 'blockedMessageLib'
+        : 'receiveUln302'
+
+    if (!ALZDeployment[sendLibraryAToBMetadataKey]) {
+        throw new Error(`Can't find ${sendLibraryAToBMetadataKey} for endpoint with eid: "${AContract.eid}".`)
     }
 
-    if (
-        !destinationLZDeployment.sendUln302 ||
-        !destinationLZDeployment.receiveUln302 ||
-        !destinationLZDeployment.executor
-    ) {
-        throw new Error(
-            `Can't find sendUln302, receiveUln302 or executor for destination endpoint with eid: "${destinationContract.eid}".`
-        )
+    if (!ALZDeployment[receiveLibraryAFromBMetadataKey]) {
+        throw new Error(`Can't find ${receiveLibraryAFromBMetadataKey} for endpoint with eid: "${AContract.eid}".`)
     }
 
-    const sourceToDestinationConfig: OmniEdgeHardhat<OAppEdgeConfig> = {
-        from: sourceContract,
-        to: destinationContract,
+    if (!BLZDeployment[sendLibraryBToAMetadataKey]) {
+        throw new Error(`Can't find ${sendLibraryBToAMetadataKey} for endpoint with eid: "${BContract.eid}".`)
+    }
+
+    if (!BLZDeployment[receiveLibraryBFromAMetadataKey]) {
+        throw new Error(`Can't find ${receiveLibraryBFromAMetadataKey} for endpoint with eid: "${BContract.eid}".`)
+    }
+
+    if (!ALZDeployment.executor) {
+        throw new Error(`Can't find executor for endpoint with eid: "${AContract.eid}".`)
+    }
+
+    const sendLibraryAToB = ALZDeployment[sendLibraryAToBMetadataKey].address
+    const receiveLibraryAFromB = ALZDeployment[receiveLibraryAFromBMetadataKey].address
+    const sendLibraryBToA = BLZDeployment[sendLibraryBToAMetadataKey].address
+    const receiveLibraryBFromA = BLZDeployment[receiveLibraryBFromAMetadataKey].address
+
+    if (!BLZDeployment.executor) {
+        throw new Error(`Can't find executor for endpoint with eid: "${BContract.eid}".`)
+    }
+
+    const AToBConfig: OmniEdgeHardhat<OAppEdgeConfig> = {
+        from: AContract,
+        to: BContract,
         config: {
-            sendLibrary: sourceLZDeployment.sendUln302.address,
+            sendLibrary: sendLibraryAToB,
             receiveLibraryConfig: {
-                receiveLibrary: sourceLZDeployment.receiveUln302.address,
+                receiveLibrary: receiveLibraryAFromB,
                 gracePeriod: BigInt(0),
             },
             sendConfig: {
                 executorConfig: {
                     maxMessageSize: 10000,
-                    executor: sourceExecutor,
+                    executor: AExecutor,
                 },
                 ulnConfig: {
-                    confirmations: BigInt(sourceToDestinationConfirmations),
-                    requiredDVNs: sourceRequiredDVNs,
-                    optionalDVNs: sourceOptionalDVNs,
+                    confirmations: BigInt(AToBConfirmations),
+                    requiredDVNs: ARequiredDVNs,
+                    requiredDVNCount,
+                    optionalDVNs: AOptionalDVNs,
                     optionalDVNThreshold,
                 },
             },
-            enforcedOptions: enforcedOptionsSrcToDst,
+            enforcedOptions: enforcedOptionsAToB,
         },
     }
 
-    const destinationToSourceConfig: OmniEdgeHardhat<OAppEdgeConfig> = {
-        from: destinationContract,
-        to: sourceContract,
+    const BToAConfig: OmniEdgeHardhat<OAppEdgeConfig> = {
+        from: BContract,
+        to: AContract,
         config: {
-            sendLibrary: destinationLZDeployment.sendUln302.address,
+            sendLibrary: sendLibraryBToA,
             receiveLibraryConfig: {
-                receiveLibrary: destinationLZDeployment.receiveUln302.address,
+                receiveLibrary: receiveLibraryBFromA,
                 gracePeriod: BigInt(0),
             },
             receiveConfig: {
                 ulnConfig: {
-                    confirmations: BigInt(sourceToDestinationConfirmations),
-                    requiredDVNs: destinationRequiredDVNs,
-                    optionalDVNs: destinationOptionalDVNs,
+                    confirmations: BigInt(AToBConfirmations),
+                    requiredDVNs: BRequiredDVNs,
+                    requiredDVNCount,
+                    optionalDVNs: BOptionalDVNs,
                     optionalDVNThreshold,
                 },
             },
         },
     }
 
-    if (destinationToSourceConfirmations) {
-        const destinationExecutor = resolveExecutorForDeployment(
-            customExecutor,
-            destinationLZDeployment,
-            metadata,
-            destinationContract.eid
-        )
+    if (BToAConfirmations) {
+        const BExecutor = resolveExecutorForDeployment(customExecutor, BLZDeployment, metadata, BContract.eid)
 
-        sourceToDestinationConfig.config.receiveConfig = {
+        AToBConfig.config.receiveConfig = {
             ulnConfig: {
-                confirmations: BigInt(destinationToSourceConfirmations),
-                requiredDVNs: sourceRequiredDVNs,
-                optionalDVNs: sourceOptionalDVNs,
+                confirmations: BigInt(BToAConfirmations),
+                requiredDVNs: ARequiredDVNs,
+                requiredDVNCount,
+                optionalDVNs: AOptionalDVNs,
                 optionalDVNThreshold,
             },
         }
 
-        destinationToSourceConfig.config.enforcedOptions = enforcedOptionsDstToSrc
+        BToAConfig.config.enforcedOptions = enforcedOptionsBToA
 
-        destinationToSourceConfig.config.sendConfig = {
+        BToAConfig.config.sendConfig = {
             executorConfig: {
                 maxMessageSize: 10000,
-                executor: destinationExecutor,
+                executor: BExecutor,
             },
             ulnConfig: {
-                confirmations: BigInt(destinationToSourceConfirmations),
-                requiredDVNs: destinationRequiredDVNs,
-                optionalDVNs: destinationOptionalDVNs,
+                confirmations: BigInt(BToAConfirmations),
+                requiredDVNs: BRequiredDVNs,
+                requiredDVNCount,
+                optionalDVNs: BOptionalDVNs,
                 optionalDVNThreshold,
             },
         }
     }
 
-    configs.push(sourceToDestinationConfig)
-    configs.push(destinationToSourceConfig)
+    configs.push(AToBConfig)
+    configs.push(BToAConfig)
 
     return configs
 }

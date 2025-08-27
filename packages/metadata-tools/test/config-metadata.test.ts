@@ -10,6 +10,7 @@ import fujiMetadata from './data/fuji.json'
 import polygonMainnetMetadata from './data/polygon-mainnet.json'
 import solanaMainnetMetadata from './data/solana-mainnet.json'
 import solanaTestnetMetadata from './data/solana-testnet.json'
+import { BLOCKED_MESSAGE_LIB_INDICATOR, NIL_DVN_COUNT } from '@/constants'
 
 describe('config-metadata', () => {
     const metadata: IMetadata = {
@@ -58,7 +59,6 @@ describe('config-metadata', () => {
                 address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy',
             }
 
-            // This array is your TwoWayConfig[]
             const pathways: TwoWayConfig[] = [
                 [avalancheContract, solanaContract, [['LayerZero Labs'], []], [1, 1], [undefined, undefined]],
             ]
@@ -273,6 +273,132 @@ describe('config-metadata', () => {
             )
             expect(config[1]?.config?.sendConfig?.executorConfig?.executor).toBe(
                 'SoLaNaExEcUtOrAdDrEsSfOrMyCustomExecutor123'
+            )
+        })
+
+        it('uses NIL_DVN_COUNT when no required DVNs are provided', async () => {
+            const avalancheContract = {
+                eid: 40106,
+                contractName: 'MyOFT',
+            }
+
+            const solanaContract = {
+                eid: 40168,
+                address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy',
+            }
+
+            const pathways: TwoWayConfig[] = [
+                [
+                    avalancheContract,
+                    solanaContract,
+                    [[], [['LayerZero Labs', 'P2P'], 1]],
+                    [1, 1],
+                    [undefined, undefined],
+                ],
+            ]
+
+            const config = await generateConnectionsConfig(pathways)
+            expect(config).toMatchSnapshot()
+
+            expect(config[0]?.config?.sendConfig?.ulnConfig?.requiredDVNCount).toBe(NIL_DVN_COUNT)
+            expect(config[0]?.config?.sendConfig?.ulnConfig?.optionalDVNThreshold).toBe(1)
+            expect(config[0]?.config?.receiveConfig?.ulnConfig?.requiredDVNCount).toBe(NIL_DVN_COUNT)
+            expect(config[0]?.config?.receiveConfig?.ulnConfig?.optionalDVNThreshold).toBe(1)
+            expect(config[1]?.config?.sendConfig?.ulnConfig?.requiredDVNCount).toBe(NIL_DVN_COUNT)
+            expect(config[1]?.config?.sendConfig?.ulnConfig?.optionalDVNThreshold).toBe(1)
+            expect(config[1]?.config?.receiveConfig?.ulnConfig?.requiredDVNCount).toBe(NIL_DVN_COUNT)
+            expect(config[1]?.config?.receiveConfig?.ulnConfig?.optionalDVNThreshold).toBe(1)
+        })
+
+        it('supports passing no required DVNs and no optional DVNs', async () => {
+            const avalancheContract = {
+                eid: 40106,
+                contractName: 'MyOFT',
+            }
+
+            const solanaContract = {
+                eid: 40168,
+                address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy',
+            }
+
+            const pathways: TwoWayConfig[] = [
+                [avalancheContract, solanaContract, [[], []], [1, 1], [undefined, undefined]],
+            ]
+
+            const config = await generateConnectionsConfig(pathways)
+            expect(config).toMatchSnapshot()
+        })
+
+        it('supports using block send library for A to B', async () => {
+            const avalancheContract = {
+                eid: 40106,
+                contractName: 'MyOFT',
+            }
+
+            const solanaContract = {
+                eid: 40168,
+                address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy',
+            }
+
+            const pathways: TwoWayConfig[] = [
+                [
+                    avalancheContract,
+                    solanaContract,
+                    [['LayerZero Labs'], []],
+                    [[1, BLOCKED_MESSAGE_LIB_INDICATOR], 1],
+                    [undefined, undefined],
+                ],
+            ]
+
+            const config = await generateConnectionsConfig(pathways)
+            expect(config).toMatchSnapshot()
+
+            expect(config[0]?.config?.sendLibrary).toBe(
+                fujiMetadata.deployments?.find((d) => d.version === 2)?.blockedMessageLib?.address
+            )
+            expect(config[1]?.config?.receiveLibraryConfig?.receiveLibrary).toBe(
+                solanaTestnetMetadata.deployments?.find((d) => d.version === 2)?.blocked_messagelib?.address
+            )
+        })
+
+        it('supports using block send library for both A to B and B to A', async () => {
+            const avalancheContract = {
+                eid: 40106,
+                contractName: 'MyOFT',
+            }
+
+            const solanaContract = {
+                eid: 40168,
+                address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy',
+            }
+
+            const pathways: TwoWayConfig[] = [
+                [
+                    avalancheContract,
+                    solanaContract,
+                    [['LayerZero Labs'], []],
+                    [
+                        [1, BLOCKED_MESSAGE_LIB_INDICATOR],
+                        [1, BLOCKED_MESSAGE_LIB_INDICATOR],
+                    ],
+                    [undefined, undefined],
+                ],
+            ]
+
+            const config = await generateConnectionsConfig(pathways)
+            expect(config).toMatchSnapshot()
+
+            expect(config[0]?.config?.sendLibrary).toBe(
+                fujiMetadata.deployments?.find((d) => d.version === 2)?.blockedMessageLib?.address
+            )
+            expect(config[0]?.config?.receiveLibraryConfig?.receiveLibrary).toBe(
+                fujiMetadata.deployments?.find((d) => d.version === 2)?.blockedMessageLib?.address
+            )
+            expect(config[1]?.config?.sendLibrary).toBe(
+                solanaTestnetMetadata.deployments?.find((d) => d.version === 2)?.blocked_messagelib?.address
+            )
+            expect(config[1]?.config?.receiveLibraryConfig?.receiveLibrary).toBe(
+                solanaTestnetMetadata.deployments?.find((d) => d.version === 2)?.blocked_messagelib?.address
             )
         })
     })
