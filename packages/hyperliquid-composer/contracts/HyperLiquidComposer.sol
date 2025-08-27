@@ -88,7 +88,7 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
         if (OFT != _oft) revert InvalidComposeCaller(address(OFT), _oft);
 
         /// @dev Since these are populated by the OFT contract, we can safely assume they are always decodeable
-        uint256 amount = OFTComposeMsgCodec.amountLD(_message);
+        uint256 amountLD = OFTComposeMsgCodec.amountLD(_message);
         bytes memory composeMsgEncoded = OFTComposeMsgCodec.composeMsg(_message);
 
         /// @dev Decode message to get receiver and perform hypercore transfers, store in failedMessages if decode fails
@@ -100,14 +100,14 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
 
             /// @dev If HyperEVM -> HyperCore fails for HYPE OR ERC20 then we do a complete refund to the receiver on hyperevm
             /// @dev try...catch to safeguard against possible breaking hyperliquid pre-compile changes
-            try this.handleTransferToHyperCore{ value: msg.value }(_to, amount) {} catch {
-                _refundToHyperEvm(_to, amount);
+            try this.handleTransfersToHyperCore{ value: msg.value }(_to, amountLD) {} catch {
+                _refundToHyperEvm(_to, amountLD);
             }
         } catch {
             SendParam memory refundSendParam;
             refundSendParam.dstEid = OFTComposeMsgCodec.srcEid(_message);
             refundSendParam.to = OFTComposeMsgCodec.composeFrom(_message);
-            refundSendParam.amountLD = amount;
+            refundSendParam.amountLD = amountLD;
 
             failedMessages[_guid] = FailedMessage({ refundSendParam: refundSendParam, msgValue: msg.value });
             emit FailedMessageDecode(_guid, refundSendParam.to, msg.value, composeMsgEncoded);
@@ -132,14 +132,14 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
      * @dev Default behavior checks if the user is activated on HyperCore in ERC20 transfer, if not then revert this call
      * @dev If the user requests for more funds than the asset bridge's balance we revert
      */
-    function handleTransferToHyperCore(address _to, uint256 _amount) external payable {
+    function handleTransfersToHyperCore(address _to, uint256 _amount) external payable {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
+        /// @dev Move ERC20 tokens into hyper core.
         _transferERC20ToHyperCore(_to, _amount);
 
-        if (msg.value > 0) {
-            _transferNativeToHyperCore(_to);
-        }
+        /// @dev Move native funds into hyper core.
+        if (msg.value > 0) _transferNativeToHyperCore(_to);
     }
 
     /**
