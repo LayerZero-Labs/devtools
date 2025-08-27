@@ -35,7 +35,7 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
     IHyperAsset public erc20Asset; /// @dev EVM token
     IHyperAsset public hypeAsset; /// @dev Hype token
 
-    mapping(bytes32 => FailedMessage) public failedMessages;
+    mapping(bytes32 guid => FailedMessage) public failedMessages;
 
     /**
      * @param _oft The OFT contract address associated with this composer

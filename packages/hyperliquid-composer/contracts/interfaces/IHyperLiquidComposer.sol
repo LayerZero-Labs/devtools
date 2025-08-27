@@ -57,13 +57,13 @@ interface IHyperLiquidComposer {
     function OFT() external view returns (address);
     function ERC20() external view returns (address);
 
-    function erc20Asset() external view returns (uint64, int64, address);
-    function hypeAsset() external view returns (uint64, int64, address);
+    function erc20Asset() external view returns (uint64 coreIndexId, int64 decimalDiff, address assetBridgeAddress);
+    function hypeAsset() external view returns (uint64 coreIndexId, int64 decimalDiff, address assetBridgeAddress);
 
     function decodeMessage(bytes calldata composeMessage) external pure returns (uint256 minMsgValue, address receiver);
     function refundToSrc(bytes32 guid) external payable;
     function quoteHyperCoreAmount(
-        uint256 _amount,
-        IHyperAsset memory _asset
+        uint256 amount,
+        IHyperAsset memory asset
     ) external view returns (IHyperAssetAmount memory);
 }
