@@ -78,8 +78,6 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
             )
         }
 
-        // NOTE: the conditionalValue block below assumes that in layerzeroconfig.ts, in the SOLANA_ENFORCED_OPTIONS, you have set the value to 0
-        // Setting value both in the SOLANA_ENFORCED_OPTIONS and in the conditionalValue block below will result in redundant value being sent
         let minimumLzReceiveValue = 0
         // If sending to Solana, compute conditional value for ATA creation
         if (dstChainType === ChainType.SOLANA) {
