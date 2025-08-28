@@ -84,7 +84,7 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
 
         // throw if user specified extraOptions and conditionalValue is non-zero
         if (args.extraOptions && conditionalValue > 0) {
-            throw new Error('extraOptions and conditionalValue cannot be set at the same time')
+            throw new Error('Cannot set extraOptions when conditional value is required for ATA creation. Remove extraOptions parameter to allow automatic value calculation.')
             // hint: do not pass in extraOptions via params
         }
         // if there's conditionalValue, we build the extraOptions to be passed in
