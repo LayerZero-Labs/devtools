@@ -7,9 +7,9 @@ import { getOftStoreAddress } from './tasks/solana'
 
 // Note:  Do not use address for EVM OmniPointHardhat contracts.  Contracts are loaded using hardhat-deploy.
 // If you do use an address, ensure artifacts exists.
-const sepoliaContract: OmniPointHardhat = {
-    eid: EndpointId.SEPOLIA_V2_TESTNET,
-    contractName: 'MyOFT',
+const optimismContract: OmniPointHardhat = {
+    eid: EndpointId.OPTSEP_V2_TESTNET,
+    contractName: 'MyOFT', // Note: change this to 'MyOFT' or your production contract name
 }
 
 const solanaContract: OmniPointHardhat = {
@@ -51,7 +51,7 @@ export default async function () {
     // if you declare A,B there's no need to declare B,A
     const connections = await generateConnectionsConfig([
         [
-            sepoliaContract, // Chain A contract
+            optimismContract, // Chain A contract
             solanaContract, // Chain B contract
             [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
             [15, 32], // [A to B confirmations, B to A confirmations]
@@ -60,7 +60,7 @@ export default async function () {
     ])
 
     return {
-        contracts: [{ contract: sepoliaContract }, { contract: solanaContract }],
+        contracts: [{ contract: optimismContract }, { contract: solanaContract }],
         connections,
     }
 }
