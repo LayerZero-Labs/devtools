@@ -128,7 +128,7 @@ export async function checkAssociatedTokenAccountExists(args: {
             tokenType = SolanaTokenType.TOKEN2022
             break
         default:
-            throw new Error(`Unknown token type: ${account?.header.owner}`)
+            throw new Error(`Unknown token type: ${mintAccount?.header.owner}`)
     }
 
     return { ata: ata[0], ataExists: !!account, tokenType }
