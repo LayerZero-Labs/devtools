@@ -24,8 +24,6 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
     using SafeERC20 for IERC20;
     using HyperLiquidComposerCodec for *; /// @dev applies to bytes, bytes32, uint256, uint64
 
-    /// @dev Minimum gas to be supplied to the composer contract for execution to prevent Out of Gas.
-    uint256 public constant MIN_GAS = 150_000;
     uint256 public constant VALID_COMPOSE_MSG_LEN = 64; /// @dev abi.encode(uint256,address) = 32+32
 
     address public immutable ENDPOINT;
@@ -94,7 +92,7 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
             if (msg.value < _minMsgValue) revert InsufficientMsgValue(msg.value, _minMsgValue);
 
             /// @dev Gas check before executing hypercore precompile operations. Can be retried from the endpoint with sufficient gas.
-            if (gasleft() < MIN_GAS) revert InsufficientGas(gasleft(), MIN_GAS);
+            if (gasleft() < MIN_GAS()) revert InsufficientGas(gasleft(), MIN_GAS());
 
             /// @dev If HyperEVM -> HyperCore fails for HYPE OR ERC20 then we do a complete refund to the receiver on hyperevm
             /// @dev try...catch to safeguard against possible breaking hyperliquid pre-compile changes
@@ -230,7 +228,7 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
      * @param _refundAddress The address to refund tokens to
      * @param _amountLD The amount of ERC20 tokens to refund
      */
-    function _refundToHyperEvm(address _refundAddress, uint256 _amountLD) internal {
+    function _refundToHyperEvm(address _refundAddress, uint256 _amountLD) internal virtual {
         if (msg.value != 0) {
             (bool success1, ) = _refundAddress.call{ value: msg.value }("");
             if (!success1) {
@@ -263,6 +261,15 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
         );
 
         emit RefundSuccessful(_guid);
+    }
+
+    /**
+     * @dev Minimum gas to be supplied to the composer contract for execution to prevent Out of Gas.
+     * todo Profile against mainnet
+     * @return The minimum gas amount
+     */
+    function MIN_GAS() public virtual returns (uint256) {
+        return 150_000;
     }
 
     receive() external payable {}

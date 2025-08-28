@@ -44,7 +44,7 @@ interface IHyperLiquidComposer {
     error FailedMessageNotFound(bytes32 guid);
 
     /// ------------------------ CONSTANTS/VARIABLES/FUNCTIONS ------------------------
-    function MIN_GAS() external view returns (uint256);
+    function MIN_GAS() external returns (uint256);
     function VALID_COMPOSE_MSG_LEN() external view returns (uint256);
 
     function ENDPOINT() external view returns (address);
