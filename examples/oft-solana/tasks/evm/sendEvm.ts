@@ -125,7 +125,7 @@ export async function sendEvm(
         extraOptions = Options.newOptions().addExecutorLzReceiveOption(extraOptionsGas, valueShortfall).toHex()
     }
     // EOF: evaluate whether options require additional value
-    process.exit(0)
+
     // 6️⃣ build sendParam and dispatch
     const sendParam = {
         dstEid,
