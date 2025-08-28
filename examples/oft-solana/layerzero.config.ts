@@ -9,7 +9,7 @@ import { getOftStoreAddress } from './tasks/solana'
 // If you do use an address, ensure artifacts exists.
 const optimismContract: OmniPointHardhat = {
     eid: EndpointId.OPTSEP_V2_TESTNET,
-    contractName: 'MyOFT', // Note: change this to 'MyOFT' or your production contract name
+    contractName: 'MyOFT', // Note: change this to your production contract name
 }
 
 const solanaContract: OmniPointHardhat = {
