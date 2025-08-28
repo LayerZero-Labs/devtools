@@ -79,7 +79,7 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
         }
 
         let minimumLzReceiveValue = 0
-        // If sending to Solana, compute conditional value for ATA creation
+        // If sending to Solana, compute minimum value needed for ATA creation
         if (dstChainType === ChainType.SOLANA) {
             const solanaDeployment = getSolanaDeployment(args.dstEid)
             // determines the absolute minimum value needed for an OFT send to Solana (based on ATA creation status)
