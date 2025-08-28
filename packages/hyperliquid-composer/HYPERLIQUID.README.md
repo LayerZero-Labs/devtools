@@ -1,22 +1,22 @@
 # Hyperliquid Composer Implementation
 
-We first start this document by talking about Hyperliquid, its quirks and the changes we had to make to achieve an `X-network` -> `HyperCore` oft transfer.
+We first start this document by talking about Hyperliquid, its quirks and the changes we had to make to achieve an `X-network` -> `HyperCore` token transfer.
 
 ## Hyperliquid Networks
 
-Hyperliquid consists of - an `EVM` named `HyperEVM` and a `L1` called `HyperCore`. These networks function together under the same `HyperBFT` consensus to act as a singular network.
+Hyperliquid consists of an `EVM` named `HyperEVM` and a `L1` called `HyperCore`. These networks function together under the same `HyperBFT` consensus to act as a singular network.
 
-HyperCore, or Core, is a high-performance Layer 1 which manages the Hyperliquid exchange’s on-chain perpetual futures and spot order books with one-block finality. ​
+HyperCore, or Core, is a high-performance Layer 1 which manages the Hyperliquid exchange’s on-chain perpetual futures and spot order books with a single-block finality. ​
 
 HyperEVM, or EVM, is an Ethereum Virtual Machine (EVM)-compatible environment that allows developers to build decentralized applications (dApps).
 
-The `EVM` has precompiles that let you interact with `HyperCore`. The `HyperCore` is where the spot and perp trading happens (and is probably why you are interested in going to Hyperliquid and reading this doc. If you are not listing on HyperCore then HyperEVM is your almost standard EVM network - you just need to switch block sizes).
+The `EVM` has precompiles that let you interact with `HyperCore`. `HyperCore` is where the spot and perp trading happens (and is probably why you are interested in going to Hyperliquid and reading this doc. If you are not listing on HyperCore then HyperEVM is your almost standard EVM network - you just need to switch block sizes to `big/slow` when deploying your contract and then switch back to `small/fast`).
 
 You can interact with `HyperEVM` via traditional `eth_` rpc calls - full list [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/evm/json-rpc).
 
-`HyperCore` however takes in a domain specific calls named `L1 actions` or `actions` - full list [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/exchange-endpoint).
+`HyperCore` operates with domain specific calls named `L1 actions` or `actions` - full list [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/exchange-endpoint).
 
-`HyperEVM` and `HyperCore` have their own block explorers. A list of explorers is [here](https://hyperliquid-co.gitbook.io/community-docs/community-and-projects/ecosystem-projects/tools). I personally use hypurrscan for `HyperCore` - <https://testnet.hypurrscan.io/> and for `HyperEVM` I use purrsec - <https://testnet.purrsec.com/>.
+`HyperEVM` and `HyperCore` have their own block explorers. A list of explorers is [here](https://hyperliquid-co.gitbook.io/community-docs/community-and-projects/ecosystem-projects/tools). I personally use hypurrscan for `HyperCore` - <https://testnet.hypurrscan.io> and for `HyperEVM` I use purrsec - <https://testnet.purrsec.com>, and `HyperEVMScan` - <https://hyperevmscan.io> for mainnet.
 
 ### Hyperliquid API
 
@@ -48,15 +48,15 @@ This will give you the spot meta data for HyperCore. (this is an example)
 }
 ```
 
-The `tokenId` is the address of the token on HyperCore.
-The `evmContract` is the address of the `ERC20` token on HyperEVM.
-The `deployerTradingFeeShare` is the fee share for the deployer of the token.
+`tokenId` is the address of the token on HyperCore.
+`evmContract` is the address of the `ERC20` token on HyperEVM.
+`deployerTradingFeeShare` is the fee share for the deployer of the token.
 
 ### HyperCore Actions
 
 An action as defined by Hyperliquid is a transaction that is sent to the `HyperCore` - as it updates state on the `HyperCore` it needs to be a signed transaction from the wallet of the action sender.
 
-You need to use `ethers-v6` to sign actions - <https://docs.ethers.org/v6/api/providers/#Signer-signTypedData>
+You need to use `ethers-v6` to sign actions - <https://docs.ethers.org/v6/api/providers/#Signer-signTypedData> - the in-house sdk `@layerzerolabs/hyperliquid-composer` handles all of this this and is usable out of the box
 
 ```bash
 # add ethers-v6 to your project as an alias for ethers@^6.13.5
@@ -74,13 +74,21 @@ const signature = await signerv6.signTypedData(domain, types, message);
 This is because in ethers-v5 EIP-712 signing is not stable. - <https://docs.ethers.org/v5/api/signer/#Signer-signTypedData>
 
 > Experimental feature (this method name will change)
-> This is still an experimental feature. If using it, please specify the exact version of ethers you are using (e.g. spcify "5.0.18", not "^5.0.18") as the method name will be renamed from \_signTypedData to signTypedData once it has been used in the field a bit.
+> This is still an experimental feature. If using it, please specify the exact version of ethers you are using (e.g. specify "5.0.18", not "^5.0.18") as the method name will be renamed from \_signTypedData to signTypedData once it has been used in the field a bit.
 
-You can use the official `Hyperliquid Python SDK` linked [here](https://github.com/hyperliquid-dex/hyperliquid-python-sdk) to interact with HyperCore. We also built an in-house minimal typescript SDK that focuses on switching blocks, deploying the HyperCore token, and connecting the HyperCore token to a HyperEVM ERC20 (oft).
+You can use the official `Hyperliquid Python SDK` linked [here](https://github.com/hyperliquid-dex/hyperliquid-python-sdk) to interact with HyperCore. We also built an in-house minimal typescript SDK that focuses on switching blocks, deploying the HyperCore token, and connecting the HyperCore token to a HyperEVM ERC20 (oft). This SDK also supports features like checking a deployment state, core spot information, coreAccount active, and core spot balances of a user.
 
 ## Accounts
 
 You can use the same account on `HyperEVM` and `HyperCore`, this is because `HyperCore` uses signed ethereum transactions to validate payload data.
+
+All EVM addresses exist on HyperCore but all HyperCore addresses do not exist on HyperEVM. Ex: CoreSpots have a 16-byte address and therefore do not exist on HyperEVM but your EOA, Multisigs, contracts, etc exist on hypercore (once activated).
+
+Accounts are activated on hypercore by sending any number of tokens to that account AND paying a `$1 USD fee` - this fee is paid out of the sender's balance ONTOP of the sent amount and is paid in `USDC` and `USDT0`. This means that if you were sending `0.00001 HYPE` on HyperCore to a new user you also NEED to have at least 1 whole token of `USDC` or `USDT0` to pay for the activation.
+
+We call these special tokens `FeeTokens`.
+
+> While USDC and USDT0 are not always worth $1 USD and can fluctuate around by a millionth of a cent. HyperCore ALWAYS takes 1 full token.
 
 ## Multi Block Architecture
 
@@ -96,9 +104,9 @@ They are both EVM blocks and you can toggle between them by sending an L1 action
 
 You can also use `bigBlockGasPrice` instead of `gasPrice` in your transactions.
 
-> ⚠️ Note: This flags the user as using big blocks and all subsequent transactions on HyperEVM will be of type big block. You can also toggle this flag on and off.
+> ⚠️ Note: This flags the user as using big blocks and all subsequent transactions on HyperEVM will be of type big block. You can toggle this flag on and off.
 
-`HyperCore` has its own blocks which results in 3 blocks. As Core and EVM blocks are produced at differing speeds with HyperCore creating more than HyperEVM the blocks created are not `[EVM]-[Core]-[EVM]` but rather something like:
+`HyperCore` has its own blocks which results in 3 different blocks. As Core and EVM blocks are produced at differing speeds with HyperCore creating more than HyperEVM the blocks created are not `[EVM]-[Core]-[EVM]` but rather something like:
 
 ```txt
 [Core]-[Core]-[EVM-small]-[Core]-[Core]-[EVM-small]-[Core]-[EVM-large]-[Core]-[EVM-small]
@@ -121,8 +129,6 @@ and `L1ActionPrecompiles`
 More `L1ActionPrecompiles` found [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/interacting-with-hypercore).
 
 `L1Read` reads from the last produced `HyperCore` block at the time of EVM-transaction execution. Similarly `CoreWriter` writes to the first produced `HyperCore` block after the production of the EVM-block. This is available on both Testnet and Mainnet.
-
-> Note: The `CoreWriter` precompiles are enabled only on Testnet. There is no publicly available timeline for a mainnet rollout, although the mainnet node software includes support for these precompiles.
 
 ## Token Standards
 
@@ -247,22 +253,21 @@ contract HyperLiquidComposer is IHyperLiquidComposer {
 }
 ```
 
-## OFTWrapper for Hyperbridge
+### There are 2 extensions for Hyperliquid Composers:
+#### Recovery Extension 
+This gives you the ability to pulls tokens our of the composer on hypercore and into the composer's address on hyperevm. Then the priviledged address can send those tokens to itself on HyperEVM, giving you the ability to recover locked tokens.
 
-Using `Hyperbridge` incurrs a `5bp` fee. We use Stargate's [OFT Wrapper](https://github.com/stargate-protocol/stargate-v2/blob/main/packages/stg-evm-v2/src/peripheral/oft-wrapper/OFTWrapper.sol) on ALL networks that we support on `Hyperbridge`. The repository that we use to deploy the bridge on various networks can be found [here](https://github.com/LayerZero-Labs/hyperliquid-oft-wrapper)
+#### FeeToken Extension 
+This extension is for tokens that are a `FeeToken` - can be used to activate users on hypercore. Should a composer deployed with this extension notice that a user's address has not been activated then it would send across bridge across the whole amount of tokens to HyperCore and then send across `amt - activationFee` to the user. This consumes `activationFee` from the composer's address. 
+
+Ex: User sends 1.5 USDT0 to an new address. The composer sends over 1.5 USDT0 to itself and then makes a core transfer of 0.5 USDT0. The 1 USDT0 is consumed as Fee.
 
 ## LayerZero Transaction on HyperEVM
 
 Since this is a compose call - the `toAddress` is the `HyperLiquidComposer` contract address.
-The token receiver is encoded as an `abi.encode/Packed()` of the `receiver` address into `SendParam.composeMsg`. This is later used in the `lzCompose` phase to transfer the tokens to the L1 spot address on behalf of the `token receiver` address.
+The composeMsg is an `abi.encode()` of the `minMsgValue` and `receiver` (`abi.encode(minMsgValue, receiver)`) and plugged into `SendParam.composeMsg`. This is later used in the `lzCompose` phase to transfer the tokens to the right HyperCore address `receiver` address. `minMsgValue` is only used when `composeMsgOptions` has some value in it. This would be a `HYPE` transfer to the composer which then sends the user `HYPE` on Core. All composer have this behavior in them.
 
-```solidity
-_credit(toAddress, _toLD(_message.amountSD()), _origin.srcEid)
-```
-
-which `mints` the amount in local decimals to the token receiver (`HyperLiquidComposer` contract address).
-
-We now need to create a `Transfer` event to send the tokens from HyperEVM to HyperCore, the composer computes the amount receivable on `HyerCore` based on the number of tokens in HyperCore's asset bridge, the max transferable tokens (`u64.max * scale`) and sends the tokens to itself on HyperCore (this scales the tokens based on `HyperAsset.decimalDiff`). It also sends to the `receivers` address on HyperEVM any leftover tokens from the above transformation from HyperEVM amount to HyperCore.
+Once the tokens are on HyperEVM we need to create a `Transfer` event to send the tokens from HyperEVM to HyperCore, the composer computes the amount receivable on `HyerCore` based on the number of tokens in HyperCore's asset bridge, the max transferable tokens (`u64.max * scale`) and sends the tokens to itself on HyperCore (this scales the tokens based on `HyperAsset.decimalDiff`). It also sends to the `receivers` address on HyperEVM any leftover tokens from the above transformation from HyperEVM amount to HyperCore.
 
 ```solidity
 IHyperAssetAmount amounts = quoteHyperCoreAmount(_amount, isOft);

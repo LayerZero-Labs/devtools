@@ -1,0 +1,157 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "SPOT_SEND_HEADER",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "bytes4", "internalType": "bytes4" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "coreUserExists",
+      "inputs": [
+        { "name": "user", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct CoreUserExists",
+          "components": [
+            { "name": "exists", "type": "bool", "internalType": "bool" }
+          ]
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "spotBalance",
+      "inputs": [
+        { "name": "user", "type": "address", "internalType": "address" },
+        { "name": "token", "type": "uint64", "internalType": "uint64" }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct SpotBalance",
+          "components": [
+            { "name": "total", "type": "uint64", "internalType": "uint64" },
+            { "name": "hold", "type": "uint64", "internalType": "uint64" },
+            { "name": "entryNtl", "type": "uint64", "internalType": "uint64" }
+          ]
+        }
+      ],
+      "stateMutability": "view"
+    }
+  ],
+  "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "methodIdentifiers": {
+    "SPOT_SEND_HEADER()": "1f8164d9",
+    "coreUserExists(address)": "9dbfb13f",
+    "spotBalance(address,uint64)": "a69610d1"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"SPOT_SEND_HEADER\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"coreUserExists\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"exists\",\"type\":\"bool\"}],\"internalType\":\"struct CoreUserExists\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"token\",\"type\":\"uint64\"}],\"name\":\"spotBalance\",\"outputs\":[{\"components\":[{\"internalType\":\"uint64\",\"name\":\"total\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"hold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"entryNtl\",\"type\":\"uint64\"}],\"internalType\":\"struct SpotBalance\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"stateVariables\":{\"HYPE_DECIMAL_DIFF\":{\"details\":\"Decimal Constants - Pre-computed for gas efficiencyuint8 HYPE_EVM_DECIMALS = 18;uint8 HYPE_CORE_DECIMALS = 8;\"},\"SPOT_SEND_HEADER\":{\"details\":\"Pre-computed headers for gas efficiencybytes1 CORE_WRITER_VERSION = 0x01;bytes3 SPOT_SEND_ACTION_ID = 0x000006;\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/HyperLiquidCore.sol\":\"HyperLiquidCore\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":hardhat/=node_modules/hardhat/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/HyperLiquidCore.sol\":{\"keccak256\":\"0xef53228c26b30d36f72c48bd77418450816656e2845d9cf9453e15b7970e70ca\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://64449b0a35912d737901e048af28dad3ce037ead293d88297d17afb4c2e1cb0b\",\"dweb:/ipfs/QmVqbYfX3TTrQ9Th1ozBbUkmQ13cHY4AEEU1WfrWDoNLtb\"]},\"contracts/interfaces/ICoreWriter.sol\":{\"keccak256\":\"0x8faa15935746558808a46034a124ae465b941a68a5a723d2ba474400bb412eb3\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://417cfcca8b2324b7894f809a3347fe367afe8a12f32b271bb63d39e4d577f76c\",\"dweb:/ipfs/QmTQpC2KUJfk1Gdt5Y6tNLCdJSBpjGLcswoNGrcHVgEm7k\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.22+commit.4fc1097e" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "SPOT_SEND_HEADER",
+          "outputs": [
+            { "internalType": "bytes4", "name": "", "type": "bytes4" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "user", "type": "address" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "coreUserExists",
+          "outputs": [
+            {
+              "internalType": "struct CoreUserExists",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                { "internalType": "bool", "name": "exists", "type": "bool" }
+              ]
+            }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "user", "type": "address" },
+            { "internalType": "uint64", "name": "token", "type": "uint64" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "spotBalance",
+          "outputs": [
+            {
+              "internalType": "struct SpotBalance",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                { "internalType": "uint64", "name": "total", "type": "uint64" },
+                { "internalType": "uint64", "name": "hold", "type": "uint64" },
+                {
+                  "internalType": "uint64",
+                  "name": "entryNtl",
+                  "type": "uint64"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "devdoc": { "kind": "dev", "methods": {}, "version": 1 },
+      "userdoc": { "kind": "user", "methods": {}, "version": 1 }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/=node_modules/@layerzerolabs/",
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/",
+        "hardhat/=node_modules/hardhat/",
+        "solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 20000 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "contracts/HyperLiquidCore.sol": "HyperLiquidCore"
+      },
+      "evmVersion": "shanghai",
+      "libraries": {}
+    },
+    "sources": {
+      "contracts/HyperLiquidCore.sol": {
+        "keccak256": "0xef53228c26b30d36f72c48bd77418450816656e2845d9cf9453e15b7970e70ca",
+        "urls": [
+          "bzz-raw://64449b0a35912d737901e048af28dad3ce037ead293d88297d17afb4c2e1cb0b",
+          "dweb:/ipfs/QmVqbYfX3TTrQ9Th1ozBbUkmQ13cHY4AEEU1WfrWDoNLtb"
+        ],
+        "license": "MIT"
+      },
+      "contracts/interfaces/ICoreWriter.sol": {
+        "keccak256": "0x8faa15935746558808a46034a124ae465b941a68a5a723d2ba474400bb412eb3",
+        "urls": [
+          "bzz-raw://417cfcca8b2324b7894f809a3347fe367afe8a12f32b271bb63d39e4d577f76c",
+          "dweb:/ipfs/QmTQpC2KUJfk1Gdt5Y6tNLCdJSBpjGLcswoNGrcHVgEm7k"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 1
+}

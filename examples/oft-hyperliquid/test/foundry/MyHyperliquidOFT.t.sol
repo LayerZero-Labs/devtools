@@ -12,7 +12,6 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
 import { HypePrecompileMock } from "@layerzerolabs/hyperliquid-composer/test/mocks/HypePrecompileMock.sol";
 import { SpotBalancePrecompileMock } from "@layerzerolabs/hyperliquid-composer/test/mocks/SpotBalancePrecompileMock.sol";
 import { HyperLiquidComposerCodec } from "@layerzerolabs/hyperliquid-composer/contracts/library/HyperLiquidComposerCodec.sol";
-import { IHyperAsset } from "@layerzerolabs/hyperliquid-composer/contracts/HyperLiquidComposer.sol";
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
@@ -25,6 +24,12 @@ import { console } from "forge-std/console.sol";
 contract MyHyperLiquidOFTTest is TestHelperOz5 {
     using OptionsBuilder for bytes;
 
+    struct IHyperAsset {
+        uint64 coreIndexId;
+        int8 decimalDiff;
+        address assetBridgeAddress;
+    }
+
     IHyperAsset public OFT;
     IHyperAsset public HYPE;
 
@@ -36,9 +41,9 @@ contract MyHyperLiquidOFTTest is TestHelperOz5 {
     string internal constant DST_OFT_NAME = "dstOFT";
     string internal constant DST_OFT_SYMBOL = "dstOFT";
 
-    int64 internal constant OFT_DECIMALS_EVM = 18;
-    int64 internal constant OFT_DECIMALS_HYPECORE = 6;
-    int64 internal constant WEI_DIFF = OFT_DECIMALS_EVM - OFT_DECIMALS_HYPECORE;
+    int8 internal constant OFT_DECIMALS_EVM = 18;
+    int8 internal constant OFT_DECIMALS_HYPECORE = 6;
+    int8 internal constant WEI_DIFF = OFT_DECIMALS_EVM - OFT_DECIMALS_HYPECORE;
 
     // https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers#system-addresses
     address public constant HYPERLIQUID_PRECOMPILE = 0x2222222222222222222222222222222222222222;
@@ -57,6 +62,8 @@ contract MyHyperLiquidOFTTest is TestHelperOz5 {
     uint256 public initialNativeBalance = 1000 ether;
 
     function setUp() public virtual override {
+        vm.chainId(998); // testnet chain id
+
         OFT = IHyperAsset({
             assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(oftHlIndexId),
             coreIndexId: oftHlIndexId,
@@ -88,13 +95,7 @@ contract MyHyperLiquidOFTTest is TestHelperOz5 {
         srcOFT = new MyOFT(SRC_OFT_NAME, SRC_OFT_SYMBOL, address(endpoints[SRC_EID]), address(this));
         dstOFT = new MyOFT(DST_OFT_NAME, DST_OFT_SYMBOL, address(endpoints[DST_EID]), address(this));
 
-        dstLZComposer = new MyHyperLiquidComposer(
-            address(endpoints[DST_EID]),
-            address(dstOFT),
-            oftHlIndexId,
-            WEI_DIFF,
-            userB
-        );
+        dstLZComposer = new MyHyperLiquidComposer(address(dstOFT), oftHlIndexId, WEI_DIFF);
 
         // config and wire the ofts
         address[] memory ofts = new address[](2);
