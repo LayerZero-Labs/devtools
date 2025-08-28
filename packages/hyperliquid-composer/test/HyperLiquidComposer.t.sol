@@ -5,11 +5,10 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
-import { IHyperAsset } from "../contracts/interfaces/IHyperLiquidComposerCore.sol";
 import { IHYPEPrecompile } from "../contracts/interfaces/IHYPEPrecompile.sol";
 import { ICoreWriter } from "../contracts/interfaces/ICoreWriter.sol";
 
-import { OFTMock } from "./mocks/OFTMock.sol";
+import { OFTMock as MyOFT } from "./mocks/OFTMock.sol";
 import { SpotBalancePrecompileMock } from "./mocks/SpotBalancePrecompileMock.sol";
 
 import { HyperLiquidComposer } from "../contracts/HyperLiquidComposer.sol";
@@ -23,16 +22,14 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
     }
 
     function test_deployment() public view {
-        (uint64 coreIndexId, int64 decimalDiff, address assetBridgeAddress) = hyperLiquidComposer.hypeAsset();
-        assertEq(assetBridgeAddress, 0x2222222222222222222222222222222222222222);
+        assertEq(hyperLiquidComposer.NATIVE_ASSET_BRIDGE(), 0x2222222222222222222222222222222222222222);
         uint256 expectedHypeCoreIndexId = block.chainid == 998 ? 1105 : 150;
-        assertEq(coreIndexId, expectedHypeCoreIndexId);
-        assertEq(decimalDiff, 10);
+        assertEq(hyperLiquidComposer.NATIVE_CORE_INDEX_ID(), expectedHypeCoreIndexId);
+        assertEq(hyperLiquidComposer.NATIVE_DECIMAL_DIFF(), 10);
 
-        (uint64 oftCoreIndexId, int64 oftDecimalDiff, address oftAssetBridgeAddress) = hyperLiquidComposer.oftAsset();
-        assertEq(oftAssetBridgeAddress, ERC20.assetBridgeAddress);
-        assertEq(oftCoreIndexId, ERC20.coreIndexId);
-        assertEq(oftDecimalDiff, ERC20.decimalDiff);
+        assertEq(hyperLiquidComposer.ERC20_ASSET_BRIDGE(), ERC20.assetBridgeAddress);
+        assertEq(hyperLiquidComposer.ERC20_CORE_INDEX_ID(), ERC20.coreIndexId);
+        assertEq(hyperLiquidComposer.ERC20_DECIMAL_DIFF(), ERC20.decimalDiff);
     }
 
     function test_hypeIndexByChainId_testnet() public {
@@ -49,15 +46,16 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
             vm.skip(true);
         }
 
-        OFTMock oftTestnet = new OFTMock("test", "test", HL_LZ_ENDPOINT_V2_TESTNET, msg.sender);
+        MyOFT oftTestnet = new MyOFT("test", "test", HL_LZ_ENDPOINT_V2_TESTNET, msg.sender);
         HyperLiquidComposer hypeComposerTestnet = new HyperLiquidComposer(
             address(oftTestnet),
             ERC20.coreIndexId,
-            ERC20.decimalDiff,
-            recovery
+            ERC20.decimalDiff
         );
 
-        assertEq(hypeComposerTestnet.hypeIndexByChainId(998), 1105);
+        uint64 coreIndexId = hypeComposerTestnet.NATIVE_CORE_INDEX_ID();
+
+        assertEq(coreIndexId, 1105);
     }
 
     function test_hypeIndexByChainId_mainnet() public {
@@ -73,15 +71,16 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
             vm.skip(true);
         }
 
-        OFTMock oftMainnet = new OFTMock("test", "test", HL_LZ_ENDPOINT_V2_MAINNET, msg.sender);
+        MyOFT oftMainnet = new MyOFT("test", "test", HL_LZ_ENDPOINT_V2_MAINNET, msg.sender);
         HyperLiquidComposer hypeComposerMainnet = new HyperLiquidComposer(
             address(oftMainnet),
             ERC20.coreIndexId,
-            ERC20.decimalDiff,
-            recovery
+            ERC20.decimalDiff
         );
 
-        assertEq(hypeComposerMainnet.hypeIndexByChainId(999), 150);
+        uint64 coreIndexId = hypeComposerMainnet.NATIVE_CORE_INDEX_ID();
+
+        assertEq(coreIndexId, 150);
     }
 
     function test_SendSpot_no_FundAddress() public {
@@ -91,19 +90,25 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
             0,
             ETH_EID,
-            AMOUNT_TO_SEND + DUST,
+            AMOUNT_TO_SEND,
             abi.encodePacked(addressToBytes32(userA), composeMsg)
         );
 
-        deal(address(oft), address(hyperLiquidComposer), AMOUNT_TO_SEND + DUST);
+        deal(address(oft), address(hyperLiquidComposer), AMOUNT_TO_SEND);
 
-        assertEq(oft.balanceOf(address(hyperLiquidComposer)), AMOUNT_TO_SEND + DUST);
+        assertEq(oft.balanceOf(address(hyperLiquidComposer)), AMOUNT_TO_SEND);
 
         // Expect the Transfer event to be emitted
         vm.expectEmit(address(oft));
         emit IERC20.Transfer(address(hyperLiquidComposer), ERC20.assetBridgeAddress, AMOUNT_TO_SEND);
 
-        uint64 coreAmount = hyperLiquidComposer.quoteHyperCoreAmount(AMOUNT_TO_SEND, true).core;
+        uint64 coreIndexId = hyperLiquidComposer.ERC20_CORE_INDEX_ID();
+        int64 decimalDiff = hyperLiquidComposer.ERC20_DECIMAL_DIFF();
+        address assetBridgeAddress = hyperLiquidComposer.ERC20_ASSET_BRIDGE();
+
+        uint64 coreAmount = hyperLiquidComposer
+            .quoteHyperCoreAmount(coreIndexId, decimalDiff, assetBridgeAddress, AMOUNT_TO_SEND)
+            .core;
         bytes memory action = abi.encode(userB, ERC20.coreIndexId, coreAmount);
         bytes memory payload = abi.encodePacked(hyperLiquidComposer.SPOT_SEND_HEADER(), action);
         vm.expectEmit(HLP_CORE_WRITER);
@@ -116,7 +121,7 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
         vm.stopPrank();
 
         assertEq(oft.balanceOf(address(hyperLiquidComposer)), 0);
-        assertEq(oft.balanceOf(userB), balanceBefore + DUST);
+        assertEq(oft.balanceOf(userB), balanceBefore);
     }
 
     function test_SendSpot_and_FundAddress() public {
@@ -137,14 +142,20 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
         vm.expectEmit(address(oft));
         emit IERC20.Transfer(address(hyperLiquidComposer), ERC20.assetBridgeAddress, AMOUNT_TO_SEND);
 
-        uint64 coreAmount = hyperLiquidComposer.quoteHyperCoreAmount(AMOUNT_TO_SEND, true).core;
+        uint64 coreIndexId = hyperLiquidComposer.ERC20_CORE_INDEX_ID();
+        int64 decimalDiff = hyperLiquidComposer.ERC20_DECIMAL_DIFF();
+        address assetBridgeAddress = hyperLiquidComposer.ERC20_ASSET_BRIDGE();
+
+        uint64 coreAmount = hyperLiquidComposer
+            .quoteHyperCoreAmount(coreIndexId, decimalDiff, assetBridgeAddress, AMOUNT_TO_SEND)
+            .core;
         bytes memory action = abi.encode(userB, ERC20.coreIndexId, coreAmount);
         bytes memory payload = abi.encodePacked(hyperLiquidComposer.SPOT_SEND_HEADER(), action);
         vm.expectEmit(HLP_CORE_WRITER);
         emit ICoreWriter.RawAction(address(hyperLiquidComposer), payload);
 
         // Expect the Received event to be emitted - this is for the HYPE precompile
-        (, , address hypeAssetBridge) = hyperLiquidComposer.hypeAsset();
+        address hypeAssetBridge = hyperLiquidComposer.NATIVE_ASSET_BRIDGE();
         vm.expectEmit(hypeAssetBridge);
         emit IHYPEPrecompile.Received(address(hyperLiquidComposer), AMOUNT_TO_FUND);
 
@@ -152,18 +163,12 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
         uint256 balanceBeforeUserB = userB.balance;
 
         vm.startPrank(HL_LZ_ENDPOINT_V2);
-        hyperLiquidComposer.lzCompose{ value: AMOUNT_TO_FUND + DUST }(
-            address(oft),
-            bytes32(0),
-            composerMsg_,
-            msg.sender,
-            ""
-        );
+        hyperLiquidComposer.lzCompose{ value: AMOUNT_TO_FUND }(address(oft), bytes32(0), composerMsg_, msg.sender, "");
         vm.stopPrank();
 
         assertEq(oft.balanceOf(address(hyperLiquidComposer)), 0);
         assertEq(HYPE.assetBridgeAddress.balance, balanceBeforeBridge + AMOUNT_TO_FUND);
-        assertEq(userB.balance, balanceBeforeUserB + DUST);
+        assertEq(userB.balance, balanceBeforeUserB);
     }
 
     function test_getBalanceOfHyperCore(uint64 _balance) public {

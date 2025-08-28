@@ -55,10 +55,10 @@ abstract contract RecoverableComposer is HyperLiquidComposer, IRecoverableCompos
      * @param _coreAmount Amount of tokens to retrieve in HyperCore decimals, or FULL_TRANSFER for all
      */
     function retrieveCoreERC20(uint64 _coreAmount) public onlyRecoveryAddress {
-        uint64 maxTransferAmt = _getMaxTransferAmount(oftAsset.coreIndexId, _coreAmount);
+        uint64 maxTransferAmt = _getMaxTransferAmount(ERC20_CORE_INDEX_ID, _coreAmount);
 
-        _submitCoreWriterTransfer(oftAsset.assetBridgeAddress, oftAsset.coreIndexId, maxTransferAmt);
-        emit Retrieved(oftAsset.coreIndexId, maxTransferAmt, oftAsset.assetBridgeAddress);
+        _submitCoreWriterTransfer(ERC20_ASSET_BRIDGE, ERC20_CORE_INDEX_ID, maxTransferAmt);
+        emit Retrieved(ERC20_CORE_INDEX_ID, maxTransferAmt, ERC20_ASSET_BRIDGE);
     }
 
     /**
@@ -68,10 +68,10 @@ abstract contract RecoverableComposer is HyperLiquidComposer, IRecoverableCompos
      * @param _coreAmount Amount of HYPE tokens to retrieve in HyperCore decimals, or FULL_TRANSFER for all
      */
     function retrieveCoreHYPE(uint64 _coreAmount) public onlyRecoveryAddress {
-        uint64 maxTransferAmt = _getMaxTransferAmount(hypeAsset.coreIndexId, _coreAmount);
+        uint64 maxTransferAmt = _getMaxTransferAmount(NATIVE_CORE_INDEX_ID, _coreAmount);
 
-        _submitCoreWriterTransfer(hypeAsset.assetBridgeAddress, hypeAsset.coreIndexId, maxTransferAmt);
-        emit Retrieved(hypeAsset.coreIndexId, maxTransferAmt, hypeAsset.assetBridgeAddress);
+        _submitCoreWriterTransfer(NATIVE_ASSET_BRIDGE, NATIVE_CORE_INDEX_ID, maxTransferAmt);
+        emit Retrieved(NATIVE_CORE_INDEX_ID, maxTransferAmt, NATIVE_ASSET_BRIDGE);
     }
 
     /**
@@ -95,9 +95,9 @@ abstract contract RecoverableComposer is HyperLiquidComposer, IRecoverableCompos
      * @param _evmAmount Amount of ERC20 tokens to recover in EVM decimals, or FULL_TRANSFER for all
      */
     function recoverEvmERC20(uint256 _evmAmount) public onlyRecoveryAddress {
-        uint256 recoverAmt = _evmAmount == FULL_TRANSFER ? IERC20(TOKEN).balanceOf(address(this)) : _evmAmount;
+        uint256 recoverAmt = _evmAmount == FULL_TRANSFER ? IERC20(ERC20).balanceOf(address(this)) : _evmAmount;
 
-        IERC20(TOKEN).safeTransfer(RECOVERY_ADDRESS, recoverAmt);
+        IERC20(ERC20).safeTransfer(RECOVERY_ADDRESS, recoverAmt);
         emit Recovered(RECOVERY_ADDRESS, recoverAmt);
     }
 
