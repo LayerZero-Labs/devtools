@@ -11,8 +11,9 @@ import { Options } from '@layerzerolabs/lz-v2-utilities'
 
 import layerzeroConfig from '../../layerzero.config'
 import { SendResult } from '../common/types'
-import { DebugLogger, KnownErrors, MSG_TYPE, isEmptyOptionsEvm } from '../common/utils'
+import { DebugLogger, KnownErrors, MSG_TYPE, calculateGasAndValueShortfall, isEmptyOptionsEvm } from '../common/utils'
 import { getLayerZeroScanLink } from '../solana'
+
 const logger = createLogger()
 export interface EvmArgs {
     srcEid: number
@@ -103,26 +104,14 @@ export async function sendEvm(
     // EOF: Check whether there are extra options or enforced options. If not, warn the user.
 
     // BOF: evaluate whether options require additional value
-    // There's no Typescript function for combining options, so we'll decode both enforcedOptions and extraOptions to get their values
-    const enforcedOptionsValue = Options.fromOptions(enforcedOptions).decodeExecutorLzReceiveOption()?.value ?? 0n
-    const extraOptionsGas = extraOptions
-        ? Options.fromOptions(extraOptions).decodeExecutorLzReceiveOption()?.gas ?? 0n
-        : 0n
-    const extraOptionsValue = extraOptions
-        ? Options.fromOptions(extraOptions).decodeExecutorLzReceiveOption()?.value ?? 0n
-        : 0n
-    const totalOptionsValue = enforcedOptionsValue + extraOptionsValue
-    let valueShortfall = 0n
-    // if minimumLzReceiveValue is greater than totalOptionsValue, we need to add the difference to the amount
-    if (minimumLzReceiveValue && BigInt(minimumLzReceiveValue) > totalOptionsValue) {
-        console.info(
-            `minimum lzReceive value needed is greater than the total options value, adding extraOptions to cover the difference: ${minimumLzReceiveValue} (minimum) - ${totalOptionsValue} (total) = ${valueShortfall} (shortfall)`
-        )
-        valueShortfall = BigInt(minimumLzReceiveValue) - totalOptionsValue
-    }
+    const { gasShortfall, valueShortfall } = calculateGasAndValueShortfall(
+        enforcedOptions,
+        extraOptions,
+        minimumLzReceiveValue
+    )
     if (valueShortfall > 0n) {
         // if there's a value shortfall, we add the difference as extraOptions
-        extraOptions = Options.newOptions().addExecutorLzReceiveOption(extraOptionsGas, valueShortfall).toHex()
+        extraOptions = Options.newOptions().addExecutorLzReceiveOption(gasShortfall, valueShortfall).toHex()
     }
     // EOF: evaluate whether options require additional value
 

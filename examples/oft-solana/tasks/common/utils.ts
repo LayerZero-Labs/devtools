@@ -126,6 +126,36 @@ export function decodeLzReceiveOptions(hex: string): string {
     }
 }
 
+export function calculateGasAndValueShortfall(
+    enforcedOptions: string,
+    extraOptions?: string,
+    minimumValue?: number | bigint
+): { gasShortfall: bigint; valueShortfall: bigint } {
+    // There's no Typescript function for combining options, so we'll decode both enforcedOptions and extraOptions to get their values
+    const enforcedOptionsValue = Options.fromOptions(enforcedOptions).decodeExecutorLzReceiveOption()?.value ?? 0n
+    const extraOptionsGas = extraOptions
+        ? Options.fromOptions(extraOptions).decodeExecutorLzReceiveOption()?.gas ?? 0n
+        : 0n
+    const extraOptionsValue = extraOptions
+        ? Options.fromOptions(extraOptions).decodeExecutorLzReceiveOption()?.value ?? 0n
+        : 0n
+    const totalOptionsValue = enforcedOptionsValue + extraOptionsValue
+
+    if (minimumValue === undefined || minimumValue === null) {
+        return { gasShortfall: extraOptionsGas, valueShortfall: 0n }
+    }
+
+    const minimum = BigInt(minimumValue)
+    if (minimum > totalOptionsValue) {
+        const shortfall = minimum - totalOptionsValue
+        console.info(
+            `minimum lzReceive value needed is greater than the total options value, adding extraOptions to cover the difference: ${minimum} (minimum) - ${totalOptionsValue} (total) = ${shortfall} (shortfall)`
+        )
+        return { gasShortfall: extraOptionsGas, valueShortfall: shortfall }
+    }
+    return { gasShortfall: extraOptionsGas, valueShortfall: 0n }
+}
+
 export async function getSolanaUlnConfigPDAs(
     remote: EndpointId,
     connection: Connection,
