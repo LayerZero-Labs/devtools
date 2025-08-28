@@ -5,8 +5,6 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
 
 import { HyperLiquidComposerCodec } from "@layerzerolabs/hyperliquid-composer/contracts/library/HyperLiquidComposerCodec.sol";
 
-import { IHyperLiquidComposerErrors } from "@layerzerolabs/hyperliquid-composer/contracts/interfaces/IHyperLiquidComposerErrors.sol";
-
 import { HyperLiquidComposer } from "@layerzerolabs/hyperliquid-composer/contracts/HyperLiquidComposer.sol";
 
 import { HyperliquidBaseTest } from "@layerzerolabs/hyperliquid-composer/test/HyperliquidBase.t.sol";
@@ -50,7 +48,7 @@ contract ComposeMessageTest is HyperliquidBaseTest {
         bytes memory _msg = OFTComposeMsgCodec.composeMsg(_message);
 
         amountLD = OFTComposeMsgCodec.amountLD(_message);
-        (minMsgValue, receiver) = hyperLiquidComposer.decode_message(_msg);
+        (minMsgValue, receiver) = hyperLiquidComposer.decodeMessage(_msg);
     }
 
     function composeMsg(bytes calldata _message) public pure returns (bytes memory) {
@@ -59,13 +57,5 @@ contract ComposeMessageTest is HyperliquidBaseTest {
 
     function addressToBytes32(address _addr) internal pure returns (bytes32) {
         return bytes32(uint256(uint160(_addr)));
-    }
-
-    function createErrorMessage(address _to, uint256 _amount, bytes memory _reason) public pure returns (bytes memory) {
-        return
-            abi.encodeWithSelector(
-                IHyperLiquidComposerErrors.ErrorMsg.selector,
-                _reason.createErrorMessage(_to, _amount)
-            );
     }
 }
