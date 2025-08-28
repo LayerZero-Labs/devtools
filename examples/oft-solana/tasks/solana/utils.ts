@@ -113,52 +113,71 @@ export async function checkAssociatedTokenAccountExists(args: {
 
     const mintPk = typeof mint === 'string' ? publicKey(mint) : mint
     const ownerPk = typeof owner === 'string' ? publicKey(owner) : owner
-
-    const ata = findAssociatedTokenPda(umi, { mint: mintPk, owner: ownerPk })
-    const account = await safeFetchToken(umi, ata)
     const mintAccount = await safeFetchMint(umi, mintPk)
-    // check header.owner to determine if the token is SPL or Token2022 using switch
-    let tokenType: SolanaTokenType | null = null
+    if (!mintAccount) throw new Error(`Mint not found: ${mintPk}`)
 
-    switch (mintAccount?.header.owner) {
+    let tokenType: SolanaTokenType
+    let tokenProgramId: string
+    switch (mintAccount.header.owner) {
         case TOKEN_PROGRAM_ID.toBase58():
             tokenType = SolanaTokenType.SPL
+            tokenProgramId = TOKEN_PROGRAM_ID.toBase58()
             break
         case TOKEN_2022_PROGRAM_ID.toBase58():
             tokenType = SolanaTokenType.TOKEN2022
+            tokenProgramId = TOKEN_2022_PROGRAM_ID.toBase58()
             break
         default:
-            throw new Error(`Unknown token type: ${mintAccount?.header.owner}`)
+            throw new Error(`Unknown token program: ${mintAccount.header.owner}`)
     }
 
-    return { ata: ata[0], ataExists: !!account, tokenType }
+    // Derive ATA with the matching token program id.
+    const ataPda = findAssociatedTokenPda(umi, {
+        mint: mintPk,
+        owner: ownerPk,
+        tokenProgramId: publicKey(tokenProgramId),
+    })
+
+    const ataPk = ataPda[0]
+    const account = await safeFetchToken(umi, ataPk)
+
+    return { ata: ataPk, ataExists: !!account, tokenType }
 }
 
 /**
- * Compute the per-transaction msg.value to attach when sending to Solana.
+ * Compute the minimum required per-transaction msg.value to attach when sending to Solana.
  * Returns 0 if the recipient ATA already exists or if the mint is Token2022.
  * Returns SPL_TOKEN_ACCOUNT_RENT_VALUE if the recipient ATA is missing and the mint is SPL.
  */
-export async function getConditionalValueForSendToSolana(args: {
+export async function getMinimumValueForSendToSolana(args: {
     eid: EndpointId
     recipient: string
     mint: string | PublicKey
     umi?: Umi
 }): Promise<number> {
     const { eid, recipient, mint, umi } = args
-    const { ataExists, tokenType } = await checkAssociatedTokenAccountExists({
+    // Note that there may still exist a race condition and stale RPC data issue
+    // Race Condition 1: First send to address X on Solana is still in flight, and the second send to address X on Solana is initiated. The second send would evaluate the ATA as not yet created.
+    // Stale RPC data issue: The ATA might have been created at t=0, but the RPC will only pick it up at t=X but a send was initiated at t < x.
+    const { ata, ataExists, tokenType } = await checkAssociatedTokenAccountExists({
         eid,
         owner: recipient,
         mint,
         umi,
     })
-    if (!ataExists && tokenType === SolanaTokenType.SPL) {
-        return SPL_TOKEN_ACCOUNT_RENT_VALUE
-    } else if (!ataExists && tokenType === SolanaTokenType.TOKEN2022) {
-        console.warn(
-            'Ensure that the TOKEN_2022_ACCOUNT_RENT_VALUE has been updated according to your actual token account size'
-        )
-        return TOKEN_2022_ACCOUNT_RENT_VALUE
+    console.info(`ATA: ${ata}, ATA exists: ${ataExists}, tokenType: ${tokenType}`)
+    if (!ataExists) {
+        // if the ATA does not exist, we return the minimum value needed for the ATA creation
+        if (tokenType === SolanaTokenType.SPL) {
+            console.info('ATA does not exist for the recipient and mint is SPL')
+            return SPL_TOKEN_ACCOUNT_RENT_VALUE
+        } else if (tokenType === SolanaTokenType.TOKEN2022) {
+            console.warn('Ensure that TOKEN_2022_ACCOUNT_RENT_VALUE matches your token account size')
+            return TOKEN_2022_ACCOUNT_RENT_VALUE
+        }
+    } else {
+        // if the ATA exists, we return 0
+        return 0
     }
     return 0
 }

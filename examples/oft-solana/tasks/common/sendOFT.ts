@@ -2,12 +2,11 @@ import { task, types } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
-import { Options } from '@layerzerolabs/lz-v2-utilities'
 
 import { EvmArgs, sendEvm } from '../evm/sendEvm'
 import { getSolanaDeployment } from '../solana'
 import { SolanaArgs, sendSolana } from '../solana/sendSolana'
-import { getConditionalValueForSendToSolana } from '../solana/utils'
+import { getMinimumValueForSendToSolana } from '../solana/utils'
 
 import { SendResult } from './types'
 import { DebugLogger, KnownOutputs, KnownWarnings, getBlockExplorerLink } from './utils'
@@ -25,10 +24,14 @@ interface MasterArgs {
     composeMsg?: string
     /** EVM: 20-byte hex; Solana: base58 PDA of the store */
     oftAddress?: string
+    /** EVM: 20-byte hex; Solana: base58 PDA of the store (currently only relevant for sends to Solana) */
+    dstOftAddress?: string
     /** Solana only: override the OFT program ID (base58) */
     oftProgramId?: string
     tokenProgram?: string
     computeUnitPriceScaleFactor?: number
+    /** Solana only (so far): minimum value needed successful lzReceive on the destination chain */
+    minimumLzReceiveValue?: number
 }
 
 task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
@@ -54,6 +57,12 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
         undefined,
         types.string
     )
+    .addOptionalParam(
+        'dstOftAddress',
+        'Override the destination local deployment OFT address (20-byte hex for EVM, base58 PDA for Solana)',
+        undefined,
+        types.string
+    )
     .addOptionalParam('oftProgramId', 'Solana only: override the OFT program ID (base58)', undefined, types.string)
     .addOptionalParam('tokenProgram', 'Solana Token Program pubkey', undefined, types.string)
     .addOptionalParam('computeUnitPriceScaleFactor', 'Solana compute unit price scale factor', 4, types.float)
@@ -71,25 +80,17 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
 
         // NOTE: the conditionalValue block below assumes that in layerzeroconfig.ts, in the SOLANA_ENFORCED_OPTIONS, you have set the value to 0
         // Setting value both in the SOLANA_ENFORCED_OPTIONS and in the conditionalValue block below will result in redundant value being sent
-        let conditionalValue = 0
+        let minimumLzReceiveValue = 0
         // If sending to Solana, compute conditional value for ATA creation
         if (dstChainType === ChainType.SOLANA) {
             const solanaDeployment = getSolanaDeployment(args.dstEid)
-            conditionalValue = await getConditionalValueForSendToSolana({
+            // determines the absolute minimum value needed for an OFT send to Solana (based on ATA creation status)
+            minimumLzReceiveValue = await getMinimumValueForSendToSolana({
                 eid: args.dstEid,
                 recipient: args.to,
-                mint: solanaDeployment.mint,
+                mint: args.dstOftAddress || solanaDeployment.mint,
             })
-        }
-
-        // throw if user specified extraOptions and conditionalValue is non-zero
-        if (args.extraOptions && conditionalValue > 0) {
-            throw new Error('Cannot set extraOptions when conditional value is required for ATA creation. Remove extraOptions parameter to allow automatic value calculation.')
-            // hint: do not pass in extraOptions via params
-        }
-        // if there's conditionalValue, we build the extraOptions to be passed in
-        if (conditionalValue > 0) {
-            args.extraOptions = Options.newOptions().addExecutorLzReceiveOption(0, conditionalValue).toHex()
+            args.minimumLzReceiveValue = minimumLzReceiveValue
         }
 
         // route to the correct send function based on the source chain type
