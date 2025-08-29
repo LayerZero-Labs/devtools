@@ -324,6 +324,25 @@ npx @layerzerolabs/hyperliquid-composer core-spot \
     [--log-level {info | verbose}]
 ```
 
+#### Get Core Spot balances
+
+```bash
+npx @layerzerolabs/hyperliquid-composer get-core-balances \ 
+    --user <0x> \
+    [--show-zero {false | true}] \ 
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+```
+
+#### Is account activated?
+
+```bash
+npx @layerzerolabs/hyperliquid-composer is-account-activated \
+    --user <0x> \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+```
+
 #### Create a deployment file
 
 ```bash

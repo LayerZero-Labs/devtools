@@ -1,5 +1,11 @@
 # @layerzerolabs/ovault-evm-example
 
+## 0.0.4
+
+### Patch Changes
+
+- 44cfbbb: Chore: improve the setup process for share only deployers.
+
 ## 0.0.3
 
 ### Patch Changes

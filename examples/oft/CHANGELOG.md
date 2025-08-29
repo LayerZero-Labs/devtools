@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.7.6
+
+### Patch Changes
+
+- bf7cb01: update link to simple config
+
 ## 0.7.5
 
 ### Patch Changes
