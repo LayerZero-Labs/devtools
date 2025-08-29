@@ -74,7 +74,7 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
         }
 
         // Auto-detect hub chain from deployment config
-        const hubEid = DEPLOYMENT_CONFIG.vault.eid
+        const hubEid = DEPLOYMENT_CONFIG.vault.deploymentEid
         const hubNetwork = Object.entries(hre.config.networks).find(([networkName, networkConfig]) => {
             return networkConfig.eid === hubEid
         })

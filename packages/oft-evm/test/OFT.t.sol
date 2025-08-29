@@ -574,7 +574,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(eMintBurnERC20Mock.balanceOf(address(userE)), initialBalance + amountReceived);
     }
 
-    function test_mint_burn_oft_adapter_send() public {
+    function test_mint_burn_oft_adapter_send() public virtual {
         uint256 tokensToSend = 1 ether;
         bytes memory options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
         SendParam memory sendParam = SendParam(
