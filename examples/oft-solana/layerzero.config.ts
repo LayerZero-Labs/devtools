@@ -44,7 +44,7 @@ const SOLANA_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
     },
 ]
 
-// Learn about Message Execution Options: https://docs.layerzero.network/v2/developers/solana/oft/account#message-execution-options
+// Learn about Message Execution Options: https://docs.layerzero.network/v2/developers/solana/oft/overview#message-execution-options
 // Learn more about the Simple Config Generator - https://docs.layerzero.network/v2/developers/evm/technical-reference/simple-config
 export default async function () {
     // note: pathways declared here are automatically bidirectional
