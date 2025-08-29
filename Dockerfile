@@ -1,3 +1,5 @@
+# check=skip=SecretsUsedInArgOrEnv
+
 # We will alow consumers to specify the node version in case we want
 # to test under different versions (since we cannot control users environment)
 # 
@@ -10,7 +12,6 @@
 # 
 # This issue does not affect users, it's only related to the test runner
 # so the code will still work on node 18.16.0
-# Removed the patch version so that NODE_VERSION works with $NODE-VERSION-trixie and $NODE-VERSION-alpine (each is only available for differing patch versions)
 ARG NODE_VERSION=20.19
 
 # We will allow consumers to override build stages with prebuilt images
@@ -66,7 +67,6 @@ ARG INITIA_NODE_IMAGE=node-initia-localnet
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-# -trixie is needed due to anchor 0.31.1 needing glibc 2.38. Without -trixie, only glibc 2.36 is available.
 FROM node:$NODE_VERSION-trixie AS machine
 
 ENV PATH="/root/.cargo/bin:$PATH"
@@ -99,12 +99,13 @@ RUN apt-get install --yes \
     # speed up llvm builds
     ninja-build
 
-
 ### Setup rust
-# Install rust and set the default toolchain to 1.75.0
-ARG RUST_TOOLCHAIN_VERSION=1.75.0
-# ENV RUSTUP_VERSION=${RUST_TOOLCHAIN_VERSION}
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${RUST_TOOLCHAIN_VERSION} --profile minimal
+# Install rust and set the default toolchain to 1.84.1
+# https://github.com/anza-xyz/agave/blob/v2.2.20/rust-toolchain.toml
+ARG RUST_TOOLCHAIN_VERSION=1.84.1
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
+    | sh -s -- -y --profile minimal --default-toolchain ${RUST_TOOLCHAIN_VERSION}
+RUN rustup toolchain install 1.84.1
 RUN rustc --version
 
 ### Setup go
@@ -133,6 +134,9 @@ RUN aptosup -l
 
 # Install docker
 RUN curl -sSL https://get.docker.com/ | sh
+
+# Print glibc version
+RUN ldd --version | head -n1
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -216,16 +220,16 @@ RUN initiad version --long
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 #
-#               Image that builds AVM & Anchor
+#               Image that builds Anchor
 #
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM machine AS avm
+FROM machine AS anchor
 
-WORKDIR /app/avm
+WORKDIR /app/anchor
 
-ENV RUST_TOOLCHAIN_VERSION_ANCHOR=nightly-2025-05-01
+ENV RUST_TOOLCHAIN_VERSION_ANCHOR=1.84.1
 RUN rustup default ${RUST_TOOLCHAIN_VERSION_ANCHOR}
 ARG ANCHOR_VERSION=0.31.1
 
@@ -234,13 +238,10 @@ ARG ANCHOR_VERSION=0.31.1
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
-RUN cargo +${RUST_TOOLCHAIN_VERSION_ANCHOR} install --git https://github.com/solana-foundation/anchor avm
-
-RUN avm install ${ANCHOR_VERSION}
-RUN avm use ${ANCHOR_VERSION}
+# We do not need an anchor version manager on CI builds
+RUN cargo install --git https://github.com/solana-foundation/anchor --tag v0.31.1 anchor-cli
 
 ENV PATH="/root/.avm/bin:$PATH"
-RUN avm --version
 RUN anchor --version
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
@@ -256,9 +257,8 @@ FROM machine AS solana
 
 WORKDIR /app/solana
 
-ENV RUST_TOOLCHAIN_VERSION_SOLANA=nightly-2025-05-01
+ENV RUST_TOOLCHAIN_VERSION_SOLANA=1.84.1
 ARG SOLANA_VERSION=2.2.20
-ARG PLATFORM_TOOLS_VERSION=1.48
 
 RUN rustup default ${RUST_TOOLCHAIN_VERSION_SOLANA}
 
@@ -268,55 +268,70 @@ ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 RUN BUILD_FROM_SOURCE=true; \
-    # Install Solana using a binary with a fallback to installing from source. 
-    # List of machines that have prebuilt binaries:
+# Install Solana using a binary with a fallback to installing from source. 
+# List of machines that have prebuilt binaries:
     # - amd64/linux - last checked on Feb 11, 2025
     if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
-        curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v${SOLANA_VERSION}/install | sh -s && \
-        BUILD_FROM_SOURCE=false; \
+    curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v${SOLANA_VERSION}/install | sh -s && \
+    BUILD_FROM_SOURCE=false; \
     fi && \
     # If we need to build from source, we'll do it here
     # List of machines that need to be built from source:
-    # - arm64/linux - last checked on Feb 11, 2025
-    if [ "$BUILD_FROM_SOURCE" = "true" ]; then \
-            git clone https://github.com/anza-xyz/agave.git --depth 1 --branch v${SOLANA_VERSION} ~/solana-v${SOLANA_VERSION} && \
-            # Produces the same directory structure as the prebuilt binaries
-            # Make the active release point to the new release
-            bash ~/solana-v${SOLANA_VERSION}/scripts/cargo-install-all.sh ~/.local/share/solana/install/releases/${SOLANA_VERSION} && \
-            ln --symbolic ~/.local/share/solana/install/releases/${SOLANA_VERSION} ~/.local/share/solana/install/active_release && \
-            # Clean up the source code
-            rm -rf ~/solana-v${SOLANA_VERSION}; \
+        # - arm64/linux - last checked on Feb 11, 2025
+        if [ "$BUILD_FROM_SOURCE" = "true" ]; then \
+        git clone https://github.com/anza-xyz/agave.git --depth 1 --branch v${SOLANA_VERSION} ~/solana-v${SOLANA_VERSION} && \
+        # Produces the same directory structure as the prebuilt binaries
+        # Make the active release point to the new release
+        bash ~/solana-v${SOLANA_VERSION}/scripts/cargo-install-all.sh ~/.local/share/solana/install/releases/${SOLANA_VERSION} && \
+        ln --symbolic ~/.local/share/solana/install/releases/${SOLANA_VERSION} ~/.local/share/solana/install/active_release && \
+        # Clean up the source code
+        rm -rf ~/solana-v${SOLANA_VERSION}; \
         fi
-
-
-RUN mkdir -p /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools && \
+        
+# Move this down to use docker caching on Solana build
+# https://github.dev/anza-xyz/agave/blob/v2.2.20/sbf/scripts/install.sh
+ARG PLATFORM_TOOLS_VERSION=1.48
+RUN set -e; \
+    mkdir -p /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools; \
     BUILD_FROM_SOURCE=true; \
-    # If we are NOT building from source, we can simply grab the prebuilt binaries
-    if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
-        # Platform tools v1.41 has prebuilt binaries for amd64/linux - we extract and move it to the cache directory
-        curl -sL https://github.com/anza-xyz/platform-tools/releases/download/v1.41/platform-tools-linux-x86_64.tar.bz2 | tar -xj && \
-        mv llvm/ rust/ version.md /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools/; \
-        BUILD_FROM_SOURCE=false; \
-    fi && \
-    # List of machines that need to be built from source:
-    # - arm64/linux - last checked on Feb 10, 2025
+    arch_deb="$(dpkg --print-architecture)"; \
+    case "$arch_deb" in \
+        amd64) gh_arch="x86_64" ;; \
+        arm64) gh_arch="aarch64" ;; \
+        *) gh_arch="" ;; \
+    esac; \
+    if [ -n "$gh_arch" ]; then \
+        # try prebuilt; if any step fails, leave BUILD_FROM_SOURCE=true
+        # builds after platform-tools v1.43 have prebuilt binaries for arm64 and amd64
+        if curl -fsSL "https://github.com/anza-xyz/platform-tools/releases/download/v${PLATFORM_TOOLS_VERSION}/platform-tools-linux-${gh_arch}.tar.bz2" | tar -xj; then \
+            mv llvm/ rust/ version.md /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools/; \
+            BUILD_FROM_SOURCE=false; \
+        else \
+            echo "No prebuilt available for v${PLATFORM_TOOLS_VERSION} (${gh_arch}) — will build from source."; \
+        fi; \
+    fi; \
+    # for older versions we only have the binaries for amd64 and NOT arm. need to build -_-
     if [ "$BUILD_FROM_SOURCE" = "true" ]; then \
-            # Grab platform tools's source code at the version tagged in PLATFORM_TOOLS_VERSION
-            curl -sL https://github.com/anza-xyz/platform-tools/archive/refs/tags/v${PLATFORM_TOOLS_VERSION}.tar.gz | tar -xz && \
-            cd platform-tools-${PLATFORM_TOOLS_VERSION} && \
-            # Optimizing (and transforming) the build.sh script
-            # Only cloning the latest commit across the several git clones
-            sed -i '/^git clone/ s/$/ --depth 1/' build.sh && \
-            # Comment out the line that contains *llvm/lib/python (it is line 120) in build.sh to prevent the build from failing due to missing llvm python - not required for solana
-            sed -i '/llvm\/lib\/python/ s/^/#/' build.sh && \
-            # Now that we're done with the modifications, we can build the binaries into the folder "target"
-            ./build.sh target && \
-            # Extract the binaries to the cache directory
-            tar -xf platform-tools-linux-aarch64.tar.bz2 && \
-            mv llvm/ rust/ version.md /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools/ && \
-            # Clean up the source code
-            cd ../ && rm -rf platform-tools-${PLATFORM_TOOLS_VERSION}; \
-        fi
+        # Grab platform tools's source code at the version tagged in PLATFORM_TOOLS_VERSION
+        curl -fsSL "https://github.com/anza-xyz/platform-tools/archive/refs/tags/v${PLATFORM_TOOLS_VERSION}.tar.gz" | tar -xz; \
+        cd "platform-tools-${PLATFORM_TOOLS_VERSION}"; \
+        # Optimizing (and transforming) the build.sh script
+        # Only cloning the latest commit across the several git clones
+        sed -i '/^git clone/ s/$/ --depth 1/' build.sh; \
+        # Comment out the line that contains *llvm/lib/python (it is line 120) in build.sh to prevent the build from failing due to missing llvm python - not required for solan
+        sed -i '/llvm\/lib\/python/ s/^/#/' build.sh; \
+        # Now that we're done with the modifications, we can build the binaries into the folder "target"
+        ./build.sh target; \
+        # pick the right artifact based on arch
+        case "$arch_deb" in \
+            amd64)  tar -xf platform-tools-linux-x86_64.tar.bz2 ;; \
+            arm64)  tar -xf platform-tools-linux-aarch64.tar.bz2 ;; \
+            *)      echo "Unknown arch: $arch_deb" >&2; exit 1 ;; \
+        esac; \
+        mv llvm/ rust/ version.md /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools/; \
+        cd .. && rm -rf "platform-tools-${PLATFORM_TOOLS_VERSION}"; \
+    fi
+
 
 # Copy the active release directory into /root/.solana and make it available in the PATH
 RUN mkdir -p /root/.solana
@@ -409,7 +424,7 @@ FROM machine AS base
 WORKDIR /app
 
 # We'll add an empty NPM_TOKEN to suppress any warnings
-ENV NPM_TOKEN=
+ENV NPM_TOKEN=""
 ENV NPM_CONFIG_STORE_DIR=/pnpm
 ENV TON_PATH="/root/.ton/bin"
 ENV INITIA_PATH="/root/.initia/bin"
@@ -434,9 +449,7 @@ COPY --from=initia /root/.initia/lib /root/.initia/lib
 RUN echo "/root/.initia/lib" > /etc/ld.so.conf.d/initia.conf && ldconfig
 
 # Get solana tooling
-# COPY --from=avm /root/.cargo/bin/anchor /root/.cargo/bin/anchor
-COPY --from=avm /root/.cargo/bin/avm /root/.cargo/bin/avm
-COPY --from=avm /root/.avm /root/.avm
+COPY --from=anchor /root/.cargo/bin/anchor /root/.cargo/bin/anchor
 
 # Copy solana cache (for platform-tools) and binaries
 COPY --from=solana /root/.cache/solana /root/.cache/solana
@@ -461,7 +474,6 @@ RUN node -v
 RUN pnpm --version
 RUN git --version
 RUN anchor --version
-RUN avm --version
 RUN aptos --version
 RUN initiad version
 RUN forge --version
