@@ -237,13 +237,15 @@ ENV RUST_TOOLCHAIN_VERSION_ANCHOR=1.84.1
 RUN rustup default ${RUST_TOOLCHAIN_VERSION_ANCHOR}
 ARG ANCHOR_VERSION=0.31.1
 
-# Configure cargo. We want to provide a way of limiting cargo resources
-# on the github runner since it is not large enough to support multiple cargo builds
+# Configure cargo for faster builds
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
+ENV CARGO_NET_GIT_FETCH_WITH_CLI=true
+ENV CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
 
-# We do not need an anchor version manager on CI builds
-RUN cargo install --git https://github.com/solana-foundation/anchor --tag v0.31.1 anchor-cli
+# Install anchor-cli with optimizations
+RUN cargo install --git https://github.com/solana-foundation/anchor --tag v${ANCHOR_VERSION} anchor-cli \
+    --profile release --locked
 
 ENV PATH="/root/.avm/bin:$PATH"
 RUN anchor --version
@@ -266,10 +268,14 @@ ARG SOLANA_VERSION=2.2.20
 
 RUN rustup default ${RUST_TOOLCHAIN_VERSION_SOLANA}
 
-# Configure cargo. We want to provide a way of limiting cargo resources
-# on the github runner since it is not large enough to support multiple cargo builds
+# Configure cargo with optimizations for CI builds
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
+# Use sccache if available and configure cargo for faster builds
+ENV CARGO_NET_GIT_FETCH_WITH_CLI=true
+ENV CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
+ENV CARGO_PROFILE_RELEASE_LTO=thin
+ENV CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
 
 RUN BUILD_FROM_SOURCE=true; \
     # Install Solana using a binary with a fallback to installing from source. 
@@ -292,10 +298,11 @@ RUN BUILD_FROM_SOURCE=true; \
         rm -rf ~/solana-v${SOLANA_VERSION}; \
     fi
         
-# Move this down to use docker caching on Solana build
+# Install platform tools with better caching and parallel builds
 # https://github.dev/anza-xyz/agave/blob/v2.2.20/sbf/scripts/install.sh
 ARG PLATFORM_TOOLS_VERSION=1.48
-RUN set -e; \
+RUN --mount=type=cache,target=/tmp/platform-tools-cache \
+    set -e; \
     mkdir -p /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools; \
     BUILD_FROM_SOURCE=true; \
     arch_deb="$(dpkg --print-architecture)"; \
@@ -305,18 +312,23 @@ RUN set -e; \
         *) gh_arch="" ;; \
     esac; \
     if [ -n "$gh_arch" ]; then \
-        # try prebuilt; if any step fails, leave BUILD_FROM_SOURCE=true
-        # builds after platform-tools v1.43 have prebuilt binaries for arm64 and amd64
-        if curl -fsSL "https://github.com/anza-xyz/platform-tools/releases/download/v${PLATFORM_TOOLS_VERSION}/platform-tools-linux-${gh_arch}.tar.bz2" | tar -xj; then \
+        # try prebuilt with cache
+        if [ -f "/tmp/platform-tools-cache/platform-tools-linux-${gh_arch}-${PLATFORM_TOOLS_VERSION}.tar.bz2" ]; then \
+            echo "Using cached platform tools"; \
+            tar -xjf "/tmp/platform-tools-cache/platform-tools-linux-${gh_arch}-${PLATFORM_TOOLS_VERSION}.tar.bz2"; \
+            mv llvm/ rust/ version.md /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools/; \
+            BUILD_FROM_SOURCE=false; \
+        elif curl -fsSL "https://github.com/anza-xyz/platform-tools/releases/download/v${PLATFORM_TOOLS_VERSION}/platform-tools-linux-${gh_arch}.tar.bz2" \
+            -o "/tmp/platform-tools-cache/platform-tools-linux-${gh_arch}-${PLATFORM_TOOLS_VERSION}.tar.bz2" && \
+            tar -xjf "/tmp/platform-tools-cache/platform-tools-linux-${gh_arch}-${PLATFORM_TOOLS_VERSION}.tar.bz2"; then \
             mv llvm/ rust/ version.md /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools/; \
             BUILD_FROM_SOURCE=false; \
         else \
             echo "No prebuilt available for v${PLATFORM_TOOLS_VERSION} (${gh_arch}) — will build from source."; \
         fi; \
     fi; \
-    # for older versions we only have the binaries for amd64 and NOT arm. need to build -_-
+    # Build from source with optimizations for CI
     if [ "$BUILD_FROM_SOURCE" = "true" ]; then \
-        # Grab platform tools's source code at the version tagged in PLATFORM_TOOLS_VERSION
         curl -fsSL "https://github.com/anza-xyz/platform-tools/archive/refs/tags/v${PLATFORM_TOOLS_VERSION}.tar.gz" | tar -xz; \
         cd "platform-tools-${PLATFORM_TOOLS_VERSION}"; \
         # Optimizing (and transforming) the build.sh script
@@ -324,9 +336,9 @@ RUN set -e; \
         sed -i '/^git clone/ s/$/ --depth 1/' build.sh; \
         # Comment out the line that contains *llvm/lib/python (it is line 120) in build.sh to prevent the build from failing due to missing llvm python - not required for solan
         sed -i '/llvm\/lib\/python/ s/^/#/' build.sh; \
-        # Now that we're done with the modifications, we can build the binaries into the folder "target"
+        # Use available CPU cores for faster builds
+        export MAKEFLAGS="-j$(nproc)"; \
         ./build.sh target; \
-        # pick the right artifact based on arch
         case "$arch_deb" in \
             amd64)  tar -xf platform-tools-linux-x86_64.tar.bz2 ;; \
             arm64)  tar -xf platform-tools-linux-aarch64.tar.bz2 ;; \
@@ -423,6 +435,21 @@ RUN cast --version
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+# Create a minimal Node.js base without blockchain tools
+FROM machine AS node-base
+
+WORKDIR /app
+
+ENV NPM_TOKEN=""
+ENV NPM_CONFIG_STORE_DIR=/pnpm
+
+# Enable corepack and configure node
+RUN corepack enable && \
+    npm install -g node-gyp@latest && \
+    echo 'cache-max=0' >> ~/.npmrc && \
+    echo 'progress=false' >> ~/.npmrc
+
+# Full base with all blockchain tooling
 FROM machine AS base
 
 WORKDIR /app
@@ -468,16 +495,10 @@ COPY --from=evm /root/.cargo/bin/svm /root/.cargo/bin/svm
 COPY --from=evm /root/.foundry /root/.foundry
 COPY --from=evm /root/.svm /root/.svm
 
-# Enable corepack, new node package manager manager
-# 
-# See more here https://nodejs.org/api/corepack.html
-RUN corepack enable
-
-# Update node-gyp to latest version for better ARM64 compatibility
-RUN npm install -g node-gyp@latest
-
-# Configure node-gyp for cross-compilation and ARM64 builds
-RUN echo 'cache-max=0' >> ~/.npmrc && \
+# Enable corepack and configure node
+RUN corepack enable && \
+    npm install -g node-gyp@latest && \
+    echo 'cache-max=0' >> ~/.npmrc && \
     echo 'progress=false' >> ~/.npmrc
 
 # Output versions
@@ -495,6 +516,30 @@ RUN solc --version
 RUN solana --version
 RUN func -V
 RUN docker compose version
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#     Image that prepares Solana-only development environment
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM node-base AS solana-dev-base
+
+ENV NPM_CONFIG_PACKAGE_IMPORT_METHOD=copy
+ENV NPM_CONFIG_BUILD_FROM_SOURCE=true
+ENV NPM_CONFIG_TARGET_ARCH=auto
+
+WORKDIR /app
+
+# Only copy Solana tooling (no EVM, Aptos, TON, etc.)
+COPY --from=anchor /root/.cargo/bin/anchor /root/.cargo/bin/anchor
+COPY --from=solana /root/.cache/solana /root/.cache/solana
+COPY --from=solana /root/.solana/bin /root/.solana/bin
+
+ENV PATH="/root/.solana/bin:$PATH"
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -616,9 +661,40 @@ ENTRYPOINT ["initiad", "start"]
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM development AS node-evm-hardhat-builder
+FROM node-base AS evm-dev-base
 
-# Build the node
+ENV NPM_CONFIG_PACKAGE_IMPORT_METHOD=copy
+ENV NPM_CONFIG_BUILD_FROM_SOURCE=true
+ENV NPM_CONFIG_TARGET_ARCH=auto
+
+# Only copy EVM tooling (no Solana, Aptos, etc.)
+COPY --from=evm /root/.cargo/bin/solc /root/.cargo/bin/solc
+COPY --from=evm /root/.cargo/bin/svm /root/.cargo/bin/svm
+COPY --from=evm /root/.foundry /root/.foundry
+COPY --from=evm /root/.svm /root/.svm
+
+# Add EVM tools to PATH
+ENV PATH="/root/.foundry/bin:$PATH"
+
+# Copy only necessary dependency files for EVM node
+COPY pnpm-*.yaml .npmrc package.json ./
+COPY tests/test-evm-node/package.json ./tests/test-evm-node/
+
+RUN \
+    --mount=type=cache,id=pnpm-store,target=/pnpm \
+    pnpm fetch --prefer-offline --frozen-lockfile
+
+# Copy only EVM-related source files
+COPY tests/test-evm-node ./tests/test-evm-node/
+
+RUN \
+    --mount=type=cache,id=pnpm-store,target=/pnpm \
+    pnpm install --recursive --offline --frozen-lockfile --ignore-scripts && \
+    pnpm rebuild --recursive
+
+FROM evm-dev-base AS node-evm-hardhat-builder
+
+# Build only the EVM node
 RUN pnpm build --filter @layerzerolabs/test-evm-node
 
 # Isolate the project
