@@ -666,40 +666,9 @@ ENTRYPOINT ["initiad", "start"]
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM node-base AS evm-dev-base
+FROM development AS node-evm-hardhat-builder
 
-ENV NPM_CONFIG_PACKAGE_IMPORT_METHOD=copy
-ENV NPM_CONFIG_BUILD_FROM_SOURCE=true
-ENV NPM_CONFIG_TARGET_ARCH=auto
-
-# Only copy EVM tooling (no Solana, Aptos, etc.)
-COPY --from=evm /root/.cargo/bin/solc /root/.cargo/bin/solc
-COPY --from=evm /root/.cargo/bin/svm /root/.cargo/bin/svm
-COPY --from=evm /root/.foundry /root/.foundry
-COPY --from=evm /root/.svm /root/.svm
-
-# Add EVM tools to PATH
-ENV PATH="/root/.foundry/bin:$PATH"
-
-# Copy only necessary dependency files for EVM node
-COPY pnpm-*.yaml .npmrc package.json ./
-COPY tests/test-evm-node/package.json ./tests/test-evm-node/
-
-RUN \
-    --mount=type=cache,id=pnpm-store,target=/pnpm \
-    pnpm fetch --prefer-offline --frozen-lockfile
-
-# Copy only EVM-related source files
-COPY tests/test-evm-node ./tests/test-evm-node/
-
-RUN \
-    --mount=type=cache,id=pnpm-store,target=/pnpm \
-    pnpm install --recursive --offline --frozen-lockfile --ignore-scripts && \
-    pnpm rebuild --recursive
-
-FROM evm-dev-base AS node-evm-hardhat-builder
-
-# Build only the EVM node
+# Build the node
 RUN pnpm build --filter @layerzerolabs/test-evm-node
 
 # Isolate the project
