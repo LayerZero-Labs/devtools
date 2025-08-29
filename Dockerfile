@@ -97,11 +97,16 @@ RUN apt-get install --yes \
     # Required to build the base image
     build-essential \
     # Required for node-gyp to build native Node.js modules (like utf-8-validate, bufferutil)
-    python3 python3-dev \
+    python3 python3-dev python3-setuptools python3-pip \
     # Additional build tools required for ARM64 native module compilation
     make g++ \
     # speed up llvm builds
-    ninja-build
+    ninja-build && \
+    # Install setuptools for Python 3.13+ compatibility with node-gyp
+    pip3 install --break-system-packages setuptools && \
+    # Clean up apt cache to reduce image size
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ### Setup rust
 # Install rust and set the default toolchain to 1.84.1
@@ -446,8 +451,10 @@ ENV NPM_CONFIG_STORE_DIR=/pnpm
 # Enable corepack and configure node
 RUN corepack enable && \
     npm install -g node-gyp@latest && \
+    # Configure npm and node-gyp for Python 3.13 compatibility
     echo 'cache-max=0' >> ~/.npmrc && \
-    echo 'progress=false' >> ~/.npmrc
+    echo 'progress=false' >> ~/.npmrc && \
+    npm config set python /usr/bin/python3
 
 # Full base with all blockchain tooling
 FROM machine AS base
@@ -498,8 +505,10 @@ COPY --from=evm /root/.svm /root/.svm
 # Enable corepack and configure node
 RUN corepack enable && \
     npm install -g node-gyp@latest && \
+    # Configure npm and node-gyp for Python 3.13 compatibility
     echo 'cache-max=0' >> ~/.npmrc && \
-    echo 'progress=false' >> ~/.npmrc
+    echo 'progress=false' >> ~/.npmrc && \
+    npm config set python /usr/bin/python3
 
 # Output versions
 RUN node -v
@@ -666,6 +675,9 @@ FROM node-base AS evm-dev-base
 ENV NPM_CONFIG_PACKAGE_IMPORT_METHOD=copy
 ENV NPM_CONFIG_BUILD_FROM_SOURCE=true
 ENV NPM_CONFIG_TARGET_ARCH=auto
+# Force node-gyp to use Python 3 and bypass distutils issues
+ENV PYTHON=/usr/bin/python3
+ENV npm_config_python=/usr/bin/python3
 
 # Only copy EVM tooling (no Solana, Aptos, etc.)
 COPY --from=evm /root/.cargo/bin/solc /root/.cargo/bin/solc
