@@ -2,8 +2,9 @@
 pragma solidity ^0.8.22;
 
 import { HyperLiquidComposer } from "@layerzerolabs/hyperliquid-composer/contracts/HyperLiquidComposer.sol";
+import { FeeToken } from "@layerzerolabs/hyperliquid-composer/contracts/extensions/FeeToken.sol";
 
-contract MyHyperLiquidComposer is HyperLiquidComposer {
+contract MyHyperLiquidComposer_FeeToken is FeeToken {
     /// @notice Constructor for the HyperLiquidComposer
     ///
     /// @param _oft The address of the OFT

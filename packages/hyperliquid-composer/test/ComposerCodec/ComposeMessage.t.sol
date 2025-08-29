@@ -5,7 +5,7 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
 
 import { HyperLiquidComposerCodec } from "../../contracts/library/HyperLiquidComposerCodec.sol";
 
-import { IHyperLiquidComposerErrors } from "../../contracts/interfaces/IHyperLiquidComposerErrors.sol";
+import { IHyperLiquidComposer } from "../../contracts/interfaces/IHyperLiquidComposer.sol";
 
 import { HyperLiquidComposer } from "../../contracts/HyperLiquidComposer.sol";
 
@@ -22,11 +22,10 @@ contract ComposeMessageTest is HyperliquidBaseTest {
         super.setUp();
     }
 
-    function test_validateAndDecodeMessage_EncodingVariants(address _receiver, bool _useEncodePacked) public view {
+    function test_validateAndDecodeMessage(address _receiver) public view {
         vm.assume(_receiver != address(0));
 
-        bytes memory encodedReceiver = _useEncodePacked ? abi.encodePacked(_receiver) : abi.encode(_receiver);
-        bytes memory encodedMessage = abi.encode(1 ether, encodedReceiver);
+        bytes memory encodedMessage = abi.encode(1 ether, _receiver);
 
         bytes memory message = _createMessage(encodedMessage, DEFAULT_AMOUNT, "");
 
@@ -48,11 +47,10 @@ contract ComposeMessageTest is HyperliquidBaseTest {
     function validateAndDecodeMessage(
         bytes calldata _message
     ) public view returns (uint256 minMsgValue, address receiver, uint256 amountLD) {
-        bytes memory maybeReceiver = OFTComposeMsgCodec.composeMsg(_message);
-        bytes32 senderBytes32 = OFTComposeMsgCodec.composeFrom(_message);
+        bytes memory _msg = OFTComposeMsgCodec.composeMsg(_message);
 
         amountLD = OFTComposeMsgCodec.amountLD(_message);
-        (minMsgValue, receiver) = hyperLiquidComposer.validate_msg_or_refund(maybeReceiver, senderBytes32, amountLD);
+        (minMsgValue, receiver) = hyperLiquidComposer.decodeMessage(_msg);
     }
 
     function composeMsg(bytes calldata _message) public pure returns (bytes memory) {
@@ -61,13 +59,5 @@ contract ComposeMessageTest is HyperliquidBaseTest {
 
     function addressToBytes32(address _addr) internal pure returns (bytes32) {
         return bytes32(uint256(uint160(_addr)));
-    }
-
-    function createErrorMessage(address _to, uint256 _amount, bytes memory _reason) public pure returns (bytes memory) {
-        return
-            abi.encodeWithSelector(
-                IHyperLiquidComposerErrors.ErrorMsg.selector,
-                _reason.createErrorMessage(_to, _amount)
-            );
     }
 }

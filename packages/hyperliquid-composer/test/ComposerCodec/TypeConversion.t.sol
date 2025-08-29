@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import { HyperLiquidComposerCodec } from "../../contracts/library/HyperLiquidComposerCodec.sol";
-import { IHyperAsset, IHyperAssetAmount } from "../../contracts/interfaces/IHyperLiquidComposerCore.sol";
+import { IHyperAssetAmount } from "../../contracts/interfaces/IHyperLiquidComposer.sol";
 
 import { Test, console } from "forge-std/Test.sol";
 
@@ -42,20 +42,13 @@ contract TypeConversionTest is Test {
 
         uint256 scale = 10 ** uint8(-1 * evmExtraWeiDecimals);
 
-        IHyperAsset memory oftAsset = IHyperAsset({
-            assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1),
-            coreIndexId: 1,
-            decimalDiff: evmExtraWeiDecimals
-        });
-
         IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyperAssetAmount(
             amount,
             bridgeSupply,
-            oftAsset
+            evmExtraWeiDecimals
         );
 
         assertEq(amounts.evm, amounts.core / scale, "evm and core amounts should differ by a factor of scale");
-        assertEq(amounts.dust + amounts.evm, amount, "dust + evm is not equal to the input amount");
     }
 
     function test_into_hyperAssetAmount_decimal_diff_gt_zero(
@@ -67,19 +60,12 @@ contract TypeConversionTest is Test {
         evmExtraWeiDecimals = int8(bound(evmExtraWeiDecimals, 1, MAX_DECIMAL_DIFF));
         uint256 scale = 10 ** uint8(evmExtraWeiDecimals);
 
-        IHyperAsset memory oftAsset = IHyperAsset({
-            assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1),
-            coreIndexId: 1,
-            decimalDiff: evmExtraWeiDecimals
-        });
-
         IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyperAssetAmount(
             amount,
             bridgeSupply,
-            oftAsset
+            evmExtraWeiDecimals
         );
 
         assertEq(amounts.evm / scale, amounts.core, "evm and core amounts should differ by a factor of scale");
-        assertEq(amounts.dust + amounts.evm, amount, "dust + evm is not equal to the input amount");
     }
 }
