@@ -268,17 +268,17 @@ ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 RUN BUILD_FROM_SOURCE=true; \
-# Install Solana using a binary with a fallback to installing from source. 
-# List of machines that have prebuilt binaries:
+    # Install Solana using a binary with a fallback to installing from source. 
+    # List of machines that have prebuilt binaries:
     # - amd64/linux - last checked on Feb 11, 2025
     if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
-    curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v${SOLANA_VERSION}/install | sh -s && \
-    BUILD_FROM_SOURCE=false; \
+        curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v${SOLANA_VERSION}/install | sh -s && \
+        BUILD_FROM_SOURCE=false; \
     fi && \
     # If we need to build from source, we'll do it here
     # List of machines that need to be built from source:
-        # - arm64/linux - last checked on Feb 11, 2025
-        if [ "$BUILD_FROM_SOURCE" = "true" ]; then \
+    # - arm64/linux - last checked on Feb 11, 2025
+    if [ "$BUILD_FROM_SOURCE" = "true" ]; then \
         git clone https://github.com/anza-xyz/agave.git --depth 1 --branch v${SOLANA_VERSION} ~/solana-v${SOLANA_VERSION} && \
         # Produces the same directory structure as the prebuilt binaries
         # Make the active release point to the new release
@@ -286,7 +286,7 @@ RUN BUILD_FROM_SOURCE=true; \
         ln --symbolic ~/.local/share/solana/install/releases/${SOLANA_VERSION} ~/.local/share/solana/install/active_release && \
         # Clean up the source code
         rm -rf ~/solana-v${SOLANA_VERSION}; \
-        fi
+    fi
         
 # Move this down to use docker caching on Solana build
 # https://github.dev/anza-xyz/agave/blob/v2.2.20/sbf/scripts/install.sh
