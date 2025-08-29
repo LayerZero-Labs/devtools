@@ -186,7 +186,7 @@ The current architecture has certain error handling AND checks (because hyperliq
 
 #### Transfer exceeding u64.max
 
-HyperCore's spot send only allows for a maximum of `u64` tokens to be transferred across. This means (in the unlikely event) that the user sends across greater than `u64` the difference would be returned the the `receiver` address on `HyperEVM`.
+HyperCore's spot send only allows for a maximum of `u64` tokens to be transferred across. This means (in the unlikely event) that the user sends across greater than `u64` the difference would be returned the `receiver` address on `HyperEVM`.
 
 #### Transfer exceeding HyperCore Bridge Capactiy
 
