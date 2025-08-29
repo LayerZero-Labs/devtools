@@ -67,7 +67,7 @@ ARG INITIA_NODE_IMAGE=node-initia-localnet
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM node:$NODE_VERSION-trixie AS machine
+FROM node:$NODE_VERSION-bookworm AS machine
 
 ENV PATH="/root/.cargo/bin:$PATH"
 
@@ -102,8 +102,6 @@ RUN apt-get install --yes \
     make g++ \
     # speed up llvm builds
     ninja-build && \
-    # Install setuptools for Python 3.13+ compatibility with node-gyp
-    pip3 install --break-system-packages setuptools && \
     # Clean up apt cache to reduce image size
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -451,10 +449,9 @@ ENV NPM_CONFIG_STORE_DIR=/pnpm
 # Enable corepack and configure node
 RUN corepack enable && \
     npm install -g node-gyp@latest && \
-    # Configure npm and node-gyp for Python 3.13 compatibility
-    echo 'cache-max=0' >> ~/.npmrc && \
-    echo 'progress=false' >> ~/.npmrc && \
-    npm config set python /usr/bin/python3
+    # Configure npm for better performance
+    echo 'prefer-online=true' >> ~/.npmrc && \
+    echo 'progress=false' >> ~/.npmrc
 
 # Full base with all blockchain tooling
 FROM machine AS base
@@ -505,10 +502,9 @@ COPY --from=evm /root/.svm /root/.svm
 # Enable corepack and configure node
 RUN corepack enable && \
     npm install -g node-gyp@latest && \
-    # Configure npm and node-gyp for Python 3.13 compatibility
-    echo 'cache-max=0' >> ~/.npmrc && \
-    echo 'progress=false' >> ~/.npmrc && \
-    npm config set python /usr/bin/python3
+    # Configure npm for better performance
+    echo 'prefer-online=true' >> ~/.npmrc && \
+    echo 'progress=false' >> ~/.npmrc
 
 # Output versions
 RUN node -v
@@ -612,7 +608,7 @@ HEALTHCHECK --interval=2s --retries=20 CMD curl -f http://0.0.0.0:8080/v1 || exi
 # Node API                          8080
 # Transaction stream                50051
 # Faucet is ready                   8081
-ENTRYPOINT aptos
+ENTRYPOINT ["aptos"]
 
 CMD ["node", "run-local-testnet", "--force-restart", "--assume-yes"]
 
@@ -675,9 +671,6 @@ FROM node-base AS evm-dev-base
 ENV NPM_CONFIG_PACKAGE_IMPORT_METHOD=copy
 ENV NPM_CONFIG_BUILD_FROM_SOURCE=true
 ENV NPM_CONFIG_TARGET_ARCH=auto
-# Force node-gyp to use Python 3 and bypass distutils issues
-ENV PYTHON=/usr/bin/python3
-ENV npm_config_python=/usr/bin/python3
 
 # Only copy EVM tooling (no Solana, Aptos, etc.)
 COPY --from=evm /root/.cargo/bin/solc /root/.cargo/bin/solc
@@ -746,7 +739,7 @@ RUN corepack enable
 HEALTHCHECK --interval=2s --retries=20 CMD curl -f http://0.0.0.0:8545 || exit 1
 
 # Run the shit
-ENTRYPOINT pnpm start
+ENTRYPOINT ["pnpm", "start"]
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
