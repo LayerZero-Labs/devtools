@@ -96,6 +96,8 @@ RUN apt-get install --yes \
     libatomic1 libssl-dev \
     # Required to build the base image
     build-essential \
+    # Required for node-gyp to build native Node.js modules (like utf-8-validate)
+    python3 \
     # speed up llvm builds
     ninja-build
 
