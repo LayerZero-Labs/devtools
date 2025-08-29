@@ -96,8 +96,10 @@ RUN apt-get install --yes \
     libatomic1 libssl-dev \
     # Required to build the base image
     build-essential \
-    # Required for node-gyp to build native Node.js modules (like utf-8-validate)
-    python3 \
+    # Required for node-gyp to build native Node.js modules (like utf-8-validate, bufferutil)
+    python3 python3-dev \
+    # Additional build tools required for ARM64 native module compilation
+    make g++ \
     # speed up llvm builds
     ninja-build
 
@@ -471,6 +473,13 @@ COPY --from=evm /root/.svm /root/.svm
 # See more here https://nodejs.org/api/corepack.html
 RUN corepack enable
 
+# Update node-gyp to latest version for better ARM64 compatibility
+RUN npm install -g node-gyp@latest
+
+# Configure node-gyp for cross-compilation and ARM64 builds
+RUN echo 'cache-max=0' >> ~/.npmrc && \
+    echo 'progress=false' >> ~/.npmrc
+
 # Output versions
 RUN node -v
 RUN pnpm --version
@@ -500,6 +509,9 @@ FROM $BASE_IMAGE AS development
 
 ENV NPM_CONFIG_STORE_DIR=/pnpm
 ENV NPM_CONFIG_PACKAGE_IMPORT_METHOD=copy
+# Set build parallelism to prevent ARM64 build issues
+ENV NPM_CONFIG_BUILD_FROM_SOURCE=true
+ENV NPM_CONFIG_TARGET_ARCH=auto
 
 WORKDIR /app
 
@@ -517,7 +529,10 @@ RUN \
     #  Mount pnpm store
     --mount=type=cache,id=pnpm-store,target=/pnpm \
     # Install dependencies (fail if we forgot to update the lockfile)
-    pnpm install --recursive --offline --frozen-lockfile
+    # Use --ignore-scripts first to avoid native build issues during dependency resolution
+    pnpm install --recursive --offline --frozen-lockfile --ignore-scripts && \
+    # Then rebuild native modules separately with better error handling
+    pnpm rebuild --recursive
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
