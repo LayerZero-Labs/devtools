@@ -1,10 +1,11 @@
+import { publicKey } from '@metaplex-foundation/umi'
 import { task, types } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 
 import { EvmArgs, sendEvm } from '../evm/sendEvm'
-import { getSolanaDeployment } from '../solana'
+import { deriveConnection, getSolanaDeployment } from '../solana'
 import { SolanaArgs, sendSolana } from '../solana/sendSolana'
 import { getMinimumValueForSendToSolana } from '../solana/utils'
 
@@ -82,12 +83,15 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
         // If sending to Solana, compute minimum value needed for ATA creation
         if (dstChainType === ChainType.SOLANA) {
             const solanaDeployment = getSolanaDeployment(args.dstEid)
+            const { connection, umi } = await deriveConnection(args.dstEid)
             // determines the absolute minimum value needed for an OFT send to Solana (based on ATA creation status)
             minimumLzReceiveValue = await getMinimumValueForSendToSolana({
-                eid: args.dstEid,
-                recipient: args.to,
-                mint: args.dstOftAddress || solanaDeployment.mint,
+                recipient: publicKey(args.to),
+                mint: publicKey(args.dstOftAddress || solanaDeployment.mint),
+                umi,
+                connection,
             })
+            console.log('minimumLzReceiveValue', minimumLzReceiveValue)
             args.minimumLzReceiveValue = minimumLzReceiveValue
         }
 

@@ -1,6 +1,13 @@
-import { findAssociatedTokenPda, safeFetchMint, safeFetchToken } from '@metaplex-foundation/mpl-toolbox'
+import { findAssociatedTokenPda, safeFetchToken } from '@metaplex-foundation/mpl-toolbox'
 import { PublicKey, Umi, publicKey } from '@metaplex-foundation/umi'
-import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
+import {
+    TOKEN_2022_PROGRAM_ID,
+    TOKEN_PROGRAM_ID,
+    Mint as Web3Mint,
+    getAccountLenForMint,
+    unpackMint,
+} from '@solana/spl-token'
 import { Connection } from '@solana/web3.js'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
@@ -13,10 +20,7 @@ import {
     TASK_LZ_OAPP_CONFIG_GET,
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
 
-import { deriveConnection } from './index'
-
 export const SPL_TOKEN_ACCOUNT_RENT_VALUE = 2_039_280 // This figure represents lamports (https://solana.com/docs/references/terminology#lamport) on Solana. Read below for more details.
-export const TOKEN_2022_ACCOUNT_RENT_VALUE = 2_500_000 // NOTE: The actual value needed depends on which specific extensions you have enabled for your Token2022 token. You would need to determine this value based on your own Token2022 token.
 
 export const findSolanaEndpointIdInGraph = async (
     hre: HardhatRuntimeEnvironment,
@@ -103,22 +107,19 @@ export enum SolanaTokenType {
  * Returns the derived ATA and a boolean indicating existence.
  */
 export async function checkAssociatedTokenAccountExists(args: {
-    umi?: Umi
-    eid: EndpointId
-    mint: PublicKey | string
-    owner: PublicKey | string
-}): Promise<{ ata: string; ataExists: boolean; tokenType: SolanaTokenType | null }> {
-    const { umi: providedUmi, eid, mint, owner } = args
-    const umi = providedUmi ?? (await deriveConnection(eid, true)).umi
+    connection: Connection
+    umi: Umi
+    mint: PublicKey
+    owner: PublicKey
+}): Promise<{ ata: string; ataExists: boolean; tokenType: SolanaTokenType | null; mintAccount: Web3Mint }> {
+    const { umi, mint, owner, connection } = args
 
-    const mintPk = typeof mint === 'string' ? publicKey(mint) : mint
-    const ownerPk = typeof owner === 'string' ? publicKey(owner) : owner
-    const mintAccount = await safeFetchMint(umi, mintPk)
-    if (!mintAccount) throw new Error(`Mint not found: ${mintPk}`)
+    const mintAccountInfo = await connection.getAccountInfo(toWeb3JsPublicKey(mint))
+    if (!mintAccountInfo) throw new Error(`Mint not found: ${mint}`)
 
     let tokenType: SolanaTokenType
     let tokenProgramId: string
-    switch (mintAccount.header.owner) {
+    switch (mintAccountInfo.owner.toBase58()) {
         case TOKEN_PROGRAM_ID.toBase58():
             tokenType = SolanaTokenType.SPL
             tokenProgramId = TOKEN_PROGRAM_ID.toBase58()
@@ -128,20 +129,21 @@ export async function checkAssociatedTokenAccountExists(args: {
             tokenProgramId = TOKEN_2022_PROGRAM_ID.toBase58()
             break
         default:
-            throw new Error(`Unknown token program: ${mintAccount.header.owner}`)
+            throw new Error(`Unknown token program: ${mintAccountInfo.owner}`)
     }
 
     // Derive ATA with the matching token program id.
     const ataPda = findAssociatedTokenPda(umi, {
-        mint: mintPk,
-        owner: ownerPk,
+        mint,
+        owner,
         tokenProgramId: publicKey(tokenProgramId),
     })
 
     const ataPk = ataPda[0]
     const account = await safeFetchToken(umi, ataPk)
+    const mintAccount = unpackMint(toWeb3JsPublicKey(mint), mintAccountInfo, TOKEN_2022_PROGRAM_ID)
 
-    return { ata: ataPk, ataExists: !!account, tokenType }
+    return { ata: ataPk, ataExists: !!account, tokenType, mintAccount }
 }
 
 /**
@@ -150,18 +152,18 @@ export async function checkAssociatedTokenAccountExists(args: {
  * Returns SPL_TOKEN_ACCOUNT_RENT_VALUE if the recipient ATA is missing and the mint is SPL.
  */
 export async function getMinimumValueForSendToSolana(args: {
-    eid: EndpointId
-    recipient: string
-    mint: string | PublicKey
-    umi?: Umi
+    recipient: PublicKey
+    mint: PublicKey
+    umi: Umi
+    connection: Connection
 }): Promise<number> {
-    const { eid, recipient, mint, umi } = args
+    const { recipient, mint, umi, connection } = args
     // Note that there may still exist a race condition and stale RPC data issue
     // Race Condition 1: First send to address X on Solana is still in flight, and the second send to address X on Solana is initiated. The second send would evaluate the ATA as not yet created.
     // Stale RPC data issue: The ATA might have been created at t=0, but the RPC will only pick it up at t=X but a send was initiated at t < x.
-    const { ata, ataExists, tokenType } = await checkAssociatedTokenAccountExists({
-        eid,
+    const { ata, ataExists, tokenType, mintAccount } = await checkAssociatedTokenAccountExists({
         owner: recipient,
+        connection,
         mint,
         umi,
     })
@@ -172,8 +174,9 @@ export async function getMinimumValueForSendToSolana(args: {
             console.info('ATA does not exist for the recipient and mint is SPL')
             return SPL_TOKEN_ACCOUNT_RENT_VALUE
         } else if (tokenType === SolanaTokenType.TOKEN2022) {
-            console.warn('Ensure that TOKEN_2022_ACCOUNT_RENT_VALUE matches your token account size')
-            return TOKEN_2022_ACCOUNT_RENT_VALUE
+            const tokenAccountSize = getAccountLenForMint(mintAccount)
+            const rentExemptLamports = await connection.getMinimumBalanceForRentExemption(tokenAccountSize) // it might be possible for you to avoid this RPC call. refer to https://x.com/0xNazreen/status/1945107841754243570
+            return rentExemptLamports
         }
     } else {
         // if the ATA exists, we return 0
