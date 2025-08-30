@@ -111,7 +111,7 @@ export async function checkAssociatedTokenAccountExists(args: {
     umi: Umi
     mint: PublicKey
     owner: PublicKey
-}): Promise<{ ata: string; ataExists: boolean; tokenType: SolanaTokenType | null; mintAccount: Web3Mint }> {
+}): Promise<{ ata: string; ataExists: boolean; tokenType: SolanaTokenType; mintAccount: Web3Mint }> {
     const { umi, mint, owner, connection } = args
 
     const mintAccountInfo = await connection.getAccountInfo(toWeb3JsPublicKey(mint))
