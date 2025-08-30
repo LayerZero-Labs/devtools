@@ -46,7 +46,7 @@
     "@layerzerolabs/devtools-solana": "~3.0.0",
     "@layerzerolabs/io-devtools": "~0.3.0",
     "@layerzerolabs/lz-definitions": "^3.0.75",
-    "@layerzerolabs/lz-solana-sdk-v2": "^3.0.59",
+    "@layerzerolabs/lz-solana-sdk-v2": "^3.0.118",
     "@layerzerolabs/lz-v2-utilities": "^3.0.75",
     "@layerzerolabs/oft-v2-solana-sdk": "^3.0.59",
     "@layerzerolabs/protocol-devtools": "~3.0.0",
