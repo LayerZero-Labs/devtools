@@ -141,7 +141,7 @@ export async function checkAssociatedTokenAccountExists(args: {
 
     const ataPk = ataPda[0]
     const account = await safeFetchToken(umi, ataPk)
-    const mintAccount = unpackMint(toWeb3JsPublicKey(mint), mintAccountInfo, TOKEN_2022_PROGRAM_ID)
+    const mintAccount = unpackMint(toWeb3JsPublicKey(mint), mintAccountInfo, mintAccountInfo.owner)
 
     return { ata: ataPk, ataExists: !!account, tokenType, mintAccount }
 }

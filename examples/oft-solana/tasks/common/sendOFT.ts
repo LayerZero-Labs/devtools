@@ -91,7 +91,6 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
                 umi,
                 connection,
             })
-            console.log('minimumLzReceiveValue', minimumLzReceiveValue)
             args.minimumLzReceiveValue = minimumLzReceiveValue
         }
 
