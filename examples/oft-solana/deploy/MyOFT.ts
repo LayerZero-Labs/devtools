@@ -26,7 +26,7 @@ const deploy: DeployFunction = async (hre) => {
     // For example:
     //
     // networks: {
-    //   'arbitrum-testnet': {
+    //   'arbitrum-sepolia': {
     //     ...
     //     eid: 40231 // Arbitrum Sepolia
     //   }
