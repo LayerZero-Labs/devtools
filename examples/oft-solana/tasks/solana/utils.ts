@@ -148,7 +148,7 @@ export async function checkAssociatedTokenAccountExists(args: {
 
 /**
  * Compute the minimum required per-transaction msg.value to attach when sending to Solana.
- * Returns 0 if the recipient ATA already exists or if the mint is Token2022.
+ * Returns 0 if the recipient ATA already exists
  * Returns SPL_TOKEN_ACCOUNT_RENT_VALUE if the recipient ATA is missing and the mint is SPL.
  */
 export async function getMinimumValueForSendToSolana(args: {
@@ -175,7 +175,7 @@ export async function getMinimumValueForSendToSolana(args: {
             return SPL_TOKEN_ACCOUNT_RENT_VALUE
         } else if (tokenType === SolanaTokenType.TOKEN2022) {
             const tokenAccountSize = getAccountLenForMint(mintAccount)
-            const rentExemptLamports = await connection.getMinimumBalanceForRentExemption(tokenAccountSize) // it might be possible for you to avoid this RPC call. refer to https://x.com/0xNazreen/status/1945107841754243570
+            const rentExemptLamports = await connection.getMinimumBalanceForRentExemption(tokenAccountSize)
             return rentExemptLamports
         }
     } else {
