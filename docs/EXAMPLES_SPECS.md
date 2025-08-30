@@ -139,4 +139,4 @@ Any sections that don't appear in the above list should be considered for remova
 ## Example Code Principles
 
 1. **Options-first**: Enforced Options implementation and instructions should be included by default (e.g. in `layerzero.config.ts`).
-2. **Two chains only**: Examples should use only 2 chains by default to reduce testnet setup friction; use “Add other chains” section to scale up if needed. For EVM, prefer using the following in the following order: Optimism Sepolia, Arbitrum Sepolia.
+2. **Two chains only**: Examples should use only 2 chains by default to reduce testnet setup friction; use “Add other chains” section to scale up if needed. For EVM, prefer using the following in the following order: Arbitrum Sepolia, Base Sepolia.
