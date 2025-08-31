@@ -134,6 +134,8 @@ export async function checkAssociatedTokenAccountExists(args: {
 
     let tokenType: SolanaTokenType
     let tokenProgramId: string
+
+    // check tokenType and tokenProgramId
     switch (mintAccountInfo.owner.toBase58()) {
         case TOKEN_PROGRAM_ID.toBase58():
             tokenType = SolanaTokenType.SPL
@@ -196,11 +198,20 @@ export async function getMinimumValueForSendToSolana(args: {
             return SPL_TOKEN_ACCOUNT_RENT_VALUE
         case SolanaTokenType.TOKEN2022: {
             logger.info('ATA does not exist for the recipient and mint is TOKEN2022')
-            const tokenAccountSize = getAccountLenForMint(mintAccount)
-            const rentExemptLamports = await connection.getMinimumBalanceForRentExemption(tokenAccountSize)
+            const rentExemptLamports = await getMinimumRentForToken2022TokenAccount({ connection, mintAccount })
             return rentExemptLamports
         }
         default:
             throw new Error(`Unknown token type: ${tokenType}`)
     }
+}
+
+async function getMinimumRentForToken2022TokenAccount(args: {
+    connection: Connection
+    mintAccount: Web3Mint
+}): Promise<number> {
+    const { connection, mintAccount } = args
+    const tokenAccountSize = getAccountLenForMint(mintAccount)
+    const rentExemptLamports = await connection.getMinimumBalanceForRentExemption(tokenAccountSize)
+    return rentExemptLamports
 }
