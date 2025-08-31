@@ -106,9 +106,9 @@ export enum SolanaTokenType {
 }
 
 /**
- * Get the mint account info for a given mint, for use by the functions `checkAssociatedTokenAccountExists` and ...
+ * Get the mint account info for a given mint, for use by the functions `checkAssociatedTokenAccountExists` and `getMinimumRentForToken2022TokenAccount`
  */
-export async function getMintAccountInfo(args: {
+async function getMintAccountInfo(args: {
     connection: Connection
     mint: PublicKey
 }): Promise<{ mintAccountInfo: AccountInfo<Buffer>; mintAccount: Web3Mint }> {
@@ -198,8 +198,7 @@ export async function getMinimumValueForSendToSolana(args: {
             return SPL_TOKEN_ACCOUNT_RENT_VALUE
         case SolanaTokenType.TOKEN2022: {
             logger.info('ATA does not exist for the recipient and mint is TOKEN2022')
-            const rentExemptLamports = await getMinimumRentForToken2022TokenAccount({ connection, mintAccount })
-            return rentExemptLamports
+            return await getMinimumRentForToken2022TokenAccount({ connection, mintAccount })
         }
         default:
             throw new Error(`Unknown token type: ${tokenType}`)
