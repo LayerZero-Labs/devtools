@@ -124,7 +124,6 @@ async function getMintAccountInfo(args: {
  * Returns the derived ATA and a boolean indicating existence.
  */
 export async function checkAssociatedTokenAccountExists(args: {
-    connection: Connection
     umi: Umi
     mint: PublicKey
     mintAccountInfo: AccountInfo<Buffer>
