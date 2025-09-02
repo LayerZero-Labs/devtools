@@ -1742,6 +1742,9 @@ importers:
       '@layerzerolabs/oapp-evm':
         specifier: ^0.3.0
         version: link:../../packages/oapp-evm
+      '@layerzerolabs/oapp-evm-upgradeable':
+        specifier: ^0.1.2
+        version: link:../../packages/oapp-evm-upgradeable
       '@layerzerolabs/oft-alt-evm':
         specifier: ^0.0.3
         version: link:../../packages/oft-alt-evm
