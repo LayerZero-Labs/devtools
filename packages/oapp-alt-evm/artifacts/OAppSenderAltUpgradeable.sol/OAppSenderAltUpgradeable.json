@@ -1,0 +1,628 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "endpoint",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "contract ILayerZeroEndpointV2"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "nativeToken",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "oAppVersion",
+      "inputs": [],
+      "outputs": [
+        { "name": "senderVersion", "type": "uint64", "internalType": "uint64" },
+        {
+          "name": "receiverVersion",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "peers",
+      "inputs": [
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [{ "name": "", "type": "bytes32", "internalType": "bytes32" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "renounceOwnership",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setDelegate",
+      "inputs": [
+        { "name": "_delegate", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setPeer",
+      "inputs": [
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_peer", "type": "bytes32", "internalType": "bytes32" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "transferOwnership",
+      "inputs": [
+        { "name": "newOwner", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "Initialized",
+      "inputs": [
+        {
+          "name": "version",
+          "type": "uint64",
+          "indexed": false,
+          "internalType": "uint64"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "OwnershipTransferred",
+      "inputs": [
+        {
+          "name": "previousOwner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "newOwner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "PeerSet",
+      "inputs": [
+        {
+          "name": "eid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "peer",
+          "type": "bytes32",
+          "indexed": false,
+          "internalType": "bytes32"
+        }
+      ],
+      "anonymous": false
+    },
+    { "type": "error", "name": "InvalidDelegate", "inputs": [] },
+    { "type": "error", "name": "InvalidEndpointCall", "inputs": [] },
+    { "type": "error", "name": "InvalidInitialization", "inputs": [] },
+    { "type": "error", "name": "LzTokenUnavailable", "inputs": [] },
+    { "type": "error", "name": "NativeTokenUnavailable", "inputs": [] },
+    {
+      "type": "error",
+      "name": "NoPeer",
+      "inputs": [{ "name": "eid", "type": "uint32", "internalType": "uint32" }]
+    },
+    {
+      "type": "error",
+      "name": "NotEnoughNative",
+      "inputs": [
+        { "name": "msgValue", "type": "uint256", "internalType": "uint256" }
+      ]
+    },
+    { "type": "error", "name": "NotInitializing", "inputs": [] },
+    {
+      "type": "error",
+      "name": "OnlyPeer",
+      "inputs": [
+        { "name": "eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "sender", "type": "bytes32", "internalType": "bytes32" }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "OwnableInvalidOwner",
+      "inputs": [
+        { "name": "owner", "type": "address", "internalType": "address" }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "OwnableUnauthorizedAccount",
+      "inputs": [
+        { "name": "account", "type": "address", "internalType": "address" }
+      ]
+    }
+  ],
+  "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "methodIdentifiers": {
+    "endpoint()": "5e280f11",
+    "nativeToken()": "e1758bd8",
+    "oAppVersion()": "17442b70",
+    "owner()": "8da5cb5b",
+    "peers(uint32)": "bb0b6a53",
+    "renounceOwnership()": "715018a6",
+    "setDelegate(address)": "ca5eb5e1",
+    "setPeer(uint32,bytes32)": "3400288b",
+    "transferOwnership(address)": "f2fde38b"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"InvalidDelegate\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidEndpointCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInitialization\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LzTokenUnavailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NativeTokenUnavailable\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"}],\"name\":\"NoPeer\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"msgValue\",\"type\":\"uint256\"}],\"name\":\"NotEnoughNative\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotInitializing\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"sender\",\"type\":\"bytes32\"}],\"name\":\"OnlyPeer\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"OwnableInvalidOwner\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"OwnableUnauthorizedAccount\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"version\",\"type\":\"uint64\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"peer\",\"type\":\"bytes32\"}],\"name\":\"PeerSet\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"endpoint\",\"outputs\":[{\"internalType\":\"contract ILayerZeroEndpointV2\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nativeToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"oAppVersion\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"senderVersion\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"receiverVersion\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"}],\"name\":\"peers\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_delegate\",\"type\":\"address\"}],\"name\":\"setDelegate\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"_peer\",\"type\":\"bytes32\"}],\"name\":\"setPeer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Abstract upgradeable contract implementing the OAppSenderAlt functionality for sending messages to a LayerZero endpoint with alternative payment methods.\",\"errors\":{\"InvalidInitialization()\":[{\"details\":\"The contract is already initialized.\"}],\"NotInitializing()\":[{\"details\":\"The contract is not initializing.\"}],\"OwnableInvalidOwner(address)\":[{\"details\":\"The owner is not a valid owner account. (eg. `address(0)`)\"}],\"OwnableUnauthorizedAccount(address)\":[{\"details\":\"The caller account is not authorized to perform an operation.\"}]},\"events\":{\"Initialized(uint64)\":{\"details\":\"Triggered when the contract has been initialized or reinitialized.\"}},\"kind\":\"dev\",\"methods\":{\"oAppVersion()\":{\"details\":\"Providing 0 as the default for OAppReceiver version. Indicates that the OAppReceiver is not implemented. ie. this is a SEND only OApp.If the OApp uses both OAppSender and OAppReceiver, then this needs to be override returning the correct versions\",\"returns\":{\"receiverVersion\":\"The version of the OAppReceiver.sol contract.\",\"senderVersion\":\"The version of the OAppSender.sol contract.\"}},\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"peers(uint32)\":{\"params\":{\"_eid\":\"The endpoint ID.\"},\"returns\":{\"_0\":\"peer The address of the peer associated with the specified endpoint.\"}},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner.\"},\"setDelegate(address)\":{\"details\":\"Only the owner/admin of the OApp can call this function.Provides the ability for a delegate to set configs, on behalf of the OApp, directly on the Endpoint contract.\",\"params\":{\"_delegate\":\"The address of the delegate to be set.\"}},\"setPeer(uint32,bytes32)\":{\"details\":\"Only the owner/admin of the OApp can call this function.Indicates that the peer is trusted to send LayerZero messages to this OApp.Set this to bytes32(0) to remove the peer address.Peer is a bytes32 to accommodate non-evm chains.\",\"params\":{\"_eid\":\"The endpoint ID.\",\"_peer\":\"The address of the peer to be associated with the corresponding endpoint.\"}},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"}},\"stateVariables\":{\"nativeToken\":{\"details\":\"storage slot not required because immutable variables are stored in the bytecode on deployment as constants\"}},\"title\":\"OAppSenderAltUpgradeable\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"endpoint()\":{\"notice\":\"Retrieves the LayerZero endpoint associated with the OApp.\"},\"oAppVersion()\":{\"notice\":\"Retrieves the OApp version information.\"},\"peers(uint32)\":{\"notice\":\"Returns the peer address (OApp instance) associated with a specific endpoint.\"},\"setDelegate(address)\":{\"notice\":\"Sets the delegate address for the OApp.\"},\"setPeer(uint32,bytes32)\":{\"notice\":\"Sets the peer address (OApp instance) for a corresponding endpoint.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/oapp-upgradeable/OAppSenderAltUpgradeable.sol\":\"OAppSenderAltUpgradeable\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/oapp-upgradeable/OAppSenderAltUpgradeable.sol\":{\"keccak256\":\"0x439688c590a61a1b8ec3bb6f4fdc43d7252407984b68a855564d605a54727863\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://82555d3339395cf7464a64a04aa3840385e5495d24ec6806bbca5a9139abcd05\",\"dweb:/ipfs/QmZTbwwqAC9T6ZFWCc8sZZvyeuBuBKR6MbJqoKLHwbPgwt\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol\":{\"keccak256\":\"0xf7f941bee89ea6369950fe54e8ac476ae6478b958b20fc0e8a83e8ff1364eac3\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bacc29fd3866af71e59cb0bdc1cf82c882a4a7f4e2652fd413c9f12649762083\",\"dweb:/ipfs/QmZh2toLnrQDWaNYhS5K4NoW7Vxd2GdZx9KA77vKEDLAqs\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol\":{\"keccak256\":\"0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b\",\"dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol\":{\"keccak256\":\"0x0878f64dffebf58c4165569416372f40860fab546b88cd926eba0d5cb6d8d972\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7e1b245d58221d16d8b5e0f01ef3e289a24a7df1ace3b94239e4d5b954ad5927\",\"dweb:/ipfs/Qmappsgp7PCY9rSSNE9Cdn4BTRX591WfCSEgq2HxhA3z6S\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol\":{\"keccak256\":\"0x85bc7090134529ec474866dc4bb1c48692d518c756eb0a961c82574829c51901\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b18b23a1643fc6636c4ad9d9023e2e6ca2d3c2a4a046482d4655bff09950598d\",\"dweb:/ipfs/Qma6G5SqiovwrMPfgqTrRngK1HWW373Wkf9c6YP2NhXpPk\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol\":{\"keccak256\":\"0xff0c546c2813dae3e440882f46b377375f7461b0714efd80bd3f0c6e5cb8da4e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5173fc9143bea314b159ca5a9adb5626659ef763bc598e27de5fa46efe3291a6\",\"dweb:/ipfs/QmSLFeMFPmVeGxT4sxRPW28ictjAS22M8rLeYRu9TXkA6D\"]},\"node_modules/@layerzerolabs/oapp-evm-upgradeable/contracts/oapp/OAppCoreUpgradeable.sol\":{\"keccak256\":\"0xbe135fd35bf12c97aeb701caeb6c5d0c1c28c1ac2ab1d4219d15f8384951c140\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a5cec12ab6677830bf2daefa94c402d848c223a2a081e4892985c1f4b06d30e4\",\"dweb:/ipfs/QmSV6NwuXCfWMZVFDRmeBgeWGBApwxqQxRbForCC2NTtgd\"]},\"node_modules/@layerzerolabs/oapp-evm-upgradeable/contracts/oapp/OAppSenderUpgradeable.sol\":{\"keccak256\":\"0x4e13557c5dc7c983f69d32911572efdbddea071a03bf2fc50e1cad92ddf0ef49\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0c455f606d0d1e3390a8d2189c50110ac4b5a85ce1be47b4a2e36de92122728a\",\"dweb:/ipfs/QmfH7dQKjCZ4THCRZaPEzaTtv5r69k5F1LbmWQGrYHV76y\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol\":{\"keccak256\":\"0x40e49f2de74506e1da5dcaed53a39853f691647f4ceb0fccc8f49a68d3f47c58\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4a1deb2a6a3eb1fb83936c9578469142bff470295f403d7d07d955a76be3adbd\",\"dweb:/ipfs/QmS9bjSfBaE4YhQ1PCQ1TknbEPbNfRXzBK9E7SaPGyiZEv\"]},\"node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol\":{\"keccak256\":\"0xc163fcf9bb10138631a9ba5564df1fa25db9adff73bd9ee868a8ae1858fe093a\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9706d43a0124053d9880f6e31a59f31bc0a6a3dc1acd66ce0a16e1111658c5f6\",\"dweb:/ipfs/QmUFmfowzkRwGtDu36cXV9SPTBHJ3n7dG9xQiK5B28jTf2\"]},\"node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol\":{\"keccak256\":\"0x631188737069917d2f909d29ce62c4d48611d326686ba6683e26b72a23bfac0b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7a61054ae84cd6c4d04c0c4450ba1d6de41e27e0a2c4f1bcdf58f796b401c609\",\"dweb:/ipfs/QmUvtdp7X1mRVyC3CsHrtPbgoqWaXHp3S1ZR24tpAQYJWM\"]},\"node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol\":{\"keccak256\":\"0xdbef5f0c787055227243a7318ef74c8a5a1108ca3a07f2b3a00ef67769e1e397\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://08e39f23d5b4692f9a40803e53a8156b72b4c1f9902a88cd65ba964db103dab9\",\"dweb:/ipfs/QmPKn6EYDgpga7KtpkA8wV2yJCYGMtc9K4LkJfhKX2RVSV\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC1363.sol\":{\"keccak256\":\"0x9b6b3e7803bc5f2f8cd7ad57db8ac1def61a9930a5a3107df4882e028a9605d7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://da62d6be1f5c6edf577f0cb45666a8aa9c2086a4bac87d95d65f02e2f4c36a4b\",\"dweb:/ipfs/QmNkpvBpoCMvX8JwAFNSc5XxJ2q5BXJpL5L1txb4QkqVFF\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC165.sol\":{\"keccak256\":\"0xde7e9fd9aee8d4f40772f96bb3b58836cbc6dfc0227014a061947f8821ea9724\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://11fea9f8bc98949ac6709f0c1699db7430d2948137aa94d5a9e95a91f61a710a\",\"dweb:/ipfs/QmQdfRXxQjwP6yn3DVo1GHPpriKNcFghSPi94Z1oKEFUNS\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC20.sol\":{\"keccak256\":\"0xce41876e78d1badc0512229b4d14e4daf83bc1003d7f83978d18e0e56f965b9c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a2608291cb038b388d80b79a06b6118a42f7894ff67b7da10ec0dbbf5b2973ba\",\"dweb:/ipfs/QmWohqcBLbcxmA4eGPhZDXe5RYMMEEpFq22nfkaUMvTfw1\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0xe06a3f08a987af6ad2e1c1e774405d4fe08f1694b67517438b467cecf0da0ef7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://df6f0c459663c9858b6cba2cda1d14a7d05a985bed6d2de72bd8e78c25ee79db\",\"dweb:/ipfs/QmeTTxZ7qVk9rjEv2R4CpCwdf8UMCcRqDNMvzNxHc3Fnn9\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\":{\"keccak256\":\"0xca2ae13e0610f6a99238dd00b97bd786bc92732dae6d6b9d61f573ec51018310\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://75f8c71ce0c91c40dd5f249ace0b7d8270f8f1767231bcf71490f7157d6ba862\",\"dweb:/ipfs/QmYXgxeDyFHvz3JsXxLEYN6GNUR44ThHeFj5XkpkgMoG4w\"]},\"node_modules/@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0x9d8da059267bac779a2dbbb9a26c2acf00ca83085e105d62d5d4ef96054a47f5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c78e2aa4313323cecd1ef12a8d6265b96beee1a199923abf55d9a2a9e291ad23\",\"dweb:/ipfs/QmUTs2KStXucZezzFo3EYeqYu47utu56qrF7jj1Gue65vb\"]},\"node_modules/@openzeppelin/contracts/utils/Errors.sol\":{\"keccak256\":\"0x6afa713bfd42cf0f7656efa91201007ac465e42049d7de1d50753a373648c123\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ba1d02f4847670a1b83dec9f7d37f0b0418d6043447b69f3a29a5f9efc547fcf\",\"dweb:/ipfs/QmQ7iH2keLNUKgq2xSWcRmuBE5eZ3F5whYAkAGzCNNoEWB\"]},\"node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol\":{\"keccak256\":\"0x79796192ec90263f21b464d5bc90b777a525971d3de8232be80d9c4f9fb353b8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f6fda447a62815e8064f47eff0dd1cf58d9207ad69b5d32280f8d7ed1d1e4621\",\"dweb:/ipfs/QmfDRc7pxfaXB2Dh9np5Uf29Na3pQ7tafRS684wd3GLjVL\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.22+commit.4fc1097e" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        { "inputs": [], "type": "error", "name": "InvalidDelegate" },
+        { "inputs": [], "type": "error", "name": "InvalidEndpointCall" },
+        { "inputs": [], "type": "error", "name": "InvalidInitialization" },
+        { "inputs": [], "type": "error", "name": "LzTokenUnavailable" },
+        { "inputs": [], "type": "error", "name": "NativeTokenUnavailable" },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "eid", "type": "uint32" }
+          ],
+          "type": "error",
+          "name": "NoPeer"
+        },
+        {
+          "inputs": [
+            { "internalType": "uint256", "name": "msgValue", "type": "uint256" }
+          ],
+          "type": "error",
+          "name": "NotEnoughNative"
+        },
+        { "inputs": [], "type": "error", "name": "NotInitializing" },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "eid", "type": "uint32" },
+            { "internalType": "bytes32", "name": "sender", "type": "bytes32" }
+          ],
+          "type": "error",
+          "name": "OnlyPeer"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "owner", "type": "address" }
+          ],
+          "type": "error",
+          "name": "OwnableInvalidOwner"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "account", "type": "address" }
+          ],
+          "type": "error",
+          "name": "OwnableUnauthorizedAccount"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint64",
+              "name": "version",
+              "type": "uint64",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "Initialized",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address",
+              "indexed": true
+            }
+          ],
+          "type": "event",
+          "name": "OwnershipTransferred",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint32",
+              "name": "eid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes32",
+              "name": "peer",
+              "type": "bytes32",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "PeerSet",
+          "anonymous": false
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "endpoint",
+          "outputs": [
+            {
+              "internalType": "contract ILayerZeroEndpointV2",
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "nativeToken",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "oAppVersion",
+          "outputs": [
+            {
+              "internalType": "uint64",
+              "name": "senderVersion",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "receiverVersion",
+              "type": "uint64"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "owner",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "peers",
+          "outputs": [
+            { "internalType": "bytes32", "name": "", "type": "bytes32" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "renounceOwnership"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_delegate",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setDelegate"
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" },
+            { "internalType": "bytes32", "name": "_peer", "type": "bytes32" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setPeer"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "newOwner", "type": "address" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "transferOwnership"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "oAppVersion()": {
+            "details": "Providing 0 as the default for OAppReceiver version. Indicates that the OAppReceiver is not implemented. ie. this is a SEND only OApp.If the OApp uses both OAppSender and OAppReceiver, then this needs to be override returning the correct versions",
+            "returns": {
+              "receiverVersion": "The version of the OAppReceiver.sol contract.",
+              "senderVersion": "The version of the OAppSender.sol contract."
+            }
+          },
+          "owner()": { "details": "Returns the address of the current owner." },
+          "peers(uint32)": {
+            "params": { "_eid": "The endpoint ID." },
+            "returns": {
+              "_0": "peer The address of the peer associated with the specified endpoint."
+            }
+          },
+          "renounceOwnership()": {
+            "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
+          },
+          "setDelegate(address)": {
+            "details": "Only the owner/admin of the OApp can call this function.Provides the ability for a delegate to set configs, on behalf of the OApp, directly on the Endpoint contract.",
+            "params": { "_delegate": "The address of the delegate to be set." }
+          },
+          "setPeer(uint32,bytes32)": {
+            "details": "Only the owner/admin of the OApp can call this function.Indicates that the peer is trusted to send LayerZero messages to this OApp.Set this to bytes32(0) to remove the peer address.Peer is a bytes32 to accommodate non-evm chains.",
+            "params": {
+              "_eid": "The endpoint ID.",
+              "_peer": "The address of the peer to be associated with the corresponding endpoint."
+            }
+          },
+          "transferOwnership(address)": {
+            "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+          }
+        },
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {
+          "endpoint()": {
+            "notice": "Retrieves the LayerZero endpoint associated with the OApp."
+          },
+          "oAppVersion()": {
+            "notice": "Retrieves the OApp version information."
+          },
+          "peers(uint32)": {
+            "notice": "Returns the peer address (OApp instance) associated with a specific endpoint."
+          },
+          "setDelegate(address)": {
+            "notice": "Sets the delegate address for the OApp."
+          },
+          "setPeer(uint32,bytes32)": {
+            "notice": "Sets the peer address (OApp instance) for a corresponding endpoint."
+          }
+        },
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/=node_modules/@layerzerolabs/",
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/",
+        "solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 20000 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "contracts/oapp-upgradeable/OAppSenderAltUpgradeable.sol": "OAppSenderAltUpgradeable"
+      },
+      "evmVersion": "shanghai",
+      "libraries": {}
+    },
+    "sources": {
+      "contracts/oapp-upgradeable/OAppSenderAltUpgradeable.sol": {
+        "keccak256": "0x439688c590a61a1b8ec3bb6f4fdc43d7252407984b68a855564d605a54727863",
+        "urls": [
+          "bzz-raw://82555d3339395cf7464a64a04aa3840385e5495d24ec6806bbca5a9139abcd05",
+          "dweb:/ipfs/QmZTbwwqAC9T6ZFWCc8sZZvyeuBuBKR6MbJqoKLHwbPgwt"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol": {
+        "keccak256": "0xf7f941bee89ea6369950fe54e8ac476ae6478b958b20fc0e8a83e8ff1364eac3",
+        "urls": [
+          "bzz-raw://bacc29fd3866af71e59cb0bdc1cf82c882a4a7f4e2652fd413c9f12649762083",
+          "dweb:/ipfs/QmZh2toLnrQDWaNYhS5K4NoW7Vxd2GdZx9KA77vKEDLAqs"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol": {
+        "keccak256": "0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc",
+        "urls": [
+          "bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b",
+          "dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol": {
+        "keccak256": "0x0878f64dffebf58c4165569416372f40860fab546b88cd926eba0d5cb6d8d972",
+        "urls": [
+          "bzz-raw://7e1b245d58221d16d8b5e0f01ef3e289a24a7df1ace3b94239e4d5b954ad5927",
+          "dweb:/ipfs/Qmappsgp7PCY9rSSNE9Cdn4BTRX591WfCSEgq2HxhA3z6S"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol": {
+        "keccak256": "0x85bc7090134529ec474866dc4bb1c48692d518c756eb0a961c82574829c51901",
+        "urls": [
+          "bzz-raw://b18b23a1643fc6636c4ad9d9023e2e6ca2d3c2a4a046482d4655bff09950598d",
+          "dweb:/ipfs/Qma6G5SqiovwrMPfgqTrRngK1HWW373Wkf9c6YP2NhXpPk"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol": {
+        "keccak256": "0xff0c546c2813dae3e440882f46b377375f7461b0714efd80bd3f0c6e5cb8da4e",
+        "urls": [
+          "bzz-raw://5173fc9143bea314b159ca5a9adb5626659ef763bc598e27de5fa46efe3291a6",
+          "dweb:/ipfs/QmSLFeMFPmVeGxT4sxRPW28ictjAS22M8rLeYRu9TXkA6D"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/oapp-evm-upgradeable/contracts/oapp/OAppCoreUpgradeable.sol": {
+        "keccak256": "0xbe135fd35bf12c97aeb701caeb6c5d0c1c28c1ac2ab1d4219d15f8384951c140",
+        "urls": [
+          "bzz-raw://a5cec12ab6677830bf2daefa94c402d848c223a2a081e4892985c1f4b06d30e4",
+          "dweb:/ipfs/QmSV6NwuXCfWMZVFDRmeBgeWGBApwxqQxRbForCC2NTtgd"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/oapp-evm-upgradeable/contracts/oapp/OAppSenderUpgradeable.sol": {
+        "keccak256": "0x4e13557c5dc7c983f69d32911572efdbddea071a03bf2fc50e1cad92ddf0ef49",
+        "urls": [
+          "bzz-raw://0c455f606d0d1e3390a8d2189c50110ac4b5a85ce1be47b4a2e36de92122728a",
+          "dweb:/ipfs/QmfH7dQKjCZ4THCRZaPEzaTtv5r69k5F1LbmWQGrYHV76y"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol": {
+        "keccak256": "0x40e49f2de74506e1da5dcaed53a39853f691647f4ceb0fccc8f49a68d3f47c58",
+        "urls": [
+          "bzz-raw://4a1deb2a6a3eb1fb83936c9578469142bff470295f403d7d07d955a76be3adbd",
+          "dweb:/ipfs/QmS9bjSfBaE4YhQ1PCQ1TknbEPbNfRXzBK9E7SaPGyiZEv"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol": {
+        "keccak256": "0xc163fcf9bb10138631a9ba5564df1fa25db9adff73bd9ee868a8ae1858fe093a",
+        "urls": [
+          "bzz-raw://9706d43a0124053d9880f6e31a59f31bc0a6a3dc1acd66ce0a16e1111658c5f6",
+          "dweb:/ipfs/QmUFmfowzkRwGtDu36cXV9SPTBHJ3n7dG9xQiK5B28jTf2"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol": {
+        "keccak256": "0x631188737069917d2f909d29ce62c4d48611d326686ba6683e26b72a23bfac0b",
+        "urls": [
+          "bzz-raw://7a61054ae84cd6c4d04c0c4450ba1d6de41e27e0a2c4f1bcdf58f796b401c609",
+          "dweb:/ipfs/QmUvtdp7X1mRVyC3CsHrtPbgoqWaXHp3S1ZR24tpAQYJWM"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol": {
+        "keccak256": "0xdbef5f0c787055227243a7318ef74c8a5a1108ca3a07f2b3a00ef67769e1e397",
+        "urls": [
+          "bzz-raw://08e39f23d5b4692f9a40803e53a8156b72b4c1f9902a88cd65ba964db103dab9",
+          "dweb:/ipfs/QmPKn6EYDgpga7KtpkA8wV2yJCYGMtc9K4LkJfhKX2RVSV"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/interfaces/IERC1363.sol": {
+        "keccak256": "0x9b6b3e7803bc5f2f8cd7ad57db8ac1def61a9930a5a3107df4882e028a9605d7",
+        "urls": [
+          "bzz-raw://da62d6be1f5c6edf577f0cb45666a8aa9c2086a4bac87d95d65f02e2f4c36a4b",
+          "dweb:/ipfs/QmNkpvBpoCMvX8JwAFNSc5XxJ2q5BXJpL5L1txb4QkqVFF"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/interfaces/IERC165.sol": {
+        "keccak256": "0xde7e9fd9aee8d4f40772f96bb3b58836cbc6dfc0227014a061947f8821ea9724",
+        "urls": [
+          "bzz-raw://11fea9f8bc98949ac6709f0c1699db7430d2948137aa94d5a9e95a91f61a710a",
+          "dweb:/ipfs/QmQdfRXxQjwP6yn3DVo1GHPpriKNcFghSPi94Z1oKEFUNS"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/interfaces/IERC20.sol": {
+        "keccak256": "0xce41876e78d1badc0512229b4d14e4daf83bc1003d7f83978d18e0e56f965b9c",
+        "urls": [
+          "bzz-raw://a2608291cb038b388d80b79a06b6118a42f7894ff67b7da10ec0dbbf5b2973ba",
+          "dweb:/ipfs/QmWohqcBLbcxmA4eGPhZDXe5RYMMEEpFq22nfkaUMvTfw1"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+        "keccak256": "0xe06a3f08a987af6ad2e1c1e774405d4fe08f1694b67517438b467cecf0da0ef7",
+        "urls": [
+          "bzz-raw://df6f0c459663c9858b6cba2cda1d14a7d05a985bed6d2de72bd8e78c25ee79db",
+          "dweb:/ipfs/QmeTTxZ7qVk9rjEv2R4CpCwdf8UMCcRqDNMvzNxHc3Fnn9"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol": {
+        "keccak256": "0xca2ae13e0610f6a99238dd00b97bd786bc92732dae6d6b9d61f573ec51018310",
+        "urls": [
+          "bzz-raw://75f8c71ce0c91c40dd5f249ace0b7d8270f8f1767231bcf71490f7157d6ba862",
+          "dweb:/ipfs/QmYXgxeDyFHvz3JsXxLEYN6GNUR44ThHeFj5XkpkgMoG4w"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/Address.sol": {
+        "keccak256": "0x9d8da059267bac779a2dbbb9a26c2acf00ca83085e105d62d5d4ef96054a47f5",
+        "urls": [
+          "bzz-raw://c78e2aa4313323cecd1ef12a8d6265b96beee1a199923abf55d9a2a9e291ad23",
+          "dweb:/ipfs/QmUTs2KStXucZezzFo3EYeqYu47utu56qrF7jj1Gue65vb"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/Errors.sol": {
+        "keccak256": "0x6afa713bfd42cf0f7656efa91201007ac465e42049d7de1d50753a373648c123",
+        "urls": [
+          "bzz-raw://ba1d02f4847670a1b83dec9f7d37f0b0418d6043447b69f3a29a5f9efc547fcf",
+          "dweb:/ipfs/QmQ7iH2keLNUKgq2xSWcRmuBE5eZ3F5whYAkAGzCNNoEWB"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+        "keccak256": "0x79796192ec90263f21b464d5bc90b777a525971d3de8232be80d9c4f9fb353b8",
+        "urls": [
+          "bzz-raw://f6fda447a62815e8064f47eff0dd1cf58d9207ad69b5d32280f8d7ed1d1e4621",
+          "dweb:/ipfs/QmfDRc7pxfaXB2Dh9np5Uf29Na3pQ7tafRS684wd3GLjVL"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 1
+}
