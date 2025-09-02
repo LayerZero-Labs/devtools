@@ -19,6 +19,9 @@ import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.s
  * @author LayerZero Labs (@shankars99)
  * @notice This contract is a composer that allows transfers of ERC20 and HYPE tokens to a target address on hypercore.
  * @dev This address needs to be "activated" on hypercore post deployment
+ * @dev Disclaimer: If your token's evm total supply exceeds your asset bridge's balance when scaled to EVM, it is possible that the 
+                    composer will not be able to send the tokens to the receiver address on hypercore due to bridge consumption. 
+                    Tokens would isntead be returned to the sender address on HyperEVM.
  */
 contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidComposer, IOAppComposer {
     using SafeERC20 for IERC20;
