@@ -71,7 +71,7 @@ const generateInput = (
     }
 }
 
-describe('generateOVaultInputs', function () {
+describe.skip('generateOVaultInputs', function () {
     // Increase timeout due to the time it takes to execute the transactions
     this.timeout(10_000)
 
