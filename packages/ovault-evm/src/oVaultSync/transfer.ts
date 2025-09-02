@@ -105,7 +105,7 @@ export class OVaultSyncMessageBuilder {
      * @returns The message fee for the hub chain.
      */
     static async calculateHubChainFee(input: SendParamsInput) {
-        const { operation, amount, composerAddress, hubChain, dstEid, hubEid, walletAddress } = input
+        const { operation, amount, composerAddress, hubChain, dstEid, hubEid, vaultAddress } = input
 
         // If the dst chain is the same as the hub chain, then we don't need to calculate the fee
         // as we are already on the hub chain, so "send" on the OFT will not be called.
@@ -121,20 +121,30 @@ export class OVaultSyncMessageBuilder {
             transport: http(),
         })
 
-        const hubOftAddress = await client.readContract({
-            address: composerAddress,
-            abi: OVaultComposerSyncAbi,
-            functionName: operation === OVaultSyncOperations.DEPOSIT ? 'SHARE_OFT' : 'ASSET_OFT',
-            args: [],
-        })
-
         const hubSendParams = await this.buildHubToDstChainSendParams(input)
+        const [shareOftAddress, assetOftAddress] = await Promise.all([
+            client.readContract({
+                address: composerAddress,
+                abi: OVaultComposerSyncAbi,
+                functionName: 'SHARE_OFT',
+            }),
+            client.readContract({
+                address: composerAddress,
+                abi: OVaultComposerSyncAbi,
+                functionName: 'ASSET_OFT',
+            }),
+        ])
 
         const messageFee = await client.readContract({
             address: composerAddress,
             abi: OVaultComposerSyncAbi,
             functionName: 'quoteSend',
-            args: [walletAddress, hubOftAddress, amount, hubSendParams],
+            args: [
+                operation === OVaultSyncOperations.DEPOSIT ? vaultAddress : shareOftAddress,
+                operation === OVaultSyncOperations.DEPOSIT ? shareOftAddress : assetOftAddress,
+                amount,
+                hubSendParams,
+            ],
         })
 
         return messageFee

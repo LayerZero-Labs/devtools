@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha'
 import { Chain, createWalletClient, http, publicActions } from 'viem'
-import { arbitrumSepolia, baseSepolia } from 'viem/chains'
+import { arbitrum, mainnet } from 'viem/chains'
 import { privateKeyToAccount } from 'viem/accounts'
 
 import { ERC20Abi } from '../../src/contracts/ERC20'
@@ -15,55 +15,63 @@ interface ChainConfig {
     eid: number
     chain: Chain
     asset: `0x${string}`
+    assetErc20?: `0x${string}`
     share: `0x${string}`
     shareErc20?: `0x${string}`
     composer?: `0x${string}`
     vault?: `0x${string}`
 }
 
+const hubChain = 'ethereum'
+
+// This is for the Resolve mainnet deployment
 const chainInputs: Record<string, ChainConfig> = {
-    'base-sepolia': {
-        eid: 40245,
-        chain: baseSepolia,
-        asset: '0x14253aC703071965Df2f211E706ec89dab034Ea4',
-        share: '0x9843622e2D6941896C1c41019857ca332Cac2e79',
+    ethereum: {
+        eid: 30101,
+        chain: mainnet,
+        asset: '0xD2eE2776F34Ef4E7325745b06E6d464b08D4be0E',
+        assetErc20: '0x66a1E37c9b0eAddca17d3662D6c05F4DECf3e110',
+        share: '0xab17c1fE647c37ceb9b96d1c27DD189bf8451978',
+        shareErc20: '0x1202F5C7b4B9E47a1A484E8B270be34dbbC75055',
+        composer: '0x4ad165d7902b292d46b442ce2a4a25d5a891dd9d',
+        vault: '0x1202F5C7b4B9E47a1A484E8B270be34dbbC75055',
     },
-    'arbitrum-sepolia': {
-        eid: 40231,
-        chain: arbitrumSepolia,
-        asset: '0x79C3E533cec4Be2d91a9301967948969b1dBE14A',
-        share: '0x4DecE3D89e74589efC8e23432459C95C1Ad0D864',
-        shareErc20: '0xCf9434De1d9E57e46D6118386dB3A38Cf61088de',
-        composer: '0x40dcBD0c323D166EC09815ae19aAF4BeC62FEC8E',
-        vault: '0xCf9434De1d9E57e46D6118386dB3A38Cf61088de',
+    arbitrum: {
+        eid: 30110,
+        chain: arbitrum,
+        asset: '0x2492d0006411af6c8bbb1c8afc1b0197350a79e9',
+        assetErc20: '0x2492d0006411af6c8bbb1c8afc1b0197350a79e9',
+        share: '0x66cfbd79257dc5217903a36293120282548e2254',
+        shareErc20: '0x66cfbd79257dc5217903a36293120282548e2254',
     },
 } as const
 
 const walletAddress = privateKeyToAccount(process.env.PRIVATE_KEY as `0x${string}`).address as `0x${string}`
 
-const generateInput = async (
+const generateInput = (
     srcChain: (typeof chainInputs)['base-sepolia'],
     dstChain: (typeof chainInputs)['base-sepolia'],
     operation: OVaultSyncOperations
 ) => {
     return {
         srcEid: srcChain.eid,
-        hubEid: chainInputs['arbitrum-sepolia']!.eid,
+        hubEid: chainInputs[hubChain]!.eid,
         dstEid: dstChain.eid,
         walletAddress: walletAddress as `0x${string}`,
-        vaultAddress: chainInputs['arbitrum-sepolia']!.vault as `0x${string}`,
-        composerAddress: chainInputs['arbitrum-sepolia']!.composer as `0x${string}`,
-        hubChain: arbitrumSepolia,
+        vaultAddress: chainInputs[hubChain]!.vault as `0x${string}`,
+        composerAddress: chainInputs[hubChain]!.composer as `0x${string}`,
+        hubChain: chainInputs[hubChain]!.chain,
         sourceChain: srcChain.chain,
         operation: operation,
-        amount: BigInt('100000000000000000'),
+        hubLzComposeGasLimit: BigInt(800_000),
+        amount: BigInt('10000000000000000'),
         slippage: 0.01, // 1% slippage
         oftAddress: operation === OVaultSyncOperations.DEPOSIT ? srcChain.asset : srcChain.share,
-        tokenAddress: operation === OVaultSyncOperations.DEPOSIT ? srcChain.asset : srcChain.shareErc20,
+        tokenAddress: operation === OVaultSyncOperations.DEPOSIT ? srcChain.assetErc20 : srcChain.shareErc20,
     }
 }
 
-describe.skip('generateOVaultInputs', function () {
+describe('generateOVaultInputs', function () {
     // Increase timeout due to the time it takes to execute the transactions
     this.timeout(10_000)
 
@@ -109,30 +117,30 @@ describe.skip('generateOVaultInputs', function () {
     /**
      * Deposit
      */
-    it('Deposit B->B->B', async () => {
-        const srcChain = chainInputs['arbitrum-sepolia']!
-        const dstChain = chainInputs['arbitrum-sepolia']!
+    it.skip('Deposit B->B->B', async () => {
+        const srcChain = chainInputs[hubChain]!
+        const dstChain = chainInputs[hubChain]!
 
         await executeTransaction(srcChain, dstChain, OVaultSyncOperations.DEPOSIT)
     })
 
-    it('Deposit A->B->A', async () => {
-        const srcChain = chainInputs['base-sepolia']!
-        const dstChain = chainInputs['base-sepolia']!
+    it.skip('Deposit A->B->A', async () => {
+        const srcChain = chainInputs['arbitrum']!
+        const dstChain = chainInputs['arbitrum']!
 
         await executeTransaction(srcChain, dstChain, OVaultSyncOperations.DEPOSIT)
     })
 
-    it('Deposit B->B->A', async () => {
-        const srcChain = chainInputs['arbitrum-sepolia']!
-        const dstChain = chainInputs['base-sepolia']!
+    it.skip('Deposit B->B->A', async () => {
+        const srcChain = chainInputs[hubChain]!
+        const dstChain = chainInputs['arbitrum']!
 
         await executeTransaction(srcChain, dstChain, OVaultSyncOperations.DEPOSIT)
     })
 
-    it('Deposit A->B->B', async () => {
-        const srcChain = chainInputs['base-sepolia']!
-        const dstChain = chainInputs['arbitrum-sepolia']!
+    it.skip('Deposit A->B->B', async () => {
+        const srcChain = chainInputs['arbitrum']!
+        const dstChain = chainInputs[hubChain]!
 
         await executeTransaction(srcChain, dstChain, OVaultSyncOperations.DEPOSIT)
     })
@@ -141,30 +149,30 @@ describe.skip('generateOVaultInputs', function () {
      * Redeem
      */
 
-    it('Redeem B->B->B', async () => {
-        const srcChain = chainInputs['arbitrum-sepolia']!
-        const dstChain = chainInputs['arbitrum-sepolia']!
+    it.skip('Redeem B->B->B', async () => {
+        const srcChain = chainInputs[hubChain]!
+        const dstChain = chainInputs[hubChain]!
 
         await executeTransaction(srcChain, dstChain, OVaultSyncOperations.REDEEM)
     })
 
-    it('Redeem A->B->A', async () => {
-        const srcChain = chainInputs['base-sepolia']!
-        const dstChain = chainInputs['base-sepolia']!
+    it.only('Redeem A->B->A', async () => {
+        const srcChain = chainInputs['arbitrum']!
+        const dstChain = chainInputs['arbitrum']!
 
         await executeTransaction(srcChain, dstChain, OVaultSyncOperations.REDEEM)
     })
 
     it('Redeem B->B->A', async () => {
-        const srcChain = chainInputs['arbitrum-sepolia']!
-        const dstChain = chainInputs['base-sepolia']!
+        const srcChain = chainInputs[hubChain]!
+        const dstChain = chainInputs['arbitrum']!
 
         await executeTransaction(srcChain, dstChain, OVaultSyncOperations.REDEEM)
     })
 
-    it('Redeem A->B->B', async () => {
-        const srcChain = chainInputs['base-sepolia']!
-        const dstChain = chainInputs['arbitrum-sepolia']!
+    it.skip('Redeem A->B->B', async () => {
+        const srcChain = chainInputs['arbitrum']!
+        const dstChain = chainInputs[hubChain]!
 
         await executeTransaction(srcChain, dstChain, OVaultSyncOperations.REDEEM)
     })
