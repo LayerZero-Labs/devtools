@@ -2,7 +2,6 @@
 pragma solidity ^0.8.20;
 
 import { IHyperAssetAmount } from "../interfaces/IHyperLiquidComposer.sol";
-import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
 /**
  * @title HyperLiquidComposerCodec
@@ -10,6 +9,8 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
  * @notice Library for computing hyperliquid asset bridges, and converting between EVM and HyperCore amounts
  */
 library HyperLiquidComposerCodec {
+    error TransferAmtExceedsAssetBridgeBalance(uint256 amt, uint256 maxAmt);
+
     /// @dev The base asset bridge address is the address of the HyperLiquid L1 contract
     /// @dev This is the address that the OFT contract will transfer the tokens to when we want to send tokens to HyperLiquid L1
     /// @dev https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers#system-addresses
@@ -87,17 +88,15 @@ library HyperLiquidComposerCodec {
         uint64 _decimalDiff
     ) internal pure returns (uint256 amountEVM, uint64 amountCore) {
         uint256 scale = 10 ** _decimalDiff;
-        uint256 maxEvmAmountFromCoreMax = _maxTransferableCoreAmount * scale;
+        uint256 maxAmt = _maxTransferableCoreAmount * scale;
 
         unchecked {
             /// @dev Strip out dust from _amount so that _amount and maxEvmAmountFromCoreMax have a maximum of _decimalDiff starting 0s
-            uint256 amountDustless = _amount - (_amount % scale); // Safe: dustAmt = _amount % scale, so dust <= _amount
+            amountEVM = _amount - (_amount % scale); // Safe: dustAmt = _amount % scale, so dust <= _amount
 
-            /// @dev Safe: Bound amountEvm to the range of [0, evmscaled u64.max]
-            /// @dev If amountDustless is larger then we have an overflow. Limit the tokens to u64.max and overflow into the dust
-            amountEVM = min_u256(amountDustless, maxEvmAmountFromCoreMax);
+            if (amountEVM > maxAmt) revert TransferAmtExceedsAssetBridgeBalance(amountEVM, maxAmt);
 
-            /// @dev Safe: Guaranteed to be in the range of [0, u64.max] because it is upperbounded by uint64 _maxTransferableCoreAmount
+            /// @dev Safe: Guaranteed to be in the range of [0, u64.max] because it is upperbounded by uint64 maxAmt
             amountCore = uint64(amountEVM / scale);
         }
     }
@@ -117,20 +116,18 @@ library HyperLiquidComposerCodec {
         uint64 _decimalDiff
     ) internal pure returns (uint256 amountEVM, uint64 amountCore) {
         uint256 scale = 10 ** _decimalDiff;
-        uint256 maxEvmAmountFromCoreMax = _maxTransferableCoreAmount / scale;
+        uint256 maxAmt = _maxTransferableCoreAmount / scale;
 
         unchecked {
+            amountEVM = _amount;
+
             /// @dev When `Core > EVM` there will be no opening dust to strip out since all tokens in evm can be represented on core
             /// @dev Safe: Bound amountEvm to the range of [0, evmscaled u64.max]
             /// @dev Overflow the excess into dust
-            amountEVM = min_u256(_amount, maxEvmAmountFromCoreMax);
+            if (_amount > maxAmt) revert TransferAmtExceedsAssetBridgeBalance(amountEVM, maxAmt);
 
-            /// @dev Safe: Guaranteed to be in the range of [0, u64.max] because it is upperbounded by uint64 _maxTransferableCoreAmount
+            /// @dev Safe: Guaranteed to be in the range of [0, u64.max] because it is upperbounded by uint64 maxAmt
             amountCore = uint64(amountEVM * scale);
         }
-    }
-
-    function min_u256(uint256 a, uint256 b) internal pure returns (uint256 result) {
-        return a < b ? a : b;
     }
 }
