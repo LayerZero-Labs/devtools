@@ -48,7 +48,7 @@ library HyperLiquidComposerCodec {
     function into_hyperAssetAmount(
         uint256 _amount,
         uint64 _assetBridgeSupply,
-        int64 _decimalDiff
+        int8 _decimalDiff
     ) internal pure returns (IHyperAssetAmount memory) {
         uint256 amountEVM;
         uint64 amountCore;
@@ -60,13 +60,13 @@ library HyperLiquidComposerCodec {
             (amountEVM, amountCore) = into_hyperAssetAmount_decimal_difference_gt_zero(
                 _amount,
                 _assetBridgeSupply,
-                uint64(_decimalDiff)
+                uint8(_decimalDiff)
             );
         } else {
             (amountEVM, amountCore) = into_hyperAssetAmount_decimal_difference_leq_zero(
                 _amount,
                 _assetBridgeSupply,
-                uint64(-1 * _decimalDiff)
+                uint8(-1 * _decimalDiff)
             );
         }
 
@@ -85,7 +85,7 @@ library HyperLiquidComposerCodec {
     function into_hyperAssetAmount_decimal_difference_gt_zero(
         uint256 _amount,
         uint64 _maxTransferableCoreAmount,
-        uint64 _decimalDiff
+        uint8 _decimalDiff
     ) internal pure returns (uint256 amountEVM, uint64 amountCore) {
         uint256 scale = 10 ** _decimalDiff;
         uint256 maxAmt = _maxTransferableCoreAmount * scale;
@@ -113,7 +113,7 @@ library HyperLiquidComposerCodec {
     function into_hyperAssetAmount_decimal_difference_leq_zero(
         uint256 _amount,
         uint64 _maxTransferableCoreAmount,
-        uint64 _decimalDiff
+        uint8 _decimalDiff
     ) internal pure returns (uint256 amountEVM, uint64 amountCore) {
         uint256 scale = 10 ** _decimalDiff;
         uint256 maxAmt = _maxTransferableCoreAmount / scale;

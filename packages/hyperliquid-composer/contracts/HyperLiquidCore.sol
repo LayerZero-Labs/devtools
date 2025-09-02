@@ -24,10 +24,9 @@ abstract contract HyperLiquidCore {
     // https://app.hyperliquid.xyz/explorer/token/0x0d01dc56dcaaca66ad901c959b4011ec
     uint64 internal constant HYPE_CORE_INDEX_MAINNET = 150;
 
-    /// @dev Decimal Constants - Pre-computed for gas efficiency
     /// @dev uint8 HYPE_EVM_DECIMALS = 18;
     /// @dev uint8 HYPE_CORE_DECIMALS = 8;
-    int64 internal constant HYPE_DECIMAL_DIFF = 10;
+    int8 internal constant HYPE_DECIMAL_DIFF = 10; // Pre-computed for gas efficiency
     address internal constant HYPE_ASSET_BRIDGE = 0x2222222222222222222222222222222222222222;
 
     // Precompile Addresses

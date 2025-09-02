@@ -26,16 +26,19 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
 
     uint256 public constant VALID_COMPOSE_MSG_LEN = 64; /// @dev abi.encode(uint256,address) = 32+32
 
+    int8 public constant MIN_DECIMAL_DIFF = -2;
+    int8 public constant MAX_DECIMAL_DIFF = 18;
+
     address public immutable ENDPOINT;
     address public immutable OFT;
 
     address public immutable NATIVE_ASSET_BRIDGE;
-    int64 public immutable NATIVE_DECIMAL_DIFF;
+    int8 public immutable NATIVE_DECIMAL_DIFF;
     uint64 public immutable NATIVE_CORE_INDEX_ID;
 
     address public immutable ERC20;
     address public immutable ERC20_ASSET_BRIDGE;
-    int64 public immutable ERC20_DECIMAL_DIFF;
+    int8 public immutable ERC20_DECIMAL_DIFF;
     uint64 public immutable ERC20_CORE_INDEX_ID;
 
     mapping(bytes32 guid => FailedMessage) public failedMessages;
@@ -45,8 +48,11 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
      * @param _coreIndexId The core index id of the HyperLiquid L1 contract
      * @param _assetDecimalDiff The difference in decimals between the HyperEVM OFT deployment and HyperLiquid L1 HIP-1 listing
      */
-    constructor(address _oft, uint64 _coreIndexId, int64 _assetDecimalDiff) {
+    constructor(address _oft, uint64 _coreIndexId, int8 _assetDecimalDiff) {
         if (_oft == address(0)) revert InvalidOFTAddress();
+
+        if (_assetDecimalDiff < MIN_DECIMAL_DIFF || _assetDecimalDiff > MAX_DECIMAL_DIFF)
+            revert InvalidDecimalDiff(_assetDecimalDiff, MIN_DECIMAL_DIFF, MAX_DECIMAL_DIFF);
 
         ENDPOINT = address(IOAppCore(_oft).endpoint());
 
@@ -153,8 +159,6 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
             _amountLD
         );
 
-        if (amounts.core > amounts.coreBalanceAssetBridge) revert TransferAmtExceedsAssetBridgeBalance(amounts);
-
         /// @dev Moving tokens to asset bridge credits the coreAccount of composer with the tokens.
         /// @dev The write call then moves coreSpot tokens from the composer to receiver
         if (amounts.evm != 0) {
@@ -180,8 +184,6 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
             NATIVE_ASSET_BRIDGE,
             msg.value
         );
-
-        if (amounts.core > amounts.coreBalanceAssetBridge) revert TransferAmtExceedsAssetBridgeBalance(amounts);
 
         if (amounts.evm != 0) {
             // Transfer the HYPE tokens to the composer's address on HyperCore
@@ -215,7 +217,7 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
      */
     function quoteHyperCoreAmount(
         uint64 _coreIndexId,
-        int64 _decimalDiff,
+        int8 _decimalDiff,
         address _bridgeAddress,
         uint256 _amountLD
     ) public view returns (IHyperAssetAmount memory) {

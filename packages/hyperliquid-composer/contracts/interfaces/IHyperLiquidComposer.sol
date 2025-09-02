@@ -27,6 +27,7 @@ interface IHyperLiquidComposer {
     error InsufficientGas(uint256 gasLeft, uint256 minGas);
 
     error InvalidOFTAddress();
+    error InvalidDecimalDiff(int8 decimalDiff, int8 minDecimalDiff, int8 maxDecimalDiff);
 
     error OnlyEndpoint();
     error InvalidComposeCaller(address internalOFTAddress, address receivedOFTAddress);
@@ -36,7 +37,6 @@ interface IHyperLiquidComposer {
     error ComposeMsgLengthNot64Bytes(uint256 length);
 
     error CoreUserNotActivated();
-    error TransferAmtExceedsAssetBridgeBalance(IHyperAssetAmount amounts);
     error NativeTransferFailed(uint256 amount);
 
     error SpotBalanceReadFailed(address user, uint64 tokenId);
@@ -55,7 +55,7 @@ interface IHyperLiquidComposer {
     function refundToSrc(bytes32 guid) external payable;
     function quoteHyperCoreAmount(
         uint64 coreIndexId,
-        int64 decimalDiff,
+        int8 decimalDiff,
         address bridgeAddress,
         uint256 amountLD
     ) external view returns (IHyperAssetAmount memory);
