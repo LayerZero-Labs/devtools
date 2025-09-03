@@ -128,7 +128,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(interfaceId, expectedId);
     }
 
-    function test_send_oft() public virtual {
+    function test_send_oft() public {
         uint256 tokensToSend = 1 ether;
         bytes memory options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
         SendParam memory sendParam = SendParam(
@@ -153,7 +153,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(bOFT.balanceOf(userB), initialBalance + tokensToSend);
     }
 
-    function test_send_oft_compose_msg() public virtual {
+    function test_send_oft_compose_msg() public {
         uint256 tokensToSend = 1 ether;
 
         OFTComposerMock composer = new OFTComposerMock();
@@ -296,7 +296,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(aOFT.balanceOf(address(this)), 0);
     }
 
-    function test_oft_credit() public virtual {
+    function test_oft_credit() public {
         uint256 amountToCreditLD = 1 ether;
         uint32 srcEid = aEid;
 
