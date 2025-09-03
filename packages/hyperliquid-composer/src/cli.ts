@@ -13,7 +13,11 @@ import {
     createSpotDeployment,
     registerTradingSpot,
     spotDeployState,
+    isAccountActivated,
+    getCoreBalances,
 } from './commands'
+
+import { formatBalancesTable } from './io'
 
 const program = new Command()
 
@@ -25,6 +29,29 @@ program
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
     .option('-l, --log-level <level>', 'Log level', LogLevel.info)
     .action(intoAssetBridgeAddress)
+
+program
+    .command('is-account-activated')
+    .description('Check if an address is activated on hypercore')
+    .requiredOption('-u, --user <0x>', 'User address')
+    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
+    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
+    .action(async (options) => {
+        const res = await isAccountActivated(options)
+        console.log(`Account activated: ${res}`)
+    })
+
+program
+    .command('get-core-balances')
+    .description('Get core balances for a user')
+    .requiredOption('-u, --user <0x>', 'User address')
+    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
+    .option('--show-zero', 'Show balances with zero amounts', false)
+    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
+    .action(async (options) => {
+        const balances = await getCoreBalances(options)
+        console.log(formatBalancesTable(balances, options.showZero))
+    })
 
 program
     .command('set-block')

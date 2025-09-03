@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-example",
-  "version": "0.7.2",
+  "version": "0.7.6",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -38,6 +38,7 @@
     "@layerzerolabs/oapp-evm": "^0.3.2",
     "@layerzerolabs/oft-evm": "^3.2.0",
     "@layerzerolabs/prettier-config-next": "^2.3.39",
+    "@layerzerolabs/protocol-devtools-evm": "^5.0.0",
     "@layerzerolabs/script-devtools-evm-foundry": "^1.0.0",
     "@layerzerolabs/solhint-config": "^3.0.12",
     "@layerzerolabs/test-devtools-evm-foundry": "~7.0.0",

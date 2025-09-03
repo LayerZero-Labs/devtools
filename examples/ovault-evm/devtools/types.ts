@@ -4,23 +4,25 @@ export interface TokenConfig {
         name: string
         symbol: string
     }
-    chains: number[]
+    deploymentEids: number[]
 }
 
 export interface VaultConfig {
-    eid: number
+    deploymentEid: number
     contracts: {
         vault: string
         shareAdapter: string
         composer: string
     }
-    assetAddress?: string // Optional pre-deployed asset address
+    vaultAddress?: string // Optional pre-deployed vault address
+    assetOFTAddress?: string // Optional pre-deployed asset OFT address
+    shareOFTAdapterAddress?: string // Optional pre-deployed ShareOFTAdapter address
 }
 
 export interface DeploymentConfig {
     vault: VaultConfig
-    asset: TokenConfig
-    share: TokenConfig
+    assetOFT: TokenConfig
+    shareOFT: TokenConfig
 }
 
 export interface DeployedContracts {

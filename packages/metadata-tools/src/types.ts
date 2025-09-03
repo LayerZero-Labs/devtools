@@ -1,13 +1,13 @@
 import type { OmniPointHardhat } from '@layerzerolabs/devtools-evm-hardhat'
 import type { OAppEnforcedOption } from '@layerzerolabs/ua-devtools'
 
-// [srcContract, dstContract, [requiredDVNs, [optionalDVNs, threshold]], [srcToDstConfirmations, dstToSrcConfirmations]], [enforcedOptionsSrcToDst, enforcedOptionsDstToSrc]
 export type TwoWayConfig = [
-    OmniPointHardhat, // srcContract
-    OmniPointHardhat, // dstContract
-    [string[], [string[], number] | []], // [requiredDVNs, [optionalDVNs, threshold]]
-    [number, number | undefined], // [srcToDstConfirmations, dstToSrcConfirmations]
-    [OAppEnforcedOption[] | undefined, OAppEnforcedOption[] | undefined], // [enforcedOptionsSrcToDst, enforcedOptionsDstToSrc]
+    srcContract: OmniPointHardhat,
+    dstContract: OmniPointHardhat,
+    dvnConfig: [string[], [string[], number] | []],
+    confirmations: [number, number | undefined],
+    enforcedOptions: [OAppEnforcedOption[] | undefined, OAppEnforcedOption[] | undefined],
+    customExecutor?: string,
 ]
 
 export interface IMetadataDvns {
@@ -17,6 +17,15 @@ export interface IMetadataDvns {
         id: string
         deprecated?: boolean
         lzReadCompatible?: boolean
+    }
+}
+
+export interface IMetadataExecutors {
+    [address: string]: {
+        version: number
+        canonicalName: string
+        id: string
+        deprecated?: boolean
     }
 }
 
@@ -64,6 +73,7 @@ export interface IMetadata {
             name?: string
         }
         dvns?: IMetadataDvns
+        executors?: IMetadataExecutors
         rpcs?: { url: string; weight?: number }[]
         addressToOApp?: {
             [address: string]: {

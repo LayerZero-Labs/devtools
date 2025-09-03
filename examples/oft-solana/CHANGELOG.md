@@ -1,5 +1,17 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.12.0
+
+### Minor Changes
+
+- 5c0a0a1: created tasks for endpoint methods
+
+## 0.11.4
+
+### Patch Changes
+
+- 2358dd5: Add prompt when sending tokens without extra options and no enforced options.
+
 ## 0.11.3
 
 ### Patch Changes

@@ -56,3 +56,10 @@ export interface SpotDeployAction extends BaseExchangeRequest {
               registerHyperliquidity: RegisterHyperliquidity
           }
 }
+
+export interface SpotClearinghouseState extends BaseExchangeRequest {
+    action: {
+        type: 'spotClearinghouseState'
+        user: string
+    }
+}

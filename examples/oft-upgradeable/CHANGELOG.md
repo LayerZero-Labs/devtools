@@ -1,5 +1,17 @@
 # @layerzerolabs/oft-upgradeable-example
 
+## 0.3.3
+
+### Patch Changes
+
+- bf7cb01: update link to simple config
+
+## 0.3.2
+
+### Patch Changes
+
+- f974ed4: Update send.ts code comments to explain extra args
+
 ## 0.3.1
 
 ### Patch Changes

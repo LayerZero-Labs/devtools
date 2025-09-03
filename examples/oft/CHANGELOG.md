@@ -1,5 +1,29 @@
 # @layerzerolabs/oft-example
 
+## 0.7.6
+
+### Patch Changes
+
+- bf7cb01: update link to simple config
+
+## 0.7.5
+
+### Patch Changes
+
+- 2358dd5: Add prompt when sending tokens without extra options and no enforced options.
+
+## 0.7.4
+
+### Patch Changes
+
+- 2d8155a: Update oft example to have two config files, one for simple worker, one for regular operations
+
+## 0.7.3
+
+### Patch Changes
+
+- f974ed4: Update LayerZero OFT example to support simple config custom DVNs and Executors.
+
 ## 0.7.2
 
 ### Patch Changes

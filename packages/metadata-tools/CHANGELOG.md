@@ -1,5 +1,11 @@
 # @layerzerolabs/metadata-tools
 
+## 3.0.1
+
+### Patch Changes
+
+- 6f63e37: Enables appending custom Executors to returned metadata
+
 ## 3.0.0
 
 ### Patch Changes

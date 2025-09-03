@@ -1,18 +1,41 @@
 import path from 'path'
 
-import { BigNumber, ContractTransaction } from 'ethers'
+import { BigNumber, Contract, ContractTransaction } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { OmniPointHardhat, createGetHreByEid } from '@layerzerolabs/devtools-evm-hardhat'
-import { createLogger } from '@layerzerolabs/io-devtools'
+import { createLogger, promptToContinue } from '@layerzerolabs/io-devtools'
 import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { Options, addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 
 import { SendResult } from './types'
-import { DebugLogger, KnownErrors, getLayerZeroScanLink } from './utils'
+import { DebugLogger, KnownErrors, MSG_TYPE, getLayerZeroScanLink, isEmptyOptionsEvm } from './utils'
 
 const logger = createLogger()
+
+/**
+ * Get OApp contract address by EID from LayerZero config
+ */
+async function getOAppAddressByEid(
+    eid: number,
+    oappConfig: string,
+    hre: HardhatRuntimeEnvironment,
+    overrideAddress?: string
+): Promise<string> {
+    if (overrideAddress) {
+        return overrideAddress
+    }
+
+    const layerZeroConfig = (await import(path.resolve('./', oappConfig))).default
+    const { contracts } = typeof layerZeroConfig === 'function' ? await layerZeroConfig() : layerZeroConfig
+    const wrapper = contracts.find((c: { contract: OmniPointHardhat }) => c.contract.eid === eid)
+    if (!wrapper) throw new Error(`No config for EID ${eid}`)
+
+    return wrapper.contract.contractName
+        ? (await hre.deployments.get(wrapper.contract.contractName)).address
+        : wrapper.contract.address || ''
+}
 
 export interface EvmArgs {
     srcEid: number
@@ -62,24 +85,24 @@ export async function sendEvm(
     const signer = (await srcEidHre.ethers.getSigners())[0]
 
     // 1️⃣ resolve the OFT wrapper address
-    let wrapperAddress: string
-    if (oftAddress) {
-        wrapperAddress = oftAddress
-    } else {
-        const layerZeroConfig = (await import(path.resolve('./', oappConfig))).default
-        const { contracts } = typeof layerZeroConfig === 'function' ? await layerZeroConfig() : layerZeroConfig
-        const wrapper = contracts.find((c: { contract: OmniPointHardhat }) => c.contract.eid === srcEid)
-        if (!wrapper) throw new Error(`No config for EID ${srcEid}`)
-        wrapperAddress = wrapper.contract.contractName
-            ? (await srcEidHre.deployments.get(wrapper.contract.contractName)).address
-            : wrapper.contract.address || ''
-    }
+    const wrapperAddress = await getOAppAddressByEid(srcEid, oappConfig, srcEidHre, oftAddress)
 
     // 2️⃣ load IOFT ABI, extend it with token()
-    const ioftArtifact = await srcEidHre.artifacts.readArtifact('IOFT')
+    const oftArtifact = await srcEidHre.artifacts.readArtifact('OFT')
 
     // now attach
-    const oft = await srcEidHre.ethers.getContractAt(ioftArtifact.abi, wrapperAddress, signer)
+    const oft = await srcEidHre.ethers.getContractAt(oftArtifact.abi, wrapperAddress, signer)
+
+    // 🔗 Get LayerZero endpoint contract
+    const endpointDep = await srcEidHre.deployments.get('EndpointV2')
+    const _endpointContract = new Contract(endpointDep.address, endpointDep.abi, signer)
+
+    // Get destination OApp address for outboundNonce call
+    const dstEidHre = await getHreByEid(dstEid)
+    const dstWrapperAddress = await getOAppAddressByEid(dstEid, oappConfig, dstEidHre, oftAddress)
+
+    // We'll get the actual outbound nonce after the transaction is sent
+    const dstWrapperBytes32 = addressToBytes32(dstWrapperAddress)
 
     // 3️⃣ fetch the underlying ERC-20
     const underlying = await oft.token()
@@ -194,8 +217,28 @@ export async function sendEvm(
             }
         }
     }
-
     const extraOptions = options.toHex()
+
+    // Check whether there are extra options or enforced options. If not, warn the user.
+    // Read on Message Options: https://docs.layerzero.network/v2/concepts/message-options
+    if (isEmptyOptionsEvm(extraOptions)) {
+        try {
+            const enforcedOptions = composeMsg
+                ? await oft.enforcedOptions(dstEid, MSG_TYPE.SEND_AND_CALL)
+                : await oft.enforcedOptions(dstEid, MSG_TYPE.SEND)
+
+            if (isEmptyOptionsEvm(enforcedOptions)) {
+                const proceed = await promptToContinue(
+                    'No extra options were included and OFT has no set enforced options. Your quote / send will most likely fail. Continue?'
+                )
+                if (!proceed) {
+                    throw new Error('Aborted due to missing options')
+                }
+            }
+        } catch (error) {
+            logger.debug(`Failed to check enforced options: ${error}`)
+        }
+    }
 
     // 9️⃣ build sendParam and dispatch
     const sendParam = {
@@ -220,6 +263,9 @@ export async function sendEvm(
         )
         throw error
     }
+    // Get the outbound nonce that will be used for this transaction (before sending)
+    const outboundNonce = (await _endpointContract.outboundNonce(wrapperAddress, dstEid, dstWrapperBytes32)).add(1)
+
     logger.info('Sending the transaction...')
     let tx: ContractTransaction
     try {
@@ -238,5 +284,5 @@ export async function sendEvm(
     const txHash = receipt.transactionHash
     const scanLink = getLayerZeroScanLink(txHash, srcEid >= 40_000 && srcEid < 50_000)
 
-    return { txHash, scanLink }
+    return { txHash, scanLink, outboundNonce: outboundNonce.toString(), extraOptions }
 }

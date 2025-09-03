@@ -22,6 +22,14 @@
 - [Build](#build)
   - [Compiling your contracts](#compiling-your-contracts)
 - [Deploy](#deploy)
+- [Simple Workers (For Testnets Without Default Workers)](#simple-workers-for-testnets-without-default-workers)
+  - [When to Use Simple Workers](#when-to-use-simple-workers)
+  - [Deploying Simple Workers](#deploying-simple-workers)
+  - [Configuring Simple Workers](#configuring-simple-workers)
+  - [Using Simple Workers](#using-simple-workers)
+  - [Simple Workers Architecture](#simple-workers-architecture)
+  - [Important Limitations](#important-limitations)
+  - [Troubleshooting Simple Workers](#troubleshooting-simple-workers)
 - [Enable Messaging](#enable-messaging)
 - [Sending OFTs](#sending-ofts)
 - [Next Steps](#next-steps)
@@ -37,9 +45,9 @@
   - [Adding other chains](#adding-other-chains)
   - [Using Multisigs](#using-multisigs)
   - [LayerZero Hardhat Helper Tasks](#layerzero-hardhat-helper-tasks)
-  - [Manual Configuration](#manual-configuration)
-  - [Contract Verification](#contract-verification)
-  - [Troubleshooting](#troubleshooting)
+    - [Manual Configuration](#manual-configuration)
+    - [Contract Verification](#contract-verification)
+    - [Troubleshooting](#troubleshooting)
 
 ## Prerequisite Knowledge
 
@@ -114,19 +122,252 @@ pnpm hardhat lz:deploy --tags MyOFTMock
 
 Select all the chains you want to deploy the OFT to.
 
+## Simple Workers (For Testnets Without Default Workers)
+
+> :warning: **Development Only**: Simple Workers are mock implementations for testing on testnets that lack DVNs and Executors. They should **NEVER** be used in production as they provide no security or service guarantees.
+
+### When to Use Simple Workers
+
+Some LayerZero testnets have default configurations, but no working DVNs (Decentralized Verifier Networks) or Executors. In these cases, you need to deploy and configure Simple Workers to enable message verification and execution.
+
+Simple Workers consist of:
+
+- **SimpleDVNMock**: A minimal DVN that allows manual message verification
+- **SimpleExecutorMock**: A mock executor that charges zero fees and enables manual message execution
+
+### Deploying Simple Workers
+
+Deploy the Simple Workers on **all chains** where you need them:
+
+```bash
+# Deploy SimpleDVNMock
+pnpm hardhat lz:deploy --tags SimpleDVNMock
+
+# Deploy SimpleExecutorMock
+pnpm hardhat lz:deploy --tags SimpleExecutorMock
+```
+
+### Configuring Simple Workers
+
+> Note: If you are NOT using simple workers then use `layerzero.config.ts` and you can skip this step
+
+You can now use custom DVNs and Executors with the standard `lz:oapp:wire` command by adding them to your metadata configuration.
+
+1. **Get your deployed addresses** from the deployment files:
+
+   - SimpleDVNMock: `./deployments/<network-name>/SimpleDVNMock.json`
+   - SimpleExecutorMock: `./deployments/<network-name>/SimpleExecutorMock.json`
+
+2. **Update your `layerzero.simple-worker.config.ts`** to include your deployed Simple Workers:
+
+   - **SECTION 1**: Add your contract definitions with the correct endpoint IDs
+   - **SECTION 4**: Add your Simple Worker addresses:
+
+```typescript
+// In layerzero.simple-worker.config.ts, SECTION 4: CUSTOM EXECUTOR AND DVN ADDRESSES
+const customExecutorsByEid: Record<number, { address: string }> = {
+  [EndpointId.OPTIMISM_V2_TESTNET]: { address: "0x..." }, // From deployments/optimism-testnet/SimpleExecutorMock.json
+  [EndpointId.ARBITRUM_V2_TESTNET]: { address: "0x..." }, // From deployments/arbitrum-testnet/SimpleExecutorMock.json
+  // Add for each chain where you deployed SimpleExecutorMock
+};
+
+const customDVNsByEid: Record<number, { address: string }> = {
+  [EndpointId.OPTIMISM_V2_TESTNET]: { address: "0x..." }, // From deployments/optimism-testnet/SimpleDVNMock.json
+  [EndpointId.ARBITRUM_V2_TESTNET]: { address: "0x..." }, // From deployments/arbitrum-testnet/SimpleDVNMock.json
+  // Add for each chain where you deployed SimpleDVNMock
+};
+```
+
+3. **Use them in your pathways** (SECTION 5) by their canonical names:
+
+```typescript
+// In layerzero.simple-worker.config.ts, SECTION 5: PATHWAY CONFIGURATION
+const pathways: TwoWayConfig[] = [
+  [
+    sourceContract,
+    destContract,
+    [["SimpleDVNMock"], []], // Use the DVN by name
+    [1, 1],
+    [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
+    "SimpleExecutorMock", // Use the executor by name
+  ],
+];
+```
+
+4. **Wire normally** using the custom configuration:
+
+```bash
+pnpm hardhat lz:oapp:wire --oapp-config layerzero.simple-worker.config.ts
+```
+
+This command will automatically:
+
+- Detect pathways without DVN configurations in your LayerZero config
+- Configure SimpleDVNMock and SimpleExecutorMock for those pathways
+- Set both send and receive configurations on the appropriate chains
+- Skip pathways that already have DVN configurations
+
+> :information_source: The command only configures pathways with empty DVN arrays, preserving any existing configurations.
+
+### Using Simple Workers
+
+When sending OFTs with Simple Workers, add the `--simple-workers` flag to enable the manual verification and execution flow:
+
+```bash
+pnpm hardhat lz:oft:send --src-eid 40232 --dst-eid 40231 --amount 1 --to <EVM_ADDRESS> --simple-workers
+```
+
+With the `--simple-workers` flag, the task will:
+
+1. Send the OFT transaction as normal
+2. Automatically trigger the manual verification process on the destination chain
+3. Execute the message delivery through the Simple Workers
+
+### Simple Workers Architecture
+
+The manual verification flow involves three steps on the destination chain:
+
+1. **Verify**: SimpleDVNMock verifies the message payload
+2. **Commit**: SimpleDVNMock commits the verification to the ULN
+3. **Execute**: SimpleExecutorMock executes the message delivery
+
+Without the `--simple-workers` flag, you would need to manually call these steps using the provided tasks:
+
+- `lz:oapp:wire:simple-workers` - Configure Simple Workers for all pathways without DVN configurations
+- `lz:simple-dvn:verify` - Verify the message with SimpleDVNMock
+- `lz:simple-dvn:commit` - Commit the verification to ULN
+- `lz:simple-workers:commit-and-execute` - Execute the message delivery
+- `lz:simple-workers:skip` - Skip a stuck message (permanent action!)
+
+### Important Limitations
+
+- **Zero Fees**: Simple Workers charge no fees, breaking the economic security model
+- **No Real Verification**: Messages are manually verified without actual validation
+- **Testnet Only**: These mocks provide no security and must never be used on mainnet
+- **Manual Process**: Requires manual intervention or the `--simple-workers` flag for automation
+
+### Troubleshooting Simple Workers
+
+#### Ordered Message Delivery
+
+LayerZero enforces ordered message delivery per channel (source → destination). Messages must be processed in the exact order they were sent. If a message fails or is skipped, all subsequent messages on that channel will be blocked.
+
+**Common Error: "InvalidNonce"**
+
+```
+warn: Lazy inbound nonce is not equal to inboundNonce + 1. You will run into an InvalidNonce error.
+```
+
+This means there are pending messages that must be processed first.
+
+#### Recovery Options
+
+When a message is stuck, you have two options:
+
+**Option 1: Process the Pending Message**
+
+```bash
+# Find the pending nonce from the error message, then:
+npx hardhat lz:simple-dvn:verify --src-eid <SRC_EID> --dst-eid <DST_EID> --nonce <PENDING_NONCE> --src-oapp <SRC_OAPP> --to-address <RECIPIENT> --amount <AMOUNT>
+npx hardhat lz:simple-workers:commit-and-execute --src-eid <SRC_EID> --dst-eid <DST_EID> --nonce <PENDING_NONCE> ...
+```
+
+**Option 2: Skip the Message** (Cannot be undone!)
+
+```bash
+# Skip a stuck message on the destination chain
+npx hardhat lz:simple-workers:skip --src-eid <SRC_EID> --src-oapp <SRC_OAPP> --nonce <NONCE_TO_SKIP> --receiver <RECEIVER_OAPP>
+```
+
+> :warning: **Skipping is permanent!** Once skipped, the message cannot be recovered. The tokens/value in that message will be permanently lost.
+
+#### RPC Failures During Processing
+
+If your RPC connection fails during `--simple-workers` processing:
+
+1. The outbound message may already be sent but not verified/executed
+2. You'll see detailed recovery information in the error output
+3. You must handle this nonce before sending new messages
+4. Either wait for RPC limits to reset and complete processing, or skip the message
+
+#### Example: Multiple Pending Messages
+
+If nonce 6 fails because nonce 4 is pending:
+
+1. First process or skip nonce 4
+2. Then process or skip nonce 5
+3. Finally, you can process nonce 6
+
+Remember: All messages must be handled in order!
+
 ## Enable Messaging
 
 The OFT standard builds on top of the OApp standard, which enables generic message-passing between chains. After deploying the OFT on the respective chains, you enable messaging by running the [wiring](https://docs.layerzero.network/v2/concepts/glossary#wire--wiring) task.
 
-> :information_source: This example uses the [Simple Config Generator](https://docs.layerzero.network/v2/developers/evm/technical-reference/simple-config), which is recommended over manual configuration.
+> :information_source: This example uses the [Simple Config Generator](https://docs.layerzero.network/v2/tools/simple-config), which is recommended over manual configuration.
 
-Run the wiring task:
+This example provides two configuration files:
+
+1. **`layerzero.config.ts`** - The standard configuration using LayerZero's default DVNs and Executors (recommended for most deployments)
+2. **`layerzero.simple-worker.config.ts`** - A template for using custom DVNs and Executors (useful for testnets without default workers or advanced custom setups)
+
+### Using the Standard Configuration (Default)
+
+For most deployments, use the standard configuration:
 
 ```bash
 pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts
 ```
 
+The `layerzero.config.ts` file is organized into clear sections:
+
+- Contract definitions
+- Gas options
+- Pathway configuration using LayerZero's default workers
+
+### Using Custom Workers Configuration
+
+If you need custom DVNs and Executors (e.g., for testnets without default workers or custom security requirements), use:
+
+```bash
+pnpm hardhat lz:oapp:wire --oapp-config layerzero.simple-worker.config.ts
+```
+
+The `layerzero.simple-worker.config.ts` file is organized into clear sections:
+
+- **SECTION 1**: Contract definitions (YOU MUST EDIT)
+- **SECTION 2**: Gas options (YOU MAY NEED TO EDIT)
+- **SECTION 3**: Metadata configuration (MOSTLY BOILERPLATE)
+- **SECTION 4**: Custom executor/DVN addresses (YOU MUST EDIT if using custom workers)
+- **SECTION 5**: Pathway configuration (YOU MUST EDIT)
+- **SECTION 6**: Export configuration
+
 Submit all the transactions to complete wiring. After all transactions confirm, your OApps are wired and can send messages to each other.
+
+### Using Custom Executors and DVNs
+
+> :information_source: For testnets without default workers, see the [Simple Workers section](#simple-workers-for-testnets-without-default-workers) above.
+
+For production deployments or advanced use cases, you can deploy and configure your own custom Executors and DVNs. This is useful when:
+
+- You need specific fee structures or execution logic
+- You want full control over message verification and execution
+- You're building a custom security stack
+
+To use custom executors and DVNs:
+
+1. **Deploy your custom contracts** on each chain
+2. **Use the `layerzero.simple-worker.config.ts` template**:
+   - **SECTION 1**: Define your contracts
+   - **SECTION 4**: Add your custom executor/DVN addresses
+   - **SECTION 5**: Reference them by name in pathways
+3. **Wire normally** with `pnpm hardhat lz:oapp:wire --oapp-config layerzero.simple-worker.config.ts`
+
+> :warning: **Important**: Custom executors and DVNs must be deployed on each chain where they're needed. The same canonical name can resolve to different addresses on different chains.
+
+> :book: **For detailed instructions**, see the [Custom Workers Configuration Guide](./CUSTOM_WORKERS_GUIDE.md) which shows exactly what to modify in your configuration.
+
+> :information_source: **Note**: For production, review **SECTION 2** in `layerzero.simple-worker.config.ts` to adjust gas limits based on your contract's actual usage.
 
 ## Sending OFTs
 
@@ -135,7 +376,7 @@ With your OFTs wired, you can now send them cross chain.
 First, via the mock contract, let's mint on **Optimism Sepolia**:
 
 ```
-cast send <OFT_ADDRESS> "mint(address,uint256)" <RECIPIENT_ADDRESS> 1000000000000000000 --private-key <PRIVATE_KEY> --rpc-url <OPTIMISM_SEPOLIA_RPC_URL>
+cast send <OFT_ADDRESS> "mint(address,uint256)" <RECIPIENT_ADDRESS> 1000000000000000000000 --private-key <PRIVATE_KEY> --rpc-url <OPTIMISM_SEPOLIA_RPC_URL>
 
 ```
 

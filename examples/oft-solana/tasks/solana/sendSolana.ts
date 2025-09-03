@@ -6,13 +6,13 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
 import bs58 from 'bs58'
 
-import { createLogger } from '@layerzerolabs/io-devtools'
+import { createLogger, promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { SendResult } from '../common/types'
-import { DebugLogger, KnownErrors } from '../common/utils'
+import { DebugLogger, KnownErrors, isEmptyOptionsSolana } from '../common/utils'
 
 import { parseDecimalToUnits, silenceSolana429 } from './utils'
 
@@ -92,6 +92,26 @@ export async function sendSolana({
     const amountUnits = parseDecimalToUnits(amount, decimals)
     if (amountUnits === 0n || amountUnits > balance) {
         throw new Error(`Insufficient balance (need ${amountUnits}, have ${balance})`)
+    }
+
+    // Check whether there are extra options or enforced options. If not, warn the user.
+    // Read on Message Options: https://docs.layerzero.network/v2/concepts/message-options
+    if (!extraOptions) {
+        try {
+            const enforcedOptionsMap = await oft.getEnforcedOptions(umi.rpc, storePda, dstEid, programId)
+            const enforcedOptionsBuffer = composeMsg ? enforcedOptionsMap.sendAndCall : enforcedOptionsMap.send
+
+            if (isEmptyOptionsSolana(enforcedOptionsBuffer)) {
+                const proceed = await promptToContinue(
+                    'No extra options were included and OFT has no set enforced options. Your quote / send will most likely fail. Continue?'
+                )
+                if (!proceed) {
+                    throw new Error('Aborted due to missing options')
+                }
+            }
+        } catch (error) {
+            logger.debug(`Failed to check enforced options: ${error}`)
+        }
     }
 
     // 7️⃣ Quote (use our overridden `programId`)
