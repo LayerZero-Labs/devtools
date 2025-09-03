@@ -99,7 +99,13 @@ const config: HardhatUserConfig = {
         "https://arbitrum-sepolia.gateway.tenderly.co",
       accounts,
     },
-    // Optimism removed; use Base and Arbitrum only
+    optimism: {
+      eid: EndpointId.OPTSEP_V2_TESTNET,
+      url:
+        process.env.RPC_URL_OPTSEP_TESTNET ||
+        "https://optimism-sepolia.gateway.tenderly.co",
+      accounts,
+    },
   },
   // ... rest of config
 };
@@ -116,7 +122,10 @@ import { EndpointId } from "@layerzerolabs/lz-definitions";
 
 // Define the chains we're deploying to
 const _hubEid = EndpointId.ARBSEP_V2_TESTNET;
-const _spokeEids = [EndpointId.BASESEP_V2_TESTNET];
+const _spokeEids = [
+  EndpointId.OPTSEP_V2_TESTNET,
+  EndpointId.BASESEP_V2_TESTNET,
+];
 
 export const DEPLOYMENT_CONFIG = {
   // Vault chain configuration (where the ERC4626 vault lives)
@@ -243,7 +252,7 @@ The deployment scripts automatically skip existing deployments, so you can safel
 > **Tip**: To deploy to specific networks only, use the `--networks` flag:
 >
 > ```bash
-> pnpm hardhat lz:deploy --tags ovault --networks arbitrum-sepolia,base-sepolia
+> pnpm hardhat lz:deploy --tags ovault --networks arbitrum,optimism
 > ```
 
 ## Enable Messaging
@@ -263,7 +272,10 @@ import {
 } from "@layerzerolabs/metadata-tools";
 import { OAppEnforcedOption } from "@layerzerolabs/toolbox-hardhat";
 
-// Optimism removed; use Base and Arbitrum only
+const optimismContract: OmniPointHardhat = {
+  eid: EndpointId.OPTSEP_V2_TESTNET.valueOf(),
+  contractName: "MyAssetOFT",
+};
 
 const arbitrumContract: OmniPointHardhat = {
   eid: EndpointId.ARBSEP_V2_TESTNET.valueOf(),
@@ -294,15 +306,15 @@ const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
 // Pathway configuration (automatically bidirectional)
 const pathways: TwoWayConfig[] = [
   [
-    baseContract, // Chain A
+    optimismContract, // Chain A
     arbitrumContract, // Chain B
     [["LayerZero Labs"], []], // DVN configuration
     [1, 1], // Confirmations [A→B, B→A]
     [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Gas options
   ],
   [
+    optimismContract,
     baseContract,
-    arbitrumContract,
     [["LayerZero Labs"], []],
     [1, 1],
     [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
@@ -320,6 +332,7 @@ export default async function () {
   const connections = await generateConnectionsConfig(pathways);
   return {
     contracts: [
+      { contract: optimismContract },
       { contract: arbitrumContract },
       { contract: baseContract },
     ],
@@ -348,7 +361,10 @@ import {
 } from "@layerzerolabs/metadata-tools";
 import { OAppEnforcedOption } from "@layerzerolabs/toolbox-hardhat";
 
-// Optimism removed; use Base and Arbitrum only
+const optimismContract: OmniPointHardhat = {
+  eid: EndpointId.OPTSEP_V2_TESTNET.valueOf(),
+  contractName: "MyShareOFT", // Standard OFT (spoke)
+};
 
 const arbitrumContract: OmniPointHardhat = {
   eid: EndpointId.BASESEP_V2_TESTNET.valueOf(), // Note: Base is the hub chain
@@ -379,15 +395,15 @@ const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
 // Same pathway structure as asset config
 const pathways: TwoWayConfig[] = [
   [
-    baseContract, // Spoke (Base)
+    optimismContract, // Spoke
     arbitrumContract, // Hub (Base chain with adapter)
     [["LayerZero Labs"], []],
     [1, 1],
     [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
   ],
   [
-    baseContract, // Spoke (Base)
-    arbitrumContract, // Spoke (Arbitrum)
+    optimismContract, // Spoke
+    baseContract, // Spoke (Arbitrum)
     [["LayerZero Labs"], []],
     [1, 1],
     [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
@@ -405,6 +421,7 @@ export default async function () {
   const connections = await generateConnectionsConfig(pathways);
   return {
     contracts: [
+      { contract: optimismContract },
       { contract: arbitrumContract },
       { contract: baseContract },
     ],
@@ -469,7 +486,7 @@ The `lz:ovault:send` task handles four different operation types automatically b
 Send assets from any spoke chain to receive vault shares on any other chain:
 
 ```bash
-# Send 1.0 asset from Arbitrum to get shares on Base
+# Send 1.0 asset from Arbitrum to get shares on Optimism
 npx hardhat lz:ovault:send \
   --src-eid 30110 \
   --dst-eid 30111 \
@@ -478,14 +495,14 @@ npx hardhat lz:ovault:send \
   --token-type asset
 ```
 
-**Flow**: Arbitrum (asset) → Base Hub (vault deposit) → Base (shares)
+**Flow**: Arbitrum (asset) → Base Hub (vault deposit) → Optimism (shares)
 
 **Share Redemption (Any Chain → Any Other Chain)**
 
 Send shares from any spoke chain to receive underlying assets on any other chain:
 
 ```bash
-# Send 0.9 shares from Base to get assets on Arbitrum
+# Send 0.9 shares from Optimism to get assets on Arbitrum
 npx hardhat lz:ovault:send \
   --src-eid 30111 \
   --dst-eid 30110 \
@@ -494,7 +511,7 @@ npx hardhat lz:ovault:send \
   --token-type share
 ```
 
-**Flow**: Base (shares) → Base Hub (vault redeem) → Arbitrum (assets)
+**Flow**: Optimism (shares) → Base Hub (vault redeem) → Arbitrum (assets)
 
 ### 2. Hub Chain Vault Operations (Same Chain)
 
@@ -563,7 +580,7 @@ npx hardhat lz:ovault:send \
 Send share tokens from the hub chain to any spoke chain:
 
 ```bash
-# Send 0.8 share tokens from hub (Base) to Arbitrum
+# Send 0.8 share tokens from hub (Base) to Optimism
 npx hardhat lz:ovault:send \
   --src-eid 30184 \
   --dst-eid 30111 \
@@ -600,7 +617,7 @@ npx hardhat lz:ovault:send \
 Send shares from any spoke chain to the hub for vault redemption:
 
 ```bash
-# Send 1.2 shares from Arbitrum to hub for vault redemption
+# Send 1.2 shares from Optimism to hub for vault redemption
 npx hardhat lz:ovault:send \
   --src-eid 30111 \
   --dst-eid 30184 \
@@ -609,7 +626,7 @@ npx hardhat lz:ovault:send \
   --token-type share
 ```
 
-**Flow**: Arbitrum (shares) → Base Hub (vault redeem → assets to recipient)
+**Flow**: Optimism (shares) → Base Hub (vault redeem → assets to recipient)
 
 - Uses composer for vault interaction
 - Optimized gas limits for hub-only operations
@@ -646,10 +663,10 @@ The task automatically optimizes gas limits based on operation type:
 **Complete Deposit Cycle:**
 
 ```bash
-# 1. Deposit assets cross-chain (Arbitrum → Hub → Base)
+# 1. Deposit assets cross-chain (Arbitrum → Hub → Optimism)
 npx hardhat lz:ovault:send --src-eid 30110 --dst-eid 30111 --amount 10.0 --to 0xRecipient --token-type asset
 
-# 2. Later redeem shares back (Base → Hub → Arbitrum)
+# 2. Later redeem shares back (Optimism → Hub → Arbitrum)
 npx hardhat lz:ovault:send --src-eid 30111 --dst-eid 30110 --amount 9.5 --to 0xRecipient --token-type share
 ```
 
