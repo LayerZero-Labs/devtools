@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.22;
 
 import { MessagingFee, MessagingReceipt, OFTCoreUpgradeable, OFTFeeDetail, OFTLimit, OFTReceipt, SendParam } from "./OFTCoreUpgradeable.sol";
 
@@ -59,6 +59,21 @@ abstract contract NativeOFTAdapterUpgradeable is OFTCoreUpgradeable {
         return false;
     }
 
+    /**
+     * @dev Executes the send operation while ensuring the correct amount of native is sent.
+     * @param _sendParam The parameters for the send operation.
+     * @param _fee The calculated fee for the send() operation.
+     *      - nativeFee: The native fee.
+     *      - lzTokenFee: The lzToken fee.
+     * @param _refundAddress The address to receive any excess funds.
+     * @return msgReceipt The receipt for the send operation.
+     * @return oftReceipt The OFT receipt information.
+     *
+     * @dev MessagingReceipt: LayerZero msg receipt
+     *  - guid: The unique identifier for the sent message.
+     *  - nonce: The nonce of the sent message.
+     *  - fee: The LayerZero fee incurred for the message.
+     */
     function send(
         SendParam calldata _sendParam,
         MessagingFee calldata _fee,
@@ -99,10 +114,6 @@ abstract contract NativeOFTAdapterUpgradeable is OFTCoreUpgradeable {
      * @param _amountLD The amount of native to credit.
      * @dev _srcEid The source chain ID.
      * @return amountReceivedLD The amount of native ACTUALLY received.
-     *
-     * @dev WARNING: The default OFTAdapter implementation assumes LOSSLESS transfers, ie. 1 token in, 1 token out.
-     * IF the 'innerToken' applies something like a transfer fee, the default will NOT work...
-     * a pre/post balance check will need to be done to calculate the amountReceivedLD.
      */
     function _credit(
         address _to,
@@ -126,40 +137,5 @@ abstract contract NativeOFTAdapterUpgradeable is OFTCoreUpgradeable {
      */
     function _payNative(uint256 _nativeFee) internal pure override returns (uint256 nativeFee) {
         return _nativeFee;
-    }
-
-    /**
-     * @notice Provides the fee breakdown and settings data for an OFT. Unused in the default implementation.
-     * @param _sendParam The parameters for the send operation.
-     * @return oftLimit The OFT limit information.
-     * @return oftFeeDetails The details of OFT fees.
-     * @return oftReceipt The OFT receipt information.
-     */
-    function quoteOFT(
-        SendParam calldata _sendParam
-    )
-    external
-    view
-    virtual
-    override
-    returns (OFTLimit memory oftLimit, OFTFeeDetail[] memory oftFeeDetails, OFTReceipt memory oftReceipt)
-    {
-        uint256 minAmountLD = 0; // Unused in the default implementation.
-        uint256 maxAmountLD = type(uint256).max; // Unused in the default implementation.
-        oftLimit = OFTLimit(minAmountLD, maxAmountLD);
-
-        // Unused in the default implementation; reserved for future complex fee details.
-        oftFeeDetails = new OFTFeeDetail[](0);
-
-        // @dev This is the same as the send() operation, but without the actual send.
-        // - amountSentLD is the amount in local decimals that would be sent from the sender.
-        // - amountReceivedLD is the amount in local decimals that will be credited to the recipient on the remote OFT instance.
-        // @dev The amountSentLD MIGHT not equal the amount the user actually receives. HOWEVER, the default does.
-        (uint256 amountSentLD, uint256 amountReceivedLD) = _debitView(
-            _sendParam.amountLD,
-            _sendParam.minAmountLD,
-            _sendParam.dstEid
-        );
-        oftReceipt = OFTReceipt(amountSentLD, amountReceivedLD);
     }
 }
