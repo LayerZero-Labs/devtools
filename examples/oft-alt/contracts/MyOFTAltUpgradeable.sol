@@ -37,10 +37,4 @@ contract MyOFTAltUpgradeable is OFTAltUpgradeable {
         __OFTAlt_init(_name, _symbol, _delegate);
         __Ownable_init(_delegate);
     }
-
-    /**
-     * @dev Storage gap to allow for future storage variables in upgrades.
-     * @dev This is a best practice for upgradeable contracts.
-     */
-    uint256[50] private __gap;
 }
