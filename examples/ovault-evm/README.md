@@ -99,13 +99,7 @@ const config: HardhatUserConfig = {
         "https://arbitrum-sepolia.gateway.tenderly.co",
       accounts,
     },
-    optimism: {
-      eid: EndpointId.OPTSEP_V2_TESTNET,
-      url:
-        process.env.RPC_URL_OPTSEP_TESTNET ||
-        "https://optimism-sepolia.gateway.tenderly.co",
-      accounts,
-    },
+    // Optimism removed; use Base and Arbitrum only
   },
   // ... rest of config
 };
@@ -122,10 +116,7 @@ import { EndpointId } from "@layerzerolabs/lz-definitions";
 
 // Define the chains we're deploying to
 const _hubEid = EndpointId.ARBSEP_V2_TESTNET;
-const _spokeEids = [
-  EndpointId.OPTSEP_V2_TESTNET,
-  EndpointId.BASESEP_V2_TESTNET,
-];
+const _spokeEids = [EndpointId.BASESEP_V2_TESTNET];
 
 export const DEPLOYMENT_CONFIG = {
   // Vault chain configuration (where the ERC4626 vault lives)
@@ -486,7 +477,7 @@ The `lz:ovault:send` task handles four different operation types automatically b
 Send assets from any spoke chain to receive vault shares on any other chain:
 
 ```bash
-# Send 1.0 asset from Arbitrum to get shares on Optimism
+# Send 1.0 asset from Arbitrum to get shares on Base
 npx hardhat lz:ovault:send \
   --src-eid 30110 \
   --dst-eid 30111 \
@@ -495,14 +486,14 @@ npx hardhat lz:ovault:send \
   --token-type asset
 ```
 
-**Flow**: Arbitrum (asset) → Base Hub (vault deposit) → Optimism (shares)
+**Flow**: Arbitrum (asset) → Base Hub (vault deposit) → Base (shares)
 
 **Share Redemption (Any Chain → Any Other Chain)**
 
 Send shares from any spoke chain to receive underlying assets on any other chain:
 
 ```bash
-# Send 0.9 shares from Optimism to get assets on Arbitrum
+# Send 0.9 shares from Base to get assets on Arbitrum
 npx hardhat lz:ovault:send \
   --src-eid 30111 \
   --dst-eid 30110 \
@@ -511,7 +502,7 @@ npx hardhat lz:ovault:send \
   --token-type share
 ```
 
-**Flow**: Optimism (shares) → Base Hub (vault redeem) → Arbitrum (assets)
+**Flow**: Base (shares) → Base Hub (vault redeem) → Arbitrum (assets)
 
 ### 2. Hub Chain Vault Operations (Same Chain)
 
@@ -580,7 +571,7 @@ npx hardhat lz:ovault:send \
 Send share tokens from the hub chain to any spoke chain:
 
 ```bash
-# Send 0.8 share tokens from hub (Base) to Optimism
+# Send 0.8 share tokens from hub (Base) to Arbitrum
 npx hardhat lz:ovault:send \
   --src-eid 30184 \
   --dst-eid 30111 \
@@ -617,7 +608,7 @@ npx hardhat lz:ovault:send \
 Send shares from any spoke chain to the hub for vault redemption:
 
 ```bash
-# Send 1.2 shares from Optimism to hub for vault redemption
+# Send 1.2 shares from Arbitrum to hub for vault redemption
 npx hardhat lz:ovault:send \
   --src-eid 30111 \
   --dst-eid 30184 \
@@ -626,7 +617,7 @@ npx hardhat lz:ovault:send \
   --token-type share
 ```
 
-**Flow**: Optimism (shares) → Base Hub (vault redeem → assets to recipient)
+**Flow**: Arbitrum (shares) → Base Hub (vault redeem → assets to recipient)
 
 - Uses composer for vault interaction
 - Optimized gas limits for hub-only operations
