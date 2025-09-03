@@ -26,7 +26,7 @@ import { OFTTest } from "./OFT.t.sol";
 
 contract NativeOFTAdapterUpgradeableTest is OFTTest {
     using OptionsBuilder for bytes;
-    uint32 dEid = 1;
+    uint32 dEid = 4;
 
     NativeOFTAdapterUpgradeableMock dNativeOFTAdapter;
 
@@ -40,7 +40,7 @@ contract NativeOFTAdapterUpgradeableTest is OFTTest {
         vm.deal(userD, initialNativeBalance);
 
         TestHelperOz5.setUp();
-        setUpEndpoints(3, LibraryType.UltraLightNode);
+        setUpEndpoints(4, LibraryType.UltraLightNode);
 
         dNativeOFTAdapter = NativeOFTAdapterUpgradeableMock(
             _deployContractAndProxy(
@@ -98,7 +98,7 @@ contract NativeOFTAdapterUpgradeableTest is OFTTest {
         assertEq(dNativeOFTAdapter.approvalRequired(), false);
     }
 
-    function test_oft_debit() public virtual override {
+    function test_native_oft_adapter_upgradeable_debit() public virtual {
         uint256 amountToSendLD = 1 ether;
         uint256 minAmountToCreditLD = 1 ether;
         uint32 dstEid = dEid;
@@ -120,7 +120,7 @@ contract NativeOFTAdapterUpgradeableTest is OFTTest {
         assertEq(amountToCreditLD, amountToSendLD);
     }
 
-    function test_oft_credit() public virtual override {
+    function test_native_oft_adapter_upgradeable_credit() public virtual {
         uint256 amountToCreditLD = 1 ether;
         uint32 srcEid = dEid;
 
@@ -134,7 +134,7 @@ contract NativeOFTAdapterUpgradeableTest is OFTTest {
         assertEq(address(dNativeOFTAdapter).balance, 0);
     }
 
-    function test_send_oft() public virtual override {
+    function test_native_oft_adapter_upgradeable_send() public virtual {
         assertEq(userD.balance, initialNativeBalance);
         assertEq(address(dNativeOFTAdapter).balance, 0);
 
@@ -178,7 +178,7 @@ contract NativeOFTAdapterUpgradeableTest is OFTTest {
         dNativeOFTAdapter.send{ value: extraMsgValue }(sendParam, fee, userD);
     }
 
-    function test_send_oft_compose_msg() public virtual override {
+    function test_native_oft_adapter_upgradeable_send_compose_msg() public virtual {
         uint256 tokensToSend = 1 ether;
 
         vm.deal(userD, initialNativeBalance);
