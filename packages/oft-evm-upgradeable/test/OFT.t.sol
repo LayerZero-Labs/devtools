@@ -96,7 +96,7 @@ contract OFTTest is TestHelperOz5 {
         bytes memory _oappBytecode,
         bytes memory _constructorArgs,
         bytes memory _initializeArgs
-    ) internal returns (address addr) {
+    ) internal virtual returns (address addr) {
         bytes memory bytecode = bytes.concat(abi.encodePacked(_oappBytecode), _constructorArgs);
         assembly {
             addr := create(0, add(bytecode, 0x20), mload(bytecode))
@@ -340,7 +340,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(cERC20Mock.balanceOf(address(cOFTAdapter)), amountToSendLD);
     }
 
-    function test_oft_adapter_credit() public {
+    function test_oft_adapter_credit() public virtual {
         uint256 amountToCreditLD = 1 ether;
         uint32 srcEid = cEid;
 

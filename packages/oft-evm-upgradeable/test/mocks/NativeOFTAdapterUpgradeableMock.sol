@@ -5,7 +5,9 @@ import { NativeOFTAdapterUpgradeable } from "../../contracts/oft/NativeOFTAdapte
 import { SendParam } from "../../contracts/oft/OFTCoreUpgradeable.sol";
 
 contract NativeOFTAdapterUpgradeableMock is NativeOFTAdapterUpgradeable {
-    constructor(uint8 _localDecimals, address _lzEndpoint) NativeOFTAdapterUpgradeable(_localDecimals, _lzEndpoint) {}
+    constructor(uint8 _localDecimals, address _lzEndpoint) NativeOFTAdapterUpgradeable(_localDecimals, _lzEndpoint) {
+        _disableInitializers();
+    }
 
     function initialize(address _delegate) external initializer {
         __NativeOFTAdapter_init(_delegate);

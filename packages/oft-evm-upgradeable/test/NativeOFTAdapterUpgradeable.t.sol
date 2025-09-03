@@ -18,11 +18,11 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
 import { IOFT, SendParam, OFTReceipt } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import { NativeOFTAdapterUpgradeable } from "../contracts/oft/NativeOFTAdapterUpgradeable.sol";
+import { TransparentUpgradeableProxy } from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
+import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 
 import "forge-std/console.sol";
 import { OFTTest } from "./OFT.t.sol";
-
-
 
 contract NativeOFTAdapterUpgradeableTest is OFTTest {
     using OptionsBuilder for bytes;
@@ -34,17 +34,27 @@ contract NativeOFTAdapterUpgradeableTest is OFTTest {
     uint256 public initialNativeBalance = 1000 ether;
 
     function setUp() public virtual override {
+        vm.deal(userA, initialBalance);
         vm.deal(userB, initialBalance);
+        vm.deal(userC, initialBalance);
         vm.deal(userD, initialNativeBalance);
 
-        super.setUp();
-        setUpEndpoints(2, LibraryType.UltraLightNode);
+        TestHelperOz5.setUp();
+        setUpEndpoints(3, LibraryType.UltraLightNode);
 
         dNativeOFTAdapter = NativeOFTAdapterUpgradeableMock(
             _deployContractAndProxy(
                 type(NativeOFTAdapterUpgradeableMock).creationCode,
                 abi.encode(18, address(endpoints[dEid])),
                 abi.encodeWithSelector(NativeOFTAdapterUpgradeableMock.initialize.selector, address(this))
+            )
+        );
+
+        aOFT = OFTUpgradeableMock(
+            _deployContractAndProxy(
+                type(OFTUpgradeableMock).creationCode,
+                abi.encode(address(endpoints[aEid])),
+                abi.encodeWithSelector(OFTUpgradeableMock.initialize.selector, "aOFT", "aOFT", address(this))
             )
         );
 
@@ -56,14 +66,27 @@ contract NativeOFTAdapterUpgradeableTest is OFTTest {
             )
         );
 
+        cERC20Mock = new ERC20Mock("cToken", "cToken");
+        cOFTAdapter = OFTAdapterUpgradeableMock(
+            _deployContractAndProxy(
+                type(OFTAdapterUpgradeableMock).creationCode,
+                abi.encode(address(cERC20Mock), address(endpoints[cEid])),
+                abi.encodeWithSelector(OFTAdapterUpgradeableMock.initialize.selector, address(this))
+            )
+        );
+
         // config and wire the ofts
-        address[] memory ofts = new address[](2);
-        ofts[0] = address(dNativeOFTAdapter);
+        address[] memory ofts = new address[](4);
+        ofts[0] = address(aOFT);
         ofts[1] = address(bOFT);
+        ofts[2] = address(cOFTAdapter);
+        ofts[3] = address(dNativeOFTAdapter);
         this.wireOApps(ofts);
 
         // mint tokens
+        aOFT.mint(userA, initialBalance);
         bOFT.mint(userB, initialBalance);
+        cERC20Mock.mint(userC, initialBalance);
 
         // deploy a universal inspector, can be used by each oft
         oAppInspector = new OFTInspectorMock();
@@ -106,6 +129,7 @@ contract NativeOFTAdapterUpgradeableTest is OFTTest {
 
         uint256 amountReceived = dNativeOFTAdapter.credit(userD, amountToCreditLD, srcEid);
 
+        assertEq(amountReceived, amountToCreditLD);
         assertEq(userD.balance, initialNativeBalance + amountReceived);
         assertEq(address(dNativeOFTAdapter).balance, 0);
     }
@@ -233,195 +257,5 @@ contract NativeOFTAdapterUpgradeableTest is OFTTest {
 
         vm.expectRevert(abi.encodeWithSelector(IOFT.SlippageExceeded.selector, amountToSendLD, minAmountToCreditLD));
         dNativeOFTAdapter.debit(amountToSendLD, minAmountToCreditLD, dstEid);
-    }
-
-    function test_oft_build_msg() public view virtual override {
-        uint32 dstEid = bEid;
-        bytes32 to = addressToBytes32(userD);
-        uint256 amountToSendLD = 1.23456789 ether;
-        uint256 minAmountToCreditLD = dNativeOFTAdapter.removeDust(amountToSendLD);
-
-        // params for buildMsgAndOptions
-        bytes memory extraOptions = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
-        bytes memory composeMsg = hex"1234";
-        SendParam memory sendParam = SendParam(
-            dstEid,
-            to,
-            amountToSendLD,
-            minAmountToCreditLD,
-            extraOptions,
-            composeMsg,
-            ""
-        );
-        uint256 amountToCreditLD = minAmountToCreditLD;
-
-        (bytes memory message, ) = dNativeOFTAdapter.buildMsgAndOptions(sendParam, amountToCreditLD);
-
-        (bool isComposed_, bytes32 sendTo_, uint64 amountSD_, bytes memory composeMsg_) = this.decodeOFTMsgCodec(
-            message
-        );
-
-        assertEq(isComposed_, true);
-        assertEq(sendTo_, to);
-        assertEq(amountSD_, dNativeOFTAdapter.toSD(amountToCreditLD));
-        bytes memory expectedComposeMsg = abi.encodePacked(addressToBytes32(address(this)), composeMsg);
-        assertEq(composeMsg_, expectedComposeMsg);
-    }
-
-    function test_oft_build_msg_no_compose_msg() public view virtual override {
-        uint32 dstEid = bEid;
-        bytes32 to = addressToBytes32(userD);
-        uint256 amountToSendLD = 1.23456789 ether;
-        uint256 minAmountToCreditLD = dNativeOFTAdapter.removeDust(amountToSendLD);
-
-        // params for buildMsgAndOptions
-        bytes memory extraOptions = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
-        bytes memory composeMsg = "";
-        SendParam memory sendParam = SendParam(
-            dstEid,
-            to,
-            amountToSendLD,
-            minAmountToCreditLD,
-            extraOptions,
-            composeMsg,
-            ""
-        );
-        uint256 amountToCreditLD = minAmountToCreditLD;
-
-        (bytes memory message, ) = dNativeOFTAdapter.buildMsgAndOptions(sendParam, amountToCreditLD);
-
-        (bool isComposed_, bytes32 sendTo_, uint64 amountSD_, bytes memory composeMsg_) = this.decodeOFTMsgCodec(
-            message
-        );
-
-        assertEq(isComposed_, false);
-        assertEq(sendTo_, to);
-        assertEq(amountSD_, dNativeOFTAdapter.toSD(amountToCreditLD));
-        assertEq(composeMsg_, "");
-    }
-
-    function test_set_enforced_options() public virtual override {
-        uint32 eid = 1;
-
-        bytes memory optionsTypeOne = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
-        bytes memory optionsTypeTwo = OptionsBuilder.newOptions().addExecutorLzReceiveOption(250000, 0);
-
-        EnforcedOptionParam[] memory enforcedOptions = new EnforcedOptionParam[](2);
-        enforcedOptions[0] = EnforcedOptionParam(eid, 1, optionsTypeOne);
-        enforcedOptions[1] = EnforcedOptionParam(eid, 2, optionsTypeTwo);
-
-        dNativeOFTAdapter.setEnforcedOptions(enforcedOptions);
-
-        assertEq(dNativeOFTAdapter.enforcedOptions(eid, 1), optionsTypeOne);
-        assertEq(dNativeOFTAdapter.enforcedOptions(eid, 2), optionsTypeTwo);
-    }
-
-    function test_assert_options_type3_revert() public virtual override {
-        uint32 eid = dEid;
-        EnforcedOptionParam[] memory enforcedOptions = new EnforcedOptionParam[](1);
-
-        enforcedOptions[0] = EnforcedOptionParam(eid, 1, hex"0004"); // not type 3
-        vm.expectRevert(abi.encodeWithSelector(IOAppOptionsType3.InvalidOptions.selector, hex"0004"));
-        dNativeOFTAdapter.setEnforcedOptions(enforcedOptions);
-
-        enforcedOptions[0] = EnforcedOptionParam(eid, 1, hex"0002"); // not type 3
-        vm.expectRevert(abi.encodeWithSelector(IOAppOptionsType3.InvalidOptions.selector, hex"0002"));
-        dNativeOFTAdapter.setEnforcedOptions(enforcedOptions);
-
-        enforcedOptions[0] = EnforcedOptionParam(eid, 1, hex"0001"); // not type 3
-        vm.expectRevert(abi.encodeWithSelector(IOAppOptionsType3.InvalidOptions.selector, hex"0001"));
-        dNativeOFTAdapter.setEnforcedOptions(enforcedOptions);
-
-        enforcedOptions[0] = EnforcedOptionParam(eid, 1, hex"0003"); // IS type 3
-        dNativeOFTAdapter.setEnforcedOptions(enforcedOptions); // doesnt revert cus option type 3
-    }
-
-    function test_combine_options() public virtual override {
-        uint32 eid = 1;
-        uint16 msgType = 1;
-
-        bytes memory enforcedOptions = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
-        EnforcedOptionParam[] memory enforcedOptionsArray = new EnforcedOptionParam[](1);
-        enforcedOptionsArray[0] = EnforcedOptionParam(eid, msgType, enforcedOptions);
-        dNativeOFTAdapter.setEnforcedOptions(enforcedOptionsArray);
-
-        bytes memory extraOptions = OptionsBuilder.newOptions().addExecutorNativeDropOption(
-            1.2345 ether,
-            addressToBytes32(userA)
-        );
-
-        bytes memory expectedOptions = OptionsBuilder
-            .newOptions()
-            .addExecutorLzReceiveOption(200000, 0)
-            .addExecutorNativeDropOption(1.2345 ether, addressToBytes32(userA));
-
-        bytes memory combinedOptions = dNativeOFTAdapter.combineOptions(eid, msgType, extraOptions);
-        assertEq(combinedOptions, expectedOptions);
-    }
-
-    function test_combine_options_no_extra_options() public virtual override {
-        uint32 eid = 1;
-        uint16 msgType = 1;
-
-        bytes memory enforcedOptions = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
-        EnforcedOptionParam[] memory enforcedOptionsArray = new EnforcedOptionParam[](1);
-        enforcedOptionsArray[0] = EnforcedOptionParam(eid, msgType, enforcedOptions);
-        dNativeOFTAdapter.setEnforcedOptions(enforcedOptionsArray);
-
-        bytes memory expectedOptions = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
-
-        bytes memory combinedOptions = dNativeOFTAdapter.combineOptions(eid, msgType, "");
-        assertEq(combinedOptions, expectedOptions);
-    }
-
-    function test_combine_options_no_enforced_options() public view virtual override {
-        uint32 eid = 1;
-        uint16 msgType = 1;
-
-        bytes memory extraOptions = OptionsBuilder.newOptions().addExecutorNativeDropOption(
-            1.2345 ether,
-            addressToBytes32(userD)
-        );
-
-        bytes memory expectedOptions = OptionsBuilder.newOptions().addExecutorNativeDropOption(
-            1.2345 ether,
-            addressToBytes32(userD)
-        );
-
-        bytes memory combinedOptions = dNativeOFTAdapter.combineOptions(eid, msgType, extraOptions);
-        assertEq(combinedOptions, expectedOptions);
-    }
-
-    function test_oapp_inspector_inspect() public virtual override {
-        uint32 dstEid = bEid;
-        bytes32 to = addressToBytes32(userD);
-        uint256 amountToSendLD = 1.23456789 ether;
-        uint256 minAmountToCreditLD = dNativeOFTAdapter.removeDust(amountToSendLD);
-
-        // params for buildMsgAndOptions
-        bytes memory extraOptions = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
-        bytes memory composeMsg = "";
-        SendParam memory sendParam = SendParam(
-            dstEid,
-            to,
-            amountToSendLD,
-            minAmountToCreditLD,
-            extraOptions,
-            composeMsg,
-            ""
-        );
-        uint256 amountToCreditLD = minAmountToCreditLD;
-
-        // doesnt revert
-        (bytes memory message, ) = dNativeOFTAdapter.buildMsgAndOptions(sendParam, amountToCreditLD);
-
-        // deploy a universal inspector, it automatically reverts
-        oAppInspector = new OFTInspectorMock();
-        // set the inspector
-        dNativeOFTAdapter.setMsgInspector(address(oAppInspector));
-
-        // does revert because inspector is set
-        vm.expectRevert(abi.encodeWithSelector(IOAppMsgInspector.InspectionFailed.selector, message, extraOptions));
-        (message, ) = dNativeOFTAdapter.buildMsgAndOptions(sendParam, amountToCreditLD);
     }
 }

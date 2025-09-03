@@ -64,6 +64,9 @@ abstract contract NativeOFTAdapterUpgradeable is OFTCoreUpgradeable {
         MessagingFee calldata _fee,
         address _refundAddress
     ) public payable virtual override returns (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) {
+        // @dev TODO: Move duplicated core logic to OFTCoreUpgradeable._send,
+        // similar to how OFTCore._send and NativeOFTAdapter.send work in non-upgradeable versions.
+        
         // @dev Ensure the native funds in msg.value are exactly enough to cover the fees and amount to send (with dust removed).
         // @dev This will revert if the _sendParam.amountLD contains any dust
         uint256 requiredMsgValue = _fee.nativeFee + _removeDust(_sendParam.amountLD);
