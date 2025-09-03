@@ -102,9 +102,10 @@ export class OVaultSyncMessageBuilder {
      * Calculate the message fee for the hub chain. This is the fee that it costs to send a message from the hub chain to the dst chain.
      *
      * @param input - The input parameters for the OVault.
+     * @param useWalletAddress
      * @returns The message fee for the hub chain.
      */
-    static async calculateHubChainFee(input: SendParamsInput) {
+    static async calculateHubChainFee(input: SendParamsInput, useWalletAddress = true) {
         const { operation, amount, composerAddress, hubChain, dstEid, hubEid, vaultAddress } = input
 
         // If the dst chain is the same as the hub chain, then we don't need to calculate the fee
@@ -135,19 +136,25 @@ export class OVaultSyncMessageBuilder {
             }),
         ])
 
-        const messageFee = await client.readContract({
+        // If it is a cross chain request, we need to use the vault address or the share OFT address as the wallet
+        // address might not have any shares or assets yet. If it is a same chain request, then we can use the wallet address.
+        const fromAddress = useWalletAddress
+            ? input.walletAddress
+            : operation === OVaultSyncOperations.DEPOSIT
+              ? vaultAddress
+              : shareOftAddress
+
+        return await client.readContract({
             address: composerAddress,
             abi: OVaultComposerSyncAbi,
             functionName: 'quoteSend',
             args: [
-                operation === OVaultSyncOperations.DEPOSIT ? vaultAddress : shareOftAddress,
+                fromAddress,
                 operation === OVaultSyncOperations.DEPOSIT ? shareOftAddress : assetOftAddress,
                 amount,
                 hubSendParams,
             ],
         })
-
-        return messageFee
     }
 
     static async getMessageFee(sendParams: SendParams, input: SendParamsInput) {
@@ -161,7 +168,7 @@ export class OVaultSyncMessageBuilder {
         // If the src chain is the same as the hub chain, then the way to calculate the message fee is the same
         // as calculating the hub chain fee as we are already on the hub chain.
         if (srcEid === hubEid) {
-            return this.calculateHubChainFee(input)
+            return this.calculateHubChainFee(input, true)
         }
 
         // If we are not on the hub chain, then we need to call the OFT's quoteSend function to get the message fee.
@@ -190,11 +197,14 @@ export class OVaultSyncMessageBuilder {
 
         // If the src chain is not the same as the hub chain, then the first message will be an LzCompose
         // so we need to add the executor option
-        const hubMessageFee = await this.calculateHubChainFee({
-            ...input,
-            dstAmount,
-            minDstAmount,
-        })
+        const hubMessageFee = await this.calculateHubChainFee(
+            {
+                ...input,
+                dstAmount,
+                minDstAmount,
+            },
+            false
+        )
 
         const gasLimit = input.hubLzComposeGasLimit ?? (dstIsHubChain ? 175_000n : 375_000n)
         options.addExecutorComposeOption(0, gasLimit, hubMessageFee.nativeFee)
