@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.22;
 
 import { NativeOFTAdapterUpgradeable } from "../../contracts/oft/NativeOFTAdapterUpgradeable.sol";
 import { SendParam } from "../../contracts/oft/OFTCoreUpgradeable.sol";
