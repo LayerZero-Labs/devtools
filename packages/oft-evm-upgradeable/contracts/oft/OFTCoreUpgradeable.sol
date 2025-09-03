@@ -214,6 +214,22 @@ abstract contract OFTCoreUpgradeable is
         MessagingFee calldata _fee,
         address _refundAddress
     ) external payable virtual returns (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) {
+        return _send(_sendParam, _fee, _refundAddress);
+    }
+
+    /**
+     * @dev Internal function to execute send operations.
+     * @param _sendParam The parameters for the send operation.
+     * @param _fee The calculated LayerZero messaging fee from the send() operation.
+     * @param _refundAddress The address to receive any excess funds from LayerZero fees.
+     * @return msgReceipt The receipt from the LayerZero messaging library.
+     * @return oftReceipt The OFT receipt information.
+     */
+    function _send(
+        SendParam calldata _sendParam,
+        MessagingFee calldata _fee,
+        address _refundAddress
+    ) internal virtual returns (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) {
         // @dev Applies the token transfers regarding this send() operation.
         // - amountSentLD is the amount in local decimals that was ACTUALLY sent/debited from the sender.
         // - amountReceivedLD is the amount in local decimals that will be received/credited to the recipient on the remote OFT instance.

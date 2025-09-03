@@ -64,9 +64,6 @@ abstract contract NativeOFTAdapterUpgradeable is OFTCoreUpgradeable {
         MessagingFee calldata _fee,
         address _refundAddress
     ) public payable virtual override returns (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) {
-        // @dev TODO: Move duplicated core logic to OFTCoreUpgradeable._send,
-        // similar to how OFTCore._send and NativeOFTAdapter.send work in non-upgradeable versions.
-        
         // @dev Ensure the native funds in msg.value are exactly enough to cover the fees and amount to send (with dust removed).
         // @dev This will revert if the _sendParam.amountLD contains any dust
         uint256 requiredMsgValue = _fee.nativeFee + _removeDust(_sendParam.amountLD);
@@ -74,25 +71,7 @@ abstract contract NativeOFTAdapterUpgradeable is OFTCoreUpgradeable {
             revert IncorrectMessageValue(msg.value, requiredMsgValue);
         }
 
-        // @dev Applies the native transfers regarding this send() operation.
-        // - amountSentLD is the amount in local decimals that was ACTUALLY sent/debited from the sender.
-        // - amountReceivedLD is the amount in local decimals that will be received/credited to the recipient on the remote OFT instance.
-        (uint256 amountSentLD, uint256 amountReceivedLD) = _debit(
-            msg.sender,
-            _sendParam.amountLD,
-            _sendParam.minAmountLD,
-            _sendParam.dstEid
-        );
-
-        // @dev Builds the options and OFT message to quote in the endpoint.
-        (bytes memory message, bytes memory options) = _buildMsgAndOptions(_sendParam, amountReceivedLD);
-
-        // @dev Sends the message to the LayerZero endpoint and returns the LayerZero msg receipt.
-        msgReceipt = _lzSend(_sendParam.dstEid, message, options, _fee, _refundAddress);
-        // @dev Formulate the OFT receipt.
-        oftReceipt = OFTReceipt(amountSentLD, amountReceivedLD);
-
-        emit OFTSent(msgReceipt.guid, _sendParam.dstEid, msg.sender, amountSentLD, amountReceivedLD);
+        return _send(_sendParam, _fee, _refundAddress);
     }
 
     /**
