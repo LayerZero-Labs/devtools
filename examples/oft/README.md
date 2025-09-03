@@ -167,13 +167,13 @@ You can now use custom DVNs and Executors with the standard `lz:oapp:wire` comma
 // In layerzero.simple-worker.config.ts, SECTION 4: CUSTOM EXECUTOR AND DVN ADDRESSES
 const customExecutorsByEid: Record<number, { address: string }> = {
   [EndpointId.OPTIMISM_V2_TESTNET]: { address: "0x..." }, // From deployments/optimism-testnet/SimpleExecutorMock.json
-  [EndpointId.ARBITRUM_V2_TESTNET]: { address: "0x..." }, // From deployments/arbitrum-testnet/SimpleExecutorMock.json
+  [EndpointId.ARBITRUM_V2_TESTNET]: { address: "0x..." }, // From deployments/arbitrum-sepolia/SimpleExecutorMock.json
   // Add for each chain where you deployed SimpleExecutorMock
 };
 
 const customDVNsByEid: Record<number, { address: string }> = {
   [EndpointId.OPTIMISM_V2_TESTNET]: { address: "0x..." }, // From deployments/optimism-testnet/SimpleDVNMock.json
-  [EndpointId.ARBITRUM_V2_TESTNET]: { address: "0x..." }, // From deployments/arbitrum-testnet/SimpleDVNMock.json
+  [EndpointId.ARBITRUM_V2_TESTNET]: { address: "0x..." }, // From deployments/arbitrum-sepolia/SimpleDVNMock.json
   // Add for each chain where you deployed SimpleDVNMock
 };
 ```
@@ -380,7 +380,7 @@ cast send <OFT_ADDRESS> "mint(address,uint256)" <RECIPIENT_ADDRESS> 100000000000
 
 ```
 
-> You can get the address of your OFT on Base Sepolia from the file at `./deployments/base-testnet/MyOFTMock.json`
+> You can get the address of your OFT on Base Sepolia from the file at `./deployments/base-sepolia/MyOFTMock.json`
 
 Send 1 OFT from **Base Sepolia** to **Arbitrum Sepolia**:
 

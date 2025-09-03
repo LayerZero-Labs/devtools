@@ -160,7 +160,7 @@ cast send <OFT_ADDRESS> "mint(address,uint256)" <RECIPIENT_ADDRESS> 100000000000
 
 ```
 
-> You can get the address of your OFT on Base Sepolia from the file at `./deployments/base-testnet/MyOFTUpgradeableMock.json`
+> You can get the address of your OFT on Base Sepolia from the file at `./deployments/base-sepolia/MyOFTUpgradeableMock.json`
 
 Send 1 OFT from **Base Sepolia** to **Arbitrum Sepolia**:
 
