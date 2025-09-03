@@ -50,13 +50,7 @@ contract NativeOFTAdapterUpgradeableTest is OFTTest {
             )
         );
 
-        aOFT = OFTUpgradeableMock(
-            _deployContractAndProxy(
-                type(OFTUpgradeableMock).creationCode,
-                abi.encode(address(endpoints[aEid])),
-                abi.encodeWithSelector(OFTUpgradeableMock.initialize.selector, "aOFT", "aOFT", address(this))
-            )
-        );
+        aOFT = OFTUpgradeableMock(address(dNativeOFTAdapter));
 
         bOFT = OFTUpgradeableMock(
             _deployContractAndProxy(
@@ -83,8 +77,7 @@ contract NativeOFTAdapterUpgradeableTest is OFTTest {
         ofts[3] = address(dNativeOFTAdapter);
         this.wireOApps(ofts);
 
-        // mint tokens
-        aOFT.mint(userA, initialBalance);
+        // mint tokens (skip aOFT since it's a native adapter - users already have ETH via vm.deal)
         bOFT.mint(userB, initialBalance);
         cERC20Mock.mint(userC, initialBalance);
 
@@ -257,5 +250,134 @@ contract NativeOFTAdapterUpgradeableTest is OFTTest {
 
         vm.expectRevert(abi.encodeWithSelector(IOFT.SlippageExceeded.selector, amountToSendLD, minAmountToCreditLD));
         dNativeOFTAdapter.debit(amountToSendLD, minAmountToCreditLD, dstEid);
+    }
+
+    function test_send_oft() public virtual override {
+        uint256 tokensToSend = 1 ether;
+        bytes memory options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
+        SendParam memory sendParam = SendParam(
+            bEid,
+            addressToBytes32(userB),
+            tokensToSend,
+            tokensToSend,
+            options,
+            "",
+            ""
+        );
+        MessagingFee memory fee = aOFT.quoteSend(sendParam, false);
+        
+        // For native adapter, msg.value must include both fee and token amount
+        uint256 correctMsgValue = fee.nativeFee + tokensToSend;
+
+        assertEq(userD.balance, initialNativeBalance);
+        assertEq(bOFT.balanceOf(userB), initialBalance);
+
+        vm.prank(userD);
+        aOFT.send{ value: correctMsgValue }(sendParam, fee, payable(address(this)));
+        verifyPackets(bEid, addressToBytes32(address(bOFT)));
+
+        assertEq(userD.balance, initialNativeBalance - correctMsgValue);
+        assertEq(bOFT.balanceOf(userB), initialBalance + tokensToSend);
+    }
+
+    function test_send_oft_compose_msg() public virtual override {
+        uint256 tokensToSend = 1 ether;
+
+        OFTComposerMock composer = new OFTComposerMock();
+
+        bytes memory options = OptionsBuilder
+            .newOptions()
+            .addExecutorLzReceiveOption(200000, 0)
+            .addExecutorLzComposeOption(0, 500000, 0);
+        bytes memory composeMsg = hex"1234";
+        SendParam memory sendParam = SendParam(
+            bEid,
+            addressToBytes32(address(composer)),
+            tokensToSend,
+            tokensToSend,
+            options,
+            composeMsg,
+            ""
+        );
+        MessagingFee memory fee = aOFT.quoteSend(sendParam, false);
+        
+        // For native adapter, msg.value must include both fee and token amount
+        uint256 correctMsgValue = fee.nativeFee + tokensToSend;
+
+        assertEq(userD.balance, initialNativeBalance);
+        assertEq(bOFT.balanceOf(address(composer)), 0);
+
+        vm.prank(userD);
+        (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) = aOFT.send{ value: correctMsgValue }(
+            sendParam,
+            fee,
+            payable(address(this))
+        );
+        verifyPackets(bEid, addressToBytes32(address(bOFT)));
+
+        bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
+            msgReceipt.nonce,
+            dEid,  // Use dEid since aOFT is the native adapter on dEid
+            oftReceipt.amountReceivedLD,
+            abi.encodePacked(addressToBytes32(userD), composeMsg)
+        );
+        this.lzCompose(bEid, address(bOFT), options, msgReceipt.guid, address(composer), composerMsg_);
+
+        assertEq(userD.balance, initialNativeBalance - correctMsgValue);
+        assertEq(bOFT.balanceOf(address(composer)), tokensToSend);
+
+        assertEq(composer.from(), address(bOFT));
+        assertEq(composer.guid(), msgReceipt.guid);
+        assertEq(composer.message(), composerMsg_);
+        assertEq(composer.executor(), address(this));
+        assertEq(composer.extraData(), composerMsg_); // default to setting the extraData to the message as well to test
+    }
+
+    function test_oft_debit() public virtual override {
+        uint256 amountToSendLD = 1 ether;
+        uint256 minAmountToCreditLD = 1 ether;
+        uint32 dstEid = bEid;
+
+        // For native adapter, the debit function just calculates amounts
+        // The actual ETH transfer happens in the send() function
+        uint256 userBalanceBefore = dNativeOFTAdapter.balanceOf(userD);
+        uint256 contractBalanceBefore = dNativeOFTAdapter.balanceOf(address(this));
+
+        assertEq(userBalanceBefore, initialNativeBalance);
+
+        vm.prank(userD);
+        (uint256 amountDebitedLD, uint256 amountToCreditLD) = dNativeOFTAdapter.debit(
+            amountToSendLD,
+            minAmountToCreditLD,
+            dstEid
+        );
+
+        assertEq(amountDebitedLD, amountToSendLD);
+        assertEq(amountToCreditLD, amountToSendLD);
+
+        // Balances remain the same because debit() only calculates, doesn't transfer
+        uint256 userBalanceAfter = dNativeOFTAdapter.balanceOf(userD);
+        uint256 contractBalanceAfter = dNativeOFTAdapter.balanceOf(address(this));
+        
+        assertEq(userBalanceAfter, userBalanceBefore);
+        assertEq(contractBalanceAfter, contractBalanceBefore);
+    }
+
+    function test_oft_credit() public virtual override {
+        uint256 amountToCreditLD = 1 ether;
+        uint32 srcEid = dEid;
+
+        // For native adapter, ensure the contract has ETH to credit from
+        vm.deal(address(dNativeOFTAdapter), amountToCreditLD);
+
+        uint256 userBalanceBefore = userD.balance;
+        uint256 adapterBalanceBefore = address(dNativeOFTAdapter).balance;
+
+        uint256 amountReceived = dNativeOFTAdapter.credit(userD, amountToCreditLD, srcEid);
+
+        assertEq(amountReceived, amountToCreditLD);
+        // Check that ETH was transferred from adapter to user
+        assertEq(userD.balance, userBalanceBefore + amountReceived);
+        assertEq(address(dNativeOFTAdapter).balance, adapterBalanceBefore - amountToCreditLD);
     }
 }

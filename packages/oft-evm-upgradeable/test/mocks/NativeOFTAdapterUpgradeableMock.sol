@@ -53,4 +53,10 @@ contract NativeOFTAdapterUpgradeableMock is NativeOFTAdapterUpgradeable {
     function toSD(uint256 _amountLD) public view returns (uint64 amountSD) {
         return _toSD(_amountLD);
     }
+
+    // @dev For compatibility with OFT test cases that expect balanceOf()
+    function balanceOf(address _account) public view returns (uint256) {
+        uint256 balance = _account.balance;
+        return balance;
+    }
 }
