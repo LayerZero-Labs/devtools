@@ -30,11 +30,9 @@ contract DebugSendScript is Script {
 
     function setUp() public {
         chainIdToSrcEid[421614] = 40231; // arb sep
-        chainIdToSrcEid[11155420] = 40232; // opt sep
         chainIdToSrcEid[84532] = 40245; // base sep
 
         chainNameToDstEid["arb-sep"] = 40231; // arb sep
-        chainNameToDstEid["opt-sep"] = 40232; // opt sep
         chainNameToDstEid["base-sep"] = 40245; // base sep
         chainNameToDstEid["bad-eid"] = 100000; // bad eid
 
@@ -51,12 +49,12 @@ contract DebugSendScript is Script {
     ) public {
         uint32 srcEid = chainIdToSrcEid[block.chainid];
         if (srcEid == 0) {
-            revert("Source chain is not Arbitrum Sepolia, Optimism Sepolia, or Base Sepolia");
+            revert("Source chain is not Arbitrum Sepolia or Base Sepolia");
         }
 
         uint32 dstEid = chainNameToDstEid[_dstChain];
         if (dstEid == 0) {
-            revert("Destination chain is not Arbitrum Sepolia, Optimism Sepolia, or Base Sepolia");
+            revert("Destination chain is not Arbitrum Sepolia or Base Sepolia");
         }
 
         srcOFT = OFT(_fromOFT);

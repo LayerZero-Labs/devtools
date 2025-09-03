@@ -243,7 +243,7 @@ The deployment scripts automatically skip existing deployments, so you can safel
 > **Tip**: To deploy to specific networks only, use the `--networks` flag:
 >
 > ```bash
-> pnpm hardhat lz:deploy --tags ovault --networks arbitrum,optimism
+> pnpm hardhat lz:deploy --tags ovault --networks arbitrum-sepolia,base-sepolia
 > ```
 
 ## Enable Messaging
@@ -263,10 +263,7 @@ import {
 } from "@layerzerolabs/metadata-tools";
 import { OAppEnforcedOption } from "@layerzerolabs/toolbox-hardhat";
 
-const optimismContract: OmniPointHardhat = {
-  eid: EndpointId.OPTSEP_V2_TESTNET.valueOf(),
-  contractName: "MyAssetOFT",
-};
+// Optimism removed; use Base and Arbitrum only
 
 const arbitrumContract: OmniPointHardhat = {
   eid: EndpointId.ARBSEP_V2_TESTNET.valueOf(),
@@ -297,15 +294,15 @@ const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
 // Pathway configuration (automatically bidirectional)
 const pathways: TwoWayConfig[] = [
   [
-    optimismContract, // Chain A
+    baseContract, // Chain A
     arbitrumContract, // Chain B
     [["LayerZero Labs"], []], // DVN configuration
     [1, 1], // Confirmations [A→B, B→A]
     [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Gas options
   ],
   [
-    optimismContract,
     baseContract,
+    arbitrumContract,
     [["LayerZero Labs"], []],
     [1, 1],
     [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
@@ -323,7 +320,6 @@ export default async function () {
   const connections = await generateConnectionsConfig(pathways);
   return {
     contracts: [
-      { contract: optimismContract },
       { contract: arbitrumContract },
       { contract: baseContract },
     ],
@@ -352,10 +348,7 @@ import {
 } from "@layerzerolabs/metadata-tools";
 import { OAppEnforcedOption } from "@layerzerolabs/toolbox-hardhat";
 
-const optimismContract: OmniPointHardhat = {
-  eid: EndpointId.OPTSEP_V2_TESTNET.valueOf(),
-  contractName: "MyShareOFT", // Standard OFT (spoke)
-};
+// Optimism removed; use Base and Arbitrum only
 
 const arbitrumContract: OmniPointHardhat = {
   eid: EndpointId.BASESEP_V2_TESTNET.valueOf(), // Note: Base is the hub chain
@@ -386,15 +379,15 @@ const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
 // Same pathway structure as asset config
 const pathways: TwoWayConfig[] = [
   [
-    optimismContract, // Spoke
+    baseContract, // Spoke (Base)
     arbitrumContract, // Hub (Base chain with adapter)
     [["LayerZero Labs"], []],
     [1, 1],
     [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
   ],
   [
-    optimismContract, // Spoke
-    baseContract, // Spoke (Arbitrum)
+    baseContract, // Spoke (Base)
+    arbitrumContract, // Spoke (Arbitrum)
     [["LayerZero Labs"], []],
     [1, 1],
     [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
@@ -412,7 +405,6 @@ export default async function () {
   const connections = await generateConnectionsConfig(pathways);
   return {
     contracts: [
-      { contract: optimismContract },
       { contract: arbitrumContract },
       { contract: baseContract },
     ],
@@ -654,10 +646,10 @@ The task automatically optimizes gas limits based on operation type:
 **Complete Deposit Cycle:**
 
 ```bash
-# 1. Deposit assets cross-chain (Arbitrum → Hub → Optimism)
+# 1. Deposit assets cross-chain (Arbitrum → Hub → Base)
 npx hardhat lz:ovault:send --src-eid 30110 --dst-eid 30111 --amount 10.0 --to 0xRecipient --token-type asset
 
-# 2. Later redeem shares back (Optimism → Hub → Arbitrum)
+# 2. Later redeem shares back (Base → Hub → Arbitrum)
 npx hardhat lz:ovault:send --src-eid 30111 --dst-eid 30110 --amount 9.5 --to 0xRecipient --token-type share
 ```
 
