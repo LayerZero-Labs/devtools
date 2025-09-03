@@ -29,6 +29,7 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
 
     uint256 public constant VALID_COMPOSE_MSG_LEN = 64; /// @dev abi.encode(uint256,address) = 32+32
 
+    /// @dev decimal difference having range [-2,18] is defined by hyperliquid in their docs
     int8 public constant MIN_DECIMAL_DIFF = -2;
     int8 public constant MAX_DECIMAL_DIFF = 18;
 
