@@ -63,9 +63,9 @@ contract HyperliquidBaseTest is Test {
         eidFromChainId[998] = Eids({ ethEid: 40161, hlpEid: 40362 });
         eidFromChainId[999] = Eids({ ethEid: 30301, hlpEid: 30367 });
 
-        // ETH as ERC20 and HYPE as HYPE
+        // USDe as ERC20 on mainnet and UETH on testnet and HYPE as HYPE
         coreSpotFromChainId[998] = CoreSpot({ erc20: 1242, hype: 1105 });
-        coreSpotFromChainId[999] = CoreSpot({ erc20: 221, hype: 150 });
+        coreSpotFromChainId[999] = CoreSpot({ erc20: 235, hype: 150 });
 
         // Hyperliquid testnet has rate limits that return empty storage roots before a fork fails
         // It is therefore recommended to create a local anvil fork of hyperliquid and assign RPC_URL_HYPERLIQUID to anvil fork
@@ -92,13 +92,13 @@ contract HyperliquidBaseTest is Test {
         ERC20 = IHyperAsset({
             assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(erc20CoreIndexId),
             coreIndexId: erc20CoreIndexId,
-            decimalDiff: 18 - 8
+            decimalDiff: block.chainid == 998 ? int8(9) : int8(10) // 18 - 9 : 18 - 10
         });
 
         HYPE = IHyperAsset({
             assetBridgeAddress: 0x2222222222222222222222222222222222222222,
             coreIndexId: hypeCoreIndexId,
-            decimalDiff: 18 - 10
+            decimalDiff: int8(10) // 18 - 8
         });
 
         oft = new OFTMock("test", "test", HL_LZ_ENDPOINT_V2, msg.sender);

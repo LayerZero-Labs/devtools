@@ -16,7 +16,7 @@ contract HyperLiquidComposer_Recoverable is HyperLiquidComposer, RecoverableComp
     constructor(
         address _oft,
         uint64 _hlIndexId,
-        int64 _assetDecimalDiff,
+        int8 _assetDecimalDiff,
         address _recoveryAddress
     ) HyperLiquidComposer(_oft, _hlIndexId, _assetDecimalDiff) RecoverableComposer(_recoveryAddress) {}
 }

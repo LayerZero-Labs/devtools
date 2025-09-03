@@ -89,7 +89,7 @@ contract FeeTokenTest is HyperliquidBaseTest {
         deal(address(oft), address(feeToken), TRANSFER_AMOUNT_EVM);
 
         uint64 coreIndexId = feeToken.ERC20_CORE_INDEX_ID();
-        int64 decimalDiff = feeToken.ERC20_DECIMAL_DIFF();
+        int8 decimalDiff = feeToken.ERC20_DECIMAL_DIFF();
         address assetBridgeAddress = feeToken.ERC20_ASSET_BRIDGE();
 
         // For new users, the core amount should be reduced by activation fee

@@ -14,6 +14,6 @@ contract MyHyperLiquidComposer_FeeToken is FeeToken {
     constructor(
         address _oft,
         uint64 _hlIndexId,
-        int64 _assetDecimalDiff
+        int8 _assetDecimalDiff
     ) HyperLiquidComposer(_oft, _hlIndexId, _assetDecimalDiff) {}
 }
