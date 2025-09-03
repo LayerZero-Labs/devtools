@@ -10,7 +10,7 @@ import { MessagingFee, MessagingReceipt, OFTCoreUpgradeable, OFTFeeDetail, OFTLi
  *
  * @dev WARNING: ONLY 1 of these should exist for a given global mesh,
  * unless you make a NON-default implementation of OFT, which needs to be done very carefully.
- * @dev WARNING: The default NativeOFTAdapter implementation assumes LOSSLESS transfers, ie. 1 native in, 1 native out.
+ * @dev WARNING: The default NativeOFTAdapterUpgradeable implementation assumes LOSSLESS transfers, ie. 1 native in, 1 native out.
  */
 abstract contract NativeOFTAdapterUpgradeable is OFTCoreUpgradeable {
 
