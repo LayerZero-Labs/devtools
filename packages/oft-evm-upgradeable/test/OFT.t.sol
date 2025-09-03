@@ -340,7 +340,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(cERC20Mock.balanceOf(address(cOFTAdapter)), amountToSendLD);
     }
 
-    function test_oft_adapter_credit() public virtual {
+    function test_oft_adapter_credit() public {
         uint256 amountToCreditLD = 1 ether;
         uint32 srcEid = cEid;
 
@@ -366,7 +366,7 @@ contract OFTTest is TestHelperOz5 {
         composeMsg = OFTMsgCodec.composeMsg(message);
     }
 
-    function test_oft_build_msg() public view virtual {
+    function test_oft_build_msg() public view {
         uint32 dstEid = bEid;
         bytes32 to = addressToBytes32(userA);
         uint256 amountToSendLD = 1.23456789 ether;
@@ -399,7 +399,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(composeMsg_, expectedComposeMsg);
     }
 
-    function test_oft_build_msg_no_compose_msg() public view virtual {
+    function test_oft_build_msg_no_compose_msg() public view {
         uint32 dstEid = bEid;
         bytes32 to = addressToBytes32(userA);
         uint256 amountToSendLD = 1.23456789 ether;
@@ -431,7 +431,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(composeMsg_, "");
     }
 
-    function test_set_enforced_options() public virtual {
+    function test_set_enforced_options() public {
         uint32 eid = 1;
 
         bytes memory optionsTypeOne = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
@@ -447,7 +447,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(aOFT.enforcedOptions(eid, 2), optionsTypeTwo);
     }
 
-    function test_assert_options_type3_revert() public virtual {
+    function test_assert_options_type3_revert() public {
         uint32 eid = 1;
         EnforcedOptionParam[] memory enforcedOptions = new EnforcedOptionParam[](1);
 
@@ -467,7 +467,7 @@ contract OFTTest is TestHelperOz5 {
         aOFT.setEnforcedOptions(enforcedOptions); // doesnt revert cus option type 3
     }
 
-    function test_combine_options() public virtual {
+    function test_combine_options() public {
         uint32 eid = 1;
         uint16 msgType = 1;
 
@@ -490,7 +490,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(combinedOptions, expectedOptions);
     }
 
-    function test_combine_options_no_extra_options() public virtual {
+    function test_combine_options_no_extra_options() public {
         uint32 eid = 1;
         uint16 msgType = 1;
 
@@ -505,7 +505,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(combinedOptions, expectedOptions);
     }
 
-    function test_combine_options_no_enforced_options() public view virtual {
+    function test_combine_options_no_enforced_options() public view {
         uint32 eid = 1;
         uint16 msgType = 1;
 
@@ -523,7 +523,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(combinedOptions, expectedOptions);
     }
 
-    function test_oapp_inspector_inspect() public virtual {
+    function test_oapp_inspector_inspect() public {
         uint32 dstEid = bEid;
         bytes32 to = addressToBytes32(userA);
         uint256 amountToSendLD = 1.23456789 ether;
