@@ -96,15 +96,15 @@ const customFetchMetadata = async (): Promise<IMetadata> => {
     // Get addresses from: ./deployments/<network-name>/YourContract.json
 
     const customExecutorsByEid: Record<number, { address: string }> = {
-        [EndpointId.BASESEP_V2_TESTNET]: { address: '' }, // <-- YOUR BASE EXECUTOR
-        [EndpointId.ARBSEP_V2_TESTNET]: { address: '0xDd320b7755cAcf40c3A2045310Bf96e2e7151c34' }, // <-- YOUR ARBITRUM EXECUTOR
+        [EndpointId.BASESEP_V2_TESTNET]: { address: '' }, // <-- EDIT THIS: YOUR BASE EXECUTOR
+        [EndpointId.ARBSEP_V2_TESTNET]: { address: '' }, // <-- EDIT THIS: YOUR ARBITRUM EXECUTOR
         // Add more executors for other chains:
         // [EndpointId.BASE_V2_TESTNET]: { address: '0xYOUR_BASE_EXECUTOR_ADDRESS' },
     }
 
     const customDVNsByEid: Record<number, { address: string }> = {
-        [EndpointId.BASESEP_V2_TESTNET]: { address: '' }, // <-- YOUR BASE DVN
-        [EndpointId.ARBSEP_V2_TESTNET]: { address: '0xf6d5B5a53b94B4828d23675fbd21C2e299d110F3' }, // <-- YOUR ARBITRUM DVN
+        [EndpointId.BASESEP_V2_TESTNET]: { address: '' }, // <-- EDIT THIS: YOUR BASE DVN
+        [EndpointId.ARBSEP_V2_TESTNET]: { address: '' }, // <-- EDIT THIS: YOUR ARBITRUM DVN
         // Add more DVNs for other chains:
         // [EndpointId.BASE_V2_TESTNET]: { address: '0xYOUR_BASE_DVN_ADDRESS' },
     }
