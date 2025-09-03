@@ -7,7 +7,6 @@ pragma solidity ^0.8.20;
 import { SafeERC20, IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { OAppSenderUpgradeable } from "@layerzerolabs/oapp-evm-upgradeable/contracts/oapp/OAppSenderUpgradeable.sol";
 import { MessagingParams, MessagingFee, MessagingReceipt } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
-import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 
 /**
  * @title OAppSenderAltUpgradeable
@@ -23,7 +22,7 @@ abstract contract OAppSenderAltUpgradeable is OAppSenderUpgradeable {
     address public immutable nativeToken;
 
     constructor() {
-        nativeToken = ILayerZeroEndpointV2(endpoint).nativeToken();
+        nativeToken = endpoint.nativeToken();
     }
 
     /**
