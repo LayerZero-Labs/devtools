@@ -277,7 +277,7 @@ npx hardhat lz:oapp:send --from-eid 40168 --dst-eid 40231 --message "Hello from 
 Send from Arbitrum Sepolia (40231) to Solana Devnet (40168) :
 
 ```bash
-npx hardhat --network arbitrum-testnet lz:oapp:send --from-eid 40231 --dst-eid 40168 --message "Hello from Arbitrum Sepolia"
+npx hardhat --network arbitrum-sepolia lz:oapp:send --from-eid 40231 --dst-eid 40168 --message "Hello from Arbitrum Sepolia"
 ```
 
 :information_source: For the list of supported chains and their endpoint ID's refer to the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.

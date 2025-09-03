@@ -21,7 +21,7 @@ import { DeploymentConfig } from './types'
 // - _hubEid: The hub chain (where the OVault [ERC4626, ShareOFTAdapter, Composer] is deployed)
 // - _spokeEids: The spoke chains (where the ShareOFT is deployed)
 const _hubEid = EndpointId.ARBSEP_V2_TESTNET
-const _spokeEids = [EndpointId.OPTSEP_V2_TESTNET, EndpointId.BASESEP_V2_TESTNET]
+const _spokeEids = [EndpointId.BASESEP_V2_TESTNET]
 
 // ============================================
 // Deployment Export

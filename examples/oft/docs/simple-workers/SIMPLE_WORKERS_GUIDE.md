@@ -68,7 +68,7 @@ Deploy Simple Workers (SimpleDVNMock and SimpleExecutorMock) on both networks:
 pnpm hardhat lz:deploy --tags SimpleDVNMock
 ```
 
-Select both `arbitrum-testnet` and `base-testnet` and specify the contract name `SimpleDVNMock` as the tag.
+Select both `arbitrum-sepolia` and `base-sepolia` and specify the contract name `SimpleDVNMock` as the tag.
 
 **Deploy SimpleExecutorMock (for send operations):**
 
@@ -76,7 +76,7 @@ Select both `arbitrum-testnet` and `base-testnet` and specify the contract name 
 pnpm hardhat lz:deploy --tags SimpleExecutorMock
 ```
 
-Select both `arbitrum-testnet` and `base-testnet` and specify the contract name `SimpleExecutorMock` as the tag.
+Select both `arbitrum-sepolia` and `base-sepolia` and specify the contract name `SimpleExecutorMock` as the tag.
 
 > There is no longer a separate destination executor. Use `SimpleExecutorMock` for commit-and-execute on the destination chain.
 
@@ -86,12 +86,12 @@ After deploying on both networks, update the address variables in your `layerzer
 
 1. **For Base Sepolia:**
 
-   - Open `deployments/base-testnet/SimpleDVNMock.json` and `deployments/base-testnet/SimpleExecutorMock.json`
+   - Open `deployments/base-sepolia/SimpleDVNMock.json` and `deployments/base-sepolia/SimpleExecutorMock.json`
    - Copy the `address` field values
    - Paste them into the respective address variables
 
 2. **For Arbitrum Sepolia:**
-   - Open `deployments/arbitrum-testnet/SimpleDVNMock.json` and `deployments/arbitrum-testnet/SimpleExecutorMock.json`
+   - Open `deployments/arbitrum-sepolia/SimpleDVNMock.json` and `deployments/arbitrum-sepolia/SimpleExecutorMock.json`
    - Copy the `address` field values
    - Paste them into the respective address variables
 
