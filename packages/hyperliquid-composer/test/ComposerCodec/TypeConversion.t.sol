@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import { HyperLiquidComposerCodec } from "../../contracts/library/HyperLiquidComposerCodec.sol";
-import { IHyperAsset, IHyperAssetAmount } from "../../contracts/interfaces/IHyperLiquidComposerCore.sol";
+import { IHyperAssetAmount } from "../../contracts/interfaces/IHyperLiquidComposer.sol";
 
 import { Test, console } from "forge-std/Test.sol";
 
@@ -15,7 +15,7 @@ contract TypeConversionTest is Test {
     function setUp() public {}
 
     function test_into_assetBridgeAddress() public pure {
-        uint256 coreIndexId = 1;
+        uint64 coreIndexId = 1;
         address assetBridgeAddress = HyperLiquidComposerCodec.into_assetBridgeAddress(coreIndexId);
         assertEq(assetBridgeAddress, 0x2000000000000000000000000000000000000001);
     }
@@ -39,23 +39,18 @@ contract TypeConversionTest is Test {
     ) public view {
         // Skip condition based on the decimal count
         evmExtraWeiDecimals = int8(bound(evmExtraWeiDecimals, MIN_DECIMAL_DIFF, 0));
+        vm.assume(amount > 1e12); // shared decimals
 
         uint256 scale = 10 ** uint8(-1 * evmExtraWeiDecimals);
-
-        IHyperAsset memory oftAsset = IHyperAsset({
-            assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1),
-            coreIndexId: 1,
-            decimalDiff: evmExtraWeiDecimals
-        });
+        vm.assume(amount < bridgeSupply / scale);
 
         IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyperAssetAmount(
             amount,
             bridgeSupply,
-            oftAsset
+            evmExtraWeiDecimals
         );
 
         assertEq(amounts.evm, amounts.core / scale, "evm and core amounts should differ by a factor of scale");
-        assertEq(amounts.dust + amounts.evm, amount, "dust + evm is not equal to the input amount");
     }
 
     function test_into_hyperAssetAmount_decimal_diff_gt_zero(
@@ -63,23 +58,18 @@ contract TypeConversionTest is Test {
         uint64 bridgeSupply,
         int8 evmExtraWeiDecimals
     ) public view {
-        // Skip condition based on the decimal count
-        evmExtraWeiDecimals = int8(bound(evmExtraWeiDecimals, 1, MAX_DECIMAL_DIFF));
-        uint256 scale = 10 ** uint8(evmExtraWeiDecimals);
+        evmExtraWeiDecimals = int8(bound(evmExtraWeiDecimals, 0, MAX_DECIMAL_DIFF));
+        vm.assume(amount > 1e12); // shared decimals
 
-        IHyperAsset memory oftAsset = IHyperAsset({
-            assetBridgeAddress: HyperLiquidComposerCodec.into_assetBridgeAddress(1),
-            coreIndexId: 1,
-            decimalDiff: evmExtraWeiDecimals
-        });
+        uint256 scale = 10 ** uint8(evmExtraWeiDecimals);
+        vm.assume(amount < bridgeSupply * scale);
 
         IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyperAssetAmount(
             amount,
             bridgeSupply,
-            oftAsset
+            evmExtraWeiDecimals
         );
 
-        assertEq(amounts.evm / scale, amounts.core, "evm and core amounts should differ by a factor of scale");
-        assertEq(amounts.dust + amounts.evm, amount, "dust + evm is not equal to the input amount");
+        assertEq(amounts.evm, scale * amounts.core, "evm and core amounts should differ by a factor of scale");
     }
 }

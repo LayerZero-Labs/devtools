@@ -7,7 +7,7 @@ import inquirer from 'inquirer'
 import { CHAIN_IDS, getCoreSpotDeployment, useBigBlock, useSmallBlock } from '@layerzerolabs/hyperliquid-composer'
 
 const contractName_oft = 'MyOFT'
-const contractName_composer = 'MyHyperLiquidComposer'
+const contractName_composer = 'MyHyperLiquidComposer_FeeToken'
 
 const deploy: DeployFunction = async (hre) => {
     const { coreSpotIndex } = await inquirer.prompt([

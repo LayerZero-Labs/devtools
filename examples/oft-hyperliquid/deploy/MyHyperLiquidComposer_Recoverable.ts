@@ -7,7 +7,7 @@ import inquirer from 'inquirer'
 import { CHAIN_IDS, getCoreSpotDeployment, useBigBlock, useSmallBlock } from '@layerzerolabs/hyperliquid-composer'
 
 const contractName_oft = 'MyOFT'
-const contractName_composer = 'MyHyperLiquidComposer'
+const contractName_composer = 'HyperLiquidComposer_Recoverable'
 
 const deploy: DeployFunction = async (hre) => {
     const { coreSpotIndex } = await inquirer.prompt([
@@ -21,8 +21,9 @@ const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
 
     const { deploy } = deployments
-    const { deployer } = await getNamedAccounts()
+    const { deployer, recoveryAddress } = await getNamedAccounts()
     assert(deployer, 'Missing named deployer account')
+    assert(recoveryAddress, 'Missing recovery address. Please set RECOVERY_ADDRESS in .env file')
 
     const networkName = hre.network.name
     const privateKey = hre.network.config.accounts
@@ -41,6 +42,7 @@ const deploy: DeployFunction = async (hre) => {
 
     console.log(`Network: ${networkName}`)
     console.log(`Deployer: ${deployer}`)
+    console.log(`Recovery Address: ${recoveryAddress}`)
 
     assert(isHyperliquid, 'The hyperliquid composer is only supported on hyperliquid networks')
 
@@ -91,6 +93,7 @@ const deploy: DeployFunction = async (hre) => {
             address_oft, // OFT address
             hip1Token.coreSpot.index, // Core index id
             hip1Token.txData.weiDiff,
+            recoveryAddress, // Recovery address
         ],
         log: true,
         skipIfAlreadyDeployed: false,

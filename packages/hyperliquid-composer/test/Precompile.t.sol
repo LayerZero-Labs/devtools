@@ -6,8 +6,7 @@ import { HyperliquidBaseTest } from "./HyperliquidBase.t.sol";
 
 import { HyperLiquidComposerCodec } from "../contracts/library/HyperLiquidComposerCodec.sol";
 
-import { IHyperAsset, IHyperAssetAmount } from "../contracts/interfaces/IHyperLiquidComposerCore.sol";
-import { IHyperLiquidComposerCore } from "../contracts/interfaces/IHyperLiquidComposerCore.sol";
+import { IHyperLiquidComposer, IHyperAssetAmount } from "../contracts/interfaces/IHyperLiquidComposer.sol";
 import { IHYPEPrecompile } from "../contracts/interfaces/IHYPEPrecompile.sol";
 
 import { HyperLiquidComposer } from "../contracts/HyperLiquidComposer.sol";
@@ -61,7 +60,7 @@ contract PrecompileTest is HyperliquidBaseTest {
             _balance
         );
 
-        uint64 balance = hyperLiquidComposer.balanceOfHyperCore(_address, asset.coreIndexId);
+        uint64 balance = hyperLiquidComposer.spotBalance(_address, asset.coreIndexId).total;
 
         assertEq(balance, _balance);
     }
