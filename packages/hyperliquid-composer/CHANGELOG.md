@@ -1,5 +1,11 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 1.0.0
+
+### Major Changes
+
+- 62c0122: hyperliquid v1 with extensions for fee-token and recovery
+
 ## 0.0.19
 
 ### Patch Changes
