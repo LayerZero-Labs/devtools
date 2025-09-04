@@ -8,15 +8,8 @@ import { CHAIN_IDS, getCoreSpotDeployment, useBigBlock, useSmallBlock } from '@l
 
 const contractName_oft = 'MyOFT'
 const contractName_composer = 'HyperLiquidComposer_Recoverable'
-const recoveryAddress = '0x0000000000000000000000000000000000000000'
 
 const deploy: DeployFunction = async (hre) => {
-    if (recoveryAddress == '0x0000000000000000000000000000000000000000') {
-        throw new Error(
-            'Recovery address is not defined. Please set the recoveryAddress variable in the deploy script.'
-        )
-    }
-
     const { coreSpotIndex } = await inquirer.prompt([
         {
             type: 'input',
@@ -28,8 +21,9 @@ const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
 
     const { deploy } = deployments
-    const { deployer } = await getNamedAccounts()
+    const { deployer, recoveryAddress } = await getNamedAccounts()
     assert(deployer, 'Missing named deployer account')
+    assert(recoveryAddress, 'Missing recovery address. Please set RECOVERY_ADDRESS in .env file')
 
     const networkName = hre.network.name
     const privateKey = hre.network.config.accounts
@@ -48,6 +42,7 @@ const deploy: DeployFunction = async (hre) => {
 
     console.log(`Network: ${networkName}`)
     console.log(`Deployer: ${deployer}`)
+    console.log(`Recovery Address: ${recoveryAddress}`)
 
     assert(isHyperliquid, 'The hyperliquid composer is only supported on hyperliquid networks')
 
