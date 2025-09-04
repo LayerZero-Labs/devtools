@@ -104,8 +104,11 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
         try this.decodeMessage(composeMsgEncoded) returns (uint256 _minMsgValue, address _to) {
             if (msg.value < _minMsgValue) revert InsufficientMsgValue(msg.value, _minMsgValue);
 
+            uint256 minGas = msg.value > 0 ? MIN_GAS_WITH_VALUE() : MIN_GAS();
+
             /// @dev Gas check before executing hypercore precompile operations. Can be retried from the endpoint with sufficient gas.
-            if (gasleft() < MIN_GAS()) revert InsufficientGas(gasleft(), MIN_GAS());
+            /// @dev Contracts would need to called with more gas than this to account for the code above this line.
+            if (gasleft() < minGas) revert InsufficientGas(gasleft(), minGas);
 
             /// @dev If HyperEVM -> HyperCore fails for HYPE OR ERC20 then we do a complete refund to the receiver on hyperevm
             /// @dev try...catch to safeguard against possible breaking hyperliquid pre-compile changes
@@ -274,11 +277,22 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
 
     /**
      * @dev Minimum gas to be supplied to the composer contract for execution to prevent Out of Gas.
-     * todo Profile against mainnet
+     * @dev This is used when the compose message does NOT have msg.value to send user funds to the receiver on core.
+     * @dev This is the minimum gas amt for the compose operations which means the contract should be called with some more gas.
      * @return The minimum gas amount
      */
     function MIN_GAS() public virtual returns (uint256) {
         return 150_000;
+    }
+
+    /**
+     * @dev Minimum gas to be supplied to the composer contract for execution to prevent Out of Gas.
+     * @dev This is used when the compose message has msg.value to send user funds to the receiver on core.
+     * @dev This is the minimum gas amt for the compose operations which means the contract should be called with some more gas.
+     * @return The minimum gas amount
+     */
+    function MIN_GAS_WITH_VALUE() public virtual returns (uint256) {
+        return 200_000;
     }
 
     receive() external payable {}
