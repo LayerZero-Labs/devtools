@@ -2,6 +2,7 @@ import { ChannelId, EndpointId } from '@layerzerolabs/lz-definitions'
 
 import type { OAppReadOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
+const arbitrumContract: OmniPointHardhat = {
     eid: EndpointId.ARBSEP_V2_TESTNET,
     contractName: 'ReadViewOrPure',
 }
