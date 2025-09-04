@@ -29,7 +29,6 @@ library HyperLiquidComposerCodec {
 
     /**
      * @notice Converts an asset bridge address to a core index id
-     * @notice This function is called by the HyperLiquidComposer contract
      * @param _assetBridgeAddress The asset bridge address to convert
      * @return _coreIndexId The core index id
      */
@@ -38,12 +37,12 @@ library HyperLiquidComposerCodec {
     }
 
     /**
-     * @notice Converts an amount and an asset to a evm amount, core amount, and dust
+     * @notice Converts an amount and an asset to a evm amount and core amount
      * @notice This function is called by the HyperLiquidComposer contract
      * @param _amount The amount to convert
      * @param _assetBridgeSupply The maximum amount transferable capped by the number of tokens located on the HyperCore's side of the asset bridge
      * @param _decimalDiff The decimal difference of evmDecimals - coreDecimals
-     * @return IHyperAssetAmount memory - The evm amount, core amount, and dust
+     * @return IHyperAssetAmount memory - The evm amount and core amount
      */
     function into_hyperAssetAmount(
         uint256 _amount,
@@ -54,7 +53,6 @@ library HyperLiquidComposerCodec {
         uint64 amountCore;
 
         /// @dev HyperLiquid decimal conversion: Scale EVM (u256,evmDecimals) -> Core (u64,coreDecimals)
-        /// @dev Dust contains the "dust" from scaling and is used for refund.
         /// @dev Core amount is guaranteed to be within u64 range.
         if (_decimalDiff > 0) {
             (amountEVM, amountCore) = into_hyperAssetAmount_decimal_difference_gt_zero(
@@ -123,7 +121,6 @@ library HyperLiquidComposerCodec {
 
             /// @dev When `Core > EVM` there will be no opening dust to strip out since all tokens in evm can be represented on core
             /// @dev Safe: Bound amountEvm to the range of [0, evmscaled u64.max]
-            /// @dev Overflow the excess into dust
             if (_amount > maxAmt) revert TransferAmtExceedsAssetBridgeBalance(amountEVM, maxAmt);
 
             /// @dev Safe: Guaranteed to be in the range of [0, u64.max] because it is upperbounded by uint64 maxAmt

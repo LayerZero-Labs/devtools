@@ -38,7 +38,8 @@ abstract contract FeeToken is HyperLiquidComposer {
         if (coreUserExists(_to).exists) return _coreAmount;
 
         uint64 fee = activationFee();
-        if (_coreAmount < fee) revert InsufficientCoreAmountForActivation();
+        /// @dev When coreAmt > fee we have some amt to send the user on core
+        if (_coreAmount <= fee) revert InsufficientCoreAmountForActivation();
         return _coreAmount - fee;
     }
 
