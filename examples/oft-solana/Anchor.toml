@@ -2,18 +2,17 @@
 anchor_version = "0.31.1"
 
 [features]
-seeds = false
-skip-lint = false
 resolution = false
+skip-lint = false
 
 [programs.localnet]
-oft = "G2BYTnfGCMQAErMZkTBCFSapKevzf6QCjizjXi8hFEtJ"
+oft = "EVehRoTTihhW8mk1o1iGRWm2wjbC4CWHtWNFjfpTTdRS"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "localnet"
 wallet = "./junk-id.json"
 
 [scripts]
