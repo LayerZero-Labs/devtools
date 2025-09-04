@@ -5,6 +5,7 @@ import { AddressCast } from "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Ad
 
 import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
 
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { IOFT, SendParam, OFTReceipt, MessagingReceipt, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 
 import { Script, console } from "forge-std/Script.sol";
@@ -14,7 +15,7 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
 /**
  * @title Lets the user send an LZ OFT transfer to transfer an amount of OFT from a source EVM chain to HyperEVM testnet or mainnet
  * @notice There are 3 supported modes that correspond to <amount>, <gas>, <value> in the forge script below:
- * @notice forge script script/SendScript.s.sol --private-key $PRIVATE_KEY --rpc-url $RPC_URL_BSC_TESTNET --sig "exec(uint256,uint128,uint128)" <amount> <gas> <value> [--broadcast]
+ * @notice forge script script/SendScript.s.sol --private-key $PRIVATE_KEY --rpc-url $RPC_URL_BSC_TESTNET --sig "exec(address,uint256,uint128,uint128,uint128)" <receiver> <amount> <gas> <value> <recvGas> [--broadcast]
  * @notice 1. Send to HyperEVM 
                 - true, false, false
  * @notice 2. Send to HyperCore 
@@ -30,12 +31,19 @@ contract SendScript is Script {
     address public address_HyperEVM_OFT;
 
     OFT public myOFT_SRC;
+    IERC20 public srcInnerToken;
     address public address_src_OFT;
 
     uint32 public srcEid;
     uint32 public dstEid;
 
-    function exec(uint256 _amount, uint128 _lzComposeGas, uint128 _lzComposeValue) public {
+    function exec(
+        address _receiver,
+        uint256 _amount,
+        uint128 _lzComposeGas,
+        uint128 _lzComposeValue,
+        uint128 _lzReceiveGas
+    ) public {
         address_HyperEVM_Composer = payable(vm.envAddress("HYPEREVM_COMPOSER"));
         address_HyperEVM_OFT = vm.envAddress("HYPEREVM_OFT");
         address_src_OFT = vm.envAddress("SRC_OFT");
@@ -44,20 +52,25 @@ contract SendScript is Script {
         dstEid = uint32(vm.envUint("DST_EID"));
 
         myOFT_SRC = OFT(address_src_OFT);
+        srcInnerToken = IERC20(myOFT_SRC.token());
 
         SendParam memory sendParam = buildSendParam(
             address_HyperEVM_Composer,
-            msg.sender,
+            _receiver,
             _amount,
             dstEid,
             _lzComposeGas,
-            _lzComposeValue
+            _lzComposeValue,
+            _lzReceiveGas
         );
 
         vm.startBroadcast();
 
         MessagingFee memory msgFee = quoteSend(sendParam);
 
+        if (myOFT_SRC.approvalRequired() && srcInnerToken.allowance(msg.sender, address_src_OFT) < _amount) {
+            srcInnerToken.approve(address_src_OFT, _amount);
+        }
         _send(sendParam, msgFee);
 
         vm.stopBroadcast();
@@ -69,15 +82,19 @@ contract SendScript is Script {
         uint256 _tokenAmount,
         uint32 _dstEid,
         uint128 _lzComposeGas,
-        uint128 _lzComposeValue
-    ) public pure returns (SendParam memory sendParam) {
-        bytes memory options;
+        uint128 _lzComposeValue,
+        uint128 _lzReceiveGas
+    ) public payable returns (SendParam memory sendParam) {
+        bytes memory options = OptionsBuilder.newOptions();
+        if (_lzReceiveGas > 0) {
+            options = options.addExecutorLzReceiveOption(_lzReceiveGas, 0);
+        }
         bytes memory composeMsg = "";
         bytes32 to = addressToBytes32(_receiver);
 
         if (_lzComposeGas > 0) {
-            options = OptionsBuilder.newOptions().addExecutorLzComposeOption(0, _lzComposeGas, _lzComposeValue);
-            composeMsg = abi.encode(_lzComposeValue, addressToBytes32(_receiver));
+            options = options.addExecutorLzComposeOption(0, _lzComposeGas, _lzComposeValue);
+            composeMsg = abi.encode(msg.value, _receiver);
             to = addressToBytes32(_composer);
         }
 
