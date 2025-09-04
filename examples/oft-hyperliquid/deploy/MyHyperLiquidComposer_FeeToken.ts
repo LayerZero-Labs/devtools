@@ -7,14 +7,9 @@ import inquirer from 'inquirer'
 import { CHAIN_IDS, getCoreSpotDeployment, useBigBlock, useSmallBlock } from '@layerzerolabs/hyperliquid-composer'
 
 const contractName_oft = 'MyOFT'
-const contractName_composer = 'HyperLiquidComposer_Recoverable'
-const recoveryAddress = '0x0000000000000000000000000000000000000000'
+const contractName_composer = 'MyHyperLiquidComposer_FeeToken'
 
 const deploy: DeployFunction = async (hre) => {
-    if (recoveryAddress == '0x0000000000000000000000000000000000000000') {
-        throw new Error('Recovery address is not defined. Please set the recoveryAddress variable.')
-    }
-
     const { coreSpotIndex } = await inquirer.prompt([
         {
             type: 'input',
@@ -96,7 +91,6 @@ const deploy: DeployFunction = async (hre) => {
             address_oft, // OFT address
             hip1Token.coreSpot.index, // Core index id
             hip1Token.txData.weiDiff,
-            recoveryAddress, // Recovery address
         ],
         log: true,
         skipIfAlreadyDeployed: false,
