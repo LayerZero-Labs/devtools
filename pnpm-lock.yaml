@@ -1737,7 +1737,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.86
       '@layerzerolabs/oapp-alt-evm':
-        specifier: ^0.0.3
+        specifier: ^0.0.4
         version: link:../../packages/oapp-alt-evm
       '@layerzerolabs/oapp-evm':
         specifier: ^0.3.0
@@ -1746,7 +1746,7 @@ importers:
         specifier: ^0.1.2
         version: link:../../packages/oapp-evm-upgradeable
       '@layerzerolabs/oft-alt-evm':
-        specifier: ^0.0.3
+        specifier: ^0.0.4
         version: link:../../packages/oft-alt-evm
       '@layerzerolabs/oft-evm':
         specifier: ^3.2.0
@@ -4493,7 +4493,7 @@ importers:
         specifier: ^3.0.75
         version: 3.0.75(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
       '@layerzerolabs/oapp-alt-evm':
-        specifier: ^0.0.3
+        specifier: ^0.0.4
         version: link:../oapp-alt-evm
       '@layerzerolabs/oapp-evm':
         specifier: ^0.3.2
