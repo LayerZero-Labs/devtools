@@ -45,6 +45,8 @@ interface IHyperLiquidComposer {
 
     /// ------------------------ CONSTANTS/VARIABLES/FUNCTIONS ------------------------
     function MIN_GAS() external returns (uint256);
+    function MIN_GAS_WITH_VALUE() external returns (uint256);
+
     function VALID_COMPOSE_MSG_LEN() external view returns (uint256);
 
     function ENDPOINT() external view returns (address);
@@ -52,7 +54,9 @@ interface IHyperLiquidComposer {
     function ERC20() external view returns (address);
 
     function decodeMessage(bytes calldata composeMessage) external pure returns (uint256 minMsgValue, address receiver);
+
     function refundToSrc(bytes32 guid) external payable;
+
     function quoteHyperCoreAmount(
         uint64 coreIndexId,
         int8 decimalDiff,
