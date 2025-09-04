@@ -23,7 +23,7 @@ library HyperLiquidComposerCodec {
      * @param _coreIndexId The core index id to convert
      * @return _assetBridgeAddress The asset bridge address
      */
-    function into_assetBridgeAddress(uint256 _coreIndexId) internal pure returns (address) {
+    function into_assetBridgeAddress(uint64 _coreIndexId) internal pure returns (address) {
         return address(uint160(BASE_ASSET_BRIDGE_ADDRESS_UINT256 + _coreIndexId));
     }
 
@@ -32,8 +32,8 @@ library HyperLiquidComposerCodec {
      * @param _assetBridgeAddress The asset bridge address to convert
      * @return _coreIndexId The core index id
      */
-    function into_tokenId(address _assetBridgeAddress) internal pure returns (uint256) {
-        return uint256(uint160(_assetBridgeAddress)) - BASE_ASSET_BRIDGE_ADDRESS_UINT256;
+    function into_tokenId(address _assetBridgeAddress) internal pure returns (uint64) {
+        return uint64(uint160(_assetBridgeAddress) - BASE_ASSET_BRIDGE_ADDRESS_UINT256);
     }
 
     /**

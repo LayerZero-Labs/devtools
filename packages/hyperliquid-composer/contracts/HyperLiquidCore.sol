@@ -13,6 +13,11 @@ struct CoreUserExists {
     bool exists;
 }
 
+/**
+ * @title HyperLiquidCore
+ * @author Hyperliquid + LayerZero Labs (@shankars99)
+ * @notice This contract is a reduced and combined form of the L1Read and CoreWriter precompiles from the Hyperliquid team.
+ */
 abstract contract HyperLiquidCore {
     // Chain IDs
     // https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm#mainnet
