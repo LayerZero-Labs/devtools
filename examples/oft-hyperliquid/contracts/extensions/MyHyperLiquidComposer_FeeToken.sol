@@ -13,7 +13,7 @@ import { FeeToken } from "@layerzerolabs/hyperliquid-composer/contracts/extensio
 /// @dev Disclaimer: If your token's evm total supply exceeds your asset bridge's balance when scaled to EVM, it is possible
 ///      that the composer will not be able to send the tokens to the receiver address on hypercore due to bridge consumption.
 ///      Tokens would instead be returned to the sender address on HyperEVM. Front-end handling is recommended.
-contract MyHyperliquidComposer_FeeToken is FeeToken {
+contract MyHyperLiquidComposer_FeeToken is FeeToken {
     /// @notice Constructor for the HyperLiquidComposer with FeeToken extension
     ///
     ///
