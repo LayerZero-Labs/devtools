@@ -23,8 +23,8 @@ export async function coreSpotDeployment(args: any): Promise<void> {
     const coreSpot: CoreSpotMetaData = await getSpotMeta(null, isTestnet, args.logLevel, tokenIndex)
 
     if (action === 'create') {
-        let oft_txHash: string
-        let oft_address: string
+        let token_txHash: string
+        let token_address: string
 
         try {
             const { deployment } = await getHyperEVMOAppDeployment(oappConfig, network, logger)
@@ -33,37 +33,37 @@ export async function coreSpotDeployment(args: any): Promise<void> {
                 return
             }
 
-            oft_txHash = deployment['transactionHash']
-            oft_address = deployment['address']
-            logger.verbose(`Tx hash: ${oft_txHash}, address: ${oft_address}`)
+            token_txHash = deployment['transactionHash']
+            token_address = deployment['address']
+            logger.verbose(`Tx hash: ${token_txHash}, address: ${token_address}`)
         } catch {
             logger.error(
-                `Error fetching deployment for ${network} for oapp-config ${oappConfig}. \n\n Can you please provide the oft address and tx hash manually?`
+                `Error fetching deployment for ${network} for oapp-config ${oappConfig}. \n\n Can you please provide the token address and tx hash manually?`
             )
 
-            const { oftAddress, oftTxHash } = await inquirer.prompt([
+            const { tokenAddress, tokenTxHash } = await inquirer.prompt([
                 {
                     type: 'input',
-                    name: 'oftAddress',
-                    message: 'Enter the oft address',
+                    name: 'tokenAddress',
+                    message: 'Enter the token address',
                 },
                 {
                     type: 'input',
-                    name: 'oftTxHash',
-                    message: 'Enter the oft tx hash',
+                    name: 'tokenTxHash',
+                    message: 'Enter the token tx hash',
                 },
             ])
 
             let shouldQuit = false
-            oft_txHash = ethers.utils.isHexString(oftTxHash) ? oftTxHash : ''
-            if (!oft_txHash) {
-                logger.error('Invalid oft tx hash')
+            token_txHash = ethers.utils.isHexString(tokenTxHash) ? tokenTxHash : ''
+            if (!token_txHash) {
+                logger.error('Invalid token tx hash')
                 shouldQuit = true
             }
 
-            oft_address = ethers.utils.isAddress(oftAddress) ? oftAddress : ''
-            if (!oft_address) {
-                logger.error('Invalid oft address')
+            token_address = ethers.utils.isAddress(tokenAddress) ? tokenAddress : ''
+            if (!token_address) {
+                logger.error('Invalid token address')
                 shouldQuit = true
             }
 
@@ -73,8 +73,8 @@ export async function coreSpotDeployment(args: any): Promise<void> {
             }
         }
 
-        const oft_abi = await getERC20abi()
-        if (!oft_abi) {
+        const token_abi = await getERC20abi()
+        if (!token_abi) {
             logger.error(`ERC20 abi not found for ${network}`)
             return
         }
@@ -84,12 +84,12 @@ export async function coreSpotDeployment(args: any): Promise<void> {
             skipFetchSetup: true,
         })
 
-        const tx = await provider.getTransaction(oft_txHash)
+        const tx = await provider.getTransaction(token_txHash)
         const nonce = tx?.nonce
         const from = tx?.from
         logger.verbose(`Nonce: ${nonce}, From: ${from}`)
 
-        const contract = new ethers.Contract(oft_address, oft_abi, provider)
+        const contract = new ethers.Contract(token_address, token_abi, provider)
         const tokenName = await contract.name()
         const decimals = await contract.decimals()
         logger.verbose(`Token name: ${tokenName}, Decimals: ${decimals}`)
@@ -101,7 +101,7 @@ export async function coreSpotDeployment(args: any): Promise<void> {
         logger.verbose(`Asset bridge address: ${assetBridgeAddress}`)
 
         const txData: TxData = {
-            txHash: oft_txHash,
+            txHash: token_txHash,
             nonce: nonce,
             from: from,
             weiDiff: weiDiff,
@@ -195,7 +195,7 @@ export async function spotDeployState(args: any): Promise<void> {
     const state = deployState.states.find((state) => state.token === parseInt(tokenIndex))
     if (!state) {
         logger.error(
-            `No in progress deployment state found for token ${tokenIndex}. This means your token is deployed.`
+            `No in progress deployment state found for token ${tokenIndex}. This means that your token is deployed.`
         )
         process.exit(1)
     }
