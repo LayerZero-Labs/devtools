@@ -107,12 +107,12 @@ RUN apt-get install --yes \
     rm -rf /var/lib/apt/lists/*
 
 ### Setup rust
-# Install rust and set the default toolchain to 1.84.1
+# Install rust and set the default toolchain to nightly-2025-05-01
 # https://github.com/anza-xyz/agave/blob/v2.2.20/rust-toolchain.toml
-ARG RUST_TOOLCHAIN_VERSION=1.84.1
+ARG RUST_TOOLCHAIN_VERSION=nightly-2025-05-01
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
     | sh -s -- -y --profile minimal --default-toolchain ${RUST_TOOLCHAIN_VERSION}
-RUN rustup toolchain install 1.84.1
+RUN rustup toolchain install nightly-2025-05-01
 RUN rustc --version
 
 ### Setup go
@@ -236,7 +236,7 @@ FROM machine AS anchor
 
 WORKDIR /app/anchor
 
-ENV RUST_TOOLCHAIN_VERSION_ANCHOR=1.84.1
+ENV RUST_TOOLCHAIN_VERSION_ANCHOR=nightly-2025-05-01
 RUN rustup default ${RUST_TOOLCHAIN_VERSION_ANCHOR}
 ARG ANCHOR_VERSION=0.31.1
 
@@ -266,7 +266,7 @@ FROM machine AS solana
 
 WORKDIR /app/solana
 
-ENV RUST_TOOLCHAIN_VERSION_SOLANA=1.84.1
+ENV RUST_TOOLCHAIN_VERSION_SOLANA=nightly-2025-05-01
 ARG SOLANA_VERSION=2.2.20
 
 RUN rustup default ${RUST_TOOLCHAIN_VERSION_SOLANA}
@@ -403,7 +403,7 @@ FROM machine AS evm
 
 WORKDIR /app/evm
 
-ENV RUST_TOOLCHAIN_VERSION_ANCHOR=1.83.0
+ENV RUST_TOOLCHAIN_VERSION_ANCHOR=nightly-2025-05-01
 RUN rustup default ${RUST_TOOLCHAIN_VERSION_ANCHOR}
 
 # Install SVM, Solidity version manager
