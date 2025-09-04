@@ -39,8 +39,10 @@ contract TypeConversionTest is Test {
     ) public view {
         // Skip condition based on the decimal count
         evmExtraWeiDecimals = int8(bound(evmExtraWeiDecimals, MIN_DECIMAL_DIFF, 0));
+        vm.assume(amount > 1e12); // shared decimals
 
         uint256 scale = 10 ** uint8(-1 * evmExtraWeiDecimals);
+        vm.assume(amount < bridgeSupply / scale);
 
         IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyperAssetAmount(
             amount,
@@ -56,9 +58,11 @@ contract TypeConversionTest is Test {
         uint64 bridgeSupply,
         int8 evmExtraWeiDecimals
     ) public view {
-        // Skip condition based on the decimal count
-        evmExtraWeiDecimals = int8(bound(evmExtraWeiDecimals, 1, MAX_DECIMAL_DIFF));
+        evmExtraWeiDecimals = int8(bound(evmExtraWeiDecimals, 0, MAX_DECIMAL_DIFF));
+        vm.assume(amount > 1e12); // shared decimals
+
         uint256 scale = 10 ** uint8(evmExtraWeiDecimals);
+        vm.assume(amount < bridgeSupply * scale);
 
         IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyperAssetAmount(
             amount,
@@ -66,6 +70,6 @@ contract TypeConversionTest is Test {
             evmExtraWeiDecimals
         );
 
-        assertEq(amounts.evm / scale, amounts.core, "evm and core amounts should differ by a factor of scale");
+        assertEq(amounts.evm / amounts.core, scale, "evm and core amounts should differ by a factor of scale");
     }
 }

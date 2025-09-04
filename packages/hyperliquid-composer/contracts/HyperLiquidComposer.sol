@@ -19,6 +19,12 @@ import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.s
  * @author LayerZero Labs (@shankars99)
  * @notice This contract is a composer that allows transfers of ERC20 and HYPE tokens to a target address on hypercore.
  * @dev This address needs to be "activated" on hypercore post deployment
+ * @dev This contract does NOT refund dust to the receiver on HyperEVM because we do not expect any due to truncation of sharedDecimals.
+            In the off-chance that you have dust you would have to implement dust refunds to the receiver in:
+            `_transferERC20ToHyperCore` and `_transferNativeToHyperCore`
+ * @dev Disclaimer: If your token's evm total supply exceeds your asset bridge's balance when scaled to EVM, it is possible that the 
+            composer will not be able to send the tokens to the receiver address on hypercore due to bridge consumption. 
+            Tokens would instead be returned to the sender address on HyperEVM.
  */
 contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidComposer, IOAppComposer {
     using SafeERC20 for IERC20;
@@ -26,16 +32,20 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
 
     uint256 public constant VALID_COMPOSE_MSG_LEN = 64; /// @dev abi.encode(uint256,address) = 32+32
 
+    /// @dev decimal difference having range [-2,18] is defined by hyperliquid in their docs
+    int8 public constant MIN_DECIMAL_DIFF = -2;
+    int8 public constant MAX_DECIMAL_DIFF = 18;
+
     address public immutable ENDPOINT;
     address public immutable OFT;
 
     address public immutable NATIVE_ASSET_BRIDGE;
-    int64 public immutable NATIVE_DECIMAL_DIFF;
+    int8 public immutable NATIVE_DECIMAL_DIFF;
     uint64 public immutable NATIVE_CORE_INDEX_ID;
 
     address public immutable ERC20;
     address public immutable ERC20_ASSET_BRIDGE;
-    int64 public immutable ERC20_DECIMAL_DIFF;
+    int8 public immutable ERC20_DECIMAL_DIFF;
     uint64 public immutable ERC20_CORE_INDEX_ID;
 
     mapping(bytes32 guid => FailedMessage) public failedMessages;
@@ -45,8 +55,11 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
      * @param _coreIndexId The core index id of the HyperLiquid L1 contract
      * @param _assetDecimalDiff The difference in decimals between the HyperEVM OFT deployment and HyperLiquid L1 HIP-1 listing
      */
-    constructor(address _oft, uint64 _coreIndexId, int64 _assetDecimalDiff) {
+    constructor(address _oft, uint64 _coreIndexId, int8 _assetDecimalDiff) {
         if (_oft == address(0)) revert InvalidOFTAddress();
+
+        if (_assetDecimalDiff < MIN_DECIMAL_DIFF || _assetDecimalDiff > MAX_DECIMAL_DIFF)
+            revert InvalidDecimalDiff(_assetDecimalDiff, MIN_DECIMAL_DIFF, MAX_DECIMAL_DIFF);
 
         ENDPOINT = address(IOAppCore(_oft).endpoint());
 
@@ -91,8 +104,11 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
         try this.decodeMessage(composeMsgEncoded) returns (uint256 _minMsgValue, address _to) {
             if (msg.value < _minMsgValue) revert InsufficientMsgValue(msg.value, _minMsgValue);
 
+            uint256 minGas = msg.value > 0 ? MIN_GAS_WITH_VALUE() : MIN_GAS();
+
             /// @dev Gas check before executing hypercore precompile operations. Can be retried from the endpoint with sufficient gas.
-            if (gasleft() < MIN_GAS()) revert InsufficientGas(gasleft(), MIN_GAS());
+            /// @dev Contracts would need to called with more gas than this to account for the code above this line.
+            if (gasleft() < minGas) revert InsufficientGas(gasleft(), minGas);
 
             /// @dev If HyperEVM -> HyperCore fails for HYPE OR ERC20 then we do a complete refund to the receiver on hyperevm
             /// @dev try...catch to safeguard against possible breaking hyperliquid pre-compile changes
@@ -153,8 +169,6 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
             _amountLD
         );
 
-        if (amounts.core > amounts.coreBalanceAssetBridge) revert TransferAmtExceedsAssetBridgeBalance(amounts);
-
         /// @dev Moving tokens to asset bridge credits the coreAccount of composer with the tokens.
         /// @dev The write call then moves coreSpot tokens from the composer to receiver
         if (amounts.evm != 0) {
@@ -180,8 +194,6 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
             NATIVE_ASSET_BRIDGE,
             msg.value
         );
-
-        if (amounts.core > amounts.coreBalanceAssetBridge) revert TransferAmtExceedsAssetBridgeBalance(amounts);
 
         if (amounts.evm != 0) {
             // Transfer the HYPE tokens to the composer's address on HyperCore
@@ -215,7 +227,7 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
      */
     function quoteHyperCoreAmount(
         uint64 _coreIndexId,
-        int64 _decimalDiff,
+        int8 _decimalDiff,
         address _bridgeAddress,
         uint256 _amountLD
     ) public view returns (IHyperAssetAmount memory) {
@@ -265,11 +277,22 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
 
     /**
      * @dev Minimum gas to be supplied to the composer contract for execution to prevent Out of Gas.
-     * todo Profile against mainnet
+     * @dev This is used when the compose message does NOT have msg.value to send user funds to the receiver on core.
+     * @dev This is the minimum gas amt for the compose operations which means the contract should be called with some more gas.
      * @return The minimum gas amount
      */
     function MIN_GAS() public virtual returns (uint256) {
         return 150_000;
+    }
+
+    /**
+     * @dev Minimum gas to be supplied to the composer contract for execution to prevent Out of Gas.
+     * @dev This is used when the compose message has msg.value to send user funds to the receiver on core.
+     * @dev This is the minimum gas amt for the compose operations which means the contract should be called with some more gas.
+     * @return The minimum gas amount
+     */
+    function MIN_GAS_WITH_VALUE() public virtual returns (uint256) {
+        return 200_000;
     }
 
     receive() external payable {}

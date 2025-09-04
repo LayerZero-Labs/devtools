@@ -103,7 +103,7 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
         emit IERC20.Transfer(address(hyperLiquidComposer), ERC20.assetBridgeAddress, AMOUNT_TO_SEND);
 
         uint64 coreIndexId = hyperLiquidComposer.ERC20_CORE_INDEX_ID();
-        int64 decimalDiff = hyperLiquidComposer.ERC20_DECIMAL_DIFF();
+        int8 decimalDiff = hyperLiquidComposer.ERC20_DECIMAL_DIFF();
         address assetBridgeAddress = hyperLiquidComposer.ERC20_ASSET_BRIDGE();
 
         uint64 coreAmount = hyperLiquidComposer
@@ -143,7 +143,7 @@ contract HyperLiquidComposerTest is HyperliquidBaseTest {
         emit IERC20.Transfer(address(hyperLiquidComposer), ERC20.assetBridgeAddress, AMOUNT_TO_SEND);
 
         uint64 coreIndexId = hyperLiquidComposer.ERC20_CORE_INDEX_ID();
-        int64 decimalDiff = hyperLiquidComposer.ERC20_DECIMAL_DIFF();
+        int8 decimalDiff = hyperLiquidComposer.ERC20_DECIMAL_DIFF();
         address assetBridgeAddress = hyperLiquidComposer.ERC20_ASSET_BRIDGE();
 
         uint64 coreAmount = hyperLiquidComposer
