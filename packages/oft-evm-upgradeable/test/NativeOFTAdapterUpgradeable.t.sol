@@ -21,7 +21,6 @@ import { NativeOFTAdapterUpgradeable } from "../contracts/oft/NativeOFTAdapterUp
 import { TransparentUpgradeableProxy } from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 
-import "forge-std/console.sol";
 import { OFTTest } from "./OFT.t.sol";
 
 contract NativeOFTAdapterUpgradeableTest is OFTTest {
