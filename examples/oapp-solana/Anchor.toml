@@ -1,7 +1,9 @@
 [toolchain]
+anchor_version = "0.31.1"
 
 [features]
 seeds = false
+resolution = false
 skip-lint = false
 
 [programs.localnet]
@@ -11,7 +13,7 @@ my_oapp = "41NCdrEvXhQ4mZgyJkmqYxL6A1uEmnraGj31UJ6PsXd3"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
