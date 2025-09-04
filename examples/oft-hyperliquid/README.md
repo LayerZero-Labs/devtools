@@ -539,7 +539,7 @@ connections: [
           executor: contractsConfig.ethereum.executor,
         },
         ulnConfig: {
-          // The number of block confirmations to wait on BSC before emitting the message from the source chain.
+          // The number of block confirmations to wait on Arbitrum Sepolia before emitting the message from the source chain.
           confirmations: BigInt(15),
           // The address of the DVNs you will pay to verify a sent message on the source chain ).
           // The destination tx will wait until ALL `requiredDVNs` verify the message.

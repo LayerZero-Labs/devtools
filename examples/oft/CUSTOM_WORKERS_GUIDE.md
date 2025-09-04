@@ -21,12 +21,12 @@ Before configuring custom workers, you must:
 In `layerzero.config.ts`, locate your contract definitions (around lines 11-19):
 
 ```typescript
-const optimismContract: OmniPointHardhat = {
+const arbitrumContract: OmniPointHardhat = {
   eid: EndpointId.OPTIMISM_V2_MAINNET, // This is your endpoint ID
   contractName: "MyOFTMock",
 };
 
-const arbitrumContract: OmniPointHardhat = {
+const baseContract: OmniPointHardhat = {
   eid: EndpointId.ARBITRUM_V2_MAINNET, // This is your endpoint ID
   contractName: "MyOFTMock",
 };
@@ -59,12 +59,12 @@ Find the `customDVNsByEid` object (around lines 81-85) and replace the placehold
 
 ```typescript
 const customDVNsByEid: Record<number, { address: string }> = {
-  [EndpointId.OPTIMISM_V2_MAINNET]: {
+  [EndpointId.ARBSEP_V2_TESTNET]: {
     address: "0xA91A576133F140BdE0AF6a9651778b697352a239",
-  }, // ← YOUR OPTIMISM DVN
-  [EndpointId.ARBITRUM_V2_MAINNET]: {
-    address: "0xf6d5B5a53b94B4828d23675fbd21C2e299d110F3",
   }, // ← YOUR ARBITRUM DVN
+  [EndpointId.BASESEP_V2_TESTNET]: {
+    address: "0xf6d5B5a53b94B4828d23675fbd21C2e299d110F3",
+  }, // ← YOUR BASE DVN
   // Add more DVNs for other endpoints as needed
 };
 ```
@@ -81,8 +81,8 @@ Find the `pathways` configuration (around lines 145-154) and set your custom DVN
 ```typescript
 const pathways: TwoWayConfig[] = [
   [
-    optimismContract,
     arbitrumContract,
+    baseContract,
     [["MyCustomDVN"], []], // ← YOUR CUSTOM DVN NAME (must match canonicalName)
     [1, 1],
     [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
@@ -116,32 +116,32 @@ Here's what a fully configured custom workers setup looks like:
 
 ```typescript
 // 1. Your contracts (no changes needed here)
-const optimismContract: OmniPointHardhat = {
-  eid: EndpointId.OPTIMISM_V2_MAINNET,
+const arbitrumContract: OmniPointHardhat = {
+  eid: EndpointId.ARBSEP_V2_TESTNET,
   contractName: "MyOFT",
 };
 
-const arbitrumContract: OmniPointHardhat = {
-  eid: EndpointId.ARBITRUM_V2_MAINNET,
+const baseContract: OmniPointHardhat = {
+  eid: EndpointId.BASESEP_V2_TESTNET,
   contractName: "MyOFT",
 };
 
 // 2. Your custom executor addresses
 const customExecutorsByEid: Record<number, { address: string }> = {
-  [EndpointId.OPTIMISM_V2_MAINNET]: {
+  [EndpointId.ARBSEP_V2_TESTNET]: {
     address: "0x1234567890123456789012345678901234567890",
   },
-  [EndpointId.ARBITRUM_V2_MAINNET]: {
+  [EndpointId.BASESEP_V2_TESTNET]: {
     address: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
   },
 };
 
 // 3. Your custom DVN addresses
 const customDVNsByEid: Record<number, { address: string }> = {
-  [EndpointId.OPTIMISM_V2_MAINNET]: {
+  [EndpointId.ARBSEP_V2_TESTNET]: {
     address: "0x9876543210987654321098765432109876543210",
   },
-  [EndpointId.ARBITRUM_V2_MAINNET]: {
+  [EndpointId.BASESEP_V2_TESTNET]: {
     address: "0xfedcbafedcbafedcbafedcbafedcbafedcbafed",
   },
 };
@@ -149,8 +149,8 @@ const customDVNsByEid: Record<number, { address: string }> = {
 // 4. Your pathway configuration
 const pathways: TwoWayConfig[] = [
   [
-    optimismContract,
     arbitrumContract,
+    baseContract,
     [["MyCustomDVN"], []], // Using your custom DVN
     [1, 1],
     [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
@@ -178,7 +178,7 @@ After configuring:
 3. **Send messages** (the system will automatically use your custom workers):
 
    ```bash
-   pnpm hardhat lz:oft:send --src-eid 30111 --dst-eid 30110 --amount 1 --to <ADDRESS> --simple-workers
+   pnpm hardhat lz:oft:send --src-eid 40231 --dst-eid 40245 --amount 1 --to <ADDRESS> --simple-workers
    ```
 
    > :information_source: For Simple Workers, add the `--simple-workers` flag to enable manual verification flow
@@ -210,8 +210,8 @@ When you run the wire command, the configuration logs discovered chainKeys:
 
 ```
 info:    ChainKey mappings for configured endpoints:
-info:      MyOFTMock (eid: 30111): optimism
-info:      MyOFTMock (eid: 30110): arbitrum
+info:      MyOFTMock (eid: 40231): arbitrum
+info:      MyOFTMock (eid: 40245): base
 ```
 
 ## Example: Using Simple Workers for Testnets
@@ -234,13 +234,13 @@ If you're using SimpleDVNMock and SimpleExecutorMock for testing on testnets wit
 
    ```typescript
    const customExecutorsByEid: Record<number, { address: string }> = {
-     [EndpointId.OPTIMISM_V2_TESTNET]: { address: "0x..." }, // From deployments/optimism-testnet/SimpleExecutorMock.json
-     [EndpointId.ARBITRUM_V2_TESTNET]: { address: "0x..." }, // From deployments/arbitrum-testnet/SimpleExecutorMock.json
+     [EndpointId.ARBSEP_V2_TESTNET]: { address: "0x..." }, // From deployments/arbitrum-sepolia/SimpleExecutorMock.json
+     [EndpointId.BASESEP_V2_TESTNET]: { address: "0x..." }, // From deployments/base-sepolia/SimpleExecutorMock.json
    };
 
    const customDVNsByEid: Record<number, { address: string }> = {
-     [EndpointId.OPTIMISM_V2_TESTNET]: { address: "0x..." }, // From deployments/optimism-testnet/SimpleDVNMock.json
-     [EndpointId.ARBITRUM_V2_TESTNET]: { address: "0x..." }, // From deployments/arbitrum-testnet/SimpleDVNMock.json
+     [EndpointId.ARBSEP_V2_TESTNET]: { address: "0x..." }, // From deployments/arbitrum-sepolia/SimpleDVNMock.json
+     [EndpointId.BASESEP_V2_TESTNET]: { address: "0x..." }, // From deployments/base-sepolia/SimpleDVNMock.json
    };
    ```
 

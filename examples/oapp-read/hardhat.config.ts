@@ -54,14 +54,14 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
-        'base-testnet': {
-            eid: EndpointId.BASESEP_V2_TESTNET,
-            url: process.env.RPC_URL_BASE || 'https://sepolia.base.org',
-            accounts,
-        },
-        'arbitrum-testnet': {
+        'arbitrum-sepolia': {
             eid: EndpointId.ARBSEP_V2_TESTNET,
             url: process.env.RPC_URL_ARBSEP || 'https://arbitrum-sepolia.gateway.tenderly.co',
+            accounts,
+        },
+        'base-sepolia': {
+            eid: EndpointId.BASESEP_V2_TESTNET,
+            url: process.env.RPC_URL_BASE || 'https://base-sepolia.gateway.tenderly.co',
             accounts,
         },
 

@@ -57,9 +57,9 @@ const config: HardhatUserConfig = {
             url: process.env.RPC_URL_HYPEREVM_TESTNET || 'https://rpc.hyperliquid-testnet.xyz/evm',
             accounts,
         },
-        'bsc-testnet': {
-            eid: EndpointId.BSC_V2_TESTNET,
-            url: process.env.RPC_URL_BSC_TESTNET || 'https://data-seed-prebsc-2-s1.bnbchain.org:8545',
+        'arbitrum-sepolia': {
+            eid: EndpointId.ARBSEP_V2_TESTNET,
+            url: process.env.RPC_URL_ARB_SEPOLIA || 'https://arbitrum-sepolia.gateway.tenderly.co',
             accounts,
         },
         hardhat: {
