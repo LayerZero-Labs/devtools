@@ -8,14 +8,14 @@ import { Test, console } from "forge-std/Test.sol";
 
 contract TypeConversionTest is Test {
     int8 MIN_DECIMAL_DIFF = -2;
-    int8 MAX_DECIMAL_DIFF = 8;
+    int8 MAX_DECIMAL_DIFF = 18;
 
     uint64 MAX_TRANSFER_PER_TX = type(uint64).max;
 
     function setUp() public {}
 
     function test_into_assetBridgeAddress() public pure {
-        uint256 coreIndexId = 1;
+        uint64 coreIndexId = 1;
         address assetBridgeAddress = HyperLiquidComposerCodec.into_assetBridgeAddress(coreIndexId);
         assertEq(assetBridgeAddress, 0x2000000000000000000000000000000000000001);
     }
@@ -58,10 +58,10 @@ contract TypeConversionTest is Test {
         uint64 bridgeSupply,
         int8 evmExtraWeiDecimals
     ) public view {
-        evmExtraWeiDecimals = int8(bound(evmExtraWeiDecimals, 0, MAX_DECIMAL_DIFF));
+        evmExtraWeiDecimals = int8(bound(evmExtraWeiDecimals, 1, MAX_DECIMAL_DIFF));
         vm.assume(amount > 1e12); // shared decimals
 
-        uint256 scale = 10 ** uint8(evmExtraWeiDecimals);
+        uint256 scale = 10 ** uint16(int16(evmExtraWeiDecimals));
         vm.assume(amount < bridgeSupply * scale);
 
         IHyperAssetAmount memory amounts = HyperLiquidComposerCodec.into_hyperAssetAmount(
@@ -70,6 +70,6 @@ contract TypeConversionTest is Test {
             evmExtraWeiDecimals
         );
 
-        assertEq(amounts.evm / amounts.core, scale, "evm and core amounts should differ by a factor of scale");
+        assertEq(amounts.evm, scale * amounts.core, "evm and core amounts should differ by a factor of scale");
     }
 }

@@ -15,7 +15,7 @@ contract TypeConversionTest is Test {
     function setUp() public {}
 
     function test_into_assetBridgeAddress() public pure {
-        uint256 coreIndexId = 1;
+        uint64 coreIndexId = 1;
         address assetBridgeAddress = HyperLiquidComposerCodec.into_assetBridgeAddress(coreIndexId);
         assertEq(assetBridgeAddress, 0x2000000000000000000000000000000000000001);
     }
@@ -70,6 +70,6 @@ contract TypeConversionTest is Test {
             evmExtraWeiDecimals
         );
 
-        assertEq(amounts.evm / amounts.core, scale, "evm and core amounts should differ by a factor of scale");
+        assertEq(amounts.evm, scale * amounts.core, "evm and core amounts should differ by a factor of scale");
     }
 }
