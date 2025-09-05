@@ -1,5 +1,11 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 1.0.1
+
+### Patch Changes
+
+- 166816a: chore: add virtual to \_getFinalCoreAmount in FeeToken
+
 ## 1.0.0
 
 ### Major Changes
