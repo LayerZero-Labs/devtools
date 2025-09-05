@@ -96,7 +96,7 @@ contract OFTTest is TestHelperOz5 {
         bytes memory _oappBytecode,
         bytes memory _constructorArgs,
         bytes memory _initializeArgs
-    ) internal returns (address addr) {
+    ) internal virtual returns (address addr) {
         bytes memory bytecode = bytes.concat(abi.encodePacked(_oappBytecode), _constructorArgs);
         assembly {
             addr := create(0, add(bytecode, 0x20), mload(bytecode))
@@ -108,7 +108,7 @@ contract OFTTest is TestHelperOz5 {
         return address(new TransparentUpgradeableProxy(addr, proxyAdmin, _initializeArgs));
     }
 
-    function test_constructor() public view {
+    function test_constructor() public view virtual {
         assertEq(aOFT.owner(), address(this));
         assertEq(bOFT.owner(), address(this));
         assertEq(cOFTAdapter.owner(), address(this));
@@ -128,7 +128,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(interfaceId, expectedId);
     }
 
-    function test_send_oft() public {
+    function test_send_oft() public virtual {
         uint256 tokensToSend = 1 ether;
         bytes memory options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
         SendParam memory sendParam = SendParam(
@@ -153,7 +153,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(bOFT.balanceOf(userB), initialBalance + tokensToSend);
     }
 
-    function test_send_oft_compose_msg() public {
+    function test_send_oft_compose_msg() public virtual {
         uint256 tokensToSend = 1 ether;
 
         OFTComposerMock composer = new OFTComposerMock();
@@ -296,7 +296,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(aOFT.balanceOf(address(this)), 0);
     }
 
-    function test_oft_credit() public {
+    function test_oft_credit() public virtual {
         uint256 amountToCreditLD = 1 ether;
         uint32 srcEid = aEid;
 
