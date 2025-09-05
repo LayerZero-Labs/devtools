@@ -272,7 +272,12 @@ function printOAppSendConfigs(oAppSendConfig: Awaited<ReturnType<typeof getSolan
         if (typeof item === 'object' && item !== null) {
             DebugLogger.keyValue(`${sendOappConfigIndexesToKeys[i]}`, '', 2)
             for (const [propKey, propVal] of Object.entries(item)) {
-                DebugLogger.keyValue(`${propKey}`, String(propVal), 3)
+                const valueDisplay = String(propVal)
+                if (propKey === 'requiredDVNs' || propKey === 'optionalDVNs') {
+                    // If the property is DVN-related, transform the propVal (array of DVN addresses) into a comma-separated list of DVN names
+                    // TODO: implement DVN address to name mapping
+                }
+                DebugLogger.keyValue(`${propKey}`, valueDisplay, 3)
             }
         } else {
             DebugLogger.keyValue(`${sendOappConfigIndexesToKeys[i]}`, String(item), 2)
