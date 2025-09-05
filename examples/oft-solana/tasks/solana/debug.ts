@@ -137,7 +137,7 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
                 'Token Mint Authority is OFT Store',
                 unwrapOption(mintAccount.mintAuthority) === oftStore
             )
-            dstEids.map(async (dstEid) => {
+            dstEids.map((dstEid) => {
                 DebugLogger.keyHeader(`Nonce Account Checks`)
                 const nonceAccountCheckInfo = nonceAccountChecksInfo[dstEid]
                 if (nonceAccountCheckInfo) {
