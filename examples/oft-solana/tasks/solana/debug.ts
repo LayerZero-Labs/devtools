@@ -149,7 +149,7 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
                     )
                     if (!definedForDstEid) {
                         console.warn(
-                            `Expected Nonce Account to exist at ${nonceAccountCheckInfo.address.toString()} for peer ${nonceAccountCheckInfo.address} (${getNetworkForChainId(dstEid).chainName}).`
+                            `Expected Nonce Account to exist at ${nonceAccountCheckInfo.address.toString()} for destination ${dstEid} (${getNetworkForChainId(dstEid).chainName}).`
                         )
                     }
                 }
