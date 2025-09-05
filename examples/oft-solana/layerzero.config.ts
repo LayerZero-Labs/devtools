@@ -40,7 +40,8 @@ const SOLANA_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
         msgType: 1,
         optionType: ExecutorOptionType.LZ_RECEIVE,
         gas: CU_LIMIT,
-        value: SPL_TOKEN_ACCOUNT_RENT_VALUE,
+        // value: SPL_TOKEN_ACCOUNT_RENT_VALUE,
+        value: 0,
     },
 ]
 

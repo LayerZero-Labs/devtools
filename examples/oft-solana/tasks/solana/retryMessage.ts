@@ -19,11 +19,12 @@ interface Args {
     receiver: string
     guid: string
     message: string
-    computeUnits: number
+    withComputeUnitLimit: number
     lamports: number
-    withPriorityFee: number
+    withComputeUnitPrice: number
 }
 
+// Run: npx hardhat lz:oft:solana:retry-message --src-eid <srcEid> --nonce <nonce> --sender <SRC_OAPP> --dst-eid <dstEid> --receiver <OFT_STORE> --guid <GUID> --message <MESSAGE> --with-compute-unit-limit <CU_LIMIT> --lamports <LAMPORTS> --with-compute-unit-price <microLamports>
 task('lz:oft:solana:retry-message', 'Retry a stored message on Solana')
     .addParam('srcEid', 'The source EndpointId', undefined, types.eid)
     .addParam('nonce', 'The nonce of the message', undefined, types.bigint)
@@ -32,9 +33,9 @@ task('lz:oft:solana:retry-message', 'Retry a stored message on Solana')
     .addParam('receiver', 'The receiver address on the destination Solana chain (bytes58)', undefined, types.string)
     .addParam('guid', 'The GUID of the message (hex)', undefined, types.string)
     .addParam('message', 'The message data in hex format', undefined, types.string)
-    .addParam('computeUnits', 'The CU for the lzReceive instruction', undefined, types.int)
     .addParam('lamports', 'The lamports for the lzReceive instruction', undefined, types.int)
-    .addParam('withPriorityFee', 'The priority fee in microLamports', undefined, types.int)
+    .addParam('withComputeUnitLimit', 'The CU for the lzReceive instruction', undefined, types.int)
+    .addParam('withComputeUnitPrice', 'The priority fee in microLamports', undefined, types.int)
     .setAction(
         async ({
             srcEid,
@@ -44,14 +45,10 @@ task('lz:oft:solana:retry-message', 'Retry a stored message on Solana')
             receiver,
             guid,
             message,
-            computeUnits,
             lamports,
-            withPriorityFee,
+            withComputeUnitLimit,
+            withComputeUnitPrice,
         }: Args) => {
-            if (!process.env.SOLANA_PRIVATE_KEY) {
-                throw new Error('SOLANA_PRIVATE_KEY is not defined in the environment variables.')
-            }
-
             const { connection, umiWalletKeyPair } = await deriveConnection(dstEid)
             const signer = toWeb3JsKeypair(umiWalletKeyPair)
             const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash()
@@ -72,14 +69,14 @@ task('lz:oft:solana:retry-message', 'Retry a stored message on Solana')
                     guid,
                     message,
                 },
-                Uint8Array.from([computeUnits, lamports]),
+                Uint8Array.from([withComputeUnitLimit, lamports]),
                 'confirmed'
             )
 
-            if (withPriorityFee) {
+            if (withComputeUnitPrice) {
                 tx.add(
                     ComputeBudgetProgram.setComputeUnitPrice({
-                        microLamports: withPriorityFee,
+                        microLamports: withComputeUnitPrice,
                     })
                 )
             }
