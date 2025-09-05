@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-evm
 
+## 3.2.1
+
+### Patch Changes
+
+- be85dba: making a test virtual
+
 ## 3.2.0
 
 ### Minor Changes

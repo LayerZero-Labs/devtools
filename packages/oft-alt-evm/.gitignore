@@ -11,5 +11,6 @@ artifacts/*
 !artifacts/OFT.sol/
 !artifacts/OFTAlt.sol/
 !artifacts/OFTAltAdapter.sol/
-!artifacts/OFTAdapter.sol/
-!artifacts/OFTCore.sol/
+!artifacts/OFTAltCore.sol/
+!artifacts/OFTAltCoreUpgradeable.sol/
+!artifacts/OFTAltUpgradeable.sol/
