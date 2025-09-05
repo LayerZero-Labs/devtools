@@ -48,6 +48,13 @@ function getChainKeyForEid(metadata: IMetadata, eid: number): string {
     throw new Error(`Can't find chainKey for eid: "${eid}".`)
 }
 
+function formatDvnAddresses(addresses: string[], metadata?: IMetadata, chainKey?: string): string {
+    const dvnMap = (chainKey && metadata ? metadata[chainKey]?.dvns : undefined) as
+        | Record<string, { canonicalName?: string }>
+        | undefined
+    return addresses.map((addr) => dvnMap?.[addr]?.canonicalName ?? addr).join(', ')
+}
+
 type DebugTaskArgs = {
     eid: EndpointId
     oftStore?: string
@@ -265,18 +272,10 @@ function printOAppReceiveConfigs(
             // Print each property in the object
             DebugLogger.keyValue(`${oAppReceiveConfigIndexesToKeys[i]}`, '', 2)
             for (const [propKey, propVal] of Object.entries(item)) {
-                let valueDisplay = String(propVal)
-                if (
-                    (propKey === 'requiredDVNs' || propKey === 'optionalDVNs') &&
-                    Array.isArray(propVal) &&
-                    metadata &&
-                    chainKey &&
-                    metadata[chainKey]?.dvns
-                ) {
-                    const dvnMap = metadata[chainKey].dvns
-                    const names = (propVal as string[]).map((addr) => dvnMap[addr]?.canonicalName ?? addr)
-                    valueDisplay = names.join(', ')
-                }
+                const valueDisplay =
+                    (propKey === 'requiredDVNs' || propKey === 'optionalDVNs') && Array.isArray(propVal)
+                        ? formatDvnAddresses(propVal as string[], metadata, chainKey)
+                        : String(propVal)
                 DebugLogger.keyValue(`${propKey}`, valueDisplay, 3)
             }
         } else {
@@ -309,19 +308,10 @@ function printOAppSendConfigs(
         if (typeof item === 'object' && item !== null) {
             DebugLogger.keyValue(`${sendOappConfigIndexesToKeys[i]}`, '', 2)
             for (const [propKey, propVal] of Object.entries(item)) {
-                let valueDisplay = String(propVal)
-                if (
-                    (propKey === 'requiredDVNs' || propKey === 'optionalDVNs') &&
-                    Array.isArray(propVal) &&
-                    metadata &&
-                    chainKey &&
-                    metadata[chainKey]?.dvns
-                ) {
-                    const dvnMap = metadata[chainKey].dvns
-                    // if the DVN's canonicalName is not found, use the address
-                    const names = (propVal as string[]).map((addr) => dvnMap[addr]?.canonicalName ?? addr)
-                    valueDisplay = names.join(', ')
-                }
+                const valueDisplay =
+                    (propKey === 'requiredDVNs' || propKey === 'optionalDVNs') && Array.isArray(propVal)
+                        ? formatDvnAddresses(propVal as string[], metadata, chainKey)
+                        : String(propVal)
                 DebugLogger.keyValue(`${propKey}`, valueDisplay, 3)
             }
         } else {
