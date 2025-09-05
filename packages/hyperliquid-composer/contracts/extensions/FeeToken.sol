@@ -34,7 +34,7 @@ abstract contract FeeToken is HyperLiquidComposer {
      * @param _coreAmount The core amount to transfer
      * @return The final core amount to transfer (same as _coreAmount in default impl)
      */
-    function _getFinalCoreAmount(address _to, uint64 _coreAmount) internal view override returns (uint64) {
+    function _getFinalCoreAmount(address _to, uint64 _coreAmount) internal view override virtual returns (uint64) {
         if (coreUserExists(_to).exists) return _coreAmount;
 
         uint64 fee = activationFee();
