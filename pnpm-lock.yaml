@@ -1737,13 +1737,16 @@ importers:
         specifier: ^3.0.12
         version: 3.0.86
       '@layerzerolabs/oapp-alt-evm':
-        specifier: ^0.0.3
+        specifier: ^0.0.4
         version: link:../../packages/oapp-alt-evm
       '@layerzerolabs/oapp-evm':
         specifier: ^0.3.0
         version: link:../../packages/oapp-evm
+      '@layerzerolabs/oapp-evm-upgradeable':
+        specifier: ^0.1.2
+        version: link:../../packages/oapp-evm-upgradeable
       '@layerzerolabs/oft-alt-evm':
-        specifier: ^0.0.3
+        specifier: ^0.0.4
         version: link:../../packages/oft-alt-evm
       '@layerzerolabs/oft-evm':
         specifier: ^3.2.0
@@ -2013,7 +2016,7 @@ importers:
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/hyperliquid-composer':
-        specifier: ^0.0.19
+        specifier: ^1.0.0
         version: link:../../packages/hyperliquid-composer
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
@@ -4403,6 +4406,9 @@ importers:
       '@layerzerolabs/oapp-evm':
         specifier: ^0.3.2
         version: link:../oapp-evm
+      '@layerzerolabs/oapp-evm-upgradeable':
+        specifier: ^0.1.2
+        version: link:../oapp-evm-upgradeable
       '@layerzerolabs/test-devtools-evm-foundry':
         specifier: ~7.0.0
         version: link:../test-devtools-evm-foundry
@@ -4487,14 +4493,20 @@ importers:
         specifier: ^3.0.75
         version: 3.0.75(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
       '@layerzerolabs/oapp-alt-evm':
-        specifier: ^0.0.3
+        specifier: ^0.0.4
         version: link:../oapp-alt-evm
       '@layerzerolabs/oapp-evm':
         specifier: ^0.3.2
         version: link:../oapp-evm
+      '@layerzerolabs/oapp-evm-upgradeable':
+        specifier: ^0.1.2
+        version: link:../oapp-evm-upgradeable
       '@layerzerolabs/oft-evm':
         specifier: ^3.2.0
         version: link:../oft-evm
+      '@layerzerolabs/oft-evm-upgradeable':
+        specifier: ^3.1.0
+        version: link:../oft-evm-upgradeable
       '@layerzerolabs/test-devtools-evm-foundry':
         specifier: ~7.0.0
         version: link:../test-devtools-evm-foundry
