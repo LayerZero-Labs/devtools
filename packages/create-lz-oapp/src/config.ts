@@ -245,20 +245,20 @@ const PACKAGE_MANAGERS: PackageManager[] = [
     {
         id: 'pnpm',
         executable: 'pnpm',
-        args: ['install'],
+        args: ['install', '--frozen-lockfile'],
         label: 'pnpm (recommended)',
     },
     {
         id: 'npm',
         executable: 'npm',
         args: ['install'],
-        label: 'npm',
+        label: 'npm (unsafe / no lockfile support)',
     },
     {
         id: 'bun',
         executable: 'bun',
         args: ['install'],
-        label: 'bun',
+        label: 'bun (unsafe / no lockfile support',
     },
 ]
 
