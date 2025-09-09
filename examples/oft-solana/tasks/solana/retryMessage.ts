@@ -1,7 +1,6 @@
 import { web3 } from '@coral-xyz/anchor'
 import { toWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
-import { ComputeBudgetProgram, Keypair, sendAndConfirmTransaction } from '@solana/web3.js'
-import bs58 from 'bs58'
+import { ComputeBudgetProgram, sendAndConfirmTransaction } from '@solana/web3.js'
 import { task } from 'hardhat/config'
 
 import { makeBytes32 } from '@layerzerolabs/devtools'
@@ -83,10 +82,9 @@ task('lz:oft:solana:retry-message', 'Retry a stored message on Solana')
             tx.add(instruction)
             tx.recentBlockhash = blockhash
 
-            const keypair = Keypair.fromSecretKey(bs58.decode(process.env.SOLANA_PRIVATE_KEY))
-            tx.sign(keypair)
+            tx.sign(signer)
 
-            const signature = await sendAndConfirmTransaction(connection, tx, [keypair], { skipPreflight: true })
+            const signature = await sendAndConfirmTransaction(connection, tx, [signer], { skipPreflight: true })
             console.log(
                 `View Solana transaction here: ${getExplorerTxLink(signature.toString(), dstEid == EndpointId.SOLANA_V2_TESTNET)}`
             )
