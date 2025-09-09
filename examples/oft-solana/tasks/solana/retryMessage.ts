@@ -84,7 +84,7 @@ task('lz:oft:solana:retry-message', 'Retry a stored message on Solana')
 
             tx.sign(signer)
 
-            const signature = await sendAndConfirmTransaction(connection, tx, [signer], { skipPreflight: true })
+            const signature = await sendAndConfirmTransaction(connection, tx, [signer])
             console.log(
                 `View Solana transaction here: ${getExplorerTxLink(signature.toString(), dstEid == EndpointId.SOLANA_V2_TESTNET)}`
             )
