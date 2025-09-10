@@ -96,10 +96,10 @@ Block switching is not present in the default oft deploy script.
 
 ### Step 2.4 : Create spot deployment
 
-| Action                | Performed by      | Actionable with                           | Required for |
-| --------------------- | ----------------- | ----------------------------------------- | ------------ |
-| Create Spot Deployment| CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
-| Blocked by            | CoreSpot Deployer | Step 2.3                                  | Step 2.5     |
+| Action                 | Performed by      | Actionable with                           | Required for |
+| ---------------------- | ----------------- | ----------------------------------------- | ------------ |
+| Create Spot Deployment | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
+| Blocked by             | CoreSpot Deployer | Step 2.3                                  | Step 2.5     |
 
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-46-createspotdeployment)
 - Step MUST be run even though we set `noHyperliquidity=true` in genesis
@@ -119,10 +119,10 @@ Block switching is not present in the default oft deploy script.
 
 ### Step 2.6 : Enable quote token capability (Optional)
 
-| Action                     | Performed by      | Actionable with                           | Required for |
-| -------------------------- | ----------------- | ----------------------------------------- | ------------ |
-| Enable Quote Token         | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
-| Blocked by                 | CoreSpot Deployer | Step 2.5                                  | none         |
+| Action             | Performed by      | Actionable with                           | Required for |
+| ------------------ | ----------------- | ----------------------------------------- | ------------ |
+| Enable Quote Token | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
+| Blocked by         | CoreSpot Deployer | Step 2.5                                  | none         |
 
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-66-enablequotetoken-optional)
 - [ ] Enables the token to be used as a quote asset for trading pairs
@@ -198,10 +198,10 @@ This is controlled by the hyperliquid community - [source](https://hyperliquid.g
 
 ### Step 7.1 : Freeze/Unfreeze Users
 
-| Action            | Performed by      | Actionable with                           | Required for |
-| ----------------- | ----------------- | ----------------------------------------- | ------------ |
-| Freeze Users      | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
-| Blocked by        | CoreSpot Deployer | Step 2.1.1 (Enable Freeze)               | none         |
+| Action       | Performed by      | Actionable with                           | Required for |
+| ------------ | ----------------- | ----------------------------------------- | ------------ |
+| Freeze Users | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
+| Blocked by   | CoreSpot Deployer | Step 2.1.1 (Enable Freeze)                | none         |
 
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#freezeunfreeze-users)
 - [ ] Only available if freeze privilege was enabled before genesis
@@ -210,10 +210,10 @@ This is controlled by the hyperliquid community - [source](https://hyperliquid.g
 
 ### Step 7.2 : Revoke Freeze Privilege
 
-| Action                 | Performed by      | Actionable with                           | Required for |
-| ---------------------- | ----------------- | ----------------------------------------- | ------------ |
-| Revoke Freeze          | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
-| Blocked by             | CoreSpot Deployer | Step 2.1.1 (Enable Freeze)               | none         |
+| Action        | Performed by      | Actionable with                           | Required for |
+| ------------- | ----------------- | ----------------------------------------- | ------------ |
+| Revoke Freeze | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
+| Blocked by    | CoreSpot Deployer | Step 2.1.1 (Enable Freeze)                | none         |
 
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#revoke-freeze-privilege)
 - [ ] **Permanently removes freeze capability (irreversible)**

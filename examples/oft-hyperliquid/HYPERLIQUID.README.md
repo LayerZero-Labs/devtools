@@ -396,7 +396,7 @@ npx @layerzerolabs/hyperliquid-composer set-genesis \
     [--log-level {info | verbose}]
 ```
 
- ### Step 4/6 `createSpotDeployment`
+### Step 4/6 `createSpotDeployment`
 
 This is the step that creates a spot deployment without hyperliquidity. This step is meant for tokens deployed with Hyperliquidity but is also required for tokens deployed without Hyperliquidity to be listed on Spot trading, as such the values for `startPx` and `orderSz` are not required as they are set by the market and the value set does not matter. The value for `nOrders` however MUST be 0 as we do not support Hyperliquidity - <https://github.com/hyperliquid-dex/hyperliquid-python-sdk/blob/master/examples/spot_deploy.py#L97-L104>
 
