@@ -2,7 +2,12 @@ import { createModuleLogger } from '@layerzerolabs/io-devtools'
 import { Wallet } from 'ethers'
 import inquirer from 'inquirer'
 
-import { getCoreSpotDeployment } from '../io'
+import {
+    getCoreSpotDeployment,
+    updateFreezePrivilegeStatus,
+    updateQuoteTokenStatus,
+    updateUserFreezeStatus,
+} from '../io'
 import { HyperliquidClient } from '../signer'
 import { MAX_HYPERCORE_SUPPLY, USDC_TOKEN_ID } from '../types'
 import { getSpotDeployState } from './spotMeta'
@@ -249,5 +254,164 @@ export async function registerSpot(wallet: Wallet, isTestnet: boolean, coreSpotT
     logger.info('Register trading spot against USDC')
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
     const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, actionForRegisterSpot)
+    return response
+}
+
+export async function enableFreezePrivilege(
+    wallet: Wallet,
+    isTestnet: boolean,
+    coreSpotTokenId: number,
+    logLevel: string
+) {
+    const logger = createModuleLogger('enable-freeze-privilege', logLevel)
+
+    const { executeTx } = await inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'executeTx',
+            message: `This will enable freeze privilege for token ${coreSpotTokenId}, allowing you to freeze/unfreeze users. This should be done BEFORE genesis. Continue?`,
+            default: false,
+        },
+    ])
+
+    if (!executeTx) {
+        logger.info('Transaction cancelled - quitting.')
+        process.exit(1)
+    }
+
+    const action: SpotDeployAction['action'] = {
+        type: 'spotDeploy',
+        enableFreezePrivilege: {
+            token: coreSpotTokenId,
+        },
+    }
+
+    logger.info('Enabling freeze privilege')
+    const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, action)
+
+    if (response.status === 'ok') {
+        updateFreezePrivilegeStatus(coreSpotTokenId, isTestnet, true, logger)
+    }
+
+    return response
+}
+
+export async function freezeUser(
+    wallet: Wallet,
+    isTestnet: boolean,
+    coreSpotTokenId: number,
+    userAddress: string,
+    freeze: boolean,
+    logLevel: string
+) {
+    const logger = createModuleLogger('freeze-user', logLevel)
+
+    const { executeTx } = await inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'executeTx',
+            message: `This will ${freeze ? 'freeze' : 'unfreeze'} user ${userAddress} for token ${coreSpotTokenId}. Continue?`,
+            default: false,
+        },
+    ])
+
+    if (!executeTx) {
+        logger.info('Transaction cancelled - quitting.')
+        process.exit(1)
+    }
+
+    const action: SpotDeployAction['action'] = {
+        type: 'spotDeploy',
+        freezeUser: {
+            token: coreSpotTokenId,
+            user: userAddress.toLowerCase(),
+            freeze: freeze,
+        },
+    }
+
+    logger.info(`${freeze ? 'Freezing' : 'Unfreezing'} user ${userAddress}`)
+    const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, action)
+
+    if (response.status === 'ok') {
+        updateUserFreezeStatus(coreSpotTokenId, isTestnet, userAddress, freeze, logger)
+    }
+
+    return response
+}
+
+export async function revokeFreezePrivilege(
+    wallet: Wallet,
+    isTestnet: boolean,
+    coreSpotTokenId: number,
+    logLevel: string
+) {
+    const logger = createModuleLogger('revoke-freeze-privilege', logLevel)
+
+    const { executeTx } = await inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'executeTx',
+            message: `This will PERMANENTLY revoke freeze privilege for token ${coreSpotTokenId}. This action is irreversible. Continue?`,
+            default: false,
+        },
+    ])
+
+    if (!executeTx) {
+        logger.info('Transaction cancelled - quitting.')
+        process.exit(1)
+    }
+
+    const action: SpotDeployAction['action'] = {
+        type: 'spotDeploy',
+        revokeFreezePrivilege: {
+            token: coreSpotTokenId,
+        },
+    }
+
+    logger.info('Revoking freeze privilege (permanent)')
+    const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, action)
+
+    if (response.status === 'ok') {
+        updateFreezePrivilegeStatus(coreSpotTokenId, isTestnet, false, logger)
+    }
+
+    return response
+}
+
+export async function enableQuoteToken(wallet: Wallet, isTestnet: boolean, coreSpotTokenId: number, logLevel: string) {
+    const logger = createModuleLogger('enable-quote-token', logLevel)
+
+    const { executeTx } = await inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'executeTx',
+            message: `This will enable token ${coreSpotTokenId} to be used as a quote asset in trading pairs. This can be done after trading fee share is set. Continue?`,
+            default: false,
+        },
+    ])
+
+    if (!executeTx) {
+        logger.info('Transaction cancelled - quitting.')
+        process.exit(1)
+    }
+
+    const action: SpotDeployAction['action'] = {
+        type: 'spotDeploy',
+        enableQuoteToken: {
+            token: coreSpotTokenId,
+        },
+    }
+
+    logger.info('Enabling quote token capability')
+    const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, action)
+
+    if (response.status === 'ok') {
+        updateQuoteTokenStatus(coreSpotTokenId, isTestnet, true, logger)
+    }
+
     return response
 }
