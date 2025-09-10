@@ -2,7 +2,17 @@ import { createModuleLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtoo
 import inquirer from 'inquirer'
 
 import { getHyperliquidWallet } from '@/signer'
-import { setTradingFeeShare, setUserGenesis, setGenesis, setNoHyperliquidity, registerSpot } from '@/operations'
+import {
+    setTradingFeeShare,
+    setUserGenesis,
+    setGenesis,
+    setNoHyperliquidity,
+    registerSpot,
+    enableFreezePrivilege,
+    freezeUser,
+    revokeFreezePrivilege,
+    enableQuoteToken,
+} from '@/operations'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function tradingFee(args: any): Promise<void> {
@@ -94,4 +104,64 @@ export async function registerTradingSpot(args: any): Promise<void> {
     const tokenIndex: number = parseInt(args.tokenIndex)
 
     await registerSpot(wallet, isTestnet, tokenIndex, args.logLevel)
+}
+
+// === Post-Launch Management Functions ===
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function enableTokenFreezePrivilege(args: any): Promise<void> {
+    setDefaultLogLevel(args.logLevel)
+    const logger = createModuleLogger('enable-freeze-privilege', args.logLevel)
+
+    const wallet = await getHyperliquidWallet(args.privateKey)
+    const isTestnet = args.network === 'testnet'
+    const tokenIndex: number = parseInt(args.tokenIndex)
+
+    logger.info(`Enabling freeze privilege for token ${tokenIndex}`)
+
+    await enableFreezePrivilege(wallet, isTestnet, tokenIndex, args.logLevel)
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function freezeTokenUser(args: any): Promise<void> {
+    setDefaultLogLevel(args.logLevel)
+    const logger = createModuleLogger('freeze-user', args.logLevel)
+
+    const wallet = await getHyperliquidWallet(args.privateKey)
+    const isTestnet = args.network === 'testnet'
+    const tokenIndex: number = parseInt(args.tokenIndex)
+    const userAddress: string = args.userAddress
+    const freeze: boolean = args.freeze === 'true'
+
+    logger.info(`${freeze ? 'Freezing' : 'Unfreezing'} user ${userAddress} for token ${tokenIndex}`)
+
+    await freezeUser(wallet, isTestnet, tokenIndex, userAddress, freeze, args.logLevel)
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function revokeTokenFreezePrivilege(args: any): Promise<void> {
+    setDefaultLogLevel(args.logLevel)
+    const logger = createModuleLogger('revoke-freeze-privilege', args.logLevel)
+
+    const wallet = await getHyperliquidWallet(args.privateKey)
+    const isTestnet = args.network === 'testnet'
+    const tokenIndex: number = parseInt(args.tokenIndex)
+
+    logger.info(`Revoking freeze privilege for token ${tokenIndex}`)
+
+    await revokeFreezePrivilege(wallet, isTestnet, tokenIndex, args.logLevel)
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function enableTokenQuoteAsset(args: any): Promise<void> {
+    setDefaultLogLevel(args.logLevel)
+    const logger = createModuleLogger('enable-quote-token', args.logLevel)
+
+    const wallet = await getHyperliquidWallet(args.privateKey)
+    const isTestnet = args.network === 'testnet'
+    const tokenIndex: number = parseInt(args.tokenIndex)
+
+    logger.info(`Enabling quote token capability for token ${tokenIndex}`)
+
+    await enableQuoteToken(wallet, isTestnet, tokenIndex, args.logLevel)
 }
