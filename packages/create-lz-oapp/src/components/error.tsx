@@ -22,6 +22,11 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
     return null;
   }
 
+  const installationCommand =
+    "args" in config.packageManager
+      ? `${config.packageManager.executable} ${config.packageManager.args.join(" ")}`
+      : config.packageManager.commands.join(" && ");
+
   switch (true) {
     case error instanceof DestinationNotEmptyError:
       return (
@@ -84,10 +89,7 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
             <Text color="cyan">cd {config.destination}</Text>
             <Newline />
             <Text># Reattempt the installation</Text>
-            <Text color="cyan">
-              {config.packageManager.executable}{" "}
-              {config.packageManager.args.join(" ")}
-            </Text>
+            <Text color="cyan">{installationCommand}</Text>
           </Box>
         </Box>
       );

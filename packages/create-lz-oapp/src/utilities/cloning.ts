@@ -80,8 +80,8 @@ export const cloneExample = async ({ example, destination, packageManager }: Con
 const IGNORED_FILES = ['CHANGELOG.md', 'turbo.json']
 
 // Lockfiles from diferent package managers should be removed
-const LOCKFILES: { [packageManagerId: PackageManager['id']]: string } = {
-    pnpm: 'pnpm-lock.yaml',
+const LOCKFILES: { [lockfile: string]: PackageManager['id'][] } = {
+    'pnpm-lock.yaml': ['pnpm_lockfile', 'pnpm_lockfile_8_or_9'],
 }
 
 /**
@@ -91,7 +91,7 @@ const LOCKFILES: { [packageManagerId: PackageManager['id']]: string } = {
  * @param {string} destination The directory containing the cloned project
  */
 const cleanupExample = async (destination: string, packageManagerId: PackageManager['id']) => {
-    const ignoredLockfiles = Object.values(LOCKFILES).filter((file) => file !== LOCKFILES[packageManagerId])
+    const ignoredLockfiles = Object.keys(LOCKFILES).filter((file) => !LOCKFILES[file]?.includes(packageManagerId))
     for (const fileName of IGNORED_FILES.concat(ignoredLockfiles)) {
         const filePath = resolve(destination, fileName)
 
