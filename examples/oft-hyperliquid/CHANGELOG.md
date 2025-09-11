@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 1.0.1
+
+### Patch Changes
+
+- 90417ab: adding in freeze and quote asset during hip-1 deployment
+
 ## 1.0.0
 
 ### Major Changes
