@@ -57,7 +57,7 @@ Block switching is not present in the default oft deploy script.
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-0-purchase-the-ticker)
 - [ ] Core spot deployer needs OFT address and deployed transaction hash
 
-### Step 2.1.1 : Enable freeze privilege (Optional)
+### Step 2.2 : Enable freeze privilege (Optional)
 
 | Action                  | Performed by      | Actionable with                           | Required for |
 | ----------------------- | ----------------- | ----------------------------------------- | ------------ |
@@ -69,7 +69,7 @@ Block switching is not present in the default oft deploy script.
 - [ ] Enables post-launch user freeze/unfreeze operations
 - [ ] Once set, can only be revoked (irreversible)
 
-### Step 2.2 : Set the user genesis
+### Step 2.3 : Set the user genesis
 
 | Action           | Performed by      | Actionable with                           | Required for |
 | ---------------- | ----------------- | ----------------------------------------- | ------------ |
@@ -84,7 +84,7 @@ Block switching is not present in the default oft deploy script.
 - You can either mint the entire amount to the asset bridge address (default) or the deployer address.
 - You can read more about the asset bridge address - [in the docs](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#make-changes-to-the-underlying-oft-if-you-want-to)
 
-### Step 2.3 - Confirm the user genesis
+### Step 2.4 - Confirm the user genesis
 
 | Action               | Performed by      | Actionable with                           | Required for |
 | -------------------- | ----------------- | ----------------------------------------- | ------------ |
@@ -94,7 +94,7 @@ Block switching is not present in the default oft deploy script.
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-36-genesis)
 - [ ] Locks in the user genesis step and is now immutable.
 
-### Step 2.4 : Create spot deployment
+### Step 2.5 : Create spot deployment
 
 | Action                 | Performed by      | Actionable with                           | Required for |
 | ---------------------- | ----------------- | ----------------------------------------- | ------------ |
@@ -105,7 +105,7 @@ Block switching is not present in the default oft deploy script.
 - Step MUST be run even though we set `noHyperliquidity=true` in genesis
 - This can be run even after deployment and linking
 
-### Step 2.5 - Register the spot
+### Step 2.6 : Register the spot
 
 | Action        | Performed by      | Actionable with                           | Required for |
 | ------------- | ----------------- | ----------------------------------------- | ------------ |
@@ -117,7 +117,7 @@ Block switching is not present in the default oft deploy script.
 - [ ] Make sure the asset bridge address on HyperCore has all the tokens minted in Step 2.3. Partial funding is not supported.
 - The final step to be executed after which the token will be listed on the spot order book.
 
-### Step 2.6 : Enable quote token capability (Optional)
+### Step 2.7 : Enable quote token capability (Optional)
 
 | Action             | Performed by      | Actionable with                           | Required for |
 | ------------------ | ----------------- | ----------------------------------------- | ------------ |
@@ -130,7 +130,7 @@ Block switching is not present in the default oft deploy script.
 - [ ] Can be executed after trading fee share is set
 - [ ] This can be run even after deployment and linking are complete
 
-### Step 2.7 : Set deployer fee share (Optional)
+### Step 2.8 : Set deployer fee share (Optional)
 
 | Action                 | Performed by      | Actionable with                           | Required for |
 | ---------------------- | ----------------- | ----------------------------------------- | ------------ |

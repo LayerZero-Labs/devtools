@@ -121,7 +121,7 @@ npx @layerzerolabs/hyperliquid-composer enable-quote-token \
     [--log-level {info | verbose}]
 ```
 
-### Optional: Set Trading Fee Share
+### 7. Set Trading Fee Share (Optional)
 
 Can be done at any time after deployment:
 
@@ -312,7 +312,7 @@ curl -X POST "https://api.hyperliquid-testnet.xyz/info" \
 This will return a json object with the current state of the spot deployment.
 (building a sdk wrapper around this is on our roadmap)
 
-### Step 0: Purchase the ticker
+### Step 0: Purchase the ticker (prerequisite)
 
 You will have to buy a ticker from the Hyperliquid UI - <https://app.hyperliquid.xyz/deploySpot>
 
@@ -329,7 +329,7 @@ npx @layerzerolabs/hyperliquid-composer core-spot \
     [--log-level {info | verbose}]
 ```
 
-### Step 1/6 `enableFreezePrivilege` (Optional)
+### Step 1/7 `enableFreezePrivilege` (Optional)
 
 **Must be done before genesis if you want freeze capability.**
 
@@ -341,7 +341,7 @@ npx @layerzerolabs/hyperliquid-composer enable-freeze-privilege \
     [--log-level {info | verbose}]
 ```
 
-### Step 2/6 `userGenesis`
+### Step 2/7 `userGenesis`
 
 This is the part where you set the genesis balances for the deployer and the users. Since `HyperCore` tokens are of uint type `u64` the most tokens possible are `18446744073709551615`.
 
@@ -384,7 +384,7 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
 
 > ⚠️ Note: There is no limit to the number of time you can re-run this command.
 
-### Step 3/6 `genesis`
+### Step 3/7 `genesis`
 
 This is the step that registers the above genesis balances on `HyperCore`.
 
@@ -398,7 +398,7 @@ npx @layerzerolabs/hyperliquid-composer set-genesis \
     [--log-level {info | verbose}]
 ```
 
-### Step 4/6 `createSpotDeployment`
+### Step 4/7 `createSpotDeployment`
 
 This is the step that creates a spot deployment without hyperliquidity. This step is meant for tokens deployed with Hyperliquidity but is also required for tokens deployed without Hyperliquidity to be listed on Spot trading, as such the values for `startPx` and `orderSz` are not required as they are set by the market and the value set does not matter. The value for `nOrders` however MUST be 0 as we do not support Hyperliquidity - <https://github.com/hyperliquid-dex/hyperliquid-python-sdk/blob/master/examples/spot_deploy.py#L97-L104>
 
@@ -421,7 +421,7 @@ npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
 
 > ⚠️ Note: `spot-deploy-state` should fail after completing this step.
 
-### Step 5/6 `registerSpot`
+### Step 5/7 `registerSpot`
 
 This is the step that registers the Core Spot on `HyperCore` and creates a base-quote pair against `USDC`, which is the only supported quote token as of now.
 
@@ -442,7 +442,7 @@ curl -X POST "https://api.hyperliquid.xyz/info" \
      -d '{ "type": "tokenDetails", "tokenId": "<YOUR_TOKEN_ID>"}'
 ```
 
-### Step 6/6 `enableQuoteToken` (Optional)
+### Step 6/7 `enableQuoteToken` (Optional)
 
 This step enables the token to be used as a quote asset for trading pairs. This allows other tokens to form trading pairs against your token (e.g., TOKEN/YOUR_TOKEN instead of only YOUR_TOKEN/USDC).
 
@@ -458,7 +458,7 @@ npx @layerzerolabs/hyperliquid-composer enable-quote-token \
     [--log-level {info | verbose}]
 ```
 
-### Optional: `setDeployerTradingFeeShare`
+### Step 7/7: `setDeployerTradingFeeShare` (Optional)
 
 This is the step where you set the trading fee share for the deployer. It can be in the range of `[0%,100%]`.
 
