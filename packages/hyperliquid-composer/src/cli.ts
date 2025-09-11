@@ -1,5 +1,5 @@
 import { Command } from 'commander'
-import { LogLevel } from '@layerzerolabs/io-devtools'
+import { LogLevel, createModuleLogger } from '@layerzerolabs/io-devtools'
 import {
     // Setup & Environment
     setBlock,
@@ -37,6 +37,7 @@ import {
 import { formatBalancesTable } from './io'
 
 const program = new Command()
+const logger = createModuleLogger('sdk-hyperliquid-composer', LogLevel.info)
 
 program.name('oft-hyperliquid-evm').description('CLI tools for HyperLiquid OFT operations and HIP-1 deployment')
 
@@ -207,7 +208,7 @@ program
     .option('-l, --log-level <level>', 'Log level', LogLevel.info)
     .action(async (options) => {
         const res = await isAccountActivated(options)
-        console.log(`Account activated: ${res}`)
+        logger.info(`Account activated: ${res}`)
     })
 
 program
@@ -219,7 +220,7 @@ program
     .option('-l, --log-level <level>', 'Log level', LogLevel.info)
     .action(async (options) => {
         const balances = await getCoreBalances(options)
-        console.log(formatBalancesTable(balances, options.showZero))
+        logger.info(formatBalancesTable(balances, options.showZero))
     })
 
 // === Utilities ===
