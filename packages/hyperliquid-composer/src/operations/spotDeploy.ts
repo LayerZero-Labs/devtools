@@ -388,7 +388,7 @@ export async function enableQuoteToken(wallet: Wallet, isTestnet: boolean, coreS
         {
             type: 'confirm',
             name: 'executeTx',
-            message: `This will enable token ${coreSpotTokenId} to be used as a quote asset in trading pairs. This can be done after trading fee share is set. Continue?`,
+            message: `This will enable token ${coreSpotTokenId} to be used as a quote asset in trading pairs. This can be done after trading fee share is set. \n There are several requirements for this to be successful - reference https://t.me/hyperliquid_api/243. Continue?`,
             default: false,
         },
     ])

@@ -114,15 +114,6 @@ program
     .option('-pk, --private-key <0x>', 'Private key')
     .action(registerTradingSpot)
 
-program
-    .command('enable-quote-token')
-    .description('HIP-1 Deployment 6. Enable token as quote asset')
-    .requiredOption('-idx, --token-index <token-index>', 'Token index')
-    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
-    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
-    .option('-pk, --private-key <0x>', 'Private key')
-    .action(enableTokenQuoteAsset)
-
 // === Optional HIP-1 Features ===
 program
     .command('trading-fee')
@@ -133,6 +124,17 @@ program
     .option('-l, --log-level <level>', 'Log level', LogLevel.info)
     .option('-pk, --private-key <0x>', 'Private key')
     .action(tradingFee)
+
+program
+    .command('enable-quote-token')
+    .description(
+        'HIP-1 Deployment Optional. Enable token as quote asset - requirements: https://t.me/hyperliquid_api/243'
+    )
+    .requiredOption('-idx, --token-index <token-index>', 'Token index')
+    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
+    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
+    .option('-pk, --private-key <0x>', 'Private key')
+    .action(enableTokenQuoteAsset)
 
 // === EVM-HyperCore Linking ===
 program
