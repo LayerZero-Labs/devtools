@@ -35,15 +35,16 @@ import {
 } from './commands'
 
 import { formatBalancesTable } from './io'
+import { CLI_COMMANDS, LOGGER_MODULES } from './types/cli-constants'
 
 const program = new Command()
-const logger = createModuleLogger('sdk-hyperliquid-composer', LogLevel.info)
+const logger = createModuleLogger(LOGGER_MODULES.SDK_HYPERLIQUID_COMPOSER, LogLevel.info)
 
 program.name('oft-hyperliquid-evm').description('CLI tools for HyperLiquid OFT operations and HIP-1 deployment')
 
 // === Setup & Environment ===
 program
-    .command('set-block')
+    .command(CLI_COMMANDS.SET_BLOCK)
     .description('Set block size')
     .requiredOption('-s, --size <size>', 'Block size (big/small)')
     .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
@@ -53,7 +54,7 @@ program
 
 // === Core Spot Management ===
 program
-    .command('core-spot')
+    .command(CLI_COMMANDS.CORE_SPOT)
     .description('Get core spot metadata information')
     .option('-a, --action <action>', 'Action (create/get)', 'get')
     .option('-oapp, --oapp-config <oapp-config>', 'OAPP config')
@@ -64,7 +65,7 @@ program
 
 // === HIP-1 Deployment Workflow ===
 program
-    .command('enable-freeze-privilege')
+    .command(CLI_COMMANDS.ENABLE_FREEZE_PRIVILEGE)
     .description('HIP-1 Deployment 1. Enable freeze privilege (must be done before genesis)')
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
     .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
@@ -73,7 +74,7 @@ program
     .action(enableTokenFreezePrivilege)
 
 program
-    .command('user-genesis')
+    .command(CLI_COMMANDS.USER_GENESIS)
     .description('HIP-1 Deployment 2. Set user genesis allocations')
     .option('-a, --action <action>', 'Action (userAndWei/existingTokenAndWei/blacklistUsers)', '*')
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
@@ -89,7 +90,7 @@ program
     })
 
 program
-    .command('set-genesis')
+    .command(CLI_COMMANDS.SET_GENESIS)
     .description('HIP-1 Deployment 3. Deploy token with genesis')
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
     .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
@@ -98,7 +99,7 @@ program
     .action(genesis)
 
 program
-    .command('create-spot-deployment')
+    .command(CLI_COMMANDS.CREATE_SPOT_DEPLOYMENT)
     .description('HIP-1 Deployment 4. Create spot deployment without hyperliquidity')
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
     .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
@@ -107,7 +108,7 @@ program
     .action(createSpotDeployment)
 
 program
-    .command('register-spot')
+    .command(CLI_COMMANDS.REGISTER_SPOT)
     .description('HIP-1 Deployment 5. Register trading spot against USDC')
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
     .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
@@ -117,7 +118,7 @@ program
 
 // === Optional HIP-1 Features ===
 program
-    .command('trading-fee')
+    .command(CLI_COMMANDS.TRADING_FEE)
     .description('HIP-1 Deployment Optional. Set deployer trading fee share')
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
     .requiredOption('-s, --share <share>', 'Share')
@@ -127,7 +128,7 @@ program
     .action(tradingFee)
 
 program
-    .command('enable-quote-token')
+    .command(CLI_COMMANDS.ENABLE_QUOTE_TOKEN)
     .description(
         'HIP-1 Deployment Optional. Enable token as quote asset - requirements: https://t.me/hyperliquid_api/243'
     )
@@ -139,7 +140,7 @@ program
 
 // === EVM-HyperCore Linking ===
 program
-    .command('request-evm-contract')
+    .command(CLI_COMMANDS.REQUEST_EVM_CONTRACT)
     .description('Linking 1. Request to link HyperCore token to EVM contract')
     .option('-oapp, --oapp-config <oapp-config>', 'OAPP config')
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
@@ -149,7 +150,7 @@ program
     .action(requestEvmContract)
 
 program
-    .command('finalize-evm-contract')
+    .command(CLI_COMMANDS.FINALIZE_EVM_CONTRACT)
     .description('Linking 2. Finalize the EVM contract linking')
     .option('-oapp, --oapp-config <oapp-config>', 'OAPP config')
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
@@ -160,7 +161,7 @@ program
 
 // === Post-Launch Management ===
 program
-    .command('freeze-user')
+    .command(CLI_COMMANDS.FREEZE_USER)
     .description('Freeze or unfreeze a specific user (only if you have enabled freeze privilege)')
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
     .requiredOption('-u, --user-address <0x>', 'User address to freeze/unfreeze')
@@ -171,7 +172,7 @@ program
     .action(freezeTokenUser)
 
 program
-    .command('revoke-freeze-privilege')
+    .command(CLI_COMMANDS.REVOKE_FREEZE_PRIVILEGE)
     .description('Permanently revoke freeze privilege (irreversible)')
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
     .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
@@ -181,7 +182,7 @@ program
 
 // === Info & Queries ===
 program
-    .command('spot-deploy-state')
+    .command(CLI_COMMANDS.SPOT_DEPLOY_STATE)
     .description('Get current deployment state of a token')
     .requiredOption(
         '-idx, --token-index <token-index>',
@@ -193,7 +194,7 @@ program
     .action(spotDeployState)
 
 program
-    .command('hip-token')
+    .command(CLI_COMMANDS.HIP_TOKEN)
     .description('Get detailed information about a HyperCore HIP-1 token')
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
     .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
@@ -201,7 +202,7 @@ program
     .action(hipTokenInfo)
 
 program
-    .command('is-account-activated')
+    .command(CLI_COMMANDS.IS_ACCOUNT_ACTIVATED)
     .description('Check if an address is activated on HyperCore')
     .requiredOption('-u, --user <0x>', 'User address')
     .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
@@ -212,7 +213,7 @@ program
     })
 
 program
-    .command('get-core-balances')
+    .command(CLI_COMMANDS.GET_CORE_BALANCES)
     .description('Get core balances for a user')
     .requiredOption('-u, --user <0x>', 'User address')
     .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
@@ -225,7 +226,7 @@ program
 
 // === Utilities ===
 program
-    .command('to-bridge')
+    .command(CLI_COMMANDS.TO_BRIDGE)
     .description('Convert token index to bridge address')
     .requiredOption('-idx, --token-index <token-index>', 'Token index')
     .option('-l, --log-level <level>', 'Log level', LogLevel.info)

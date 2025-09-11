@@ -13,6 +13,7 @@ import { MAX_HYPERCORE_SUPPLY, USDC_TOKEN_ID } from '../types'
 import { getSpotDeployState } from './spotMeta'
 import type { SpotDeployAction, SpotDeployStates } from '../types'
 import { RegisterHyperliquidity } from '@/types/spotDeploy'
+import { LOGGER_MODULES } from '@/types/cli-constants'
 
 export async function setTradingFeeShare(
     wallet: Wallet,
@@ -41,7 +42,7 @@ export async function setUserGenesis(
     action: string,
     logLevel: string
 ) {
-    const logger = createModuleLogger('setUserGenesis', logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.SET_USER_GENESIS, logLevel)
     const coreSpotDeployment = getCoreSpotDeployment(coreSpotTokenId, isTestnet, logger)
 
     const userGenesis = coreSpotDeployment.userGenesis
@@ -126,7 +127,7 @@ export async function setUserGenesis(
 }
 
 export async function setGenesis(wallet: Wallet, isTestnet: boolean, coreSpotTokenId: number, logLevel: string) {
-    const logger = createModuleLogger('setGenesis', logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.SET_GENESIS, logLevel)
     const coreSpotDeployment = getCoreSpotDeployment(coreSpotTokenId, isTestnet, logger)
 
     const maxUserWei = coreSpotDeployment.userGenesis.userAndWei.reduce(
@@ -165,7 +166,7 @@ export async function setGenesis(wallet: Wallet, isTestnet: boolean, coreSpotTok
 }
 
 export async function setNoHyperliquidity(wallet: Wallet, isTestnet: boolean, tokenIndex: number, logLevel: string) {
-    const logger = createModuleLogger('setNoHyperliquidity', logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.SET_NO_HYPERLIQUIDITY, logLevel)
 
     const deployStates = (await getSpotDeployState(wallet.address, isTestnet, logLevel)) as SpotDeployStates
 
@@ -227,7 +228,7 @@ export async function setNoHyperliquidity(wallet: Wallet, isTestnet: boolean, to
 }
 
 export async function registerSpot(wallet: Wallet, isTestnet: boolean, coreSpotTokenId: number, logLevel: string) {
-    const logger = createModuleLogger('register-spot', logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.REGISTER_TRADING_SPOT, logLevel)
 
     const { executeTx } = await inquirer.prompt([
         {
@@ -263,7 +264,7 @@ export async function enableFreezePrivilege(
     coreSpotTokenId: number,
     logLevel: string
 ) {
-    const logger = createModuleLogger('enable-freeze-privilege', logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.ENABLE_FREEZE_PRIVILEGE, logLevel)
 
     const { executeTx } = await inquirer.prompt([
         {
@@ -305,7 +306,7 @@ export async function freezeUser(
     freeze: boolean,
     logLevel: string
 ) {
-    const logger = createModuleLogger('freeze-user', logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.FREEZE_USER, logLevel)
 
     const { executeTx } = await inquirer.prompt([
         {
@@ -347,7 +348,7 @@ export async function revokeFreezePrivilege(
     coreSpotTokenId: number,
     logLevel: string
 ) {
-    const logger = createModuleLogger('revoke-freeze-privilege', logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.REVOKE_FREEZE_PRIVILEGE, logLevel)
 
     const { executeTx } = await inquirer.prompt([
         {
@@ -382,7 +383,7 @@ export async function revokeFreezePrivilege(
 }
 
 export async function enableQuoteToken(wallet: Wallet, isTestnet: boolean, coreSpotTokenId: number, logLevel: string) {
-    const logger = createModuleLogger('enable-quote-token', logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.ENABLE_QUOTE_TOKEN, logLevel)
 
     const { executeTx } = await inquirer.prompt([
         {

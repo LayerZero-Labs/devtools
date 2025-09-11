@@ -13,11 +13,12 @@ import {
     revokeFreezePrivilege,
     enableQuoteToken,
 } from '@/operations'
+import { LOGGER_MODULES } from '@/types/cli-constants'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function tradingFee(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
-    const logger = createModuleLogger('trading-fee', args.logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.TRADING_FEE, args.logLevel)
 
     const wallet = await getHyperliquidWallet(args.privateKey)
     const isTestnet = args.network === 'testnet'
@@ -49,7 +50,7 @@ export async function tradingFee(args: any): Promise<void> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function userGenesis(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
-    const logger = createModuleLogger('user-genesis', args.logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.USER_GENESIS, args.logLevel)
 
     const wallet = await getHyperliquidWallet(args.privateKey)
     const isTestnet = args.network === 'testnet'
@@ -65,7 +66,7 @@ export async function userGenesis(args: any): Promise<void> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function genesis(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
-    const logger = createModuleLogger('genesis', args.logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.GENESIS, args.logLevel)
 
     const wallet = await getHyperliquidWallet(args.privateKey)
     const isTestnet = args.network === 'testnet'
@@ -80,7 +81,7 @@ export async function genesis(args: any): Promise<void> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function createSpotDeployment(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
-    const logger = createModuleLogger('createSpotDeployment', args.logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.CREATE_SPOT_DEPLOYMENT, args.logLevel)
 
     const wallet = await getHyperliquidWallet(args.privateKey)
     const isTestnet = args.network === 'testnet'
@@ -94,7 +95,7 @@ export async function createSpotDeployment(args: any): Promise<void> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function registerTradingSpot(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
-    const logger = createModuleLogger('registerSpot', args.logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.REGISTER_TRADING_SPOT, args.logLevel)
 
     const wallet = await getHyperliquidWallet(args.privateKey)
     const isTestnet = args.network === 'testnet'
@@ -111,7 +112,7 @@ export async function registerTradingSpot(args: any): Promise<void> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function enableTokenFreezePrivilege(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
-    const logger = createModuleLogger('enable-freeze-privilege', args.logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.ENABLE_FREEZE_PRIVILEGE, args.logLevel)
 
     const wallet = await getHyperliquidWallet(args.privateKey)
     const isTestnet = args.network === 'testnet'
@@ -125,7 +126,7 @@ export async function enableTokenFreezePrivilege(args: any): Promise<void> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function freezeTokenUser(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
-    const logger = createModuleLogger('freeze-user', args.logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.FREEZE_USER, args.logLevel)
 
     const wallet = await getHyperliquidWallet(args.privateKey)
     const isTestnet = args.network === 'testnet'
@@ -141,7 +142,7 @@ export async function freezeTokenUser(args: any): Promise<void> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function revokeTokenFreezePrivilege(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
-    const logger = createModuleLogger('revoke-freeze-privilege', args.logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.REVOKE_FREEZE_PRIVILEGE, args.logLevel)
 
     const wallet = await getHyperliquidWallet(args.privateKey)
     const isTestnet = args.network === 'testnet'
@@ -155,7 +156,7 @@ export async function revokeTokenFreezePrivilege(args: any): Promise<void> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function enableTokenQuoteAsset(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
-    const logger = createModuleLogger('enable-quote-token', args.logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.ENABLE_QUOTE_TOKEN, args.logLevel)
 
     const wallet = await getHyperliquidWallet(args.privateKey)
     const isTestnet = args.network === 'testnet'
