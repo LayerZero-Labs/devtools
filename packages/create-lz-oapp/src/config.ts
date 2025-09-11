@@ -277,7 +277,7 @@ const PACKAGE_MANAGERS: PackageManager[] = [
         id: 'bun',
         executable: 'bun',
         args: ['install'],
-        label: 'bun (unsafe / no lockfile',
+        label: 'bun (unsafe / no lockfile)',
         hasLockfile: false,
     },
 ]
