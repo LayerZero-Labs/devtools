@@ -37,6 +37,7 @@
     "test:jest": "jest"
   },
   "devDependencies": {
+    "@ethersproject/address": "~5.7.0",
     "@layerzerolabs/devtools-evm-hardhat": "~4.0.0",
     "@layerzerolabs/ua-devtools": "~5.0.0",
     "@swc/core": "^1.4.0",
