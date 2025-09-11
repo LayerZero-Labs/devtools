@@ -116,7 +116,9 @@ npx @layerzerolabs/hyperliquid-composer register-spot \
     [--log-level {info | verbose}]
 ```
 
-### 6. Enable Quote Token Capability (optional)
+### 6. Enable Quote Token Capability (Optional)
+
+Enables your token to be used as a quote asset for trading pairs. **Requirements must be met** - see: [Hyperliquid API requirements](https://t.me/hyperliquid_api/243)
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer enable-quote-token \

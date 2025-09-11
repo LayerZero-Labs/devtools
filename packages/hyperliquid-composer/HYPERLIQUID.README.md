@@ -380,6 +380,8 @@ npx @layerzerolabs/hyperliquid-composer register-spot \
 
 ### 6. Enable Quote Token Capability (Optional)
 
+Enables your token to be used as a quote asset for trading pairs. **Requirements must be met** - see: [Hyperliquid API requirements](https://t.me/hyperliquid_api/243)
+
 ```bash
 npx @layerzerolabs/hyperliquid-composer enable-quote-token \
     --token-index <coreIndex> \
@@ -713,7 +715,11 @@ curl -X POST "https://api.hyperliquid.xyz/info" \
 
 ### Step 6/6 `enableQuoteToken` (Optional)
 
-This step enables the token to be used as a quote asset for trading pairs.
+This step enables the token to be used as a quote asset for trading pairs. This allows other tokens to form trading pairs against your token (e.g., TOKEN/YOUR_TOKEN instead of only YOUR_TOKEN/USDC).
+
+> ⚠️ **Requirements**: There are specific requirements that must be met for this to be successful. Please review the requirements at: [Hyperliquid API requirements](https://t.me/hyperliquid_api/243)
+>
+> 📝 **Note**: This can be executed after the trading fee share is set and even after deployment and linking are complete.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer enable-quote-token \

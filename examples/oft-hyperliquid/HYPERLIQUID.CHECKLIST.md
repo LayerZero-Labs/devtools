@@ -124,9 +124,11 @@ Block switching is not present in the default oft deploy script.
 | Enable Quote Token | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
 | Blocked by         | CoreSpot Deployer | Step 2.5                                  | none         |
 
+- [ ] **Review requirements first**: Check [Hyperliquid API requirements](https://t.me/hyperliquid_api/243) for eligibility criteria
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-66-enablequotetoken-optional)
-- [ ] Enables the token to be used as a quote asset for trading pairs
-- This can be run even after deployment and linking
+- [ ] Enables the token to be used as a quote asset for trading pairs (e.g., OTHER_TOKEN/YOUR_TOKEN)
+- [ ] Can be executed after trading fee share is set
+- [ ] This can be run even after deployment and linking are complete
 
 ### Step 2.7 : Set deployer fee share (Optional)
 
