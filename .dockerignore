@@ -21,12 +21,21 @@ docker-*.yaml
 # Dependencies & deployments
 **/node_modules
 
-# Build files & cache
+# Build files & cache  
 **/deployments
 **/dist
 **/artifacts
 **/cache
 **/out
+**/.turbo
+**/coverage
+**/tmp
+**/temp
+
+# Keep tests/ for specific builds but exclude heavy files
+tests/**/node_modules/
+tests/**/.turbo/
+tests/**/coverage/
 
 # Metadata
 *.md
