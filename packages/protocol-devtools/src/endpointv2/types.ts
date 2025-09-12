@@ -38,6 +38,7 @@ export interface IEndpointV2 extends IOmniSDK {
 
     isRegisteredLibrary(uln: OmniAddress): Promise<boolean>
     registerLibrary(uln: OmniAddress): Promise<OmniTransaction>
+    isBlockedLibrary(uln: OmniAddress): Promise<boolean>
 
     getSendLibrary(sender: OmniAddress, dstEid: EndpointId): Promise<OmniAddress | undefined>
     getReceiveLibrary(
