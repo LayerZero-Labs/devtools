@@ -1,0 +1,157 @@
+{
+  "created": "2025-05-20T21:57:23.000Z",
+  "updated": "2025-05-20T21:57:23.000Z",
+  "tableName": "layerzero-chain_metadata",
+  "environment": "testnet",
+  "blockExplorers": [
+    {
+      "url": "https://amoy.polygonscan.com"
+    }
+  ],
+  "deployments": [
+    {
+      "eid": "10267",
+      "endpoint": {
+        "address": "0x55370E0fBB5f5b8dAeD978BA1c075a499eB107B8"
+      },
+      "chainKey": "amoy-testnet",
+      "stage": "testnet",
+      "relayerV2": {
+        "address": "0x6Ac7bdc07A0583A362F1497252872AE6c0A5F5B8"
+      },
+      "ultraLightNodeV2": {
+        "address": "0x35AdD9321507A87471a11EBd4aE4f592d531e620"
+      },
+      "sendUln301": {
+        "address": "0xa78A78a13074eD93aD447a26Ec57121f29E8feC2"
+      },
+      "receiveUln301": {
+        "address": "0x88B27057A9e00c5F05DDa29241027afF63f9e6e0"
+      },
+      "version": 1,
+      "nonceContract": {
+        "address": "0x88866E5A296FffA511EF8011CB1BBd4d01Cd094F"
+      }
+    },
+    {
+      "eid": "40267",
+      "endpointV2View": {
+        "address": "0xcF1B0F4106B0324F96fEfcC31bA9498caa80701C"
+      },
+      "chainKey": "amoy-testnet",
+      "stage": "testnet",
+      "executor": {
+        "address": "0x4Cf1B3Fa61465c2c907f82fC488B43223BA0CF93"
+      },
+      "endpointV2": {
+        "address": "0x6EDCE65403992e310A62460808c4b910D972f10f"
+      },
+      "sendUln302": {
+        "address": "0x1d186C560281B8F1AF831957ED5047fD3AB902F9"
+      },
+      "lzExecutor": {
+        "address": "0x4dFa426aEAA55E6044d2b47682842460a04aF45c"
+      },
+      "blockedMessageLib": {
+        "address": "0x0c77d8d771ab35e2e184e7ce127f19ced31ff8c0"
+      },
+      "version": 2,
+      "receiveUln302": {
+        "address": "0x53fd4C4fBBd53F6bC58CaE6704b92dB1f360A648"
+      }
+    }
+  ],
+  "chainDetails": {
+    "mainnetChainName": "polygon",
+    "chainKey": "amoy-testnet",
+    "chainStatus": "ACTIVE",
+    "nativeChainId": 80002,
+    "chainLayer": "L1",
+    "nativeCurrency": {
+      "symbol": "MATIC",
+      "cgId": "polygon-ecosystem-token",
+      "cmcId": 28321,
+      "decimals": 18
+    },
+    "chainType": "evm"
+  },
+  "dvns": {
+    "0x3ed2211f49ce343d70cb8ded927ca6c4a6198101": {
+      "version": 2,
+      "canonicalName": "Bitgo",
+      "id": "bitgo"
+    },
+    "0xe67ef84173d024603a844c4aea6a3a15ccccc32c": {
+      "version": 2,
+      "canonicalName": "Blockdaemon",
+      "id": "blockdaemon"
+    },
+    "0x5364192803e9c6da2e937ed602ac1854d4f223cb": {
+      "version": 2,
+      "canonicalName": "Frax",
+      "id": "frax"
+    },
+    "0xd44e25bea2bedcceceb7e104d5843a55d208e8a9": {
+      "version": 2,
+      "canonicalName": "Japan Blockchain Foundation",
+      "id": "joc"
+    },
+    "0x8ca915a3ea6b0757adb4a0358c54c62908230961": {
+      "id": "frax",
+      "version": 2,
+      "canonicalName": "Frax",
+      "deprecated": true
+    },
+    "0x02feab4e6ca6eebd60d85347762de70ca9ce162a": {
+      "id": "bitgo",
+      "version": 2,
+      "canonicalName": "Bitgo",
+      "deprecated": true
+    },
+    "0x35cea726508192472919c51951042dd140794b01": {
+      "version": 2,
+      "canonicalName": "Republic",
+      "id": "republic-crypto"
+    },
+    "0x55c175dd5b039331db251424538169d8495c18d1": {
+      "version": 2,
+      "canonicalName": "LayerZero Labs",
+      "id": "layerzero-labs"
+    }
+  },
+  "rpcs": [
+    {
+      "url": "https://rpc.ankr.com/polygon_amoy"
+    },
+    {
+      "url": "https://polygon-amoy.drpc.org"
+    },
+    {
+      "url": "https://rpc-amoy.polygon.technology"
+    }
+  ],
+  "addressToOApp": {
+    "0x6a4631a4ca1a7b1a6bbacae80915fa65d3250dc8": {
+      "id": "cadence-protocol",
+      "canonicalName": "Cadence Protocol"
+    },
+    "0x99e7dad184ee4b65ddba8744e00f4bfa49a98b3f": {
+      "id": "cadence-protocol",
+      "canonicalName": "Cadence Protocol"
+    },
+    "0xf64597697246f09aa71eb859f69512c4aabd4de5": {
+      "id": "hermes-v2",
+      "canonicalName": "Hermes V2"
+    },
+    "0x244e087d1bd4ffe7a75ababf1b60267f437d8d": {
+      "id": "cere-network",
+      "canonicalName": "Cere Network"
+    },
+    "0xcd23dbd7bdd30b5a9b31d4d7064c78ff0ce4c55d": {
+      "id": "synthr",
+      "canonicalName": "SYNTHR"
+    }
+  },
+  "chainName": "amoy",
+  "chainKey": "amoy-testnet"
+}

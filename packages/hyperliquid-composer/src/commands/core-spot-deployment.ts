@@ -6,13 +6,14 @@ import { toAssetBridgeAddress } from '@/types'
 import type { CoreSpotDeployment, CoreSpotMetaData, SpotDeployStates, SpotInfo, TxData, UserGenesis } from '@/types'
 import { ethers } from 'ethers'
 import { RPC_URLS } from '@/types'
+import { LOGGER_MODULES } from '@/types/cli-constants'
 
 import inquirer from 'inquirer'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function coreSpotDeployment(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
-    const logger = createModuleLogger('core-spot-deployment', args.logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.CORE_SPOT_DEPLOYMENT, args.logLevel)
 
     const oappConfig = args.oappConfig
     const network = args.network
@@ -155,7 +156,7 @@ export async function coreSpotDeployment(args: any): Promise<void> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function hipTokenInfo(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
-    const logger = createModuleLogger('hip-token-info', args.logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.HIP_TOKEN_INFO, args.logLevel)
 
     const tokenIndex = args.tokenIndex
     const network = args.network
@@ -170,7 +171,7 @@ export async function hipTokenInfo(args: any): Promise<void> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function spotDeployState(args: any): Promise<void> {
     setDefaultLogLevel(args.logLevel)
-    const logger = createModuleLogger('get-deploy-state', args.logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.GET_DEPLOY_STATE, args.logLevel)
 
     const tokenIndex = args.tokenIndex
     const network = args.network

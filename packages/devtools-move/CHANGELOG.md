@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-move
 
+## 1.0.12
+
+### Patch Changes
+
+- db3a1d4: Updates simple config to support blocked messageLib on Solana and EVM
+
 ## 1.0.11
 
 ### Patch Changes
