@@ -1,37 +1,41 @@
 import { spawnSync } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { getExampleDirs } from './common-lockfiles.mjs';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const repoRoot = join(__dirname, '..');
+// Only consider `examples/`.
+const dirs = getExampleDirs();
 
-function run(cmd, args, opts = {}) {
-    const r = spawnSync(cmd, args, { cwd: repoRoot, encoding: 'utf8', ...opts });
-    if (r.error) {
-        throw r.error;
+if (dirs.length === 0) {
+    console.error('No packages found under examples/');
+    process.exit(1);
+}
+
+const failedPackages = [];
+
+for (const pkgDir of dirs) {
+    console.log(`\n[lockfile] ${pkgDir}`);
+
+    // Verify lockfile is valid for package.
+    const res = spawnSync(
+        'pnpm',
+        ['--ignore-workspace', 'install', '--frozen-lockfile', '--offline', '--lockfile-only', '--lockfile-dir', '.'],
+        {
+            cwd: pkgDir,
+            stdio: 'inherit',
+            env: { ...process.env },
+        }
+    );
+    if (res.status !== 0) {
+        console.error(`[lockfile] failed: ${pkgDir}`);
+        failedPackages.push(pkgDir);
     }
-    return r;
 }
 
-// Regenerate all lockfiles.
-const gen = run('node', ['scripts/generate-lockfiles.mjs'], { stdio: 'inherit' });
-if (gen.status !== 0) {
-    process.exit(gen.status || 1);
-}
-
-// Check if any lockfiles changed or are untracked.
-const diff = run('git', ['diff', '--name-only']);
-const untracked = run('git', ['ls-files', '--others', '--exclude-standard']);
-const changed = [...diff.stdout.split('\n'), ...untracked.stdout.split('\n')]
-    .filter(Boolean)
-    .filter((p) => /^(examples\/[^/]+\/pnpm-lock\.yaml)$/.test(p));
-
-if (changed.length) {
-    console.error('\n🔴 Lockfiles changed.\n');
-    for (const f of changed) {
-        console.error(`Changed: ${f}`);
+if (failedPackages.length) {
+    console.error(`\n🔴 Lockfile verification failed for:`);
+    for (const f of failedPackages) {
+        console.error(` - ${f}`);
     }
     process.exit(1);
 }
 
-console.log('🟢 Lockfiles match.');
+console.log('\n🟢 Lockfiles match.');

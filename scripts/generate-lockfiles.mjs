@@ -1,17 +1,10 @@
-import { readdirSync, existsSync } from 'node:fs';
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const repoRoot = join(__dirname, '..');
-const examplesDir = join(repoRoot, 'examples');
+import { getExampleDirs } from './common-lockfiles.mjs';
 
 // Only consider `examples/`.
-const dirs = readdirSync(examplesDir, { withFileTypes: true })
-    .filter((d) => d.isDirectory())
-    .map((d) => join(examplesDir, d.name))
-    .filter((p) => existsSync(join(p, 'package.json')));
+const dirs = getExampleDirs();
 
 if (dirs.length === 0) {
     console.error('No packages found under examples/');
@@ -23,11 +16,15 @@ for (const pkgDir of dirs) {
     console.log(`\n[lockfile] ${pkgDir}`);
 
     // Generate lockfile for package.
-    const res = spawnSync('pnpm', ['--ignore-workspace', 'install', '--lockfile-only', '--lockfile-dir', '.'], {
-        cwd: pkgDir,
-        stdio: 'inherit',
-        env: { ...process.env },
-    });
+    const res = spawnSync(
+        'pnpm',
+        ['--ignore-workspace', 'install', '--prefer-frozen-lockfile', '--lockfile-only', '--lockfile-dir', '.'],
+        {
+            cwd: pkgDir,
+            stdio: 'inherit',
+            env: { ...process.env },
+        }
+    );
     if (res.status !== 0) {
         console.error(`[lockfile] failed: ${pkgDir}`);
         failures++;

@@ -79,7 +79,7 @@ export const cloneExample = async ({ example, destination, packageManager }: Con
 // List of files to be removed after the cloning is done
 const IGNORED_FILES = ['CHANGELOG.md', 'turbo.json']
 
-// Lockfiles from diferent package managers should be removed
+// Lockfiles from different package managers should be removed
 const LOCKFILES: { [lockfile: string]: PackageManager['id'][] } = {
     'pnpm-lock.yaml': ['pnpm_lockfile', 'pnpm_lockfile_8_or_9'],
 }
