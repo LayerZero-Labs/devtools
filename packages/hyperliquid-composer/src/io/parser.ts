@@ -83,6 +83,64 @@ export function writeNativeSpotConnected(
     logger?.info(`Updated core spot ${index}`)
 }
 
+export function updateFreezePrivilegeStatus(
+    index: string | number,
+    isTestnet: boolean,
+    enabled: boolean,
+    logger?: Logger
+) {
+    const fullPath = getFullPath(index.toString(), isTestnet)
+
+    const spot = getCoreSpotDeployment(index, isTestnet, logger)
+    spot.coreSpot.freezePrivilegeEnabled = enabled
+
+    fs.writeFileSync(fullPath, JSON.stringify(spot, null, 2))
+    logger?.info(`Updated freeze privilege status for core spot ${index}: ${enabled ? 'enabled' : 'revoked'}`)
+}
+
+export function updateQuoteTokenStatus(index: string | number, isTestnet: boolean, enabled: boolean, logger?: Logger) {
+    const fullPath = getFullPath(index.toString(), isTestnet)
+
+    const spot = getCoreSpotDeployment(index, isTestnet, logger)
+    spot.coreSpot.quoteAssetEnabled = enabled
+
+    fs.writeFileSync(fullPath, JSON.stringify(spot, null, 2))
+    logger?.info(`Updated quote token status for core spot ${index}: ${enabled ? 'enabled' : 'disabled'}`)
+}
+
+export function updateUserFreezeStatus(
+    index: string | number,
+    isTestnet: boolean,
+    userAddress: string,
+    frozen: boolean,
+    logger?: Logger
+) {
+    const fullPath = getFullPath(index.toString(), isTestnet)
+
+    const spot = getCoreSpotDeployment(index, isTestnet, logger)
+
+    // Ensure blacklistUsers array exists
+    if (!spot.userGenesis.blacklistUsers) {
+        spot.userGenesis.blacklistUsers = []
+    }
+
+    // Normalize user address - hyperliquid indexes based on lowercase addresses
+    const normalizedAddress = userAddress.toLowerCase()
+
+    // Remove existing entry for this user
+    spot.userGenesis.blacklistUsers = spot.userGenesis.blacklistUsers.filter((addr) => addr !== normalizedAddress)
+
+    // Add user to blacklist if frozen
+    if (frozen) {
+        spot.userGenesis.blacklistUsers.push(normalizedAddress)
+    }
+
+    fs.writeFileSync(fullPath, JSON.stringify(spot, null, 2))
+    logger?.info(
+        `Updated freeze status for user ${normalizedAddress} in core spot ${index}: ${frozen ? 'frozen' : 'unfrozen'}`
+    )
+}
+
 export async function getHyperEVMOAppDeployment(
     oapp_config: string,
     network: string,

@@ -11,6 +11,8 @@ export interface CoreSpotMetaData {
     }
     fullName: string | null
     deployerTradingFeeShare: string
+    freezePrivilegeEnabled?: boolean
+    quoteAssetEnabled?: boolean
 }
 
 export interface TxData {

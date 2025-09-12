@@ -5,8 +5,8 @@ import { firstFactory } from '@layerzerolabs/devtools'
 import { SUBTASK_LZ_SIGN_AND_SEND, types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { setTransactionSizeBuffer } from '@layerzerolabs/devtools-solana'
 import { type LogLevel, createLogger } from '@layerzerolabs/io-devtools'
+import { DebugLogger, KnownErrors } from '@layerzerolabs/io-devtools'
 import { ChainType, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
-import { BlockedMessageLibProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { type IOApp, type OAppConfigurator, type OAppOmniGraph, configureOwnable } from '@layerzerolabs/ua-devtools'
 import {
     SUBTASK_LZ_OAPP_WIRE_CONFIGURE,
@@ -21,8 +21,6 @@ import { findSolanaEndpointIdInGraph } from '../solana/utils'
 
 import { publicKey as publicKeyType } from './types'
 import {
-    DebugLogger,
-    KnownErrors,
     createSdkFactory,
     createSolanaConnectionFactory,
     createSolanaSignerFactory,
@@ -125,41 +123,51 @@ task(TASK_LZ_OAPP_WIRE)
             async (subtaskArgs: SubtaskConfigureTaskArgs<OAppOmniGraph, IOApp>, _hre, runSuper) => {
                 // start of pre-wiring checks. we only do this when the current task is wire. if the current task is init-config, we shouldn't run this.
                 if (!args.isSolanaInitConfig) {
-                    logger.debug('Running pre-wiring checks...')
+                    logger.verbose('Running pre-wiring checks...')
                     const { graph } = subtaskArgs
                     for (const connection of graph.connections) {
                         // check if from Solana Endpoint
                         if (endpointIdToChainType(connection.vector.from.eid) === ChainType.SOLANA) {
-                            if (
-                                connection.config?.sendLibrary &&
-                                connection.config.sendLibrary !== BlockedMessageLibProgram.PROGRAM_ID.toString()
-                            ) {
-                                // if from Solana Endpoint, ensure the PeerConfig account was already initialized
-                                const solanaConnection = await connectionFactory(connection.vector.from.eid)
+                            if (connection.config?.sendLibrary) {
+                                // Check if this is BlockedMessageLib - if so, skip the config checks
+                                const BLOCKED_MESSAGE_LIB_SOLANA_MAINNET =
+                                    '2XrYqmhBMPJgDsb4SVbjV1PnJBprurd5bzRCkHwiFCJB'
+                                const BLOCKED_MESSAGE_LIB_SOLANA_TESTNET =
+                                    '2XrYqmhBMPJgDsb4SVbjV1PnJBprurd5bzRCkHwiFCJB'
+                                const sendLibraryAddress = connection.config.sendLibrary
 
-                                const [sendConfig, receiveConfig] = await getSolanaUlnConfigPDAs(
-                                    connection.vector.to.eid,
-                                    solanaConnection,
-                                    new PublicKey(connection.config.sendLibrary),
-                                    new PublicKey(solanaDeployment.oftStore)
-                                )
-
-                                if (sendConfig == null) {
-                                    DebugLogger.printErrorAndFixSuggestion(
-                                        KnownErrors.ULN_INIT_CONFIG_SKIPPED,
-                                        `SendConfig on ${connection.vector.from.eid} not initialized for remote ${connection.vector.to.eid}.`
+                                // Check if this is a BlockedMessageLib address for either mainnet or testnet
+                                if (
+                                    sendLibraryAddress === BLOCKED_MESSAGE_LIB_SOLANA_MAINNET ||
+                                    sendLibraryAddress === BLOCKED_MESSAGE_LIB_SOLANA_TESTNET
+                                ) {
+                                    logger.verbose(
+                                        `Skipping ULN config checks for BlockedMessageLib on ${connection.vector.from.eid}`
                                     )
+                                    continue
                                 }
 
-                                if (receiveConfig == null) {
+                                logger.verbose(`Send library found. Checking if ULN configs have been initialized...`)
+
+                                try {
+                                    // Use the SDK to check if configs exist
+                                    const [sendConfig, receiveConfig] = await getSolanaUlnConfigPDAs(
+                                        connection.vector.to.eid,
+                                        await connectionFactory(connection.vector.from.eid),
+                                        new PublicKey(connection.config.sendLibrary),
+                                        new PublicKey(connection.vector.from.address)
+                                    )
+
+                                    logger.verbose(
+                                        `ULN configs checked successfully for ${connection.vector.from.eid} -> ${connection.vector.to.eid}`
+                                    )
+                                } catch (error) {
+                                    logger.verbose(`Error checking ULN configs: ${error}`)
                                     DebugLogger.printErrorAndFixSuggestion(
                                         KnownErrors.ULN_INIT_CONFIG_SKIPPED,
-                                        `ReceiveConfig on ${connection.vector.from.eid} not initialized for remote ${connection.vector.to.eid}.`
+                                        `ULN configs on ${connection.vector.from.eid} not initialized for remote ${connection.vector.to.eid}.`
                                     )
-                                }
-
-                                if (sendConfig == null || receiveConfig == null) {
-                                    throw new Error('SendConfig or ReceiveConfig not initialized. ')
+                                    throw new Error('ULN configs not initialized. Please run init-config task first.')
                                 }
                             } else {
                                 logger.debug(
