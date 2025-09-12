@@ -138,7 +138,7 @@ cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 anchor-cli
     PRIVATE_KEY="0xabc...def"
     ```
 
-  - Fund your EVM deployer address with the native tokens of the chains you want to deploy to. This example by default will deploy to the following EVM testnet: **Ethereum Sepolia**.
+  - Fund your EVM deployer address with the native tokens of the chains you want to deploy to. This example by default will deploy to the following EVM testnet: **Arbitrum Sepolia**.
 
 ## Build
 
@@ -259,7 +259,7 @@ The above command will create a Solana OFT which will have only the OFT Store as
 
 > For an elaboration on the command params for this command to create an Solana OFT, refer to the section [Create Solana OFT](#create-solana-oft)
 
-### Deploy a sepolia OFT peer
+### Deploy an Arbitrum Sepolia OFT peer
 
 ```bash
 pnpm hardhat lz:deploy # follow the prompts
@@ -290,25 +290,25 @@ pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts
 
 ## Sending OFTs
 
-Send From 1 OFT from **Solana Devnet** to **Ethereum Sepolia**
+Send From 1 OFT from **Solana Devnet** to **Arbitrum Sepolia**
 
 ```bash
-npx hardhat lz:oft:send --src-eid 40168 --dst-eid 40161 --to <EVM_ADDRESS>  --amount 1
+npx hardhat lz:oft:send --src-eid 40168 --dst-eid 40231 --to <EVM_ADDRESS>  --amount 1
 ```
 
-> :information_source: `40168` and `40161` are the Endpoint IDs of Solana Devnet and Ethereum Sepolia respectively. View the list of chains and their Endpoint IDs on the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.
+> :information_source: `40168` and `40231` are the Endpoint IDs of Solana Devnet and Arbitrum Sepolia respectively. View the list of chains and their Endpoint IDs on the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.
 
-Send 1 OFT From **Ethereum Sepolia** to **Solana Devnet**
+Send 1 OFT From **Arbitrum Sepolia** to **Solana Devnet**
 
 ```bash
-npx hardhat lz:oft:send --src-eid 40161 --dst-eid 40168 --to <SOLANA_ADDRESS>  --amount 1
+npx hardhat lz:oft:send --src-eid 40231 --dst-eid 40168 --to <SOLANA_ADDRESS>  --amount 1
 ```
 
 Upon a successful send, the script will provide you with the link to the message on LayerZero Scan.
 
 Once the message is delivered, you will be able to click on the destination transaction hash to verify that the OFT was sent.
 
-Congratulations, you have now sent an OFT cross-chain between Solana and Ethereum!
+Congratulations, you have now sent an OFT between Solana and Arbitrum!
 
 > If you run into any issues, refer to [Troubleshooting](#troubleshooting).
 
