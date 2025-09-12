@@ -1,6 +1,6 @@
 import { fetchMint } from '@metaplex-foundation/mpl-toolbox'
-import { publicKey, unwrapOption } from '@metaplex-foundation/umi'
-import { toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
+import { PublicKey as UmiPublicKey, publicKey, unwrapOption } from '@metaplex-foundation/umi'
+import { fromWeb3JsPublicKey, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { Keypair, PublicKey } from '@solana/web3.js'
 import { task } from 'hardhat/config'
 
@@ -9,6 +9,7 @@ import { types } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 import { EndpointPDADeriver, EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { IMetadata, defaultFetchMetadata } from '@layerzerolabs/metadata-tools'
+import { EndpointProgram as EndpointProgramUmi } from '@layerzerolabs/lz-solana-sdk-v2/umi'
 import { OftPDA, oft } from '@layerzerolabs/oft-v2-solana-sdk'
 import { EndpointV2 } from '@layerzerolabs/protocol-devtools-solana'
 
@@ -99,6 +100,9 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
             console.error(`Failed to fetch OFTStore at ${oftStore.toString()}:`, e)
             return
         }
+        const nonceAccountChecksInfo: Partial<
+            Record<EndpointId, { data: EndpointProgramUmi.accounts.NonceAccountData; address: UmiPublicKey }>
+        > = {}
 
         const mintAccount = await fetchMint(umi, publicKey(oftStoreInfo.tokenMint))
 
@@ -158,6 +162,23 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
                 'Token Mint Authority is OFT Store',
                 unwrapOption(mintAccount.mintAuthority) === oftStore
             )
+            dstEids.map((dstEid) => {
+                DebugLogger.keyHeader(`Nonce Account Checks`)
+                const nonceAccountCheckInfo = nonceAccountChecksInfo[dstEid]
+                if (nonceAccountCheckInfo) {
+                    const definedForDstEid = !!nonceAccountCheckInfo.data
+                    DebugLogger.keyValue(
+                        `Defined for ${dstEid} (${getNetworkForChainId(dstEid).chainName})`,
+                        definedForDstEid,
+                        2
+                    )
+                    if (!definedForDstEid) {
+                        console.warn(
+                            `Expected Nonce Account to exist at ${nonceAccountCheckInfo.address.toString()} for destination ${dstEid} (${getNetworkForChainId(dstEid).chainName}).`
+                        )
+                    }
+                }
+            })
             DebugLogger.separator()
         }
 
@@ -186,14 +207,24 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
                 const network = getNetworkForChainId(dstEid)
                 const oAppReceiveConfig = await getSolanaReceiveConfig(endpointV2Sdk, dstEid, oftStore)
                 const oAppSendConfig = await getSolanaSendConfig(endpointV2Sdk, dstEid, oftStore)
-
                 // Show the chain info
                 DebugLogger.header(`${dstEid} (${network.chainName})`)
 
                 if (info) {
+                    // nonce account
+                    const nonceAccount = epDeriver.nonce(toWeb3JsPublicKey(oftStore), dstEid, info.peerAddress)[0]
+                    const nonceAccountInfo = await EndpointProgramUmi.accounts.fetchNonce(
+                        umi,
+                        fromWeb3JsPublicKey(nonceAccount)
+                    )
+                    nonceAccountChecksInfo[dstEid] = {
+                        data: nonceAccountInfo,
+                        address: fromWeb3JsPublicKey(nonceAccount),
+                    }
                     // Existing PeerConfig info
                     DebugLogger.keyValue('PeerConfig Account', peerConfigs[index].toString())
                     DebugLogger.keyValue('Peer Address', denormalizePeer(info.peerAddress, dstEid))
+                    DebugLogger.keyValue('Nonce Account', nonceAccount.toString())
                     DebugLogger.keyHeader('Enforced Options')
                     DebugLogger.keyValue(
                         'Send',
@@ -240,10 +271,10 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
                     console.error(`Invalid action specified. Use any of ${Object.keys(DEBUG_ACTIONS)}.`)
             }
         } else {
-            await printOftStore()
-            await printDelegate()
-            await printToken()
-            if (dstEids.length > 0) await printPeerConfigs()
+            const tasks = [printOftStore(), printDelegate(), printToken()]
+            if (dstEids.length > 0) tasks.push(printPeerConfigs())
+            await Promise.all(tasks)
+            // printChecks might depend on other tasks, so we don't add it to the tasks array
             await printChecks()
         }
     })
