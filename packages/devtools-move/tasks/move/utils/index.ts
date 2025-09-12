@@ -1,6 +1,9 @@
 import { Deserializer, Serializer } from '@layerzerolabs/lz-serdes'
 import { addressToBytes32, trim0x } from '@layerzerolabs/lz-v2-utilities'
 
+// A value used to indicate that no DVNs are required. It has to be used instead of 0, because 0 falls back to default value.
+const NIL_DVN_COUNT = (1 << 8) - 1 // type(uint8).max = 255
+
 /**
  * Interface representing the limits.
  */
@@ -125,7 +128,7 @@ export const UlnConfig = {
         const serializer = new Serializer(false)
         serializer.serializeU64(obj.confirmations)
         serializer.serializeU8(obj.optional_dvn_threshold)
-        const requiredDVNCount = obj.required_dvns.length
+        const requiredDVNCount = obj.required_dvns.length > 0 ? obj.required_dvns.length : NIL_DVN_COUNT
         serializer.serializeU8(requiredDVNCount)
         for (const item of obj.required_dvns) {
             serializer.serializeFixedBytes(addressToBytes32(item))

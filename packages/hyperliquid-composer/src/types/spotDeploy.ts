@@ -58,3 +58,39 @@ export interface RegisterHyperliquidity {
     nOrders: number
     nSeededLevels?: number
 }
+
+/**
+ * Enables freeze privilege for a token, allowing the deployer to freeze/unfreeze users
+ * @param token - The token index
+ */
+export interface EnableFreezePrivilege {
+    token: number
+}
+
+/**
+ * Freezes or unfreezes a specific user for a token
+ * @param token - The token index
+ * @param user - The user address to freeze/unfreeze
+ * @param freeze - True to freeze, false to unfreeze
+ */
+export interface FreezeUser {
+    token: number
+    user: string
+    freeze: boolean
+}
+
+/**
+ * Revokes freeze privilege for a token, permanently disabling the ability to freeze users
+ * @param token - The token index
+ */
+export interface RevokeFreezePrivilege {
+    token: number
+}
+
+/**
+ * Enables a token to be used as a quote asset in trading pairs
+ * @param token - The token index
+ */
+export interface EnableQuoteToken {
+    token: number
+}
