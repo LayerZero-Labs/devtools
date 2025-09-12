@@ -60,7 +60,7 @@ devDependencies:
     specifier: ^3.0.86
     version: 3.0.128(@openzeppelin/contracts-upgradeable@5.4.0)(@openzeppelin/contracts@5.4.0)(hardhat-deploy@0.12.4)
   '@layerzerolabs/lz-solana-sdk-v2':
-    specifier: ^3.0.86
+    specifier: ^3.0.118
     version: 3.0.128(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.2)
   '@layerzerolabs/lz-v2-utilities':
     specifier: ^3.0.86
@@ -628,7 +628,7 @@ packages:
       '@ethersproject/abstract-provider': 5.8.0
       '@ethersproject/address': 5.8.0
       '@ethersproject/bignumber': 5.8.0
-      '@ethersproject/bytes': 5.7.0
+      '@ethersproject/bytes': 5.8.0
       '@ethersproject/constants': 5.8.0
       '@ethersproject/contracts': 5.8.0
       '@ethersproject/hash': 5.8.0
@@ -4243,7 +4243,7 @@ packages:
     resolution: {integrity: sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==}
     dependencies:
       follow-redirects: 1.15.11(debug@4.4.1)
-      form-data: 4.0.0
+      form-data: 4.0.4
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug

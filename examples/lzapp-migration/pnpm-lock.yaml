@@ -102,7 +102,7 @@ devDependencies:
     specifier: ^3.0.75
     version: 3.0.128(@openzeppelin/contracts-upgradeable@4.9.6)(@openzeppelin/contracts@4.9.6)(hardhat-deploy@0.12.4)
   '@layerzerolabs/lz-solana-sdk-v2':
-    specifier: ^3.0.81
+    specifier: ^3.0.118
     version: 3.0.128(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.2)
   '@layerzerolabs/lz-v2-utilities':
     specifier: ^3.0.75
@@ -639,7 +639,7 @@ packages:
       '@ethersproject/abstract-provider': 5.8.0
       '@ethersproject/address': 5.8.0
       '@ethersproject/bignumber': 5.8.0
-      '@ethersproject/bytes': 5.7.0
+      '@ethersproject/bytes': 5.8.0
       '@ethersproject/constants': 5.8.0
       '@ethersproject/contracts': 5.8.0
       '@ethersproject/hash': 5.8.0
@@ -2755,7 +2755,7 @@ packages:
     resolution: {integrity: sha512-XyNh1rB0SkEqd3tXcXMi+Xe1fvg+kUIcoRIEujP1Jgv7DqW2r9lg3Ah0NkFaCs9sTkQAQA8kw7xiRXzENi9Rtw==}
     dependencies:
       '@noble/hashes': 1.2.0
-      '@noble/secp256k1': 1.7.1
+      '@noble/secp256k1': 1.7.2
       '@scure/base': 1.1.9
 
   /@scure/bip32@1.4.0:
@@ -4096,7 +4096,7 @@ packages:
     resolution: {integrity: sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==}
     dependencies:
       follow-redirects: 1.15.11(debug@4.4.1)
-      form-data: 4.0.0
+      form-data: 4.0.4
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
@@ -4775,7 +4775,7 @@ packages:
     dependencies:
       cipher-base: 1.0.6
       inherits: 2.0.4
-      ripemd160: 2.0.1
+      ripemd160: 2.0.2
       sha.js: 2.4.12
 
   /create-hash@1.2.0:

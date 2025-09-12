@@ -13,7 +13,19 @@ devDependencies:
   '@coral-xyz/anchor':
     specifier: ^0.29.0
     version: 0.29.0(typescript@5.9.2)
+  '@ethersproject/abi':
+    specifier: ^5.7.0
+    version: 5.8.0
+  '@ethersproject/abstract-signer':
+    specifier: ^5.7.0
+    version: 5.8.0
   '@ethersproject/bytes':
+    specifier: ^5.7.0
+    version: 5.8.0
+  '@ethersproject/contracts':
+    specifier: ^5.7.0
+    version: 5.8.0
+  '@ethersproject/providers':
     specifier: ^5.7.0
     version: 5.8.0
   '@layerzerolabs/devtools':
@@ -47,7 +59,7 @@ devDependencies:
     specifier: ^3.0.86
     version: 3.0.128(@openzeppelin/contracts-upgradeable@5.4.0)(@openzeppelin/contracts@5.4.0)(hardhat-deploy@0.12.4)
   '@layerzerolabs/lz-solana-sdk-v2':
-    specifier: ^3.0.86
+    specifier: ^3.0.118
     version: 3.0.128(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.2)
   '@layerzerolabs/lz-v2-utilities':
     specifier: ^3.0.86
@@ -872,7 +884,7 @@ packages:
     dependencies:
       '@ethersproject/abi': 5.8.0
       '@ethersproject/abstract-provider': 5.8.0
-      '@ethersproject/address': 5.7.0
+      '@ethersproject/address': 5.8.0
       '@ethersproject/bignumber': 5.8.0
       '@ethersproject/bytes': 5.8.0
       '@ethersproject/constants': 5.8.0
@@ -1035,7 +1047,7 @@ packages:
   /@ethereumjs/tx@3.4.0:
     resolution: {integrity: sha512-WWUwg1PdjHKZZxPPo274ZuPsJCWV3SqATrEKQP1n2DrVYVP1aZIYpo/mFaA0BDoE0tIQmBeimRCEA0Lgil+yYw==}
     dependencies:
-      '@ethereumjs/common': 2.6.0
+      '@ethereumjs/common': 2.6.5
       ethereumjs-util: 7.1.5
     dev: true
 
@@ -1068,8 +1080,8 @@ packages:
     dependencies:
       '@ethereumjs/block': 3.6.3
       '@ethereumjs/blockchain': 5.5.3
-      '@ethereumjs/common': 2.6.0
-      '@ethereumjs/tx': 3.4.0
+      '@ethereumjs/common': 2.6.5
+      '@ethereumjs/tx': 3.5.2
       async-eventemitter: 0.2.4
       core-js-pure: 3.45.1
       debug: 2.6.9
@@ -4759,7 +4771,7 @@ packages:
     deprecated: Superseded by abstract-level (https://github.com/Level/community#faq)
     dependencies:
       buffer: 5.7.1
-      immediate: 3.2.3
+      immediate: 3.3.0
       level-concat-iterator: 2.0.1
       level-supports: 1.0.1
       xtend: 4.0.2
@@ -5153,7 +5165,7 @@ packages:
     resolution: {integrity: sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==}
     dependencies:
       follow-redirects: 1.15.11(debug@4.4.1)
-      form-data: 4.0.0
+      form-data: 4.0.4
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
