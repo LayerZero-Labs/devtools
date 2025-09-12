@@ -121,6 +121,7 @@ export async function sendEvm(
         // No ERC20 contract needed for native tokens
     } else {
         erc20 = await srcEidHre.ethers.getContractAt('ERC20', underlying, signer)
+        // throw if no contract found
         decimals = await erc20.decimals()
     }
 
@@ -130,18 +131,21 @@ export async function sendEvm(
     // 6️⃣ Check if approval is required (for OFT Adapters) and handle approval —
     // Skip approval check for NativeOFTAdapter since it doesn't need ERC20 approval.
     if (!isNativeOFT) {
+        if (erc20 === null) {
+            throw new Error('ERC20 contract not found')
+        }
         try {
             const approvalRequired = await oft.approvalRequired()
             if (approvalRequired) {
                 logger.info('OFT Adapter detected - checking ERC20 allowance...')
 
-                const currentAllowance = await erc20!.allowance(signer.address, wrapperAddress)
+                const currentAllowance = await erc20.allowance(signer.address, wrapperAddress)
                 logger.info(`Current allowance: ${currentAllowance.toString()}`)
                 logger.info(`Required amount: ${amountUnits.toString()}`)
 
                 if (currentAllowance.lt(amountUnits)) {
                     logger.info('Insufficient allowance - approving ERC20 tokens...')
-                    const approveTx = await erc20!.approve(wrapperAddress, amountUnits)
+                    const approveTx = await erc20.approve(wrapperAddress, amountUnits)
                     logger.info(`Approval transaction hash: ${approveTx.hash}`)
                     await approveTx.wait()
                     logger.info('ERC20 approval confirmed')
