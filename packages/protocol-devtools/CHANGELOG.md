@@ -1,5 +1,12 @@
 # @layerzerolabs/protocol-devtools
 
+## 3.0.1
+
+### Patch Changes
+
+- db3a1d4: add block msg lib support on evm and optional dvns support on evm and solana
+- db3a1d4: Updates simple config to support blocked messageLib on Solana and EVM
+
 ## 3.0.0
 
 ### Patch Changes

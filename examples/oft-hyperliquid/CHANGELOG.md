@@ -1,5 +1,17 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 1.0.1
+
+### Patch Changes
+
+- 90417ab: adding in freeze and quote asset during hip-1 deployment
+
+## 1.0.0
+
+### Major Changes
+
+- 62c0122: hyperliquid v1 with extensions for fee-token and recovery
+
 ## 0.0.12
 
 ### Patch Changes

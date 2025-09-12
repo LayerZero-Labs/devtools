@@ -1,13 +1,22 @@
 import type { OmniPointHardhat } from '@layerzerolabs/devtools-evm-hardhat'
 import type { OAppEnforcedOption } from '@layerzerolabs/ua-devtools'
+import { MSG_LIB_BLOCK_RECEIVE_ONLY, MSG_LIB_BLOCK_SEND_AND_RECEIVE, MSG_LIB_BLOCK_SEND_ONLY } from './constants'
 
+export type CustomMessageLibraryType =
+    | typeof MSG_LIB_BLOCK_SEND_ONLY
+    | typeof MSG_LIB_BLOCK_RECEIVE_ONLY
+    | typeof MSG_LIB_BLOCK_SEND_AND_RECEIVE
+export type BlockConfirmationsType = number | bigint
+export type BlockConfirmationsDefinition = BlockConfirmationsType | [BlockConfirmationsType, CustomMessageLibraryType]
+
+// [AContract, BContract, [requiredDVNs, [optionalDVNs, threshold]], [AToBConfirmations, BToAConfirmations]], [enforcedOptionsAToB, enforcedOptionsBToA], customExecutor?]
 export type TwoWayConfig = [
-    srcContract: OmniPointHardhat,
-    dstContract: OmniPointHardhat,
-    dvnConfig: [string[], [string[], number] | []],
-    confirmations: [number, number | undefined],
-    enforcedOptions: [OAppEnforcedOption[] | undefined, OAppEnforcedOption[] | undefined],
-    customExecutor?: string,
+    OmniPointHardhat, // AContract
+    OmniPointHardhat, // BContract
+    [string[], [string[], number] | []], // [requiredDVNs, [optionalDVNs, threshold]]
+    [BlockConfirmationsDefinition, BlockConfirmationsDefinition | undefined], // [AToBConfirmations, BToAConfirmations]
+    [OAppEnforcedOption[] | undefined, OAppEnforcedOption[] | undefined], // [enforcedOptionsAToB, enforcedOptionsBToA]
+    string?, // customExecutor (optional)
 ]
 
 export interface IMetadataDvns {
@@ -49,6 +58,7 @@ export interface IMetadata {
             deadDVN?: { address: string }
             endpointV2?: { address: string }
             sendUln302?: { address: string }
+            blockedMessageLib?: { address: string }
             lzExecutor?: { address: string }
             sendUln301?: { address: string }
             receiveUln301?: { address: string }
