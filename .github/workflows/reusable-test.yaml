@@ -58,6 +58,9 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Verify lockfiles
+        run: pnpm lockfiles:verify
+
       # We'll run the build in series to avoid race conditions
       # when compiling hardhat projects in monorepo setups
       - name: Build
