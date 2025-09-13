@@ -9,6 +9,7 @@ import { types } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 import { EndpointPDADeriver, EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { EndpointProgram as EndpointProgramUmi } from '@layerzerolabs/lz-solana-sdk-v2/umi'
+import { IMetadata, defaultFetchMetadata } from '@layerzerolabs/metadata-tools'
 import { OftPDA, oft } from '@layerzerolabs/oft-v2-solana-sdk'
 import { EndpointV2 } from '@layerzerolabs/protocol-devtools-solana'
 
@@ -32,6 +33,28 @@ const DEBUG_ACTIONS = {
  * @param {string} oftStore
  */
 const getOftStore = (eid: EndpointId, oftStore?: string) => publicKey(oftStore ?? getSolanaDeployment(eid).oftStore)
+
+function getChainKeyForEid(metadata: IMetadata, eid: number): string {
+    const eidStr = String(eid)
+    for (const objectKey in metadata) {
+        const entry = metadata[objectKey]
+        if (typeof entry?.deployments !== 'undefined') {
+            for (const deployment of entry.deployments) {
+                if (deployment.eid === eidStr) {
+                    return deployment.chainKey
+                }
+            }
+        }
+    }
+    throw new Error(`Can't find chainKey for eid: "${eid}".`)
+}
+
+function formatDvnAddresses(addresses: string[], metadata?: IMetadata, chainKey?: string): string {
+    const dvnMap = (chainKey && metadata ? metadata[chainKey]?.dvns : undefined) as
+        | Record<string, { canonicalName?: string }>
+        | undefined
+    return addresses.map((addr) => dvnMap?.[addr]?.canonicalName ?? addr).join(', ')
+}
 
 type DebugTaskArgs = {
     eid: EndpointId
@@ -67,6 +90,8 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
         const { eid, oftStore: oftStoreArg, endpoint, dstEids, action } = taskArgs
         const { umi, connection } = await deriveConnection(eid, true)
         const oftStore = getOftStore(eid, oftStoreArg)
+        const metadata = await defaultFetchMetadata()
+        const sourceChainKey = getChainKeyForEid(metadata, eid)
 
         let oftStoreInfo
         try {
@@ -212,8 +237,8 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
                         2
                     )
 
-                    printOAppReceiveConfigs(oAppReceiveConfig, network.chainName)
-                    printOAppSendConfigs(oAppSendConfig, network.chainName)
+                    printOAppReceiveConfigs(oAppReceiveConfig, network.chainName, metadata, sourceChainKey)
+                    printOAppSendConfigs(oAppSendConfig, network.chainName, metadata, sourceChainKey)
                 } else {
                     // No PeerConfig account
                     console.log(`No PeerConfig account found for ${dstEid} (${network.chainName}).`)
@@ -256,7 +281,9 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
 
 function printOAppReceiveConfigs(
     oAppReceiveConfig: Awaited<ReturnType<typeof getSolanaReceiveConfig>>,
-    peerChainName: string
+    peerChainName: string,
+    metadata?: IMetadata,
+    chainKey?: string
 ) {
     const oAppReceiveConfigIndexesToKeys: Record<number, string> = {
         0: 'receiveLibrary',
@@ -276,7 +303,11 @@ function printOAppReceiveConfigs(
             // Print each property in the object
             DebugLogger.keyValue(`${oAppReceiveConfigIndexesToKeys[i]}`, '', 2)
             for (const [propKey, propVal] of Object.entries(item)) {
-                DebugLogger.keyValue(`${propKey}`, String(propVal), 3)
+                const valueDisplay =
+                    (propKey === 'requiredDVNs' || propKey === 'optionalDVNs') && Array.isArray(propVal)
+                        ? formatDvnAddresses(propVal as string[], metadata, chainKey)
+                        : String(propVal)
+                DebugLogger.keyValue(`${propKey}`, valueDisplay, 3)
             }
         } else {
             // Print a primitive (string, number, etc.)
@@ -285,7 +316,12 @@ function printOAppReceiveConfigs(
     }
 }
 
-function printOAppSendConfigs(oAppSendConfig: Awaited<ReturnType<typeof getSolanaSendConfig>>, peerChainName: string) {
+function printOAppSendConfigs(
+    oAppSendConfig: Awaited<ReturnType<typeof getSolanaSendConfig>>,
+    peerChainName: string,
+    metadata?: IMetadata,
+    chainKey?: string
+) {
     const sendOappConfigIndexesToKeys: Record<number, string> = {
         0: 'sendLibrary',
         1: 'sendUlnConfig',
@@ -303,7 +339,11 @@ function printOAppSendConfigs(oAppSendConfig: Awaited<ReturnType<typeof getSolan
         if (typeof item === 'object' && item !== null) {
             DebugLogger.keyValue(`${sendOappConfigIndexesToKeys[i]}`, '', 2)
             for (const [propKey, propVal] of Object.entries(item)) {
-                DebugLogger.keyValue(`${propKey}`, String(propVal), 3)
+                const valueDisplay =
+                    (propKey === 'requiredDVNs' || propKey === 'optionalDVNs') && Array.isArray(propVal)
+                        ? formatDvnAddresses(propVal as string[], metadata, chainKey)
+                        : String(propVal)
+                DebugLogger.keyValue(`${propKey}`, valueDisplay, 3)
             }
         } else {
             DebugLogger.keyValue(`${sendOappConfigIndexesToKeys[i]}`, String(item), 2)
