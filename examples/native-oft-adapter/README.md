@@ -101,6 +101,20 @@ More information about available CLI arguments can be found using the `--help` f
 npx hardhat lz:deploy --help
 ```
 
+## 3) Wire
+
+```bash
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts
+```
+
+## 4) Send
+
+```bash
+npx hardhat lz:oft:send --amount 1 --src-eid <SRC_EID> --to <EVM_RECIPIENT> --dst-eid <DST_EID> --extra-lz-receive-options "80000,0"
+```
+
+> `80000` as the gas value is sufficient for most EVM chains. For production, you should profile the gas usage of your pathways.
+
 By following these steps, you can focus more on creating innovative omnichain solutions and less on the complexities of cross-chain communication.
 
 <br></br>
