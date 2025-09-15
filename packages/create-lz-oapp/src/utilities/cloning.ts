@@ -1,4 +1,4 @@
-import { Config, Example } from '@/types'
+import { Config, Example, PackageManager } from '@/types'
 import { createModuleLogger } from '@layerzerolabs/io-devtools'
 import { rm } from 'fs/promises'
 import { resolve } from 'path'
@@ -20,7 +20,7 @@ export const createExampleGitURL = (example: Example): string => {
         .join('')
 }
 
-export const cloneExample = async ({ example, destination }: Config) => {
+export const cloneExample = async ({ example, destination, packageManager }: Config) => {
     const logger = createModuleLogger('cloning')
 
     const url = createExampleGitURL(example)
@@ -40,7 +40,7 @@ export const cloneExample = async ({ example, destination }: Config) => {
         logger.verbose(`Cleaning up`)
 
         // Then we cleanup what we don't want to be included
-        await cleanupExample(destination)
+        await cleanupExample(destination, packageManager.id)
     } catch (error: unknown) {
         try {
             // Let's make sure to clean up after us
@@ -79,14 +79,20 @@ export const cloneExample = async ({ example, destination }: Config) => {
 // List of files to be removed after the cloning is done
 const IGNORED_FILES = ['CHANGELOG.md', 'turbo.json']
 
+// Lockfiles from different package managers should be removed
+const LOCKFILES: { [lockfile: string]: PackageManager['id'][] } = {
+    'pnpm-lock.yaml': ['pnpm_lockfile', 'pnpm_lockfile_8_or_9'],
+}
+
 /**
  * Helper utility that removes the files we don't want to include in the final project
  * after the cloning is done
  *
  * @param {string} destination The directory containing the cloned project
  */
-const cleanupExample = async (destination: string) => {
-    for (const fileName of IGNORED_FILES) {
+const cleanupExample = async (destination: string, packageManagerId: PackageManager['id']) => {
+    const ignoredLockfiles = Object.keys(LOCKFILES).filter((file) => !LOCKFILES[file]?.includes(packageManagerId))
+    for (const fileName of IGNORED_FILES.concat(ignoredLockfiles)) {
         const filePath = resolve(destination, fileName)
 
         try {
