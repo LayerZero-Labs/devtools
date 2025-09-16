@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-read-example
 
+## 0.3.1
+
+### Patch Changes
+
+- 5e15a8d: Add lockfiles to example packages
+
 ## 0.3.0
 
 ### Minor Changes

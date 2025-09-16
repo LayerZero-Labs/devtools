@@ -1,5 +1,11 @@
 # @layerzerolabs/uniswap-read-example
 
+## 0.2.10
+
+### Patch Changes
+
+- 5e15a8d: Add lockfiles to example packages
+
 ## 0.2.9
 
 ### Patch Changes
