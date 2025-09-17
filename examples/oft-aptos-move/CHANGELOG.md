@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-aptos-move-example
 
+## 1.0.8
+
+### Patch Changes
+
+- 5e15a8d: Add lockfiles to example packages
+
 ## 1.0.7
 
 ### Patch Changes

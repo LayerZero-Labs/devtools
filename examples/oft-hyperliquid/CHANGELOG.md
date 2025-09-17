@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 1.0.2
+
+### Patch Changes
+
+- 5e15a8d: Add lockfiles to example packages
+
 ## 1.0.1
 
 ### Patch Changes
