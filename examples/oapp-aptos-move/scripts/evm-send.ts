@@ -18,7 +18,7 @@ async function main() {
     }
 
     // Connect to provider (replace with your RPC URL)
-    const provider = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545')
+    const provider = new ethers.providers.JsonRpcProvider('https://arbitrum-sepolia.gateway.tenderly.co')
     const wallet = new ethers.Wallet(privateKey, provider)
 
     // Contract address

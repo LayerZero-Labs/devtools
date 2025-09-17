@@ -268,16 +268,16 @@ With a squads multisig, you can simply append the `--multisig-key` flag to the e
 
 With your OApps wired, you can now send a message.
 
-Send from Solana Devnet (40168) to Optimism Sepolia (40232) :
+Send from Solana Devnet (40168) to Arbitrum Sepolia (40231) :
 
 ```bash
-npx hardhat lz:oapp:send --from-eid 40168 --dst-eid 40232 --message "Hello from Solana Devnet"
+npx hardhat lz:oapp:send --from-eid 40168 --dst-eid 40231 --message "Hello from Solana Devnet"
 ```
 
-Send from Optimism Sepolia (40232) to Solana Devnet (40168) :
+Send from Arbitrum Sepolia (40231) to Solana Devnet (40168) :
 
 ```bash
-npx hardhat --network optimism-testnet lz:oapp:send --from-eid 40232 --dst-eid 40168 --message "Hello from Optimism Sepolia"
+npx hardhat --network arbitrum-sepolia lz:oapp:send --from-eid 40231 --dst-eid 40168 --message "Hello from Arbitrum Sepolia"
 ```
 
 :information_source: For the list of supported chains and their endpoint ID's refer to the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.

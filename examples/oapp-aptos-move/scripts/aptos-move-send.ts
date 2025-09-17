@@ -1,7 +1,7 @@
 /**
  * @file aptos-move-send.ts
  * @description A script to demonstrate cross-chain messaging using LayerZero's OApp protocol.
- * This script sends a message from an Aptos chain to another blockchain (e.g., BSC testnet).
+ * This script sends a message from an Aptos chain to another blockchain (e.g., Arbitrum Sepolia).
  * It handles the entire flow of:
  * 1. Message preparation and fee quotation
  * 2. Balance verification

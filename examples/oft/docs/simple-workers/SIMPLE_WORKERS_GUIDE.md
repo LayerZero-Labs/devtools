@@ -53,7 +53,7 @@ cp docs/simple-workers/simple-workers-example.layerzero.config.ts layerzero.conf
 The example configuration includes:
 
 - A custom `fetchMetadata` function that extends the default LayerZero metadata
-- Variables for Simple Workers addresses on both Optimism and Arbitrum Sepolia
+- Variables for Simple Workers addresses on both Base Sepolia and Arbitrum Sepolia
 - Simple Workers (SimpleDVNMock and SimpleExecutorMock) defined as custom workers on both chains
 - Pathways configured to use Simple Workers as the only required workers (no LayerZero Labs DVN)
 - The configuration passed to `generateConnectionsConfig` with the custom metadata
@@ -68,7 +68,7 @@ Deploy Simple Workers (SimpleDVNMock and SimpleExecutorMock) on both networks:
 pnpm hardhat lz:deploy --tags SimpleDVNMock
 ```
 
-Select both `arbitrum-testnet` and `optimism-testnet` and specify the contract name `SimpleDVNMock` as the tag.
+Select both `arbitrum-sepolia` and `base-sepolia` and specify the contract name `SimpleDVNMock` as the tag.
 
 **Deploy SimpleExecutorMock (for send operations):**
 
@@ -76,7 +76,7 @@ Select both `arbitrum-testnet` and `optimism-testnet` and specify the contract n
 pnpm hardhat lz:deploy --tags SimpleExecutorMock
 ```
 
-Select both `arbitrum-testnet` and `optimism-testnet` and specify the contract name `SimpleExecutorMock` as the tag.
+Select both `arbitrum-sepolia` and `base-sepolia` and specify the contract name `SimpleExecutorMock` as the tag.
 
 > There is no longer a separate destination executor. Use `SimpleExecutorMock` for commit-and-execute on the destination chain.
 
@@ -84,23 +84,23 @@ Select both `arbitrum-testnet` and `optimism-testnet` and specify the contract n
 
 After deploying on both networks, update the address variables in your `layerzero.config.ts` file:
 
-1. **For Optimism Sepolia:**
+1. **For Base Sepolia:**
 
-   - Open `deployments/optimism-testnet/SimpleDVNMock.json` and `deployments/optimism-testnet/SimpleExecutorMock.json`
+   - Open `deployments/base-sepolia/SimpleDVNMock.json` and `deployments/base-sepolia/SimpleExecutorMock.json`
    - Copy the `address` field values
    - Paste them into the respective address variables
 
 2. **For Arbitrum Sepolia:**
-   - Open `deployments/arbitrum-testnet/SimpleDVNMock.json` and `deployments/arbitrum-testnet/SimpleExecutorMock.json`
+   - Open `deployments/arbitrum-sepolia/SimpleDVNMock.json` and `deployments/arbitrum-sepolia/SimpleExecutorMock.json`
    - Copy the `address` field values
    - Paste them into the respective address variables
 
 Example:
 
 ```typescript
-const simpleDvnAddressOptimism = "0x1234..."; // Your Optimism SimpleDVNMock address
+const simpleDvnAddressBase = "0x1234..."; // Your Base SimpleDVNMock address
 const simpleDvnAddressArbitrum = "0x5678..."; // Your Arbitrum SimpleDVNMock address
-const simpleExecutorAddressOptimism = "0x9abc..."; // Your Optimism SimpleExecutorMock address
+const simpleExecutorAddressBase = "0x9abc..."; // Your Base SimpleExecutorMock address
 const simpleExecutorAddressArbitrum = "0xdef0..."; // Your Arbitrum SimpleExecutorMock address
 // No separate DestinationExecutorMock needed anymore
 ```
@@ -122,11 +122,11 @@ After wiring, you need to override the default worker configuration with your Si
 **Set Send Configuration (for outgoing messages):**
 
 ```bash
-# On Optimism Sepolia (to send to Arbitrum)
-pnpm hardhat lz:simple-workers:set-send-config --dst-eid 40231 --contract-name MyOFTMock --network optimism-testnet
+# On Base Sepolia (to send to Arbitrum)
+pnpm hardhat lz:simple-workers:set-send-config --dst-eid 40231 --contract-name MyOFTMock --network base-sepolia
 
-# On Arbitrum Sepolia (to send to Optimism)
-pnpm hardhat lz:simple-workers:set-send-config --dst-eid 40232 --contract-name MyOFTMock --network arbitrum-testnet
+# On Arbitrum Sepolia (to send to Base)
+pnpm hardhat lz:simple-workers:set-send-config --dst-eid 40245 --contract-name MyOFTMock --network arbitrum-sepolia
 ```
 
 These commands will:
@@ -138,19 +138,19 @@ These commands will:
 
 ⚠️ **Important**: You must run these configuration commands **after** the `lz:oapp:wire` command, as the wire command will reset the configuration to use default LayerZero workers.
 
-### Step 6: Send 1 OFT from **Optimism Sepolia** to **Arbitrum Sepolia**
+### Step 6: Send 1 OFT from **Base Sepolia** to **Arbitrum Sepolia**
 
-First, via the mock contract, let's mint on **Optimism Sepolia**:
+First, via the mock contract, let's mint on **Base Sepolia**:
 
 ```
-cast send <OFT_ADDRESS> "mint(address,uint256)" <RECIPIENT_ADDRESS> 1000000000000000000000 --private-key <PRIVATE_KEY> --rpc-url <OPTIMISM_SEPOLIA_RPC_URL>
+cast send <OFT_ADDRESS> "mint(address,uint256)" <RECIPIENT_ADDRESS> 1000000000000000000000 --private-key <PRIVATE_KEY> --rpc-url <BASE_SEPOLIA_RPC_URL>
 ```
 
 **Use the `lz:oft:send` task with the `--simple-workers` flag to send OFT tokens and automatically process them through SimpleWorkers:**
 
 ```
 pnpm hardhat lz:oft:send \
-  --src-eid 40232 \
+  --src-eid 40245 \
   --dst-eid 40231 \
   --amount 1.0 \
   --to <RECIPIENT> \
