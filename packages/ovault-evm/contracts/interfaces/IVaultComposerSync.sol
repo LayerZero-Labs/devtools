@@ -11,10 +11,13 @@ interface IVaultComposerSync is IOAppComposer {
     event Sent(bytes32 indexed guid); // 0x27b5aea9
     event Refunded(bytes32 indexed guid); // 0xfe509803
 
+    event Deposited(bytes32 sender, bytes32 recipient, uint256 assetAmt, uint256 shareAmt, uint32 dstEid); // 0x65f3a003
+    event Redeemed(bytes32 sender, bytes32 recipient, uint256 shareAmt, uint256 assetAmt, uint32 dstEid); // 0x53b1e2cb
+
     /// ========================== Error Messages =====================================
     error ShareOFTNotAdapter(address shareOFT); // 0xfc1514ae
     error ShareTokenNotVault(address shareERC20, address vault); // 0x0e178ab6
-    error AssetTokenNotVaultAsset(address assetERC20, address vaultAsset); // 0xba9d665f
+    error AssetTokenNotVaultAsset(address assetERC20, address vaultAsset); // 0x338bea04
 
     error OnlyEndpoint(address caller); // 0x91ac5e4f
     error OnlySelf(address caller); // 0xa19dbf00
