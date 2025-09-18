@@ -2,9 +2,9 @@ import { createModuleLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtoo
 
 import { getSpotPairDeployAuctionStatus } from '@/operations'
 import { LOGGER_MODULES } from '@/types/cli-constants'
+import { SpotAuctionStatusArgs } from '@/types'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function spotAuctionStatus(args: any): Promise<void> {
+export async function spotAuctionStatus(args: SpotAuctionStatusArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.SPOT_AUCTION_STATUS, args.logLevel)
 
