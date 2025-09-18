@@ -96,22 +96,22 @@ npx @layerzerolabs/hyperliquid-composer set-genesis \
     [--log-level {info | verbose}]
 ```
 
-### 4. Create Spot Deployment
-
-```bash
-npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
-    --token-index <coreIndex> \
-    --network {testnet | mainnet} \
-    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
-    [--log-level {info | verbose}]
-```
-
-### 5. Register Trading Spot
+### 4. Register Trading Spot
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer register-spot \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \ 
+    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    [--log-level {info | verbose}]
+```
+
+### 5. Create Spot Deployment
+
+```bash
+npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
+    --token-index <coreIndex> \
+    --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \ 
     [--log-level {info | verbose}]
 ```
@@ -241,6 +241,23 @@ npx @layerzerolabs/hyperliquid-composer is-account-activated \
 npx @layerzerolabs/hyperliquid-composer get-core-balances \ 
     --user <0x...> \
     [--show-zero {false | true}] \ 
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+```
+
+### List Spot Trading Pairs
+
+```bash
+npx @layerzerolabs/hyperliquid-composer list-spot-pairs \
+    --token-index <coreIndex> \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+```
+
+### Check Spot Auction Status
+
+```bash
+npx @layerzerolabs/hyperliquid-composer spot-auction-status \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
 ```
