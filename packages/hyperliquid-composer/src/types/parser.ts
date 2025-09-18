@@ -110,3 +110,22 @@ export interface SpotBalance {
 export interface SpotBalancesResponse {
     balances: SpotBalance[]
 }
+
+export interface SpotPair {
+    tokens: number[]
+    name: string
+    index: number
+    isCanonical: boolean
+}
+
+export interface SpotMetaUniverse {
+    universe: SpotPair[]
+}
+
+export interface SpotPairDeployAuctionStatus {
+    startTimeSeconds: number
+    durationSeconds: number
+    startGas: string
+    currentGas: string
+    endGas: string | null
+}
