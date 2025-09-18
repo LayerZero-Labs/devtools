@@ -2,9 +2,9 @@ import { createModuleLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtoo
 
 import { getSpotPairs } from '@/operations'
 import { LOGGER_MODULES } from '@/types/cli-constants'
+import { ListSpotPairsArgs } from '@/types'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function listSpotPairs(args: any): Promise<void> {
+export async function listSpotPairs(args: ListSpotPairsArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.LIST_SPOT_PAIRS, args.logLevel)
 
