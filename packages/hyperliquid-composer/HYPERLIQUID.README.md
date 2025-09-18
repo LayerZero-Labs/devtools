@@ -156,7 +156,7 @@ In order to connect the two assets and create the asset bridge there are 2 actio
 This creates the asset bridge precompile `0x2000...abcd` (where `abcd` is the `coreIndexId` of the HIP-1 in hex) to send tokens between HyperEVM and HyperCore.
 
 > ⚠️ **Setup Guidance**: Configure your core spot decimals to ensure your HyperCore bridge balance can handle your EVM token's total supply when scaled to EVM decimals. You can reduce your core spot decimals if needed to maintain consistent bridging performance across all scenarios.
-
+>
 > ⚠️ **Setup Guidance**: CoreDecimals - EVMDecimals must be within [-2,18] is a requirement for the hyperliquid protocol
 
 ## The Asset Bridge
@@ -358,20 +358,20 @@ npx @layerzerolabs/hyperliquid-composer set-genesis \
     [--log-level {info | verbose}]
 ```
 
-### 4. Create Spot Deployment
+### 4. Register Trading Spot
 
 ```bash
-npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
+npx @layerzerolabs/hyperliquid-composer register-spot \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
-### 5. Register Trading Spot
+### 5. Create Spot Deployment
 
 ```bash
-npx @layerzerolabs/hyperliquid-composer register-spot \
+npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
@@ -503,6 +503,23 @@ npx @layerzerolabs/hyperliquid-composer is-account-activated \
 npx @layerzerolabs/hyperliquid-composer get-core-balances \ 
     --user <0x> \
     [--show-zero {false | true}] \ 
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+```
+
+### List Spot Trading Pairs
+
+```bash
+npx @layerzerolabs/hyperliquid-composer list-spot-pairs \
+    --token-index <coreIndex> \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+```
+
+### Check Spot Auction Status
+
+```bash
+npx @layerzerolabs/hyperliquid-composer spot-auction-status \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
 ```
@@ -669,7 +686,19 @@ npx @layerzerolabs/hyperliquid-composer set-genesis \
     [--log-level {info | verbose}]
 ```
 
-### Step 4/7 `createSpotDeployment`
+### Step 4/7 `registerSpot`
+
+This is the step that registers the Core Spot on `HyperCore` and creates a base-quote pair. You can now choose between USDC, USDT0, or custom quote tokens.
+
+```bash
+npx @layerzerolabs/hyperliquid-composer register-spot \
+    --token-index <CoreIndex> \
+    --network {testnet | mainnet} \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
+    [--log-level {info | verbose}]
+```
+
+### Step 5/7 `createSpotDeployment`
 
 This is the step that creates a spot deployment without hyperliquidity. This step is meant for tokens deployed with Hyperliquidity but is also required for tokens deployed without Hyperliquidity to be listed on Spot trading, as such the values for `startPx` and `orderSz` are not required as they are set by the market and the value set does not matter. The value for `nOrders` however MUST be 0 as we do not support Hyperliquidity - <https://github.com/hyperliquid-dex/hyperliquid-python-sdk/blob/master/examples/spot_deploy.py#L97-L104>
 
@@ -691,18 +720,6 @@ npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
 ```
 
 > ⚠️ Note: `spot-deploy-state` should fail after completing this step.
-
-### Step 5/7 `registerSpot`
-
-This is the step that registers the Core Spot on `HyperCore` and creates a base-quote pair against `USDC`, which is the only supported quote token as of now.
-
-```bash
-npx @layerzerolabs/hyperliquid-composer register-spot \
-    --token-index <CoreIndex> \
-    --network {testnet | mainnet} \
-    --private-key $PRIVATE_KEY_HYPERLIQUID \
-    [--log-level {info | verbose}]
-```
 
 Your Core Spot (that does not use Hyperliquidity) has now been deployed and registered on `HyperCore`.
 The following command will return a json object with your newly deployed Core Spot token details.
