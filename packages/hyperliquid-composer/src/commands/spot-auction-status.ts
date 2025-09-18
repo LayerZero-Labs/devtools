@@ -2,9 +2,9 @@ import { createModuleLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtoo
 
 import { getSpotPairDeployAuctionStatus } from '@/operations'
 import { LOGGER_MODULES } from '@/types/cli-constants'
-import { SpotAuctionStatusArgs } from '@/types'
+import { BaseArgs } from '@/types'
 
-export async function spotAuctionStatus(args: SpotAuctionStatusArgs): Promise<void> {
+export async function spotAuctionStatus(args: BaseArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.SPOT_AUCTION_STATUS, args.logLevel)
 

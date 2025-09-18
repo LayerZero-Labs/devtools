@@ -1,9 +1,9 @@
 import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 
 import { spotClearinghouseState } from '@/operations'
-import { SpotBalancesResponse, IsAccountActivatedArgs, GetCoreBalancesArgs } from '@/types'
+import { SpotBalancesResponse, UserArgs, GetCoreBalancesArgs } from '@/types'
 
-export async function isAccountActivated(args: IsAccountActivatedArgs): Promise<boolean> {
+export async function isAccountActivated(args: UserArgs): Promise<boolean> {
     setDefaultLogLevel(args.logLevel)
 
     const user = args.user

@@ -11,7 +11,7 @@ import type {
     TxData,
     UserGenesis,
     CoreSpotDeploymentArgs,
-    HipTokenInfoArgs,
+    TokenIndexArgs,
     SpotDeployStateArgs,
 } from '@/types'
 import { ethers } from 'ethers'
@@ -162,7 +162,7 @@ export async function coreSpotDeployment(args: CoreSpotDeploymentArgs): Promise<
     }
 }
 
-export async function hipTokenInfo(args: HipTokenInfoArgs): Promise<void> {
+export async function hipTokenInfo(args: TokenIndexArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.HIP_TOKEN_INFO, args.logLevel)
 
