@@ -21,9 +21,9 @@ import {
     CreateSpotDeploymentArgs,
     RegisterTradingSpotArgs,
     EnableTokenFreezePrivilegeArgs,
-    FreezeUserArgs,
     RevokeTokenFreezePrivilegeArgs,
     EnableTokenQuoteAssetArgs,
+    FreezeUserArgs,
 } from '@/types'
 
 export async function tradingFee(args: TradingFeeArgs): Promise<void> {

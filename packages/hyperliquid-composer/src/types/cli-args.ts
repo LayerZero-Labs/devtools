@@ -23,35 +23,28 @@ export interface UserArgs extends BaseArgs {
     user: string
 }
 
-export interface OAppArgs extends BaseArgs {
+export interface OptionalOAppArgs extends BaseArgs {
     oappConfig?: string
 }
-
-// Combined argument interfaces
-export interface DeploymentArgs extends TokenIndexArgs, PrivateKeyArgs {}
-
-export interface EvmLinkingArgs extends DeploymentArgs, OAppArgs {}
-
-export interface UserQueryArgs extends UserArgs {}
 
 // Specific command argument interfaces
 export interface SetBlockArgs extends PrivateKeyArgs {
     size: 'big' | 'small'
 }
 
-export interface CoreSpotDeploymentArgs extends TokenIndexArgs, OAppArgs {
+export interface CoreSpotDeploymentArgs extends TokenIndexArgs, OptionalOAppArgs {
     action: 'create' | 'get'
 }
 
-export interface UserGenesisArgs extends DeploymentArgs {
+export interface UserGenesisArgs extends TokenIndexArgs, PrivateKeyArgs {
     action: '*' | 'userAndWei' | 'existingTokenAndWei' | 'blacklistUsers'
 }
 
-export interface TradingFeeArgs extends DeploymentArgs {
+export interface TradingFeeArgs extends TokenIndexArgs, PrivateKeyArgs {
     share: string
 }
 
-export interface FreezeUserArgs extends DeploymentArgs {
+export interface FreezeUserArgs extends TokenIndexArgs, PrivateKeyArgs {
     userAddress: string
     freeze: 'true' | 'false'
 }
@@ -60,21 +53,16 @@ export interface SpotDeployStateArgs extends TokenIndexArgs {
     deployerAddress?: string
 }
 
-export interface GetCoreBalancesArgs extends UserQueryArgs {
+export interface GetCoreBalancesArgs extends UserArgs {
     showZero: boolean
 }
 
-// Simple command args that only extend base interfaces
-export interface GenesisArgs extends DeploymentArgs {}
-export interface CreateSpotDeploymentArgs extends DeploymentArgs {}
-export interface RegisterTradingSpotArgs extends DeploymentArgs {}
-export interface EnableTokenFreezePrivilegeArgs extends DeploymentArgs {}
-export interface RevokeTokenFreezePrivilegeArgs extends DeploymentArgs {}
-export interface EnableTokenQuoteAssetArgs extends DeploymentArgs {}
-export interface RequestEvmContractArgs extends EvmLinkingArgs {}
-export interface FinalizeEvmContractArgs extends EvmLinkingArgs {}
-export interface HipTokenInfoArgs extends TokenIndexArgs {}
-export interface IsAccountActivatedArgs extends UserQueryArgs {}
-export interface ListSpotPairsArgs extends TokenIndexArgs {}
-export interface SpotAuctionStatusArgs extends BaseArgs {}
-export interface IntoAssetBridgeAddressArgs extends TokenIndexArgs {}
+// Simple command args - using concrete interfaces instead of empty extends
+export interface GenesisArgs extends TokenIndexArgs, PrivateKeyArgs {}
+export interface CreateSpotDeploymentArgs extends TokenIndexArgs, PrivateKeyArgs {}
+export interface RegisterTradingSpotArgs extends TokenIndexArgs, PrivateKeyArgs {}
+export interface EnableTokenFreezePrivilegeArgs extends TokenIndexArgs, PrivateKeyArgs {}
+export interface RevokeTokenFreezePrivilegeArgs extends TokenIndexArgs, PrivateKeyArgs {}
+export interface EnableTokenQuoteAssetArgs extends TokenIndexArgs, PrivateKeyArgs {}
+export interface RequestEvmContractArgs extends TokenIndexArgs, PrivateKeyArgs, OptionalOAppArgs {}
+export interface FinalizeEvmContractArgs extends TokenIndexArgs, PrivateKeyArgs, OptionalOAppArgs {}
