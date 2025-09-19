@@ -120,6 +120,12 @@ export interface SpotPair {
 
 export interface SpotMetaUniverse {
     universe: SpotPair[]
+    tokens: CoreSpotMetaData[]
+}
+
+export interface SpotPairsWithMetadata {
+    pairs: SpotPair[]
+    tokens: CoreSpotMetaData[]
 }
 
 export interface SpotPairDeployAuctionStatus {

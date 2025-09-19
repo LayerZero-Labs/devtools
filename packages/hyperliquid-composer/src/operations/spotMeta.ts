@@ -8,6 +8,7 @@ import {
     SpotDeployStates,
     SpotMetaUniverse,
     SpotPair,
+    SpotPairsWithMetadata,
     SpotPairDeployAuctionStatus,
 } from '../types'
 
@@ -79,6 +80,37 @@ export async function getSpotPairs(isTestnet: boolean, tokenIndex: number, logLe
     const filteredPairs = spotMetaUniverse.universe.filter((pair) => pair.tokens.includes(tokenIndex))
 
     return filteredPairs
+}
+
+/**
+ * Gets all spot trading pairs for a given coreSpot token index along with token metadata.
+ * This function fetches both the pairs and token metadata for name resolution.
+ *
+ * @param isTestnet Whether to query testnet or mainnet
+ * @param tokenIndex The token index to find pairs for
+ * @param logLevel Logging level for the client
+ * @returns Object containing filtered pairs and token metadata
+ */
+export async function getSpotPairsWithMetadata(
+    isTestnet: boolean,
+    tokenIndex: number,
+    logLevel: string
+): Promise<SpotPairsWithMetadata> {
+    const action: BaseInfoRequest = {
+        type: 'spotMeta',
+    }
+
+    const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
+    const response = await hyperliquidClient.submitHyperliquidAction('/info', null, action)
+    const spotMetaUniverse = response as SpotMetaUniverse
+
+    // Filter pairs that include the specified token index
+    const filteredPairs = spotMetaUniverse.universe.filter((pair) => pair.tokens.includes(tokenIndex))
+
+    return {
+        pairs: filteredPairs,
+        tokens: spotMetaUniverse.tokens,
+    }
 }
 
 /**
