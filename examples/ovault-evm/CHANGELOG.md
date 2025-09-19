@@ -1,5 +1,11 @@
 # @layerzerolabs/ovault-evm-example
 
+## 0.0.7
+
+### Patch Changes
+
+- 125ac8c: fix DebugSendScript to include composeValue in composeMsg
+
 ## 0.0.6
 
 ### Patch Changes
