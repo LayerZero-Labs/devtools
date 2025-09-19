@@ -1,10 +1,9 @@
 import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 
 import { spotClearinghouseState } from '@/operations'
-import { SpotBalancesResponse } from '@/types'
+import { SpotBalancesResponse, UserArgs, GetCoreBalancesArgs } from '@/types'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function isAccountActivated(args: any): Promise<boolean> {
+export async function isAccountActivated(args: UserArgs): Promise<boolean> {
     setDefaultLogLevel(args.logLevel)
 
     const user = args.user
@@ -15,8 +14,7 @@ export async function isAccountActivated(args: any): Promise<boolean> {
     return userBalances.balances.length === 0 ? false : true
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function getCoreBalances(args: any): Promise<SpotBalancesResponse> {
+export async function getCoreBalances(args: GetCoreBalancesArgs): Promise<SpotBalancesResponse> {
     setDefaultLogLevel(args.logLevel)
 
     const user = args.user
