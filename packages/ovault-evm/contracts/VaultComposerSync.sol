@@ -195,7 +195,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         _sendParam.minAmountLD = 0;
 
         _send(SHARE_OFT, _sendParam, _refundAddress);
-        emit Deposited(_depositor, _sendParam.to, _assetAmount, shareAmount, _sendParam.dstEid);
+        emit Deposited(_depositor, _sendParam.to, _sendParam.dstEid, _assetAmount, shareAmount);
     }
 
     /**
@@ -248,7 +248,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         _sendParam.minAmountLD = 0;
 
         _send(ASSET_OFT, _sendParam, _refundAddress);
-        emit Redeemed(_redeemer, _sendParam.to, _shareAmount, assetAmount, _sendParam.dstEid);
+        emit Redeemed(_redeemer, _sendParam.to, _sendParam.dstEid, _shareAmount, assetAmount);
     }
 
     /**
