@@ -124,13 +124,13 @@ With your OApps wired, you can now send messages cross-chain.
 Send a message from **Optimism Sepolia** to **Arbitrum Sepolia**:
 
 ```bash
-pnpm hardhat lz:oapp:send --dst-eid 40231 --string 'Hello from Ethereum!' --network optimism-testnet
+pnpm hardhat lz:oapp:send --dst-eid 40231 --string 'Hello from Optimism!' --network optimism-testnet
 ```
 
 Send a message from **Arbitrum Sepolia** to **Optimism Sepolia**:
 
 ```bash
-pnpm hardhat lz:oapp:send --dst-eid 40161 --string 'Hello from Arbitrum!' --network arbitrum-testnet
+pnpm hardhat lz:oapp:send --dst-eid 40232 --string 'Hello from Arbitrum!' --network arbitrum-testnet
 ```
 
 > :information_source: `40161` and `40231` are the Endpoint IDs of Optimism Sepolia and Arbitrum Sepolia respectively. The source network is determined by the `--network` flag, not a separate `--src-eid` parameter. View the list of chains and their Endpoint IDs on the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.
