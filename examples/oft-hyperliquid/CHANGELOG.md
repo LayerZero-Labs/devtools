@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 1.0.3
+
+### Patch Changes
+
+- 97f506f: update register-spot command and add in commands to track spotMarket gas and current deployment for a token
+
 ## 1.0.2
 
 ### Patch Changes
