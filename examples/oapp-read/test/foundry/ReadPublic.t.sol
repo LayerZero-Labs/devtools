@@ -19,9 +19,9 @@ import "forge-std/console.sol";
 import "forge-std/Test.sol";
 
 // DevTools imports
-import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
+import { SlimLzTestHelper } from "@layerzerolabs/test-devtools-evm-foundry/contracts/SlimLzTestHelper.sol";
 
-contract ReadPublicTest is TestHelperOz5 {
+contract ReadPublicTest is SlimLzTestHelper {
     using OptionsBuilder for bytes;
 
     uint32 private aEid = 1; // Chain A Endpoint ID
