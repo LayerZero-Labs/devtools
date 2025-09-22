@@ -14,9 +14,19 @@ import {
     enableQuoteToken,
 } from '@/operations'
 import { LOGGER_MODULES } from '@/types/cli-constants'
+import {
+    TradingFeeArgs,
+    UserGenesisArgs,
+    GenesisArgs,
+    CreateSpotDeploymentArgs,
+    RegisterTradingSpotArgs,
+    EnableTokenFreezePrivilegeArgs,
+    RevokeTokenFreezePrivilegeArgs,
+    EnableTokenQuoteAssetArgs,
+    FreezeUserArgs,
+} from '@/types'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function tradingFee(args: any): Promise<void> {
+export async function tradingFee(args: TradingFeeArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.TRADING_FEE, args.logLevel)
 
@@ -47,8 +57,7 @@ export async function tradingFee(args: any): Promise<void> {
     await setTradingFeeShare(wallet, isTestnet, tokenIndex, share, args.logLevel)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function userGenesis(args: any): Promise<void> {
+export async function userGenesis(args: UserGenesisArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.USER_GENESIS, args.logLevel)
 
@@ -63,8 +72,7 @@ export async function userGenesis(args: any): Promise<void> {
     await setUserGenesis(wallet, isTestnet, tokenIndex, action, args.logLevel)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function genesis(args: any): Promise<void> {
+export async function genesis(args: GenesisArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.GENESIS, args.logLevel)
 
@@ -78,8 +86,7 @@ export async function genesis(args: any): Promise<void> {
     await setGenesis(wallet, isTestnet, tokenIndex, args.logLevel)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function createSpotDeployment(args: any): Promise<void> {
+export async function createSpotDeployment(args: CreateSpotDeploymentArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.CREATE_SPOT_DEPLOYMENT, args.logLevel)
 
@@ -92,8 +99,7 @@ export async function createSpotDeployment(args: any): Promise<void> {
     await setNoHyperliquidity(wallet, isTestnet, tokenIndex, args.logLevel)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function registerTradingSpot(args: any): Promise<void> {
+export async function registerTradingSpot(args: RegisterTradingSpotArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.REGISTER_TRADING_SPOT, args.logLevel)
 
@@ -109,8 +115,7 @@ export async function registerTradingSpot(args: any): Promise<void> {
 
 // === Post-Launch Management Functions ===
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function enableTokenFreezePrivilege(args: any): Promise<void> {
+export async function enableTokenFreezePrivilege(args: EnableTokenFreezePrivilegeArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.ENABLE_FREEZE_PRIVILEGE, args.logLevel)
 
@@ -123,8 +128,7 @@ export async function enableTokenFreezePrivilege(args: any): Promise<void> {
     await enableFreezePrivilege(wallet, isTestnet, tokenIndex, args.logLevel)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function freezeTokenUser(args: any): Promise<void> {
+export async function freezeTokenUser(args: FreezeUserArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.FREEZE_USER, args.logLevel)
 
@@ -139,8 +143,7 @@ export async function freezeTokenUser(args: any): Promise<void> {
     await freezeUser(wallet, isTestnet, tokenIndex, userAddress, freeze, args.logLevel)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function revokeTokenFreezePrivilege(args: any): Promise<void> {
+export async function revokeTokenFreezePrivilege(args: RevokeTokenFreezePrivilegeArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.REVOKE_FREEZE_PRIVILEGE, args.logLevel)
 
@@ -153,8 +156,7 @@ export async function revokeTokenFreezePrivilege(args: any): Promise<void> {
     await revokeFreezePrivilege(wallet, isTestnet, tokenIndex, args.logLevel)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function enableTokenQuoteAsset(args: any): Promise<void> {
+export async function enableTokenQuoteAsset(args: EnableTokenQuoteAssetArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.ENABLE_QUOTE_TOKEN, args.logLevel)
 

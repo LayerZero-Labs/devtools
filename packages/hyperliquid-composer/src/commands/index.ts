@@ -13,6 +13,8 @@ export * from './register-token'
 
 // === Info & Queries ===
 export * from './account-state'
+export * from './list-spot-pairs'
+export * from './spot-auction-status'
 
 // === Utilities ===
 export * from './type-conversion'
