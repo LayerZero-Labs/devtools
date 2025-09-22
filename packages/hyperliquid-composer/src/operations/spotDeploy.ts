@@ -317,7 +317,7 @@ export async function registerSpot(wallet: Wallet, isTestnet: boolean, coreSpotT
     const allStandardTokensDeployed =
         existingQuoteTokens.includes(usdc_tokenId) && existingQuoteTokens.includes(usdt0_tokenId)
 
-    if (allStandardTokensDeployed && choices.length === 1) {
+    if (allStandardTokensDeployed && choices.length === 2) {
         logger.info(`\nAll standard quote tokens (USDC, USDT0) are already deployed.`)
         logger.info(`You can only deploy against a custom quote token.`)
     }
@@ -365,10 +365,8 @@ export async function registerSpot(wallet: Wallet, isTestnet: boolean, coreSpotT
         quoteTokenId = selectedQuoteToken
         if (quoteTokenId === usdc_tokenId) {
             quoteTokenName = 'USDC'
-        } else if (quoteTokenId === usdt0_tokenId) {
-            quoteTokenName = 'USDT0'
         } else {
-            quoteTokenName = `Token ${quoteTokenId}`
+            quoteTokenName = 'USDT0'
         }
     }
 
