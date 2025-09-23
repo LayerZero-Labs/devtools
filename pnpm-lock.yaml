@@ -4800,6 +4800,9 @@ importers:
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.75
         version: 3.0.86(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.86)(@layerzerolabs/lz-evm-v1-0.7@3.0.86)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-oapp-v2':
+        specifier: ^3.0.134
+        version: 3.0.134(@layerzerolabs/lz-evm-messagelib-v2@3.0.86)(@layerzerolabs/lz-evm-protocol-v2@3.0.86)(@layerzerolabs/lz-evm-v1-0.7@3.0.86)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-protocol-v2':
         specifier: ^3.0.75
         version: 3.0.86(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
@@ -4824,6 +4827,9 @@ importers:
       '@openzeppelin/contracts-upgradeable':
         specifier: ^5.0.2
         version: 5.1.0(@openzeppelin/contracts@5.1.0)
+      '@stargatefinance/stg-evm-v2':
+        specifier: ^4.0.0
+        version: 4.0.0(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(@types/node@24.3.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)(typescript@5.5.3)
       '@types/mocha':
         specifier: ^10.0.10
         version: 10.0.10
@@ -9854,6 +9860,28 @@ packages:
       tiny-invariant: 1.3.3
     dev: true
 
+  /@layerzerolabs/lz-evm-messagelib-v2@2.0.11(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@layerzerolabs/lz-evm-protocol-v2@2.0.11)(@layerzerolabs/lz-evm-v1-0.7@3.0.86)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2):
+    resolution: {integrity: sha512-i6nZvzxzH+3bMzGRxIzf6fFXTzxQIZ1vyduAoFTy3U2zK9xZUHunKFfpC+vqCY1goNzjBquX4VnClWMWlc5ZIA==}
+    peerDependencies:
+      '@axelar-network/axelar-gmp-sdk-solidity': ^5.6.3
+      '@chainlink/contracts-ccip': ^0.7.6
+      '@layerzerolabs/lz-evm-protocol-v2': ^2.0.11
+      '@layerzerolabs/lz-evm-v1-0.7': ^2.0.11
+      '@openzeppelin/contracts': ^4.8.1
+      '@openzeppelin/contracts-upgradeable': ^4.8.1
+      hardhat-deploy: ^0.12.1
+      solidity-bytes-utils: ^0.8.0
+    dependencies:
+      '@axelar-network/axelar-gmp-sdk-solidity': 5.10.0
+      '@chainlink/contracts-ccip': 0.7.6(ethers@5.7.2)
+      '@layerzerolabs/lz-evm-protocol-v2': 2.0.11(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-v1-0.7': 3.0.86(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
+      '@openzeppelin/contracts': 5.1.0
+      '@openzeppelin/contracts-upgradeable': 5.1.0(@openzeppelin/contracts@5.1.0)
+      hardhat-deploy: 0.12.4
+      solidity-bytes-utils: 0.8.2
+    dev: true
+
   /@layerzerolabs/lz-evm-messagelib-v2@3.0.75(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.75)(@layerzerolabs/lz-evm-v1-0.7@3.0.75)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2):
     resolution: {integrity: sha512-CYcZiAqcQkFKf+pxkigFBQCOU60jNeIpnEBMDkIx75hVSazbftqJ/wx9Jv3fVCxr2vQ6nw990b0mbjNBtOY1lw==}
     peerDependencies:
@@ -10182,6 +10210,58 @@ packages:
       - utf-8-validate
     dev: true
 
+  /@layerzerolabs/lz-evm-oapp-v2@2.3.44(@layerzerolabs/lz-evm-messagelib-v2@2.0.11)(@layerzerolabs/lz-evm-protocol-v2@2.0.11)(@layerzerolabs/lz-evm-v1-0.7@3.0.86)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2):
+    resolution: {integrity: sha512-FNm9+OFKOl+/5JvpV6rMUoHZSePOcLtNJ+GHJuf38xPmEe0ehxFVQBw3iIfaH2dsWzRn/T7ZizV5ouId35FLdg==}
+    peerDependencies:
+      '@layerzerolabs/lz-evm-messagelib-v2': ^2.3.44
+      '@layerzerolabs/lz-evm-protocol-v2': ^2.3.44
+      '@layerzerolabs/lz-evm-v1-0.7': ^2.3.44
+      '@openzeppelin/contracts': ^4.8.1 || ^5.0.0
+      '@openzeppelin/contracts-upgradeable': ^4.8.1 || ^5.0.0
+      hardhat-deploy: ^0.12.1
+      solidity-bytes-utils: ^0.8.0
+    dependencies:
+      '@layerzerolabs/lz-evm-messagelib-v2': 2.0.11(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@layerzerolabs/lz-evm-protocol-v2@2.0.11)(@layerzerolabs/lz-evm-v1-0.7@3.0.86)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-protocol-v2': 2.0.11(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-v1-0.7': 3.0.86(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
+      '@openzeppelin/contracts': 5.1.0
+      '@openzeppelin/contracts-upgradeable': 5.1.0(@openzeppelin/contracts@5.1.0)
+      hardhat-deploy: 0.12.4
+      solidity-bytes-utils: 0.8.2
+    dev: true
+
+  /@layerzerolabs/lz-evm-oapp-v2@3.0.134(@layerzerolabs/lz-evm-messagelib-v2@3.0.86)(@layerzerolabs/lz-evm-protocol-v2@3.0.86)(@layerzerolabs/lz-evm-v1-0.7@3.0.86)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2):
+    resolution: {integrity: sha512-FtL1yvXqaCa9bSJhGVEyAcbYXxi4Ck1zc8OIdFpIg603HrnKzh8a+6WdOfL81yHc0bzqksBY9MsCRwdLkf63/w==}
+    peerDependencies:
+      '@layerzerolabs/lz-evm-messagelib-v2': ^3.0.134
+      '@layerzerolabs/lz-evm-protocol-v2': ^3.0.134
+      '@layerzerolabs/lz-evm-v1-0.7': ^3.0.134
+      '@openzeppelin/contracts': ^4.8.1 || ^5.0.0
+      '@openzeppelin/contracts-upgradeable': ^4.8.1 || ^5.0.0
+      hardhat-deploy: ^0.12.1
+      solidity-bytes-utils: ^0.8.0
+    dependencies:
+      '@layerzerolabs/lz-evm-messagelib-v2': 3.0.86(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.86)(@layerzerolabs/lz-evm-v1-0.7@3.0.86)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-protocol-v2': 3.0.86(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-v1-0.7': 3.0.86(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
+      '@openzeppelin/contracts': 5.1.0
+      '@openzeppelin/contracts-upgradeable': 5.1.0(@openzeppelin/contracts@5.1.0)
+      hardhat-deploy: 0.12.4
+      solidity-bytes-utils: 0.8.2
+    dev: true
+
+  /@layerzerolabs/lz-evm-protocol-v2@2.0.11(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2):
+    resolution: {integrity: sha512-hkcNheUjTOYNxoAnBTSatLLzLe71Y7kcmw1+56aazezyUb6SCu330V4sJg+jsp8Ag6Sb7y1tLLYn1Sa5EWgCxg==}
+    peerDependencies:
+      '@openzeppelin/contracts': ^4.8.1
+      hardhat-deploy: ^0.12.1
+      solidity-bytes-utils: ^0.8.0
+    dependencies:
+      '@openzeppelin/contracts': 5.1.0
+      hardhat-deploy: 0.12.4
+      solidity-bytes-utils: 0.8.2
+    dev: true
+
   /@layerzerolabs/lz-evm-protocol-v2@3.0.75(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2):
     resolution: {integrity: sha512-x0rY7XRu9YU5tFjHBWxofdEsWFZ4dDjHGzNYaPKQIpTcoXZbVqnxZhJVcf0YBOpg7phrEOLWWhPXmNLz2nxUTQ==}
     peerDependencies:
@@ -10350,6 +10430,16 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
+
+  /@layerzerolabs/lz-evm-sdk-v2@3.0.30:
+    resolution: {integrity: sha512-UMP/Z8MWrKeklK7zjjbjn+GS9dPUcZsa1Y70uFXGq1j9V/xkLGIH+T9IltKndLR/W+Z/t3UhgjswUVMPd+OSsw==}
+    dependencies:
+      '@layerzerolabs/evm-sdks-core': 3.0.75
+      ethers: 5.7.2
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: true
 
   /@layerzerolabs/lz-evm-sdk-v2@3.0.75:
     resolution: {integrity: sha512-GoSMjRCtrwoQrwANc8Bpe/rpdoYIPU0zJWLCrFrh9/70wkIhprH1A7/t3I8lHg2dMcHCxtYjo5eJsFzbu1+OVw==}
@@ -10972,6 +11062,38 @@ packages:
       - typescript
       - utf-8-validate
 
+  /@layerzerolabs/lz-utilities@3.0.120(@types/node@24.3.0)(typescript@5.5.3):
+    resolution: {integrity: sha512-gl2nuC9r/K5focDdpUcn5c/xxlVBZ+XCSxnSnjSDh/GsFWLhuSShovO/Hkd4DXhf8UbXwpCUOJu0LZDJAFsR6w==}
+    dependencies:
+      '@ethersproject/bytes': 5.8.0
+      '@initia/initia.js': 1.0.4(typescript@5.5.3)
+      '@layerzerolabs/lz-definitions': 3.0.120
+      '@solana/web3.js': 1.98.0
+      '@ton/core': 0.59.0(@ton/crypto@3.3.0)
+      '@ton/crypto': 3.3.0
+      '@ton/ton': /@layerzerolabs/ton@15.2.0-rc.3(@layerzerolabs/ton@15.2.0-rc.3)(@ton/core@0.59.0)(@ton/crypto@3.3.0)(@types/node@24.3.0)(typescript@5.5.3)
+      aptos: 1.21.0
+      bip39: 3.1.0
+      dayjs: 1.11.13
+      ed25519-hd-key: 1.3.0
+      ethers: 5.7.2
+      memoizee: 0.4.17
+      picocolors: 1.0.0
+      pino: 8.21.0
+    transitivePeerDependencies:
+      - '@jest/globals'
+      - '@swc/core'
+      - '@swc/wasm'
+      - '@types/node'
+      - bufferutil
+      - chai
+      - debug
+      - encoding
+      - supports-color
+      - typescript
+      - utf-8-validate
+    dev: true
+
   /@layerzerolabs/lz-utilities@3.0.66(@jest/globals@29.7.0)(@types/node@18.18.14)(chai@4.5.0)(typescript@5.5.3):
     resolution: {integrity: sha512-PDc3YAdUcNCnFGbQ7oDg1Pja/wt0O+FyRbhwoyTBQdqjNT/hG35KI7sz1yZgAQG0IItzgqKGI/5n4LKMvjZH/Q==}
     dependencies:
@@ -11511,6 +11633,35 @@ packages:
       '@ton/crypto': '>=3.2.0'
     dependencies:
       '@ton/blueprint': 0.25.0(@layerzerolabs/ton@15.2.0-rc.3)(@ton/core@0.59.0)(@ton/crypto@3.3.0)(@types/node@22.15.3)(typescript@5.5.3)
+      '@ton/core': 0.59.0(@ton/crypto@3.3.0)
+      '@ton/crypto': 3.3.0
+      '@ton/sandbox': 0.22.0(@ton/core@0.59.0)(@ton/crypto@3.3.0)
+      '@ton/test-utils': 0.4.2(@jest/globals@29.7.0)(@ton/core@0.59.0)(chai@4.5.0)
+      axios: 1.7.9
+      dataloader: 2.2.2
+      symbol.inspect: 1.0.1
+      teslabot: 1.5.0
+      zod: 3.22.4
+    transitivePeerDependencies:
+      - '@jest/globals'
+      - '@swc/core'
+      - '@swc/wasm'
+      - '@ton/ton'
+      - '@types/node'
+      - chai
+      - debug
+      - encoding
+      - supports-color
+      - typescript
+    dev: true
+
+  /@layerzerolabs/ton@15.2.0-rc.3(@layerzerolabs/ton@15.2.0-rc.3)(@ton/core@0.59.0)(@ton/crypto@3.3.0)(@types/node@24.3.0)(typescript@5.5.3):
+    resolution: {integrity: sha512-Aq7htcWn31DxSYs8l0sJcQ76uAJRPy50lg6M2G+qNLSXpO01sPcUSb8oK/TmCKo+S+rDIFWUNKFjT0B/rll1YQ==}
+    peerDependencies:
+      '@ton/core': '>=0.59.0'
+      '@ton/crypto': '>=3.2.0'
+    dependencies:
+      '@ton/blueprint': 0.25.0(@layerzerolabs/ton@15.2.0-rc.3)(@ton/core@0.59.0)(@ton/crypto@3.3.0)(@types/node@24.3.0)(typescript@5.5.3)
       '@ton/core': 0.59.0(@ton/crypto@3.3.0)
       '@ton/crypto': 3.3.0
       '@ton/sandbox': 0.22.0(@ton/core@0.59.0)(@ton/crypto@3.3.0)
@@ -13655,6 +13806,51 @@ packages:
       - utf-8-validate
     dev: true
 
+  /@stargatefinance/stg-definitions-v2@4.0.0:
+    resolution: {integrity: sha512-Zi/kvahyBFSUh+7CgnC3EOTSrDpE9Cz07T+LEQDHqUzmFEZzhmEqpF8ii3ykk/Sng7r5+kh1cfuGt7wcKUkuHQ==}
+    dev: true
+
+  /@stargatefinance/stg-evm-v1@1.0.33:
+    resolution: {integrity: sha512-funR7QssJn+9m8tAO+2nMB2+9ke1FplY5/Jt1RGReFR4ZXhlMKWvbos4KNh7L6k6tu2c+9oQOjn8bPiGnGwmew==}
+    dependencies:
+      exponential-backoff: 3.1.1
+    dev: true
+
+  /@stargatefinance/stg-evm-v2@4.0.0(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(@types/node@24.3.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)(typescript@5.5.3):
+    resolution: {integrity: sha512-y6kAMk8jeuqvnxv3lBO3l6B3jdWzen3kPNNKfJm/9mtITuSkj4KRGzP55lfAYGxIzhhbRiajt1QIO1Ix/AhvbQ==}
+    dependencies:
+      '@layerzerolabs/lz-definitions': 3.0.120
+      '@layerzerolabs/lz-evm-messagelib-v2': 2.0.11(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@layerzerolabs/lz-evm-protocol-v2@2.0.11)(@layerzerolabs/lz-evm-v1-0.7@3.0.86)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-oapp-v2': 2.3.44(@layerzerolabs/lz-evm-messagelib-v2@2.0.11)(@layerzerolabs/lz-evm-protocol-v2@2.0.11)(@layerzerolabs/lz-evm-v1-0.7@3.0.86)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-protocol-v2': 2.0.11(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-sdk-v2': 3.0.30
+      '@layerzerolabs/lz-evm-v1-0.7': 3.0.86(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
+      '@layerzerolabs/lz-utilities': 3.0.120(@types/node@24.3.0)(typescript@5.5.3)
+      '@layerzerolabs/lz-v2-utilities': 3.0.120
+      '@stargatefinance/stg-definitions-v2': 4.0.0
+      '@stargatefinance/stg-evm-v1': 1.0.33
+      '@types/sinon': 17.0.3
+      ethers: 5.7.2
+    transitivePeerDependencies:
+      - '@axelar-network/axelar-gmp-sdk-solidity'
+      - '@chainlink/contracts-ccip'
+      - '@jest/globals'
+      - '@openzeppelin/contracts'
+      - '@openzeppelin/contracts-upgradeable'
+      - '@swc/core'
+      - '@swc/wasm'
+      - '@types/node'
+      - bufferutil
+      - chai
+      - debug
+      - encoding
+      - hardhat-deploy
+      - solidity-bytes-utils
+      - supports-color
+      - typescript
+      - utf-8-validate
+    dev: true
+
   /@swc/core-darwin-arm64@1.4.0:
     resolution: {integrity: sha512-UTJ/Vz+s7Pagef6HmufWt6Rs0aUu+EJF4Pzuwvr7JQQ5b1DZeAAUeUtkUTFx/PvCbM8Xfw4XdKBUZfrIKCfW8A==}
     engines: {node: '>=10'}
@@ -13924,6 +14120,38 @@ packages:
       inquirer: 8.2.6
       qrcode-terminal: 0.12.0
       ts-node: 10.9.2(@types/node@22.15.3)(typescript@5.5.3)
+    transitivePeerDependencies:
+      - '@swc/core'
+      - '@swc/wasm'
+      - '@types/node'
+      - debug
+      - encoding
+      - supports-color
+      - typescript
+    dev: true
+
+  /@ton/blueprint@0.25.0(@layerzerolabs/ton@15.2.0-rc.3)(@ton/core@0.59.0)(@ton/crypto@3.3.0)(@types/node@24.3.0)(typescript@5.5.3):
+    resolution: {integrity: sha512-ji5VnGNt/j68Zkp9CB5P1JV1AHN99fHdP7+sKtOo+qIlO6c09vSLhTvGcWu70KOYPj27SRGBSQbpWdBreX/OhA==}
+    hasBin: true
+    peerDependencies:
+      '@ton/core': '>=0.58.1'
+      '@ton/crypto': '>=3.3.0'
+      '@ton/ton': npm:@layerzerolabs/ton@15.2.0-rc.3
+    dependencies:
+      '@tact-lang/compiler': 1.5.4
+      '@ton-community/func-js': 0.7.0
+      '@ton/core': 0.59.0(@ton/crypto@3.3.0)
+      '@ton/crypto': 3.3.0
+      '@ton/tolk-js': 0.6.0
+      '@ton/ton': /@layerzerolabs/ton@15.2.0-rc.3(@layerzerolabs/ton@15.2.0-rc.3)(@ton/core@0.59.0)(@ton/crypto@3.3.0)(@types/node@24.3.0)(typescript@5.5.3)
+      '@tonconnect/sdk': 2.2.0
+      arg: 5.0.2
+      axios: 1.8.4
+      chalk: 4.1.2
+      dotenv: 16.4.7
+      inquirer: 8.2.6
+      qrcode-terminal: 0.12.0
+      ts-node: 10.9.2(@types/node@24.3.0)(typescript@5.5.3)
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
