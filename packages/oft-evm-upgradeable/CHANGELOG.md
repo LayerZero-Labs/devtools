@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-evm-upgradeable
 
+## 3.2.0
+
+### Minor Changes
+
+- 7af2d6e: Adding NativeOFTAdapterUpgradeable
+
 ## 3.1.0
 
 ### Minor Changes

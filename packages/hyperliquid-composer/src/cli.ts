@@ -29,6 +29,8 @@ import {
     hipTokenInfo,
     isAccountActivated,
     getCoreBalances,
+    listSpotPairs,
+    spotAuctionStatus,
 
     // Utilities
     intoAssetBridgeAddress,
@@ -236,6 +238,23 @@ optionGroups
         const balances = await getCoreBalances(options)
         logger.info(formatBalancesTable(balances, options.showZero))
     })
+
+optionGroups
+    .base(
+        program
+            .command(CLI_COMMANDS.LIST_SPOT_PAIRS)
+            .description('List all spot trading pairs for a given token index')
+            .requiredOption(...commonOptions.tokenIndex())
+    )
+    .action(listSpotPairs)
+
+optionGroups
+    .base(
+        program
+            .command(CLI_COMMANDS.SPOT_AUCTION_STATUS)
+            .description('Show current spot pair deploy auction status and gas costs')
+    )
+    .action(spotAuctionStatus)
 
 // === Utilities ===
 optionGroups

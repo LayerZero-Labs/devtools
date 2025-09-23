@@ -243,22 +243,42 @@ export const getExamples = (): Example[] => {
 
 const PACKAGE_MANAGERS: PackageManager[] = [
     {
+        // pnpm 10+ needs to update pnpm lockfile from V6 to V9.
+        id: 'pnpm_lockfile',
+        executable: 'pnpm',
+        commands: ['pnpm install --lockfile-only --ignore-scripts', 'pnpm install --frozen-lockfile'],
+        label: 'pnpm (recommended)',
+        hasLockfile: true,
+        versionRegex: /^(1[0-9]|[2-9][0-9])\./,
+    },
+    {
+        id: 'pnpm_lockfile_8_or_9',
+        executable: 'pnpm',
+        args: ['install', '--frozen-lockfile'],
+        label: 'pnpm (recommended)',
+        hasLockfile: true,
+        versionRegex: /^(8|9)\./,
+    },
+    {
         id: 'pnpm',
         executable: 'pnpm',
         args: ['install'],
-        label: 'pnpm (recommended)',
+        label: 'pnpm (unsafe / no lockfile)',
+        hasLockfile: false,
     },
     {
         id: 'npm',
         executable: 'npm',
         args: ['install'],
-        label: 'npm',
+        label: 'npm (unsafe / no lockfile)',
+        hasLockfile: false,
     },
     {
         id: 'bun',
         executable: 'bun',
         args: ['install'],
-        label: 'bun',
+        label: 'bun (unsafe / no lockfile)',
+        hasLockfile: false,
     },
 ]
 

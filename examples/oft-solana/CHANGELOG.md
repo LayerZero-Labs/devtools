@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.12.1
+
+### Patch Changes
+
+- 5e15a8d: Add lockfiles to example packages
+
 ## 0.12.0
 
 ### Minor Changes

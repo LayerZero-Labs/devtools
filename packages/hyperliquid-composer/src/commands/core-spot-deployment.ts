@@ -3,15 +3,24 @@ import { createModuleLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtoo
 import { getERC20abi, getHyperEVMOAppDeployment, writeCoreSpotDeployment } from '@/io'
 import { getSpotMeta, getHipTokenInfo, getSpotDeployState } from '@/operations'
 import { toAssetBridgeAddress } from '@/types'
-import type { CoreSpotDeployment, CoreSpotMetaData, SpotDeployStates, SpotInfo, TxData, UserGenesis } from '@/types'
+import type {
+    CoreSpotDeployment,
+    CoreSpotMetaData,
+    SpotDeployStates,
+    SpotInfo,
+    TxData,
+    UserGenesis,
+    CoreSpotDeploymentArgs,
+    TokenIndexArgs,
+    SpotDeployStateArgs,
+} from '@/types'
 import { ethers } from 'ethers'
 import { RPC_URLS } from '@/types'
 import { LOGGER_MODULES } from '@/types/cli-constants'
 
 import inquirer from 'inquirer'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function coreSpotDeployment(args: any): Promise<void> {
+export async function coreSpotDeployment(args: CoreSpotDeploymentArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.CORE_SPOT_DEPLOYMENT, args.logLevel)
 
@@ -28,7 +37,7 @@ export async function coreSpotDeployment(args: any): Promise<void> {
         let token_address: string
 
         try {
-            const { deployment } = await getHyperEVMOAppDeployment(oappConfig, network, logger)
+            const { deployment } = await getHyperEVMOAppDeployment(oappConfig!, network, logger)
             if (!deployment) {
                 logger.error(`Deployment file not found for ${network}`)
                 return
@@ -95,10 +104,10 @@ export async function coreSpotDeployment(args: any): Promise<void> {
         const decimals = await contract.decimals()
         logger.verbose(`Token name: ${tokenName}, Decimals: ${decimals}`)
 
-        const weiDiff = decimals - coreSpot.weiDecimals
+        const weiDiff = decimals.parseInt() - coreSpot.weiDecimals
         logger.verbose(`Wei diff: ${weiDiff}`)
 
-        const assetBridgeAddress = toAssetBridgeAddress(tokenIndex)
+        const assetBridgeAddress = toAssetBridgeAddress(parseInt(tokenIndex))
         logger.verbose(`Asset bridge address: ${assetBridgeAddress}`)
 
         const txData: TxData = {
@@ -153,8 +162,7 @@ export async function coreSpotDeployment(args: any): Promise<void> {
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function hipTokenInfo(args: any): Promise<void> {
+export async function hipTokenInfo(args: TokenIndexArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.HIP_TOKEN_INFO, args.logLevel)
 
@@ -168,8 +176,7 @@ export async function hipTokenInfo(args: any): Promise<void> {
     logger.info(JSON.stringify(coreSpotInfo, null, 2))
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function spotDeployState(args: any): Promise<void> {
+export async function spotDeployState(args: SpotDeployStateArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.GET_DEPLOY_STATE, args.logLevel)
 
@@ -178,8 +185,8 @@ export async function spotDeployState(args: any): Promise<void> {
 
     const isTestnet = network === 'testnet'
     let deployerAddress: string
-    if (args.deployAddress) {
-        deployerAddress = args.deployAddress
+    if (args.deployerAddress) {
+        deployerAddress = args.deployerAddress
     } else {
         const coreSpot: CoreSpotMetaData = await getSpotMeta(null, isTestnet, args.logLevel, tokenIndex)
         const coreSpotInfo: SpotInfo = await getHipTokenInfo(null, isTestnet, args.logLevel, coreSpot.tokenId)
