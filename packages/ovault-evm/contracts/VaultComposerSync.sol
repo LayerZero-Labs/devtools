@@ -141,7 +141,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         bytes32 _composeFrom,
         bytes memory _composeMsg,
         uint256 _amount
-    ) external payable {
+    ) external payable virtual {
         /// @dev Can only be called by self
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
@@ -316,7 +316,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @param _sendParam The parameters for the send operation
      * @param _refundAddress Address to receive excess payment of the LZ fees
      */
-    function _send(address _oft, SendParam memory _sendParam, address _refundAddress) internal {
+    function _send(address _oft, SendParam memory _sendParam, address _refundAddress) internal virtual {
         if (_sendParam.dstEid == VAULT_EID) {
             /// @dev Can do this because _oft is validated before this function is called
             address erc20 = _oft == ASSET_OFT ? ASSET_ERC20 : SHARE_ERC20;
