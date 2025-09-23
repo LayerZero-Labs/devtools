@@ -8,6 +8,9 @@ import type { SetConfigParam, address, eid } from './types'
 
 const DEFAULT_CONFIG_MESSAGE = `${constants.AddressZero} - DEFAULT`
 
+// A value used to indicate that no DVNs are required. It has to be used instead of 0, because 0 falls back to default value.
+const NIL_DVN_COUNT = (1 << 8) - 1 // type(uint8).max = 255
+
 export async function getConfig(
     epv2Contract: Contract,
     evmAddress: address,
@@ -60,7 +63,7 @@ export function buildConfig(
         [
             {
                 confirmations: ulnConfig.confirmations,
-                requiredDVNCount: _requiredDVNs.length,
+                requiredDVNCount: _requiredDVNs.length > 0 ? _requiredDVNs.length : NIL_DVN_COUNT,
                 optionalDVNCount: _optionalDVNs.length,
                 optionalDVNThreshold: ulnConfig.optionalDVNThreshold,
                 requiredDVNs: _requiredDVNs.sort(),

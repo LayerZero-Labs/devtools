@@ -1,5 +1,17 @@
 # @layerzerolabs/ovault-evm-example
 
+## 0.0.7
+
+### Patch Changes
+
+- 125ac8c: fix DebugSendScript to include composeValue in composeMsg
+
+## 0.0.6
+
+### Patch Changes
+
+- 5e15a8d: Add lockfiles to example packages
+
 ## 0.0.5
 
 ### Patch Changes

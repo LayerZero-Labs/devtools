@@ -1,5 +1,11 @@
 # @layerzerolabs/onft721-example
 
+## 0.3.11
+
+### Patch Changes
+
+- 5e15a8d: Add lockfiles to example packages
+
 ## 0.3.10
 
 ### Patch Changes

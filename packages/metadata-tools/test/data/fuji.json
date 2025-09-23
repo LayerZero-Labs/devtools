@@ -35,6 +35,9 @@
     },
     {
       "eid": "40106",
+      "endpointV2View": {
+        "address": "0x31fFd858c7826817F830C3dF2bb2A74126d51126"
+      },
       "chainKey": "fuji",
       "stage": "testnet",
       "executor": {
@@ -49,11 +52,8 @@
       "lzExecutor": {
         "address": "0x1356D9201036A216836925803512649d6BB2395e"
       },
-      "sendUln301": {
-        "address": "0x184e24e31657Cf853602589fe5304b144a826c85"
-      },
-      "receiveUln301": {
-        "address": "0x91df17bF1Ced54c6169e1E24722C0a88a447cBAf"
+      "blockedMessageLib": {
+        "address": "0x0c77d8d771ab35e2e184e7ce127f19ced31ff8c0"
       },
       "version": 2,
       "receiveUln302": {

@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.7.7
+
+### Patch Changes
+
+- 5e15a8d: Add lockfiles to example packages
+
 ## 0.7.6
 
 ### Patch Changes

@@ -185,7 +185,7 @@ export const createWithAsyncLogger =
  *
  * `[ethereum-mainnet] Some message`
  */
-const prefix = format((info, { label }) => ({
+const prefix = format((info: any, opts?: any) => ({
     ...info,
-    message: `${label ? `[${label}] ` : ''}${info.message}`,
+    message: `${opts?.label ? `[${opts.label}] ` : ''}${info.message}`,
 }))

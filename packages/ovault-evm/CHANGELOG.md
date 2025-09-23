@@ -1,5 +1,11 @@
 # @layerzerolabs/ovault-evm
 
+## 0.0.6
+
+### Patch Changes
+
+- a84d6a4: emit Deposited and Redeemed events in the composer for off-chain tracking
+
 ## 0.0.5
 
 ### Patch Changes
