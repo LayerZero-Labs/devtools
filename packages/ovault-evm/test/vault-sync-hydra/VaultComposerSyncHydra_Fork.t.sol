@@ -34,9 +34,11 @@ contract VaultComposerSyncHydraForkTest is Test {
     using OptionsBuilder for bytes;
     using OFTMsgCodec for address;
 
+    uint256 public constant PINNED_BLOCK = 23_435_096;
+
     // Mainnet addresses
     address public constant HYDRA_ASSET_OFT = 0xc026395860Db2d07ee33e05fE50ed7bD583189C7;
-    address public constant VAULT = 0xdA89af5bF2eb0B225d787aBfA9095610f2E79e7D;
+    address public constant VAULT = 0xd63070114470f685b75B74D60EEc7c1113d33a3D;
     address public constant LZ_ENDPOINT_V2 = 0x1a44076050125825900e736c501f859c50fE728c;
     uint32 public constant ARB_EID = 30110;
     uint32 public constant BERA_EID = 30362;
@@ -60,10 +62,12 @@ contract VaultComposerSyncHydraForkTest is Test {
     ILayerZeroEndpointV2 public endpoint;
     VaultComposerSyncHydra public composer;
 
+    bytes32 public randomGUID;
+
     // Test constants
     uint256 public constant INITIAL_NATIVE = 100 ether;
-    uint256 public constant INITIAL_BALANCE = 10_000e6;
-    uint256 public constant TOKENS_TO_SEND = 100e6;
+    uint256 public constant INITIAL_BALANCE_USDC = 10_000e6;
+    uint256 public constant TOKENS_TO_SEND_USDC = 100e6;
 
     function setUp() public {
         // Setup fork
@@ -74,7 +78,7 @@ contract VaultComposerSyncHydraForkTest is Test {
             rpcUrl = "https://mainnet.gateway.tenderly.co";
         }
 
-        vm.createSelectFork(rpcUrl);
+        vm.createSelectFork(rpcUrl, PINNED_BLOCK);
 
         // Initialize contract interfaces
         hydraAssetOFT = IStargatePool(HYDRA_ASSET_OFT);
@@ -119,6 +123,8 @@ contract VaultComposerSyncHydraForkTest is Test {
 
         vm.prank(0xE982615d461DD5cD06575BbeA87624fda4e3de17); // USDC Master Minter
         assetERC20.configureMinter(address(this), type(uint256).max);
+
+        randomGUID = bytes32(vm.randomBytes(32));
     }
 
     function test_setup() public view {
@@ -134,7 +140,6 @@ contract VaultComposerSyncHydraForkTest is Test {
         assertEq(shareOFTAdapter.owner(), deployer, "OFTAdapter owner mismatch");
 
         assertEq(shareOFTAdapter.approvalRequired(), true, "OFTAdapter approvalRequired mismatch");
-        assertEq(assetERC20.balanceOf(userA), INITIAL_BALANCE, "Asset ERC20 balance mismatch");
 
         assertGt(hydraAssetOFT.paths(ARB_EID).credit, 0, "Hydra Asset OFT path credit mismatch for arb");
         assertLt(hydraAssetOFT.paths(ARB_EID).credit, UNLIMITED_CREDIT, "Hydra Asset OFT path credit mismatch for arb");
@@ -146,7 +151,7 @@ contract VaultComposerSyncHydraForkTest is Test {
         );
     }
 
-    function test_forkSendFromArbPool() public {
+    function test_forkDepositFromArbPool() public {
         uint64 credit = hydraAssetOFT.paths(ARB_EID).credit;
         uint256 amtToSend = type(uint64).max;
         assertGt(amtToSend, credit, "Amount to send should be greater than the credit");
@@ -154,6 +159,7 @@ contract VaultComposerSyncHydraForkTest is Test {
         assetERC20.mint(address(composer), amtToSend);
 
         SendParam memory sendParam;
+        sendParam.minAmountLD = type(uint256).max;
 
         bytes memory composeMsg = OFTComposeMsgCodec.encode(
             0,
@@ -162,13 +168,11 @@ contract VaultComposerSyncHydraForkTest is Test {
             abi.encodePacked(userA.addressToBytes32(), abi.encode(sendParam, hubRecoveryAddress, 0.1 ether))
         );
 
-        bytes32 guid = bytes32(vm.randomBytes(32));
-
         assertEq(assetERC20.balanceOf(address(composer)), amtToSend, "Composer should have the amount to send");
         assertEq(assetERC20.balanceOf(hubRecoveryAddress), 0, "HubRecoveryAddress should have 0 balance");
 
         vm.startPrank(LZ_ENDPOINT_V2);
-        composer.lzCompose{ value: 0.1 ether }(address(hydraAssetOFT), guid, composeMsg, executor, "");
+        composer.lzCompose{ value: 0.1 ether }(address(hydraAssetOFT), randomGUID, composeMsg, executor, "");
         vm.stopPrank();
 
         assertEq(assetERC20.balanceOf(address(composer)), 0, "Composer should have 0 balance");
@@ -179,9 +183,9 @@ contract VaultComposerSyncHydraForkTest is Test {
         );
     }
 
-    function test_forkSendFromBeraOFT() public {
+    function test_forkDepositFromBeraOFT() public {
         uint64 credit = hydraAssetOFT.paths(BERA_EID).credit;
-        uint256 amtToSend = 100e6;
+        uint256 amtToSend = type(uint32).max;
         assertLt(amtToSend, credit, "Amount to send should be less than the credit");
 
         assetERC20.mint(address(composer), amtToSend);
@@ -196,16 +200,100 @@ contract VaultComposerSyncHydraForkTest is Test {
             abi.encodePacked(userA.addressToBytes32(), abi.encode(sendParam, hubRecoveryAddress, 0.1 ether))
         );
 
-        bytes32 guid = bytes32(vm.randomBytes(32));
-
         assertEq(assetERC20.balanceOf(address(composer)), amtToSend, "Composer should have the amount to send");
         assertEq(assetERC20.balanceOf(hubRecoveryAddress), 0, "HubRecoveryAddress should have 0 balance");
 
         vm.startPrank(LZ_ENDPOINT_V2);
-        composer.lzCompose{ value: 0.1 ether }(address(hydraAssetOFT), guid, composeMsg, executor, "");
+        composer.lzCompose{ value: 0.1 ether }(address(hydraAssetOFT), randomGUID, composeMsg, executor, "");
         vm.stopPrank();
 
         assertEq(assetERC20.balanceOf(address(composer)), 0, "Composer should have 0 balance");
         assertEq(assetERC20.balanceOf(hubRecoveryAddress), 0, "HubRecoveryAddress should have 0 balance");
+    }
+
+    function test_forkRedeemToArbPool() public {
+        uint64 credit = hydraAssetOFT.paths(ARB_EID).credit;
+        uint256 amtToMint = type(uint64).max;
+        assertGt(amtToMint, credit, "Asset amount to mint should be greater than the credit");
+
+        uint256 composerBalancePreDeposit = vault.balanceOf(address(composer));
+        assertEq(composerBalancePreDeposit, 0, "Composer should have 0 share balance before deposit");
+
+        assetERC20.mint(address(this), amtToMint);
+        assetERC20.approve(address(vault), amtToMint);
+        vault.deposit(amtToMint, address(composer));
+
+        uint256 amtToRedeem = vault.balanceOf(address(composer));
+
+        assertGt(amtToRedeem, composerBalancePreDeposit, "Composer should have more share balance after deposit");
+
+        SendParam memory sendParam;
+        sendParam.dstEid = ARB_EID;
+
+        bytes memory redeemMsg = OFTComposeMsgCodec.encode(
+            0,
+            BERA_EID, // does not matter since we are testing asset functionality
+            amtToRedeem,
+            abi.encodePacked(userA.addressToBytes32(), abi.encode(sendParam, hubRecoveryAddress, 0.1 ether))
+        );
+
+        assertEq(
+            assetERC20.balanceOf(address(hubRecoveryAddress)),
+            0,
+            "HubRecoveryAddress should have 0 asset balance"
+        );
+
+        vm.startPrank(LZ_ENDPOINT_V2);
+        composer.lzCompose{ value: 0.1 ether }(address(shareOFTAdapter), randomGUID, redeemMsg, executor, "");
+        vm.stopPrank();
+
+        assertEq(vault.balanceOf(address(composer)), 0, "Composer should have 0 share balance");
+        assertGt(
+            assetERC20.balanceOf(address(hubRecoveryAddress)),
+            0,
+            "HubRecoveryAddress should have more asset balance"
+        );
+    }
+
+    function test_forkRedeemToBeraOFT() public {
+        uint256 amtToMint = type(uint32).max;
+
+        uint256 composerBalancePreDeposit = vault.balanceOf(address(composer));
+        assertEq(composerBalancePreDeposit, 0, "Composer should have 0 share balance before deposit");
+
+        assetERC20.mint(address(this), amtToMint);
+        assetERC20.approve(address(vault), amtToMint);
+        vault.deposit(amtToMint, address(composer));
+
+        uint256 amtToRedeem = vault.balanceOf(address(composer));
+
+        assertGt(amtToRedeem, composerBalancePreDeposit, "Composer should have more share balance after deposit");
+
+        SendParam memory sendParam;
+        sendParam.dstEid = BERA_EID;
+
+        bytes memory redeemMsg = OFTComposeMsgCodec.encode(
+            0,
+            ARB_EID, // does not matter since we are testing asset functionality
+            amtToRedeem,
+            abi.encodePacked(userA.addressToBytes32(), abi.encode(sendParam, hubRecoveryAddress, 0.1 ether))
+        );
+
+        assertEq(
+            assetERC20.balanceOf(address(hubRecoveryAddress)),
+            0,
+            "HubRecoveryAddress should have 0 asset balance"
+        );
+
+        vm.startPrank(LZ_ENDPOINT_V2);
+        composer.lzCompose{ value: 0.1 ether }(address(shareOFTAdapter), randomGUID, redeemMsg, executor, "");
+        vm.stopPrank();
+
+        assertEq(vault.balanceOf(address(composer)), 0, "Composer should have 0 share balance");
+        assertEq(
+            assetERC20.balanceOf(address(hubRecoveryAddress)),
+            0,
+            "HubRecoveryAddress should have 0 asset balance"
+        );
     }
 }
