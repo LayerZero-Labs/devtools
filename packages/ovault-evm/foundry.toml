@@ -1,12 +1,13 @@
 [profile.default]
 solc = '0.8.22'
-verbosity = 3
+verbosity = 5
 src = "contracts"
 test = "test"
 out = "artifacts"
 cache_path = "cache"
 optimizer = true
 optimizer_runs = 20_000
+evm_version = "cancun"
 
 libs = [
     # We provide a set of useful contract utilities
