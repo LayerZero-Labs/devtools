@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.8.2
+
+### Patch Changes
+
+- 5e15a8d: Add lockfiles to example packages
+
 ## 0.8.1
 
 ### Patch Changes
