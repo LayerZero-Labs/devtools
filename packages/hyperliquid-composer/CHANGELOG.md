@@ -1,5 +1,17 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 1.0.3
+
+### Patch Changes
+
+- 97f506f: update register-spot command and add in commands to track spotMarket gas and current deployment for a token
+
+## 1.0.2
+
+### Patch Changes
+
+- 90417ab: adding in freeze and quote asset during hip-1 deployment
+
 ## 1.0.1
 
 ### Patch Changes

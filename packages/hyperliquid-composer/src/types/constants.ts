@@ -31,6 +31,11 @@ export const USDC_TOKEN_ID = {
     TESTNET: 0,
 }
 
+export const USDT0_TOKEN_ID = {
+    MAINNET: 268,
+    TESTNET: 1204,
+}
+
 export function toAssetBridgeAddress(tokenIndex: number): string {
     const addressLength = 42
     const addressPrefix = '0x2'

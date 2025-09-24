@@ -1,6 +1,20 @@
+// === Setup & Environment ===
 export * from './set-block'
-export * from './register-token'
+
+// === Core Spot Management ===
 export * from './core-spot-deployment'
+
+// === HIP-1 Deployment Workflow ===
+// Note: HIP-1 deployment functions are in spot-deploy.ts
 export * from './spot-deploy'
-export * from './type-conversion'
+
+// === EVM-HyperCore Linking ===
+export * from './register-token'
+
+// === Info & Queries ===
 export * from './account-state'
+export * from './list-spot-pairs'
+export * from './spot-auction-status'
+
+// === Utilities ===
+export * from './type-conversion'

@@ -114,6 +114,17 @@ teardown() {
     refute_output --partial "No deployment found for: EndpointV2"
 }
 
+@test "should work with pnpm & lockfile & oapp example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp"
+
+    npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm_lockfile
+    cd "$DESTINATION"
+    pnpm compile
+    pnpm test
+    pnpm lint:fix
+    pnpm lint
+}
+
 @test "should work with pnpm & oapp example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp"
 

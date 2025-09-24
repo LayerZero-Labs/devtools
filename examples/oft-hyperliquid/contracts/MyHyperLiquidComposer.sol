@@ -5,12 +5,12 @@ import { HyperLiquidComposer } from "@layerzerolabs/hyperliquid-composer/contrac
 
 /// @dev This contract is a composer that allows transfers of ERC20 and HYPE tokens to a target address on hypercore.
 ///
-/// @dev This contract does NOT refund dust to the receiver because we do not expect any due to truncation of sharedDecimals.
+/// @dev This contract does NOT refund dust because we do not expect any due to truncation of sharedDecimals.
 ///      In the off-chance that you have dust you would have to implement dust refunds to the receiver in:
 ///      `_transferERC20ToHyperCore` and `_transferNativeToHyperCore`
 ///
-/// @dev Disclaimer: If your token's evm total supply exceeds your asset bridge's balance when scaled to EVM, it is possible
-///      that the composer will not be able to send the tokens to the receiver address on hypercore due to bridge consumption.
+/// @dev Disclaimer: If your token's evm total supply exceeds your asset bridge's balance when scaled to EVM,
+///      it is possible that the composer will not be able to send the tokens to the receiver on hypercore.
 ///      Tokens would instead be returned to the sender address on HyperEVM. Front-end handling is recommended.
 contract MyHyperLiquidComposer is HyperLiquidComposer {
     /// @notice Constructor for the HyperLiquidComposer

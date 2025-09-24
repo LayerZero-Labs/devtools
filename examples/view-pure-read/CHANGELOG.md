@@ -1,5 +1,11 @@
 # @layerzerolabs/view-pure-read-example
 
+## 0.0.4
+
+### Patch Changes
+
+- 5e15a8d: Add lockfiles to example packages
+
 ## 0.0.3
 
 ### Patch Changes

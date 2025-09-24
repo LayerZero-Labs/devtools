@@ -1,9 +1,9 @@
 import type { Config, PackageManager } from '@/types'
 import { createModuleLogger } from '@layerzerolabs/io-devtools'
-import { spawn } from 'child_process'
+import { spawn, spawnSync } from 'child_process'
 import which from 'which'
 
-export const installDependencies = (config: Config) =>
+const runCommand = (command: string, args: string[], cwd: string, packageManager: PackageManager) =>
     new Promise<void>((resolve, reject) => {
         const logger = createModuleLogger('installation')
 
@@ -20,8 +20,8 @@ export const installDependencies = (config: Config) =>
         /**
          * Spawn the installation process.
          */
-        const child = spawn(config.packageManager.executable, config.packageManager.args, {
-            cwd: config.destination,
+        const child = spawn(command, args, {
+            cwd,
             env: {
                 ...process.env,
                 ADBLOCK: '1',
@@ -50,13 +50,50 @@ export const installDependencies = (config: Config) =>
 
                 // And any other non-zero exit code means an error
                 default:
-                    return reject(new InstallationError(config.packageManager, code, std.join('')))
+                    return reject(new InstallationError(packageManager, code, std.join('')))
             }
         })
     })
 
-export const isPackageManagerAvailable = ({ executable }: PackageManager): boolean =>
-    !!which.sync(executable, { nothrow: true })
+export const installDependencies = async (config: Config) => {
+    if ('args' in config.packageManager) {
+        await runCommand(
+            config.packageManager.executable,
+            config.packageManager.args,
+            config.destination,
+            config.packageManager
+        )
+        return
+    }
+    for (const command of config.packageManager.commands) {
+        const [cmd, ...args] = command.split(' ')
+        if (!cmd) {
+            continue
+        }
+        await runCommand(cmd, args, config.destination, config.packageManager)
+    }
+}
+
+export const getPackageManagerVersion = ({ executable }: PackageManager): string | null => {
+    try {
+        const result = spawnSync(executable, ['--version'], { encoding: 'utf8' })
+        if (result.status === 0 && result.stdout) {
+            return result.stdout.trim()
+        }
+        return null
+    } catch {
+        return null
+    }
+}
+
+export const isPackageManagerAvailable = (packageManager: PackageManager): boolean => {
+    const { executable, versionRegex } = packageManager
+    if (!versionRegex) {
+        return which.sync(executable, { nothrow: true }) !== null
+    }
+    const version = getPackageManagerVersion(packageManager)
+    return !version ? false : versionRegex.test(version)
+}
 
 export class InstallationError extends Error {
     constructor(

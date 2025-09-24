@@ -58,6 +58,16 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      # Temporary skip until we have a better solution for lockfile verification
+      # Skip lockfile verification for layerzero-bot PRs because:
+      # 1. The bot updates package.json versions (e.g. @layerzerolabs/devtools ^0.1.0 -> ^0.2.0)
+      # 2. This makes existing lockfiles stale since they were generated against old package.json
+      # 3. verify-lockfiles.mjs uses --frozen-lockfile which fails when package.json/lockfile mismatch
+      # 4. The auto-approve workflow already validates bot PRs only contain allowed file changes
+      # - name: Verify lockfiles
+      #   if: github.actor != 'layerzero-bot'
+      #   run: pnpm lockfiles:verify
+
       # We'll run the build in series to avoid race conditions
       # when compiling hardhat projects in monorepo setups
       - name: Build
