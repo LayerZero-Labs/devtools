@@ -26,6 +26,8 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
     /// @dev Hydra OFTs have unlimited credit
     uint64 public constant UNLIMITED_CREDIT = type(uint64).max;
 
+    address public immutable RECOVERY_ADDRESS;
+
     /**
      * @notice Initializes the VaultComposerSyncHydra contract with vault and OFT token addresses
      * @param _vault The address of the ERC4626 vault contract
@@ -37,7 +39,61 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
      * - Asset token must match the vault's underlying asset
      * - Share OFT must be an adapter (approvalRequired() returns true)
      */
-    constructor(address _vault, address _assetOFT, address _shareOFT) VaultComposerSync(_vault, _assetOFT, _shareOFT) {}
+    constructor(
+        address _vault,
+        address _assetOFT,
+        address _shareOFT,
+        address _recoveryAddress
+    ) VaultComposerSync(_vault, _assetOFT, _shareOFT) {
+        if (_recoveryAddress == address(0)) revert InvalidRecoveryAddress();
+        RECOVERY_ADDRESS = _recoveryAddress;
+    }
+
+    /**
+     * @notice Handles LayerZero compose operations for vault transactions with automatic refund functionality
+     * @dev This composer is designed to handle refunds to an EOA address and not a contract
+     * @dev Any revert in handleCompose() causes a refund back to the src EXCEPT for InsufficientMsgValue
+     * @param _composeSender The OFT contract address used for refunds, must be either ASSET_OFT or SHARE_OFT
+     * @param _guid LayerZero's unique tx id (created on the source tx)
+     * @param _message Decomposable bytes object into [composeHeader][composeMessage]
+     */
+    function lzCompose(
+        address _composeSender, // The OFT used on refund, also the vaultIn token.
+        bytes32 _guid,
+        bytes calldata _message, // expected to contain a composeMessage = abi.encode(SendParam hopSendParam,uint256 minMsgValue)
+        address /*_executor*/,
+        bytes calldata /*_extraData*/
+    ) external payable virtual override {
+        if (msg.sender != ENDPOINT) revert OnlyEndpoint(msg.sender);
+        if (_composeSender != ASSET_OFT && _composeSender != SHARE_OFT) revert OnlyValidComposeCaller(_composeSender);
+
+        bytes32 composeFrom = _message.composeFrom();
+        uint256 amount = _message.amountLD();
+        bytes memory composeMsg = _message.composeMsg();
+
+        /// @dev try...catch to handle the compose operation. if it fails we refund the user
+        try this.handleCompose{ value: msg.value }(_composeSender, composeFrom, composeMsg, amount) {
+            emit Sent(_guid);
+        } catch (bytes memory _err) {
+            /// @dev A revert where the msg.value passed is lower than the min expected msg.value is handled separately
+            /// This is because it is possible to re-trigger from the endpoint the compose operation with the right msg.value
+            if (bytes4(_err) == InsufficientMsgValue.selector) {
+                assembly {
+                    revert(add(32, _err), mload(_err))
+                }
+            }
+
+            /// @dev If the revert message contains the address of the hub recovery address, use it
+            if (bytes4(_err) == OFTSendFailed.selector) {
+                address hubRecoveryAddress = abi.decode(_err, (address));
+                _refund(_composeSender, _message, amount, hubRecoveryAddress);
+            } else {
+                _refund(_composeSender, _message, amount, RECOVERY_ADDRESS);
+            }
+
+            emit Refunded(_guid);
+        }
+    }
 
     /**
      * @notice Handles the compose operation for OFT (Omnichain Fungible Token) transactions
@@ -130,7 +186,7 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
         try IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), _refundAddress) {} catch {
             /// @dev For Pool destinations: transfer directly to user on failure (Bridge+Swap pattern)
             /// @dev For OFT destinations or Share tokens: revert to allow LayerZero retry mechanism
-            if (_oft == SHARE_OFT || _isOFTPath(_sendParam.dstEid)) revert OFTSendFailed();
+            if (_oft == SHARE_OFT || _isOFTPath(_sendParam.dstEid)) revert OFTSendFailed(_refundAddress);
 
             /// @dev Transfer the asset to the hub recovery address
             IERC20(ASSET_ERC20).safeTransfer(_refundAddress, _sendParam.amountLD);

@@ -5,10 +5,13 @@ import { IStargate } from "@stargatefinance/stg-evm-v2/src/interfaces/IStargate.
 import { Path } from "@stargatefinance/stg-evm-v2/src/libs/Path.sol";
 
 interface IVaultComposerSyncHydra {
-    error OFTSendFailed();
+    error InvalidRecoveryAddress();
+    error OFTSendFailed(address hubRecoveryAddress);
     error NativeTransferFailed(uint256 amount);
 
     function UNLIMITED_CREDIT() external view returns (uint64);
+
+    function RECOVERY_ADDRESS() external view returns (address);
 }
 
 interface IStargateWithPath is IStargate {
