@@ -5,9 +5,9 @@ import { getCoreSpotDeployment, getHyperEVMOAppDeployment, writeUpdatedCoreSpotD
 import { getHyperliquidWallet } from '@/signer'
 import { setRequestEvmContract, setFinalizeEvmContract } from '@/operations'
 import { LOGGER_MODULES } from '@/types/cli-constants'
+import { RequestEvmContractArgs, FinalizeEvmContractArgs } from '@/types'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function requestEvmContract(args: any): Promise<void> {
+export async function requestEvmContract(args: RequestEvmContractArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.REGISTER_TOKEN, args.logLevel)
     logger.verbose(JSON.stringify(args, null, 2))
@@ -25,7 +25,7 @@ export async function requestEvmContract(args: any): Promise<void> {
 
     let token_address: string
     try {
-        const { deployment } = await getHyperEVMOAppDeployment(oappConfig, network, logger)
+        const { deployment } = await getHyperEVMOAppDeployment(oappConfig!, network, logger)
 
         if (!deployment) {
             logger.error(`Deployment file not found for ${network}`)
@@ -68,8 +68,7 @@ export async function requestEvmContract(args: any): Promise<void> {
     await setRequestEvmContract(wallet, isTestnet, token_address, txData.weiDiff, hyperAssetIndexInt, args.logLevel)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function finalizeEvmContract(args: any): Promise<void> {
+export async function finalizeEvmContract(args: FinalizeEvmContractArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.REGISTER_TOKEN, args.logLevel)
     logger.verbose(JSON.stringify(args, null, 2))
@@ -89,7 +88,7 @@ export async function finalizeEvmContract(args: any): Promise<void> {
     let token_address: string
 
     try {
-        const { deployment } = await getHyperEVMOAppDeployment(oappConfig, network, logger)
+        const { deployment } = await getHyperEVMOAppDeployment(oappConfig!, network, logger)
 
         if (!deployment) {
             logger.error(`Deployment file not found for ${network}`)
