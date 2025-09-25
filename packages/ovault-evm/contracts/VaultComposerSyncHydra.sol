@@ -108,7 +108,7 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
     function handleCompose(
         address _oftIn,
         bytes32 _composeFrom,
-        bytes memory _composeMsg,
+        bytes calldata _composeMsg,
         uint256 _amount
     ) external payable override {
         /// @dev Can only be called by self
@@ -117,10 +117,7 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
         /// @dev SendParam: defines how the composer will handle the user's funds
         /// @dev hubRecoveryAddress: EVM address to receive tokens on Pool send failures
         /// @dev minMsgValue: minimum msg.value required to prevent endpoint retry
-        (SendParam memory sendParam, address hubRecoveryAddress, uint256 minMsgValue) = abi.decode(
-            _composeMsg,
-            (SendParam, address, uint256)
-        );
+        (SendParam memory sendParam, address hubRecoveryAddress, uint256 minMsgValue) = decodeComposeMsg(_composeMsg);
         if (msg.value < minMsgValue) revert InsufficientMsgValue(minMsgValue, msg.value);
 
         /// @dev Always trigger Taxi mode
@@ -190,5 +187,11 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
      */
     function _isOFTPath(uint32 _dstEid) internal view returns (bool) {
         return IStargateWithPath(ASSET_OFT).paths(_dstEid).credit == UNLIMITED_CREDIT;
+    }
+
+    function decodeComposeMsg(
+        bytes calldata _composeMsg
+    ) public pure returns (SendParam memory sendParam, address hubRecoveryAddress, uint256 minMsgValue) {
+        (sendParam, hubRecoveryAddress, minMsgValue) = abi.decode(_composeMsg, (SendParam, address, uint256));
     }
 }
