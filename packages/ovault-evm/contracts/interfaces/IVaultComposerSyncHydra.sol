@@ -6,7 +6,7 @@ import { Path } from "@stargatefinance/stg-evm-v2/src/libs/Path.sol";
 
 interface IVaultComposerSyncHydra {
     error InvalidRecoveryAddress();
-    error OFTSendFailed(address hubRecoveryAddress);
+    error TargetNotStargatePool();
     error NativeTransferFailed(uint256 amount);
 
     function UNLIMITED_CREDIT() external view returns (uint64);
