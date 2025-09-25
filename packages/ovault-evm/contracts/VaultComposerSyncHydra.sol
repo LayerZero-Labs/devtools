@@ -75,22 +75,21 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
         try this.handleCompose{ value: msg.value }(_composeSender, composeFrom, composeMsg, amount) {
             emit Sent(_guid);
         } catch (bytes memory _err) {
-            /// @dev A revert where the msg.value passed is lower than the min expected msg.value is handled separately
+            /// @dev A revert where the msg.value passed is lower than the min expected msg.value or OFTSendFailed is handled separately
             /// This is because it is possible to re-trigger from the endpoint the compose operation with the right msg.value
-            if (bytes4(_err) == InsufficientMsgValue.selector) {
+            bytes4 errSelector = bytes4(_err);
+            if (errSelector == RemoteNotStargatePool.selector || errSelector == InsufficientMsgValue.selector) {
                 assembly {
                     revert(add(32, _err), mload(_err))
                 }
             }
 
-            /// @dev If the revert message contains the address of the hub recovery address, use it
-            if (bytes4(_err) == OFTSendFailed.selector) {
-                address hubRecoveryAddress = abi.decode(_err, (address));
-                _refund(_composeSender, _message, amount, hubRecoveryAddress);
-            } else {
-                _refund(_composeSender, _message, amount, RECOVERY_ADDRESS);
-            }
+            address recoverTo = RECOVERY_ADDRESS;
+            try this.decodeComposeMsg(composeMsg) returns (SendParam memory, address hubRecoveryAddress, uint256) {
+                recoverTo = hubRecoveryAddress;
+            } catch {}
 
+            _refund(_composeSender, _message, amount, recoverTo);
             emit Refunded(_guid);
         }
     }
