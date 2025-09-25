@@ -119,9 +119,6 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
         (SendParam memory sendParam, address hubRecoveryAddress, uint256 minMsgValue) = decodeComposeMsg(_composeMsg);
         if (msg.value < minMsgValue) revert InsufficientMsgValue(minMsgValue, msg.value);
 
-        /// @dev Always trigger Taxi mode
-        sendParam.oftCmd = hex"";
-
         if (_oftIn == ASSET_OFT) {
             _depositAndSend(_composeFrom, _amount, sendParam, hubRecoveryAddress);
         } else {
@@ -137,6 +134,12 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
      * @param _refundAddress Address to receive tokens and native on Pool failure
      */
     function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress) internal override {
+        if (_oft == ASSET_OFT && !_isOFTPath(_sendParam.dstEid)) {
+            /// @dev Safe because this is the only function in VaultComposerSync that calls oft.send()
+            /// @dev Always trigger Taxi mode for StargatePool
+            _sendParam.oftCmd = hex"";
+        }
+
         try IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), _refundAddress) {} catch {
             /// @dev For Pool destinations: transfer directly to user on failure (Bridge+Swap pattern)
             /// @dev For OFT destinations or Share tokens: revert to allow LayerZero retry mechanism
