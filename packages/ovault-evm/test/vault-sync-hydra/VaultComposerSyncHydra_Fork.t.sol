@@ -71,13 +71,7 @@ contract VaultComposerSyncHydraForkTest is Test {
 
     function setUp() public {
         // Setup fork
-        string memory rpcUrl;
-        try vm.envString("RPC_URL_ETHEREUM_MAINNET") returns (string memory envRpcUrl) {
-            rpcUrl = envRpcUrl;
-        } catch {
-            rpcUrl = "https://mainnet.gateway.tenderly.co";
-        }
-
+        string memory rpcUrl = vm.envOr("RPC_URL_ETHEREUM_MAINNET", vm.rpcUrl("ethereum_mainnet"));
         vm.createSelectFork(rpcUrl, PINNED_BLOCK);
 
         // Initialize contract interfaces
