@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.22;
 
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+
 import { SafeERC20, IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { IOFT, SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
@@ -18,7 +20,7 @@ import { VaultComposerSync } from "./VaultComposerSync.sol";
  * @dev Uses hubRecoveryAddress for Pool failure recovery, falling back to tx.origin
  * @dev Compatible with ERC4626 vaults and requires Share OFT to be an adapter
  */
-contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
+contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra, Ownable {
     using OFTComposeMsgCodec for bytes;
     using OFTComposeMsgCodec for bytes32;
     using SafeERC20 for IERC20;
@@ -26,13 +28,12 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
     /// @dev Hydra OFTs have unlimited credit
     uint64 public constant UNLIMITED_CREDIT = type(uint64).max;
 
-    address public immutable RECOVERY_ADDRESS;
-
     /**
      * @notice Initializes the VaultComposerSyncHydra contract with vault and OFT token addresses
      * @param _vault The address of the ERC4626 vault contract
      * @param _assetOFT The address of the asset OFT (Omnichain Fungible Token) contract
      * @param _shareOFT The address of the share OFT contract (must be an adapter)
+     * @param _defaultRecoveryAddress The address to receive tokens on Pool send failures if the compose message cannot be decoded
      *
      * Requirements:
      * - Share token must be the vault itself
@@ -43,11 +44,8 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
         address _vault,
         address _assetOFT,
         address _shareOFT,
-        address _recoveryAddress
-    ) VaultComposerSync(_vault, _assetOFT, _shareOFT) {
-        if (_recoveryAddress == address(0)) revert InvalidRecoveryAddress();
-        RECOVERY_ADDRESS = _recoveryAddress;
-    }
+        address _defaultRecoveryAddress
+    ) VaultComposerSync(_vault, _assetOFT, _shareOFT) Ownable(_defaultRecoveryAddress) {}
 
     /**
      * @notice Handles LayerZero compose operations for vault transactions with automatic refund functionality
@@ -60,7 +58,7 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
     function lzCompose(
         address _composeSender, // The OFT used on refund, also the vaultIn token.
         bytes32 _guid,
-        bytes calldata _message, // expected to contain a composeMessage = abi.encode(SendParam hopSendParam,uint256 minMsgValue)
+        bytes calldata _message,
         address /*_executor*/,
         bytes calldata /*_extraData*/
     ) external payable virtual override {
@@ -77,14 +75,14 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
         } catch (bytes memory _err) {
             /// @dev A revert where the msg.value passed is lower than the min expected msg.value or OFTSendFailed is handled separately
             /// This is because it is possible to re-trigger from the endpoint the compose operation with the right msg.value
-            bytes4 errSelector = bytes4(_err);
-            if (errSelector == RemoteNotStargatePool.selector || errSelector == InsufficientMsgValue.selector) {
+            if (bytes4(_err) == InsufficientMsgValue.selector) {
                 assembly {
                     revert(add(32, _err), mload(_err))
                 }
             }
 
-            address recoverTo = RECOVERY_ADDRESS;
+            /// @dev Try to decode the compose message to get the hubRecoveryAddress else use vault owned recovery address
+            address recoverTo = owner();
             try this.decodeComposeMsg(composeMsg) returns (SendParam memory, address hubRecoveryAddress, uint256) {
                 recoverTo = hubRecoveryAddress;
             } catch {}
@@ -114,15 +112,15 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
         /// @dev SendParam: defines how the composer will handle the user's funds
-        /// @dev hubRecoveryAddress: EVM address to receive tokens on Pool send failures
+        /// @dev usrHubAddr: EVM address to receive tokens on Pool send failures <- specify users
         /// @dev minMsgValue: minimum msg.value required to prevent endpoint retry
-        (SendParam memory sendParam, address hubRecoveryAddress, uint256 minMsgValue) = decodeComposeMsg(_composeMsg);
+        (SendParam memory sendParam, address usrHubAddr, uint256 minMsgValue) = decodeComposeMsg(_composeMsg);
         if (msg.value < minMsgValue) revert InsufficientMsgValue(minMsgValue, msg.value);
 
         if (_oftIn == ASSET_OFT) {
-            _depositAndSend(_composeFrom, _amount, sendParam, hubRecoveryAddress);
+            _depositAndSend(_composeFrom, _amount, sendParam, usrHubAddr);
         } else {
-            _redeemAndSend(_composeFrom, _amount, sendParam, hubRecoveryAddress);
+            _redeemAndSend(_composeFrom, _amount, sendParam, usrHubAddr);
         }
     }
 
@@ -134,17 +132,17 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
      * @param _refundAddress Address to receive tokens and native on Pool failure
      */
     function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress) internal override {
-        if (_oft == ASSET_OFT && !_isOFTPath(_sendParam.dstEid)) {
-            /// @dev Safe because this is the only function in VaultComposerSync that calls oft.send()
-            /// @dev Always trigger Taxi mode for StargatePool
-            _sendParam.oftCmd = hex"";
-        }
+        /// @dev Safe because this is the only function in VaultComposerSync that calls oft.send()
+        /// @dev Always trigger Taxi mode for txs to Stargate (assets)
+        if (_oft == ASSET_OFT) _sendParam.oftCmd = hex"";
 
-        try IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), _refundAddress) {} catch {
+        /// @dev Refund to tx.origin to maintain the same behavior as the parent contract
+        try IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), tx.origin) {} catch {
             /// @dev For Pool destinations: transfer directly to user on failure (Bridge+Swap pattern)
             /// @dev For OFT destinations or Share tokens: revert to allow LayerZero retry mechanism
             if (_oft == SHARE_OFT || _isOFTPath(_sendParam.dstEid)) revert RemoteNotStargatePool();
 
+            /// @dev From here it is pool
             /// @dev Transfer the asset to the hub recovery address
             IERC20(ASSET_ERC20).safeTransfer(_refundAddress, _sendParam.amountLD);
 
