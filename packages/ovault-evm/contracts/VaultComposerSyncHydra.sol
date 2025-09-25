@@ -134,22 +134,30 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
     }
 
     /**
-     * @dev Internal function that handles token transfer to the recipient
-     * @dev If the destination eid is the same as the current eid, it transfers the tokens directly to the recipient
-     * @dev If the destination eid is different, it sends a LayerZero cross-chain transaction
+     * @dev Send tokens via OFT with Stargate Hydra-specific error handling
+     * @dev Bridge+Swap pattern for Pool failures, retry mechanism for OFT failures
      * @param _oft The OFT contract address to use for sending
      * @param _sendParam The parameters for the send operation
-     * @param _refundAddress Address to receive excess payment of the LZ fees
+     * @param _refundAddress Address to receive tokens and native on Pool failure
      */
-    function _send(address _oft, SendParam memory _sendParam, address _refundAddress) internal override {
-        if (_sendParam.dstEid == VAULT_EID) {
-            /// @dev Can do this because _oft is validated before this function is called
-            address erc20 = _oft == ASSET_OFT ? ASSET_ERC20 : SHARE_ERC20;
+    function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress) internal override {
+        try IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), _refundAddress) {} catch {
+            /// @dev For Pool destinations: transfer directly to user on failure (Bridge+Swap pattern)
+            /// @dev For OFT destinations or Share tokens: revert to allow LayerZero retry mechanism
+            if (_oft == SHARE_OFT || _isOFTPath(_sendParam.dstEid)) revert TargetNotStargatePool();
 
-            if (msg.value > 0) revert NoMsgValueExpected();
-            IERC20(erc20).safeTransfer(_sendParam.to.bytes32ToAddress(), _sendParam.amountLD);
-        } else {
-            _sendOrFallbackToHub(_oft, _sendParam, _refundAddress);
+            /// @dev Transfer the asset to the hub recovery address
+            IERC20(ASSET_ERC20).safeTransfer(_refundAddress, _sendParam.amountLD);
+
+            if (msg.value == 0) return;
+
+            /// @dev Try sending native to hub recovery, fallback to tx.origin
+            (bool sentToHub, ) = _refundAddress.call{ value: msg.value }("");
+            if (!sentToHub) {
+                (bool sentToOrigin, ) = tx.origin.call{ value: msg.value }("");
+                /// @dev If this fails then the user should call Endpoint.lzCompose() from an address that can receive native
+                if (!sentToOrigin) revert NativeTransferFailed(msg.value);
+            }
         }
     }
 
@@ -172,35 +180,7 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
         refundSendParam.to = OFTComposeMsgCodec.composeFrom(_message);
         refundSendParam.amountLD = _amount;
 
-        _sendOrFallbackToHub(_oft, refundSendParam, _refundAddress);
-    }
-
-    /**
-     * @dev Send tokens via OFT with Stargate Hydra-specific error handling
-     * @dev Bridge+Swap pattern for Pool failures, retry mechanism for OFT failures
-     * @param _oft The OFT contract address to use for sending
-     * @param _sendParam The parameters for the send operation
-     * @param _refundAddress Address to receive tokens and native on Pool failure
-     */
-    function _sendOrFallbackToHub(address _oft, SendParam memory _sendParam, address _refundAddress) internal {
-        try IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), _refundAddress) {} catch {
-            /// @dev For Pool destinations: transfer directly to user on failure (Bridge+Swap pattern)
-            /// @dev For OFT destinations or Share tokens: revert to allow LayerZero retry mechanism
-            if (_oft == SHARE_OFT || _isOFTPath(_sendParam.dstEid)) revert OFTSendFailed(_refundAddress);
-
-            /// @dev Transfer the asset to the hub recovery address
-            IERC20(ASSET_ERC20).safeTransfer(_refundAddress, _sendParam.amountLD);
-
-            if (msg.value == 0) return;
-
-            /// @dev Try sending native to hub recovery, fallback to tx.origin
-            (bool sentToHub, ) = _refundAddress.call{ value: msg.value }("");
-            if (!sentToHub) {
-                (bool sentToOrigin, ) = tx.origin.call{ value: msg.value }("");
-                /// @dev If this fails then the user should call Endpoint.lzCompose() from an address that can receive native
-                if (!sentToOrigin) revert NativeTransferFailed(msg.value);
-            }
-        }
+        _sendRemote(_oft, refundSendParam, _refundAddress);
     }
 
     /**
