@@ -95,7 +95,7 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
     }
 
     /**
-     * @notice Handles the compose operation for OFT (Omnichain Fungible Token) transactions
+     * @notice Handles the compose operation for ShareOFTs and StargateAsset Pool/OFT
      * @dev This function can only be called by the contract itself (self-call restriction)
      *      Decodes the compose message to extract SendParam, hubRecoveryAddress, and minMsgValue
      *      Routes to either deposit or redeem flow based on the input OFT token type
