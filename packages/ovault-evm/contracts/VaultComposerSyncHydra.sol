@@ -141,7 +141,7 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
         try IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), _refundAddress) {} catch {
             /// @dev For Pool destinations: transfer directly to user on failure (Bridge+Swap pattern)
             /// @dev For OFT destinations or Share tokens: revert to allow LayerZero retry mechanism
-            if (_oft == SHARE_OFT || _isOFTPath(_sendParam.dstEid)) revert TargetNotStargatePool();
+            if (_oft == SHARE_OFT || _isOFTPath(_sendParam.dstEid)) revert RemoteNotStargatePool();
 
             /// @dev Transfer the asset to the hub recovery address
             IERC20(ASSET_ERC20).safeTransfer(_refundAddress, _sendParam.amountLD);
