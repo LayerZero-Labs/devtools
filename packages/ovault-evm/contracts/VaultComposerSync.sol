@@ -318,15 +318,36 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      */
     function _send(address _oft, SendParam memory _sendParam, address _refundAddress) internal virtual {
         if (_sendParam.dstEid == VAULT_EID) {
-            /// @dev Can do this because _oft is validated before this function is called
-            address erc20 = _oft == ASSET_OFT ? ASSET_ERC20 : SHARE_ERC20;
-
-            if (msg.value > 0) revert NoMsgValueExpected();
-            IERC20(erc20).safeTransfer(_sendParam.to.bytes32ToAddress(), _sendParam.amountLD);
+            _sendLocal(_oft, _sendParam, _refundAddress);
         } else {
-            // crosschain send
-            IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), _refundAddress);
+            _sendRemote(_oft, _sendParam, _refundAddress);
         }
+    }
+
+    /**
+     * @dev Internal function that handles token transfer to the recipient
+     * @dev If the destination eid is the same as the current eid, it transfers the tokens directly to the recipient
+     * @dev Tokens are transferred directly to the recipient from SendParam.to
+     * @param _oft The OFT contract address to use for sending
+     * @param _sendParam The parameters for the send operation
+     */
+    function _sendLocal(address _oft, SendParam memory _sendParam, address /*_refundAddress*/) internal virtual {
+        if (msg.value > 0) revert NoMsgValueExpected();
+
+        /// @dev Can do this because _oft is validated before this function is called
+        address erc20 = _oft == ASSET_OFT ? ASSET_ERC20 : SHARE_ERC20;
+        IERC20(erc20).safeTransfer(_sendParam.to.bytes32ToAddress(), _sendParam.amountLD);
+    }
+
+    /**
+     * @dev Internal function that handles token transfer to the recipient
+     * @dev If the destination eid is different, it sends a LayerZero cross-chain transaction
+     * @param _oft The OFT contract address to use for sending
+     * @param _sendParam The parameters for the send operation
+     * @param _refundAddress Address to receive excess payment of the LZ fees
+     */
+    function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress) internal virtual {
+        IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), _refundAddress);
     }
 
     /**
@@ -343,7 +364,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         refundSendParam.to = OFTComposeMsgCodec.composeFrom(_message);
         refundSendParam.amountLD = _amount;
 
-        IOFT(_oft).send{ value: msg.value }(refundSendParam, MessagingFee(msg.value, 0), _refundAddress);
+        _sendRemote(_oft, refundSendParam, _refundAddress);
     }
 
     receive() external payable {}
