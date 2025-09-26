@@ -9,6 +9,7 @@ interface IVaultComposerSyncHydra {
     error NativeTransferFailed(uint256 amount);
 
     function UNLIMITED_CREDIT() external view returns (uint64);
+    function DEFAULT_RECOVERY_ADDRESS() external view returns (address);
 }
 
 interface IStargateWithPath is IStargate {

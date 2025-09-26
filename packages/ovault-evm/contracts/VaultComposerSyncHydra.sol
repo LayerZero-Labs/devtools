@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.22;
 
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-
 import { SafeERC20, IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { IOFT, SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
@@ -20,13 +18,14 @@ import { VaultComposerSync } from "./VaultComposerSync.sol";
  * @dev Uses hubRecoveryAddress for Pool failure recovery, falling back to tx.origin
  * @dev Compatible with ERC4626 vaults and requires Share OFT to be an adapter
  */
-contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra, Ownable {
+contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
     using OFTComposeMsgCodec for bytes;
     using OFTComposeMsgCodec for bytes32;
     using SafeERC20 for IERC20;
 
     /// @dev Hydra OFTs have unlimited credit
     uint64 public constant UNLIMITED_CREDIT = type(uint64).max;
+    address public immutable DEFAULT_RECOVERY_ADDRESS;
 
     /**
      * @notice Initializes the VaultComposerSyncHydra contract with vault and OFT token addresses
@@ -45,7 +44,9 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra, O
         address _assetOFT,
         address _shareOFT,
         address _defaultRecoveryAddress
-    ) VaultComposerSync(_vault, _assetOFT, _shareOFT) Ownable(_defaultRecoveryAddress) {}
+    ) VaultComposerSync(_vault, _assetOFT, _shareOFT) {
+        DEFAULT_RECOVERY_ADDRESS = _defaultRecoveryAddress;
+    }
 
     /**
      * @notice Handles LayerZero compose operations for vault transactions with automatic refund functionality
@@ -82,7 +83,7 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra, O
             }
 
             /// @dev Try to decode the compose message to get the hubRecoveryAddress else use vault owned recovery address
-            address recoverTo = owner();
+            address recoverTo = DEFAULT_RECOVERY_ADDRESS;
             try this.decodeComposeMsg(composeMsg) returns (SendParam memory, address hubRecoveryAddress, uint256) {
                 recoverTo = hubRecoveryAddress;
             } catch {}
