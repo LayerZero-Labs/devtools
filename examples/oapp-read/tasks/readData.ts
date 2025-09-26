@@ -43,11 +43,8 @@ function getLayerZeroScanLink(txHash: string, isTestnet = false): string {
 async function getBlockExplorerLink(networkName: string, txHash: string): Promise<string | undefined> {
     // This is a simplified version - in production you'd fetch from the metadata API
     const explorers: Record<string, string> = {
-        sepolia: 'https://sepolia.etherscan.io',
-        'optimism-sepolia': 'https://sepolia-optimism.etherscan.io',
+        'base-sepolia': 'https://sepolia.basescan.org',
         'arbitrum-sepolia': 'https://sepolia.arbiscan.io',
-        'avalanche-testnet': 'https://testnet.snowtrace.io',
-        'polygon-amoy': 'https://amoy.polygonscan.com',
     }
 
     const explorer = explorers[networkName]
