@@ -325,8 +325,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
     }
 
     /**
-     * @dev Internal function that handles token transfer to the recipient
-     * @dev If the destination eid is the same as the current eid, it transfers the tokens directly to the recipient
+     * @dev Internal function that handles token transfer to the recipient on local chains
      * @dev Tokens are transferred directly to the recipient from SendParam.to
      * @param _oft The OFT contract address to use for sending
      * @param _sendParam The parameters for the send operation
@@ -340,8 +339,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
     }
 
     /**
-     * @dev Internal function that handles token transfer to the recipient
-     * @dev If the destination eid is different, it sends a LayerZero cross-chain transaction
+     * @dev Internal function that handles token transfer to the recipient on remote chains
      * @param _oft The OFT contract address to use for sending
      * @param _sendParam The parameters for the send operation
      * @param _refundAddress Address to receive excess payment of the LZ fees
