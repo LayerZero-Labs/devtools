@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-upgradeable-example
 
+## 0.3.5
+
+### Patch Changes
+
+- c44e657: update evm networks used
+
 ## 0.3.4
 
 ### Patch Changes

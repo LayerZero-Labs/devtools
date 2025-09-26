@@ -1,5 +1,11 @@
 # @layerzerolabs/native-oft-adapter-example
 
+## 0.2.10
+
+### Patch Changes
+
+- c44e657: update evm networks used
+
 ## 0.2.9
 
 ### Patch Changes

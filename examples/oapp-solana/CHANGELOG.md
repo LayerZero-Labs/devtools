@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-solana-example
 
+## 0.1.3
+
+### Patch Changes
+
+- c44e657: update evm networks used
+
 ## 0.1.2
 
 ### Patch Changes
