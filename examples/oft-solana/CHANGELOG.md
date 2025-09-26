@@ -1,5 +1,12 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.12.2
+
+### Patch Changes
+
+- d48633e: fix oft-solana's debug script when peers are checked
+- c44e657: update evm network used
+
 ## 0.12.1
 
 ### Patch Changes

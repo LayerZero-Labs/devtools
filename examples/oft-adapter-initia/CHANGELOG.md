@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-adapter-initia-example
 
+## 0.1.2
+
+### Patch Changes
+
+- c44e657: update evm networks used
+
 ## 0.1.1
 
 ### Patch Changes
