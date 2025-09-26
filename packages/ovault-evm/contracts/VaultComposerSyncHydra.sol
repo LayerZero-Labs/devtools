@@ -112,7 +112,7 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra, O
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
         /// @dev SendParam: defines how the composer will handle the user's funds
-        /// @dev usrHubAddr: EVM address to receive tokens on Pool send failures <- specify users
+        /// @dev usrHubAddr: User-input EVM address to receive tokens on Pool send failures
         /// @dev minMsgValue: minimum msg.value required to prevent endpoint retry
         (SendParam memory sendParam, address usrHubAddr, uint256 minMsgValue) = decodeComposeMsg(_composeMsg);
         if (msg.value < minMsgValue) revert InsufficientMsgValue(minMsgValue, msg.value);
