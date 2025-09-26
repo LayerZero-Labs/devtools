@@ -89,7 +89,7 @@ Throughout this walkthrough, helper tasks will be used. For the full list of ava
     PRIVATE_KEY="0xabc...def"
     ```
 
-- Fund this deployer address/account with the native tokens of the chains you want to deploy to. This example by default will deploy to the following chains' testnets: **Optimism** and **Arbitrum**.
+- Fund this deployer address/account with the native tokens of the chains you want to deploy to. This example by default will deploy to the following chains' testnets: **Base** and **Arbitrum**.
 
 ## Build
 
@@ -166,14 +166,14 @@ You can now use custom DVNs and Executors with the standard `lz:oapp:wire` comma
 ```typescript
 // In layerzero.simple-worker.config.ts, SECTION 4: CUSTOM EXECUTOR AND DVN ADDRESSES
 const customExecutorsByEid: Record<number, { address: string }> = {
-  [EndpointId.OPTIMISM_V2_TESTNET]: { address: "0x..." }, // From deployments/optimism-testnet/SimpleExecutorMock.json
-  [EndpointId.ARBITRUM_V2_TESTNET]: { address: "0x..." }, // From deployments/arbitrum-testnet/SimpleExecutorMock.json
+  [EndpointId.BASESEP_V2_TESTNET]: { address: "0x..." }, // From deployments/base-sepolia/SimpleExecutorMock.json
+  [EndpointId.ARBSEP_V2_TESTNET]: { address: "0x..." }, // From deployments/arbitrum-sepolia/SimpleExecutorMock.json
   // Add for each chain where you deployed SimpleExecutorMock
 };
 
 const customDVNsByEid: Record<number, { address: string }> = {
-  [EndpointId.OPTIMISM_V2_TESTNET]: { address: "0x..." }, // From deployments/optimism-testnet/SimpleDVNMock.json
-  [EndpointId.ARBITRUM_V2_TESTNET]: { address: "0x..." }, // From deployments/arbitrum-testnet/SimpleDVNMock.json
+  [EndpointId.BASESEP_V2_TESTNET]: { address: "0x..." }, // From deployments/base-sepolia/SimpleDVNMock.json
+  [EndpointId.ARBSEP_V2_TESTNET]: { address: "0x..." }, // From deployments/arbitrum-sepolia/SimpleDVNMock.json
   // Add for each chain where you deployed SimpleDVNMock
 };
 ```
@@ -373,22 +373,22 @@ To use custom executors and DVNs:
 
 With your OFTs wired, you can now send them cross chain.
 
-First, via the mock contract, let's mint on **Optimism Sepolia**:
+First, via the mock contract, let's mint on **Base Sepolia**:
 
 ```
-cast send <OFT_ADDRESS> "mint(address,uint256)" <RECIPIENT_ADDRESS> 1000000000000000000000 --private-key <PRIVATE_KEY> --rpc-url <OPTIMISM_SEPOLIA_RPC_URL>
+cast send <OFT_ADDRESS> "mint(address,uint256)" <RECIPIENT_ADDRESS> 1000000000000000000000 --private-key <PRIVATE_KEY> --rpc-url <BASE_SEPOLIA_RPC_URL>
 
 ```
 
-> You can get the address of your OFT on Optimism Sepolia from the file at `./deployments/optimism-testnet/MyOFTMock.json`
+> You can get the address of your OFT on Base Sepolia from the file at `./deployments/base-sepolia/MyOFTMock.json`
 
-Send 1 OFT from **Optimism Sepolia** to **Arbitrum Sepolia**:
+Send 1 OFT from **Base Sepolia** to **Arbitrum Sepolia**:
 
 ```bash
-pnpm hardhat lz:oft:send --src-eid 40232 --dst-eid 40231 --amount 1 --to <EVM_ADDRESS>
+pnpm hardhat lz:oft:send --src-eid 40245 --dst-eid 40231 --amount 1 --to <EVM_ADDRESS>
 ```
 
-> :information_source: `40232` and `40106` are the Endpoint IDs of Optimism Sepolia and Arbitrum Sepolia respectively. View the list of chains and their Endpoint IDs on the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.
+> :information_source: `40245` and `40231` are the Endpoint IDs of Base Sepolia and Arbitrum Sepolia respectively. View the list of chains and their Endpoint IDs on the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.
 
 Upon a successful send, the script will provide you with the link to the message on LayerZero Scan.
 
