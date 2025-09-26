@@ -400,9 +400,15 @@ importers:
       '@babel/core':
         specifier: ^7.23.9
         version: 7.23.9
+      '@layerzerolabs/devtools-evm-hardhat':
+        specifier: ^4.0.0
+        version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
+      '@layerzerolabs/io-devtools':
+        specifier: ~0.3.0
+        version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.75
         version: 3.0.75
