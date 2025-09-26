@@ -9,7 +9,7 @@ import { IVaultComposerSyncHydra, IStargateWithPath } from "./interfaces/IVaultC
 import { VaultComposerSync } from "./VaultComposerSync.sol";
 
 /**
- * @title VaultComposerSyncHydra - Synchronous Vault Composer with Stargate Hydra
+ * @title VaultComposerSyncHydra - Synchronous Vault Composer with Stargate Pools/Hydra as
  * @author LayerZero Labs (@shankars99)
  * @notice Enables vault operations across chains with Bridge+Swap fallback for Stargate Pool failures
  * @dev Extends VaultComposerSync with Hydra-specific error handling:
@@ -126,7 +126,7 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
     }
 
     /**
-     * @dev Send tokens via OFT with Stargate Hydra-specific error handling
+     * @dev Send tokens via OFT with Stargate Pools-specific error handling
      * @dev Bridge+Swap pattern for Pool failures, retry mechanism for OFT failures
      * @param _oft The OFT contract address to use for sending
      * @param _sendParam The parameters for the send operation
