@@ -12,12 +12,13 @@ name: Check code submission
 
 on:
   pull_request:
+  merge_group:
   workflow_dispatch:
 
 # We want the workflow to stop and yield to a new run if new code is pushed
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name != 'merge_group' }} # Don't cancel in-progress runs for merge_group events. Cancel for other events. Original value was 'true' but was updated to accommodate merge queue usage.
 
 jobs:
   check:
