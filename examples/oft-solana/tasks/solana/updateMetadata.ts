@@ -51,6 +51,10 @@ task('lz:oft:solana:update-metadata', 'Updates the metaplex metadata of the SPL 
                 throw new Error('Only the update authority can update the metadata')
             }
 
+            if (vaultPda && initialMetadata.updateAuthority !== publicKey(vaultPda).toString()) {
+                throw new Error('Provided vaultPda is not the current update authority on this metadata')
+            }
+
             if (initialMetadata.isMutable == false) {
                 throw new Error('Metadata is not mutable')
             }
@@ -59,8 +63,7 @@ task('lz:oft:solana:update-metadata', 'Updates the metaplex metadata of the SPL 
 
             const updateV1Args: UpdateV1InstructionAccounts & UpdateV1InstructionArgs = {
                 mint,
-                // if vaultPda is provided, we don't need to provide the signer as authority, as we only need the txn data as base58
-                authority: vaultPda ? undefined : umiWalletSigner,
+                authority: umiWalletSigner,
                 data: {
                     ...initialMetadata,
                     name: name || initialMetadata.name,
@@ -76,8 +79,8 @@ task('lz:oft:solana:update-metadata', 'Updates the metaplex metadata of the SPL 
                 txBuilder.setFeePayer(umiWalletSigner).useV0()
                 // Include a recent blockhash before building
                 const web3JsTxn = toWeb3JsTransaction(await txBuilder.buildWithLatestBlockhash(umi))
-                const base58 = bs58.encode(web3JsTxn.serialize())
-                console.log('==== Import the following txn data into the Squads UI ====')
+                const base58 = bs58.encode(new Uint8Array(web3JsTxn.message.serialize()))
+                console.log('==== Import the following base58 txn data into the Squads UI ====')
                 console.log(base58)
                 // output txn data as base58
             } else {
