@@ -141,3 +141,10 @@ Any sections that don't appear in the above list should be considered for remova
 1. **Options-first**: Enforced Options implementation and instructions should be included by default (e.g. in `layerzero.config.ts`).
 2. **Two chains only**: Examples should use only 2 chains by default to reduce testnet setup friction; use “Add other chains” section to scale up if needed. For EVM, prefer using the following in the following order: Arbitrum Sepolia (`EndpointId.ARBSEP_V2_TESTNET`), Base Sepolia (`EndpointId.BASESEP_V2_TESTNET`).
   - in `hardhat.config.ts`, the network names should be like `arbitrum-sepolia` and `base-sepolia` (and NOT `arbitrum-testnet` or `base-testnet`)
+3. (In Progress) For Hardhat tasks, above the `task()` line there should be a comment with an example of how to run it. Prefer using only the required params for the example command run.
+- param labels should be like `<EID>`, `<EVM_RECIPIENT>`, `<SOLANA_RECIPIENT>`, `<MINT_ADDRESS>`
+
+
+## Appendix
+
+Note that principle items with the `(In Progress)` prefix are new and not yet applied to all examples, but should be.
