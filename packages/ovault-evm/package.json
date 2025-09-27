@@ -57,6 +57,7 @@
   },
   "devDependencies": {
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.75",
+    "@layerzerolabs/lz-evm-oapp-v2": "^3.0.134",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.75",
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.75",
     "@layerzerolabs/oapp-evm": "^0.3.2",
@@ -65,6 +66,7 @@
     "@layerzerolabs/toolbox-foundry": "^0.1.12",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
+    "@stargatefinance/stg-evm-v2": "^4.0.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.1.0",
     "mocha": "^11.7.1",

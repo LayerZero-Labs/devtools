@@ -57,7 +57,6 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         VAULT = IERC4626(_vault);
 
         ASSET_OFT = _assetOFT;
-        ASSET_ERC20 = IOFT(ASSET_OFT).token();
         SHARE_OFT = _shareOFT;
         SHARE_ERC20 = IOFT(SHARE_OFT).token();
 
@@ -68,23 +67,14 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
             revert ShareTokenNotVault(SHARE_ERC20, address(VAULT));
         }
 
-        if (ASSET_ERC20 != address(VAULT.asset())) {
-            revert AssetTokenNotVaultAsset(ASSET_ERC20, address(VAULT.asset()));
-        }
-
         /// @dev ShareOFT must be an OFT adapter. We can infer this by checking 'approvalRequired()'.
         /// @dev burn() on tokens when a user sends changes totalSupply() which the asset:share ratio depends on.
         if (!IOFT(SHARE_OFT).approvalRequired()) revert ShareOFTNotAdapter(SHARE_OFT);
 
-        /// @dev Approve the vault to spend the asset tokens held by this contract
-        IERC20(ASSET_ERC20).approve(_vault, type(uint256).max);
-        /// @dev Approving the vault for the share erc20 is not required when the vault is the share erc20
-        // IERC20(SHARE_ERC20).approve(_vault, type(uint256).max);
-
         /// @dev Approve the share adapter with the share tokens held by this contract
         IERC20(SHARE_ERC20).approve(_shareOFT, type(uint256).max);
-        /// @dev If the asset OFT is an adapter, approve it as well
-        if (IOFT(_assetOFT).approvalRequired()) IERC20(ASSET_ERC20).approve(_assetOFT, type(uint256).max);
+
+        ASSET_ERC20 = _validateAssetToken(ASSET_OFT, VAULT);
     }
 
     /**
@@ -139,9 +129,9 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
     function handleCompose(
         address _oftIn,
         bytes32 _composeFrom,
-        bytes memory _composeMsg,
+        bytes calldata _composeMsg,
         uint256 _amount
-    ) external payable {
+    ) external payable virtual {
         /// @dev Can only be called by self
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
@@ -316,17 +306,36 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @param _sendParam The parameters for the send operation
      * @param _refundAddress Address to receive excess payment of the LZ fees
      */
-    function _send(address _oft, SendParam memory _sendParam, address _refundAddress) internal {
+    function _send(address _oft, SendParam memory _sendParam, address _refundAddress) internal virtual {
         if (_sendParam.dstEid == VAULT_EID) {
-            /// @dev Can do this because _oft is validated before this function is called
-            address erc20 = _oft == ASSET_OFT ? ASSET_ERC20 : SHARE_ERC20;
-
-            if (msg.value > 0) revert NoMsgValueExpected();
-            IERC20(erc20).safeTransfer(_sendParam.to.bytes32ToAddress(), _sendParam.amountLD);
+            _sendLocal(_oft, _sendParam, _refundAddress);
         } else {
-            // crosschain send
-            IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), _refundAddress);
+            _sendRemote(_oft, _sendParam, _refundAddress);
         }
+    }
+
+    /**
+     * @dev Internal function that handles token transfer to the recipient on local chains
+     * @dev Tokens are transferred directly to the recipient from SendParam.to
+     * @param _oft The OFT contract address to use for sending
+     * @param _sendParam The parameters for the send operation
+     */
+    function _sendLocal(address _oft, SendParam memory _sendParam, address /*_refundAddress*/) internal virtual {
+        if (msg.value > 0) revert NoMsgValueExpected();
+
+        /// @dev Can do this because _oft is validated before this function is called
+        address erc20 = _oft == ASSET_OFT ? ASSET_ERC20 : SHARE_ERC20;
+        IERC20(erc20).safeTransfer(_sendParam.to.bytes32ToAddress(), _sendParam.amountLD);
+    }
+
+    /**
+     * @dev Internal function that handles token transfer to the recipient on remote chains
+     * @param _oft The OFT contract address to use for sending
+     * @param _sendParam The parameters for the send operation
+     * @param _refundAddress Address to receive excess payment of the LZ fees
+     */
+    function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress) internal virtual {
+        IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), _refundAddress);
     }
 
     /**
@@ -343,7 +352,30 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         refundSendParam.to = OFTComposeMsgCodec.composeFrom(_message);
         refundSendParam.amountLD = _amount;
 
-        IOFT(_oft).send{ value: msg.value }(refundSendParam, MessagingFee(msg.value, 0), _refundAddress);
+        _sendRemote(_oft, refundSendParam, _refundAddress);
+    }
+
+    /**
+     * @dev Internal function to validate the asset token compatibility
+     * @dev Validate part of the constructor in an overridable function since the asset token may not be the same as the OFT token
+     * @dev For example, in the case of VaultComposerSyncPoolNative, the asset token is WETH but the OFT token is native
+     * @param _assetOFT The address of the asset OFT
+     * @param _vault The address of the vault
+     */
+    function _validateAssetToken(address _assetOFT, IERC4626 _vault) internal virtual returns (address assetERC20) {
+        assetERC20 = IOFT(_assetOFT).token();
+
+        if (assetERC20 != address(_vault.asset())) {
+            revert AssetTokenNotVaultAsset(ASSET_ERC20, address(_vault.asset()));
+        }
+
+        /// @dev Approve the vault to spend the asset tokens held by this contract
+        IERC20(assetERC20).approve(address(_vault), type(uint256).max);
+        /// @dev Approving the vault for the share erc20 is not required when the vault is the share erc20
+        // IERC20(SHARE_ERC20).approve(_vault, type(uint256).max);
+
+        /// @dev If the asset OFT is an adapter, approve it as well
+        if (IOFT(_assetOFT).approvalRequired()) IERC20(assetERC20).approve(_assetOFT, type(uint256).max);
     }
 
     receive() external payable {}
