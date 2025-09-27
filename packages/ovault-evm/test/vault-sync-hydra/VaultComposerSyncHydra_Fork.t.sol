@@ -23,14 +23,14 @@ import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contract
 import { MockOFTAdapter as OFTAdapter } from "../mocks/MockOFT.sol";
 
 // Contract imports
-import { VaultComposerSyncHydra } from "../../contracts/VaultComposerSyncHydra.sol";
-import { IVaultComposerSyncHydra } from "../../contracts/interfaces/IVaultComposerSyncHydra.sol";
+import { VaultComposerSyncPool } from "../../contracts/VaultComposerSyncPool.sol";
+import { IVaultComposerSyncPool } from "../../contracts/interfaces/IVaultComposerSyncPool.sol";
 
 // Forge imports
 import "forge-std/Test.sol";
 import "forge-std/console.sol";
 
-contract VaultComposerSyncHydraForkTest is Test {
+contract VaultComposerSyncPoolForkTest is Test {
     using OptionsBuilder for bytes;
     using OFTMsgCodec for address;
 
@@ -60,7 +60,7 @@ contract VaultComposerSyncHydraForkTest is Test {
     IERC4626 public vault;
 
     ILayerZeroEndpointV2 public endpoint;
-    VaultComposerSyncHydra public composer;
+    VaultComposerSyncPool public composer;
 
     bytes32 public randomGUID;
 
@@ -89,7 +89,7 @@ contract VaultComposerSyncHydraForkTest is Test {
         );
 
         // Deploy VaultComposerSyncHydra
-        composer = new VaultComposerSyncHydra(
+        composer = new VaultComposerSyncPool(
             address(vault), // VAULT
             address(hydraAssetOFT), // ASSET_OFT (Hydra Asset)
             address(shareOFTAdapter), // SHARE_OFT
@@ -102,7 +102,7 @@ contract VaultComposerSyncHydraForkTest is Test {
         vm.label(VAULT, "Vault");
         vm.label(LZ_ENDPOINT_V2, "LZEndpointV2");
         vm.label(address(shareOFTAdapter), "ShareOFTAdapter");
-        vm.label(address(composer), "VaultComposerSyncHydra");
+        vm.label(address(composer), "VaultComposerSyncPool");
         vm.label(userA, "UserA");
         vm.label(hubRecoveryAddress, "HubRecoveryAddress");
         vm.label(executor, "Executor");

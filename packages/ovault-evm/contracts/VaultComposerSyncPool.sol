@@ -5,22 +5,22 @@ import { SafeERC20, IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/Saf
 import { IOFT, SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
-import { IVaultComposerSyncHydra, IStargateWithPath } from "./interfaces/IVaultComposerSyncHydra.sol";
+import { IVaultComposerSyncPool } from "./interfaces/IVaultComposerSyncPool.sol";
+import { IStargateWithPath } from "./interfaces/IStargateWithPath.sol";
 import { VaultComposerSync } from "./VaultComposerSync.sol";
 
 /**
- * @title VaultComposerSyncHydra - Synchronous Vault Composer with Stargate Pools/Hydra as
+ * @title Synchronous Vault Composer with Stargate Pools/Hydra as Asset and ERC20 as Share (non-native)
  * @author LayerZero Labs (@shankars99)
  * @notice Enables vault operations across chains with Bridge+Swap fallback for Stargate Pool failures
- * @dev Extends VaultComposerSync with Hydra-specific error handling:
+ * @dev Extends VaultComposerSync with Pool-specific error handling:
  *      - Pool destinations: Bridge+Swap pattern on send failures (liquidity/slippage issues)
  *      - OFT destinations: Revert for LayerZero retry mechanism (config/gas issues)
  * @dev Uses hubRecoveryAddress for Pool failure recovery, falling back to tx.origin
  * @dev Compatible with ERC4626 vaults and requires Share OFT to be an adapter
  */
-contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
+contract VaultComposerSyncPool is VaultComposerSync, IVaultComposerSyncPool {
     using OFTComposeMsgCodec for bytes;
-    using OFTComposeMsgCodec for bytes32;
     using SafeERC20 for IERC20;
 
     /// @dev Hydra OFTs have unlimited credit
@@ -28,7 +28,7 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
     address public immutable DEFAULT_RECOVERY_ADDRESS;
 
     /**
-     * @notice Initializes the VaultComposerSyncHydra contract with vault and OFT token addresses
+     * @notice Initializes the VaultComposerSyncPool contract with vault and OFT token addresses
      * @param _vault The address of the ERC4626 vault contract
      * @param _assetOFT The address of the asset OFT (Omnichain Fungible Token) contract
      * @param _shareOFT The address of the share OFT contract (must be an adapter)
@@ -108,7 +108,7 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
         bytes32 _composeFrom,
         bytes calldata _composeMsg,
         uint256 _amount
-    ) external payable override {
+    ) external payable virtual override {
         /// @dev Can only be called by self
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
@@ -132,7 +132,7 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
      * @param _sendParam The parameters for the send operation
      * @param _refundAddress Address to receive tokens and native on Pool failure
      */
-    function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress) internal override {
+    function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress) internal virtual override {
         /// @dev Safe because this is the only function in VaultComposerSync that calls oft.send()
         /// @dev Always trigger Taxi mode for txs to Stargate (assets)
         if (_oft == ASSET_OFT) _sendParam.oftCmd = hex"";
@@ -143,7 +143,7 @@ contract VaultComposerSyncHydra is VaultComposerSync, IVaultComposerSyncHydra {
             /// @dev For OFT destinations or Share tokens: revert to allow LayerZero retry mechanism
             if (_oft == SHARE_OFT || _isOFTPath(_sendParam.dstEid)) revert RemoteNotStargatePool();
 
-            /// @dev From here it is pool
+            /// @dev Code from here is executed ONLY when the send fails and _oft is Pool
             /// @dev Transfer the asset to the hub recovery address
             IERC20(ASSET_ERC20).safeTransfer(_refundAddress, _sendParam.amountLD);
 
