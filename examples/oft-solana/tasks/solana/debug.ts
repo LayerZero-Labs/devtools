@@ -1,3 +1,4 @@
+import { fetchMetadataFromSeeds } from '@metaplex-foundation/mpl-token-metadata'
 import { fetchMint } from '@metaplex-foundation/mpl-toolbox'
 import { PublicKey as UmiPublicKey, publicKey, unwrapOption } from '@metaplex-foundation/umi'
 import { fromWeb3JsPublicKey, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
@@ -6,6 +7,7 @@ import { task } from 'hardhat/config'
 
 import { OmniPoint, denormalizePeer } from '@layerzerolabs/devtools'
 import { types } from '@layerzerolabs/devtools-evm-hardhat'
+import { isSquadsV4Vault } from '@layerzerolabs/devtools-solana'
 import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 import { EndpointPDADeriver, EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { EndpointProgram as EndpointProgramUmi } from '@layerzerolabs/lz-solana-sdk-v2/umi'
@@ -120,9 +122,14 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
 
         const oftDeriver = new OftPDA(oftStoreInfo.header.owner)
 
+        const tokenMetadata = await fetchMetadataFromSeeds(umi, { mint: oftStoreInfo.tokenMint })
+
+        const adminIsSquadsV4Vault = await isSquadsV4Vault(oftStoreInfo.admin)
+        const delegateIsSquadsV4Vault = await isSquadsV4Vault(oAppRegistryInfo?.delegate?.toBase58())
+
         const printOftStore = async () => {
             DebugLogger.header('OFT Store Information')
-            DebugLogger.keyValue('Owner', oftStoreInfo.header.owner)
+            DebugLogger.keyValue('OFT Program', oftStoreInfo.header.owner)
             DebugLogger.keyValue('OFT Type', oft.types.OFTType[oftStoreInfo.oftType])
             DebugLogger.keyValue('Admin', oftStoreInfo.admin)
             DebugLogger.keyValue('Token Mint', oftStoreInfo.tokenMint)
@@ -150,6 +157,8 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
                 'Freeze Authority',
                 unwrapOption(mintAccount.freezeAuthority, () => 'None')
             )
+            DebugLogger.keyValue('Update Authority', tokenMetadata.updateAuthority)
+            DebugLogger.keyValue('Metadata is mutable', tokenMetadata.isMutable)
             DebugLogger.separator()
         }
 
@@ -162,6 +171,8 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
                 'Token Mint Authority is OFT Store',
                 unwrapOption(mintAccount.mintAuthority) === oftStore
             )
+            DebugLogger.keyValue('Admin is Squads V4 Vault', adminIsSquadsV4Vault)
+            DebugLogger.keyValue('Delegate is Squads V4 Vault', delegateIsSquadsV4Vault)
             dstEids.map((dstEid) => {
                 DebugLogger.keyHeader(`Nonce Account Checks`)
                 const nonceAccountCheckInfo = nonceAccountChecksInfo[dstEid]
