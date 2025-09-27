@@ -26,9 +26,9 @@ interface UpdateMetadataTaskArgs {
 
 // note that if URI is specified, then the name and symbol in there would be used and will override the 'outer' name and symbol
 // Example:
-// pnpm hardhat lz:oft:solana:update-metadata --eid <EID> --mint <MINT_ADDRESS>
+// pnpm hardhat lz:oft:solana:update-metadata --eid <EID> --mint <MINT_ADDRESS> --name <NEW_TOKEN_NAME>
 // If Update Authority is a multisig (Vault PDA):
-// // pnpm hardhat lz:oft:solana:update-metadata --eid <EID> --mint <MINT_ADDRESS> --vault-pda <VAULT_ADDRESS>
+// // pnpm hardhat lz:oft:solana:update-metadata --eid <EID> --mint <MINT_ADDRESS> --name <NEW_TOKEN_NAME> --vault-pda <VAULT_ADDRESS>
 task('lz:oft:solana:update-metadata', 'Updates the metaplex metadata of the SPL Token')
     .addParam('eid', 'Solana mainnet (30168) or testnet (40168)', undefined, devtoolsTypes.eid)
     .addParam('mint', 'The Token mint public key', undefined, devtoolsTypes.string)
