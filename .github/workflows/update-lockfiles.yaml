@@ -1,0 +1,70 @@
+name: Update example lockfiles
+
+on:
+  workflow_run:
+    workflows: ["Check & publish"]
+    types:
+      - completed
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  # This should only run on the main branch after the packages are published to NPM
+  # to make sure the updated packages are available when updating the lockfiles.
+  update-example-lockfiles:
+    name: Update example lockfiles
+    if: github.ref == "refs/heads/main" && ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup environment
+        uses: ./.github/workflows/actions/setup-environment
+
+      - name: Create additional lockfile update PR
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          BRANCH="lockfiles-update/main"
+
+          git fetch origin
+
+          if git ls-remote --exit-code --heads origin "$BRANCH" > /dev/null 2>&1; then
+            git checkout -B "$BRANCH" "origin/$BRANCH"
+          else
+            git checkout -b "$BRANCH"
+          fi
+
+          pnpm lockfiles:generate
+
+          if git diff --quiet; then
+            echo "No changes to commit, skipping PR creation"
+            exit 0
+          fi
+
+          git add .
+          git commit -m "chore: automatically update example lockfiles"
+          git push --force origin "$BRANCH"
+
+          if gh pr view "$BRANCH" --json state --jq '.state' 2>/dev/null | grep -q "OPEN"; then
+            echo "Open PR already exists for branch $BRANCH"
+            exit 0
+          fi
+
+          gh pr create \
+            --title "🔒 Update example lockfiles" \
+            --body "Automated update of example lockfiles after package publishing.
+
+            ⚠️ Version packages PRs should be merged first." \
+            --base main \
+            --head "$BRANCH" \
+            --assignee layerzero-bot
+        env:
+          GH_TOKEN: ${{ secrets.LAYERZERO_BOT_GITHUB_TOKEN }}
