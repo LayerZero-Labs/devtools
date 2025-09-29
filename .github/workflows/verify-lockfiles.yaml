@@ -19,5 +19,8 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup environment
+        uses: ./.github/workflows/actions/setup-environment
+
       - name: Verify lockfiles
         run: pnpm lockfiles:verify
