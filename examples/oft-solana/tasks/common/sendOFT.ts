@@ -45,6 +45,7 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
         undefined,
         types.string
     )
+    .addOptionalParam('composeMsg', 'Arbitrary bytes message to deliver alongside the OFT', undefined, types.string)
     .addOptionalParam(
         'oftAddress',
         'Override the source local deployment OFT address (20-byte hex for EVM, base58 PDA for Solana)',
