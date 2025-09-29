@@ -1,4 +1,4 @@
-name: Verify example lockfiles 
+name: Verify example lockfiles
 
 on:
   pull_request:
