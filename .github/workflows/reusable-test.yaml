@@ -58,11 +58,6 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      # Only verify lockfiles in non-release PRs
-      - name: Verify lockfiles
-        if: github.event_name == 'pull_request' && github.actor != 'layerzero-bot'
-        run: pnpm lockfiles:verify
-
       # We'll run the build in series to avoid race conditions
       # when compiling hardhat projects in monorepo setups
       - name: Build
