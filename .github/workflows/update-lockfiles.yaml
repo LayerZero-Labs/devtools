@@ -15,7 +15,7 @@ jobs:
   # to make sure the updated packages are available when updating the lockfiles.
   update-example-lockfiles:
     name: Update example lockfiles
-    if: github.ref == "refs/heads/main" && ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.ref == 'refs/heads/main' && github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
