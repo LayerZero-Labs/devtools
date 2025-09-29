@@ -108,9 +108,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           BRANCH="lockfiles-update/main"
-          
+
           git fetch origin
-          
+
           if git ls-remote --exit-code --heads origin "$BRANCH" > /dev/null 2>&1; then
             git checkout -B "$BRANCH" "origin/$BRANCH"
           else
