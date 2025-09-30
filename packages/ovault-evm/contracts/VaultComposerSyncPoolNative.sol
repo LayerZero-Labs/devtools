@@ -54,7 +54,7 @@ contract VaultComposerSyncPoolNative is VaultComposerSyncPool, IVaultComposerSyn
      * @notice Handles LayerZero compose operations for vault transactions with automatic refund functionality
      * @dev This composer is designed to handle refunds to an EOA address and not a contract
      * @dev Any revert in handleCompose() causes a refund back to the src EXCEPT for InsufficientMsgValue
-     * @dev Overrides the parent contract to wrap ETH into WETH
+     * @dev Overrides the parent contract to wrap ETH into WETH converting NativePool into Pool logic
      * @param _composeSender The OFT contract address used for refunds, must be either ASSET_OFT or SHARE_OFT
      * @param _guid LayerZero's unique tx id (created on the source tx)
      * @param _message Decomposable bytes object into [composeHeader][composeMessage]
@@ -107,12 +107,15 @@ contract VaultComposerSyncPoolNative is VaultComposerSyncPool, IVaultComposerSyn
 
         /// @dev Safe because this is the only function in VaultComposerSync that calls oft.send()
         /// @dev Always trigger Taxi mode for txs to Stargate (assets)
+        /// @dev Stargate Pool take in ETH as underlying token so we need to convert WETH to ETH
         if (_oft == ASSET_OFT) {
-            /// @dev Case for when we are redeeming
-            /// @dev Stargate Pool take in ETH as underlying token and Fee.
-            msgValue += _sendParam.amountLD;
+            /// @dev Since we converted ETH to WETH in lzCompose, on deposit we have WETH at this point.
+            /// @dev Incase of redemption the vault outputs WETH.
+            /// @dev MsgValue passed to Stargate Pool is nativeFee + amountLD
             IWETH(ASSET_ERC20).withdraw(_sendParam.amountLD);
-            _sendParam.oftCmd = hex""; /// @dev To disable Bus mode on Stargate Pool
+            msgValue += _sendParam.amountLD;
+            /// @dev Always trigger Taxi mode for txs to Stargate (assets)
+            _sendParam.oftCmd = hex"";
         }
 
         IOFT(_oft).send{ value: msgValue }(_sendParam, MessagingFee(msg.value, 0), _refundAddress);
