@@ -36,9 +36,9 @@ contract VaultComposerSyncPoolNative is VaultComposerSyncPool, IVaultComposerSyn
      * @param _defaultRecoveryAddress The address to receive tokens on Pool send failures if the compose message cannot be decoded
      *
      * Requirements:
-     * - Share token must be Ether
+     * - Share token must be the vault itself
      * - Vault asset token must be WETH
-     * - Asset token must match the vault's underlying asset
+     * - Asset token must be native - address(0), which is converted to WETH for vault operations
      * - Share OFT must be an adapter (approvalRequired() returns true)
      */
     constructor(

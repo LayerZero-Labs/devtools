@@ -86,9 +86,13 @@ contract VaultComposerSyncPool is VaultComposerSync, IVaultComposerSyncPool {
      * @dev Bridge+Swap pattern for Pool failures, retry mechanism for OFT failures
      * @param _oft The OFT contract address to use for sending
      * @param _sendParam The parameters for the send operation
-     * @param _refundAddress Address to receive tokens and native on Pool failure
+     * @param _fallbackRefundAddress Address to receive tokens and native on Pool failure
      */
-    function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress) internal virtual override {
+    function _sendRemote(
+        address _oft,
+        SendParam memory _sendParam,
+        address _fallbackRefundAddress
+    ) internal virtual override {
         /// @dev Refund to tx.origin to maintain the same behavior as the parent contract
         try this.oappSend{ value: msg.value }(_oft, _sendParam, tx.origin) {} catch {
             /// @dev For Pool destinations: transfer directly to user on failure (Bridge+Swap pattern)
@@ -97,12 +101,12 @@ contract VaultComposerSyncPool is VaultComposerSync, IVaultComposerSyncPool {
 
             /// @dev Code from here is executed ONLY when the send fails and _oft is Pool
             /// @dev Transfer the asset to the hub recovery address
-            IERC20(ASSET_ERC20).safeTransfer(_refundAddress, _sendParam.amountLD);
+            IERC20(ASSET_ERC20).safeTransfer(_fallbackRefundAddress, _sendParam.amountLD);
 
             if (msg.value == 0) return;
 
             /// @dev Try sending native to hub recovery, fallback to tx.origin
-            (bool sentToHub, ) = _refundAddress.call{ value: msg.value }("");
+            (bool sentToHub, ) = _fallbackRefundAddress.call{ value: msg.value }("");
             if (!sentToHub) {
                 (bool sentToOrigin, ) = tx.origin.call{ value: msg.value }("");
                 /// @dev If this fails then the user should call Endpoint.lzCompose() from an address that can receive native
@@ -171,7 +175,7 @@ contract VaultComposerSyncPool is VaultComposerSync, IVaultComposerSyncPool {
      */
     function _isOFTPath(address _oft, uint32 _dstEid) internal view returns (bool isOFT) {
         uint64 credit = IStargateWithPath(ASSET_OFT).paths(_dstEid).credit;
-        isOFT = (_oft == SHARE_OFT || credit == UNLIMITED_CREDIT) ? true : false;
+        isOFT = (_oft == SHARE_OFT || credit == UNLIMITED_CREDIT);
     }
 
     /**

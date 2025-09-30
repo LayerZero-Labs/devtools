@@ -1,25 +1,18 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.22;
 
-// OApp imports
-import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
-
-// OFT imports
-import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
-import { OFTMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTMsgCodec.sol";
-import { SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
-import { EnforcedOptionParam } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppOptionsType3.sol";
-
 // OpenZeppelin imports
-import { IMockUSDC as ERC20 } from "../mocks/MockERC20.sol";
 import { IStargatePoolWithPath as IStargatePool } from "../mocks/IMocks.sol";
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
-import { IERC20Metadata } from "@openzeppelin/contracts/interfaces/IERC20Metadata.sol";
 
 // LayerZero imports
 import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
+import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
+import { OFTMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTMsgCodec.sol";
+import { SendParam } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 
-// OFT Adapter import
+// Mocks
+import { IMockUSDC as ERC20 } from "../mocks/MockERC20.sol";
 import { MockOFTAdapter as OFTAdapter } from "../mocks/MockOFT.sol";
 
 // Contract imports
@@ -30,7 +23,6 @@ import { IVaultComposerSyncPool } from "../../contracts/interfaces/IVaultCompose
 import { Test, console } from "forge-std/Test.sol";
 
 contract VaultComposerSyncPoolForkTest is Test {
-    using OptionsBuilder for bytes;
     using OFTMsgCodec for address;
 
     uint256 public constant PINNED_BLOCK = 23_435_096;
@@ -121,7 +113,7 @@ contract VaultComposerSyncPoolForkTest is Test {
         randomGUID = bytes32(vm.randomBytes(32));
     }
 
-    function test_setup() public view {
+    function test_setupPool() public view {
         // Validate deployment addresses
         assertEq(address(composer.VAULT()), address(vault), "Vault address mismatch");
         assertEq(composer.ASSET_OFT(), address(hydraAssetOFT), "Asset OFT address mismatch");
@@ -145,7 +137,7 @@ contract VaultComposerSyncPoolForkTest is Test {
         );
     }
 
-    function test_forkDepositFromArbPool() public {
+    function test_forkPoolDepositFromArbPool() public {
         uint64 credit = hydraAssetOFT.paths(ARB_EID).credit;
         uint256 amtToSend = (credit * TO_LD) + 1;
         assertGt(amtToSend, credit, "Amount to send should be greater than the credit");
@@ -177,7 +169,7 @@ contract VaultComposerSyncPoolForkTest is Test {
         );
     }
 
-    function test_forkDepositFromBeraOFT() public {
+    function test_forkPoolDepositFromBeraOFT() public {
         uint64 credit = hydraAssetOFT.paths(BERA_EID).credit;
         uint256 amtToSend = type(uint32).max;
         assertLt(amtToSend, credit, "Amount to send should be less than the credit");
@@ -205,7 +197,7 @@ contract VaultComposerSyncPoolForkTest is Test {
         assertEq(assetERC20.balanceOf(hubRecoveryAddress), 0, "HubRecoveryAddress should have 0 balance");
     }
 
-    function test_forkRedeemToArbPool() public {
+    function test_forkPoolRedeemToArbPool() public {
         uint64 credit = hydraAssetOFT.paths(ARB_EID).credit;
         uint256 amtToMint = (credit * TO_LD) + 1;
         assertGt(amtToMint, credit, "Asset amount to mint should be greater than the credit");
@@ -249,7 +241,7 @@ contract VaultComposerSyncPoolForkTest is Test {
         );
     }
 
-    function test_forkRedeemToBeraOFT() public {
+    function test_forkPoolRedeemToBeraOFT() public {
         uint256 amtToMint = 1 ether;
 
         uint256 composerBalancePreDeposit = vault.balanceOf(address(composer));

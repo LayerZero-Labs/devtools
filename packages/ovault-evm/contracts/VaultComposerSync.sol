@@ -366,7 +366,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         assetERC20 = IOFT(_assetOFT).token();
 
         if (assetERC20 != address(_vault.asset())) {
-            revert AssetTokenNotVaultAsset(ASSET_ERC20, address(_vault.asset()));
+            revert AssetTokenNotVaultAsset(assetERC20, address(_vault.asset()));
         }
 
         /// @dev Approve the vault to spend the asset tokens held by this contract
