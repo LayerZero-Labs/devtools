@@ -112,7 +112,12 @@ RUN apt-get install --yes \
 ARG RUST_TOOLCHAIN_VERSION=1.84.1
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
     | sh -s -- -y --profile minimal --default-toolchain ${RUST_TOOLCHAIN_VERSION}
+# Ensure stable is installed and available
 RUN rustup toolchain install 1.84.1
+# Pre-install nightly to satisfy tools that implicitly try to use nightly
+# and ensure the 'cargo' component is available for nightly too
+ARG RUST_NIGHTLY_VERSION=nightly-2025-01-01
+RUN rustup toolchain install ${RUST_NIGHTLY_VERSION} && rustup component add --toolchain ${RUST_NIGHTLY_VERSION} cargo
 RUN rustc --version
 
 ### Setup go
