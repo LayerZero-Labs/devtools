@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-aptos-move-example
 
+## 1.0.9
+
+### Patch Changes
+
+- c44e657: update evm networks used
+
 ## 1.0.8
 
 ### Patch Changes
