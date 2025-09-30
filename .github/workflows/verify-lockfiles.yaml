@@ -1,0 +1,26 @@
+name: Verify example lockfiles
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  verify-example-lockfiles:
+    name: Verify example lockfiles
+    if: github.actor != 'layerzero-bot'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup environment
+        uses: ./.github/workflows/actions/setup-environment
+
+      - name: Verify lockfiles
+        run: pnpm lockfiles:verify

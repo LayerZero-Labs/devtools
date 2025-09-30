@@ -49,8 +49,8 @@ devDependencies:
     specifier: ^3.1.2
     version: 3.2.1(@layerzerolabs/lz-evm-messagelib-v2@3.0.128)(@layerzerolabs/lz-evm-protocol-v2@3.0.128)(@layerzerolabs/lz-evm-v1-0.7@3.0.128)(@layerzerolabs/oapp-evm@0.3.2)(@openzeppelin/contracts-upgradeable@5.4.0)(@openzeppelin/contracts@5.4.0)
   '@layerzerolabs/ovault-evm':
-    specifier: ^0.0.5
-    version: 0.0.5(@layerzerolabs/lz-evm-messagelib-v2@3.0.128)(@layerzerolabs/lz-evm-protocol-v2@3.0.128)(@layerzerolabs/lz-evm-v1-0.7@3.0.128)(@layerzerolabs/oapp-evm@0.3.2)(@openzeppelin/contracts-upgradeable@5.4.0)(@openzeppelin/contracts@5.4.0)(typescript@5.9.2)(zod@3.25.76)
+    specifier: ^0.0.6
+    version: 0.0.6(@layerzerolabs/lz-evm-messagelib-v2@3.0.128)(@layerzerolabs/lz-evm-protocol-v2@3.0.128)(@layerzerolabs/lz-evm-v1-0.7@3.0.128)(@layerzerolabs/oapp-evm@0.3.2)(@openzeppelin/contracts-upgradeable@5.4.0)(@openzeppelin/contracts@5.4.0)(typescript@5.9.2)(zod@3.25.76)
   '@layerzerolabs/prettier-config-next':
     specifier: ^2.3.39
     version: 2.3.44
@@ -1528,8 +1528,8 @@ packages:
       '@openzeppelin/contracts-upgradeable': 5.4.0(@openzeppelin/contracts@5.4.0)
     dev: true
 
-  /@layerzerolabs/ovault-evm@0.0.5(@layerzerolabs/lz-evm-messagelib-v2@3.0.128)(@layerzerolabs/lz-evm-protocol-v2@3.0.128)(@layerzerolabs/lz-evm-v1-0.7@3.0.128)(@layerzerolabs/oapp-evm@0.3.2)(@openzeppelin/contracts-upgradeable@5.4.0)(@openzeppelin/contracts@5.4.0)(typescript@5.9.2)(zod@3.25.76):
-    resolution: {integrity: sha512-PjUGHVUdKK/zysbXCcCob6AZ8LWukUrlkJ49lyFEKSOK9SA/WZWgMgYWqxv5JK9baJBmgxB03U+O+/6AhfvWyA==}
+  /@layerzerolabs/ovault-evm@0.0.6(@layerzerolabs/lz-evm-messagelib-v2@3.0.128)(@layerzerolabs/lz-evm-protocol-v2@3.0.128)(@layerzerolabs/lz-evm-v1-0.7@3.0.128)(@layerzerolabs/oapp-evm@0.3.2)(@openzeppelin/contracts-upgradeable@5.4.0)(@openzeppelin/contracts@5.4.0)(typescript@5.9.2)(zod@3.25.76):
+    resolution: {integrity: sha512-NSkA0fOkI0smXHtz3EVMVBzLPnKUiaX4Gd1mV9v18IeG3aZ8Wq9qxd8V7gpJTPFjyT9bIf6KWBdPIdK0jy1Gxw==}
     peerDependencies:
       '@layerzerolabs/lz-evm-messagelib-v2': ^3.0.75
       '@layerzerolabs/lz-evm-protocol-v2': ^3.0.75

@@ -1,5 +1,12 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 1.0.4
+
+### Patch Changes
+
+- c44e657: update evm networks used
+- 286c350: Update lockfiles
+
 ## 1.0.3
 
 ### Patch Changes
