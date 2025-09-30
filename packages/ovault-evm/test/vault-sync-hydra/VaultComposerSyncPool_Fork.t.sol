@@ -27,8 +27,7 @@ import { VaultComposerSyncPool } from "../../contracts/VaultComposerSyncPool.sol
 import { IVaultComposerSyncPool } from "../../contracts/interfaces/IVaultComposerSyncPool.sol";
 
 // Forge imports
-import "forge-std/Test.sol";
-import "forge-std/console.sol";
+import { Test, console } from "forge-std/Test.sol";
 
 contract VaultComposerSyncPoolForkTest is Test {
     using OptionsBuilder for bytes;
@@ -37,13 +36,14 @@ contract VaultComposerSyncPoolForkTest is Test {
     uint256 public constant PINNED_BLOCK = 23_435_096;
 
     // Mainnet addresses
-    address public constant HYDRA_ASSET_OFT = 0xc026395860Db2d07ee33e05fE50ed7bD583189C7;
+    address public constant ASSET_OFT = 0xc026395860Db2d07ee33e05fE50ed7bD583189C7;
     address public constant VAULT = 0xd63070114470f685b75B74D60EEc7c1113d33a3D;
     address public constant LZ_ENDPOINT_V2 = 0x1a44076050125825900e736c501f859c50fE728c;
     uint32 public constant ARB_EID = 30110;
     uint32 public constant BERA_EID = 30362;
 
     uint256 public constant UNLIMITED_CREDIT = type(uint64).max;
+    uint256 public constant TO_LD = 1e12;
 
     // Test addresses
     address public userA = makeAddr("userA");
@@ -75,7 +75,7 @@ contract VaultComposerSyncPoolForkTest is Test {
         vm.createSelectFork(rpcUrl, PINNED_BLOCK);
 
         // Initialize contract interfaces
-        hydraAssetOFT = IStargatePool(HYDRA_ASSET_OFT);
+        hydraAssetOFT = IStargatePool(ASSET_OFT);
         vault = IERC4626(VAULT);
         endpoint = ILayerZeroEndpointV2(LZ_ENDPOINT_V2);
         assetERC20 = ERC20(hydraAssetOFT.token());
@@ -98,7 +98,7 @@ contract VaultComposerSyncPoolForkTest is Test {
         vm.stopPrank();
 
         // Setup labels for better debugging
-        vm.label(HYDRA_ASSET_OFT, "HydraAssetOFT");
+        vm.label(ASSET_OFT, "HydraAssetOFT");
         vm.label(VAULT, "Vault");
         vm.label(LZ_ENDPOINT_V2, "LZEndpointV2");
         vm.label(address(shareOFTAdapter), "ShareOFTAdapter");
@@ -147,7 +147,7 @@ contract VaultComposerSyncPoolForkTest is Test {
 
     function test_forkDepositFromArbPool() public {
         uint64 credit = hydraAssetOFT.paths(ARB_EID).credit;
-        uint256 amtToSend = type(uint64).max;
+        uint256 amtToSend = (credit * TO_LD) + 1;
         assertGt(amtToSend, credit, "Amount to send should be greater than the credit");
 
         assetERC20.mint(address(composer), amtToSend);
@@ -207,7 +207,7 @@ contract VaultComposerSyncPoolForkTest is Test {
 
     function test_forkRedeemToArbPool() public {
         uint64 credit = hydraAssetOFT.paths(ARB_EID).credit;
-        uint256 amtToMint = type(uint64).max;
+        uint256 amtToMint = (credit * TO_LD) + 1;
         assertGt(amtToMint, credit, "Asset amount to mint should be greater than the credit");
 
         uint256 composerBalancePreDeposit = vault.balanceOf(address(composer));
@@ -250,7 +250,7 @@ contract VaultComposerSyncPoolForkTest is Test {
     }
 
     function test_forkRedeemToBeraOFT() public {
-        uint256 amtToMint = type(uint32).max;
+        uint256 amtToMint = 1 ether;
 
         uint256 composerBalancePreDeposit = vault.balanceOf(address(composer));
         assertEq(composerBalancePreDeposit, 0, "Composer should have 0 share balance before deposit");
