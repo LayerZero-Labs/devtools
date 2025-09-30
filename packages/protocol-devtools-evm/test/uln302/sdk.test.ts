@@ -58,6 +58,7 @@ describe('uln302/sdk', () => {
                         optionalDVNThreshold: 0,
                         optionalDVNs: dvns,
                         requiredDVNs: dvns,
+                        requiredDVNCount: dvns.length,
                     }
 
                     const ulnConfigSorted: Uln302UlnConfig = {
@@ -85,6 +86,7 @@ describe('uln302/sdk', () => {
                         optionalDVNThreshold: 0,
                         optionalDVNs: dvns,
                         requiredDVNs: dvns,
+                        requiredDVNCount: dvns.length,
                     }
 
                     const ulnConfigSorted: Uln302UlnConfig = {
@@ -133,6 +135,7 @@ describe('uln302/sdk', () => {
                         confirmations: BigInt(0),
                         optionalDVNThreshold: 0,
                         optionalDVNs: [],
+                        requiredDVNCount: dvns.length,
                     }
 
                     // Let's check that both the sorted and the unsorted config produce the same transaction
@@ -171,6 +174,7 @@ describe('uln302/sdk', () => {
                 optionalDVNThreshold: fc.integer({ min: 0, max: dvns.length }),
                 optionalDVNs: fc.constant(dvns),
                 requiredDVNs: fc.constant(dvns),
+                requiredDVNCount: fc.constant(dvns.length),
             })
         )
 
@@ -245,6 +249,7 @@ describe('uln302/sdk', () => {
                         optionalDVNs: [],
                         optionalDVNThreshold: 0,
                         confirmations: BigInt(0),
+                        requiredDVNCount: dvns.length,
                     }
 
                     getAppUlnConfigSpy.mockReset()

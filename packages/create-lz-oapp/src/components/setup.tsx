@@ -94,8 +94,15 @@ const NextSteps: React.FC<{ config: Config }> = ({ config }) => {
             <Text color="cyan">npx hardhat lz:deploy</Text>
           </>
         )}
+        {!config.packageManager.hasLockfile ? (
+          <>
+            <Newline />
+            <Text bold>
+              🚨 Your project dependencies are not pinned, please verify them.
+            </Text>
+          </>
+        ) : null}
         <Newline />
-
         <Text bold>
           Visit our docs page at{" "}
           <Text underline color="cyan">

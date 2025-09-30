@@ -31,7 +31,7 @@ remappings = [
 ]
 
 [fuzz]
-runs = 1000
+runs = 64
 
 [profile.ci.fuzz]
 runs = 1

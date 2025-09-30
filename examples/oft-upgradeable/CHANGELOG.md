@@ -1,5 +1,17 @@
 # @layerzerolabs/oft-upgradeable-example
 
+## 0.3.5
+
+### Patch Changes
+
+- c44e657: update evm networks used
+
+## 0.3.4
+
+### Patch Changes
+
+- 5e15a8d: Add lockfiles to example packages
+
 ## 0.3.3
 
 ### Patch Changes

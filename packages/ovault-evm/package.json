@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ovault-evm",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "LayerZero Labs reference EVM OVault + composer implementation",
   "keywords": [
     "LayerZero",

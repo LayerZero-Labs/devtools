@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-alt-example",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -29,9 +29,10 @@
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
     "@layerzerolabs/lz-v2-utilities": "^3.0.12",
-    "@layerzerolabs/oapp-alt-evm": "^0.0.3",
+    "@layerzerolabs/oapp-alt-evm": "^0.0.4",
     "@layerzerolabs/oapp-evm": "^0.3.0",
-    "@layerzerolabs/oft-alt-evm": "^0.0.3",
+    "@layerzerolabs/oapp-evm-upgradeable": "^0.1.2",
+    "@layerzerolabs/oft-alt-evm": "^0.0.4",
     "@layerzerolabs/oft-evm": "^3.2.0",
     "@layerzerolabs/prettier-config-next": "^2.3.39",
     "@layerzerolabs/solhint-config": "^3.0.12",

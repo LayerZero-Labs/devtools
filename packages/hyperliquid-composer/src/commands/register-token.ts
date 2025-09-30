@@ -4,11 +4,12 @@ import inquirer from 'inquirer'
 import { getCoreSpotDeployment, getHyperEVMOAppDeployment, writeUpdatedCoreSpotDeployment } from '@/io/parser'
 import { getHyperliquidWallet } from '@/signer'
 import { setRequestEvmContract, setFinalizeEvmContract } from '@/operations'
+import { LOGGER_MODULES } from '@/types/cli-constants'
+import { RequestEvmContractArgs, FinalizeEvmContractArgs } from '@/types'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function requestEvmContract(args: any): Promise<void> {
+export async function requestEvmContract(args: RequestEvmContractArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
-    const logger = createModuleLogger('register-token', args.logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.REGISTER_TOKEN, args.logLevel)
     logger.verbose(JSON.stringify(args, null, 2))
 
     const wallet = await getHyperliquidWallet(args.privateKey)
@@ -22,27 +23,27 @@ export async function requestEvmContract(args: any): Promise<void> {
     const coreSpotDeployment = getCoreSpotDeployment(hyperAssetIndex, isTestnet, logger)
     const txData = coreSpotDeployment.txData
 
-    let oft_address: string
+    let token_address: string
     try {
-        const { deployment } = await getHyperEVMOAppDeployment(oappConfig, network, logger)
+        const { deployment } = await getHyperEVMOAppDeployment(oappConfig!, network, logger)
 
         if (!deployment) {
             logger.error(`Deployment file not found for ${network}`)
             return
         }
-        oft_address = deployment['address']
+        token_address = deployment['address']
     } catch (error) {
         logger.error(
-            `Error fetching deployment for ${network} for oapp-config ${oappConfig}. \n\n Can you please provide the oft address manually?`
+            `Error fetching deployment for ${network} for oapp-config ${oappConfig}. \n\n Can you please provide the token address manually?`
         )
-        const { oftAddress } = await inquirer.prompt([
+        const { tokenAddress } = await inquirer.prompt([
             {
                 type: 'input',
-                name: 'oftAddress',
-                message: 'Enter the oft address',
+                name: 'tokenAddress',
+                message: 'Enter the token address',
             },
         ])
-        oft_address = oftAddress
+        token_address = tokenAddress
     }
 
     logger.verbose(`txData: \n ${JSON.stringify(txData, null, 2)}`)
@@ -53,7 +54,7 @@ export async function requestEvmContract(args: any): Promise<void> {
         {
             type: 'confirm',
             name: 'executeTx',
-            message: `Trying to populate a request to connect HyperCore-EVM ${hyperAssetIndex} to ${oft_address}. This should be sent by the Spot Deployer and before finalizeEvmContract is executed. Do you want to execute the transaction?`,
+            message: `Trying to populate a request to connect HyperCore-EVM ${hyperAssetIndex} to ${token_address}. This should be sent by the Spot Deployer and before finalizeEvmContract is executed. Do you want to execute the transaction?`,
             default: false,
         },
     ])
@@ -64,13 +65,12 @@ export async function requestEvmContract(args: any): Promise<void> {
     }
 
     logger.info(`Request EVM contract`)
-    await setRequestEvmContract(wallet, isTestnet, oft_address, txData.weiDiff, hyperAssetIndexInt, args.logLevel)
+    await setRequestEvmContract(wallet, isTestnet, token_address, txData.weiDiff, hyperAssetIndexInt, args.logLevel)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function finalizeEvmContract(args: any): Promise<void> {
+export async function finalizeEvmContract(args: FinalizeEvmContractArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
-    const logger = createModuleLogger('register-token', args.logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.REGISTER_TOKEN, args.logLevel)
     logger.verbose(JSON.stringify(args, null, 2))
 
     const wallet = await getHyperliquidWallet(args.privateKey)
@@ -85,29 +85,29 @@ export async function finalizeEvmContract(args: any): Promise<void> {
     const nativeSpot = coreSpotDeployment.coreSpot
     const txData = coreSpotDeployment.txData
 
-    let oft_address: string
+    let token_address: string
 
     try {
-        const { deployment } = await getHyperEVMOAppDeployment(oappConfig, network, logger)
+        const { deployment } = await getHyperEVMOAppDeployment(oappConfig!, network, logger)
 
         if (!deployment) {
             logger.error(`Deployment file not found for ${network}`)
             return
         }
 
-        oft_address = deployment['address']
+        token_address = deployment['address']
     } catch (error) {
         logger.error(
-            `Error fetching deployment for ${network} for oapp-config ${oappConfig}. \n\n Can you please provide the oft address manually?`
+            `Error fetching deployment for ${network} for oapp-config ${oappConfig}. \n\n Can you please provide the token address manually?`
         )
-        const { oftAddress } = await inquirer.prompt([
+        const { tokenAddress } = await inquirer.prompt([
             {
                 type: 'input',
-                name: 'oftAddress',
-                message: 'Enter the oft address',
+                name: 'tokenAddress',
+                message: 'Enter the token address',
             },
         ])
-        oft_address = oftAddress
+        token_address = tokenAddress
     }
 
     logger.verbose(`txData: \n ${JSON.stringify(txData, null, 2)}`)
@@ -118,7 +118,7 @@ export async function finalizeEvmContract(args: any): Promise<void> {
         {
             type: 'confirm',
             name: 'executeTx',
-            message: `Confirms the connection of ${oft_address} to HyperCore-EVM ${hyperAssetIndex}. This should be sent by the EVM Deployer and after requestEvmContract is executed. Do you want to execute the transaction?`,
+            message: `Confirms the connection of ${token_address} to HyperCore-EVM ${hyperAssetIndex}. This should be sent by the EVM Deployer and after requestEvmContract is executed. Do you want to execute the transaction?`,
             default: false,
         },
     ])
@@ -132,7 +132,7 @@ export async function finalizeEvmContract(args: any): Promise<void> {
         {
             type: 'confirm',
             name: 'confirmTx',
-            message: `Confirm that you want to finalize the connection of ${oft_address} to HyperCore-EVM ${hyperAssetIndex}? This is irreversible.`,
+            message: `Confirm that you want to finalize the connection of ${token_address} to HyperCore-EVM ${hyperAssetIndex}? This is irreversible.`,
             default: false,
         },
     ])
@@ -149,7 +149,7 @@ export async function finalizeEvmContract(args: any): Promise<void> {
             hyperAssetIndex,
             isTestnet,
             nativeSpot.fullName ?? '',
-            oft_address,
+            token_address,
             txData,
             logger
         )

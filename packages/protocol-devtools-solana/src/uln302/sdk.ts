@@ -228,13 +228,20 @@ export class Uln302 extends OmniSDK implements IUln302 {
         requiredDVNs,
         optionalDVNs = [],
         optionalDVNThreshold = 0,
+        requiredDVNCount,
     }: Uln302UlnUserConfig): SerializedUln302UlnConfig {
+        // NIL_DVN_COUNT is used to indicate no DVNs are required
+        // It has to be used instead of 0, because 0 falls back to default value
+        const NIL_DVN_COUNT = 255 // type(uint8).max
+
         return {
             confirmations,
             optionalDVNThreshold,
             requiredDVNs: serializeDVNs(requiredDVNs),
             optionalDVNs: serializeDVNs(optionalDVNs),
-            requiredDVNCount: requiredDVNs.length,
+            // If requiredDVNCount is explicitly provided, use it
+            // Otherwise, calculate based on array length (using NIL_DVN_COUNT for empty arrays)
+            requiredDVNCount: requiredDVNCount ?? (requiredDVNs.length > 0 ? requiredDVNs.length : NIL_DVN_COUNT),
             optionalDVNCount: optionalDVNs.length,
         }
     }
