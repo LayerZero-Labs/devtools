@@ -1,5 +1,11 @@
 # @layerzerolabs/lzapp-migration-example
 
+## 0.3.3
+
+### Patch Changes
+
+- e415855: rename retryPayload to retryMessage
+
 ## 0.3.2
 
 ### Patch Changes
