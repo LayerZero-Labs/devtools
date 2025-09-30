@@ -1,5 +1,17 @@
 # @layerzerolabs/oft-adapter-example
 
+## 0.5.3
+
+### Patch Changes
+
+- c44e657: update evm networks used
+
+## 0.5.2
+
+### Patch Changes
+
+- 5e15a8d: Add lockfiles to example packages
+
 ## 0.5.1
 
 ### Patch Changes

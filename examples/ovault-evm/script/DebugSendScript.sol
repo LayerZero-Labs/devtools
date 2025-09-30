@@ -105,7 +105,7 @@ contract DebugSendScript is Script {
                 composeMsg: composeMsg,
                 oftCmd: hex""
             });
-            composeMsg = abi.encode(hopSendParam);
+            composeMsg = abi.encode(hopSendParam, _lzComposeValue);
             to = _composer.toBytes32();
             dstEid = HUB_EID;
         }

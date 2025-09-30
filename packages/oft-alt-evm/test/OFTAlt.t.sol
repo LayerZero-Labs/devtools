@@ -125,7 +125,7 @@ contract OFTAltTest is TestHelperOz5 {
         vm.deal(userD, initialNativeBalance);
     }
 
-    function test_constructor() public {
+    function test_constructor() public view {
         assertEq(aOFT.owner(), address(this));
         assertEq(bOFT.owner(), address(this));
         assertEq(cOFTAdapter.owner(), address(this));
@@ -139,7 +139,7 @@ contract OFTAltTest is TestHelperOz5 {
         assertEq(cOFTAdapter.token(), address(cERC20Mock));
     }
 
-    function test_oftVersion() public {
+    function test_oftVersion() public view {
         (bytes4 interfaceId, ) = aOFT.oftVersion();
         bytes4 expectedId = 0x02e49c2c;
         assertEq(interfaceId, expectedId);
@@ -268,7 +268,7 @@ contract OFTAltTest is TestHelperOz5 {
         uint32 srcEid,
         uint256 amountCreditLD,
         bytes memory composeMsg
-    ) public {
+    ) public view {
         bytes memory message = OFTComposeMsgCodec.encode(
             nonce,
             srcEid,
@@ -326,14 +326,14 @@ contract OFTAltTest is TestHelperOz5 {
         aOFT.asOFTAltMock().debit(amountToSendLD, minAmountToCreditLD, dstEid);
     }
 
-    function test_toLD(uint64 amountSD) public {
+    function test_toLD(uint64 amountSD) public view {
         assertEq(
             amountSD * OFTAltMock(address(aOFT)).decimalConversionRate(),
             aOFT.asOFTAltMock().toLD(uint64(amountSD))
         );
     }
 
-    function test_toSD(uint256 amountLD) public {
+    function test_toSD(uint256 amountLD) public view {
         vm.assume(amountLD <= type(uint64).max); // avoid reverting due to overflow
         assertEq(amountLD / aOFT.asOFTAltMock().decimalConversionRate(), aOFT.asOFTAltMock().toSD(amountLD));
     }
@@ -430,7 +430,12 @@ contract OFTAltTest is TestHelperOz5 {
         composeMsg = OFTMsgCodec.composeMsg(message);
     }
 
-    function test_oft_build_msg(uint32 dstEid, bytes32 to, uint256 amountToSendLD, bytes memory composeMsg) public {
+    function test_oft_build_msg(
+        uint32 dstEid,
+        bytes32 to,
+        uint256 amountToSendLD,
+        bytes memory composeMsg
+    ) public view {
         vm.assume(composeMsg.length > 0); // ensure there is a composed payload
         uint256 minAmountToCreditLD = aOFT.asOFTAltMock().removeDust(amountToSendLD);
 
@@ -460,7 +465,7 @@ contract OFTAltTest is TestHelperOz5 {
         assertEq(composeMsg_, expectedComposeMsg);
     }
 
-    function test_oft_build_msg_no_compose_msg(uint32 dstEid, bytes32 to, uint256 amountToSendLD) public {
+    function test_oft_build_msg_no_compose_msg(uint32 dstEid, bytes32 to, uint256 amountToSendLD) public view {
         uint256 minAmountToCreditLD = aOFT.asOFTAltMock().removeDust(amountToSendLD);
 
         // params for buildMsgAndOptions
@@ -566,7 +571,7 @@ contract OFTAltTest is TestHelperOz5 {
         uint16 msgType,
         uint128 nativeDropGas,
         address user
-    ) public {
+    ) public view {
         bytes memory extraOptions = OptionsBuilder.newOptions().addExecutorNativeDropOption(
             nativeDropGas,
             addressToBytes32(user)

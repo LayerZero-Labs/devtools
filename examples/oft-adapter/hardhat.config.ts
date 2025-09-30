@@ -55,18 +55,18 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
-        'optimism-testnet': {
-            eid: EndpointId.OPTSEP_V2_TESTNET,
-            url: process.env.RPC_URL_OP_SEPOLIA || 'https://optimism-sepolia.gateway.tenderly.co',
+        'arbitrum-sepolia': {
+            eid: EndpointId.ARBSEP_V2_TESTNET,
+            url: process.env.RPC_URL_ARB_SEPOLIA || 'https://arbitrum-sepolia.gateway.tenderly.co',
+            accounts,
+        },
+        'base-sepolia': {
+            eid: EndpointId.BASESEP_V2_TESTNET,
+            url: process.env.RPC_URL_BASE_SEPOLIA || 'https://base-sepolia.gateway.tenderly.co',
             accounts,
             oftAdapter: {
                 tokenAddress: '0x0', // Set the token address for the OFT adapter
             },
-        },
-        'arbitrum-testnet': {
-            eid: EndpointId.ARBSEP_V2_TESTNET,
-            url: process.env.RPC_URL_ARB_SEPOLIA || 'https://arbitrum-sepolia.gateway.tenderly.co',
-            accounts,
         },
         hardhat: {
             // Need this for testing because TestHelperOz5.sol is exceeding the compiled contract size limit

@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-aptos-move-example",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "private": true,
   "license": "MIT",
   "scripts": {

@@ -22,6 +22,9 @@ const MNEMONIC = process.env.MNEMONIC
 // If you prefer to be authenticated using a private key, set a PRIVATE_KEY environment variable
 const PRIVATE_KEY = process.env.PRIVATE_KEY
 
+// Recovery address (public address only - no private key needed for deployment)
+const RECOVERY_ADDRESS = process.env.RECOVERY_ADDRESS || null
+
 const accounts: HttpNetworkAccountsUserConfig | undefined = MNEMONIC
     ? { mnemonic: MNEMONIC }
     : PRIVATE_KEY
@@ -57,9 +60,9 @@ const config: HardhatUserConfig = {
             url: process.env.RPC_URL_HYPEREVM_TESTNET || 'https://rpc.hyperliquid-testnet.xyz/evm',
             accounts,
         },
-        'bsc-testnet': {
-            eid: EndpointId.BSC_V2_TESTNET,
-            url: process.env.RPC_URL_BSC_TESTNET || 'https://data-seed-prebsc-2-s1.bnbchain.org:8545',
+        'arbitrum-sepolia': {
+            eid: EndpointId.ARBSEP_V2_TESTNET,
+            url: process.env.RPC_URL_ARB_SEPOLIA || 'https://arbitrum-sepolia.gateway.tenderly.co',
             accounts,
         },
         hardhat: {
@@ -70,6 +73,9 @@ const config: HardhatUserConfig = {
     namedAccounts: {
         deployer: {
             default: 0, // wallet address of index[0], of the mnemonic in .env
+        },
+        recovery: {
+            default: RECOVERY_ADDRESS, // recovery address from env (null if not set)
         },
     },
 }

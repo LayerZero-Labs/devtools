@@ -1,135 +1,117 @@
 import { Command } from 'commander'
-import { LogLevel } from '@layerzerolabs/io-devtools'
+import { LogLevel, createModuleLogger } from '@layerzerolabs/io-devtools'
 import {
+    // Setup & Environment
     setBlock,
-    requestEvmContract,
-    finalizeEvmContract,
+
+    // Core Spot Management
     coreSpotDeployment,
-    intoAssetBridgeAddress,
-    hipTokenInfo,
-    tradingFee,
+
+    // HIP-1 Deployment Workflow
+    enableTokenFreezePrivilege,
     userGenesis,
     genesis,
     createSpotDeployment,
     registerTradingSpot,
+    enableTokenQuoteAsset,
+    tradingFee,
+
+    // EVM-HyperCore Linking
+    requestEvmContract,
+    finalizeEvmContract,
+
+    // Post-Launch Management
+    freezeTokenUser,
+    revokeTokenFreezePrivilege,
+
+    // Info & Queries
     spotDeployState,
+    hipTokenInfo,
     isAccountActivated,
     getCoreBalances,
+    listSpotPairs,
+    spotAuctionStatus,
+
+    // Utilities
+    intoAssetBridgeAddress,
 } from './commands'
 
 import { formatBalancesTable } from './io'
+import { CLI_COMMANDS, LOGGER_MODULES } from './types/cli-constants'
 
 const program = new Command()
+const logger = createModuleLogger(LOGGER_MODULES.SDK_HYPERLIQUID_COMPOSER, LogLevel.info)
 
-program.name('oft-hyperliquid-evm').description('CLI tools for HyperLiquid OFT operations')
+// Reusable option builders
+const commonOptions = {
+    tokenIndex: () => ['-idx, --token-index <token-index>', 'Token index'] as const,
+    network: () => ['-n, --network <network>', 'Network (mainnet/testnet)'] as const,
+    logLevel: () => ['-l, --log-level <level>', 'Log level', LogLevel.info] as const,
+    privateKey: () => ['-pk, --private-key <0x>', 'Private key'] as const,
+    oappConfig: () => ['-oapp, --oapp-config <oapp-config>', 'OAPP config'] as const,
+    userAddress: () => ['-u, --user <0x>', 'User address'] as const,
+}
 
-program
-    .command('to-bridge')
-    .description('Returns the asset bridge address for a token index')
-    .requiredOption('-idx, --token-index <token-index>', 'Token index')
-    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
-    .action(intoAssetBridgeAddress)
+// Combined option groups - apply multiple options at once
+const optionGroups = {
+    // Base group: network + log-level (used by almost all commands)
+    base: (cmd: Command) => cmd.requiredOption(...commonOptions.network()).option(...commonOptions.logLevel()),
 
-program
-    .command('is-account-activated')
-    .description('Check if an address is activated on hypercore')
-    .requiredOption('-u, --user <0x>', 'User address')
-    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
-    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
-    .action(async (options) => {
-        const res = await isAccountActivated(options)
-        console.log(`Account activated: ${res}`)
-    })
+    // Standard deployment: base + token-index + private-key
+    deployment: (cmd: Command) =>
+        optionGroups
+            .base(cmd)
+            .requiredOption(...commonOptions.tokenIndex())
+            .option(...commonOptions.privateKey()),
 
-program
-    .command('get-core-balances')
-    .description('Get core balances for a user')
-    .requiredOption('-u, --user <0x>', 'User address')
-    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
-    .option('--show-zero', 'Show balances with zero amounts', false)
-    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
-    .action(async (options) => {
-        const balances = await getCoreBalances(options)
-        console.log(formatBalancesTable(balances, options.showZero))
-    })
+    // User query: base + user address
+    userQuery: (cmd: Command) => optionGroups.base(cmd).requiredOption(...commonOptions.userAddress()),
 
-program
-    .command('set-block')
-    .description('Set block size')
-    .requiredOption('-s, --size <size>', 'Block size (big/small)')
-    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
-    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
-    .option('-pk, --private-key <0x>', 'Private Key')
+    // EVM linking: deployment + oapp-config
+    evmLinking: (cmd: Command) => optionGroups.deployment(cmd).option(...commonOptions.oappConfig()),
+}
+
+program.name('oft-hyperliquid-evm').description('CLI tools for HyperLiquid OFT operations and HIP-1 deployment')
+
+// === Setup & Environment ===
+optionGroups
+    .base(
+        program
+            .command(CLI_COMMANDS.SET_BLOCK)
+            .description('Set block size')
+            .requiredOption('-s, --size <size>', 'Block size (big/small)')
+    )
+    .option(...commonOptions.privateKey())
     .action(setBlock)
 
-program
-    .command('request-evm-contract')
-    .description('Set the core spot to connect to an EVM contract')
-    .option('-oapp, --oapp-config <oapp-config>', 'OAPP config')
-    .requiredOption('-idx, --token-index <token-index>', 'Token index')
-    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
-    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
-    .option('-pk, --private-key <0x>', 'HyperCore Asset deployer private key')
-    .action(requestEvmContract)
-
-program
-    .command('finalize-evm-contract')
-    .description('Finalize the EVM contract')
-    .option('-oapp, --oapp-config <oapp-config>', 'OAPP config')
-    .requiredOption('-idx, --token-index <token-index>', 'Token index')
-    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
-    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
-    .option('-pk, --private-key <0x>', 'Private key')
-    .action(finalizeEvmContract)
-
-program
-    .command('core-spot')
-    .description('Get core spot metadata information')
-    .option('-a, --action <action>', 'Action (create/get)', 'get')
-    .option('-oapp, --oapp-config <oapp-config>', 'OAPP config')
-    .requiredOption('-idx, --token-index <token-index>', 'Token index')
-    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
-    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
+// === Core Spot Management ===
+optionGroups
+    .base(
+        program
+            .command(CLI_COMMANDS.CORE_SPOT)
+            .description('Get core spot metadata information')
+            .option('-a, --action <action>', 'Action (create/get)', 'get')
+            .option(...commonOptions.oappConfig())
+            .requiredOption(...commonOptions.tokenIndex())
+    )
     .action(coreSpotDeployment)
 
-program
-    .command('hip-token')
-    .description('Get information about a HyperCore HIP-1 token')
-    .requiredOption('-idx, --token-index <token-index>', 'Token index')
-    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
-    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
-    .action(hipTokenInfo)
-
-program
-    .command('spot-deploy-state')
-    .description('Get the current deployment state of a hypercore token')
-    .requiredOption(
-        '-idx, --token-index <token-index>',
-        'Filter on token index. To view all deployments, use "--log-level verbose"'
+// === HIP-1 Deployment Workflow ===
+optionGroups
+    .deployment(
+        program
+            .command(CLI_COMMANDS.ENABLE_FREEZE_PRIVILEGE)
+            .description('HIP-1 Deployment 1. Enable freeze privilege (must be done before genesis)')
     )
-    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
-    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
-    .option('-da, --deployer-address <0x>', 'Core spot deployer address (optional)')
-    .action(spotDeployState)
+    .action(enableTokenFreezePrivilege)
 
-program
-    .command('trading-fee')
-    .description('Set trading fee share')
-    .requiredOption('-idx, --token-index <token-index>', 'Token index')
-    .requiredOption('-s, --share <share>', 'Share')
-    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
-    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
-    .option('-pk, --private-key <0x>', 'Private key')
-    .action(tradingFee)
-
-program
-    .command('user-genesis')
-    .description('Set user genesis')
-    .option('-a, --action <action>', 'Action (userAndWei/existingTokenAndWei/blacklistUsers)', '*')
-    .requiredOption('-idx, --token-index <token-index>', 'Token index')
-    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
-    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
-    .option('-pk, --private-key <0x>', 'Private key')
+optionGroups
+    .deployment(
+        program
+            .command(CLI_COMMANDS.USER_GENESIS)
+            .description('HIP-1 Deployment 2. Set user genesis allocations')
+            .option('-a, --action <action>', 'Action (userAndWei/existingTokenAndWei/blacklistUsers)', '*')
+    )
     .action(async (options) => {
         const validActions = ['*', 'userAndWei', 'existingTokenAndWei', 'blacklistUsers']
         if (!validActions.includes(options.action)) {
@@ -138,31 +120,150 @@ program
         await userGenesis(options)
     })
 
-program
-    .command('set-genesis')
-    .description('Set genesis')
-    .requiredOption('-idx, --token-index <token-index>', 'Token index')
-    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
-    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
-    .option('-pk, --private-key <0x>', 'Private key')
+optionGroups
+    .deployment(program.command(CLI_COMMANDS.SET_GENESIS).description('HIP-1 Deployment 3. Deploy token with genesis'))
     .action(genesis)
 
-program
-    .command('create-spot-deployment')
-    .description('Create a spot deployment without hyperliquidity')
-    .requiredOption('-idx, --token-index <token-index>', 'Token index')
-    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
-    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
-    .option('-pk, --private-key <0x>', 'Private key')
+optionGroups
+    .deployment(
+        program
+            .command(CLI_COMMANDS.CREATE_SPOT_DEPLOYMENT)
+            .description('HIP-1 Deployment 4. Create spot deployment without hyperliquidity')
+    )
     .action(createSpotDeployment)
 
-program
-    .command('register-spot')
-    .description('Register trading spot against USDC')
-    .requiredOption('-idx, --token-index <token-index>', 'Token index')
-    .requiredOption('-n, --network <network>', 'Network (mainnet/testnet)')
-    .option('-l, --log-level <level>', 'Log level', LogLevel.info)
-    .option('-pk, --private-key <0x>', 'Private key')
+optionGroups
+    .deployment(
+        program
+            .command(CLI_COMMANDS.REGISTER_SPOT)
+            .description('HIP-1 Deployment 5. Register trading spot against USDC')
+    )
     .action(registerTradingSpot)
+
+// === Optional HIP-1 Features ===
+optionGroups
+    .deployment(
+        program
+            .command(CLI_COMMANDS.TRADING_FEE)
+            .description('HIP-1 Deployment Optional. Set deployer trading fee share')
+            .requiredOption('-s, --share <share>', 'Share')
+    )
+    .action(tradingFee)
+
+optionGroups
+    .deployment(
+        program
+            .command(CLI_COMMANDS.ENABLE_QUOTE_TOKEN)
+            .description(
+                'HIP-1 Deployment Optional. Enable token as quote asset - requirements: https://t.me/hyperliquid_api/243'
+            )
+    )
+    .action(enableTokenQuoteAsset)
+
+// === EVM-HyperCore Linking ===
+optionGroups
+    .evmLinking(
+        program
+            .command(CLI_COMMANDS.REQUEST_EVM_CONTRACT)
+            .description('Linking 1. Request to link HyperCore token to EVM contract')
+    )
+    .option('-pk, --private-key <0x>', 'HyperCore Asset deployer private key')
+    .action(requestEvmContract)
+
+optionGroups
+    .evmLinking(
+        program.command(CLI_COMMANDS.FINALIZE_EVM_CONTRACT).description('Linking 2. Finalize the EVM contract linking')
+    )
+    .action(finalizeEvmContract)
+
+// === Post-Launch Management ===
+optionGroups
+    .deployment(
+        program
+            .command(CLI_COMMANDS.FREEZE_USER)
+            .description('Freeze or unfreeze a specific user (only if you have enabled freeze privilege)')
+            .requiredOption('-u, --user-address <0x>', 'User address to freeze/unfreeze')
+            .requiredOption('-f, --freeze <true|false>', 'True to freeze, false to unfreeze')
+    )
+    .action(freezeTokenUser)
+
+optionGroups
+    .deployment(
+        program
+            .command(CLI_COMMANDS.REVOKE_FREEZE_PRIVILEGE)
+            .description('Permanently revoke freeze privilege (irreversible)')
+    )
+    .action(revokeTokenFreezePrivilege)
+
+// === Info & Queries ===
+optionGroups
+    .base(
+        program
+            .command(CLI_COMMANDS.SPOT_DEPLOY_STATE)
+            .description('Get current deployment state of a token')
+            .requiredOption(
+                '-idx, --token-index <token-index>',
+                'Filter on token index. To view all deployments, use "--log-level verbose"'
+            )
+            .option('-da, --deployer-address <0x>', 'Core spot deployer address (optional)')
+    )
+    .action(spotDeployState)
+
+optionGroups
+    .base(
+        program
+            .command(CLI_COMMANDS.HIP_TOKEN)
+            .description('Get detailed information about a HyperCore HIP-1 token')
+            .requiredOption(...commonOptions.tokenIndex())
+    )
+    .action(hipTokenInfo)
+
+optionGroups
+    .userQuery(
+        program.command(CLI_COMMANDS.IS_ACCOUNT_ACTIVATED).description('Check if an address is activated on HyperCore')
+    )
+    .action(async (options) => {
+        const res = await isAccountActivated(options)
+        logger.info(`Account activated: ${res}`)
+    })
+
+optionGroups
+    .userQuery(
+        program
+            .command(CLI_COMMANDS.GET_CORE_BALANCES)
+            .description('Get core balances for a user')
+            .option('--show-zero', 'Show balances with zero amounts', false)
+    )
+    .action(async (options) => {
+        const balances = await getCoreBalances(options)
+        logger.info(formatBalancesTable(balances, options.showZero))
+    })
+
+optionGroups
+    .base(
+        program
+            .command(CLI_COMMANDS.LIST_SPOT_PAIRS)
+            .description('List all spot trading pairs for a given token index')
+            .requiredOption(...commonOptions.tokenIndex())
+    )
+    .action(listSpotPairs)
+
+optionGroups
+    .base(
+        program
+            .command(CLI_COMMANDS.SPOT_AUCTION_STATUS)
+            .description('Show current spot pair deploy auction status and gas costs')
+    )
+    .action(spotAuctionStatus)
+
+// === Utilities ===
+optionGroups
+    .base(
+        program
+            .command(CLI_COMMANDS.TO_BRIDGE)
+            .description('Convert token index to bridge address')
+            .requiredOption(...commonOptions.tokenIndex())
+    )
+    .action(intoAssetBridgeAddress)
 
 program.parse()

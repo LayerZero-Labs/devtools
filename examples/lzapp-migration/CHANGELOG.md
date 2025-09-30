@@ -1,5 +1,17 @@
 # @layerzerolabs/lzapp-migration-example
 
+## 0.3.3
+
+### Patch Changes
+
+- e415855: rename retryPayload to retryMessage
+
+## 0.3.2
+
+### Patch Changes
+
+- 5e15a8d: Add lockfiles to example packages
+
 ## 0.3.1
 
 ### Patch Changes

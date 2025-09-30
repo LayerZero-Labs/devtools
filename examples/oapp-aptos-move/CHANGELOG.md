@@ -1,5 +1,17 @@
 # @layerzerolabs/oapp-aptos-example
 
+## 1.0.9
+
+### Patch Changes
+
+- c44e657: update evm networks used
+
+## 1.0.8
+
+### Patch Changes
+
+- 5e15a8d: Add lockfiles to example packages
+
 ## 1.0.7
 
 ### Patch Changes

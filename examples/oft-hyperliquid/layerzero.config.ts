@@ -3,7 +3,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
 const bscTestnetContract: OmniPointHardhat = {
-    eid: EndpointId.BSC_V2_TESTNET,
+    eid: EndpointId.ARBSEP_V2_TESTNET,
     contractName: 'MyOFT',
 }
 

@@ -8,6 +8,8 @@
     "dev": "$npm_execpath turbo run dev",
     "lint": "$npm_execpath turbo run lint",
     "lint:fix": "$npm_execpath turbo run lint:fix",
+    "lockfiles:generate": "node scripts/generate-lockfiles.mjs",
+    "lockfiles:verify": "node scripts/verify-lockfiles.mjs",
     "logs": "docker compose logs -f",
     "prepare": "husky install",
     "prune": "git clean -dfX",

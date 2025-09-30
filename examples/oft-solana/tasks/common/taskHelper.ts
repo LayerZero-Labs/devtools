@@ -20,9 +20,17 @@ export async function getSolanaReceiveConfig(
     remoteEid: EndpointId,
     address: OmniAddress
 ): Promise<[OmniAddress, Uln302UlnConfig, Timeout] | undefined> {
-    const [receiveLibrary] = await endpointV2Sdk.getReceiveLibrary(address, remoteEid)
+    let receiveLibraryAddress = UlnProgram.PROGRAM_ADDRESS
+    try {
+        const [receiveLibrary] = await endpointV2Sdk.getReceiveLibrary(address, remoteEid)
+        if (receiveLibrary) {
+            receiveLibraryAddress = receiveLibrary
+        }
+    } catch {
+        // no action is necessary as upon error, we will just use the default UlnProgram.PROGRAM_ADDRESS
+    }
     return [
-        receiveLibrary ?? UlnProgram.PROGRAM_ADDRESS,
+        receiveLibraryAddress,
         await endpointV2Sdk.getAppUlnConfig(
             address,
             UlnProgram.PROGRAM_ID.toBase58(),
@@ -47,10 +55,18 @@ export async function getSolanaSendConfig(
     eid: EndpointId,
     address: OmniAddress
 ): Promise<[OmniAddress, Uln302UlnConfig, Uln302ExecutorConfig] | undefined> {
-    const sendLibrary = (await endpointV2Sdk.getSendLibrary(address, eid)) ?? UlnProgram.PROGRAM_ADDRESS
+    let sendLibraryAddress = UlnProgram.PROGRAM_ADDRESS
+    try {
+        const sendLibrary = await endpointV2Sdk.getSendLibrary(address, eid)
+        if (sendLibrary) {
+            sendLibraryAddress = sendLibrary
+        }
+    } catch {
+        // no action is necessary as upon error, we will just use the default UlnProgram.PROGRAM_ADDRESS
+    }
     return [
-        sendLibrary,
+        sendLibraryAddress,
         await endpointV2Sdk.getAppUlnConfig(address, UlnProgram.PROGRAM_ID.toBase58(), eid, Uln302ConfigType.Send),
-        await endpointV2Sdk.getAppExecutorConfig(address, sendLibrary, eid),
+        await endpointV2Sdk.getAppExecutorConfig(address, sendLibraryAddress, eid),
     ]
 }

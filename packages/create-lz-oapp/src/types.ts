@@ -12,9 +12,12 @@ export interface Example {
     ref?: string
 }
 
-export interface PackageManager {
+interface PackageManagerBase {
     id: string
     executable: string
-    args: string[]
     label: string
+    hasLockfile: boolean
+    versionRegex?: RegExp
 }
+
+export type PackageManager = PackageManagerBase & ({ args: string[] } | { commands: string[] })
