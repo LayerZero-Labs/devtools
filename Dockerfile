@@ -116,7 +116,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
 RUN rustup toolchain install 1.84.1
 # Pre-install nightly to satisfy tools that implicitly try to use nightly
 # and ensure the 'cargo' component is available for nightly too
-ARG RUST_NIGHTLY_VERSION=nightly-2025-01-01
+ARG RUST_NIGHTLY_VERSION=nightly-2025-05-01
 RUN rustup toolchain install ${RUST_NIGHTLY_VERSION} && rustup component add --toolchain ${RUST_NIGHTLY_VERSION} cargo
 RUN rustc --version
 
