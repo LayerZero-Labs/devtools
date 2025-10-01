@@ -96,10 +96,16 @@ contract VaultComposerSyncPool is VaultComposerSync, IVaultComposerSyncPool {
         address _fallbackRefundAddress
     ) internal virtual override {
         /// @dev Refund to tx.origin to maintain the same behavior as the parent contract
-        try this.lzSend{ value: msg.value }(_oft, _sendParam, tx.origin) {} catch {
+        try this.lzSend{ value: msg.value }(_oft, _sendParam, tx.origin) {} catch (bytes memory _err) {
             /// @dev For Pool destinations: transfer directly to user on failure (Bridge+Swap pattern)
-            /// @dev For OFT destinations or Share tokens: revert to allow LayerZero retry mechanism
-            if (_isOFTPath(_oft, _sendParam.dstEid)) revert RemoteNotStargatePool();
+            /// @dev For OFT destinations or Share tokens: revert with OFT send failure reason
+            if (_isOFTPath(_oft, _sendParam.dstEid)) {
+                if (_err.length > 0) {
+                    assembly {
+                        revert(add(32, _err), mload(_err))
+                    }
+                } else revert();
+            }
 
             /// @dev Code from here is executed ONLY when the send fails and _oft is Pool
             /// @dev Transfer the asset to the hub recovery address
