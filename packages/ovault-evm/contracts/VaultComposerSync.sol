@@ -91,7 +91,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         bytes calldata _message, // expected to contain a composeMessage = abi.encode(SendParam hopSendParam,uint256 minMsgValue)
         address /*_executor*/,
         bytes calldata /*_extraData*/
-    ) external payable virtual override {
+    ) public payable virtual override {
         if (msg.sender != ENDPOINT) revert OnlyEndpoint(msg.sender);
         if (_composeSender != ASSET_OFT && _composeSender != SHARE_OFT) revert OnlyValidComposeCaller(_composeSender);
 
