@@ -26,7 +26,7 @@ contract VaultComposerSyncPool is VaultComposerSync, IVaultComposerSyncPool {
     /// @dev Hydra OFTs have unlimited credit
     uint64 public constant UNLIMITED_CREDIT = type(uint64).max;
 
-    /// @dev Used to receive tokens on Pool send failures if the compose message cannot be decoded
+    /// @dev Used to receive tokens on Pool send failures only if the compose message cannot be decoded
     address public immutable DEFAULT_RECOVERY_ADDRESS;
 
     /**
@@ -55,6 +55,7 @@ contract VaultComposerSyncPool is VaultComposerSync, IVaultComposerSyncPool {
      * @dev This function can only be called by the contract itself (self-call restriction)
      *      Decodes the compose message to extract SendParam, hubRecoveryAddress, and minMsgValue
      *      Routes to either deposit or redeem flow based on the input OFT token type
+     *
      * @param _oftIn The OFT token whose funds have been received in the lzReceive associated with this lzTx
      * @param _composeFrom The bytes32 identifier of the compose sender
      * @param _composeMsg The encoded message containing SendParam, hubRecoveryAddress, and minMsgValue
@@ -68,16 +69,17 @@ contract VaultComposerSyncPool is VaultComposerSync, IVaultComposerSyncPool {
     ) external payable virtual override {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
-        /// @dev SendParam: defines how the composer will handle the user's funds
-        /// @dev usrHubAddr: User-input EVM address to receive tokens on Pool send failures
-        /// @dev minMsgValue: minimum msg.value required to prevent endpoint retry
-        (SendParam memory sendParam, address usrHubAddr, uint256 minMsgValue) = decodeComposeMsg(_composeMsg);
+        // Decode compose message parameters
+        (SendParam memory sendParam, address hubRecoveryAddress, uint256 minMsgValue) = decodeComposeMsg(_composeMsg);
+
+        // Validate minimum message value to prevent endpoint retry
         if (msg.value < minMsgValue) revert InsufficientMsgValue(minMsgValue, msg.value);
 
+        // Route to appropriate vault operation
         if (_oftIn == ASSET_OFT) {
-            _depositAndSend(_composeFrom, _amount, sendParam, usrHubAddr);
+            _depositAndSend(_composeFrom, _amount, sendParam, hubRecoveryAddress);
         } else {
-            _redeemAndSend(_composeFrom, _amount, sendParam, usrHubAddr);
+            _redeemAndSend(_composeFrom, _amount, sendParam, hubRecoveryAddress);
         }
     }
 
@@ -105,9 +107,10 @@ contract VaultComposerSyncPool is VaultComposerSync, IVaultComposerSyncPool {
 
             if (msg.value == 0) return;
 
-            /// @dev Try sending native to hub recovery, fallback to tx.origin
+            /// @dev Try sending native to hub recovery
             (bool sentToHub, ) = _fallbackRefundAddress.call{ value: msg.value }("");
             if (!sentToHub) {
+                /// @dev Fallback to tx.origin since we do not want a case where users tokens are locked in the contract
                 (bool sentToOrigin, ) = tx.origin.call{ value: msg.value }("");
                 /// @dev If this fails then the user should call Endpoint.lzCompose() from an address that can receive native
                 if (!sentToOrigin) revert NativeTransferFailed(msg.value);

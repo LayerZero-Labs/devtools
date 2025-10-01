@@ -73,8 +73,8 @@ contract VaultComposerSyncPoolNative is VaultComposerSyncPool, IVaultComposerSyn
         uint256 amount = _message.amountLD();
         bytes memory composeMsg = _message.composeMsg();
 
-        /// @dev Reduction of PoolNative into Pool by wrapping ETH into WETH
-        _wrapNative(_composeSender);
+        /// @dev Reduction of PoolNative into Pool by wrapping ETH received in lzReceiveinto WETH
+        _wrapNative(_composeSender, amount);
 
         /// @dev try...catch to handle the compose operation. if it fails we refund the user
         try this.handleCompose{ value: msg.value }(_composeSender, composeFrom, composeMsg, amount) {
@@ -137,8 +137,9 @@ contract VaultComposerSyncPoolNative is VaultComposerSyncPool, IVaultComposerSyn
      * @dev Internal function to wrap native into Vault asset
      * @dev Can be overridden to account for different asset tokens
      * @param _oft The OFT contract address to use for wrapping
+     * @param _amount The amount of native to wrap
      */
-    function _wrapNative(address _oft) internal virtual {
-        if (_oft == ASSET_OFT) IWETH(ASSET_ERC20).deposit{ value: msg.value }();
+    function _wrapNative(address _oft, uint256 _amount) internal virtual {
+        if (_oft == ASSET_OFT) IWETH(ASSET_ERC20).deposit{ value: _amount }();
     }
 }
