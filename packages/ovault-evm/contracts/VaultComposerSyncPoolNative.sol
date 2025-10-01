@@ -73,8 +73,7 @@ contract VaultComposerSyncPoolNative is VaultComposerSyncPool, IVaultComposerSyn
     }
 
     /**
-     * @dev Unwrap WETH and send via OFT
-     * @dev Refund to tx.origin to maintain the same behavior as the parent contract
+     * @dev Unwrap WETH when sending to Stargate PoolNative and send via OFT
      * @dev Can only be called by self
      * @param _oft The OFT contract address to use for sending
      * @param _sendParam The parameters for the send operation

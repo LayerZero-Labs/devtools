@@ -55,7 +55,7 @@ contract VaultComposerSyncPool is VaultComposerSync, IVaultComposerSyncPool {
      * @dev This function can only be called by the contract itself (self-call restriction)
      *      Decodes the compose message to extract SendParam, hubRecoveryAddress, and minMsgValue
      *      Routes to either deposit or redeem flow based on the input OFT token type
-     *
+     * @dev Override to decode hubRecoveryAddress from the compose message
      * @param _oftIn The OFT token whose funds have been received in the lzReceive associated with this lzTx
      * @param _composeFrom The bytes32 identifier of the compose sender
      * @param _composeMsg The encoded message containing SendParam, hubRecoveryAddress, and minMsgValue
@@ -138,6 +138,7 @@ contract VaultComposerSyncPool is VaultComposerSync, IVaultComposerSyncPool {
 
     /**
      * @dev Internal function to refund input tokens to sender on source during a failed transaction
+     * @dev Override to handle case for DEFAULT_RECOVERY_ADDRESS
      * @param _oft The OFT contract address used for refunding
      * @param _message The original message that was sent
      * @param _amount The amount of tokens to refund
