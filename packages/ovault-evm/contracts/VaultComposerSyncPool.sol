@@ -177,8 +177,8 @@ contract VaultComposerSyncPool is VaultComposerSync, IVaultComposerSyncPool {
      * @return isOFT Whether the destination path has unlimited credit (OFT) or limited credit (Pool)
      */
     function _isOFTPath(address _oft, uint32 _dstEid) internal view returns (bool isOFT) {
-        uint64 credit = IStargateWithPath(ASSET_OFT).paths(_dstEid).credit;
-        isOFT = (_oft == SHARE_OFT || credit == UNLIMITED_CREDIT);
+        if (_oft == SHARE_OFT) return true;
+        return IStargateWithPath(ASSET_OFT).paths(_dstEid).credit == UNLIMITED_CREDIT;
     }
 
     /**
