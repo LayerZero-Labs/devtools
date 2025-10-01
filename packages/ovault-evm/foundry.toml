@@ -1,13 +1,12 @@
 [profile.default]
 solc = '0.8.22'
-verbosity = 5
+verbosity = 3
 src = "contracts"
 test = "test"
 out = "artifacts"
 cache_path = "cache"
 optimizer = true
 optimizer_runs = 20_000
-evm_version = "cancun"
 
 libs = [
     # We provide a set of useful contract utilities
@@ -36,4 +35,7 @@ remappings = [
 ethereum_mainnet = "https://mainnet.gateway.tenderly.co"
 
 [fuzz]
-runs = 1000
+runs = 1024
+
+[profile.ci.fuzz]
+runs = 8
