@@ -114,10 +114,14 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
     | sh -s -- -y --profile minimal --default-toolchain ${RUST_TOOLCHAIN_VERSION}
 # Ensure stable is installed and available
 RUN rustup toolchain install 1.84.1
-# Pre-install nightly to satisfy tools that implicitly try to use nightly
-# and ensure the 'cargo' component is available for nightly too
+# Pre-install nightly toolchains used by Anchor IDL builds
+# Install both a pinned nightly and the moving 'nightly' channel with required components
 ARG RUST_NIGHTLY_VERSION=nightly-2025-05-01
-RUN rustup toolchain install ${RUST_NIGHTLY_VERSION} && rustup component add --toolchain ${RUST_NIGHTLY_VERSION} cargo
+RUN rustup toolchain install ${RUST_NIGHTLY_VERSION} && \
+    rustup component add --toolchain ${RUST_NIGHTLY_VERSION} cargo rustfmt clippy
+# Map the moving 'nightly' alias to the pinned nightly to avoid updates
+RUN host=$(rustc -vV | sed -n 's/^host: //p') && \
+    rustup toolchain link nightly /root/.rustup/toolchains/${RUST_NIGHTLY_VERSION}-${host}
 RUN rustc --version
 
 ### Setup go
