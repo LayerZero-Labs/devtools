@@ -46,9 +46,7 @@ contract VaultComposerSyncPoolNative is VaultComposerSyncPool, IVaultComposerSyn
         address _assetOFT,
         address _shareOFT,
         address _defaultRecoveryAddress
-    ) VaultComposerSyncPool(_vault, _assetOFT, _shareOFT, _defaultRecoveryAddress) {
-        ASSET_ERC20 = _validateAssetToken(_assetOFT, IERC4626(_vault));
-    }
+    ) VaultComposerSyncPool(_vault, _assetOFT, _shareOFT, _defaultRecoveryAddress) {}
 
     /**
      * @notice Handles LayerZero compose operations for vault transactions with automatic refund functionality
@@ -63,34 +61,13 @@ contract VaultComposerSyncPoolNative is VaultComposerSyncPool, IVaultComposerSyn
         address _composeSender, // The OFT used on refund, also the vaultIn token.
         bytes32 _guid,
         bytes calldata _message,
-        address /*_executor*/,
-        bytes calldata /*_extraData*/
-    ) external payable virtual override {
-        if (msg.sender != ENDPOINT) revert OnlyEndpoint(msg.sender);
-        if (_composeSender != ASSET_OFT && _composeSender != SHARE_OFT) revert OnlyValidComposeCaller(_composeSender);
-
-        bytes32 composeFrom = _message.composeFrom();
+        address _executor,
+        bytes calldata _extraData
+    ) public payable virtual override {
         uint256 amount = _message.amountLD();
-        bytes memory composeMsg = _message.composeMsg();
-
-        /// @dev Reduction of PoolNative into Pool by wrapping ETH received in lzReceiveinto WETH
         _wrapNative(_composeSender, amount);
 
-        /// @dev try...catch to handle the compose operation. if it fails we refund the user
-        try this.handleCompose{ value: msg.value }(_composeSender, composeFrom, composeMsg, amount) {
-            emit Sent(_guid);
-        } catch (bytes memory _err) {
-            /// @dev A revert where the msg.value passed is lower than the min expected msg.value or OFTSendFailed is handled separately
-            /// This is because it is possible to re-trigger from the endpoint the compose operation with the right msg.value
-            if (bytes4(_err) == InsufficientMsgValue.selector) {
-                assembly {
-                    revert(add(32, _err), mload(_err))
-                }
-            }
-
-            _refund(_composeSender, _message, amount, DEFAULT_RECOVERY_ADDRESS);
-            emit Refunded(_guid);
-        }
+        super.lzCompose(_composeSender, _guid, _message, _executor, _extraData);
     }
 
     /**
