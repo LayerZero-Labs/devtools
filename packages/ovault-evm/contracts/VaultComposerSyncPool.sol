@@ -94,7 +94,7 @@ contract VaultComposerSyncPool is VaultComposerSync, IVaultComposerSyncPool {
         address _fallbackRefundAddress
     ) internal virtual override {
         /// @dev Refund to tx.origin to maintain the same behavior as the parent contract
-        try this.oappSend{ value: msg.value }(_oft, _sendParam, tx.origin) {} catch {
+        try this.lzSend{ value: msg.value }(_oft, _sendParam, tx.origin) {} catch {
             /// @dev For Pool destinations: transfer directly to user on failure (Bridge+Swap pattern)
             /// @dev For OFT destinations or Share tokens: revert to allow LayerZero retry mechanism
             if (_isOFTPath(_oft, _sendParam.dstEid)) revert RemoteNotStargatePool();
@@ -123,7 +123,7 @@ contract VaultComposerSyncPool is VaultComposerSync, IVaultComposerSyncPool {
      * @param _sendParam The parameters for the send operation
      * @param _refundAddress Address to receive tokens and native on Pool failure
      */
-    function oappSend(address _oft, SendParam memory _sendParam, address _refundAddress) external payable virtual {
+    function lzSend(address _oft, SendParam memory _sendParam, address _refundAddress) external payable virtual {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
         /// @dev Safe because this is the only function in VaultComposerSync that calls oft.send()

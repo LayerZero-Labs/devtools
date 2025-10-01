@@ -74,7 +74,7 @@ contract VaultComposerSyncPoolNative is VaultComposerSyncPool, IVaultComposerSyn
         bytes memory composeMsg = _message.composeMsg();
 
         /// @dev Reduction of PoolNative into Pool by wrapping ETH into WETH
-        if (_composeSender == ASSET_OFT) IWETH(ASSET_ERC20).deposit{ value: amount }();
+        _wrapNative(_composeSender);
 
         /// @dev try...catch to handle the compose operation. if it fails we refund the user
         try this.handleCompose{ value: msg.value }(_composeSender, composeFrom, composeMsg, amount) {
@@ -101,7 +101,7 @@ contract VaultComposerSyncPoolNative is VaultComposerSyncPool, IVaultComposerSyn
      * @param _sendParam The parameters for the send operation
      * @param _refundAddress Address to receive tokens and native on Pool failure
      */
-    function oappSend(address _oft, SendParam memory _sendParam, address _refundAddress) external payable override {
+    function lzSend(address _oft, SendParam memory _sendParam, address _refundAddress) external payable override {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
         uint256 msgValue = msg.value;
 
@@ -131,5 +131,14 @@ contract VaultComposerSyncPoolNative is VaultComposerSyncPool, IVaultComposerSyn
         if (IOFT(_assetOFT).token() != address(0)) revert StargatePoolTokenNotNative();
         assetERC20 = _vault.asset();
         IWETH(assetERC20).approve(address(_vault), type(uint256).max);
+    }
+
+    /**
+     * @dev Internal function to wrap native into Vault asset
+     * @dev Can be overridden to account for different asset tokens
+     * @param _oft The OFT contract address to use for wrapping
+     */
+    function _wrapNative(address _oft) internal virtual {
+        if (_oft == ASSET_OFT) IWETH(ASSET_ERC20).deposit{ value: msg.value }();
     }
 }
