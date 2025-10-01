@@ -4,6 +4,7 @@ anchor_version = "0.31.1"
 [features]
 seeds = false
 skip-lint = false
+resolution = false
 
 [programs.localnet]
 oft = "G2BYTnfGCMQAErMZkTBCFSapKevzf6QCjizjXi8hFEtJ"
