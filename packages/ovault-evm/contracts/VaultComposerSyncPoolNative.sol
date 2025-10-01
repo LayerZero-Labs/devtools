@@ -65,6 +65,8 @@ contract VaultComposerSyncPoolNative is VaultComposerSyncPool, IVaultComposerSyn
         bytes calldata _extraData
     ) public payable virtual override {
         uint256 amount = _message.amountLD();
+        /// @dev Reduction of PoolNative into Pool by wrapping ETH into WETH
+        /// @dev All internal logic handles WETH as the asset token making deposit symmetric to redemption
         _wrapNative(_composeSender, amount);
 
         super.lzCompose(_composeSender, _guid, _message, _executor, _extraData);
