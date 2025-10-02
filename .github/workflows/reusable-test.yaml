@@ -38,7 +38,7 @@ jobs:
     
     # We'll run the job on the prebuilt base image
     container:
-      image: ghcr.io/layerzero-labs/devtools-dev-base:shankar-ci-upgrade
+      image: ghcr.io/layerzero-labs/devtools-dev-base:solana-examples-update-anchor-version-try-diff-toolchain-version
 
     steps:
       - name: Checkout repo
@@ -107,11 +107,11 @@ jobs:
           JEST_TIMEOUT: 60_000  # Increase timeout for ARM builds
           TEST_TIMEOUT: 600_000 # 10 minutes timeout for long-running tests
           # We'll use the prebuilt base image
-          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:shankar-ci-upgrade
+          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:solana-examples-update-anchor-version-try-diff-toolchain-version
           # And the prebuilt hardhat EVM node image
-          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:shankar-ci-upgrade
+          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:solana-examples-update-anchor-version-try-diff-toolchain-version
           # And the prebuilt TON node image
-          DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:shankar-ci-upgrade
+          DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:solana-examples-update-anchor-version-try-diff-toolchain-version
           # Provided we have good quality Solana RPCs, we can enable Solana tests
           #
           # FIXME The Solana tests need to be ported to either use a stable deployment
@@ -175,17 +175,17 @@ jobs:
           LAYERZERO_EXAMPLES_REPOSITORY_URL: https://github.com/${{ github.repository }}.git
           LAYERZERO_EXAMPLES_REPOSITORY_REF: ${{ github.ref }}
           # We'll use the prebuilt base image
-          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:shankar-ci-upgrade
+          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:solana-examples-update-anchor-version-try-diff-toolchain-version
           # And the prebuilt hardhat EVM node image
-          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:shankar-ci-upgrade
+          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:solana-examples-update-anchor-version-try-diff-toolchain-version
           # Using the local Aptos testnet node
-          DEVTOOLS_APTOS_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-aptos-local-testnet:shankar-ci-upgrade
+          DEVTOOLS_APTOS_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-aptos-local-testnet:solana-examples-update-anchor-version-try-diff-toolchain-version
           # Using the local TON node - i do not know if this is working
-          DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:shankar-ci-upgrade
+          DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:solana-examples-update-anchor-version-try-diff-toolchain-version
           # Using the local Initia node
-          DEVTOOLS_INITIA_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-initia-localnet:shankar-ci-upgrade
+          DEVTOOLS_INITIA_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-initia-localnet:solana-examples-update-anchor-version-try-diff-toolchain-version
           # Using the local Solana test validator - may fail due to RPC issues
-          DEVTOOLS_SOLANA_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-solana-test-validator:shankar-ci-upgrade
+          DEVTOOLS_SOLANA_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-solana-test-validator:solana-examples-update-anchor-version-try-diff-toolchain-version
 
 
       # We'll collect the docker compose logs from all containers on failure

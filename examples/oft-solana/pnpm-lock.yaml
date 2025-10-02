@@ -11,8 +11,8 @@ overrides:
 
 devDependencies:
   '@coral-xyz/anchor':
-    specifier: ^0.29.0
-    version: 0.29.0(typescript@5.9.2)
+    specifier: ^0.31.1
+    version: 0.31.1(typescript@5.9.2)
   '@ethersproject/abi':
     specifier: ^5.7.0
     version: 5.8.0
@@ -648,6 +648,11 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /@coral-xyz/anchor-errors@0.31.1:
+    resolution: {integrity: sha512-NhNEku4F3zzUSBtrYz84FzYWm48+9OvmT1Hhnwr6GnPQry2dsEqH/ti/7ASjjpoFTWRnPXrjAIT1qM6Isop+LQ==}
+    engines: {node: '>=10'}
+    dev: true
+
   /@coral-xyz/anchor@0.26.0(typescript@5.9.2):
     resolution: {integrity: sha512-PxRl+wu5YyptWiR9F2MBHOLLibm87Z4IMUBPreX+DYBtPM+xggvcPi0KAN7+kIL4IrIhXI8ma5V0MCXxSN1pHg==}
     engines: {node: '>=11'}
@@ -725,6 +730,30 @@ packages:
       - utf-8-validate
     dev: true
 
+  /@coral-xyz/anchor@0.31.1(typescript@5.9.2):
+    resolution: {integrity: sha512-QUqpoEK+gi2S6nlYc2atgT2r41TT3caWr/cPUEL8n8Md9437trZ68STknq897b82p5mW0XrTBNOzRbmIRJtfsA==}
+    engines: {node: '>=17'}
+    dependencies:
+      '@coral-xyz/anchor-errors': 0.31.1
+      '@coral-xyz/borsh': 0.31.1(@solana/web3.js@1.98.4)
+      '@noble/hashes': 1.8.0
+      '@solana/web3.js': 1.98.4(typescript@5.9.2)
+      bn.js: 5.2.2
+      bs58: 4.0.1
+      buffer-layout: 1.2.2
+      camelcase: 6.3.0
+      cross-fetch: 3.2.0
+      eventemitter3: 4.0.7
+      pako: 2.1.0
+      superstruct: 0.15.5
+      toml: 3.0.0
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - typescript
+      - utf-8-validate
+    dev: true
+
   /@coral-xyz/borsh@0.26.0(@solana/web3.js@1.98.4):
     resolution: {integrity: sha512-uCZ0xus0CszQPHYfWAqKS5swS1UxvePu83oOF+TWpUkedsNlg6p2p4azxZNSSqwXb9uXMFgxhuMBX9r3Xoi0vQ==}
     engines: {node: '>=10'}
@@ -749,6 +778,17 @@ packages:
 
   /@coral-xyz/borsh@0.30.1(@solana/web3.js@1.98.4):
     resolution: {integrity: sha512-aaxswpPrCFKl8vZTbxLssA2RvwX2zmKLlRCIktJOwW+VpVwYtXRtlWiIP+c2pPRKneiTiWCN2GEMSH9j1zTlWQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      '@solana/web3.js': ^1.98.0
+    dependencies:
+      '@solana/web3.js': 1.98.4(typescript@5.9.2)
+      bn.js: 5.2.2
+      buffer-layout: 1.2.2
+    dev: true
+
+  /@coral-xyz/borsh@0.31.1(@solana/web3.js@1.98.4):
+    resolution: {integrity: sha512-9N8AU9F0ubriKfNE3g1WF0/4dtlGXoBN/hd1PvbNBamBNwRgHxH4P+o3Zt7rSEloW1HUs6LfZEchlx9fW7POYw==}
     engines: {node: '>=10'}
     peerDependencies:
       '@solana/web3.js': ^1.98.0
@@ -1089,7 +1129,7 @@ packages:
       functional-red-black-tree: 1.0.1
       mcl-wasm: 0.7.9
       merkle-patricia-tree: 4.2.4
-      rustbn.js: 0.2.0
+      rustbn.js: 0.3.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -11093,8 +11133,8 @@ packages:
       queue-microtask: 1.2.3
     dev: true
 
-  /rustbn.js@0.2.0:
-    resolution: {integrity: sha512-4VlvkRUuCJvr2J6Y0ImW7NvTCriMi7ErOAqWk1y69vAdoNIzCF3yPmgeNzx+RQTLEDFq5sHfscn1MwHxP9hNfA==}
+  /rustbn.js@0.3.0:
+    resolution: {integrity: sha512-RXLW0TSDBFlujBgq/ZdWa6ADGKiEFZgSqRdCcSXy8XiPqLPApKwaJjf14ImspysQm2mI8hA3EBWN+IOQReqwtA==}
     dev: true
 
   /rxjs@7.8.2:

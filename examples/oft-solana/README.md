@@ -44,7 +44,7 @@
 
 ## Requirements
 
-- Rust `nightly-2025-05-01`
+- Rust `1.84.1`
 - Anchor `0.31.1`
 - Solana CLI `2.2.20`
 - Docker `28.3.0`
