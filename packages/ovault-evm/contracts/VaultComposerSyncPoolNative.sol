@@ -67,7 +67,8 @@ contract VaultComposerSyncPoolNative is VaultComposerSyncPool, IVaultComposerSyn
         uint256 amount = _message.amountLD();
         /// @dev Reduction of PoolNative into Pool by wrapping ETH into WETH
         /// @dev All internal logic handles WETH as the asset token making deposit symmetric to redemption
-        _wrapNative(_composeSender, amount);
+        /// @dev The native token used here was populated during lzReceive
+        if (_composeSender == ASSET_OFT) _wrapNative(amount);
 
         super.lzCompose(_composeSender, _guid, _message, _executor, _extraData);
     }
@@ -85,7 +86,7 @@ contract VaultComposerSyncPoolNative is VaultComposerSyncPool, IVaultComposerSyn
     ) external payable {
         if (msg.value < _assetAmount) revert AmountExceedsMsgValue();
 
-        _wrapNative(ASSET_OFT, _assetAmount);
+        _wrapNative(_assetAmount);
         /// @dev Reduce msg.value to the amount used as Fee for the lzSend operation
         this.depositAndSend{ value: msg.value - _assetAmount }(_assetAmount, _sendParam, _refundAddress);
     }
@@ -132,10 +133,9 @@ contract VaultComposerSyncPoolNative is VaultComposerSyncPool, IVaultComposerSyn
     /**
      * @dev Internal function to wrap native into Vault asset
      * @dev Can be overridden to account for different asset tokens
-     * @param _oft The OFT contract address to use for wrapping
      * @param _amount The amount of native to wrap
      */
-    function _wrapNative(address _oft, uint256 _amount) internal virtual {
-        if (_oft == ASSET_OFT) IWETH(ASSET_ERC20).deposit{ value: _amount }();
+    function _wrapNative(uint256 _amount) internal virtual {
+        IWETH(ASSET_ERC20).deposit{ value: _amount }();
     }
 }
