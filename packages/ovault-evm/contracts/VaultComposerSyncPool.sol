@@ -100,6 +100,7 @@ contract VaultComposerSyncPool is VaultComposerSync, IVaultComposerSyncPool {
             /// @dev For Pool destinations: transfer directly to user on failure (Bridge+Swap pattern)
             /// @dev For OFT destinations or Share tokens: revert with OFT send failure reason
             if (_isOFTPath(_oft, _sendParam.dstEid)) {
+                /// @dev For OFT destinations: bubble up the original error to enable LayerZero retry
                 if (_err.length > 0) {
                     assembly {
                         revert(add(32, _err), mload(_err))
