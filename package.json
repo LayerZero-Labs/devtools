@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "echo $npm_execpath && pnpm turbo run build",
+    "build": "$npm_execpath turbo run build",
     "clean": "$npm_execpath turbo run clean",
     "dev": "$npm_execpath turbo run dev",
-    "lint": "ls /github/home/setup-pnpm/node_modules/.pnpm/pnpm@8.15.6/node_modules/pnpm/*/*",
+    "lint": "$npm_execpath turbo run lint",
     "lint:fix": "$npm_execpath turbo run lint:fix",
     "lockfiles:generate": "node scripts/generate-lockfiles.mjs",
     "lockfiles:verify": "node scripts/verify-lockfiles.mjs",
