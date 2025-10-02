@@ -120,9 +120,10 @@ contract VaultComposerSyncPoolNative is VaultComposerSyncPool, IVaultComposerSyn
 
     /**
      * @dev Internal function to validate the asset token compatibility
-     * @dev Validate part of the constructor in an overridable function since the asset token may not be the same as the OFT token
-     * @dev For example, in the case of VaultComposerSyncPoolNative, the asset token is WETH but the OFT token is native
-     * @dev Overridden to do nothing because WETH is the asset token for the vault but the OFT has native token as the token
+     * @dev For example, in the case of VaultComposerSyncPoolNative, the asset token is WETH but the OFT token is native (ETH)
+     * @param _assetOFT The address of the asset OFT (Omnichain Fungible Token) contract
+     * @param _vault The address of the vault contract
+     * @return assetERC20 The address of the asset ERC20 token
      */
     function _validateAssetToken(address _assetOFT, IERC4626 _vault) internal override returns (address assetERC20) {
         if (IOFT(_assetOFT).token() != address(0)) revert StargatePoolTokenNotNative();
@@ -132,7 +133,7 @@ contract VaultComposerSyncPoolNative is VaultComposerSyncPool, IVaultComposerSyn
 
     /**
      * @dev Internal function to wrap native into Vault asset
-     * @dev Can be overridden to account for different asset tokens
+     * @dev Can be overridden to account for different asset tokens (WETH)
      * @param _amount The amount of native to wrap
      */
     function _wrapNative(uint256 _amount) internal virtual {
