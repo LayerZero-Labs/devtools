@@ -73,6 +73,24 @@ contract VaultComposerSyncPoolNative is VaultComposerSyncPool, IVaultComposerSyn
     }
 
     /**
+     * @notice Deposits Native token (ETH) from the caller into the vault and sends them to the recipient
+     * @param _assetAmount The number of Native token (ETH) to deposit and send
+     * @param _sendParam Parameters on how to send the shares to the recipient
+     * @param _refundAddress Address to receive excess `msg.value`
+     */
+    function depositNativeAndSend(
+        uint256 _assetAmount,
+        SendParam memory _sendParam,
+        address _refundAddress
+    ) external payable {
+        if (msg.value < _assetAmount) revert AmountExceedsMsgValue();
+
+        _wrapNative(ASSET_OFT, _assetAmount);
+        /// @dev Reduce msg.value to the amount used as Fee for the lzSend operation
+        this.depositAndSend{ value: msg.value - _assetAmount }(_assetAmount, _sendParam, _refundAddress);
+    }
+
+    /**
      * @dev Unwrap WETH when sending to Stargate PoolNative and send via OFT
      * @dev Can only be called by self
      * @param _oft The OFT contract address to use for sending

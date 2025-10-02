@@ -188,6 +188,51 @@ contract VaultComposerSyncPoolNativeForkTest is VaultComposerSyncPoolBaseTest {
     }
 
     // ═══════════════════════════════════════════════════════════════════════════════════════
+    // NATIVE-SPECIFIC FUNCTION TESTS
+    // ═══════════════════════════════════════════════════════════════════════════════════════
+
+    function test_depositNativeAndSend_hub_destination() public {
+        uint256 nativeAmount = 1 ether;
+
+        // Give userA native ETH for the deposit
+        vm.deal(userA, nativeAmount);
+
+        uint256 userInitialShares = ethVault.balanceOf(userA);
+        uint256 hubRecoveryInitialBalance = address(hubRecoveryAddress).balance;
+
+        // Create send param for Pool destination (will trigger Bridge+Swap fallback)
+        SendParam memory sendParam = _createSendParam(ETH_EID, userA, nativeAmount, (nativeAmount * 95) / 100);
+
+        assertEq(userInitialShares, 0, "User should have 0 shares before deposit");
+        assertEq(hubRecoveryInitialBalance, 0, "HubRecoveryAddress should have 0 native balance before deposit");
+
+        // Call depositNativeAndSend
+        vm.prank(userA);
+        ethComposer.depositNativeAndSend{ value: nativeAmount }(nativeAmount, sendParam, userA);
+
+        assertGt(ethVault.balanceOf(userA), userInitialShares, "User should have more shares after deposit");
+        assertEq(
+            address(hubRecoveryAddress).balance,
+            hubRecoveryInitialBalance,
+            "HubRecoveryAddress should have more native balance after deposit"
+        );
+    }
+
+    function test_depositNativeAndSend_insufficient_msg_value() public {
+        uint256 nativeAmount = 1 ether;
+        uint256 insufficientMsgValue = 0.5 ether; // Less than nativeAmount
+
+        vm.deal(userA, insufficientMsgValue);
+
+        SendParam memory sendParam = _createSendParam(ARB_EID, userB, nativeAmount, 0);
+
+        // Should revert due to insufficient msg.value
+        vm.prank(userA);
+        vm.expectRevert(); // AmountExceedsMsgValue error
+        ethComposer.depositNativeAndSend{ value: insufficientMsgValue }(nativeAmount, sendParam, userA);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════════════════
     // ADDITIONAL NATIVE-SPECIFIC TESTS
     // ═══════════════════════════════════════════════════════════════════════════════════════
 
