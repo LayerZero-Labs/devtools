@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "$npm_execpath turbo run build",
+    "build": "echo $npm_execpath && pnpm turbo run build",
     "clean": "$npm_execpath turbo run clean",
     "dev": "$npm_execpath turbo run dev",
     "lint": "$npm_execpath turbo run lint",
