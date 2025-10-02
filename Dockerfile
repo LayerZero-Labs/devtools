@@ -119,6 +119,7 @@ RUN rustup toolchain install 1.84.1
 ARG RUST_NIGHTLY_VERSION=nightly-2025-05-01
 RUN rustup toolchain install ${RUST_NIGHTLY_VERSION} && \
     rustup component add --toolchain ${RUST_NIGHTLY_VERSION} cargo rustfmt clippy
+ENV RUSTUP_TOOLCHAIN=${RUST_NIGHTLY_VERSION}
 RUN rustc --version
 
 ### Setup go
