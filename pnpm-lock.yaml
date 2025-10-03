@@ -2344,7 +2344,7 @@ importers:
         specifier: ^4.0.0
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/devtools-solana':
-        specifier: ~3.0.0
+        specifier: ~3.0.1
         version: link:../../packages/devtools-solana
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -2419,7 +2419,7 @@ importers:
         specifier: ~9.0.0
         version: link:../../packages/ua-devtools-evm-hardhat
       '@layerzerolabs/ua-devtools-solana':
-        specifier: ~8.0.1
+        specifier: ~8.0.2
         version: link:../../packages/ua-devtools-solana
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^3.2.1
@@ -5662,7 +5662,7 @@ importers:
         specifier: ~2.0.0
         version: link:../devtools
       '@layerzerolabs/devtools-solana':
-        specifier: ~3.0.0
+        specifier: ~3.0.1
         version: link:../devtools-solana
       '@layerzerolabs/io-devtools':
         specifier: ~0.3.0
