@@ -1,4 +1,3 @@
-// tasks/solana/sendOFT.ts
 import { fetchMint, fetchToken, findAssociatedTokenPda } from '@metaplex-foundation/mpl-toolbox'
 import { publicKey, transactionBuilder } from '@metaplex-foundation/umi'
 import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
@@ -20,7 +19,7 @@ import {
     TransactionType,
     addComputeUnitInstructions,
     deriveConnection,
-    getAddressLookupTable,
+    getDefaultAddressLookupTable,
     getLayerZeroScanLink,
     getSolanaDeployment,
 } from './index'
@@ -39,6 +38,7 @@ export interface SolanaArgs {
     oftProgramId?: string
     tokenProgram?: string
     computeUnitPriceScaleFactor?: number
+    addressLookupTables?: string[]
 }
 
 export async function sendSolana({
@@ -53,6 +53,7 @@ export async function sendSolana({
     minAmount,
     extraOptions,
     composeMsg,
+    addressLookupTables,
 }: SolanaArgs): Promise<SendResult> {
     // 1️⃣ RPC + UMI
     const { connection, umi, umiWalletSigner } = await deriveConnection(srcEid)
@@ -77,7 +78,7 @@ export async function sendSolana({
     const mintPk = new PublicKey(oftStoreInfo.tokenMint)
     const escrowPk = new PublicKey(oftStoreInfo.tokenEscrow)
 
-    // 5️⃣ Attach token account & check balance
+    // 4️⃣ Attach token account & check balance
     const tokenProgramId = tokenProgramStr ? publicKey(tokenProgramStr) : fromWeb3JsPublicKey(TOKEN_PROGRAM_ID)
     const tokenAccount = findAssociatedTokenPda(umi, {
         mint: fromWeb3JsPublicKey(mintPk),
@@ -87,7 +88,7 @@ export async function sendSolana({
     if (!tokenAccount) throw new Error(`No token account for mint ${mintPk}`)
     const balance = (await fetchToken(umi, tokenAccount)).amount
 
-    // 6️⃣ Normalize human→base units
+    // 5️⃣ Normalize human→base units
     const decimals = (await fetchMint(umi, fromWeb3JsPublicKey(mintPk))).decimals
     const amountUnits = parseDecimalToUnits(amount, decimals)
     if (amountUnits === 0n || amountUnits > balance) {
@@ -114,6 +115,11 @@ export async function sendSolana({
         }
     }
 
+    // 6️⃣ Lookup table addresses
+    const lookupTableAddresses = addressLookupTables
+        ? addressLookupTables.map((addr) => publicKey(addr))
+        : [(await getDefaultAddressLookupTable(connection, umi, srcEid)).lookupTableAddress]
+
     // 7️⃣ Quote (use our overridden `programId`)
     logger.info('Quoting the native gas cost for the send transaction...')
     const sendParam = {
@@ -137,7 +143,7 @@ export async function sendSolana({
         },
         { oft: programId }, // ← use override
         [],
-        (await getAddressLookupTable(connection, umi, srcEid)).lookupTableAddress
+        lookupTableAddresses
     )
 
     // 8️⃣ Send (again passing `programId`)
@@ -166,7 +172,8 @@ export async function sendSolana({
         txB,
         umiWalletSigner,
         computeUnitPriceScaleFactor,
-        TransactionType.SendOFT
+        TransactionType.SendOFT,
+        lookupTableAddresses
     )
     let txHash: string
     try {
