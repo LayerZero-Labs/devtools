@@ -1,5 +1,26 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.12.3
+
+### Patch Changes
+
+- d34cbbd: add nonce account check to debug script
+- d34cbbd: debug script displays dvn name
+
+## 0.12.2
+
+### Patch Changes
+
+- e415855: rename retryPayload to retryMessage
+- d48633e: fix oft-solana's debug script when peers are checked
+- c44e657: update evm network used
+
+## 0.12.1
+
+### Patch Changes
+
+- 5e15a8d: Add lockfiles to example packages
+
 ## 0.12.0
 
 ### Minor Changes

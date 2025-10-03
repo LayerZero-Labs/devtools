@@ -1,5 +1,11 @@
 # @layerzerolabs/onft721-zksync-example
 
+## 1.0.9
+
+### Patch Changes
+
+- 5e15a8d: Add lockfiles to example packages
+
 ## 1.0.8
 
 ### Patch Changes
