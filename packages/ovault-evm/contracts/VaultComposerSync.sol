@@ -50,7 +50,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      *
      * Requirements:
      * - Share token must be the vault itself
-     * - Asset token must match the vault's underlying asset
+     * - Asset token should match the vault's underlying asset (overridable behavior)
      * - Share OFT must be an adapter (approvalRequired() returns true)
      */
     constructor(address _vault, address _assetOFT, address _shareOFT) {
@@ -104,7 +104,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
             emit Sent(_guid);
         } catch (bytes memory _err) {
             /// @dev A revert where the msg.value passed is lower than the min expected msg.value is handled separately
-            /// This is because it is possible to re-trigger from the endpoint the compose operation with the right msg.value
+            /// @dev This is because it is possible to re-trigger from the endpoint the compose operation with the right msg.value
             if (bytes4(_err) == InsufficientMsgValue.selector) {
                 assembly {
                     revert(add(32, _err), mload(_err))
@@ -136,7 +136,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
         /// @dev SendParam defines how the composer will handle the user's funds
-        /// @dev The minMsgValue is the minimum amount of msg.value that must be sent, failing to do so will revert and the transaction will be retained in the endpoint for future retries
+        /// @dev When msg.value < minMsgValue we revert and payload will stay in the endpoint for future retries
         (SendParam memory sendParam, uint256 minMsgValue) = abi.decode(_composeMsg, (SendParam, uint256));
         if (msg.value < minMsgValue) revert InsufficientMsgValue(minMsgValue, msg.value);
 
@@ -170,7 +170,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @param _refundAddress Address to receive excess payment of the LZ fees
      * @notice This function first deposits the assets to mint shares, validates the shares meet minimum slippage requirements,
      *         then sends the minted shares cross-chain using the OFT (Omnichain Fungible Token) protocol
-     * @notice The _sendParam.amountLD is updated to the actual share amount minted, and minAmountLD is reset to 0 for the send operation
+     * @notice _sendParam.amountLD is set to the share amount minted, and minAmountLD is reset to 0 for send operation
      */
     function _depositAndSend(
         bytes32 _depositor,
@@ -278,7 +278,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         uint256 _vaultInAmount,
         SendParam memory _sendParam
     ) external view virtual returns (MessagingFee memory) {
-        /// @dev When quoting the asset OFT, the function input is shares and the SendParam.amountLD into quoteSend() should be assets (and vice versa)
+        /// @dev When quoting the asset OFT, if the input is shares, SendParam.amountLD must be assets (and vice versa)
 
         if (_targetOFT == ASSET_OFT) {
             uint256 maxRedeem = VAULT.maxRedeem(_from);
@@ -356,7 +356,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
 
     /**
      * @dev Internal function to validate the asset token compatibility
-     * @dev Validate part of the constructor in an overridable function since the asset token may not be the same as the OFT token
+     * @dev Validate part of the constructor in an overridable function due to differences in asset and OFT token
      * @dev For example, in the case of VaultComposerSyncPoolNative, the asset token is WETH but the OFT token is native
      * @param _assetOFT The address of the asset OFT
      * @param _vault The address of the vault
