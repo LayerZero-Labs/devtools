@@ -20,12 +20,10 @@
       "persistent": true
     },
     "lint": {
-      "cache": false,
-      "dependsOn": ["^build"]
+      "cache": false
     },
     "lint:fix": {
-      "cache": false,
-      "dependsOn": ["^build"]
+      "cache": false
     },
     "start": {
       "outputs": [],
