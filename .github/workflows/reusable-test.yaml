@@ -58,6 +58,9 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Clean
+        run: pnpm clean
+
       # We'll run the build in series to avoid race conditions
       # when compiling hardhat projects in monorepo setups
       - name: Build
