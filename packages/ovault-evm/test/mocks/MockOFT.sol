@@ -30,3 +30,7 @@ contract MockOFTAdapter is OFTAdapter {
         address _delegate
     ) OFTAdapter(_token, _lzEndpoint, _delegate) Ownable(msg.sender) {}
 }
+
+contract NonPayableContract {
+    // No receive() or fallback() function - cannot receive native tokens
+}
