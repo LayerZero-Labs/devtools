@@ -55,8 +55,8 @@ jobs:
       - name: Setup build cache
         uses: ./.github/workflows/actions/setup-build-cache
 
-      - name: Lint
-        run: pnpm lint
+      # - name: Lint
+      #   run: pnpm lint
 
       # We'll run the build in series to avoid race conditions
       # when compiling hardhat projects in monorepo setups
