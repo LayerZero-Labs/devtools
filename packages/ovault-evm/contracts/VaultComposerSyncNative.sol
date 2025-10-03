@@ -13,11 +13,10 @@ import { VaultComposerSync } from "./VaultComposerSync.sol";
 /**
  * @title Synchronous Vault Composer with Stargate NativePools as Asset and WETH as Share
  * @author LayerZero Labs (@shankars99)
- * @dev Extends VaultComposerSyncPool with Pool-specific error handling:
- *      - Pool destinations: Bridge+Swap pattern on send failures (liquidity/slippage issues)
- *      - OFT destinations: Revert for LayerZero retry mechanism (config/gas issues)
- * @dev DepositAndSend and Deposit use WETH.
- * @dev Uses hubRecoveryAddress for Pool failure recovery, falling back to tx.origin
+ * @dev Extends VaultComposerSync with Pool-specific behavior such as oft.token wrapping
+ * @dev WETH is used as the share token for the vault instead of native token (ETH)
+ * @dev DepositAndSend and Deposit use WETH instead of native token (ETH)
+ * @dev DepositNativeAndSend allows for deposits with ETH
  * @dev Compatible with ERC4626 vaults and requires Share OFT to be an adapter
  */
 contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative {
@@ -48,7 +47,7 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
     ) external payable {
         if (msg.value < _assetAmount) revert AmountExceedsMsgValue();
 
-        _wrapNative(_assetAmount);
+        IWETH(ASSET_ERC20).deposit{ value: _assetAmount }();
         /// @dev Reduce msg.value to the amount used as Fee for the lzSend operation
         this.depositAndSend{ value: msg.value - _assetAmount }(_assetAmount, _sendParam, _refundAddress);
     }
@@ -61,37 +60,20 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
      * @param _refundAddress Address to receive tokens and native on Pool failure
      */
     function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress) internal override {
+        /// @dev msg.value passed in this call is used as LayerZero fee
         uint256 msgValue = msg.value;
 
         /// @dev Safe because this is the only function in VaultComposerSync that calls oft.send()
-        /// @dev Stargate Pool takes in ETH as underlying token so we need to convert WETH to ETH
         if (_oft == ASSET_OFT) {
-            /// @dev Since we converted ETH to WETH in lzCompose, on deposit we have WETH at this point.
+            /// @dev In deposit's lzReceive() we converted ETH to WETH.
             /// @dev Incase of redemption the vault outputs WETH.
-            _unwrapNative(_sendParam.amountLD);
+            /// @dev So we always have WETH at this point which we unwrap to ETH for the Stargate Pool
+            IWETH(ASSET_ERC20).withdraw(_sendParam.amountLD);
             /// @dev MsgValue passed to Stargate Pool is nativeFee + amountLD
             msgValue += _sendParam.amountLD;
         }
 
         IOFT(_oft).send{ value: msgValue }(_sendParam, MessagingFee(msg.value, 0), _refundAddress);
-    }
-
-    /**
-     * @dev Internal function to wrap native into Vault asset
-     * @dev Can be overridden to account for different native wrapped tokens
-     * @param _amount The amount of native to wrap
-     */
-    function _wrapNative(uint256 _amount) internal virtual {
-        IWETH(ASSET_ERC20).deposit{ value: _amount }();
-    }
-
-    /**
-     * @dev Internal function to unwrap native from Vault asset
-     * @dev Can be overridden to account for different native wrapped tokens
-     * @param _amount The amount of native to unwrap
-     */
-    function _unwrapNative(uint256 _amount) internal virtual {
-        IWETH(ASSET_ERC20).withdraw(_amount);
     }
 
     /**
@@ -107,10 +89,13 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
         IWETH(assetERC20).approve(address(_vault), type(uint256).max);
     }
 
+    /**
+     * @dev Reduction of ComposerNative into ComposerBase by wrapping ETH into WETH
+     * @dev All internal logic handles WETH as the asset token making deposit symmetric to redemption
+     * @dev The native token used here was sent during lzReceive from the Pool
+     * @dev lzCompose calls comes from the Endpoint and are not affected by the wrapNative call
+     */
     receive() external payable override {
-        /// @dev Reduction of ComposerNative into ComposerBase by wrapping ETH into WETH
-        /// @dev All internal logic handles WETH as the asset token making deposit symmetric to redemption
-        /// @dev The native token used here was populated during lzReceive
-        if (msg.sender == ASSET_OFT) _wrapNative(msg.value);
+        if (msg.sender == ASSET_OFT) IWETH(ASSET_ERC20).deposit{ value: msg.value }();
     }
 }
