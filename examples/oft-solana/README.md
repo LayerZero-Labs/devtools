@@ -265,6 +265,8 @@ The above command will create a Solana OFT which will have only the OFT Store as
 pnpm hardhat lz:deploy # follow the prompts
 ```
 
+> For EVM OFTs used in this flow, if you need initial tokens on testnet, open the EVM `contracts/MyOFT.sol` and uncomment `_mint(msg.sender, 100000 * (10 ** 18));` in the constructor. Ensure you remove this line for production.
+
 ## Enable Messaging
 
 Run the following command to initialize the SendConfig and ReceiveConfig Accounts. This step is unique to pathways that involve Solana.
@@ -390,8 +392,7 @@ pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <
 
 Before deploying, ensure the following:
 
-- (required) you are not using `MyOFTMock`, which has a public `mint` function
-  - In `layerzero.config.ts`, ensure you are not using `MyOFTMock` as the `contractName` for any of the contract objects.
+- (required) for EVM OFTs used in this flow, if you uncommented the testnet mint line in `contracts/MyOFT.sol`, ensure it is commented out for production
 - (recommended) you have profiled the gas usage of `lzReceive` on your destination chains
 <!-- TODO: mention https://docs.layerzero.network/v2/developers/evm/technical-reference/integration-checklist#set-security-and-executor-configurations after it has been updated to reference the CLI -->
 

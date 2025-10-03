@@ -23,12 +23,12 @@ In `layerzero.config.ts`, locate your contract definitions (around lines 11-19):
 ```typescript
 const arbitrumContract: OmniPointHardhat = {
   eid: EndpointId.OPTIMISM_V2_MAINNET, // This is your endpoint ID
-  contractName: "MyOFTMock",
+  contractName: "MyOFT",
 };
 
 const baseContract: OmniPointHardhat = {
   eid: EndpointId.ARBITRUM_V2_MAINNET, // This is your endpoint ID
-  contractName: "MyOFTMock",
+  contractName: "MyOFT",
 };
 ```
 
@@ -166,7 +166,7 @@ After configuring:
 1. **Deploy your OApp** (if not already done):
 
    ```bash
-   pnpm hardhat lz:deploy --tags MyOFTMock
+   pnpm hardhat lz:deploy --tags MyOFT
    ```
 
 2. **Wire your OApp with the configuration**:
@@ -210,8 +210,8 @@ When you run the wire command, the configuration logs discovered chainKeys:
 
 ```
 info:    ChainKey mappings for configured endpoints:
-info:      MyOFTMock (eid: 40231): arbitrum
-info:      MyOFTMock (eid: 40245): base
+info:      MyOFT (eid: 40231): arbitrum
+info:      MyOFT (eid: 40245): base
 ```
 
 ## Example: Using Simple Workers for Testnets
