@@ -111,7 +111,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
                 }
             }
 
-            _refund(_composeSender, _message, amount, tx.origin);
+            _refund(_composeSender, _message, amount, tx.origin, msg.value);
             emit Refunded(_guid);
         }
     }
@@ -141,9 +141,9 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         if (msg.value < minMsgValue) revert InsufficientMsgValue(minMsgValue, msg.value);
 
         if (_oftIn == ASSET_OFT) {
-            _depositAndSend(_composeFrom, _amount, sendParam, tx.origin);
+            _depositAndSend(_composeFrom, _amount, sendParam, tx.origin, msg.value);
         } else {
-            _redeemAndSend(_composeFrom, _amount, sendParam, tx.origin);
+            _redeemAndSend(_composeFrom, _amount, sendParam, tx.origin, msg.value);
         }
     }
 
@@ -159,7 +159,13 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         address _refundAddress
     ) external payable virtual nonReentrant {
         IERC20(ASSET_ERC20).safeTransferFrom(msg.sender, address(this), _assetAmount);
-        _depositAndSend(OFTComposeMsgCodec.addressToBytes32(msg.sender), _assetAmount, _sendParam, _refundAddress);
+        _depositAndSend(
+            OFTComposeMsgCodec.addressToBytes32(msg.sender),
+            _assetAmount,
+            _sendParam,
+            _refundAddress,
+            msg.value
+        );
     }
 
     /**
@@ -176,7 +182,8 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         bytes32 _depositor,
         uint256 _assetAmount,
         SendParam memory _sendParam,
-        address _refundAddress
+        address _refundAddress,
+        uint256 _msgValue
     ) internal virtual {
         uint256 shareAmount = _deposit(_depositor, _assetAmount);
         _assertSlippage(shareAmount, _sendParam.minAmountLD);
@@ -184,7 +191,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         _sendParam.amountLD = shareAmount;
         _sendParam.minAmountLD = 0;
 
-        _send(SHARE_OFT, _sendParam, _refundAddress);
+        _send(SHARE_OFT, _sendParam, _refundAddress, _msgValue);
         emit Deposited(_depositor, _sendParam.to, _sendParam.dstEid, _assetAmount, shareAmount);
     }
 
@@ -210,7 +217,13 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         address _refundAddress
     ) external payable virtual nonReentrant {
         IERC20(SHARE_ERC20).safeTransferFrom(msg.sender, address(this), _shareAmount);
-        _redeemAndSend(OFTComposeMsgCodec.addressToBytes32(msg.sender), _shareAmount, _sendParam, _refundAddress);
+        _redeemAndSend(
+            OFTComposeMsgCodec.addressToBytes32(msg.sender),
+            _shareAmount,
+            _sendParam,
+            _refundAddress,
+            msg.value
+        );
     }
 
     /**
@@ -229,7 +242,8 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         bytes32 _redeemer,
         uint256 _shareAmount,
         SendParam memory _sendParam,
-        address _refundAddress
+        address _refundAddress,
+        uint256 _msgValue
     ) internal virtual {
         uint256 assetAmount = _redeem(_redeemer, _shareAmount);
         _assertSlippage(assetAmount, _sendParam.minAmountLD);
@@ -237,7 +251,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         _sendParam.amountLD = assetAmount;
         _sendParam.minAmountLD = 0;
 
-        _send(ASSET_OFT, _sendParam, _refundAddress);
+        _send(ASSET_OFT, _sendParam, _refundAddress, _msgValue);
         emit Redeemed(_redeemer, _sendParam.to, _sendParam.dstEid, _shareAmount, assetAmount);
     }
 
@@ -304,11 +318,11 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @param _sendParam The parameters for the send operation
      * @param _refundAddress Address to receive excess payment of the LZ fees
      */
-    function _send(address _oft, SendParam memory _sendParam, address _refundAddress) internal virtual {
+    function _send(address _oft, SendParam memory _sendParam, address _refundAddress, uint256 _msgValue) internal virtual {
         if (_sendParam.dstEid == VAULT_EID) {
-            _sendLocal(_oft, _sendParam, _refundAddress);
+            _sendLocal(_oft, _sendParam, _refundAddress, _msgValue);
         } else {
-            _sendRemote(_oft, _sendParam, _refundAddress);
+            _sendRemote(_oft, _sendParam, _refundAddress, _msgValue);
         }
     }
 
@@ -318,8 +332,8 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @param _oft The OFT contract address to determine which token to transfer
      * @param _sendParam The parameters for the send operation
      */
-    function _sendLocal(address _oft, SendParam memory _sendParam, address /*_refundAddress*/) internal virtual {
-        if (msg.value > 0) revert NoMsgValueExpected();
+    function _sendLocal(address _oft, SendParam memory _sendParam, address /*_refundAddress*/, uint256 _msgValue) internal virtual {
+        if (_msgValue > 0) revert NoMsgValueExpected();
 
         /// @dev Can do this because _oft is validated before this function is called
         address erc20 = _oft == ASSET_OFT ? ASSET_ERC20 : SHARE_ERC20;
@@ -333,8 +347,8 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @param _sendParam The parameters for the send operation
      * @param _refundAddress Address to receive excess payment of the LZ fees
      */
-    function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress) internal virtual {
-        IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), _refundAddress);
+    function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress, uint256 _msgValue) internal virtual {
+        IOFT(_oft).send{ value: _msgValue}(_sendParam, MessagingFee(_msgValue, 0), _refundAddress);
     }
 
     /**
@@ -344,14 +358,14 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @param _amount The amount of tokens to refund
      * @param _refundAddress Address to receive the refund
      */
-    function _refund(address _oft, bytes calldata _message, uint256 _amount, address _refundAddress) internal virtual {
+    function _refund(address _oft, bytes calldata _message, uint256 _amount, address _refundAddress, uint256 _msgValue) internal virtual {
         /// @dev Extracted from the _message header. Will always be part of the _message since it is created by lzReceive
         SendParam memory refundSendParam;
         refundSendParam.dstEid = OFTComposeMsgCodec.srcEid(_message);
         refundSendParam.to = OFTComposeMsgCodec.composeFrom(_message);
         refundSendParam.amountLD = _amount;
 
-        _sendRemote(_oft, refundSendParam, _refundAddress);
+        _sendRemote(_oft, refundSendParam, _refundAddress, _msgValue);
     }
 
     /**

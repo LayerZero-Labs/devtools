@@ -4,6 +4,7 @@ pragma solidity ^0.8.22;
 import { IERC4626 } from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
 
 import { IOFT, SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
+import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
 import { IVaultComposerSyncNative } from "./interfaces/IVaultComposerSyncNative.sol";
 import { IWETH } from "./interfaces/IWETH.sol";
@@ -20,6 +21,8 @@ import { VaultComposerSync } from "./VaultComposerSync.sol";
  * @dev Compatible with ERC4626 vaults and requires Share OFT to be an adapter
  */
 contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative {
+    using OFTComposeMsgCodec for bytes32;
+
     /**
      * @notice Initializes the VaultComposerSyncPoolNative contract with vault and OFT token addresses
      * @param _vault The address of the ERC4626 vault contract
@@ -48,8 +51,15 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
         if (msg.value < _assetAmount) revert AmountExceedsMsgValue();
 
         IWETH(ASSET_ERC20).deposit{ value: _assetAmount }();
+
         /// @dev Reduce msg.value to the amount used as Fee for the lzSend operation
-        this.depositAndSend{ value: msg.value - _assetAmount }(_assetAmount, _sendParam, _refundAddress);
+        _depositAndSend(
+            OFTComposeMsgCodec.addressToBytes32(msg.sender),
+            _assetAmount,
+            _sendParam,
+            _refundAddress,
+            msg.value - _assetAmount
+        );
     }
 
     /**
@@ -59,9 +69,9 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
      * @param _sendParam The parameters for the send operation
      * @param _refundAddress Address to receive tokens and native on Pool failure
      */
-    function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress) internal override {
+    function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress, uint256 _msgValue) internal override {
         /// @dev msg.value passed in this call is used as LayerZero fee
-        uint256 msgValue = msg.value;
+        uint256 msgValue = _msgValue;
 
         /// @dev Safe because this is the only function in VaultComposerSync that calls oft.send()
         if (_oft == ASSET_OFT) {
@@ -73,7 +83,7 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
             msgValue += _sendParam.amountLD;
         }
 
-        IOFT(_oft).send{ value: msgValue }(_sendParam, MessagingFee(msg.value, 0), _refundAddress);
+        IOFT(_oft).send{ value: msgValue }(_sendParam, MessagingFee(_msgValue, 0), _refundAddress);
     }
 
     /**
