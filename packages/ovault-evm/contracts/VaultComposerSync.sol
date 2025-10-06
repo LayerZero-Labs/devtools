@@ -163,6 +163,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @param _assetAmount The number of assets to deposit
      * @param _sendParam Parameter that defines how to send the shares
      * @param _refundAddress Address to receive excess payment of the LZ fees
+     * @param _msgValue The amount of native tokens sent with the transaction
      * @notice This function first deposits the assets to mint shares, validates the shares meet minimum slippage requirements,
      *         then sends the minted shares cross-chain using the OFT (Omnichain Fungible Token) protocol
      * @notice _sendParam.amountLD is set to the share amount minted, and minAmountLD is reset to 0 for send operation
@@ -221,6 +222,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @param _shareAmount The number of shares to redeem
      * @param _sendParam Parameter that defines how to send the assets
      * @param _refundAddress Address to receive excess payment of the LZ fees
+     * @param _msgValue The amount of native tokens sent with the transaction
      * @notice This function first redeems the specified share amount for the underlying asset,
      *         validates the received amount against slippage protection, then initiates a cross-chain
      *         transfer of the redeemed assets using the OFT (Omnichain Fungible Token) protocol
@@ -306,6 +308,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @param _oft The OFT contract address to use for sending
      * @param _sendParam The parameters for the send operation
      * @param _refundAddress Address to receive excess payment of the LZ fees
+     * @param _msgValue The amount of native tokens sent with the transaction
      */
     function _send(address _oft, SendParam memory _sendParam, address _refundAddress, uint256 _msgValue) internal virtual {
         if (_sendParam.dstEid == VAULT_EID) {
@@ -320,6 +323,8 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @dev Transfers tokens directly without LayerZero messaging
      * @param _oft The OFT contract address to determine which token to transfer
      * @param _sendParam The parameters for the send operation
+     * @dev _refundAddress Address to receive excess payment of the LZ fees (unused for local transfers)
+     * @param _msgValue The amount of native tokens sent with the transaction (must be 0 for local transfers)
      */
     function _sendLocal(address _oft, SendParam memory _sendParam, address /*_refundAddress*/, uint256 _msgValue) internal virtual {
         if (_msgValue > 0) revert NoMsgValueExpected();
@@ -335,6 +340,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @param _oft The OFT contract address to use for sending
      * @param _sendParam The parameters for the send operation
      * @param _refundAddress Address to receive excess payment of the LZ fees
+     * @param _msgValue The amount of native tokens sent with the transaction
      */
     function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress, uint256 _msgValue) internal virtual {
         IOFT(_oft).send{ value: _msgValue}(_sendParam, MessagingFee(_msgValue, 0), _refundAddress);
@@ -346,6 +352,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @param _message The original message that was sent
      * @param _amount The amount of tokens to refund
      * @param _refundAddress Address to receive the refund
+     * @param _msgValue The amount of native tokens sent with the transaction
      */
     function _refund(address _oft, bytes calldata _message, uint256 _amount, address _refundAddress, uint256 _msgValue) internal virtual {
         /// @dev Extracted from the _message header. Will always be part of the _message since it is created by lzReceive
