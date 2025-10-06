@@ -396,11 +396,11 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
             revert AssetTokenNotVaultAsset(assetERC20, address(VAULT.asset()));
         }
 
-        /// @dev Approve the vault to spend the asset tokens held by this contract
-        IERC20(assetERC20).approve(address(VAULT), type(uint256).max);
-
         /// @dev If the asset OFT is an adapter, approve it as well
         if (IOFT(assetOFT).approvalRequired()) IERC20(assetERC20).approve(assetOFT, type(uint256).max);
+
+        /// @dev Approve the vault to spend the asset tokens held by this contract
+        IERC20(assetERC20).approve(address(VAULT), type(uint256).max);
     }
 
     receive() external payable virtual {}

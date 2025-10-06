@@ -99,10 +99,10 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
 
         if (IOFT(assetOFT).token() != address(0)) revert AssetOFTTokenNotNative();
 
-        IWETH(assetERC20).approve(address(VAULT), type(uint256).max);
-
         // @dev The asset OFT does NOT need approval since it operates in native ETH.
         // if (IOFT(assetOFT).approvalRequired()) IERC20(assetERC20).approve(assetOFT, type(uint256).max);
+
+        IWETH(assetERC20).approve(address(VAULT), type(uint256).max);
     }
 
     /**
