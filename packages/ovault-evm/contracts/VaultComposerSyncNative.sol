@@ -70,7 +70,7 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
      * @param _refundAddress Address to receive tokens and native on Pool failure
      */
     function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress, uint256 _msgValue) internal override {
-        /// @dev msg.value passed in this call is used as LayerZero fee
+        /// @dev _msgValue passed in this call is used as LayerZero fee
         uint256 msgValue = _msgValue;
 
         /// @dev Safe because this is the only function in VaultComposerSync that calls oft.send()
