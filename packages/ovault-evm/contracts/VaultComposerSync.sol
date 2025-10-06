@@ -56,8 +56,11 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
     constructor(address _vault, address _assetOFT, address _shareOFT) {
         VAULT = IERC4626(_vault);
 
-        (SHARE_OFT, SHARE_ERC20) = _initializeShareToken(_shareOFT);
-        (ASSET_OFT, ASSET_ERC20) = _initializeAssetToken(_assetOFT);
+        SHARE_OFT = _shareOFT;
+        ASSET_OFT = _assetOFT;
+
+        SHARE_ERC20 = _initializeShareToken();
+        ASSET_ERC20 = _initializeAssetToken();
 
         ENDPOINT = address(IOAppCore(ASSET_OFT).endpoint());
         VAULT_EID = ILayerZeroEndpointV2(ENDPOINT).eid();
@@ -357,15 +360,12 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
     /**
         * @dev Internal function to validate the share token compatibility
         * @dev Validate part of the constructor in an overridable function due to differences in asset and OFT token
-        * @param _shareOFT The address of the share OFT
-        * @return shareOFT The address of the share OFT
         * @return shareERC20 The address of the share ERC20 token
         * @notice Share token must be the vault itself
         * @notice Share OFT must be an adapter (approvalRequired() returns true)
      */
-    function _initializeShareToken(address _shareOFT) internal virtual returns (address shareOFT, address shareERC20) {
-        shareOFT = _shareOFT;
-        shareERC20 = IOFT(shareOFT).token();
+    function _initializeShareToken() internal virtual returns (address shareERC20) {
+        shareERC20 = IOFT(SHARE_OFT).token();
 
         if (shareERC20 != address(VAULT)) {
             revert ShareTokenNotVault(shareERC20, address(VAULT));
@@ -373,31 +373,28 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
 
         /// @dev ShareOFT must be an OFT adapter. We can infer this by checking 'approvalRequired()'.
         /// @dev burn() on tokens when a user sends changes totalSupply() which the asset:share ratio depends on.
-        if (!IOFT(shareOFT).approvalRequired()) revert ShareOFTNotAdapter(shareOFT);
+        if (!IOFT(SHARE_OFT).approvalRequired()) revert ShareOFTNotAdapter(SHARE_OFT);
 
         /// @dev Approve the share adapter with the share tokens held by this contract
-        IERC20(shareERC20).approve(shareOFT, type(uint256).max);
+        IERC20(shareERC20).approve(SHARE_OFT, type(uint256).max);
     }
 
     /**
      * @dev Internal function to validate the asset token compatibility
      * @dev Validate part of the constructor in an overridable function due to differences in asset and OFT token
      * @dev For example, in the case of VaultComposerSyncPoolNative, the asset token is WETH but the OFT token is native
-     * @param _assetOFT The address of the asset OFT
-     * @return assetOFT The address of the asset OFT
      * @return assetERC20 The address of the asset ERC20 token
      * @notice Asset token should match the vault's underlying asset (overridable behavior)
      */
-    function _initializeAssetToken(address _assetOFT) internal virtual returns (address assetOFT, address assetERC20) {
-        assetOFT = _assetOFT;
-        assetERC20 = IOFT(assetOFT).token();
+    function _initializeAssetToken() internal virtual returns (address assetERC20) {
+        assetERC20 = IOFT(ASSET_OFT).token();
 
         if (assetERC20 != address(VAULT.asset())) {
             revert AssetTokenNotVaultAsset(assetERC20, address(VAULT.asset()));
         }
 
         /// @dev If the asset OFT is an adapter, approve it as well
-        if (IOFT(assetOFT).approvalRequired()) IERC20(assetERC20).approve(assetOFT, type(uint256).max);
+        if (IOFT(ASSET_OFT).approvalRequired()) IERC20(assetERC20).approve(ASSET_OFT, type(uint256).max);
 
         /// @dev Approve the vault to spend the asset tokens held by this contract
         IERC20(assetERC20).approve(address(VAULT), type(uint256).max);

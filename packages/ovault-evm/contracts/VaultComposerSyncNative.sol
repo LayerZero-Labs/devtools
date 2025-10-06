@@ -89,18 +89,15 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
     /**
      * @dev Internal function to validate the asset token compatibility
      * @dev In VaultComposerSyncNative, the asset token is WETH but the OFT token is native (ETH)
-     * @param _assetOFT The address of the asset OFT (Omnichain Fungible Token) contract
-     * @return assetOFT The address of the asset OFT token
      * @return assetERC20 The address of the asset ERC20 token
      */
-    function _initializeAssetToken(address _assetOFT) internal override returns (address assetOFT, address assetERC20) {
-        assetOFT = _assetOFT;
+    function _initializeAssetToken() internal override returns (address assetERC20) {
         assetERC20 = VAULT.asset();
 
-        if (IOFT(assetOFT).token() != address(0)) revert AssetOFTTokenNotNative();
+        if (IOFT(ASSET_OFT).token() != address(0)) revert AssetOFTTokenNotNative();
 
         // @dev The asset OFT does NOT need approval since it operates in native ETH.
-        // if (IOFT(assetOFT).approvalRequired()) IERC20(assetERC20).approve(assetOFT, type(uint256).max);
+        // if (IOFT(ASSET_OFT).approvalRequired()) IERC20(assetERC20).approve(ASSET_OFT, type(uint256).max);
 
         IWETH(assetERC20).approve(address(VAULT), type(uint256).max);
     }
