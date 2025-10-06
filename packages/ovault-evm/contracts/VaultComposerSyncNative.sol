@@ -94,9 +94,14 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
      * @return assetERC20 The address of the asset ERC20 token
      */
     function _initializeAssetToken(address _assetOFT, IERC4626 _vault) internal override returns (address assetERC20) {
-        if (IOFT(_assetOFT).token() != address(0)) revert AssetOFTTokenNotNative();
         assetERC20 = _vault.asset();
+
+        if (IOFT(_assetOFT).token() != address(0)) revert AssetOFTTokenNotNative();
+
         IWETH(assetERC20).approve(address(_vault), type(uint256).max);
+
+        // The asset OFT does NOT need approval since it operates in native ETH.
+        // if (IOFT(_assetOFT).approvalRequired()) IERC20(assetERC20).approve(_assetOFT, type(uint256).max);
     }
 
     /**
