@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.22;
 
-import { IERC4626 } from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
-
 import { IOFT, SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
@@ -96,7 +94,7 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
 
         if (IOFT(ASSET_OFT).token() != address(0)) revert AssetOFTTokenNotNative();
 
-        // @dev The asset OFT does NOT need approval since it operates in native ETH.
+        /// @dev The asset OFT does NOT need approval since it operates in native ETH.
         // if (IOFT(ASSET_OFT).approvalRequired()) IERC20(assetERC20).approve(ASSET_OFT, type(uint256).max);
 
         IWETH(assetERC20).approve(address(VAULT), type(uint256).max);
