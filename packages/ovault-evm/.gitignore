@@ -5,11 +5,6 @@ cache
 artifacts/*
 !artifacts/VaultComposerSync.sol/
 !artifacts/IVaultComposerSync.sol/
-!artifacts/VaultComposerSync_Base.t.sol
-!artifacts/VaultComposerSync_E2E.t.sol
-!artifacts/VaultComposerSync_ProxySend.t.sol
-!artifacts/VaultComposerSync_Unit.t.sol
-
 
 # sdk 
 .env
