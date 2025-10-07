@@ -2,7 +2,7 @@
 pragma solidity ^0.8.22;
 
 // OpenZeppelin imports
-import { IERC20, IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 // LayerZero imports
 import { OFTMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTMsgCodec.sol";
@@ -10,7 +10,6 @@ import { SendParam } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol"
 
 // Contract imports
 import { IWETH } from "../../contracts/interfaces/IWETH.sol";
-import { VaultComposerSync } from "../../contracts/VaultComposerSync.sol";
 import { VaultComposerSyncNative } from "../../contracts/VaultComposerSyncNative.sol";
 
 // Base test imports
