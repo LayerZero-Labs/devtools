@@ -81,7 +81,7 @@ abstract contract RecoverableComposer is HyperLiquidComposer, IRecoverableCompos
      * @param _coreAmount Amount of USDC tokens to retrieve in HyperCore decimals, or FULL_TRANSFER for all
      * @param _to Destination address to receive the retrieved USDC tokens
      */
-    function retrieveCoreUSDC(uint64 _coreAmount, address _to) public onlyRecoveryAddress {
+    function retrieveCoreUSDC(uint64 _coreAmount, address _to) public virtual onlyRecoveryAddress {
         uint64 maxTransferAmt = _getMaxTransferAmount(USDC_CORE_INDEX, _coreAmount);
 
         _submitCoreWriterTransfer(_to, USDC_CORE_INDEX, maxTransferAmt);
