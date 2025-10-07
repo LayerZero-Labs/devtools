@@ -4,6 +4,7 @@ pragma solidity ^0.8.22;
 import { IERC4626 } from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
 
 import { IOFT, SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
+import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
 import { IVaultComposerSyncNative } from "./interfaces/IVaultComposerSyncNative.sol";
 import { IWETH } from "./interfaces/IWETH.sol";
@@ -20,6 +21,8 @@ import { VaultComposerSync } from "./VaultComposerSync.sol";
  * @dev Compatible with ERC4626 vaults and requires Share OFT to be an adapter
  */
 contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative {
+    using OFTComposeMsgCodec for bytes32;
+
     /**
      * @notice Initializes the VaultComposerSyncPoolNative contract with vault and OFT token addresses
      * @param _vault The address of the ERC4626 vault contract
@@ -48,8 +51,15 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
         if (msg.value < _assetAmount) revert AmountExceedsMsgValue();
 
         IWETH(ASSET_ERC20).deposit{ value: _assetAmount }();
+
         /// @dev Reduce msg.value to the amount used as Fee for the lzSend operation
-        this.depositAndSend{ value: msg.value - _assetAmount }(_assetAmount, _sendParam, _refundAddress);
+        _depositAndSend(
+            OFTComposeMsgCodec.addressToBytes32(msg.sender),
+            _assetAmount,
+            _sendParam,
+            _refundAddress,
+            msg.value - _assetAmount
+        );
     }
 
     /**
@@ -59,9 +69,9 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
      * @param _sendParam The parameters for the send operation
      * @param _refundAddress Address to receive tokens and native on Pool failure
      */
-    function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress) internal override {
-        /// @dev msg.value passed in this call is used as LayerZero fee
-        uint256 msgValue = msg.value;
+    function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress, uint256 _msgValue) internal override {
+        /// @dev _msgValue passed in this call is used as LayerZero fee
+        uint256 msgValue = _msgValue;
 
         /// @dev Safe because this is the only function in VaultComposerSync that calls oft.send()
         if (_oft == ASSET_OFT) {
@@ -73,20 +83,23 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
             msgValue += _sendParam.amountLD;
         }
 
-        IOFT(_oft).send{ value: msgValue }(_sendParam, MessagingFee(msg.value, 0), _refundAddress);
+        IOFT(_oft).send{ value: msgValue }(_sendParam, MessagingFee(_msgValue, 0), _refundAddress);
     }
 
     /**
      * @dev Internal function to validate the asset token compatibility
      * @dev In VaultComposerSyncNative, the asset token is WETH but the OFT token is native (ETH)
-     * @param _assetOFT The address of the asset OFT (Omnichain Fungible Token) contract
-     * @param _vault The address of the vault contract
      * @return assetERC20 The address of the asset ERC20 token
      */
-    function _initializeAssetToken(address _assetOFT, IERC4626 _vault) internal override returns (address assetERC20) {
-        if (IOFT(_assetOFT).token() != address(0)) revert AssetOFTTokenNotNative();
-        assetERC20 = _vault.asset();
-        IWETH(assetERC20).approve(address(_vault), type(uint256).max);
+    function _initializeAssetToken() internal override returns (address assetERC20) {
+        assetERC20 = VAULT.asset();
+
+        if (IOFT(ASSET_OFT).token() != address(0)) revert AssetOFTTokenNotNative();
+
+        // @dev The asset OFT does NOT need approval since it operates in native ETH.
+        // if (IOFT(ASSET_OFT).approvalRequired()) IERC20(assetERC20).approve(ASSET_OFT, type(uint256).max);
+
+        IWETH(assetERC20).approve(address(VAULT), type(uint256).max);
     }
 
     /**
