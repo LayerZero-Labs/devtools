@@ -126,6 +126,9 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     function activationFee() public view virtual override returns (uint64) {
         uint64 rawPrice = _spotPx();
 
+        uint64 coreBalance = spotBalance(address(this), QUOTE_ASSET_INDEX).total;
+        if (coreBalance < MIN_USDC_PRE_FUND_AMOUNT()) revert InsufficientCoreAmountForActivation();
+
         return uint64((ACTIVATION_COST * (10 ** SPOT_PRICE_DECIMALS)) / rawPrice);
     }
 
@@ -161,6 +164,13 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
         emit Retrieved(ERC20_CORE_INDEX_ID, transferAmount, _to);
     }
 
+    /**
+     * @notice Retrieves USDC tokens from HyperCore to a specified address
+     * @dev Transfers USDC tokens from the composer's HyperCore balance to the specified address
+     * @dev Can only be called by the recovery address
+     * @param _coreAmount Amount of USDC tokens to retrieve in HyperCore decimals, or FULL_TRANSFER for all
+     * @param _to Destination address to receive the retrieved USDC tokens
+     */
     function retrieveCoreUSDC(uint64 _coreAmount, address _to) public virtual override onlyRecoveryAddress {
         uint64 maxTransferAmt = _getMaxTransferAmount(USDC_CORE_INDEX, _coreAmount);
         uint64 minComposerBalance = MIN_USDC_PRE_FUND_AMOUNT();
@@ -171,6 +181,18 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
 
         _submitCoreWriterTransfer(_to, USDC_CORE_INDEX, maxTransferAmt);
         emit Retrieved(USDC_CORE_INDEX, maxTransferAmt, _to);
+    }
+
+    /**
+     * @notice Drains the FeeToken balance from the composer
+     * @dev To be used when deprecating the composer
+     * @dev Can only be called by the recovery address
+     */
+    function drainFeeToken(address _to) public onlyRecoveryAddress {
+        uint64 coreBalance = spotBalance(address(this), QUOTE_ASSET_INDEX).total;
+        if (coreBalance < MIN_USDC_PRE_FUND_AMOUNT()) revert InsufficientCoreAmountForActivation();
+        _submitCoreWriterTransfer(_to, QUOTE_ASSET_INDEX, coreBalance);
+        emit Retrieved(QUOTE_ASSET_INDEX, coreBalance, _to);
     }
 
     /**
