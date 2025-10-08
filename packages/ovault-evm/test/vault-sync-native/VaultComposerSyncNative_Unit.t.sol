@@ -1,14 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.20;
 
-import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
-
 import { VaultComposerSyncUnitTest } from "../vault-sync/VaultComposerSync_Unit.t.sol";
 import { VaultComposerSyncNativeBaseTest } from "./VaultComposerSyncNative_Base.t.sol";
 
 contract VaultComposerSyncNativeUnitTest is VaultComposerSyncUnitTest, VaultComposerSyncNativeBaseTest {
-    using OptionsBuilder for bytes;
-
     function _feedAssets(address _addr, uint256 _amount) internal override {
         /// @dev Send tokens from Asset OFT so that composer converts them to WETH.
         vm.deal(address(assetOFT_arb), _amount);

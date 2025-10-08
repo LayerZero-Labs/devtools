@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.20;
 
-import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
 import { SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 
 import { VaultComposerSyncNative } from "../../contracts/VaultComposerSyncNative.sol";
@@ -9,13 +8,10 @@ import { VaultComposerSyncProxySendTest } from "../vault-sync/VaultComposerSync_
 import { VaultComposerSyncNativeBaseTest } from "./VaultComposerSyncNative_Base.t.sol";
 
 contract VaultComposerSyncNativeProxySendTest is VaultComposerSyncProxySendTest, VaultComposerSyncNativeBaseTest {
-    using OptionsBuilder for bytes;
-
     VaultComposerSyncNative vaultComposerNative;
 
     function setUp() public virtual override(VaultComposerSyncProxySendTest, VaultComposerSyncNativeBaseTest) {
         super.setUp();
-        vm.deal(userA, 100 ether);
         vaultComposerNative = VaultComposerSyncNative(payable(address(vaultComposer)));
     }
 

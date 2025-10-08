@@ -16,6 +16,7 @@ import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contract
 contract VaultComposerSyncNativeBaseTest is VaultComposerSyncBaseTest {
     using OptionsBuilder for bytes;
 
+    /// @dev Identical to `VaultComposerSyncNativeBaseTest.setUp()` except for the custom NatSpec lines.
     function setUp() public virtual override {
         TestHelperOz5.setUp();
         setUpEndpoints(subMeshSize, LibraryType.UltraLightNode);
@@ -25,8 +26,12 @@ contract VaultComposerSyncNativeBaseTest is VaultComposerSyncBaseTest {
         weth = new MockWETH();
         vm.deal(address(weth), 100 ether);
 
-        /// @dev Deploy the Asset OFT (we can expect them to exist before we deploy the VaultComposerSync)
+        vm.deal(userA, 100 ether);
+
+        /// @dev Deploy the Asset OFT (we can expect them to exist before we deploy the composer)
+        /// @custom:changed-line
         assetOFT_arb = MockOFT(address(new MockNativeOFTAdapter(18, address(endpoints[ARB_EID]), address(this))));
+        /// @custom:changed-line
         assetToken_arb = weth;
         assetOFT_eth = new MockOFT("ethAsset", "ethAsset", address(endpoints[ETH_EID]), address(this));
         assetOFT_pol = new MockOFT("polAsset", "polAsset", address(endpoints[POL_EID]), address(this));
@@ -39,8 +44,9 @@ contract VaultComposerSyncNativeBaseTest is VaultComposerSyncBaseTest {
         this.wireOApps(assetOFTs);
 
         /// Now the "expansion" is for the arb vault and share ofts on other networks.
-        vault_arb = new MockVault("arbShare", "arbShare", address(weth));
+        vault_arb = new MockVault("arbShare", "arbShare", address(assetToken_arb));
         shareOFT_arb = new MockOFTAdapter(address(vault_arb), address(endpoints[ARB_EID]), address(this));
+        /// @custom:changed-line
         vaultComposer = new VaultComposerSyncNative(address(vault_arb), address(assetOFT_arb), address(shareOFT_arb));
 
         /// Deploy the Share OFTs on other networks - these are NOT lockbox adapters.
@@ -53,7 +59,9 @@ contract VaultComposerSyncNativeBaseTest is VaultComposerSyncBaseTest {
         shareOFTs[2] = address(shareOFT_pol);
         this.wireOApps(shareOFTs);
 
+        /// @custom:changed-line
         vm.label(address(assetOFT_arb), "AssetNativeOFTAdapter::arb");
+        /// @custom:added-line
         vm.label(address(assetToken_arb), "AssetToken::arb");
         vm.label(address(assetOFT_eth), "AssetOFT::eth");
         vm.label(address(assetOFT_pol), "AssetOFT::pol");
@@ -63,6 +71,7 @@ contract VaultComposerSyncNativeBaseTest is VaultComposerSyncBaseTest {
         vm.label(address(shareOFT_pol), "ShareOFT::pol");
 
         vm.label(address(vault_arb), "Vault::arb");
+        /// @custom:changed-line
         vm.label(address(vaultComposer), "VaultComposerSyncNative::arb");
 
         deal(arbExecutor, INITIAL_BALANCE);

@@ -12,7 +12,6 @@ contract VaultComposerSyncProxySendTest is VaultComposerSyncBaseTest {
 
     function setUp() public virtual override {
         super.setUp();
-        vm.deal(userA, 100 ether);
     }
 
     function test_target_is_hub_reverts_when_msg_value_provided() public {

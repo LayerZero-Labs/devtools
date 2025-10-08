@@ -58,12 +58,15 @@ contract VaultComposerSyncBaseTest is TestHelperOz5 {
     uint256 public constant msgValueToPass = 250_000_000 wei;
 
     function setUp() public virtual override {
-        super.setUp();
+        TestHelperOz5.setUp();
         setUpEndpoints(subMeshSize, LibraryType.UltraLightNode);
 
         arbEndpoint = address(endpoints[ARB_EID]);
 
-        weth = new MockWETH(); /// @custom:added
+        weth = new MockWETH();
+        vm.deal(address(weth), 100 ether);
+
+        vm.deal(userA, 100 ether);
 
         /// @dev Deploy the Asset OFT (we can expect them to exist before we deploy the VaultComposerSync)
         assetOFT_arb = new MockOFT("arbAsset", "arbAsset", address(endpoints[ARB_EID]), address(this));
@@ -79,7 +82,7 @@ contract VaultComposerSyncBaseTest is TestHelperOz5 {
         this.wireOApps(assetOFTs);
 
         /// Now the "expansion" is for the arb vault and share ofts on other networks.
-        vault_arb = new MockVault("arbShare", "arbShare", address(assetOFT_arb));
+        vault_arb = new MockVault("arbShare", "arbShare", address(assetToken_arb));
         shareOFT_arb = new MockOFTAdapter(address(vault_arb), address(endpoints[ARB_EID]), address(this));
         vaultComposer = new VaultComposerSync(address(vault_arb), address(assetOFT_arb), address(shareOFT_arb));
 

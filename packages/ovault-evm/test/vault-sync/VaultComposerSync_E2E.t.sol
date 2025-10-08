@@ -19,8 +19,6 @@ contract VaultComposerSyncE2ETest is VaultComposerSyncBaseTest {
 
     function setUp() public virtual override {
         super.setUp();
-
-        vm.deal(userA, 1000 ether);
     }
 
     function test_E2E_ethereum_to_polygon() public {
