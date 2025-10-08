@@ -1,23 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.20;
 
-// OApp imports
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
-
-import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
-import { IOAppCore } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol";
-import { IOFT } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
-
 import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
 import { SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
-import { IVaultComposerSync } from "../../contracts/interfaces/IVaultComposerSync.sol";
-import { VaultComposerSync } from "../../contracts/VaultComposerSync.sol";
 import { VaultComposerSyncBaseTest } from "./VaultComposerSync_Base.t.sol";
-
-import { console } from "forge-std/console.sol";
 
 contract VaultComposerSyncE2ETest is VaultComposerSyncBaseTest {
     using OptionsBuilder for bytes;
@@ -31,8 +19,6 @@ contract VaultComposerSyncE2ETest is VaultComposerSyncBaseTest {
 
     function setUp() public virtual override {
         super.setUp();
-
-        vm.deal(userA, 1000 ether);
     }
 
     function test_E2E_ethereum_to_polygon() public {
@@ -42,7 +28,7 @@ contract VaultComposerSyncE2ETest is VaultComposerSyncBaseTest {
 
         (uint256 mintAssets, ) = _setTradeRatioAssetToShare(1, 2);
 
-        address composerAddress = address(VaultComposerSyncArb);
+        address composerAddress = address(vaultComposer);
         uint256 initialPolygonBalance = shareOFT_pol.balanceOf(userA);
 
         /// @dev This is the send param that is passed as the compose payload to the final OFT
@@ -79,13 +65,15 @@ contract VaultComposerSyncE2ETest is VaultComposerSyncBaseTest {
         assetOFT_eth.send{ value: fee.nativeFee }(ethToArbSendParam, fee, payable(address(this)));
         vm.stopPrank();
 
-        assertEq(assetOFT_arb.balanceOf(address(vault_arb)), assetOFT_arb.totalSupply(), mintAssets);
+        assertEq(assetToken_arb.balanceOf(address(vault_arb)), assetToken_arb.totalSupply(), mintAssets);
 
+        /// @dev Deal ETH to support `VaultComposerSyncNative` tests.
+        vm.deal(address(assetOFT_arb), 100 ether);
         verifyPackets(ARB_EID, addressToBytes32(address(assetOFT_arb)));
 
         assertEq(
-            assetOFT_arb.balanceOf(composerAddress) + assetOFT_arb.balanceOf(address(vault_arb)),
-            assetOFT_arb.totalSupply(),
+            assetToken_arb.balanceOf(composerAddress) + assetToken_arb.balanceOf(address(vault_arb)),
+            assetToken_arb.totalSupply(),
             mintAssets + TOKENS_TO_SEND
         );
 
@@ -98,7 +86,7 @@ contract VaultComposerSyncE2ETest is VaultComposerSyncBaseTest {
 
         vm.prank(arbEndpoint);
         vm.deal(address(arbEndpoint), 1000 ether);
-        VaultComposerSyncArb.lzCompose{ value: lzComposeMsgValue, gas: lzComposeGasValue }(
+        vaultComposer.lzCompose{ value: lzComposeMsgValue, gas: lzComposeGasValue }(
             address(assetOFT_arb),
             addressToBytes32(address(assetOFT_arb)),
             composeMsg,
@@ -107,7 +95,7 @@ contract VaultComposerSyncE2ETest is VaultComposerSyncBaseTest {
         );
 
         assertEq(
-            assetOFT_arb.balanceOf(composerAddress),
+            assetToken_arb.balanceOf(composerAddress),
             0,
             "composerAddress should have the no tokens after lzCompose on arb"
         );
