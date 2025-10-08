@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.22;
 
-import { IERC4626 } from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
-
 import { IOFT, SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
@@ -21,8 +19,6 @@ import { VaultComposerSync } from "./VaultComposerSync.sol";
  * @dev Compatible with ERC4626 vaults and requires Share OFT to be an adapter
  */
 contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative {
-    using OFTComposeMsgCodec for bytes32;
-
     /**
      * @notice Initializes the VaultComposerSyncPoolNative contract with vault and OFT token addresses
      * @param _vault The address of the ERC4626 vault contract
@@ -68,8 +64,14 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
      * @param _oft The OFT contract address to use for sending
      * @param _sendParam The parameters for the send operation
      * @param _refundAddress Address to receive tokens and native on Pool failure
+     * @param _msgValue The amount of native tokens sent with the transaction
      */
-    function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress, uint256 _msgValue) internal override {
+    function _sendRemote(
+        address _oft,
+        SendParam memory _sendParam,
+        address _refundAddress,
+        uint256 _msgValue
+    ) internal override {
         /// @dev _msgValue passed in this call is used as LayerZero fee
         uint256 msgValue = _msgValue;
 
@@ -96,7 +98,7 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
 
         if (IOFT(ASSET_OFT).token() != address(0)) revert AssetOFTTokenNotNative();
 
-        // @dev The asset OFT does NOT need approval since it operates in native ETH.
+        /// @dev The asset OFT does NOT need approval since it operates in native ETH.
         // if (IOFT(ASSET_OFT).approvalRequired()) IERC20(assetERC20).approve(ASSET_OFT, type(uint256).max);
 
         IWETH(assetERC20).approve(address(VAULT), type(uint256).max);

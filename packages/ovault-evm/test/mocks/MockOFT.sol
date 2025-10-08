@@ -3,6 +3,8 @@ pragma solidity ^0.8.22;
 
 import { OFT } from "@layerzerolabs/oft-evm/contracts/OFT.sol";
 import { OFTAdapter } from "@layerzerolabs/oft-evm/contracts/OFTAdapter.sol";
+import { NativeOFTAdapter } from "@layerzerolabs/oft-evm/contracts/NativeOFTAdapter.sol";
+import { MessagingFee, SendParam, MessagingReceipt, OFTReceipt } from "@layerzerolabs/oft-evm/contracts/OFTCore.sol";
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -33,7 +35,24 @@ contract MockOFTAdapter is OFTAdapter {
         address _token,
         address _lzEndpoint,
         address _delegate
-    ) OFTAdapter(_token, _lzEndpoint, _delegate) Ownable(msg.sender) {}
+    ) OFTAdapter(_token, _lzEndpoint, _delegate) Ownable(_delegate) {}
+}
+
+contract MockNativeOFTAdapter is NativeOFTAdapter {
+    constructor(
+        uint8 _localDecimals,
+        address _lzEndpoint,
+        address _delegate
+    ) NativeOFTAdapter(_localDecimals, _lzEndpoint, _delegate) Ownable(_delegate) {}
+
+    /// @dev Removing the dust check for testing purposes.
+    function send(
+        SendParam calldata _sendParam,
+        MessagingFee calldata _fee,
+        address _refundAddress
+    ) public payable virtual override returns (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) {
+        return _send(_sendParam, _fee, _refundAddress);
+    }
 }
 
 contract StargatePool is OFT {
