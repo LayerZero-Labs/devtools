@@ -19,8 +19,6 @@ import { VaultComposerSync } from "./VaultComposerSync.sol";
  * @dev Compatible with ERC4626 vaults and requires Share OFT to be an adapter
  */
 contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative {
-    using OFTComposeMsgCodec for bytes32;
-
     /**
      * @notice Initializes the VaultComposerSyncPoolNative contract with vault and OFT token addresses
      * @param _vault The address of the ERC4626 vault contract
@@ -66,6 +64,7 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
      * @param _oft The OFT contract address to use for sending
      * @param _sendParam The parameters for the send operation
      * @param _refundAddress Address to receive tokens and native on Pool failure
+     * @param _msgValue The amount of native tokens sent with the transaction
      */
     function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress, uint256 _msgValue) internal override {
         /// @dev _msgValue passed in this call is used as LayerZero fee
