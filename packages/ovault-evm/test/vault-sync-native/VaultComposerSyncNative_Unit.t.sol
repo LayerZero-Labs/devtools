@@ -9,7 +9,7 @@ contract VaultComposerSyncNativeUnitTest is VaultComposerSyncUnitTest, VaultComp
         /// @dev Send tokens from Asset OFT so that composer converts them to WETH.
         vm.deal(address(assetOFT_arb), _amount);
         vm.prank(address(assetOFT_arb));
-        (bool success,) = _addr.call{ value: _amount }("");
+        (bool success, ) = _addr.call{ value: _amount }("");
         assertTrue(success, "Failed to feed composer with assets");
     }
 
@@ -17,7 +17,7 @@ contract VaultComposerSyncNativeUnitTest is VaultComposerSyncUnitTest, VaultComp
         return _amount;
     }
 
-    function setUp() public virtual override (VaultComposerSyncUnitTest, VaultComposerSyncNativeBaseTest) {
+    function setUp() public virtual override(VaultComposerSyncUnitTest, VaultComposerSyncNativeBaseTest) {
         super.setUp();
     }
 }

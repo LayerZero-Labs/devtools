@@ -4,7 +4,9 @@ cache
 # artifacts;  ignore all files except the local contract artifacts.
 artifacts/*
 !artifacts/VaultComposerSync.sol/
+!artifacts/VaultComposerSyncNative.sol/
 !artifacts/IVaultComposerSync.sol/
+!artifacts/IVaultComposerSyncNative.sol/
 
 # sdk 
 .env

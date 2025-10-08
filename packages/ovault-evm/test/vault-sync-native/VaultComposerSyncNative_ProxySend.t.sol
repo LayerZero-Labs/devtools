@@ -42,15 +42,14 @@ contract VaultComposerSyncNativeProxySendTest is VaultComposerSyncProxySendTest,
     function test_depositNativeAndSend_target_not_hub() public {
         SendParam memory sendParam = SendParam(POL_EID, addressToBytes32(userA), TOKENS_TO_SEND, 0, "", "", "");
 
-        MessagingFee memory fee = vaultComposer.quoteSend(
-            userA,
-            address(shareOFT_arb),
-            TOKENS_TO_SEND,
-            sendParam
-        );
+        MessagingFee memory fee = vaultComposer.quoteSend(userA, address(shareOFT_arb), TOKENS_TO_SEND, sendParam);
 
         vm.startPrank(userA);
-        vaultComposerNative.depositNativeAndSend{ value: TOKENS_TO_SEND + fee.nativeFee }(TOKENS_TO_SEND, sendParam, userA);
+        vaultComposerNative.depositNativeAndSend{ value: TOKENS_TO_SEND + fee.nativeFee }(
+            TOKENS_TO_SEND,
+            sendParam,
+            userA
+        );
         vm.stopPrank();
 
         assertEq(assetToken_arb.totalSupply(), assetToken_arb.balanceOf(address(vault_arb)), TOKENS_TO_SEND);

@@ -19,7 +19,7 @@ contract VaultComposerSyncUnitTest is VaultComposerSyncBaseTest {
     }
 
     function _getUndustedAssetAmount(uint256 _amount) internal pure virtual returns (uint256) {
-        (uint256 sentUndusted,) = _removeDust(_amount);
+        (uint256 sentUndusted, ) = _removeDust(_amount);
         return sentUndusted;
     }
 
@@ -61,12 +61,7 @@ contract VaultComposerSyncUnitTest is VaultComposerSyncBaseTest {
         emit IERC20.Transfer(address(0), address(vaultComposer), TOKENS_TO_SEND);
 
         vm.expectEmit(true, true, true, true, address(vault_arb));
-        emit IERC4626.Deposit(
-            address(vaultComposer),
-            address(vaultComposer),
-            TOKENS_TO_SEND,
-            TOKENS_TO_SEND
-        );
+        emit IERC4626.Deposit(address(vaultComposer), address(vaultComposer), TOKENS_TO_SEND, TOKENS_TO_SEND);
 
         vm.expectEmit(true, true, true, true, address(vaultComposer));
         emit IVaultComposerSync.Sent(guid);
@@ -143,12 +138,7 @@ contract VaultComposerSyncUnitTest is VaultComposerSyncBaseTest {
         emit IERC20.Transfer(address(0), address(vaultComposer), TOKENS_TO_SEND);
 
         vm.expectEmit(true, true, true, true, address(vault_arb));
-        emit IERC4626.Deposit(
-            address(vaultComposer),
-            address(vaultComposer),
-            TOKENS_TO_SEND,
-            TOKENS_TO_SEND
-        );
+        emit IERC4626.Deposit(address(vaultComposer), address(vaultComposer), TOKENS_TO_SEND, TOKENS_TO_SEND);
 
         vm.expectEmit(true, true, true, true, address(vaultComposer));
         emit IVaultComposerSync.Sent(guid);

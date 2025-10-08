@@ -93,12 +93,7 @@ contract VaultComposerSyncProxySendTest is VaultComposerSyncBaseTest {
         SendParam memory sendParam = SendParam(POL_EID, addressToBytes32(userA), TOKENS_TO_SEND, 0, "", "", "");
         assetToken_arb.mint(address(userA), TOKENS_TO_SEND);
 
-        MessagingFee memory fee = vaultComposer.quoteSend(
-            userA,
-            address(shareOFT_arb),
-            TOKENS_TO_SEND,
-            sendParam
-        );
+        MessagingFee memory fee = vaultComposer.quoteSend(userA, address(shareOFT_arb), TOKENS_TO_SEND, sendParam);
 
         vm.startPrank(userA);
         assetToken_arb.approve(address(vaultComposer), TOKENS_TO_SEND);
@@ -119,12 +114,7 @@ contract VaultComposerSyncProxySendTest is VaultComposerSyncBaseTest {
         assetToken_arb.mint(address(vault_arb), TOKENS_TO_SEND);
         vault_arb.mint(address(userA), TOKENS_TO_SEND);
 
-        MessagingFee memory fee = vaultComposer.quoteSend(
-            userA,
-            address(assetOFT_arb),
-            TOKENS_TO_SEND,
-            sendParam
-        );
+        MessagingFee memory fee = vaultComposer.quoteSend(userA, address(assetOFT_arb), TOKENS_TO_SEND, sendParam);
 
         vm.startPrank(userA);
         vault_arb.approve(address(vaultComposer), TOKENS_TO_SEND);

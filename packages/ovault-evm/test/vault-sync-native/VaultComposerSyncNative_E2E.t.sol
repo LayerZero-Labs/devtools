@@ -5,7 +5,7 @@ import { VaultComposerSyncE2ETest } from "../vault-sync/VaultComposerSync_E2E.t.
 import { VaultComposerSyncNativeBaseTest } from "./VaultComposerSyncNative_Base.t.sol";
 
 contract VaultComposerSyncNativeE2ETest is VaultComposerSyncE2ETest, VaultComposerSyncNativeBaseTest {
-    function setUp() public virtual override (VaultComposerSyncE2ETest, VaultComposerSyncNativeBaseTest) {
+    function setUp() public virtual override(VaultComposerSyncE2ETest, VaultComposerSyncNativeBaseTest) {
         super.setUp();
     }
 }

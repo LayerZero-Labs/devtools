@@ -66,7 +66,12 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
      * @param _refundAddress Address to receive tokens and native on Pool failure
      * @param _msgValue The amount of native tokens sent with the transaction
      */
-    function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress, uint256 _msgValue) internal override {
+    function _sendRemote(
+        address _oft,
+        SendParam memory _sendParam,
+        address _refundAddress,
+        uint256 _msgValue
+    ) internal override {
         /// @dev _msgValue passed in this call is used as LayerZero fee
         uint256 msgValue = _msgValue;
 
