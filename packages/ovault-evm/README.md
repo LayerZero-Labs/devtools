@@ -26,8 +26,7 @@ pnpm install @layerzerolabs/ovault-evm
 npm install @layerzerolabs/ovault-evm
 ```
 
-
-## Ovault SDK 
+## Ovault SDK
 
 This is an SDK to make depositing/redeeming on OVaults simple.
 
