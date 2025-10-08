@@ -104,11 +104,11 @@ contract VaultComposerSyncUnitTest is VaultComposerSyncBaseTest {
             address(vaultComposer),
             TOKENS_TO_SEND - 1, /// @dev Due to ERC4626 rounding.
             TOKENS_TO_SEND
-        ); 
+        );
 
         vm.expectEmit(true, true, true, true, address(assetToken_arb));
         emit IERC20.Transfer(address(vaultComposer), address(0), _getUndustedAssetAmount(TOKENS_TO_SEND - 1));
- 
+
         vm.expectEmit(true, true, true, true, address(vaultComposer));
         emit IVaultComposerSync.Sent(guid);
 
