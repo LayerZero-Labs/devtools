@@ -310,7 +310,12 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @param _refundAddress Address to receive excess payment of the LZ fees
      * @param _msgValue The amount of native tokens sent with the transaction
      */
-    function _send(address _oft, SendParam memory _sendParam, address _refundAddress, uint256 _msgValue) internal virtual {
+    function _send(
+        address _oft,
+        SendParam memory _sendParam,
+        address _refundAddress,
+        uint256 _msgValue
+    ) internal virtual {
         if (_sendParam.dstEid == VAULT_EID) {
             _sendLocal(_oft, _sendParam, _refundAddress, _msgValue);
         } else {
@@ -326,7 +331,12 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @dev _refundAddress Address to receive excess payment of the LZ fees (unused for local transfers)
      * @param _msgValue The amount of native tokens sent with the transaction (must be 0 for local transfers)
      */
-    function _sendLocal(address _oft, SendParam memory _sendParam, address /*_refundAddress*/, uint256 _msgValue) internal virtual {
+    function _sendLocal(
+        address _oft,
+        SendParam memory _sendParam,
+        address /*_refundAddress*/,
+        uint256 _msgValue
+    ) internal virtual {
         if (_msgValue > 0) revert NoMsgValueExpected();
 
         /// @dev Can do this because _oft is validated before this function is called
@@ -342,8 +352,13 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @param _refundAddress Address to receive excess payment of the LZ fees
      * @param _msgValue The amount of native tokens sent with the transaction
      */
-    function _sendRemote(address _oft, SendParam memory _sendParam, address _refundAddress, uint256 _msgValue) internal virtual {
-        IOFT(_oft).send{ value: _msgValue}(_sendParam, MessagingFee(_msgValue, 0), _refundAddress);
+    function _sendRemote(
+        address _oft,
+        SendParam memory _sendParam,
+        address _refundAddress,
+        uint256 _msgValue
+    ) internal virtual {
+        IOFT(_oft).send{ value: _msgValue }(_sendParam, MessagingFee(_msgValue, 0), _refundAddress);
     }
 
     /**
@@ -354,7 +369,13 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @param _refundAddress Address to receive the refund
      * @param _msgValue The amount of native tokens sent with the transaction
      */
-    function _refund(address _oft, bytes calldata _message, uint256 _amount, address _refundAddress, uint256 _msgValue) internal virtual {
+    function _refund(
+        address _oft,
+        bytes calldata _message,
+        uint256 _amount,
+        address _refundAddress,
+        uint256 _msgValue
+    ) internal virtual {
         /// @dev Extracted from the _message header. Will always be part of the _message since it is created by lzReceive
         SendParam memory refundSendParam;
         refundSendParam.dstEid = OFTComposeMsgCodec.srcEid(_message);
@@ -365,11 +386,11 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
     }
 
     /**
-        * @dev Internal function to validate the share token compatibility
-        * @dev Validate part of the constructor in an overridable function due to differences in asset and OFT token
-        * @return shareERC20 The address of the share ERC20 token
-        * @notice Share token must be the vault itself
-        * @notice Share OFT must be an adapter (approvalRequired() returns true)
+     * @dev Internal function to validate the share token compatibility
+     * @dev Validate part of the constructor in an overridable function due to differences in asset and OFT token
+     * @return shareERC20 The address of the share ERC20 token
+     * @notice Share token must be the vault itself
+     * @notice Share OFT must be an adapter (approvalRequired() returns true)
      */
     function _initializeShareToken() internal virtual returns (address shareERC20) {
         shareERC20 = IOFT(SHARE_OFT).token();

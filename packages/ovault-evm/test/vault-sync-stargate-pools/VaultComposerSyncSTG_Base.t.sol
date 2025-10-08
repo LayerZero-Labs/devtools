@@ -16,17 +16,16 @@ import { SendParam } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol"
 import { EnforcedOptionParam } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppOptionsType3.sol";
 
 // Contract and interface imports
-import { IWETH } from "../../contracts/interfaces/IWETH.sol";
 import { VaultComposerSync } from "../../contracts/VaultComposerSync.sol";
 import { VaultComposerSyncNative } from "../../contracts/VaultComposerSyncNative.sol";
 
 // Mock imports for OFT Adapter
 import { MockOFTAdapter } from "../mocks/MockOFT.sol";
 import { IMockUSDC as IUSDC } from "../mocks/MockERC20.sol";
-import { StargatePool, Path } from "../mocks/MockOFT.sol";
+import { StargatePool } from "../mocks/MockOFT.sol";
 
 // Forge imports
-import { Test, console } from "forge-std/Test.sol";
+import { Test } from "forge-std/Test.sol";
 
 contract VaultComposerSyncSTG_BaseTest is Test {
     using OptionsBuilder for bytes;
