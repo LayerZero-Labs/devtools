@@ -29,7 +29,7 @@
     "@layerzerolabs/export-deployments": "^0.0.16",
     "@layerzerolabs/io-devtools": "^0.3.0",
     "@layerzerolabs/lz-evm-sdk-v1": "^3.0.49",
-    "@layerzerolabs/oft-v2-solana-sdk": "^3.0.64",
+    "@layerzerolabs/oft-v2-solana-sdk": "^3.0.136",
     "@layerzerolabs/protocol-devtools": "^3.0.0",
     "@layerzerolabs/solidity-examples": "^1.1.0",
     "@layerzerolabs/ua-devtools": "^5.0.0",
