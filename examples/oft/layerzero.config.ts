@@ -7,12 +7,12 @@ import type { OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
 const baseContract: OmniPointHardhat = {
     eid: EndpointId.BASESEP_V2_TESTNET,
-    contractName: 'MyOFTMock', // Note: change this to 'MyOFT' or your production contract name
+    contractName: 'MyOFT', // Use 'MyOFT' for both testnet and production
 }
 
 const arbitrumContract: OmniPointHardhat = {
     eid: EndpointId.ARBSEP_V2_TESTNET,
-    contractName: 'MyOFTMock', // Note: change this to 'MyOFT' or your production contract name
+    contractName: 'MyOFT', // Use 'MyOFT' for both testnet and production
 }
 
 // To connect all the above chains to each other, we need the following pathways:

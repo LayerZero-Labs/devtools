@@ -123,10 +123,10 @@ After wiring, you need to override the default worker configuration with your Si
 
 ```bash
 # On Base Sepolia (to send to Arbitrum)
-pnpm hardhat lz:simple-workers:set-send-config --dst-eid 40231 --contract-name MyOFTMock --network base-sepolia
+pnpm hardhat lz:simple-workers:set-send-config --dst-eid 40231 --contract-name MyOFT --network base-sepolia
 
 # On Arbitrum Sepolia (to send to Base)
-pnpm hardhat lz:simple-workers:set-send-config --dst-eid 40245 --contract-name MyOFTMock --network arbitrum-sepolia
+pnpm hardhat lz:simple-workers:set-send-config --dst-eid 40245 --contract-name MyOFT --network arbitrum-sepolia
 ```
 
 These commands will:
