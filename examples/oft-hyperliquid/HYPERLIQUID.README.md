@@ -537,4 +537,4 @@ While the composer could have been deployed at any point in time due to its stat
 npx hardhat lz:deploy --tags MyHyperLiquidComposer
 ```
 
-> ⚠️ Note: You would need to fund the composer's address with HyperCore with at least $1 in USDC or HYPE so that it can perform L1WriteActions through it's address.
+> ⚠️ Note: You would need to activate the composer's address on hypercore by transferring any amount of tokens from a wallet that has at least $1 in quote tokens. This $1 will be automatically debited from your accoutn to cover an activation fee.
