@@ -23,16 +23,12 @@ export interface UserArgs extends BaseArgs {
     user: string
 }
 
-export interface OptionalOAppArgs extends BaseArgs {
-    oappConfig?: string
-}
-
 // Specific command argument interfaces
 export interface SetBlockArgs extends PrivateKeyArgs {
     size: 'big' | 'small'
 }
 
-export interface CoreSpotDeploymentArgs extends TokenIndexArgs, OptionalOAppArgs {
+export interface CoreSpotDeploymentArgs extends TokenIndexArgs {
     action: 'create' | 'get'
 }
 
@@ -64,5 +60,5 @@ export interface RegisterTradingSpotArgs extends TokenIndexArgs, PrivateKeyArgs 
 export interface EnableTokenFreezePrivilegeArgs extends TokenIndexArgs, PrivateKeyArgs {}
 export interface RevokeTokenFreezePrivilegeArgs extends TokenIndexArgs, PrivateKeyArgs {}
 export interface EnableTokenQuoteAssetArgs extends TokenIndexArgs, PrivateKeyArgs {}
-export interface RequestEvmContractArgs extends TokenIndexArgs, PrivateKeyArgs, OptionalOAppArgs {}
-export interface FinalizeEvmContractArgs extends TokenIndexArgs, PrivateKeyArgs, OptionalOAppArgs {}
+export interface RequestEvmContractArgs extends TokenIndexArgs, PrivateKeyArgs {}
+export interface FinalizeEvmContractArgs extends TokenIndexArgs, PrivateKeyArgs {}

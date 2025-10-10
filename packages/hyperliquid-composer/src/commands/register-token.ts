@@ -1,7 +1,7 @@
 import { createModuleLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 import inquirer from 'inquirer'
 
-import { getCoreSpotDeployment, getHyperEVMOAppDeployment, writeUpdatedCoreSpotDeployment } from '@/io/parser'
+import { getCoreSpotDeployment, writeUpdatedCoreSpotDeployment } from '@/io/parser'
 import { getHyperliquidWallet } from '@/signer'
 import { setRequestEvmContract, setFinalizeEvmContract } from '@/operations'
 import { LOGGER_MODULES } from '@/types/cli-constants'
@@ -14,7 +14,6 @@ export async function requestEvmContract(args: RequestEvmContractArgs): Promise<
 
     const wallet = await getHyperliquidWallet(args.privateKey)
 
-    const oappConfig = args.oappConfig
     const hyperAssetIndex = args.tokenIndex
     const network = args.network
     const isTestnet = network == 'testnet'
@@ -23,28 +22,14 @@ export async function requestEvmContract(args: RequestEvmContractArgs): Promise<
     const coreSpotDeployment = getCoreSpotDeployment(hyperAssetIndex, isTestnet, logger)
     const txData = coreSpotDeployment.txData
 
-    let token_address: string
-    try {
-        const { deployment } = await getHyperEVMOAppDeployment(oappConfig!, network, logger)
-
-        if (!deployment) {
-            logger.error(`Deployment file not found for ${network}`)
-            return
-        }
-        token_address = deployment['address']
-    } catch (error) {
-        logger.error(
-            `Error fetching deployment for ${network} for oapp-config ${oappConfig}. \n\n Can you please provide the token address manually?`
-        )
-        const { tokenAddress } = await inquirer.prompt([
-            {
-                type: 'input',
-                name: 'tokenAddress',
-                message: 'Enter the token address',
-            },
-        ])
-        token_address = tokenAddress
-    }
+    const { tokenAddress } = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'tokenAddress',
+            message: 'Enter the token address',
+        },
+    ])
+    const token_address = tokenAddress
 
     logger.verbose(`txData: \n ${JSON.stringify(txData, null, 2)}`)
 
@@ -75,7 +60,6 @@ export async function finalizeEvmContract(args: FinalizeEvmContractArgs): Promis
 
     const wallet = await getHyperliquidWallet(args.privateKey)
 
-    const oappConfig = args.oappConfig
     const hyperAssetIndex = args.tokenIndex
     const network = args.network
     const isTestnet = network == 'testnet'
@@ -85,30 +69,14 @@ export async function finalizeEvmContract(args: FinalizeEvmContractArgs): Promis
     const nativeSpot = coreSpotDeployment.coreSpot
     const txData = coreSpotDeployment.txData
 
-    let token_address: string
-
-    try {
-        const { deployment } = await getHyperEVMOAppDeployment(oappConfig!, network, logger)
-
-        if (!deployment) {
-            logger.error(`Deployment file not found for ${network}`)
-            return
-        }
-
-        token_address = deployment['address']
-    } catch (error) {
-        logger.error(
-            `Error fetching deployment for ${network} for oapp-config ${oappConfig}. \n\n Can you please provide the token address manually?`
-        )
-        const { tokenAddress } = await inquirer.prompt([
-            {
-                type: 'input',
-                name: 'tokenAddress',
-                message: 'Enter the token address',
-            },
-        ])
-        token_address = tokenAddress
-    }
+    const { tokenAddress } = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'tokenAddress',
+            message: 'Enter the token address',
+        },
+    ])
+    const token_address = tokenAddress
 
     logger.verbose(`txData: \n ${JSON.stringify(txData, null, 2)}`)
 
