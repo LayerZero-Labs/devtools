@@ -88,7 +88,7 @@ All EVM addresses exist on HyperCore but all HyperCore addresses do not exist on
 
 Accounts are activated on hypercore by sending any number of tokens to that account AND paying a `1 USD-stable coin fee` - this fee is paid out of the sender's balance ONTOP of the sent amount and is paid in `USDC` and `USDT0`. This means that if you were sending `0.00001 HYPE` on HyperCore to a new user you also NEED to have at least 1 whole token of `USDC` or `USDT0` to pay for the activation.
 
-We call these special tokens `FeeTokens`.
+We call these special tokens `FeeTokens` or [quoteTokens](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/activation-gas-fee).
 
 > While USDC and USDT0 are not always worth $1 USD and can fluctuate around by a millionth of a cent. HyperCore ALWAYS takes 1 full token.
 
@@ -308,7 +308,6 @@ npx @layerzerolabs/hyperliquid-composer set-block \
 # Create deployment configuration with optional freeze/quote features
 npx @layerzerolabs/hyperliquid-composer core-spot \
     --action create \
-    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
@@ -411,7 +410,6 @@ After completing HIP-1 deployment, link your token to a LayerZero OFT:
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer request-evm-contract \
-    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
@@ -422,7 +420,6 @@ npx @layerzerolabs/hyperliquid-composer request-evm-contract \
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer finalize-evm-contract \
-    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
@@ -611,7 +608,6 @@ After this we can use the `core-spot create` command to create a new file under 
 ```bash
 npx @layerzerolabs/hyperliquid-composer core-spot \
     --action create \
-    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
@@ -633,7 +629,7 @@ npx @layerzerolabs/hyperliquid-composer enable-freeze-privilege \
 
 This is the part where you set the genesis balances for the deployer and the users. Since `HyperCore` tokens are of uint type `u64` the most tokens possible are `18446744073709551615`.
 
-You will have to edit the deployment created by `core-spot create` command that is under `./deployments/hypercore-{testnet | mainnet}` with the name of the Core Spot token index. It should be populated with the `deployer` and `asset bridge address` with both set to `0 wei`.
+You will have to edit the deployment created by `core-spot create` command that is under `./deployments/hypercore-{testnet | mainnet}` with the name of the Core Spot token index. It should be populated with the `asset bridge address` and set to the number of tokens that you want to mint (we recommend `u64.max` since it allows for the most tokens that users can send from HyperEVM).
 
 You can then use the `user-genesis` command to set the genesis balances for the deployer and the users.
 
@@ -734,7 +730,7 @@ curl -X POST "https://api.hyperliquid.xyz/info" \
 
 This step enables the token to be used as a quote asset for trading pairs. This allows other tokens to form trading pairs against your token (e.g., TOKEN/YOUR_TOKEN instead of only YOUR_TOKEN/USDC).
 
-> ⚠️ **Requirements**: There are specific requirements that must be met for this to be successful. Please review the requirements at: [Hyperliquid API requirements](https://t.me/hyperliquid_api/243)
+> ⚠️ **Requirements**: There are specific requirements that must be met for this to be successful. Please review the requirements at: [Hyperliquid API requirements](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/aligned-quote-assets) and contact the Hyperliquid team for the most upto date information.
 >
 > 📝 **Note**: This can be executed after the trading fee share is set and even after deployment and linking are complete.
 
@@ -750,7 +746,7 @@ npx @layerzerolabs/hyperliquid-composer enable-quote-token \
 
 This is the step where you set the trading fee share for the deployer. It can be in the range of `[0%,100%]`.
 
-A deployer fee share <https://hyperliquid.gitbook.io/hyperliquid-docs/trading/fees> is claimed per transaction on HyperCore. Half of the base rate (50%) is allocated as the deployer fee share. The deployer can choose to forgo this fee share by setting the share to `0%`. This causes the deployer's fee share part to be burnt. If it were to be set to `100%`, the deployer would receive the full fee share part of the fee.
+A deployer fee share <https://hyperliquid.gitbook.io/hyperliquid-docs/trading/fees> is claimed per transaction on HyperCore. Half of the base rate (50%) is allocated as the deployer fee share. The deployer can choose to forgo this fee share by setting the share to `0%`. This causes the deployer's fee share part to be burnt. If it were to be set to `100%`, the deployer would receive the full fee share part of the fee. We recommend setting it to `100%`
 
 > ⚠️ Note: The trading fee can be reset as long as the new share is lower than the previous share.
 > ⚠️ Note: This step can also be run after the core spot is deployed.
@@ -766,9 +762,9 @@ npx @layerzerolabs/hyperliquid-composer trading-fee \
 
 ## Connect the OFT to the deployed Core Spot
 
-If you have run the above steps then you can use `--oapp-config` in the following commands. If not do not worry! Our SDK will prompt you for the OFT address and the OFT deployed transaction hash (we need the deployment nonce).
+Our SDK will prompt you for the ERC20 address and the ERC20 deployed transaction hash (we need the deployment nonce). In the case of an OFT the ERC20 would the OFT but in an adapter they are different.
 
-In order to enable transfers between the OFT and the Core Spot, we need to connect the OFT to the Core Spot. This is done in two steps:
+In order to enable transfers between the ERC20 and the Core Spot, we need to connect the ERC20 to the Core Spot. This is done in two steps:
 
 ### Step 1/2 `requestEvmContract`
 
@@ -778,7 +774,6 @@ This step is issued by the Core Spot deployer and populates in `HyperCore` that 
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer request-evm-contract  \
-    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --log-level verbose \
@@ -793,7 +788,6 @@ This step completes the connection between the OFT and the Core Spot. It pulls e
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer finalize-evm-contract  \
-    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --log-level verbose \
@@ -810,7 +804,7 @@ You can either use the default composer or use the recovery one or even make cha
 npx hardhat lz:deploy --tags MyHyperLiquidComposer
 ```
 
-> ⚠️ Note: You would need to fund the composer's address with HyperCore with at least $1 in USDC or HYPE so that it can perform CoreWriter actions through it's address.
+> ⚠️ Note: You would need to activate the composer's address on hypercore by transferring any amount of tokens from a wallet that has at least $1 in quote tokens. This $1 will be automatically debited from your account to cover an activation fee.
 
 ## Sending tokens from x-network to HyperEVM/Core
 

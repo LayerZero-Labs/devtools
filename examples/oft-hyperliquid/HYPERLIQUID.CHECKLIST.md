@@ -173,7 +173,7 @@ Block switching is not present in the default oft deploy script.
 
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-22-finalizeevmcontract)
 - Deployer script in the oft repo will deploy the composer - it also handles block switching.
-- [ ] Make sure the Composer's address is activated on HyperCore (sending it at least $1 worth of `HYPE` or `USDC`).
+- [ ] Make sure the Composer's address is activated on HyperCore - transferring any spot amount on `app.hyperliquid.xyz` to the address will prompt you that you are paying $1 as an activation fee. `app.hyperliquid-testnet.xyz` should be used for a testnet deployment.
 - Composer is re-deployable and independent of the oft and does not need to be linked with anything.
 
 ## Step 5 : Listing on spot order books
