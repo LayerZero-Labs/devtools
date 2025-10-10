@@ -633,7 +633,7 @@ npx @layerzerolabs/hyperliquid-composer enable-freeze-privilege \
 
 This is the part where you set the genesis balances for the deployer and the users. Since `HyperCore` tokens are of uint type `u64` the most tokens possible are `18446744073709551615`.
 
-You will have to edit the deployment created by `core-spot create` command that is under `./deployments/hypercore-{testnet | mainnet}` with the name of the Core Spot token index. It should be populated with the `deployer` and `asset bridge address` with both set to `0 wei`.
+You will have to edit the deployment created by `core-spot create` command that is under `./deployments/hypercore-{testnet | mainnet}` with the name of the Core Spot token index. It should be populated with the `asset bridge address` and set to the number of tokens that you want to mint (we recommend `u64.max` since it allows for the most tokens that users can send from HyperEVM).
 
 You can then use the `user-genesis` command to set the genesis balances for the deployer and the users.
 
@@ -734,7 +734,7 @@ curl -X POST "https://api.hyperliquid.xyz/info" \
 
 This step enables the token to be used as a quote asset for trading pairs. This allows other tokens to form trading pairs against your token (e.g., TOKEN/YOUR_TOKEN instead of only YOUR_TOKEN/USDC).
 
-> ⚠️ **Requirements**: There are specific requirements that must be met for this to be successful. Please review the requirements at: [Hyperliquid API requirements](https://t.me/hyperliquid_api/243)
+> ⚠️ **Requirements**: There are specific requirements that must be met for this to be successful. Please review the requirements at: [Hyperliquid API requirements](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/aligned-quote-assets) and contact the Hyperliquid team for the most upto date information.
 >
 > 📝 **Note**: This can be executed after the trading fee share is set and even after deployment and linking are complete.
 
@@ -750,7 +750,7 @@ npx @layerzerolabs/hyperliquid-composer enable-quote-token \
 
 This is the step where you set the trading fee share for the deployer. It can be in the range of `[0%,100%]`.
 
-A deployer fee share <https://hyperliquid.gitbook.io/hyperliquid-docs/trading/fees> is claimed per transaction on HyperCore. Half of the base rate (50%) is allocated as the deployer fee share. The deployer can choose to forgo this fee share by setting the share to `0%`. This causes the deployer's fee share part to be burnt. If it were to be set to `100%`, the deployer would receive the full fee share part of the fee.
+A deployer fee share <https://hyperliquid.gitbook.io/hyperliquid-docs/trading/fees> is claimed per transaction on HyperCore. Half of the base rate (50%) is allocated as the deployer fee share. The deployer can choose to forgo this fee share by setting the share to `0%`. This causes the deployer's fee share part to be burnt. If it were to be set to `100%`, the deployer would receive the full fee share part of the fee. We recommend setting it to `100%`
 
 > ⚠️ Note: The trading fee can be reset as long as the new share is lower than the previous share.
 > ⚠️ Note: This step can also be run after the core spot is deployed.
@@ -810,7 +810,7 @@ You can either use the default composer or use the recovery one or even make cha
 npx hardhat lz:deploy --tags MyHyperLiquidComposer
 ```
 
-> ⚠️ Note: You would need to fund the composer's address with HyperCore with at least $1 in USDC or HYPE so that it can perform CoreWriter actions through it's address.
+> ⚠️ Note: You will need to activate the composer's address on HyperCore by sending it any amount (ex: 0.00000001 USDC) (hyperliquid will automatically charge your account 1 USD stable coin ) so that it can perform CoreWriter actions through it's address.
 
 ## Sending tokens from x-network to HyperEVM/Core
 
