@@ -762,7 +762,7 @@ npx @layerzerolabs/hyperliquid-composer trading-fee \
 
 ## Connect the OFT to the deployed Core Spot
 
-If you have run the above steps then you can use `--oapp-config` in the following commands. If not do not worry! Our SDK will prompt you for the ERC20 address and the ERC20 deployed transaction hash (we need the deployment nonce). In the case of an OFT the ERC20 would the OFT but in an adapter they are different.
+Our SDK will prompt you for the ERC20 address and the ERC20 deployed transaction hash (we need the deployment nonce). In the case of an OFT the ERC20 would the OFT but in an adapter they are different.
 
 In order to enable transfers between the ERC20 and the Core Spot, we need to connect the ERC20 to the Core Spot. This is done in two steps:
 
