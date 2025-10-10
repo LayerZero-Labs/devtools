@@ -39,7 +39,6 @@ npx @layerzerolabs/hyperliquid-composer set-block \
 # Create deployment configuration with optional freeze/quote features
 npx @layerzerolabs/hyperliquid-composer core-spot \
     --action create \
-    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
@@ -142,7 +141,6 @@ After completing HIP-1 deployment, link your token to a LayerZero OFT:
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer request-evm-contract \
-    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
@@ -153,7 +151,6 @@ npx @layerzerolabs/hyperliquid-composer request-evm-contract \
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer finalize-evm-contract \
-    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
@@ -340,7 +337,6 @@ After this we can use the `core-spot create` command to create a new file under 
 ```bash
 npx @layerzerolabs/hyperliquid-composer core-spot \
     --action create \
-    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
@@ -507,7 +503,6 @@ This step is issued by the Core Spot deployer and populates in `HyperCore` that 
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer request-evm-contract  \
-    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --log-level verbose \
@@ -522,7 +517,6 @@ This step completes the connection between the OFT and the Core Spot. It pulls e
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer finalize-evm-contract  \
-    [--oapp-config <layerzero.config.ts>] \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --log-level verbose \
