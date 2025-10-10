@@ -104,7 +104,7 @@ export async function coreSpotDeployment(args: CoreSpotDeploymentArgs): Promise<
         const decimals = await contract.decimals()
         logger.verbose(`Token name: ${tokenName}, Decimals: ${decimals}`)
 
-        const weiDiff = decimals.parseInt() - coreSpot.weiDecimals
+        const weiDiff = decimals - coreSpot.weiDecimals
         logger.verbose(`Wei diff: ${weiDiff}`)
 
         const assetBridgeAddress = toAssetBridgeAddress(parseInt(tokenIndex))
