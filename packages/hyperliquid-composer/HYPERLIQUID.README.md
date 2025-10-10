@@ -88,7 +88,7 @@ All EVM addresses exist on HyperCore but all HyperCore addresses do not exist on
 
 Accounts are activated on hypercore by sending any number of tokens to that account AND paying a `1 USD-stable coin fee` - this fee is paid out of the sender's balance ONTOP of the sent amount and is paid in `USDC` and `USDT0`. This means that if you were sending `0.00001 HYPE` on HyperCore to a new user you also NEED to have at least 1 whole token of `USDC` or `USDT0` to pay for the activation.
 
-We call these special tokens `FeeTokens` or [quoteTokens](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/activation-gas-fee)
+We call these special tokens `FeeTokens` or [quoteTokens](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/activation-gas-fee).
 
 > While USDC and USDT0 are not always worth $1 USD and can fluctuate around by a millionth of a cent. HyperCore ALWAYS takes 1 full token.
 
@@ -810,7 +810,7 @@ You can either use the default composer or use the recovery one or even make cha
 npx hardhat lz:deploy --tags MyHyperLiquidComposer
 ```
 
-> ⚠️ Note: You would need to activate the composer's address on hypercore by transferring any amount of tokens from a wallet that has at least $1 in quote tokens. This $1 will be automatically debited from your accoutn to cover an activation fee.
+> ⚠️ Note: You would need to activate the composer's address on hypercore by transferring any amount of tokens from a wallet that has at least $1 in quote tokens. This $1 will be automatically debited from your account to cover an activation fee.
 
 ## Sending tokens from x-network to HyperEVM/Core
 
