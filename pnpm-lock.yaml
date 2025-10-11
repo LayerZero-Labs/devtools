@@ -2392,7 +2392,7 @@ importers:
         specifier: ~5.0.0
         version: link:../../packages/protocol-devtools-evm
       '@layerzerolabs/protocol-devtools-solana':
-        specifier: ^8.0.1
+        specifier: ^8.0.3
         version: link:../../packages/protocol-devtools-solana
       '@layerzerolabs/solhint-config':
         specifier: ^3.0.12
