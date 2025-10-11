@@ -171,6 +171,80 @@ export const OVaultComposerSyncAbi = [
         type: 'event',
     },
     {
+        anonymous: false,
+        inputs: [
+            {
+                indexed: false,
+                internalType: 'bytes32',
+                name: 'sender',
+                type: 'bytes32',
+            },
+            {
+                indexed: false,
+                internalType: 'bytes32',
+                name: 'recipient',
+                type: 'bytes32',
+            },
+            {
+                indexed: false,
+                internalType: 'uint32',
+                name: 'dstEid',
+                type: 'uint32',
+            },
+            {
+                indexed: false,
+                internalType: 'uint256',
+                name: 'assetAmt',
+                type: 'uint256',
+            },
+            {
+                indexed: false,
+                internalType: 'uint256',
+                name: 'shareAmt',
+                type: 'uint256',
+            },
+        ],
+        name: 'Deposited',
+        type: 'event',
+    },
+    {
+        anonymous: false,
+        inputs: [
+            {
+                indexed: false,
+                internalType: 'bytes32',
+                name: 'sender',
+                type: 'bytes32',
+            },
+            {
+                indexed: false,
+                internalType: 'bytes32',
+                name: 'recipient',
+                type: 'bytes32',
+            },
+            {
+                indexed: false,
+                internalType: 'uint32',
+                name: 'dstEid',
+                type: 'uint32',
+            },
+            {
+                indexed: false,
+                internalType: 'uint256',
+                name: 'shareAmt',
+                type: 'uint256',
+            },
+            {
+                indexed: false,
+                internalType: 'uint256',
+                name: 'assetAmt',
+                type: 'uint256',
+            },
+        ],
+        name: 'Redeemed',
+        type: 'event',
+    },
+    {
         inputs: [],
         name: 'ASSET_ERC20',
         outputs: [
