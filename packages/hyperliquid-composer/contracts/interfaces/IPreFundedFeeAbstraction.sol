@@ -30,5 +30,4 @@ interface IPreFundedFeeAbstraction {
 
     function getAccruedFeeUsdValue() external view returns (uint64);
     function retrieveAccruedFees(uint64 _coreAmount, address _to) external;
-    function drainFeeToken(address _to) external;
 }
