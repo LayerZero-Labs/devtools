@@ -173,7 +173,10 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
      */
     function retrieveCoreUSDC(uint64 _coreAmount, address _to) public virtual override onlyRecoveryAddress {
         uint64 maxTransferAmt = _getMaxTransferAmount(USDC_CORE_INDEX, _coreAmount);
-        uint64 minComposerBalance = MIN_USDC_PRE_FUND_AMOUNT();
+
+        uint64 minComposerBalance = _coreAmount == FULL_TRANSFER
+            ? accruedActivationFee - MIN_USDC_PRE_FUND_AMOUNT()
+            : _coreAmount;
 
         if (maxTransferAmt > minComposerBalance) {
             revert MaxRetrieveAmountExceeded(minComposerBalance, maxTransferAmt);
@@ -181,18 +184,6 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
 
         _submitCoreWriterTransfer(_to, USDC_CORE_INDEX, maxTransferAmt);
         emit Retrieved(USDC_CORE_INDEX, maxTransferAmt, _to);
-    }
-
-    /**
-     * @notice Drains the FeeToken balance from the composer
-     * @dev To be used when deprecating the composer
-     * @dev Can only be called by the recovery address
-     */
-    function drainFeeToken(address _to) public onlyRecoveryAddress {
-        uint64 coreBalance = spotBalance(address(this), QUOTE_ASSET_INDEX).total;
-        if (coreBalance < MIN_USDC_PRE_FUND_AMOUNT()) revert InsufficientCoreAmountForActivation();
-        _submitCoreWriterTransfer(_to, QUOTE_ASSET_INDEX, coreBalance);
-        emit Retrieved(QUOTE_ASSET_INDEX, coreBalance, _to);
     }
 
     /**
