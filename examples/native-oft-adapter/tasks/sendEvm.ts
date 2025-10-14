@@ -189,7 +189,7 @@ export async function sendEvm(
         for (let i = 0; i < extraLzComposeOptions.length; i += 3) {
             const index = Number(extraLzComposeOptions[i])
             const gas = extraLzComposeOptions[i + 1]
-            const value = extraLzComposeOptions[i + 2] || 0
+            const value = extraLzComposeOptions[i + 2] ?? 0
             options = options.addExecutorComposeOption(index, gas, value)
             logger.info(`Added lzCompose option: index ${index}, ${gas} gas, ${value} value`)
         }
