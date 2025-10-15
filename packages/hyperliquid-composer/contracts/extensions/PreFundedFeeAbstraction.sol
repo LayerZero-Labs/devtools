@@ -44,8 +44,9 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
 
     uint64 public immutable SPOT_PAIR_ID;
     uint64 public immutable QUOTE_ASSET_INDEX;
-    uint64 public immutable QUOTE_ASSET_DECIMALS;
 
+    /// @dev DECIMALS are scaled to quote token wei decimals
+    uint64 public immutable QUOTE_ASSET_DECIMALS;
     /// @dev Pre-calculated spot price decimals for gas efficiency: (8 - szDecimals)
     uint64 public immutable SPOT_PRICE_DECIMALS;
 
@@ -72,7 +73,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
         TokenInfo memory quoteAssetInfo = _tokenInfo(QUOTE_ASSET_INDEX);
 
         /// @dev Hyperliquid protocol uses (8 - szDecimals) for spot price decimal encoding
-        SPOT_PRICE_DECIMALS = SPOT_PRICE_MAX_DECIMALS - baseAssetInfo.szDecimals;
+        SPOT_PRICE_DECIMALS = uint64(10 ** (SPOT_PRICE_MAX_DECIMALS - baseAssetInfo.szDecimals));
         QUOTE_ASSET_DECIMALS = uint64(10 ** quoteAssetInfo.weiDecimals);
 
         uint64 totalCentsAmount = BASE_ACTIVATION_FEE_CENTS + _activationOverheadFee;
@@ -119,7 +120,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
      */
     function activationFee() public view virtual override returns (uint64) {
         uint64 rawPrice = _spotPx(SPOT_PAIR_ID);
-        return uint64((ACTIVATION_COST * (10 ** SPOT_PRICE_DECIMALS)) / rawPrice);
+        return uint64((ACTIVATION_COST * SPOT_PRICE_DECIMALS) / rawPrice);
     }
 
     /**
@@ -130,7 +131,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
         if (accruedActivationFees == 0) return 0;
 
         uint64 rawPrice = _spotPx(SPOT_PAIR_ID);
-        return (rawPrice * accruedActivationFees) / (10 ** SPOT_PRICE_DECIMALS);
+        return (rawPrice * accruedActivationFees) / SPOT_PRICE_DECIMALS;
     }
 
     /**
