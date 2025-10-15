@@ -31,6 +31,8 @@ interface IPreFundedFeeAbstraction {
     function SPOT_PRICE_DECIMALS() external view returns (uint64);
     function ACTIVATION_COST() external view returns (uint64);
 
+    function accruedActivationFees() external view returns (uint64);
+
     function getAccruedFeeUsdValue() external view returns (uint256);
     function retrieveAccruedFees(uint64 _coreAmount, address _to) external;
 

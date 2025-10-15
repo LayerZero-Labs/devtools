@@ -51,7 +51,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
 
     /// @dev Activation fee are collected in the base asset and can be retrieved by recovery address
     /// @dev Amount is denoted in HyperCore decimals
-    uint64 public accruedActivationFee;
+    uint64 public accruedActivationFees;
 
     /**
      * @notice Constructor for the PreFundedFeeAbstraction extension
@@ -104,7 +104,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
                 if (coreBalance < MIN_USD_PRE_FUND_WEI_VALUE()) revert InsufficientCoreAmountForActivation();
 
                 uint64 feeCollected = originalAmount - coreAmount;
-                accruedActivationFee += feeCollected;
+                accruedActivationFees += feeCollected;
                 emit FeeCollected(feeCollected);
             }
 
@@ -127,10 +127,10 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
      * @return USD value in quote token terms
      */
     function getAccruedFeeUsdValue() public view returns (uint256) {
-        if (accruedActivationFee == 0) return 0;
+        if (accruedActivationFees == 0) return 0;
 
         uint64 rawPrice = _spotPx(SPOT_PAIR_ID);
-        return (rawPrice * accruedActivationFee) / (10 ** SPOT_PRICE_DECIMALS);
+        return (rawPrice * accruedActivationFees) / (10 ** SPOT_PRICE_DECIMALS);
     }
 
     /**
@@ -140,15 +140,15 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
      * @param _to Destination address on HyperCore
      */
     function retrieveAccruedFees(uint64 _coreAmount, address _to) external onlyRecoveryAddress {
-        if (accruedActivationFee == 0) revert NoFeesToConvert();
+        if (accruedActivationFees == 0) revert NoFeesToConvert();
 
-        uint64 transferAmount = _coreAmount == FULL_TRANSFER ? accruedActivationFee : _coreAmount;
+        uint64 transferAmount = _coreAmount == FULL_TRANSFER ? accruedActivationFees : _coreAmount;
 
-        if (transferAmount > accruedActivationFee) {
-            revert MaxRetrieveAmountExceeded(accruedActivationFee, transferAmount);
+        if (transferAmount > accruedActivationFees) {
+            revert MaxRetrieveAmountExceeded(accruedActivationFees, transferAmount);
         }
 
-        accruedActivationFee -= transferAmount;
+        accruedActivationFees -= transferAmount;
         _submitCoreWriterTransfer(_to, ERC20_CORE_INDEX_ID, transferAmount);
 
         emit Retrieved(ERC20_CORE_INDEX_ID, transferAmount, _to);
