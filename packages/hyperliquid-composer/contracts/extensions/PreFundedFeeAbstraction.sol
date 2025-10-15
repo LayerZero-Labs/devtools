@@ -116,7 +116,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
         uint64 coreBalance = spotBalance(address(this), QUOTE_ASSET_INDEX).total;
         if (coreBalance < MIN_USD_PRE_FUND_WEI_VALUE()) revert InsufficientCoreAmountForActivation();
 
-        uint64 rawPrice = _spotPx();
+        uint64 rawPrice = _spotPx(SPOT_ID);
         return uint64((ACTIVATION_COST * (10 ** SPOT_PRICE_DECIMALS)) / rawPrice);
     }
 
@@ -127,7 +127,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     function getAccruedFeeUsdValue() public view returns (uint256) {
         if (accruedActivationFee == 0) return 0;
 
-        uint64 rawPrice = _spotPx();
+        uint64 rawPrice = _spotPx(SPOT_ID);
         return (rawPrice * accruedActivationFee) / (10 ** SPOT_PRICE_DECIMALS);
     }
 
@@ -180,38 +180,39 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
 
     /**
      * @notice Gets current spot price from HyperCore precompile
+     * @param _spotPairId The spot pair ID to query
      * @return Raw spot price with protocol-specific decimal encoding
      */
-    function _spotPx() internal view returns (uint64) {
+    function _spotPx(uint64 _spotPairId) internal view returns (uint64) {
         bool success;
         bytes memory result;
-        (success, result) = SPOT_PX_PRECOMPILE_ADDRESS.staticcall(abi.encode(SPOT_ID));
+        (success, result) = SPOT_PX_PRECOMPILE_ADDRESS.staticcall(abi.encode(_spotPairId));
         require(success, "SpotPx precompile call failed");
         return abi.decode(result, (uint64));
     }
 
     /**
      * @notice Gets spot pair info from HyperCore precompile
-     * @param _spot Spot pair ID to query
+     * @param _spotPairId Spot pair ID to query
      * @return SpotInfo containing pair name and token indices
      */
-    function _spotInfo(uint64 _spot) internal view returns (SpotInfo memory) {
+    function _spotInfo(uint64 _spotPairId) internal view returns (SpotInfo memory) {
         bool success;
         bytes memory result;
-        (success, result) = SPOT_INFO_PRECOMPILE_ADDRESS.staticcall(abi.encode(_spot));
+        (success, result) = SPOT_INFO_PRECOMPILE_ADDRESS.staticcall(abi.encode(_spotPairId));
         require(success, "SpotInfo precompile call failed");
         return abi.decode(result, (SpotInfo));
     }
 
     /**
      * @notice Gets token metadata from HyperCore precompile
-     * @param _coreSpotIndex Core token index to query
+     * @param _coreIndex Core token index to query
      * @return TokenInfo with token metadata and decimal configurations
      */
-    function _tokenInfo(uint64 _coreSpotIndex) internal view returns (TokenInfo memory) {
+    function _tokenInfo(uint64 _coreIndex) internal view returns (TokenInfo memory) {
         bool success;
         bytes memory result;
-        (success, result) = TOKEN_INFO_PRECOMPILE_ADDRESS.staticcall(abi.encode(_coreSpotIndex));
+        (success, result) = TOKEN_INFO_PRECOMPILE_ADDRESS.staticcall(abi.encode(_coreIndex));
         require(success, "TokenInfo precompile call failed");
         return abi.decode(result, (TokenInfo));
     }
