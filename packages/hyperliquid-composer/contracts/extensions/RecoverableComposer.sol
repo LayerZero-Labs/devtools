@@ -45,6 +45,8 @@ abstract contract RecoverableComposer is HyperLiquidComposer, IRecoverableCompos
      * @param _recoveryAddress Address that will be authorized to perform recovery operations
      */
     constructor(address _recoveryAddress) {
+        if (_recoveryAddress == address(0)) revert InvalidRecoveryAddress();
+
         RECOVERY_ADDRESS = _recoveryAddress;
     }
 
