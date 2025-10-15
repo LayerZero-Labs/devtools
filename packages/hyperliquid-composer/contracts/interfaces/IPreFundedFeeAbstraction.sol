@@ -25,7 +25,7 @@ interface IPreFundedFeeAbstraction {
     event FeeCollected(uint256 amount);
 
     /// Immutable variables
-    function SPOT_ID() external view returns (uint64);
+    function SPOT_PAIR_ID() external view returns (uint64);
     function QUOTE_ASSET_INDEX() external view returns (uint64);
     function QUOTE_ASSET_WEI_DECIMALS() external view returns (uint8);
     function SPOT_PRICE_DECIMALS() external view returns (uint64);
