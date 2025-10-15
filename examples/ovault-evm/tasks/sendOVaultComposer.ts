@@ -1,10 +1,8 @@
-import path from 'path'
-
 import { parseUnits } from 'ethers/lib/utils'
 import { task, types } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
-import { OmniPointHardhat, createGetHreByEid } from '@layerzerolabs/devtools-evm-hardhat'
+import { createGetHreByEid } from '@layerzerolabs/devtools-evm-hardhat'
 import { createLogger } from '@layerzerolabs/io-devtools'
 import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { Options, addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
@@ -406,31 +404,23 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
         let lzComposeValue = args.lzComposeValue || '0'
 
         if (!args.lzComposeValue && args.dstEid !== hubEid) {
-            // Determine which OFT to quote (opposite of what we're sending)
-            const outputTokenConfig =
-                args.tokenType === 'asset'
-                    ? args.shareOappConfig || 'layerzero.share.config.ts' // Asset input → Share output
-                    : args.assetOappConfig || 'layerzero.asset.config.ts' // Share input → Asset output
+            // Get the output OFT address directly from the composer contract
+            // This works for any asset (including Stargate) without needing config files
+            const composerArtifact = await hubHre.artifacts.readArtifact('IVaultComposerSync')
+            const composerContract = await hubHre.ethers.getContractAt(composerArtifact.abi, composerAddress, hubSigner)
 
-            const outputLayerZeroConfig = (await import(path.resolve('./', outputTokenConfig))).default
-            const { contracts: outputContracts } =
-                typeof outputLayerZeroConfig === 'function' ? await outputLayerZeroConfig() : outputLayerZeroConfig
-
-            // Find the output OFT on hub chain
-            const hubOutputContract = outputContracts.find(
-                (c: { contract: OmniPointHardhat }) => c.contract.eid === hubEid
-            )
-            if (!hubOutputContract) {
-                throw new Error(`No output OFT config found for hub EID ${hubEid} in ${outputTokenConfig}`)
+            let outputOFTAddress: string
+            if (args.tokenType === 'asset') {
+                // Asset input → Share output
+                outputOFTAddress = await composerContract.SHARE_OFT()
+                logger.info(`Using SHARE_OFT from composer: ${outputOFTAddress}`)
+            } else {
+                // Share input → Asset output
+                outputOFTAddress = await composerContract.ASSET_OFT()
+                logger.info(`Using ASSET_OFT from composer: ${outputOFTAddress}`)
             }
 
-            // Get the output OFT address from hub chain deployments
-            const outputOFTAddress = hubOutputContract.contract.contractName
-                ? (await hubHre.deployments.get(hubOutputContract.contract.contractName)).address
-                : hubOutputContract.contract.address || ''
-
-            // IMPORTANT: Use hub chain RPC/signer for quoting the second hop
-            const hubSigner = (await hubHre.ethers.getSigners())[0]
+            // Quote the second hop using hub chain RPC
             const ioftArtifact = await hubHre.artifacts.readArtifact('IOFT')
             const outputOFT = await hubHre.ethers.getContractAt(ioftArtifact.abi, outputOFTAddress, hubSigner)
 
