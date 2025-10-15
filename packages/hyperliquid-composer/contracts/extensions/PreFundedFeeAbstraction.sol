@@ -42,7 +42,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
 
     uint64 public immutable SPOT_PAIR_ID;
     uint64 public immutable QUOTE_ASSET_INDEX;
-    uint8 public immutable QUOTE_ASSET_WEI_DECIMALS;
+    uint64 public immutable QUOTE_ASSET_DECIMALS;
 
     /// @dev Pre-calculated spot price decimals for gas efficiency: (8 - szDecimals)
     uint64 public immutable SPOT_PRICE_DECIMALS;
@@ -71,12 +71,12 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
 
         /// @dev Hyperliquid protocol uses (8 - szDecimals) for spot price decimal encoding
         SPOT_PRICE_DECIMALS = SPOT_PRICE_MAX_DECIMALS - baseAssetInfo.szDecimals;
-        uint256 scaledWeiDecimals = 10 ** quoteAssetInfo.weiDecimals;
+        QUOTE_ASSET_DECIMALS = uint64(10 ** quoteAssetInfo.weiDecimals);
 
         uint64 totalCentsAmount = BASE_ACTIVATION_FEE_CENTS + _activationOverheadFee;
-        ACTIVATION_COST = uint64((totalCentsAmount * scaledWeiDecimals) / 100);
+        ACTIVATION_COST = uint64((totalCentsAmount * QUOTE_ASSET_DECIMALS) / 100);
 
-        if (MIN_USD_PRE_FUND_AMOUNT() * scaledWeiDecimals > type(uint64).max) revert MinUSDAmtGreaterThanU64Max();
+        if (MIN_USD_PRE_FUND_AMOUNT() * QUOTE_ASSET_DECIMALS > type(uint64).max) revert MinUSDAmtGreaterThanU64Max();
     }
 
     /**
@@ -224,7 +224,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
      * @return The minimum quote token wei amount required for activation fees
      */
     function MIN_USD_PRE_FUND_WEI_VALUE() public view virtual returns (uint64) {
-        return uint64(MIN_USD_PRE_FUND_AMOUNT() * (10 ** QUOTE_ASSET_WEI_DECIMALS));
+        return uint64(MIN_USD_PRE_FUND_AMOUNT() * QUOTE_ASSET_DECIMALS);
     }
 
     /**
