@@ -45,6 +45,8 @@ OVault extends the ERC-4626 tokenized vault standard with LayerZero's omnichain 
 
 OVault makes it extremely easy to move assets and shares between any supported chains, while also enabling cross-chain vault operations. Users can deposit assets from any chain to receive shares on any destination chain, redeem shares from any chain to receive assets on any destination chain, or simply transfer these tokens between chains - all through a unified interface.
 
+**Stargate Integration**: OVault is fully compatible with Stargate OFTs (USDC, USDT, etc.) as vault assets, with automatic decimal handling and no configuration required.
+
 ## Requirements
 
 - **git**
@@ -649,6 +651,29 @@ npx hardhat lz:ovault:send \
 - `--lz-compose-gas`: Gas for lzCompose operation (auto-optimized by default)
 - `--lz-compose-value`: Value for lzCompose operation (in wei)
 - `--oft-address`: Override source OFT address
+
+**Using Stargate Assets:**
+
+The OVault system is fully compatible with Stargate OFTs (e.g., USDC.e) as the underlying vault asset. To use Stargate assets, specify the Stargate pool/OFT address using the `--oft-address` parameter:
+
+```bash
+# Example: Deposit Stargate USDC from Ethereum to receive shares on Base
+npx hardhat lz:ovault:send \
+  --src-eid 30101 \
+  --dst-eid 30184 \
+  --amount 100 \
+  --to 0xYourRecipientAddress \
+  --token-type asset \
+  --oft-address 0xc026395860Db2d07ee33e05fE50ed7bD583189C7  # Stargate USDC pool on Ethereum
+```
+
+**Key points for Stargate integration:**
+
+- The `--oft-address` must point to the Stargate pool/OFT address on the source chain
+- Decimals are automatically detected (e.g., 6 decimals for USDC vs 18 for ETH)
+- No LayerZero config files needed - addresses are read from the deployed composer
+- Works with any Stargate asset that implements the IOFT interface
+- Automatic slippage protection (0.5% default) for stablecoin transfers
 
 **Gas Optimization:**
 
