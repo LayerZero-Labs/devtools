@@ -8,6 +8,7 @@ pragma solidity ^0.8.20;
  * @dev Defines the public API for recovery mechanisms for both HyperEVM and HyperCore assets
  */
 interface IRecoverableComposer {
+    error InvalidRecoveryAddress();
     error MaxRetrieveAmountExceeded(uint256 maxAmount, uint256 requestedAmount);
     error NotRecoveryAddress();
     error TransferFailed();

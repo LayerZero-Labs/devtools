@@ -13,9 +13,7 @@ import { PreFundedFeeAbstraction } from "@layerzerolabs/hyperliquid-composer/con
 ///
 /// @dev Does NOT refund dust due to sharedDecimals truncation.
 /// @dev Disclaimer: If EVM supply exceeds bridge balance, tokens return to sender on HyperEVM.
-contract MyHyperLiquidComposer_FeeAbstraction is FeeToken, RecoverableComposer, PreFundedFeeAbstraction {
-    error InvalidRecoveryAddress();
-
+contract MyHyperLiquidComposer_FeeAbstraction is PreFundedFeeAbstraction {
     /// @param _oft The OFT address
     /// @param _hlIndexId The HyperLiquid core spot index
     /// @param _assetDecimalDiff EVM - HyperLiquid decimal difference
@@ -32,46 +30,6 @@ contract MyHyperLiquidComposer_FeeAbstraction is FeeToken, RecoverableComposer, 
     )
         HyperLiquidComposer(_oft, _hlIndexId, _assetDecimalDiff)
         RecoverableComposer(_recoveryAddress)
-        FeeToken()
         PreFundedFeeAbstraction(_spotId, _activationOverheadFee)
-    {
-        if (_recoveryAddress == address(0)) revert InvalidRecoveryAddress();
-    }
-
-    /**
-     * @notice Override to use PreFundedFeeAbstraction implementation for activation fee calculation
-     */
-    function activationFee() public view virtual override(FeeToken, PreFundedFeeAbstraction) returns (uint64) {
-        return PreFundedFeeAbstraction.activationFee();
-    }
-
-    /**
-     * @notice Override to use PreFundedFeeAbstraction implementation for fee calculation with user activation
-     */
-    function _getFinalCoreAmount(
-        address _to,
-        uint64 _coreAmount
-    ) internal view virtual override(FeeToken, HyperLiquidComposer, PreFundedFeeAbstraction) returns (uint64) {
-        return PreFundedFeeAbstraction._getFinalCoreAmount(_to, _coreAmount);
-    }
-
-    /**
-     * @notice Override to use PreFundedFeeAbstraction implementation for fee tracking during transfers
-     */
-    function _transferERC20ToHyperCore(
-        address _to,
-        uint256 _amountLD
-    ) internal virtual override(HyperLiquidComposer, PreFundedFeeAbstraction) {
-        PreFundedFeeAbstraction._transferERC20ToHyperCore(_to, _amountLD);
-    }
-
-    /**
-     * @notice Override to use PreFundedFeeAbstraction implementation for retrieving USDC
-     */
-    function retrieveCoreUSDC(
-        uint64 _coreAmount,
-        address _to
-    ) public virtual override(RecoverableComposer, PreFundedFeeAbstraction) onlyRecoveryAddress {
-        PreFundedFeeAbstraction.retrieveCoreUSDC(_coreAmount, _to);
-    }
+    {}
 }
