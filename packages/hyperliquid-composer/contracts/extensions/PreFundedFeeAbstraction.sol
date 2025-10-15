@@ -40,7 +40,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     /// @dev Total activation cost in quote token wei (base + overhead). Scaled to core spot decimals.
     uint64 public immutable ACTIVATION_COST;
 
-    uint64 public immutable SPOT_ID;
+    uint64 public immutable SPOT_PAIR_ID;
     uint64 public immutable QUOTE_ASSET_INDEX;
     uint8 public immutable QUOTE_ASSET_WEI_DECIMALS;
 
@@ -53,18 +53,18 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
 
     /**
      * @notice Constructor for the PreFundedFeeAbstraction extension
-     * @param _spotId The spot pair ID for the asset/quote pair (e.g., 107 for HYPE/USDC)
+     * @param _spotPairId The spot pair ID for the asset/quote pair (e.g., 107 for HYPE/USDC)
      * @param _activationOverheadFee The activation overhead fee in cents on top of $1 base (e.g., 50 = 50 cents = $0.50 overhead)
      */
-    constructor(uint64 _spotId, uint16 _activationOverheadFee) {
-        uint64[2] memory tokens = _spotInfo(_spotId).tokens;
+    constructor(uint64 _spotPairId, uint16 _activationOverheadFee) {
+        uint64[2] memory tokens = _spotInfo(_spotPairId).tokens;
         uint64 assetIndex = tokens[0];
         QUOTE_ASSET_INDEX = tokens[1];
 
         /// @dev The spot ID is NOT the same as the core asset index
         /// @dev Example: HYPE has core index 150 but HYPE/USDC has spot ID 107
         if (assetIndex != ERC20_CORE_INDEX_ID) revert InvalidSpot();
-        SPOT_ID = _spotId;
+        SPOT_PAIR_ID = _spotPairId;
 
         TokenInfo memory baseAssetInfo = _tokenInfo(assetIndex);
         TokenInfo memory quoteAssetInfo = _tokenInfo(QUOTE_ASSET_INDEX);
@@ -116,7 +116,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
         uint64 coreBalance = spotBalance(address(this), QUOTE_ASSET_INDEX).total;
         if (coreBalance < MIN_USD_PRE_FUND_WEI_VALUE()) revert InsufficientCoreAmountForActivation();
 
-        uint64 rawPrice = _spotPx(SPOT_ID);
+        uint64 rawPrice = _spotPx(SPOT_PAIR_ID);
         return uint64((ACTIVATION_COST * (10 ** SPOT_PRICE_DECIMALS)) / rawPrice);
     }
 
@@ -127,7 +127,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     function getAccruedFeeUsdValue() public view returns (uint256) {
         if (accruedActivationFee == 0) return 0;
 
-        uint64 rawPrice = _spotPx(SPOT_ID);
+        uint64 rawPrice = _spotPx(SPOT_PAIR_ID);
         return (rawPrice * accruedActivationFee) / (10 ** SPOT_PRICE_DECIMALS);
     }
 
