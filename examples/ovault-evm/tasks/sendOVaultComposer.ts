@@ -334,7 +334,6 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
         const erc20DecimalsAbi = ['function decimals() view returns (uint8)']
         const assetToken = new hubHre.ethers.Contract(assetAddress, erc20DecimalsAbi, hubSigner)
         const assetDecimals = await assetToken.decimals()
-        console.log('assetDecimals', assetDecimals)
 
         // Fetch share decimals from vault (shares are ERC20-compliant)
         const shareToken = new hubHre.ethers.Contract(vaultAddress, erc20DecimalsAbi, hubSigner)
