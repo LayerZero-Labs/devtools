@@ -1,25 +1,28 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
 
 import { HyperLiquidComposer } from "../HyperLiquidComposer.sol";
-import { HyperLiquidComposerCodec } from "../library/HyperLiquidComposerCodec.sol";
 import { FeeToken } from "../extensions/FeeToken.sol";
 import { RecoverableComposer } from "../extensions/RecoverableComposer.sol";
-import { IHyperAssetAmount } from "../interfaces/IHyperLiquidComposer.sol";
 
+import { IHyperAssetAmount } from "../interfaces/IHyperLiquidComposer.sol";
 import { IPreFundedFeeAbstraction, SpotInfo, TokenInfo } from "../interfaces/IPreFundedFeeAbstraction.sol";
 
 /**
- * @title PreFunded Fee Abstraction
+ * @title Pre-funded Fee Abstraction
  * @author LayerZero Labs (@shankars99)
- * @notice Extension that eliminates the need for pre-funding composers with USDC by using deposited assets for activation fees
- * @dev Instead of maintaining separate balances for activation, this extension deducts fees from user deposits in their native asset
- * @dev The composer calculates USD-equivalent fee amounts using real-time HyperCore spot prices and asset conversion
- * @dev Accumulated fees are tracked and can be retrieved by the recovery address for external liquidation
+ * @notice Extension that allows using deposited assets for activation fees, by being pre-funded with quote tokens.
+ * @dev The composer calculates USD-equivalent fee amounts using real-time HyperCore spot prices and asset conversion.
+ * @dev Accumulated fees can be retrieved by the recovery address for external liquidation.
+ * @dev This contract needs to be periodically funded with quote tokens.
+ * @dev Activations will stop working if the contract holds less than `MAX_USERS_PER_BLOCK` quote tokens,
+ *      to avoid multiple users trying to activate in the same block, and silently reverting on HyperCore.
+ * @dev This contract assumes 1 quote token = 1 USD = activation fee.
+ * @dev Activation fees are automatically deducted from the composer's balance on HyperCore.
  */
 abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPreFundedFeeAbstraction {
     using SafeERC20 for IERC20;
@@ -28,30 +31,34 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     address internal constant SPOT_INFO_PRECOMPILE_ADDRESS = 0x000000000000000000000000000000000000080b;
     address internal constant TOKEN_INFO_PRECOMPILE_ADDRESS = 0x000000000000000000000000000000000000080C;
 
-    /// @dev Hyperliquid protocol constant: spot prices use MAX_DECIMALS of 8
+    /// @dev Hyperliquid protocol constant: spot prices use `MAX_DECIMALS` of 8.
     uint8 internal constant SPOT_PRICE_MAX_DECIMALS = 8;
 
-    /// @dev Hyperliquid protocol requires 1 quote token for activation
+    /// @dev Hyperliquid protocol requires 1 quote token for activation.
     uint64 internal constant BASE_ACTIVATION_FEE_CENTS = 100;
 
-    /// @dev US Dollar value of the minimum pre-fund amount. Not scaled to core spot decimals.
-    /// @dev The maximum number of transactions that can be fit in a single block
-    /// @dev This is because spotBalance returns the same value for all transactions in a block
-    uint64 private constant MAX_USERS_PER_BLOCK = 25;
+    /// @dev USD value of the minimum pre-fund amount. Not scaled to core spot decimals.
+    /// @dev The maximum number of transactions that can be fit in a single HyperEVM block.
+    /// @dev This is because `spotBalance` returns the same value for all transactions in a HyperEVM block.
+    uint64 private constant MAX_USERS_PER_BLOCK = 50;
 
     /// @dev Total activation cost in quote token wei (base + overhead). Scaled to core spot decimals.
     uint64 public immutable ACTIVATION_COST;
 
+    /// @dev Spot pair ID for the asset/quote pair (e.g., 107 for HYPE/USDC).
     uint64 public immutable SPOT_PAIR_ID;
+
+    /// @dev Quote asset core index (e.g., 0 for USDC, 150 for HYPE).
     uint64 public immutable QUOTE_ASSET_INDEX;
 
-    /// @dev DECIMALS are scaled to quote token wei decimals
+    /// @dev Quote asset core decimals (e.g., 8 for USDC, 8 for HYPE).
     uint64 public immutable QUOTE_ASSET_DECIMALS;
-    /// @dev Pre-calculated spot price decimals for gas efficiency: (8 - szDecimals)
+    /// @dev Pre-calculated spot price decimals for gas efficiency: (8 - `szDecimals`).
     uint64 public immutable SPOT_PRICE_DECIMALS;
 
     /**
-     * @notice Constructor for the PreFundedFeeAbstraction extension
+     * @notice Constructor for the `PreFundedFeeAbstraction` extension.
+     * @dev Needs to be executed after `HyperLiquidComposer` constructor.
      * @param _spotPairId The spot pair ID for the asset/quote pair (e.g., 107 for HYPE/USDC)
      * @param _activationOverheadFee The activation overhead fee in cents on top of $1 base (e.g., 50 = 50 cents = $0.50 overhead)
      */
@@ -60,28 +67,27 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
         uint64 assetIndex = tokens[0];
         QUOTE_ASSET_INDEX = tokens[1];
 
-        /// @dev The spot ID is NOT the same as the core asset index
-        /// @dev Example: HYPE has core index 150 but HYPE/USDC has spot ID 107
-        if (assetIndex != ERC20_CORE_INDEX_ID) revert InvalidSpot();
+        /// @dev The spot pair ID is NOT the same as the core asset index.
+        ///      Example: HYPE has core index 150 but HYPE/USDC has spot pair ID 107.
+        if (assetIndex != ERC20_CORE_INDEX_ID) revert InvalidSpotPair();
         SPOT_PAIR_ID = _spotPairId;
 
         TokenInfo memory baseAssetInfo = _tokenInfo(assetIndex);
         TokenInfo memory quoteAssetInfo = _tokenInfo(QUOTE_ASSET_INDEX);
 
-        /// @dev Hyperliquid protocol uses (8 - szDecimals) for spot price decimal encoding
+        /// @dev Hyperliquid protocol uses (8 - `szDecimals`) for spot price decimal encoding.
         SPOT_PRICE_DECIMALS = uint64(10 ** (SPOT_PRICE_MAX_DECIMALS - baseAssetInfo.szDecimals));
         QUOTE_ASSET_DECIMALS = uint64(10 ** quoteAssetInfo.weiDecimals);
 
         uint64 totalCentsAmount = BASE_ACTIVATION_FEE_CENTS + _activationOverheadFee;
         ACTIVATION_COST = uint64((totalCentsAmount * QUOTE_ASSET_DECIMALS) / 100);
 
-        if (MAX_USERS_PER_BLOCK * QUOTE_ASSET_DECIMALS > type(uint64).max) revert MinUSDAmtGreaterThanU64Max();
+        if (uint256(MAX_USERS_PER_BLOCK) * uint256(QUOTE_ASSET_DECIMALS) > type(uint64).max) revert MinUSDAmtGreaterThanU64Max();
     }
 
     /**
-     * @notice Override to track activation fees during transfers
-     * @param _to Destination address on HyperCore
-     * @param _amountLD Amount to transfer in LayerZero decimals
+     * @dev Override to track activation fees during transfers.
+     * @inheritdoc HyperLiquidComposer
      */
     function _transferERC20ToHyperCore(address _to, uint256 _amountLD) internal virtual override {
         IHyperAssetAmount memory amounts = quoteHyperCoreAmount(
@@ -95,14 +101,16 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
             uint64 originalAmount = amounts.core;
             uint64 coreAmount = _getFinalCoreAmount(_to, originalAmount);
 
-            /// @dev When the user is not activated we collect the activation fee
+            /// @dev When the user is not activated we collect the activation fee.
             if (originalAmount > coreAmount) {
                 uint64 coreBalance = spotBalance(address(this), QUOTE_ASSET_INDEX).total;
-                if (coreBalance < uint64(MAX_USERS_PER_BLOCK * QUOTE_ASSET_DECIMALS))
+                /// @dev Otherwise, this could revert silently if multiple users try to activate in the same block.
+                if (coreBalance < (MAX_USERS_PER_BLOCK * QUOTE_ASSET_DECIMALS)) {
                     revert InsufficientCoreAmountForActivation();
+                }
 
                 uint64 feeCollected = originalAmount - coreAmount;
-                emit FeeCollected(feeCollected);
+                emit FeeCollected(_to, feeCollected);
             }
 
             IERC20(ERC20).safeTransfer(ERC20_ASSET_BRIDGE, amounts.evm);
@@ -111,58 +119,50 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     }
 
     /**
-     * @notice Calculates activation fee in asset tokens using current spot price
+     * @notice Calculates activation fee in asset tokens using current spot price.
      * @return Activation fee amount in core asset decimals
      */
     function activationFee() public view virtual override returns (uint64) {
         uint64 rawPrice = _spotPx(SPOT_PAIR_ID);
-        return uint64((ACTIVATION_COST * SPOT_PRICE_DECIMALS) / rawPrice);
+        return uint64(Math.mulDiv(ACTIVATION_COST, SPOT_PRICE_DECIMALS, rawPrice, Math.Rounding.Ceil));
     }
 
     /**
-     * @notice Gets current spot price from HyperCore precompile
+     * @notice Gets current spot price from HyperCore precompile.
      * @param _spotPairId The spot pair ID to query
      * @return Raw spot price with protocol-specific decimal encoding
      */
     function _spotPx(uint64 _spotPairId) internal view returns (uint64) {
-        bool success;
-        bytes memory result;
-        (success, result) = SPOT_PX_PRECOMPILE_ADDRESS.staticcall(abi.encode(_spotPairId));
+        (bool success, bytes memory result) = SPOT_PX_PRECOMPILE_ADDRESS.staticcall(abi.encode(_spotPairId));
         require(success, "SpotPx precompile call failed");
         return abi.decode(result, (uint64));
     }
 
     /**
-     * @notice Gets spot pair info from HyperCore precompile
+     * @notice Gets spot pair info from HyperCore precompile.
      * @param _spotPairId Spot pair ID to query
-     * @return SpotInfo containing pair name and token indices
+     * @return `SpotInfo` containing pair name and token indices
      */
     function _spotInfo(uint64 _spotPairId) internal view returns (SpotInfo memory) {
-        bool success;
-        bytes memory result;
-        (success, result) = SPOT_INFO_PRECOMPILE_ADDRESS.staticcall(abi.encode(_spotPairId));
+        (bool success, bytes memory result) = SPOT_INFO_PRECOMPILE_ADDRESS.staticcall(abi.encode(_spotPairId));
         require(success, "SpotInfo precompile call failed");
         return abi.decode(result, (SpotInfo));
     }
 
     /**
-     * @notice Gets token metadata from HyperCore precompile
+     * @notice Gets token metadata from HyperCore precompile.
      * @param _coreIndex Core token index to query
-     * @return TokenInfo with token metadata and decimal configurations
+     * @return `TokenInfo` with token metadata and decimal configurations
      */
     function _tokenInfo(uint64 _coreIndex) internal view returns (TokenInfo memory) {
-        bool success;
-        bytes memory result;
-        (success, result) = TOKEN_INFO_PRECOMPILE_ADDRESS.staticcall(abi.encode(_coreIndex));
+        (bool success, bytes memory result) = TOKEN_INFO_PRECOMPILE_ADDRESS.staticcall(abi.encode(_coreIndex));
         require(success, "TokenInfo precompile call failed");
         return abi.decode(result, (TokenInfo));
     }
 
     /**
-     * @notice Deducts activation fee if user not activated, otherwise returns full amount
-     * @param _to Destination address on HyperCore
-     * @param _coreAmount Original core amount before fee deduction
-     * @return Final core amount after potential fee deduction
+     * @dev Underflows if `_coreAmount < activationFee()`.
+     * @inheritdoc FeeToken
      */
     function _getFinalCoreAmount(
         address _to,
