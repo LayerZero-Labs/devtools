@@ -29,21 +29,23 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     address internal constant TOKEN_INFO_PRECOMPILE_ADDRESS = 0x000000000000000000000000000000000000080C;
 
     /// @dev Hyperliquid protocol constant: spot prices use MAX_DECIMALS of 8
-    uint8 constant MAX_SPOT_PRICE_DECIMALS = 8;
+    uint8 internal constant SPOT_PRICE_MAX_DECIMALS = 8;
 
     /// @dev Hyperliquid protocol requires 1 quote token for activation
-    uint64 constant BASE_ACTIVATION_FEE_CENTS = 100;
+    uint64 internal constant BASE_ACTIVATION_FEE_CENTS = 100;
 
-    uint8 constant DEFAULT_MIN_USDC_PRE_FUND_AMOUNT = 20;
+    /// @dev US Dollar value of the minimum pre-fund amount. Not scaled to core spot decimals.
+    uint64 private constant DEFAULT_MIN_USD_PRE_FUND_AMOUNT = 100;
 
-    /// @dev Total activation cost in quote token wei (base + overhead)
+    /// @dev Total activation cost in quote token wei (base + overhead). Scaled to core spot decimals.
     uint64 public immutable ACTIVATION_COST;
 
     uint64 public immutable SPOT_ID;
     uint64 public immutable QUOTE_ASSET_INDEX;
+    uint8 public immutable QUOTE_ASSET_WEI_DECIMALS;
 
     /// @dev Pre-calculated spot price decimals for gas efficiency: (8 - szDecimals)
-    uint8 public immutable SPOT_PRICE_DECIMALS;
+    uint64 public immutable SPOT_PRICE_DECIMALS;
 
     /// @dev Activation fee are collected in the base asset and can be retrieved by recovery address
     /// @dev Amount is denoted in HyperCore decimals
@@ -68,27 +70,13 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
         TokenInfo memory quoteAssetInfo = _tokenInfo(QUOTE_ASSET_INDEX);
 
         /// @dev Hyperliquid protocol uses (8 - szDecimals) for spot price decimal encoding
-        SPOT_PRICE_DECIMALS = MAX_SPOT_PRICE_DECIMALS - baseAssetInfo.szDecimals;
+        SPOT_PRICE_DECIMALS = SPOT_PRICE_MAX_DECIMALS - baseAssetInfo.szDecimals;
+        uint256 scaledWeiDecimals = 10 ** quoteAssetInfo.weiDecimals;
 
         uint64 totalCentsAmount = BASE_ACTIVATION_FEE_CENTS + _activationOverheadFee;
-        ACTIVATION_COST = uint64((totalCentsAmount * (10 ** quoteAssetInfo.weiDecimals)) / 100);
-    }
+        ACTIVATION_COST = uint64((totalCentsAmount * scaledWeiDecimals) / 100);
 
-    /**
-     * @notice Deducts activation fee if user not activated, otherwise returns full amount
-     * @param _to Destination address on HyperCore
-     * @param _coreAmount Original core amount before fee deduction
-     * @return Final core amount after potential fee deduction
-     */
-    function _getFinalCoreAmount(
-        address _to,
-        uint64 _coreAmount
-    ) internal view virtual override(FeeToken, HyperLiquidComposer) returns (uint64) {
-        if (coreUserExists(_to).exists) return _coreAmount;
-
-        uint64 fee = activationFee();
-        if (_coreAmount <= fee) revert InsufficientCoreAmountForActivation();
-        return _coreAmount - fee;
+        if (MIN_USD_PRE_FUND_AMOUNT() * scaledWeiDecimals > type(uint64).max) revert MinUSDAmtGreaterThanU64Max();
     }
 
     /**
@@ -108,7 +96,8 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
             uint64 originalAmount = amounts.core;
             uint64 coreAmount = _getFinalCoreAmount(_to, originalAmount);
 
-            if (!coreUserExists(_to).exists) {
+            /// @dev When the user is not activated we collect the activation fee
+            if (originalAmount > coreAmount) {
                 uint64 feeCollected = originalAmount - coreAmount;
                 accruedActivationFee += feeCollected;
                 emit FeeCollected(feeCollected);
@@ -124,11 +113,10 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
      * @return Activation fee amount in core asset decimals
      */
     function activationFee() public view virtual override returns (uint64) {
-        uint64 rawPrice = _spotPx();
-
         uint64 coreBalance = spotBalance(address(this), QUOTE_ASSET_INDEX).total;
-        if (coreBalance < MIN_USDC_PRE_FUND_AMOUNT()) revert InsufficientCoreAmountForActivation();
+        if (coreBalance < MIN_USD_PRE_FUND_WEI_VALUE()) revert InsufficientCoreAmountForActivation();
 
+        uint64 rawPrice = _spotPx();
         return uint64((ACTIVATION_COST * (10 ** SPOT_PRICE_DECIMALS)) / rawPrice);
     }
 
@@ -136,17 +124,17 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
      * @notice Estimates USD value of accumulated fees using current spot price
      * @return USD value in quote token terms
      */
-    function getAccruedFeeUsdValue() public view returns (uint64) {
+    function getAccruedFeeUsdValue() public view returns (uint256) {
         if (accruedActivationFee == 0) return 0;
 
         uint64 rawPrice = _spotPx();
-        return uint64((rawPrice * accruedActivationFee) / (10 ** SPOT_PRICE_DECIMALS));
+        return (rawPrice * accruedActivationFee) / (10 ** SPOT_PRICE_DECIMALS);
     }
 
     /**
      * @notice Transfers accumulated fees to specified address for external liquidation
      * @dev Permissioned call by the recovery address
-     * @param _coreAmount Amount to transfer in core decimals, or FULL_TRANSFER for all
+     * @param _coreAmount Amount to transfer in core decimals, FULL_TRANSFER for max available
      * @param _to Destination address on HyperCore
      */
     function retrieveAccruedFees(uint64 _coreAmount, address _to) external onlyRecoveryAddress {
@@ -168,15 +156,19 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
      * @notice Retrieves USDC tokens from HyperCore to a specified address
      * @dev Transfers USDC tokens from the composer's HyperCore balance to the specified address
      * @dev Can only be called by the recovery address
-     * @param _coreAmount Amount of USDC tokens to retrieve in HyperCore decimals, or FULL_TRANSFER for all
+     * @param _coreAmount Amount of USDC tokens to retrieve in HyperCore decimals, FULL_TRANSFER for max available
      * @param _to Destination address to receive the retrieved USDC tokens
      */
     function retrieveCoreUSDC(uint64 _coreAmount, address _to) public virtual override onlyRecoveryAddress {
-        uint64 maxTransferAmt = _getMaxTransferAmount(USDC_CORE_INDEX, _coreAmount);
+        if (_coreAmount == FULL_TRANSFER && accruedActivationFee < MIN_USD_PRE_FUND_WEI_VALUE()) {
+            revert InsufficientCoreAmountForActivation();
+        }
 
         uint64 minComposerBalance = _coreAmount == FULL_TRANSFER
-            ? accruedActivationFee - MIN_USDC_PRE_FUND_AMOUNT()
+            ? accruedActivationFee - MIN_USD_PRE_FUND_WEI_VALUE()
             : _coreAmount;
+
+        uint64 maxTransferAmt = _getMaxTransferAmount(USDC_CORE_INDEX, _coreAmount);
 
         if (maxTransferAmt > minComposerBalance) {
             revert MaxRetrieveAmountExceeded(minComposerBalance, maxTransferAmt);
@@ -225,11 +217,35 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     }
 
     /**
-     * @notice Returns the minimum activation cost threshold in USD terms
+     * @notice Returns the minimum activation cost threshold in quote token wei terms
+     * @dev Scaled to quote token wei decimals
      * @dev Can be overridden by implementing contracts to adjust minimum fee requirements
-     * @return The minimum USD amount required for activation fees
+     * @return The minimum quote token wei amount required for activation fees
      */
-    function MIN_USDC_PRE_FUND_AMOUNT() public pure virtual returns (uint8) {
-        return DEFAULT_MIN_USDC_PRE_FUND_AMOUNT;
+    function MIN_USD_PRE_FUND_WEI_VALUE() public view virtual returns (uint64) {
+        return uint64(MIN_USD_PRE_FUND_AMOUNT() * (10 ** QUOTE_ASSET_WEI_DECIMALS));
+    }
+
+    /**
+     * @notice Returns the minimum activation cost threshold in US Dollars
+     * @dev NOT scaled to quote token wei decimals
+     * @dev Can be overridden by implementing contracts to adjust minimum fee requirements
+     * @return The minimum quote token wei amount required for activation fees
+     */
+    function MIN_USD_PRE_FUND_AMOUNT() public pure virtual returns (uint64) {
+        return DEFAULT_MIN_USD_PRE_FUND_AMOUNT;
+    }
+
+    /**
+     * @notice Deducts activation fee if user not activated, otherwise returns full amount
+     * @param _to Destination address on HyperCore
+     * @param _coreAmount Original core amount before fee deduction
+     * @return Final core amount after potential fee deduction
+     */
+    function _getFinalCoreAmount(
+        address _to,
+        uint64 _coreAmount
+    ) internal view virtual override(FeeToken, HyperLiquidComposer) returns (uint64) {
+        return FeeToken._getFinalCoreAmount(_to, _coreAmount);
     }
 }
