@@ -3,7 +3,6 @@ pragma solidity ^0.8.22;
 
 import { HyperLiquidComposer } from "@layerzerolabs/hyperliquid-composer/contracts/HyperLiquidComposer.sol";
 import { RecoverableComposer } from "@layerzerolabs/hyperliquid-composer/contracts/extensions/RecoverableComposer.sol";
-import { FeeToken } from "@layerzerolabs/hyperliquid-composer/contracts/extensions/FeeToken.sol";
 import { PreFundedFeeAbstraction } from "@layerzerolabs/hyperliquid-composer/contracts/extensions/PreFundedFeeAbstraction.sol";
 
 /// @dev Composer with PreFundedFeeAbstraction extension for NonFee tokens.
