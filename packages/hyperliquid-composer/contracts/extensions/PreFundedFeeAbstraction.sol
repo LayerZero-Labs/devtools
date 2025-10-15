@@ -37,7 +37,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     /// @dev US Dollar value of the minimum pre-fund amount. Not scaled to core spot decimals.
     /// @dev The maximum number of transactions that can be fit in a single block
     /// @dev This is because spotBalance returns the same value for all transactions in a block
-    uint64 private constant DEFAULT_MIN_USD_PRE_FUND_AMOUNT = 25;
+    uint64 private constant MAX_USERS_PER_BLOCK = 25;
 
     /// @dev Total activation cost in quote token wei (base + overhead). Scaled to core spot decimals.
     uint64 public immutable ACTIVATION_COST;
@@ -49,10 +49,6 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     uint64 public immutable QUOTE_ASSET_DECIMALS;
     /// @dev Pre-calculated spot price decimals for gas efficiency: (8 - szDecimals)
     uint64 public immutable SPOT_PRICE_DECIMALS;
-
-    /// @dev Activation fee are collected in the base asset and can be retrieved by recovery address
-    /// @dev Amount is denoted in HyperCore decimals
-    uint64 public accruedActivationFees;
 
     /**
      * @notice Constructor for the PreFundedFeeAbstraction extension
@@ -79,7 +75,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
         uint64 totalCentsAmount = BASE_ACTIVATION_FEE_CENTS + _activationOverheadFee;
         ACTIVATION_COST = uint64((totalCentsAmount * QUOTE_ASSET_DECIMALS) / 100);
 
-        if (MIN_USD_PRE_FUND_AMOUNT() * QUOTE_ASSET_DECIMALS > type(uint64).max) revert MinUSDAmtGreaterThanU64Max();
+        if (MAX_USERS_PER_BLOCK * QUOTE_ASSET_DECIMALS > type(uint64).max) revert MinUSDAmtGreaterThanU64Max();
     }
 
     /**
@@ -102,10 +98,10 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
             /// @dev When the user is not activated we collect the activation fee
             if (originalAmount > coreAmount) {
                 uint64 coreBalance = spotBalance(address(this), QUOTE_ASSET_INDEX).total;
-                if (coreBalance < MIN_USD_PRE_FUND_WEI_VALUE()) revert InsufficientCoreAmountForActivation();
+                if (coreBalance < uint64(MAX_USERS_PER_BLOCK * QUOTE_ASSET_DECIMALS))
+                    revert InsufficientCoreAmountForActivation();
 
                 uint64 feeCollected = originalAmount - coreAmount;
-                accruedActivationFees += feeCollected;
                 emit FeeCollected(feeCollected);
             }
 
@@ -121,38 +117,6 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     function activationFee() public view virtual override returns (uint64) {
         uint64 rawPrice = _spotPx(SPOT_PAIR_ID);
         return uint64((ACTIVATION_COST * SPOT_PRICE_DECIMALS) / rawPrice);
-    }
-
-    /**
-     * @notice Estimates USD value of accumulated fees using current spot price
-     * @return USD value in quote token terms
-     */
-    function getAccruedFeeUsdValue() public view returns (uint256) {
-        if (accruedActivationFees == 0) return 0;
-
-        uint64 rawPrice = _spotPx(SPOT_PAIR_ID);
-        return (rawPrice * accruedActivationFees) / SPOT_PRICE_DECIMALS;
-    }
-
-    /**
-     * @notice Transfers accumulated fees to specified address for external liquidation
-     * @dev Permissioned call by the recovery address
-     * @param _coreAmount Amount to transfer in core decimals, FULL_TRANSFER for max available
-     * @param _to Destination address on HyperCore
-     */
-    function retrieveAccruedFees(uint64 _coreAmount, address _to) external onlyRecoveryAddress {
-        if (accruedActivationFees == 0) revert NoFeesToConvert();
-
-        uint64 transferAmount = _coreAmount == FULL_TRANSFER ? accruedActivationFees : _coreAmount;
-
-        if (transferAmount > accruedActivationFees) {
-            revert MaxRetrieveAmountExceeded(accruedActivationFees, transferAmount);
-        }
-
-        accruedActivationFees -= transferAmount;
-        _submitCoreWriterTransfer(_to, ERC20_CORE_INDEX_ID, transferAmount);
-
-        emit Retrieved(ERC20_CORE_INDEX_ID, transferAmount, _to);
     }
 
     /**
@@ -192,26 +156,6 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
         (success, result) = TOKEN_INFO_PRECOMPILE_ADDRESS.staticcall(abi.encode(_coreIndex));
         require(success, "TokenInfo precompile call failed");
         return abi.decode(result, (TokenInfo));
-    }
-
-    /**
-     * @notice Returns the minimum activation cost threshold in quote token wei terms
-     * @dev Scaled to quote token wei decimals
-     * @dev Can be overridden by implementing contracts to adjust minimum fee requirements
-     * @return The minimum quote token wei amount required for activation fees
-     */
-    function MIN_USD_PRE_FUND_WEI_VALUE() public view virtual returns (uint64) {
-        return uint64(MIN_USD_PRE_FUND_AMOUNT() * QUOTE_ASSET_DECIMALS);
-    }
-
-    /**
-     * @notice Returns the minimum activation cost threshold in US Dollars
-     * @dev NOT scaled to quote token wei decimals
-     * @dev Can be overridden by implementing contracts to adjust minimum fee requirements
-     * @return The minimum quote token wei amount required for activation fees
-     */
-    function MIN_USD_PRE_FUND_AMOUNT() public pure virtual returns (uint64) {
-        return DEFAULT_MIN_USD_PRE_FUND_AMOUNT;
     }
 
     /**
