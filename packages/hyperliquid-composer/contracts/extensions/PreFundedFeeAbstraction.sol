@@ -35,7 +35,9 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     uint64 internal constant BASE_ACTIVATION_FEE_CENTS = 100;
 
     /// @dev US Dollar value of the minimum pre-fund amount. Not scaled to core spot decimals.
-    uint64 private constant DEFAULT_MIN_USD_PRE_FUND_AMOUNT = 100;
+    /// @dev The maximum number of transactions that can be fit in a single block
+    /// @dev This is because spotBalance returns the same value for all transactions in a block
+    uint64 private constant DEFAULT_MIN_USD_PRE_FUND_AMOUNT = 25;
 
     /// @dev Total activation cost in quote token wei (base + overhead). Scaled to core spot decimals.
     uint64 public immutable ACTIVATION_COST;
@@ -98,6 +100,9 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
 
             /// @dev When the user is not activated we collect the activation fee
             if (originalAmount > coreAmount) {
+                uint64 coreBalance = spotBalance(address(this), QUOTE_ASSET_INDEX).total;
+                if (coreBalance < MIN_USD_PRE_FUND_WEI_VALUE()) revert InsufficientCoreAmountForActivation();
+
                 uint64 feeCollected = originalAmount - coreAmount;
                 accruedActivationFee += feeCollected;
                 emit FeeCollected(feeCollected);
@@ -113,9 +118,6 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
      * @return Activation fee amount in core asset decimals
      */
     function activationFee() public view virtual override returns (uint64) {
-        uint64 coreBalance = spotBalance(address(this), QUOTE_ASSET_INDEX).total;
-        if (coreBalance < MIN_USD_PRE_FUND_WEI_VALUE()) revert InsufficientCoreAmountForActivation();
-
         uint64 rawPrice = _spotPx(SPOT_PAIR_ID);
         return uint64((ACTIVATION_COST * (10 ** SPOT_PRICE_DECIMALS)) / rawPrice);
     }
@@ -150,32 +152,6 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
         _submitCoreWriterTransfer(_to, ERC20_CORE_INDEX_ID, transferAmount);
 
         emit Retrieved(ERC20_CORE_INDEX_ID, transferAmount, _to);
-    }
-
-    /**
-     * @notice Retrieves USDC tokens from HyperCore to a specified address
-     * @dev Transfers USDC tokens from the composer's HyperCore balance to the specified address
-     * @dev Can only be called by the recovery address
-     * @param _coreAmount Amount of USDC tokens to retrieve in HyperCore decimals, FULL_TRANSFER for max available
-     * @param _to Destination address to receive the retrieved USDC tokens
-     */
-    function retrieveCoreUSDC(uint64 _coreAmount, address _to) public virtual override onlyRecoveryAddress {
-        if (_coreAmount == FULL_TRANSFER && accruedActivationFee < MIN_USD_PRE_FUND_WEI_VALUE()) {
-            revert InsufficientCoreAmountForActivation();
-        }
-
-        uint64 minComposerBalance = _coreAmount == FULL_TRANSFER
-            ? accruedActivationFee - MIN_USD_PRE_FUND_WEI_VALUE()
-            : _coreAmount;
-
-        uint64 maxTransferAmt = _getMaxTransferAmount(USDC_CORE_INDEX, _coreAmount);
-
-        if (maxTransferAmt > minComposerBalance) {
-            revert MaxRetrieveAmountExceeded(minComposerBalance, maxTransferAmt);
-        }
-
-        _submitCoreWriterTransfer(_to, USDC_CORE_INDEX, maxTransferAmt);
-        emit Retrieved(USDC_CORE_INDEX, maxTransferAmt, _to);
     }
 
     /**
