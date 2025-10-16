@@ -36,7 +36,66 @@ import {
     saveSolanaDeployment,
 } from './index'
 
-const DEFAULT_LOCAL_DECIMALS = 9 // Note: perhaps we should just update this to 6 as that's the norm for most tokens that are expanding from an EVM chain
+const DEFAULT_LOCAL_DECIMALS = 6
+const MAX_RECOMMENDED_LOCAL_DECIMALS = 6
+
+// Max whole-token supply on Solana (u64) formatted as "XB" or "Y.YT"
+const U64_MAX = (1n << 64n) - 1n
+
+const UNITS = [
+    { base: 1_000_000_000_000n, suffix: 'T' },
+    { base: 1_000_000_000n, suffix: 'B' },
+    { base: 1_000_000n, suffix: 'M' },
+    { base: 1_000n, suffix: 'K' },
+]
+
+/**
+ * Max whole-token supply on Solana for a given localDecimals,
+ * formatted as T/B/M/K, else plain number. Rounded half up.
+ * @param {number} localDecimals - non-negative integer
+ * @param {number} precision - decimals to keep (default 1)
+ * @returns {string}
+ */
+function maxSupplyHuman(localDecimals: number, precision = 1) {
+    if (!Number.isInteger(localDecimals) || localDecimals < 0) {
+        throw new Error('localDecimals must be a non-negative integer')
+    }
+    if (!Number.isInteger(precision) || precision < 0 || precision > 6) {
+        throw new Error('precision must be an integer between 0 and 6')
+    }
+
+    const denom = 10n ** BigInt(localDecimals)
+    const whole = U64_MAX / denom // whole-token cap
+
+    // choose largest unit that fits
+    for (let i = 0; i < UNITS.length; i++) {
+        const { base, suffix } = UNITS[i]
+        if (whole >= base) {
+            const pow = 10n ** BigInt(precision)
+            // round half up at the requested precision
+            let scaled = (whole * pow + base / 2n) / base
+            let intPart = scaled / pow
+
+            // if rounding pushes us to 1000 of this unit, bump to the next larger (e.g., 999.6B -> 1.0T)
+            if (intPart >= 1000n && i === 1) {
+                // B -> T
+                const higher = UNITS[0]
+                scaled = (whole * pow + higher.base / 2n) / higher.base
+                intPart = scaled / pow
+                const frac = scaled % pow
+                const fracStr = precision === 0 ? '' : frac.toString().padStart(precision, '0').replace(/0+$/, '')
+                return fracStr ? `${intPart}.${fracStr}${higher.suffix}` : `${intPart}${higher.suffix}`
+            }
+
+            const frac = scaled % pow
+            const fracStr = precision === 0 ? '' : frac.toString().padStart(precision, '0').replace(/0+$/, '')
+            return fracStr ? `${intPart}.${fracStr}${suffix}` : `${intPart}${suffix}`
+        }
+    }
+
+    // < 1K -> show plain whole number
+    return whole.toString()
+}
 
 interface CreateOFTTaskArgs {
     /**
@@ -229,6 +288,20 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             }
 
             // EOF: Validate combination of parameters
+
+            // BOF: validate local decimals
+            if (decimals > MAX_RECOMMENDED_LOCAL_DECIMALS) {
+                const continueWithMaxRecommendedLocalDecimals = await promptToContinue(
+                    `You have chosen ${decimals} local decimals. This is greater than the maximum recommended local decimals of ${MAX_RECOMMENDED_LOCAL_DECIMALS}. \n If you proceed, the maximum supply of your Solana OFT token will be ${maxSupplyHuman(decimals)} tokens. Continue?`
+                )
+                if (!continueWithMaxRecommendedLocalDecimals) {
+                    return
+                }
+            }
+            // EOF: validate local decimals
+
+            const maxSupplyStatement = `\nYou have chosen ${decimals} local decimals. The maximum supply of your Solana OFT token will be ${maxSupplyHuman(decimals)}.\n`
+            console.log(maxSupplyStatement)
 
             let mintAuthorityPublicKey: PublicKey = toWeb3JsPublicKey(oftStorePda) // we default to the OFT Store as the Mint Authority when there are no additional minters
 
