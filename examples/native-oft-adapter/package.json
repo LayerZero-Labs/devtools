@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/native-oft-adapter-example",
-  "version": "0.2.9",
+  "version": "0.2.11",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -22,7 +22,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
+    "@layerzerolabs/devtools-evm-hardhat": "^4.0.0",
     "@layerzerolabs/eslint-config-next": "~2.3.39",
+    "@layerzerolabs/io-devtools": "~0.3.0",
     "@layerzerolabs/lz-definitions": "^3.0.75",
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.75",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.75",

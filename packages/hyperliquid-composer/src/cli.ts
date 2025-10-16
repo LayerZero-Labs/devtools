@@ -48,7 +48,6 @@ const commonOptions = {
     network: () => ['-n, --network <network>', 'Network (mainnet/testnet)'] as const,
     logLevel: () => ['-l, --log-level <level>', 'Log level', LogLevel.info] as const,
     privateKey: () => ['-pk, --private-key <0x>', 'Private key'] as const,
-    oappConfig: () => ['-oapp, --oapp-config <oapp-config>', 'OAPP config'] as const,
     userAddress: () => ['-u, --user <0x>', 'User address'] as const,
 }
 
@@ -67,8 +66,8 @@ const optionGroups = {
     // User query: base + user address
     userQuery: (cmd: Command) => optionGroups.base(cmd).requiredOption(...commonOptions.userAddress()),
 
-    // EVM linking: deployment + oapp-config
-    evmLinking: (cmd: Command) => optionGroups.deployment(cmd).option(...commonOptions.oappConfig()),
+    // EVM linking: deployment
+    evmLinking: (cmd: Command) => optionGroups.deployment(cmd),
 }
 
 program.name('oft-hyperliquid-evm').description('CLI tools for HyperLiquid OFT operations and HIP-1 deployment')
@@ -91,7 +90,6 @@ optionGroups
             .command(CLI_COMMANDS.CORE_SPOT)
             .description('Get core spot metadata information')
             .option('-a, --action <action>', 'Action (create/get)', 'get')
-            .option(...commonOptions.oappConfig())
             .requiredOption(...commonOptions.tokenIndex())
     )
     .action(coreSpotDeployment)
