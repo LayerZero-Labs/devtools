@@ -36,7 +36,7 @@ import {
     saveSolanaDeployment,
 } from './index'
 
-const DEFAULT_LOCAL_DECIMALS = 9
+const DEFAULT_LOCAL_DECIMALS = 9 // Note: perhaps we should just update this to 6 as that's the norm for most tokens that are expanding from an EVM chain
 
 interface CreateOFTTaskArgs {
     /**
@@ -117,6 +117,11 @@ interface CreateOFTTaskArgs {
      * The freeze authority address (only supported in onlyOftStore mode).
      */
     freezeAuthority?: string
+
+    /**
+     * Whether to continue without confirmation.
+     */
+    ci: boolean
 }
 
 // Define a Hardhat task for creating OFT on Solana
@@ -158,6 +163,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
         true
     )
     .addParam('computeUnitPriceScaleFactor', 'The compute unit price scale factor', 4, devtoolsTypes.float, true)
+    .addFlag('ci', 'Continue without confirmation')
     .setAction(
         async ({
             amount,
@@ -176,6 +182,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             uri,
             freezeAuthority: freezeAuthorityStr,
             computeUnitPriceScaleFactor,
+            ci,
         }: CreateOFTTaskArgs) => {
             const isMABA = !!mintStr // the difference between MABA and OFT Adapter is that MABA uses mint/burn mechanism whereas OFT Adapter uses lock/unlock mechanism
             if (tokenProgramStr !== TOKEN_PROGRAM_ID.toBase58() && !isMABA) {
@@ -212,7 +219,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                 )
             }
 
-            if (onlyOftStore) {
+            if (onlyOftStore && !ci) {
                 const continueWithOnlyOftStore = await promptToContinue(
                     `You have chosen \`--only-oft-store true\`. This means that only the OFT Store will be able to mint new tokens${freezeAuthorityStr ? '' : ' and that the Freeze Authority will be immediately renounced'}.  Continue?`
                 )
