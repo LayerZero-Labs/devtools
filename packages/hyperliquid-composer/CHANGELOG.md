@@ -1,5 +1,12 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 1.0.4
+
+### Patch Changes
+
+- 52ad590: readme hyperliquid docs update
+- 1b91fd2: Fix core spot command
+
 ## 1.0.3
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # @layerzerolabs/lzapp-migration-example
 
+## 0.3.4
+
+### Patch Changes
+
+- 002caa2: Add support for multiple ALTs when sending OFTs from Solana, fix extra options and compose message parsing bugs
+
+## 0.3.3
+
+### Patch Changes
+
+- e415855: rename retryPayload to retryMessage
+
 ## 0.3.2
 
 ### Patch Changes

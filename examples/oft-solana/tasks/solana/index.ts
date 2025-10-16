@@ -36,7 +36,7 @@ import { OftPDA } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { DebugLogger, KnownWarnings, createSolanaConnectionFactory } from '../common/utils'
 
-const LOOKUP_TABLE_ADDRESS: Partial<Record<EndpointId, PublicKey>> = {
+export const DEFAULT_LOOKUP_TABLE_ADDRESS: Partial<Record<EndpointId, PublicKey>> = {
     [EndpointId.SOLANA_V2_MAINNET]: publicKey('AokBxha6VMLLgf97B5VYHEtqztamWmYERBmmFvjuTzJB'),
     [EndpointId.SOLANA_V2_TESTNET]: publicKey('9thqPdbR27A1yLWw2spwJLySemiGMXxPnEvfmXVk4KuK'),
 }
@@ -188,10 +188,8 @@ export const getLayerZeroScanLink = (hash: string, isTestnet = false) =>
 export const getExplorerTxLink = (hash: string, isTestnet = false) =>
     `https://solscan.io/tx/${hash}?cluster=${isTestnet ? 'devnet' : 'mainnet-beta'}`
 
-export const getAddressLookupTable = async (connection: Connection, umi: Umi, fromEid: EndpointId) => {
-    // Lookup Table Address and Priority Fee Calculation
-    const lookupTableAddress = LOOKUP_TABLE_ADDRESS[fromEid]
-    assert(lookupTableAddress != null, `No lookup table found for ${formatEid(fromEid)}`)
+const getAddressLookupTable = async (_lookupTableAddress: string | PublicKey, connection: Connection, umi: Umi) => {
+    const lookupTableAddress = publicKey(_lookupTableAddress)
     const addressLookupTableInput: AddressLookupTableInput = await fetchAddressLookupTable(umi, lookupTableAddress)
     if (!addressLookupTableInput) {
         throw new Error(`No address lookup table found for ${lookupTableAddress}`)
@@ -200,11 +198,14 @@ export const getAddressLookupTable = async (connection: Connection, umi: Umi, fr
     if (!lookupTableAccount) {
         throw new Error(`No address lookup table account found for ${lookupTableAddress}`)
     }
-    return {
-        lookupTableAddress,
-        addressLookupTableInput,
-        lookupTableAccount,
-    }
+    return { lookupTableAddress, addressLookupTableInput, lookupTableAccount }
+}
+
+export const getDefaultAddressLookupTable = async (connection: Connection, umi: Umi, fromEid: EndpointId) => {
+    // Lookup Table Address and Priority Fee Calculation
+    const lookupTableAddress = DEFAULT_LOOKUP_TABLE_ADDRESS[fromEid]
+    assert(lookupTableAddress != null, `No lookup table found for ${formatEid(fromEid)}`)
+    return getAddressLookupTable(lookupTableAddress, connection, umi)
 }
 
 export enum TransactionType {
@@ -230,7 +231,7 @@ export const getComputeUnitPriceAndLimit = async (
     connection: Connection,
     ixs: Instruction[],
     wallet: KeypairSigner,
-    lookupTableAccount: AddressLookupTableAccount,
+    lookupTableAccounts: AddressLookupTableAccount | AddressLookupTableAccount[],
     transactionType: TransactionType
 ) => {
     const { averageFeeExcludingZeros } = await getPrioritizationFees(connection)
@@ -246,7 +247,7 @@ export const getComputeUnitPriceAndLimit = async (
                     connection,
                     ixs.map((ix) => toWeb3JsInstruction(ix)),
                     toWeb3JsPublicKey(wallet.publicKey),
-                    [lookupTableAccount]
+                    Array.isArray(lookupTableAccounts) ? lookupTableAccounts : [lookupTableAccounts]
                 ),
             {
                 maxDelay: 10000,
@@ -286,15 +287,33 @@ export const addComputeUnitInstructions = async (
     txBuilder: TransactionBuilder,
     umiWalletSigner: KeypairSigner,
     computeUnitPriceScaleFactor: number,
-    transactionType: TransactionType
+    transactionType: TransactionType,
+    addressLookupTables?: (string | PublicKey)[]
 ) => {
     const computeUnitLimitScaleFactor = 1.1 // hardcoded to 1.1 as the estimations are not perfect and can fall slightly short of the actual CU usage on-chain
-    const { addressLookupTableInput, lookupTableAccount } = await getAddressLookupTable(connection, umi, eid)
+
+    const addressLookupTableInputs: AddressLookupTableInput[] = []
+    const lookupTableAccounts: AddressLookupTableAccount[] = []
+
+    if (addressLookupTables) {
+        const lookupTableResults = await Promise.all(
+            addressLookupTables.map((lookupTable) => getAddressLookupTable(lookupTable, connection, umi))
+        )
+        for (const { addressLookupTableInput, lookupTableAccount } of lookupTableResults) {
+            addressLookupTableInputs.push(addressLookupTableInput)
+            lookupTableAccounts.push(lookupTableAccount)
+        }
+    } else {
+        const { addressLookupTableInput, lookupTableAccount } = await getDefaultAddressLookupTable(connection, umi, eid)
+        addressLookupTableInputs.push(addressLookupTableInput)
+        lookupTableAccounts.push(lookupTableAccount)
+    }
+
     const { computeUnitPrice, computeUnits } = await getComputeUnitPriceAndLimit(
         connection,
         txBuilder.getInstructions(),
         umiWalletSigner,
-        lookupTableAccount,
+        lookupTableAccounts,
         transactionType
     )
     // Since transaction builders are immutable, we must be careful to always assign the result of the add and prepend
@@ -306,7 +325,7 @@ export const addComputeUnitInstructions = async (
             })
         )
         .add(setComputeUnitLimit(umi, { units: computeUnits * computeUnitLimitScaleFactor }))
-        .setAddressLookupTables([addressLookupTableInput])
+        .setAddressLookupTables(addressLookupTableInputs)
         .add(txBuilder)
     return newTxBuilder
 }

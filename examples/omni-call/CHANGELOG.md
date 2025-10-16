@@ -1,5 +1,11 @@
 # @layerzerolabs/omni-call-example
 
+## 0.0.4
+
+### Patch Changes
+
+- c44e657: update evm networks used
+
 ## 0.0.3
 
 ### Patch Changes
