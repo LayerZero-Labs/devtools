@@ -38,7 +38,7 @@ const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
 
     const { deploy } = deployments
-    const { deployer, recoveryAddress } = await getNamedAccounts()
+    const { deployer, recovery: recoveryAddress } = await getNamedAccounts()
     assert(deployer, 'Missing named deployer account')
     assert(recoveryAddress, 'Missing recovery address. Please set RECOVERY_ADDRESS in .env file')
 
@@ -86,12 +86,12 @@ const deploy: DeployFunction = async (hre) => {
                 },
             ])
 
-            return oftAddress
+            return { address: oftAddress }
         } else {
             throw new Error(`Needs ${contractName_oft} to be deployed before deploying MyHyperLiquidComposer`)
         }
     })
-
+    console.log('address_oft', address_oft)
     if (!hre.ethers.utils.isAddress(address_oft)) {
         throw new Error(`Input address ${address_oft} is not a valid address`)
     }

@@ -65,7 +65,7 @@ const deploy: DeployFunction = async (hre) => {
                 },
             ])
 
-            return oftAddress
+            return { address: oftAddress }
         } else {
             throw new Error(`Needs ${contractName_oft} to be deployed before deploying MyHyperLiquidComposer`)
         }
