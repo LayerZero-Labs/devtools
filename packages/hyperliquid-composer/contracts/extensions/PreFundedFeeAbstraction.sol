@@ -3,7 +3,6 @@ pragma solidity ^0.8.20;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
 
 import { HyperLiquidComposer } from "../HyperLiquidComposer.sol";
 import { FeeToken } from "../extensions/FeeToken.sol";
@@ -60,9 +59,11 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
      * @notice Constructor for the `PreFundedFeeAbstraction` extension.
      * @dev Needs to be executed after `HyperLiquidComposer` constructor.
      * @param _spotPairId The spot pair ID for the asset/quote pair (e.g., 107 for HYPE/USDC)
-     * @param _activationOverheadFee The activation overhead fee in cents on top of $1 base (e.g., 50 = 50 cents = $0.50 overhead)
+     * @param _activationOverheadFee Non-zero activation overhead fee in cents on top of $1 base (e.g., 50 = 50 cents = $0.50 overhead)
      */
     constructor(uint64 _spotPairId, uint16 _activationOverheadFee) {
+        if (_activationOverheadFee == 0) revert ZeroActivationOverheadFee();
+    
         uint64[2] memory tokens = _spotInfo(_spotPairId).tokens;
         uint64 assetIndex = tokens[0];
         QUOTE_ASSET_INDEX = tokens[1];
@@ -124,7 +125,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
      */
     function activationFee() public view virtual override returns (uint64) {
         uint64 rawPrice = _spotPx(SPOT_PAIR_ID);
-        return uint64(Math.mulDiv(ACTIVATION_COST, SPOT_PRICE_DECIMALS, rawPrice, Math.Rounding.Ceil));
+        return (ACTIVATION_COST * SPOT_PRICE_DECIMALS) / rawPrice;
     }
 
     /**
