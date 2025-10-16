@@ -33,6 +33,8 @@ export function silenceSolana429(connection: Connection): void {
     }) as typeof process.stderr.write
 }
 
+export const MAX_RECOMMENDED_LOCAL_DECIMALS = 6
+
 // Max whole-token supply on Solana (u64)
 const U64_MAX = (1n << 64n) - 1n
 const UNITS = [

@@ -83,6 +83,7 @@ export function silenceSolana429(connection: Connection): void {
         return origWrite(chunk, ...args)
     }) as typeof process.stderr.write
 }
+export const MAX_RECOMMENDED_LOCAL_DECIMALS = 6
 // Max whole-token supply on Solana (u64) formatted as "XB" or "Y.YT"
 const U64_MAX = (1n << 64n) - 1n
 const UNITS = [

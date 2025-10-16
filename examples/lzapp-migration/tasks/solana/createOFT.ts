@@ -26,7 +26,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OFT_DECIMALS as DEFAULT_SHARED_DECIMALS, oft202 } from '@layerzerolabs/oft-v2-solana-sdk' // Note: 'oft202' should be used instead of 'oft'
 
 import { checkMultisigSigners, createMintAuthorityMultisig } from './multisig'
-import { maxSupplyHuman } from './utils'
+import { MAX_RECOMMENDED_LOCAL_DECIMALS, maxSupplyHuman } from './utils'
 
 import {
     TransactionType,
@@ -38,7 +38,7 @@ import {
 } from './index'
 
 const DEFAULT_LOCAL_DECIMALS = 6
-const MAX_RECOMMENDED_LOCAL_DECIMALS = 6
+
 interface CreateOFTTaskArgs {
     /**
      * The initial supply to mint on solana.
