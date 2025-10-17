@@ -4299,6 +4299,9 @@ importers:
       tsup:
         specifier: ^8.4.0
         version: 8.4.0(typescript@5.5.3)
+      typescript:
+        specifier: ^5.4.4
+        version: 5.5.3
 
   packages/io-devtools:
     dependencies:
