@@ -26,7 +26,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OFT_DECIMALS as DEFAULT_SHARED_DECIMALS, oft202 } from '@layerzerolabs/oft-v2-solana-sdk' // Note: 'oft202' should be used instead of 'oft'
 
 import { checkMultisigSigners, createMintAuthorityMultisig } from './multisig'
-import { MAX_RECOMMENDED_LOCAL_DECIMALS, maxSupplyHuman } from './utils'
+import { maxSupplyHuman } from './utils'
 
 import {
     TransactionType,
@@ -37,7 +37,7 @@ import {
     saveSolanaDeployment,
 } from './index'
 
-const DEFAULT_LOCAL_DECIMALS = 6
+const DEFAULT_LOCAL_DECIMALS = 9
 
 interface CreateOFTTaskArgs {
     /**
@@ -230,20 +230,11 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             }
             // EOF: Validate combination of parameters
 
-            // BOF: validate local decimals
-            if (decimals > MAX_RECOMMENDED_LOCAL_DECIMALS) {
-                console.log('\n')
-                const continueWithMaxRecommendedLocalDecimals = await promptToContinue(
-                    `You have chosen ${decimals} local decimals. This is greater than the maximum recommended local decimals of ${MAX_RECOMMENDED_LOCAL_DECIMALS}. If you proceed, the maximum supply of your Solana OFT token will be ${maxSupplyHuman(decimals)}. Continue?`
-                )
-                if (!continueWithMaxRecommendedLocalDecimals) {
-                    return
-                }
+            const maxSupplyStatement = `You have chosen ${decimals} local decimals. The maximum supply of your Solana OFT token will be ${maxSupplyHuman(decimals)}.\n`
+            const confirmMaxSupply = await promptToContinue(maxSupplyStatement)
+            if (!confirmMaxSupply) {
+                return
             }
-            // EOF: validate local decimals
-
-            const maxSupplyStatement = `\nYou have chosen ${decimals} local decimals. The maximum supply of your Solana OFT token will be ${maxSupplyHuman(decimals)}.\n`
-            console.log(maxSupplyStatement)
 
             let mintAuthorityPublicKey: PublicKey = toWeb3JsPublicKey(oftStorePda) // we default to the OFT Store as the Mint Authority when there are no additional minters
 
