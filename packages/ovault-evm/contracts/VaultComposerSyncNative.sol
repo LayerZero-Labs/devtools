@@ -48,8 +48,10 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
         address _executor,
         bytes calldata _extraData
     ) public payable virtual override {
-        /// @dev Wrap the native token into WETH
+        /// @dev Wrap ETH received during lzReceive into WETH
         if (_composeSender == ASSET_OFT) IWETH(ASSET_ERC20).deposit{ value: _message.amountLD() }();
+
+        /// @dev Since lzCompose is public, the msg.value called to pay the tx Fee is automatically forwarded
         super.lzCompose(_composeSender, _guid, _message, _executor, _extraData);
     }
 
