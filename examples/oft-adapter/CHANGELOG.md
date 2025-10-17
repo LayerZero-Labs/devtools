@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-adapter-example
 
+## 0.5.4
+
+### Patch Changes
+
+- 608915a: Fix extra option parsing to avoid overflow in `sendEvm` script
+
 ## 0.5.3
 
 ### Patch Changes
