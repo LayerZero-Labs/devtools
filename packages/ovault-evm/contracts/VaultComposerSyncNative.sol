@@ -19,6 +19,8 @@ import { VaultComposerSync } from "./VaultComposerSync.sol";
  * @dev Compatible with ERC4626 vaults and requires Share OFT to be an adapter
  */
 contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative {
+    using OFTComposeMsgCodec for bytes;
+
     /**
      * @notice Initializes the VaultComposerSyncPoolNative contract with vault and OFT token addresses
      * @param _vault The address of the ERC4626 vault contract
@@ -32,6 +34,26 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
      * - Share OFT must be an adapter (approvalRequired() returns true)
      */
     constructor(address _vault, address _assetOFT, address _shareOFT) VaultComposerSync(_vault, _assetOFT, _shareOFT) {}
+
+    /**
+     * @dev Reduction of ComposerNative into ComposerBase by wrapping ETH into WETH
+     * @dev All internal logic handles WETH as the asset token making deposit symmetric to redemption
+     * @dev The native token used here was sent during lzReceive from the Pool
+     * @dev lzCompose calls comes from the Endpoint and are not affected by the wrapNative call
+     */
+    function lzCompose(
+        address _composeSender, // The OFT used on refund, also the vaultIn token.
+        bytes32 _guid,
+        bytes calldata _message, // expected to contain a composeMessage = abi.encode(SendParam hopSendParam,uint256 minMsgValue)
+        address _executor,
+        bytes calldata _extraData
+    ) public payable virtual override {
+        /// @dev Wrap ETH received during lzReceive into WETH
+        if (_composeSender == ASSET_OFT) IWETH(ASSET_ERC20).deposit{ value: _message.amountLD() }();
+
+        /// @dev Since lzCompose is public, the msg.value called to pay the tx Fee is automatically forwarded
+        super.lzCompose(_composeSender, _guid, _message, _executor, _extraData);
+    }
 
     /**
      * @notice Deposits Native token (ETH) from the caller into the vault and sends them to the recipient
@@ -102,15 +124,5 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
         // if (IOFT(ASSET_OFT).approvalRequired()) IERC20(assetERC20).approve(ASSET_OFT, type(uint256).max);
 
         IWETH(assetERC20).approve(address(VAULT), type(uint256).max);
-    }
-
-    /**
-     * @dev Reduction of ComposerNative into ComposerBase by wrapping ETH into WETH
-     * @dev All internal logic handles WETH as the asset token making deposit symmetric to redemption
-     * @dev The native token used here was sent during lzReceive from the Pool
-     * @dev lzCompose calls comes from the Endpoint and are not affected by the wrapNative call
-     */
-    receive() external payable override {
-        if (msg.sender == ASSET_OFT) IWETH(ASSET_ERC20).deposit{ value: msg.value }();
     }
 }
