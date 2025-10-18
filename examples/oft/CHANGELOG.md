@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.7.9
+
+### Patch Changes
+
+- 608915a: Fix extra option parsing to avoid overflow in `sendEvm` script
+
 ## 0.7.8
 
 ### Patch Changes
