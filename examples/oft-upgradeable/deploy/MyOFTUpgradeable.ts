@@ -13,27 +13,44 @@ import { getDeploymentAddressAndAbi } from '@layerzerolabs/lz-evm-sdk-v2'
 const contractName = 'MyOFTUpgradeable'
 
 const deploy: DeployFunction = async (hre) => {
-    const signer = (await hre.ethers.getSigners())[0]
-    console.log(`Deploying ${contractName} on network: ${hre.network.name} with ${signer.address}`)
+    const { getNamedAccounts } = hre
+    const { deployer } = await getNamedAccounts()
+
+    console.log(`Deploying ${contractName} on network: ${hre.network.name} with ${deployer}`)
 
     const eid = hre.network.config.eid as EndpointId
     const lzNetworkName = endpointIdToNetwork(eid)
     const { address: endpointAddress } = getDeploymentAddressAndAbi(lzNetworkName, 'EndpointV2')
 
-    const { address: proxyAdminAddress } = await deployProxyAdmin(hre, contractName, signer.address)
+    const { address: proxyAdminAddress } = await deployProxyAdmin({
+        hre,
+        contractName,
+        deployer,
+        owner: deployer,
+    })
 
-    const { address: implementationAddress } = await deployImplementation(hre, contractName, signer.address, [
-        endpointAddress,
-    ])
+    const { address: implementationAddress } = await deployImplementation({
+        hre,
+        contractName,
+        deployer,
+        args: [endpointAddress],
+    })
 
     const initializeInterface = new hre.ethers.utils.Interface([
-        'function initialize(string memory name, string memory symbol, address delegate) public',
+        'function initialize(string memory name, string memory symbol, address delegate)',
     ])
-    const initializeData = initializeInterface.encodeFunctionData('initialize', ['MyOFT', 'MOFT', signer.address])
+    const initializeData = initializeInterface.encodeFunctionData('initialize', ['MyOFT', 'MOFT', deployer])
 
-    await deployProxy(hre, contractName, signer.address, implementationAddress, proxyAdminAddress, initializeData)
+    await deployProxy({
+        hre,
+        contractName,
+        deployer,
+        implementationAddress,
+        proxyAdminAddress,
+        initializeData,
+    })
 
-    await saveCombinedDeployment(hre, contractName)
+    await saveCombinedDeployment({ hre, contractName })
 }
 
 deploy.tags = [contractName]

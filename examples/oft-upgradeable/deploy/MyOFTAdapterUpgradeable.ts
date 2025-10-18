@@ -13,26 +13,48 @@ import { getDeploymentAddressAndAbi } from '@layerzerolabs/lz-evm-sdk-v2'
 const contractName = 'MyOFTAdapterUpgradeable'
 
 const deploy: DeployFunction = async (hre) => {
-    const signer = (await hre.ethers.getSigners())[0]
-    console.log(`Deploying ${contractName} on network: ${hre.network.name} with ${signer.address}`)
+    const { getNamedAccounts } = hre
+    const { deployer } = await getNamedAccounts()
+
+    console.log(`Deploying ${contractName} on network: ${hre.network.name} with ${deployer}`)
 
     const eid = hre.network.config.eid as EndpointId
     const lzNetworkName = endpointIdToNetwork(eid)
     const { address: endpointAddress } = getDeploymentAddressAndAbi(lzNetworkName, 'EndpointV2')
 
-    const { address: proxyAdminAddress } = await deployProxyAdmin(hre, contractName, signer.address)
+    const tokenAddress = hre.network.config.oftAdapter?.tokenAddress
+    if (tokenAddress == null) {
+        console.warn(`oftAdapter not configured on network config, skipping OFTAdapterUpgradeable deployment`)
+        return
+    }
 
-    const { address: implementationAddress } = await deployImplementation(hre, contractName, signer.address, [
-        '0x', // replace '0x' with the address of the ERC-20 token
-        endpointAddress,
-    ])
+    const { address: proxyAdminAddress } = await deployProxyAdmin({
+        hre,
+        contractName,
+        deployer,
+        owner: deployer,
+    })
 
-    const initializeInterface = new hre.ethers.utils.Interface(['function initialize(address delegate) public'])
-    const initializeData = initializeInterface.encodeFunctionData('initialize', [signer.address])
+    const { address: implementationAddress } = await deployImplementation({
+        hre,
+        contractName,
+        deployer,
+        args: [tokenAddress, endpointAddress],
+    })
 
-    await deployProxy(hre, contractName, signer.address, implementationAddress, proxyAdminAddress, initializeData)
+    const initializeInterface = new hre.ethers.utils.Interface(['function initialize(address delegate)'])
+    const initializeData = initializeInterface.encodeFunctionData('initialize', [deployer])
 
-    await saveCombinedDeployment(hre, contractName)
+    await deployProxy({
+        hre,
+        contractName,
+        deployer,
+        implementationAddress,
+        proxyAdminAddress,
+        initializeData,
+    })
+
+    await saveCombinedDeployment({ hre, contractName })
 }
 
 deploy.tags = [contractName]
