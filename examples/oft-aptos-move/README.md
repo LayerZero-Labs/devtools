@@ -158,6 +158,8 @@ pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-nam
 npx hardhat lz:deploy
 ```
 
+> If you need initial tokens on testnet for the EVM OFT, open `contracts/MyOFT.sol` and uncomment `_mint(msg.sender, 100000 * (10 ** 18));` in the constructor. Ensure you remove this line for production.
+
 Select only the EVM networks you wish to deploy to (do not select Aptos, Movement, Solana, or Initia).
 
 ## Init and Set Delegate

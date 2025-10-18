@@ -60,6 +60,8 @@ Deploys your contract to any of the available networks in your [`hardhat.config.
 
 </details>
 
+> If you need initial tokens on testnet, open `contracts/MyOFT.sol` and uncomment `_mint(msg.sender, 100000 * (10 ** 18));` in the constructor. Ensure you remove this line for production.
+
 <details>
 <summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/start"><code>npx hardhat lz:oapp:config:init --oapp-config YOUR_OAPP_CONFIG --contract-name CONTRACT_NAME</code></a> </summary>
 
