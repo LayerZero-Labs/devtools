@@ -5,8 +5,11 @@ import bs58 from 'bs58'
 import { task } from 'hardhat/config'
 
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
+import { promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OFT_DECIMALS, oft } from '@layerzerolabs/oft-v2-solana-sdk'
+
+import { maxSupplyHuman } from './utils'
 
 import {
     TransactionType,
@@ -63,6 +66,13 @@ task('lz:oft-adapter:solana:create', 'Creates new OFT Adapter (OFT Store PDA)')
             const mint = publicKey(mintStr)
 
             const mintPDA = await getMint(connection, new PublicKey(mintStr), undefined, new PublicKey(tokenProgramStr))
+            const mintDecimals = mintPDA.decimals
+
+            const maxSupplyStatement = `You provided Token Mint ${mintDecimals} local decimals. The maximum supply of your Solana OFT token will be ${maxSupplyHuman(mintDecimals)}.\n`
+            const confirmMaxSupply = await promptToContinue(maxSupplyStatement)
+            if (!confirmMaxSupply) {
+                return
+            }
 
             const mintAuthority = mintPDA.mintAuthority
 
