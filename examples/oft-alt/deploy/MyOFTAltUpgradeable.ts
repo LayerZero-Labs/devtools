@@ -15,6 +15,7 @@ const deploy: DeployFunction = async (hre) => {
 
     console.log(`Deploying ${contractName} on network: ${hre.network.name} with ${deployer}`)
 
+    /// EndpointV2Alt deployments are also saved under the filename: EndpointV2
     const endpointV2AltDeployment = await hre.deployments.get('EndpointV2')
 
     const { address: proxyAdminAddress } = await deployProxyAdmin({
