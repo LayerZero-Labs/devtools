@@ -37,4 +37,13 @@ interface IPreFundedFeeAbstraction {
     function QUOTE_ASSET_INDEX() external view returns (uint64);
     function QUOTE_ASSET_DECIMALS() external view returns (uint64);
     function SPOT_PRICE_DECIMALS() external view returns (uint64);
+
+    /**
+     * @notice Retrieves quote tokens from HyperCore to a specified address
+     * @dev Transfers quote tokens from the composer's HyperCore balance to the specified address
+     * @dev Can only be called by the recovery address
+     * @param coreAmount Amount of quote tokens to retrieve in HyperCore decimals, or FULL_TRANSFER for all
+     * @param to Destination address to receive the retrieved quote tokens
+     */
+    function retrieveQuoteTokens(uint64 coreAmount, address to) external;
 }
