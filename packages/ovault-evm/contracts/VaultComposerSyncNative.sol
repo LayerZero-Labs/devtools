@@ -16,6 +16,7 @@ import { VaultComposerSync } from "./VaultComposerSync.sol";
  * @dev WETH is used as the asset token for the vault instead of native token (ETH)
  * @dev DepositAndSend and Deposit use asset token (WETH) instead of native token (ETH)
  * @dev DepositNativeAndSend allows for deposits with ETH
+ * @dev Redemptions always output the asset token (WETH)
  * @dev Compatible with ERC4626 vaults and requires Share OFT to be an adapter
  */
 contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative {
