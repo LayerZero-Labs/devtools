@@ -63,7 +63,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
      */
     constructor(uint64 _spotPairId, uint16 _activationOverheadFee) {
         if (_activationOverheadFee == 0) revert ZeroActivationOverheadFee();
-    
+
         uint64[2] memory tokens = _spotInfo(_spotPairId).tokens;
         uint64 assetIndex = tokens[0];
         QUOTE_ASSET_INDEX = tokens[1];
@@ -83,7 +83,8 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
         uint64 totalCentsAmount = BASE_ACTIVATION_FEE_CENTS + _activationOverheadFee;
         ACTIVATION_COST = uint64((totalCentsAmount * QUOTE_ASSET_DECIMALS) / 100);
 
-        if (uint256(MAX_USERS_PER_BLOCK) * uint256(QUOTE_ASSET_DECIMALS) > type(uint64).max) revert MinUSDAmtGreaterThanU64Max();
+        if (uint256(MAX_USERS_PER_BLOCK) * uint256(QUOTE_ASSET_DECIMALS) > type(uint64).max)
+            revert MinUSDAmtGreaterThanU64Max();
     }
 
     /**
@@ -126,6 +127,20 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     function activationFee() public view virtual override returns (uint64) {
         uint64 rawPrice = _spotPx(SPOT_PAIR_ID);
         return (ACTIVATION_COST * SPOT_PRICE_DECIMALS) / rawPrice;
+    }
+
+    /**
+     * @notice Retrieves quote tokens from HyperCore to a specified address
+     * @dev Transfers quote tokens from the composer's HyperCore balance to the specified address
+     * @dev Can only be called by the recovery address
+     * @param _coreAmount Amount of quote tokens to retrieve in HyperCore decimals, or FULL_TRANSFER for all
+     * @param _to Destination address to receive the retrieved quote tokens
+     */
+    function retrieveQuoteTokens(uint64 _coreAmount, address _to) public virtual onlyRecoveryAddress {
+        uint64 maxTransferAmt = _getMaxTransferAmount(QUOTE_ASSET_INDEX, _coreAmount);
+
+        _submitCoreWriterTransfer(_to, QUOTE_ASSET_INDEX, maxTransferAmt);
+        emit Retrieved(QUOTE_ASSET_INDEX, maxTransferAmt, _to);
     }
 
     /**
