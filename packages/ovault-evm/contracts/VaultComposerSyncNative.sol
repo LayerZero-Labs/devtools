@@ -13,8 +13,8 @@ import { VaultComposerSync } from "./VaultComposerSync.sol";
  * @title Synchronous Vault Composer with Stargate NativePools as Asset and WETH as Share
  * @author LayerZero Labs (@shankars99)
  * @dev Extends VaultComposerSync with Pool-specific behavior such as oft.token wrapping
- * @dev WETH is used as the share token for the vault instead of native token (ETH)
- * @dev DepositAndSend and Deposit use WETH instead of native token (ETH)
+ * @dev WETH is used as the asset token for the vault instead of native token (ETH)
+ * @dev DepositAndSend and Deposit use asset token (WETH) instead of native token (ETH)
  * @dev DepositNativeAndSend allows for deposits with ETH
  * @dev Compatible with ERC4626 vaults and requires Share OFT to be an adapter
  */
