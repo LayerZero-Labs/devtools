@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 4.0.1
+
+### Patch Changes
+
+- 9d3e558: use manual TUP instead of hardhat-deploy for upgradeable deploy scripts
+
 ## 4.0.0
 
 ### Patch Changes

@@ -31,14 +31,16 @@ const deploy: DeployFunction = async (hre) => {
     //     eid: EndpointId.AVALANCHE_V2_TESTNET
     //   }
     // }
-    const endpointV2Deployment = await hre.deployments.get('EndpointV2')
+
+    /// EndpointV2Alt deployments are also saved under the filename: EndpointV2
+    const endpointV2AltDeployment = await hre.deployments.get('EndpointV2')
 
     const { address } = await deploy(contractName, {
         from: deployer,
         args: [
             'MyOFTAlt', // name
             'MOFTAlt', // symbol
-            endpointV2Deployment.address, // LayerZero's EndpointV2 address
+            endpointV2AltDeployment.address, // EndpointV2 address
             deployer, // owner
         ],
         log: true,

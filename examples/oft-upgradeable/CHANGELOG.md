@@ -1,5 +1,17 @@
 # @layerzerolabs/oft-upgradeable-example
 
+## 0.3.7
+
+### Patch Changes
+
+- 9d3e558: use manual TUP instead of hardhat-deploy for upgradeable deploy scripts
+
+## 0.3.6
+
+### Patch Changes
+
+- 608915a: Fix extra option parsing to avoid overflow in `sendEvm` script
+
 ## 0.3.5
 
 ### Patch Changes
