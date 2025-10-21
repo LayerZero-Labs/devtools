@@ -51,7 +51,7 @@ const nativeChainInputs: Record<string, ChainConfig> = {
     ethereum: {
         eid: 30101,
         chain: mainnet,
-        asset: '0x0',
+        asset: '0x77b2043768d28E9C9aB44E1aBfC95944bcE57931',
         assetErc20: '0x0',
         share: '0x5610118dA36A56c86390282D5E2b8Ac2FD9B7C6f',
         shareErc20: '0x76e1908646F3Bf45862972072484548Dff22472d',
@@ -87,7 +87,7 @@ const generateInput = (
         sourceChain: srcChain.chain,
         operation: operation,
         hubLzComposeGasLimit: BigInt(800_000),
-        amount: BigInt('1000000000000000'),
+        amount: BigInt('10000000000000'),
         slippage: 0.01, // 1% slippage
         // buffer: 0.1, // 10% buffer
         oftAddress: operation === OVaultSyncOperations.DEPOSIT ? srcChain.asset : srcChain.share,
@@ -140,7 +140,7 @@ describe('generateOVaultInputs', function () {
         console.log('Transaction Submitted. Hash: ', tx)
     }
 
-    describe.skip('Native Vaulting', () => {
+    describe('Native Vaulting', () => {
         const hubChain = nativeChainInputs[hubChainKey]!
         /**
          * Deposit
@@ -152,9 +152,9 @@ describe('generateOVaultInputs', function () {
             await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.DEPOSIT)
         })
 
-        it('Deposit A->B->B', async () => {
+        it('Deposit A->B->A', async () => {
             const srcChain = nativeChainInputs['arbitrum']!
-            const dstChain = hubChain
+            const dstChain = nativeChainInputs['arbitrum']!
 
             await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.DEPOSIT)
         })
@@ -166,11 +166,22 @@ describe('generateOVaultInputs', function () {
             await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.DEPOSIT)
         })
 
-        it('Deposit A->B->A', async () => {
+        it('Deposit A->B->B', async () => {
             const srcChain = nativeChainInputs['arbitrum']!
-            const dstChain = nativeChainInputs['arbitrum']!
+            const dstChain = hubChain
 
             await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.DEPOSIT)
+        })
+
+        /**
+         * Redeem
+         */
+
+        it('Redeem B->B->B', async () => {
+            const srcChain = hubChain
+            const dstChain = hubChain
+
+            await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.REDEEM)
         })
 
         it('Redeem A->B->A', async () => {
@@ -187,22 +198,15 @@ describe('generateOVaultInputs', function () {
             await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.REDEEM)
         })
 
-        it('Redeem A->B->B', async () => {
+        it.only('Redeem A->B->B', async () => {
             const srcChain = nativeChainInputs['arbitrum']!
-            const dstChain = hubChain
-
-            await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.REDEEM)
-        })
-
-        it('Redeem B->B->B', async () => {
-            const srcChain = hubChain
             const dstChain = hubChain
 
             await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.REDEEM)
         })
     })
 
-    describe('OFT Vaulting', () => {
+    describe.skip('OFT Vaulting', () => {
         const hubChain = chainInputs[hubChainKey]!
         /**
          * Deposit
@@ -221,7 +225,7 @@ describe('generateOVaultInputs', function () {
             await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.DEPOSIT)
         })
 
-        it.only('Deposit B->B->A', async () => {
+        it('Deposit B->B->A', async () => {
             const srcChain = chainInputs[hubChainKey]!
             const dstChain = chainInputs['arbitrum']!
 
