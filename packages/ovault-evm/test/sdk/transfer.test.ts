@@ -24,7 +24,7 @@ interface ChainConfig {
 
 const hubChainKey = 'ethereum'
 
-// This is for the Resolve mainnet deployment
+// This is for the Resolv mainnet deployment
 const chainInputs: Record<string, ChainConfig> = {
     ethereum: {
         eid: 30101,
@@ -33,7 +33,7 @@ const chainInputs: Record<string, ChainConfig> = {
         assetErc20: '0x66a1E37c9b0eAddca17d3662D6c05F4DECf3e110',
         share: '0xab17c1fE647c37ceb9b96d1c27DD189bf8451978',
         shareErc20: '0x1202F5C7b4B9E47a1A484E8B270be34dbbC75055',
-        composer: '0x4ad165d7902b292d46b442ce2a4a25d5a891dd9d',
+        composer: '0x683467864a918951a75f472dd8853e31Fad50959',
         vault: '0x1202F5C7b4B9E47a1A484E8B270be34dbbC75055',
     },
     arbitrum: {
@@ -87,8 +87,9 @@ const generateInput = (
         sourceChain: srcChain.chain,
         operation: operation,
         hubLzComposeGasLimit: BigInt(800_000),
-        amount: BigInt('10000000000000'),
+        amount: BigInt('1000000000000000'),
         slippage: 0.01, // 1% slippage
+        // buffer: 0.1, // 10% buffer
         oftAddress: operation === OVaultSyncOperations.DEPOSIT ? srcChain.asset : srcChain.share,
         tokenAddress: operation === OVaultSyncOperations.DEPOSIT ? srcChain.assetErc20 : srcChain.shareErc20,
     }
@@ -123,13 +124,11 @@ describe('generateOVaultInputs', function () {
                 functionName: 'approve',
                 args: [inputs.approval.spender, inputs.approval.amount],
             })
+            console.log({ approvalTx })
             await walletClient.waitForTransactionReceipt({ hash: approvalTx })
             console.log('Approval Completed. Hash: ', approvalTx)
         }
 
-        console.log({
-            dstAmount: inputs.dstAmount,
-        })
         const tx = await walletClient.writeContract({
             address: inputs.contractAddress,
             abi: inputs.abi,
@@ -141,7 +140,7 @@ describe('generateOVaultInputs', function () {
         console.log('Transaction Submitted. Hash: ', tx)
     }
 
-    describe('Native Vaulting', () => {
+    describe.skip('Native Vaulting', () => {
         const hubChain = nativeChainInputs[hubChainKey]!
         /**
          * Deposit
@@ -174,7 +173,7 @@ describe('generateOVaultInputs', function () {
             await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.DEPOSIT)
         })
 
-        it.only('Redeem A->B->A', async () => {
+        it('Redeem A->B->A', async () => {
             const srcChain = nativeChainInputs['arbitrum']!
             const dstChain = nativeChainInputs['arbitrum']!
 
@@ -203,7 +202,7 @@ describe('generateOVaultInputs', function () {
         })
     })
 
-    describe.skip('OFT Vaulting', () => {
+    describe('OFT Vaulting', () => {
         const hubChain = chainInputs[hubChainKey]!
         /**
          * Deposit
@@ -222,7 +221,7 @@ describe('generateOVaultInputs', function () {
             await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.DEPOSIT)
         })
 
-        it('Deposit B->B->A', async () => {
+        it.only('Deposit B->B->A', async () => {
             const srcChain = chainInputs[hubChainKey]!
             const dstChain = chainInputs['arbitrum']!
 

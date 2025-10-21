@@ -120,7 +120,7 @@ export class OVaultSyncMessageBuilder {
      * @returns The message fee for the hub chain.
      */
     static async calculateHubChainFee(input: SendParamsInput, useWalletAddress = true) {
-        const { operation, amount, composerAddress, hubChain, dstEid, hubEid, vaultAddress } = input
+        const { operation, amount, composerAddress, hubChain, dstEid, hubEid, vaultAddress, buffer } = input
 
         // If the dst chain is the same as the hub chain, then we don't need to calculate the fee
         // as we are already on the hub chain, so "send" on the OFT will not be called.
@@ -158,21 +158,27 @@ export class OVaultSyncMessageBuilder {
               ? vaultAddress
               : shareOftAddress
 
-        return await client.readContract({
+        const quote = await client.readContract({
             address: composerAddress,
             abi: OVaultComposerSyncAbi,
             functionName: 'quoteSend',
             args: [
                 fromAddress,
+                // This is the target OFT
                 operation === OVaultSyncOperations.DEPOSIT ? shareOftAddress : assetOftAddress,
                 amount,
                 hubSendParams,
             ],
         })
+
+        return {
+            nativeFee: this.increaseByBuffer(quote.nativeFee, buffer),
+            lzTokenFee: this.increaseByBuffer(quote.lzTokenFee, buffer),
+        }
     }
 
     static async getMessageFee(sendParams: SendParams, input: SendParamsInput) {
-        const { oftAddress, sourceChain, srcEid, hubEid } = input
+        const { oftAddress, sourceChain, srcEid, hubEid, buffer } = input
 
         const client = createPublicClient({
             chain: sourceChain,
@@ -193,7 +199,21 @@ export class OVaultSyncMessageBuilder {
             args: [sendParams as never, false],
         })
 
-        return messageFee
+        return {
+            nativeFee: this.increaseByBuffer(messageFee.nativeFee, buffer),
+            lzTokenFee: this.increaseByBuffer(messageFee.lzTokenFee, buffer),
+        }
+    }
+
+    static increaseByBuffer(amount: bigint, buffer: number = 0) {
+        if (!buffer || buffer <= 0) {
+            return amount
+        }
+
+        const flatNumber = BigInt((buffer * 100).toFixed(0))
+
+        const bufferAmount = (amount * flatNumber) / 100n
+        return amount + bufferAmount
     }
 
     static async getOutputAmount(input: SendParamsInput) {
@@ -260,8 +280,6 @@ export class OVaultSyncMessageBuilder {
             const slippageAmount = (amountDst * BigInt(Number(slippage.toFixed(3)) * 1000)) / 1000n
             minAmountLD = amountDst - slippageAmount
         }
-
-        console.log({ minAmountLD })
 
         return {
             // If the src chain is not the same as the hub chain, then the first message will be to the hub chain
@@ -354,6 +372,7 @@ export class OVaultSyncMessageBuilder {
         } = input
 
         const outputAmount = await this.quoteOVaultOutput(input)
+
         const fullInputParams = {
             ...input,
             dstAmount: outputAmount.dstAmount,

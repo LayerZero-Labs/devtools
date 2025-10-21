@@ -52,7 +52,7 @@ export interface SendParamsInput {
 
 export type GenerateOVaultSyncInputsProps = Omit<
     SendParamsInput,
-    'dstAmount' | 'minDstAmount' | 'tokenAddress' | 'dstAddress'
+    'dstAmount' | 'minDstAmount' | 'tokenAddress' | 'dstAddress' | 'hubChainSourceAmount'
 > & {
     tokenAddress?: `0x${string}`
     dstAddress?: `0x${string}`
