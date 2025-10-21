@@ -28,7 +28,6 @@ contract SendScript is Script {
     using OptionsBuilder for bytes;
 
     address payable public address_HyperEVM_Composer;
-    address public address_HyperEVM_OFT;
 
     OFT public myOFT_SRC;
     IERC20 public srcInnerToken;
@@ -45,7 +44,6 @@ contract SendScript is Script {
         uint128 _lzReceiveGas
     ) public {
         address_HyperEVM_Composer = payable(vm.envAddress("HYPEREVM_COMPOSER"));
-        address_HyperEVM_OFT = vm.envAddress("HYPEREVM_OFT");
         address_src_OFT = vm.envAddress("SRC_OFT");
 
         srcEid = uint32(vm.envUint("SRC_EID"));

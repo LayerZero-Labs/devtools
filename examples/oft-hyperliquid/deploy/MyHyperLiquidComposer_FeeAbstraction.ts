@@ -7,7 +7,7 @@ import inquirer from 'inquirer'
 import { CHAIN_IDS, getCoreSpotDeployment, useBigBlock, useSmallBlock } from '@layerzerolabs/hyperliquid-composer'
 
 const contractName_oft = 'MyOFT'
-const contractName_composer = 'MyHyperLiquidComposer_FeeToken'
+const contractName_composer = 'MyHyperLiquidComposer_FeeAbstraction'
 
 const deploy: DeployFunction = async (hre) => {
     const { coreSpotIndex } = await inquirer.prompt([
@@ -18,11 +18,29 @@ const deploy: DeployFunction = async (hre) => {
         },
     ])
 
+    const { spotId } = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'spotId',
+            message: 'Enter the spot pair ID for price queries (e.g., 107 for HYPE/USDC)',
+        },
+    ])
+
+    const { activationOverheadFee } = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'activationOverheadFee',
+            message: 'Enter activation overhead fee in cents (e.g., 100 = $1.00 overhead on top of $1.00 base)',
+            default: '100',
+        },
+    ])
+
     const { getNamedAccounts, deployments } = hre
 
     const { deploy } = deployments
-    const { deployer } = await getNamedAccounts()
+    const { deployer, recovery: recoveryAddress } = await getNamedAccounts()
     assert(deployer, 'Missing named deployer account')
+    assert(recoveryAddress, 'Missing recovery address. Please set RECOVERY_ADDRESS in .env file')
 
     const networkName = hre.network.name
     const privateKey = hre.network.config.accounts
@@ -41,6 +59,9 @@ const deploy: DeployFunction = async (hre) => {
 
     console.log(`Network: ${networkName}`)
     console.log(`Deployer: ${deployer}`)
+    console.log(`Recovery Address: ${recoveryAddress}`)
+    console.log(`Spot ID: ${spotId}`)
+    console.log(`Activation Overhead Fee: ${activationOverheadFee} cents`)
 
     assert(isHyperliquid, 'The hyperliquid composer is only supported on hyperliquid networks')
 
@@ -70,11 +91,12 @@ const deploy: DeployFunction = async (hre) => {
             throw new Error(`Needs ${contractName_oft} to be deployed before deploying MyHyperLiquidComposer`)
         }
     })
-
+    console.log('address_oft', address_oft)
     if (!hre.ethers.utils.isAddress(address_oft)) {
         throw new Error(`Input address ${address_oft} is not a valid address`)
     }
-    // Switch to hyperliquidbig block if the contract is not deployed
+
+    // Switch to hyperliquid big block if the contract is not deployed
     const isDeployed_composer = await hre.deployments.getOrNull(contractName_composer)
 
     if (!isDeployed_composer) {
@@ -84,21 +106,29 @@ const deploy: DeployFunction = async (hre) => {
         console.log(`Deplying a contract uses big block which is mined at a transaction per minute.`)
     }
 
-    // Deploy the OFT composer
+    // Deploy the OFT composer with FeeAbstraction extension
     const { address: address_composer } = await deploy(contractName_composer, {
         from: deployer,
         args: [
             address_oft, // OFT address
             hip1Token.coreSpot.index, // Core index id
-            hip1Token.txData.weiDiff,
+            hip1Token.txData.weiDiff, // Asset decimal difference
+            parseInt(spotId), // Spot pair ID for price queries
+            parseInt(activationOverheadFee), // Activation overhead fee in cents
+            recoveryAddress, // Recovery address for fee management
         ],
         log: true,
         skipIfAlreadyDeployed: false,
     })
 
     console.log(
-        `Deployed HyperliquidComposer contract: ${contractName_composer}, network: ${hre.network.name}, address: ${address_composer}`
+        `Deployed HyperliquidComposer with FeeAbstraction: ${contractName_composer}, network: ${hre.network.name}, address: ${address_composer}`
     )
+    console.log(`  - Spot ID: ${spotId}`)
+    console.log(
+        `  - Overhead Fee: ${activationOverheadFee} cents (Total fee: $${(100 + parseInt(activationOverheadFee)) / 100})`
+    )
+    console.log(`  - Recovery Address: ${recoveryAddress}`)
 
     // Set small block eitherway as we do not have a method to check which hyperliquidblock we are on
     {

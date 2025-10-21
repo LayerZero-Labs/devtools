@@ -45,6 +45,8 @@ abstract contract RecoverableComposer is HyperLiquidComposer, IRecoverableCompos
      * @param _recoveryAddress Address that will be authorized to perform recovery operations
      */
     constructor(address _recoveryAddress) {
+        if (_recoveryAddress == address(0)) revert InvalidRecoveryAddress();
+
         RECOVERY_ADDRESS = _recoveryAddress;
     }
 
@@ -81,7 +83,7 @@ abstract contract RecoverableComposer is HyperLiquidComposer, IRecoverableCompos
      * @param _coreAmount Amount of USDC tokens to retrieve in HyperCore decimals, or FULL_TRANSFER for all
      * @param _to Destination address to receive the retrieved USDC tokens
      */
-    function retrieveCoreUSDC(uint64 _coreAmount, address _to) public onlyRecoveryAddress {
+    function retrieveCoreUSDC(uint64 _coreAmount, address _to) public virtual onlyRecoveryAddress {
         uint64 maxTransferAmt = _getMaxTransferAmount(USDC_CORE_INDEX, _coreAmount);
 
         _submitCoreWriterTransfer(_to, USDC_CORE_INDEX, maxTransferAmt);
