@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.12.5
+
+### Patch Changes
+
+- 87dd61e: updateMetadata supports when Update Authority is a Multisig
+
 ## 0.12.4
 
 ### Patch Changes
