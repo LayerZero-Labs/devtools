@@ -21,7 +21,7 @@ contract VaultComposerSyncE2ETest is VaultComposerSyncBaseTest {
         super.setUp();
     }
 
-    function test_E2E_ethereum_to_polygon() public {
+    function test_E2E_ethereum_to_polygon() public virtual {
         (uint256 shareTokensToReceive, ) = _removeDustWithOffset(TOKENS_TO_SEND * 2, -1);
 
         deal(address(assetOFT_eth), userA, TOKENS_TO_SEND);

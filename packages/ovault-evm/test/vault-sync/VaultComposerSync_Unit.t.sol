@@ -33,7 +33,7 @@ contract VaultComposerSyncUnitTest is VaultComposerSyncBaseTest {
         assertEq(vaultComposer.ASSET_OFT(), address(assetOFT_arb));
     }
 
-    function test_onlyEndpoint() public {
+    function test_onlyEndpoint() public virtual {
         vm.expectRevert(abi.encodeWithSelector(IVaultComposerSync.OnlyEndpoint.selector, address(this)));
         vaultComposer.lzCompose(address(assetOFT_arb), _randomGUID(), "", userA, "");
     }
@@ -46,7 +46,7 @@ contract VaultComposerSyncUnitTest is VaultComposerSyncBaseTest {
         vaultComposer.lzCompose{ value: 1 ether }(_oft, _randomGUID(), "", arbExecutor, "");
     }
 
-    function test_lzCompose_pass_dst_not_hub_deposit() public {
+    function test_lzCompose_pass_dst_not_hub_deposit() public virtual {
         bytes32 guid = _randomGUID();
         _feedAssets(address(vaultComposer), TOKENS_TO_SEND);
 
@@ -76,7 +76,7 @@ contract VaultComposerSyncUnitTest is VaultComposerSyncBaseTest {
         assertEq(vault_arb.totalSupply(), vault_arb.balanceOf(address(shareOFT_arb)), TOKENS_TO_SEND);
     }
 
-    function test_lzCompose_pass_dst_not_hub_withdraw() public {
+    function test_lzCompose_pass_dst_not_hub_withdraw() public virtual {
         bytes32 guid = _randomGUID();
         vault_arb.mint(address(vaultComposer), TOKENS_TO_SEND);
 
@@ -115,7 +115,7 @@ contract VaultComposerSyncUnitTest is VaultComposerSyncBaseTest {
         assertEq(vault_arb.balanceOf(address(vaultComposer)), 0);
     }
 
-    function test_lzCompose_pass_dst_is_hub() public {
+    function test_lzCompose_pass_dst_is_hub() public virtual {
         bytes32 guid = _randomGUID();
         _feedAssets(address(vaultComposer), TOKENS_TO_SEND);
 
@@ -209,7 +209,7 @@ contract VaultComposerSyncUnitTest is VaultComposerSyncBaseTest {
         );
     }
 
-    function test_lzCompose_slippage_causes_refund() public {
+    function test_lzCompose_slippage_causes_refund() public virtual {
         bytes32 guid = _randomGUID();
         _feedAssets(address(vaultComposer), TOKENS_TO_SEND);
         uint256 userABalanceEth = assetOFT_eth.balanceOf(userA);

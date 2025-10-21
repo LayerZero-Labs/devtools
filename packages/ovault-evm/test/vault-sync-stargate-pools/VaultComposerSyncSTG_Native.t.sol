@@ -116,9 +116,10 @@ contract VaultComposerSyncSTG_NativeForkTest is VaultComposerSyncSTG_ERC20ForkTe
         (bool success, ) = payable(address(ethComposer)).call{ value: amt }("");
         require(success, "ETH transfer failed");
 
+        // New behavior: ETH is held until lzCompose, not wrapped immediately
         uint256 wethBalanceAfter = weth.balanceOf(address(ethComposer));
-        assertEq(wethBalanceAfter, wethBalanceBefore + amt, "WETH should be wrapped");
-        assertEq(ethBalanceBefore, address(ethComposer).balance, "ETH balance should remain the same");
+        assertEq(wethBalanceAfter, wethBalanceBefore, "WETH should not be wrapped immediately");
+        assertEq(address(ethComposer).balance, ethBalanceBefore + amt, "ETH balance should increase");
     }
 
     function test_forkPoolComposerDoesNotWrapOnTransfersNotFromPool() public {
@@ -136,14 +137,95 @@ contract VaultComposerSyncSTG_NativeForkTest is VaultComposerSyncSTG_ERC20ForkTe
     }
 
     /**
-     * @dev Setup tokens for testing by minting USDC and depositing WETH
-     * @param _recipient Address to receive tokens
-     * @param _amt Amount of tokens to mint
+     * @dev Setup tokens for testing by simulating lzReceive sending ETH to composer
+     * @param _recipient Address to receive ETH (should be the composer)
+     * @param _amt Amount of ETH to send
      */
     function _simulatelzReceive(address _recipient, uint256 _amt) internal override {
+        // Simulate lzReceive on NativePool sending ETH to composer (triggers receive())
         vm.deal(address(ethPool), _amt);
         vm.prank(address(ethPool));
         (bool success, ) = payable(_recipient).call{ value: _amt }("");
         require(success, "ETH transfer failed");
+
+        // The composer now holds ETH until lzCompose is called
+        // No wrapping happens here - that's deferred to lzCompose
+    }
+
+    /**
+     * @dev Override to check ETH balance instead of WETH balance for native composer
+     * @param _composer Address of the composer
+     * @return The effective asset balance (ETH for native, WETH for regular)
+     */
+    function _getComposerAssetBalance(address _composer) internal view override returns (uint256) {
+        // For native composer, check ETH balance since wrapping is deferred
+        return _composer.balance;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════════════════
+    // REDEEM TEST OVERRIDES - Need WETH for vault operations
+    // ═══════════════════════════════════════════════════════════════════════════════════════
+
+    function test_forkPoolSuccessRedeemToArbPool(uint256 _amtToDeposit) public override {
+        uint256 amtToDepositShared = _amtToDeposit / TO_LD;
+        uint64 maxCredit = _getPathCredit(pool, ARB_EID);
+        vm.assume(_amtToDeposit > TO_LD * 1e2 && amtToDepositShared < maxCredit);
+
+        // Setup vault shares for the composer - wrap ETH to WETH for vault operations
+        _simulatelzReceive(address(composer), _amtToDeposit);
+        vm.prank(address(composer));
+        weth.deposit{ value: _amtToDeposit }(); // Wrap ETH to WETH
+
+        vm.startPrank(address(composer));
+        assetToken.approve(address(vault), _amtToDeposit);
+        vault.deposit(_amtToDeposit, address(composer));
+        vm.stopPrank();
+
+        uint256 amtToRedeem = vault.balanceOf(address(composer));
+        uint256 composerBalancePreRedeem = vault.balanceOf(address(composer));
+
+        SendParam memory sendParam = _createSendParam(ARB_EID, userB, amtToRedeem, 0);
+
+        bytes memory redeemMsg = _createPoolComposePayload(ARB_EID, sendParam, 0.1 ether, amtToRedeem, userA);
+
+        assertEq(amtToRedeem, composerBalancePreRedeem, "Composer should have more share balance after deposit");
+
+        if (amtToDepositShared > maxCredit) vm.expectRevert();
+        vm.prank(LZ_ENDPOINT_V2);
+        composer.lzCompose{ value: 0.1 ether }(address(shareOFTAdapter), randomGUID, redeemMsg, executor, "");
+
+        uint256 targetBalance = amtToDepositShared > maxCredit ? composerBalancePreRedeem : 0;
+        assertEq(vault.balanceOf(address(composer)), targetBalance, "Composer should have the same share balance");
+    }
+
+    function test_forkPoolSuccessRedeemToBeraOFT(uint256 _amtToDeposit) public override {
+        uint256 amtToDepositShared = _amtToDeposit / TO_LD;
+        uint64 maxCredit = _getPathCredit(pool, BERA_EID);
+        /// @dev Reduce max credit to 1/100th of the max credit to avoid overflows on the vault
+        vm.assume(_amtToDeposit > TO_LD * 1e2 && amtToDepositShared < (maxCredit / 1e2));
+
+        // Setup vault shares for the composer - wrap ETH to WETH for vault operations
+        _simulatelzReceive(address(composer), _amtToDeposit);
+        vm.prank(address(composer));
+        weth.deposit{ value: _amtToDeposit }(); // Wrap ETH to WETH
+
+        vm.startPrank(address(composer));
+        assetToken.approve(address(vault), _amtToDeposit);
+        vault.deposit(_amtToDeposit, address(composer));
+        vm.stopPrank();
+
+        uint256 amtToRedeem = vault.balanceOf(address(composer));
+        uint256 composerBalancePreRedeem = vault.balanceOf(address(composer));
+
+        SendParam memory sendParam = _createSendParam(BERA_EID, userB, amtToRedeem, 0);
+
+        bytes memory redeemMsg = _createPoolComposePayload(BERA_EID, sendParam, 0.1 ether, amtToRedeem, userA);
+
+        assertEq(amtToRedeem, composerBalancePreRedeem, "Composer should have more share balance after deposit");
+
+        vm.prank(LZ_ENDPOINT_V2);
+        composer.lzCompose{ value: 0.1 ether }(address(shareOFTAdapter), randomGUID, redeemMsg, executor, "");
+
+        assertEq(vault.balanceOf(address(composer)), 0, "Composer should have the same share balance");
     }
 }

@@ -80,7 +80,7 @@ contract VaultComposerSyncSTG_ERC20ForkTest is VaultComposerSyncSTG_BaseTest {
         SendParam memory sendParam = _createSendParam(ARB_EID, userB, _amtToSend, type(uint256).max);
         bytes memory composeMsg = _createPoolComposePayload(ARB_EID, sendParam, 0.1 ether, _amtToSend, userA);
 
-        uint256 composerBalancePreDeposit = assetToken.balanceOf(address(composer));
+        uint256 composerBalancePreDeposit = _getComposerAssetBalance(address(composer));
         assertEq(composerBalancePreDeposit, _amtToSend, "Composer should have the amount to send");
 
         if (amtToSendShared > maxCredit) vm.expectRevert();
@@ -88,7 +88,7 @@ contract VaultComposerSyncSTG_ERC20ForkTest is VaultComposerSyncSTG_BaseTest {
         composer.lzCompose{ value: 0.1 ether }(address(pool), randomGUID, composeMsg, executor, "");
 
         uint256 targetBalance = amtToSendShared > maxCredit ? composerBalancePreDeposit : 0;
-        assertEq(assetToken.balanceOf(address(composer)), targetBalance, "Composer balance should be the same");
+        assertEq(_getComposerAssetBalance(address(composer)), targetBalance, "Composer balance should be the same");
     }
 
     function test_forkPoolDepositFailedFromBeraOFT(uint256 _amtToSend) public {
@@ -102,19 +102,19 @@ contract VaultComposerSyncSTG_ERC20ForkTest is VaultComposerSyncSTG_BaseTest {
         SendParam memory sendParam = _createSendParam(BERA_EID, userB, _amtToSend, type(uint256).max);
         bytes memory composeMsg = _createPoolComposePayload(BERA_EID, sendParam, 0.1 ether, _amtToSend, userA);
 
-        assertEq(assetToken.balanceOf(address(composer)), _amtToSend, "Composer should have the amount to send");
+        assertEq(_getComposerAssetBalance(address(composer)), _amtToSend, "Composer should have the amount to send");
 
         vm.prank(LZ_ENDPOINT_V2);
         composer.lzCompose{ value: 0.1 ether }(address(pool), randomGUID, composeMsg, executor, "");
 
-        assertEq(assetToken.balanceOf(address(composer)), 0, "Composer should have 0 balance");
+        assertEq(_getComposerAssetBalance(address(composer)), 0, "Composer should have 0 balance");
     }
 
     // ═══════════════════════════════════════════════════════════════════════════════════════
     // FORK TESTS - Successful Redeem to Stargate Pool
     // ═══════════════════════════════════════════════════════════════════════════════════════
 
-    function test_forkPoolSuccessRedeemToArbPool(uint256 _amtToDeposit) public {
+    function test_forkPoolSuccessRedeemToArbPool(uint256 _amtToDeposit) public virtual {
         uint256 amtToDepositShared = _amtToDeposit / TO_LD;
         uint64 maxCredit = _getPathCredit(pool, ARB_EID);
         vm.assume(_amtToDeposit > TO_LD * 1e2 && amtToDepositShared < maxCredit);
@@ -143,7 +143,7 @@ contract VaultComposerSyncSTG_ERC20ForkTest is VaultComposerSyncSTG_BaseTest {
         assertEq(vault.balanceOf(address(composer)), targetBalance, "Composer should have the same share balance");
     }
 
-    function test_forkPoolSuccessRedeemToBeraOFT(uint256 _amtToDeposit) public {
+    function test_forkPoolSuccessRedeemToBeraOFT(uint256 _amtToDeposit) public virtual {
         uint256 amtToDepositShared = _amtToDeposit / TO_LD;
         uint64 maxCredit = _getPathCredit(pool, BERA_EID);
         /// @dev Reduce max credit to 1/100th of the max credit to avoid overflows on the vault
@@ -178,5 +178,15 @@ contract VaultComposerSyncSTG_ERC20ForkTest is VaultComposerSyncSTG_BaseTest {
      */
     function _simulatelzReceive(address _recipient, uint256 _amt) internal virtual {
         usdcToken.mint(_recipient, _amt);
+    }
+
+    /**
+     * @dev Get the effective asset balance for the composer
+     * @param _composer Address of the composer
+     * @return The asset balance (WETH for ERC20, ETH for native - overridden in native tests)
+     */
+    function _getComposerAssetBalance(address _composer) internal view virtual returns (uint256) {
+        // For ERC20 composer, check assetToken (USDC/WETH) balance
+        return assetToken.balanceOf(_composer);
     }
 }
