@@ -191,20 +191,7 @@ export class OFT extends OmniSDK implements IOApp {
         const instructions = [
             await this._createSetPeerAddressIx(normalizedPeer, eid), // admin
         ]
-
-        const isSendLibraryInitialized = await this.isSendLibraryInitialized(eid)
-        if (!isSendLibraryInitialized) {
-            instructions.push(
-                oft.initSendLibrary({ admin: delegate, oftStore }, eid) // delegate
-            )
-        }
-
-        const isReceiveLibraryInitialized = await this.isReceiveLibraryInitialized(eid)
-        if (!isReceiveLibraryInitialized) {
-            instructions.push(
-                oft.initReceiveLibrary({ admin: delegate, oftStore }, eid) // delegate
-            )
-        }
+        // send lib and receive lib should be intialized in the init-config step
 
         // since the order is important, we push the instructions in the order we want them to be executed
         instructions.push(
