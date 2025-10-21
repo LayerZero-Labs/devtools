@@ -39,8 +39,8 @@ export interface SendParamsInput {
 
     slippage: number // How much slippage to allow for the redemption. This is a percentage, so 0.01 = 1%
 
-    oftAddress: `0x${string}` // If a hex code equal to 0x0, then the native token is being sent
-    tokenAddress: `0x${string}`
+    oftAddress: `0x${string}`
+    tokenAddress: `0x${string}` // If a hex code equal to 0x0, then the native token is being sent
 
     // The gas limit for the hub chain. Only needed if the hub chain is not the same as the source chain.
     // Defaults to 375_000 for cross chain operations and 175_000 for same chain operations.

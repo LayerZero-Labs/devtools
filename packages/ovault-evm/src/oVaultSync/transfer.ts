@@ -73,25 +73,20 @@ export class OVaultSyncMessageBuilder {
         dstAmount: bigint
         minDstAmount: bigint
     }> {
-        const { operation, amount, vaultAddress, hubChain, slippage, tokenAddress, oftAddress } = input
+        const { operation, vaultAddress, hubChain, slippage, tokenAddress, oftAddress } = input
 
         const client = createPublicClient({
             chain: hubChain,
             transport: http(),
         })
 
-        let sourceAmount = amount
-
-        if (hexToBigInt(tokenAddress ?? oftAddress) === 0n) {
-            // If it's a native transfer then there can be slippage or a fee taken during the inital hop.
-            sourceAmount = await this.getOutputAmount({
-                ...input,
-                dstAmount: 0n,
-                minDstAmount: 0n,
-                dstAddress: input.walletAddress,
-                tokenAddress: tokenAddress ?? oftAddress,
-            })
-        }
+        const sourceAmount = await this.getOutputAmount({
+            ...input,
+            dstAmount: 0n,
+            minDstAmount: 0n,
+            dstAddress: input.walletAddress,
+            tokenAddress: tokenAddress ?? oftAddress,
+        })
 
         const outputAmount = await client.readContract({
             address: vaultAddress,
