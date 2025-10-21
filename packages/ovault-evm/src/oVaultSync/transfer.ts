@@ -1,4 +1,4 @@
-import { createPublicClient, encodeAbiParameters, http, pad } from 'viem'
+import { createPublicClient, encodeAbiParameters, hexToBigInt, http, pad } from 'viem'
 import { OFTAbi } from '../contracts/OFT'
 import { OVaultComposerSyncAbi } from '../contracts/OVaultComposerSync'
 import { ERC4626_ABI } from '../contracts/ERC4626'
@@ -11,6 +11,7 @@ import {
     GenerateOVaultSyncInputsProps,
     OVaultSyncOperations,
 } from '../types'
+import { OVaultComposerSyncNativeAbi } from '../contracts/OVaultComposerSyncNative'
 
 export class OVaultSyncMessageBuilder {
     static async buildComposeArgument(input: SendParamsInput, messageFee: bigint) {
@@ -72,18 +73,31 @@ export class OVaultSyncMessageBuilder {
         dstAmount: bigint
         minDstAmount: bigint
     }> {
-        const { operation, amount, vaultAddress, hubChain, slippage } = input
+        const { operation, amount, vaultAddress, hubChain, slippage, tokenAddress, oftAddress } = input
 
         const client = createPublicClient({
             chain: hubChain,
             transport: http(),
         })
 
+        let sourceAmount = amount
+
+        if (hexToBigInt(tokenAddress ?? oftAddress) === 0n) {
+            // If it's a native transfer then there can be slippage or a fee taken during the inital hop.
+            sourceAmount = await this.getOutputAmount({
+                ...input,
+                dstAmount: 0n,
+                minDstAmount: 0n,
+                dstAddress: input.walletAddress,
+                tokenAddress: tokenAddress ?? oftAddress,
+            })
+        }
+
         const outputAmount = await client.readContract({
             address: vaultAddress,
             abi: ERC4626_ABI,
             functionName: operation === OVaultSyncOperations.DEPOSIT ? 'previewDeposit' : 'previewRedeem',
-            args: [amount],
+            args: [sourceAmount],
         })
 
         if (slippage < 0.001) {
@@ -158,7 +172,7 @@ export class OVaultSyncMessageBuilder {
     }
 
     static async getMessageFee(sendParams: SendParams, input: SendParamsInput) {
-        const { tokenAddress, sourceChain, srcEid, hubEid } = input
+        const { oftAddress, sourceChain, srcEid, hubEid } = input
 
         const client = createPublicClient({
             chain: sourceChain,
@@ -173,7 +187,7 @@ export class OVaultSyncMessageBuilder {
 
         // If we are not on the hub chain, then we need to call the OFT's quoteSend function to get the message fee.
         const messageFee = await client.readContract({
-            address: tokenAddress,
+            address: oftAddress,
             abi: OFTAbi,
             functionName: 'quoteSend',
             args: [sendParams as never, false],
@@ -182,9 +196,38 @@ export class OVaultSyncMessageBuilder {
         return messageFee
     }
 
+    static async getOutputAmount(input: SendParamsInput) {
+        const { sourceChain, oftAddress, amount, hubEid, composerAddress } = input
+        const client = createPublicClient({
+            chain: sourceChain,
+            transport: http(),
+        })
+
+        const sendParams = {
+            // If the src chain is not the same as the hub chain, then the first message will be to the hub chain
+            // so we need to set the dstEid to the hub chain EID
+            dstEid: hubEid,
+            to: pad(composerAddress, { size: 32 }),
+            amountLD: amount,
+            minAmountLD: 0n,
+            extraOptions: Options.newOptions().toHex() as `0x${string}`,
+            composeMsg: '0x' as `0x${string}`,
+            oftCmd: '0x' as `0x${string}`,
+        }
+
+        const outputAmount = await client.readContract({
+            address: oftAddress,
+            abi: OFTAbi,
+            functionName: 'quoteOFT',
+            args: [sendParams],
+        })
+
+        return outputAmount[2].amountReceivedLD
+    }
+
     static async buildSendParams(input: SendParamsInput) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { amount, srcEid, dstEid, composerAddress, hubEid, dstAmount, minDstAmount, dstAddress } = input
+        const { amount, srcEid, dstEid, composerAddress, hubEid, dstAmount, minDstAmount, tokenAddress, slippage } =
+            input
 
         const options = Options.newOptions()
 
@@ -209,13 +252,24 @@ export class OVaultSyncMessageBuilder {
         const gasLimit = input.hubLzComposeGasLimit ?? (dstIsHubChain ? 175_000n : 375_000n)
         options.addExecutorComposeOption(0, gasLimit, hubMessageFee.nativeFee)
 
+        let minAmountLD = amount // If it's an OFT transfer there should be no slippage
+
+        if (hexToBigInt(tokenAddress) === 0n) {
+            // If sending native tokens, we need to account for slippage
+            const amountDst = await this.getOutputAmount(input)
+            const slippageAmount = (amountDst * BigInt(Number(slippage.toFixed(3)) * 1000)) / 1000n
+            minAmountLD = amountDst - slippageAmount
+        }
+
+        console.log({ minAmountLD })
+
         return {
             // If the src chain is not the same as the hub chain, then the first message will be to the hub chain
             // so we need to set the dstEid to the hub chain EID
             dstEid: hubEid,
             to: pad(composerAddress, { size: 32 }),
             amountLD: amount,
-            minAmountLD: amount, // This is an OFT transfer so there should be no slippage
+            minAmountLD: minAmountLD,
             extraOptions: options.toHex() as `0x${string}`,
             composeMsg: await this.buildComposeArgument(input, hubMessageFee.nativeFee),
             oftCmd: '0x' as `0x${string}`,
@@ -245,6 +299,11 @@ export class OVaultSyncMessageBuilder {
         const spender = useVault ? vaultAddress : composerAddress
 
         if (tokenAddress === spender) {
+            return
+        }
+
+        if (hexToBigInt(tokenAddress) === 0n) {
+            // If the token address is 0x0, then we are sending native tokens, so no approval is needed
             return
         }
 
@@ -293,8 +352,8 @@ export class OVaultSyncMessageBuilder {
             dstEid,
             vaultAddress,
         } = input
-        const outputAmount = await this.quoteOVaultOutput(input)
 
+        const outputAmount = await this.quoteOVaultOutput(input)
         const fullInputParams = {
             ...input,
             dstAmount: outputAmount.dstAmount,
@@ -309,10 +368,19 @@ export class OVaultSyncMessageBuilder {
         const srcIsHubChain = srcEid === hubEid
         const dstIsHubChain = dstEid === hubEid
 
-        if (srcIsHubChain && dstIsHubChain) {
+        const isNativeToken = hexToBigInt(fullInputParams.tokenAddress) === 0n
+
+        // If the tokenAddress is 0x0, then we are sending native tokens, so we need to add the amount to the message value
+        let additionalNative = 0n
+        if (isNativeToken) {
+            additionalNative += amount
+        }
+
+        if (srcIsHubChain && dstIsHubChain && !isNativeToken) {
             if (operation === OVaultSyncOperations.DEPOSIT) {
                 return {
                     messageFee,
+                    messageValue: messageFee.nativeFee + additionalNative,
                     dstAmount: {
                         amount: outputAmount.dstAmount,
                         minAmount: outputAmount.minDstAmount,
@@ -327,6 +395,7 @@ export class OVaultSyncMessageBuilder {
 
             return {
                 messageFee,
+                messageValue: messageFee.nativeFee + additionalNative,
                 dstAmount: {
                     amount: outputAmount.dstAmount,
                     minAmount: outputAmount.minDstAmount,
@@ -342,6 +411,7 @@ export class OVaultSyncMessageBuilder {
         if (!srcIsHubChain) {
             return {
                 messageFee,
+                messageValue: messageFee.nativeFee + additionalNative,
                 dstAmount: {
                     amount: outputAmount.dstAmount,
                     minAmount: outputAmount.minDstAmount,
@@ -353,17 +423,20 @@ export class OVaultSyncMessageBuilder {
             }
         }
 
+        const depositOperation = isNativeToken ? 'depositNativeAndSend' : 'depositAndSend'
+
         return {
             messageFee,
+            messageValue: messageFee.nativeFee + additionalNative,
             dstAmount: {
                 amount: outputAmount.dstAmount,
                 minAmount: outputAmount.minDstAmount,
             },
             approval: await this.buildApproval(fullInputParams),
             txArgs: [amount, sendParams, refundAddress ?? dstAddress],
-            contractFunctionName: operation === OVaultSyncOperations.DEPOSIT ? 'depositAndSend' : 'redeemAndSend',
+            contractFunctionName: operation === OVaultSyncOperations.DEPOSIT ? depositOperation : 'redeemAndSend',
             contractAddress: composerAddress,
-            abi: OVaultComposerSyncAbi,
+            abi: isNativeToken ? OVaultComposerSyncNativeAbi : OVaultComposerSyncAbi,
         }
     }
 }

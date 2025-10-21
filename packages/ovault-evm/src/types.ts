@@ -2,6 +2,7 @@ import { Chain as ViemChain } from 'viem'
 import { OFTAbi } from './contracts/OFT'
 import { OVaultComposerSyncAbi } from './contracts/OVaultComposerSync'
 import { ERC4626_ABI } from './contracts/ERC4626'
+import { OVaultComposerSyncNativeAbi } from './contracts/OVaultComposerSyncNative'
 
 export enum OVaultSyncOperations {
     DEPOSIT = 'deposit',
@@ -38,12 +39,15 @@ export interface SendParamsInput {
 
     slippage: number // How much slippage to allow for the redemption. This is a percentage, so 0.01 = 1%
 
-    oftAddress: `0x${string}`
+    oftAddress: `0x${string}` // If a hex code equal to 0x0, then the native token is being sent
     tokenAddress: `0x${string}`
 
     // The gas limit for the hub chain. Only needed if the hub chain is not the same as the source chain.
     // Defaults to 375_000 for cross chain operations and 175_000 for same chain operations.
     hubLzComposeGasLimit?: bigint
+
+    // The amount of extra buffer gas to add to the message fee calculation
+    buffer?: number
 }
 
 export type GenerateOVaultSyncInputsProps = Omit<
@@ -101,6 +105,7 @@ export interface MessageFee {
 export type OVaultSyncInputs = {
     messageFee: MessageFee
     contractAddress: `0x${string}`
+    messageValue: bigint
     dstAmount: {
         amount: bigint
         minAmount: bigint
@@ -118,8 +123,8 @@ export type OVaultSyncInputs = {
       }
     | {
           txArgs: [bigint, SendParams, `0x${string}`]
-          contractFunctionName: 'depositAndSend' | 'redeemAndSend'
-          abi: typeof OVaultComposerSyncAbi
+          contractFunctionName: 'depositAndSend' | 'redeemAndSend' | 'depositNativeAndSend'
+          abi: typeof OVaultComposerSyncAbi | typeof OVaultComposerSyncNativeAbi
       }
     | {
           txArgs: [bigint, `0x${string}`]
