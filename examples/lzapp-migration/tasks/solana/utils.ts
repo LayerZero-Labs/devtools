@@ -43,10 +43,33 @@ const UNITS = [
 ]
 
 /**
- * Max whole-token supply on Solana for a given localDecimals,
- * formatted as T/B/M/K, else plain number. Rounded half up.
+ * Computes the maximum whole-token supply representable by a Solana SPL mint
+ * given its local decimal precision, formatted for readability.
+ *
+ * Behavior:
+ * - Uses compact units when large enough: K (thousand), M (million), B (billion), T (trillion).
+ * - Values < 1000 are returned as a plain whole number string without a suffix.
+ * - Rounds "half up" to the provided display precision.
+ * - Near unit boundaries, rounding can promote the value to the next unit
+ *   (e.g., 999.6B -> 1.0T) which matches typical human-readable expectations.
+ *
+ * Parameters:
+ * - localDecimals: Non-negative integer count of decimals on the SPL mint.
+ * - maxDisplayDecimals: Fractional digits to include in the compact representation (0–6). Default is 1.
+ *
+ * Returns:
+ * - A human-readable string such as "18.4B", "1.0T", or "842".
+ *
+ * Throws:
+ * - If localDecimals is negative or not an integer.
+ * - If maxDisplayDecimals is not an integer in the inclusive range [0, 6].
+ *
+ * Examples:
+ * - maxSupplyWholeTokens(9)  -> "18.4B"   // typical 9-decimal mint
+ * - maxSupplyWholeTokens(12) -> "18.4M"
+ * - maxSupplyWholeTokens(18) -> "18"      // < 1K, returned as a plain number
  */
-export function maxSupplyWholeTokens(localDecimals: number, maxDisplayDecimals = 1): string {
+export function localDecimalsToMaxSupplyWholeTokens(localDecimals: number, maxDisplayDecimals = 1): string {
     if (!Number.isInteger(localDecimals) || localDecimals < 0) {
         throw new Error('localDecimals must be a non-negative integer')
     }
