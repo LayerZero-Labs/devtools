@@ -16,6 +16,7 @@ import {
     PublicKey,
     TransactionBuilder,
     Umi,
+    createNoopSigner,
     createSignerFromKeypair,
     publicKey,
     signerIdentity,
@@ -41,17 +42,25 @@ export const DEFAULT_LOOKUP_TABLE_ADDRESS: Partial<Record<EndpointId, PublicKey>
     [EndpointId.SOLANA_V2_TESTNET]: publicKey('9thqPdbR27A1yLWw2spwJLySemiGMXxPnEvfmXVk4KuK'),
 }
 
+type DeriveConnectionParams =
+    | boolean
+    | {
+          readOnly?: boolean
+          noopSigner?: PublicKey
+      }
 /**
  * Derive common connection and UMI objects for a given endpoint ID.
  * @param eid {EndpointId}
  */
-export const deriveConnection = async (eid: EndpointId, readOnly = false) => {
+export const deriveConnection = async (eid: EndpointId, params: DeriveConnectionParams = false) => {
+    // line below is for backwards compatibility (second param was initially only readOnly, updated to an object)
+    const { readOnly = false, noopSigner } = typeof params === 'object' ? params : { readOnly: params }
     const keypair = await getSolanaKeypair(readOnly)
     const connectionFactory = createSolanaConnectionFactory()
     const connection = await connectionFactory(eid)
     const umi = createUmi(connection.rpcEndpoint).use(mplToolbox())
     const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(keypair.secretKey)
-    const umiWalletSigner = createSignerFromKeypair(umi, umiWalletKeyPair)
+    const umiWalletSigner = noopSigner ? createNoopSigner(noopSigner) : createSignerFromKeypair(umi, umiWalletKeyPair)
     umi.use(signerIdentity(umiWalletSigner))
     return {
         connection,
