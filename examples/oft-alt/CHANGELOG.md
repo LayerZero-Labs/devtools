@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-alt-example
 
+## 0.0.6
+
+### Patch Changes
+
+- 9d3e558: use manual TUP instead of hardhat-deploy for upgradeable deploy scripts
+
 ## 0.0.5
 
 ### Patch Changes

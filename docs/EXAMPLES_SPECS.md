@@ -142,3 +142,10 @@ Any sections that don't appear in the above list should be considered for remova
 2. **Two chains only**: Examples should use only 2 chains by default to reduce testnet setup friction; use “Add other chains” section to scale up if needed. For EVM, prefer using the following in the following order: Arbitrum Sepolia (`EndpointId.ARBSEP_V2_TESTNET`), Base Sepolia (`EndpointId.BASESEP_V2_TESTNET`).
   - in `hardhat.config.ts`, the network names should be like `arbitrum-sepolia` and `base-sepolia` (and NOT `arbitrum-testnet` or `base-testnet`)
 3. **EVM OFT Test Minting**: If minting is needed for testing, prefer a commented line in `contracts/MyOFT.sol` constructor: `// _mint(msg.sender, 100000 * (10 ** 18));`. The README must: (a) instruct developers to uncomment this line for testnet, and (b) include a production checklist reminder to ensure this line is commented out for production deployments.
+4. **Example helper task runs** (In Progress) For Hardhat tasks, above the `task()` line there should be a comment with an example of how to run it. Prefer using only the required params for the example command run.
+- param labels should be like `<EID>`, `<EVM_RECIPIENT>`, `<SOLANA_RECIPIENT>`, `<MINT_ADDRESS>`
+
+
+## Appendix
+
+Note that principle items with the `(In Progress)` prefix are new and not yet applied to all examples, but should be.
