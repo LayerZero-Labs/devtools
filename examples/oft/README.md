@@ -115,10 +115,10 @@ pnpm compile:hardhat
 To deploy the OFT contracts to your desired blockchains, run the following command:
 
 ```bash
-pnpm hardhat lz:deploy --tags MyOFTMock
+pnpm hardhat lz:deploy --tags MyOFT
 ```
 
-> :information_source: MyOFTMock will be used as it provides a public mint function which we require for testing
+> Note: If you need initial tokens on testnet, open `contracts/MyOFT.sol` and uncomment the `_mint(msg.sender, 100000 * (10 ** 18));` line in the constructor. Remember to remove this line for production deployments.
 
 Select all the chains you want to deploy the OFT to.
 
@@ -380,7 +380,7 @@ cast send <OFT_ADDRESS> "mint(address,uint256)" <RECIPIENT_ADDRESS> 100000000000
 
 ```
 
-> You can get the address of your OFT on Base Sepolia from the file at `./deployments/base-sepolia/MyOFTMock.json`
+> You can get the address of your OFT on Base Sepolia from the file at `./deployments/base-sepolia/MyOFT.json`
 
 Send 1 OFT from **Base Sepolia** to **Arbitrum Sepolia**:
 
@@ -412,8 +412,7 @@ Now that you've gone through a simplified walkthrough, here are what you can do 
 
 Before deploying, ensure the following:
 
-- (required) you are not using `MyOFTMock`, which has a public `mint` function
-  - In `layerzero.config.ts`, ensure you are not using `MyOFTMock` as the `contractName` for any of the contract objects.
+- (required) if you previously uncommented the testnet mint line in `contracts/MyOFT.sol`, ensure it is commented out for production
 - (recommended) you have profiled the gas usage of `lzReceive` on your destination chains
 <!-- TODO: mention https://docs.layerzero.network/v2/developers/evm/technical-reference/integration-checklist#set-security-and-executor-configurations after it has been updated to reference the CLI -->
 
