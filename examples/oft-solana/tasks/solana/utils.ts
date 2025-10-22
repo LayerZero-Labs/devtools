@@ -160,16 +160,3 @@ export function formatAmount(whole: bigint, maxDisplayDecimals = 1): string {
     // < 1K -> show plain whole number
     return whole.toString()
 }
-/**
- * Convenience wrapper: computes the whole-token maximum from localDecimals and
- * formats it using compact units. Delegates to `localDecimalsToMaxSupply` and
- * `formatAmount`. Kept for compatibility with prior APIs.
- *
- * @param localDecimals Non-negative integer count of decimals on the SPL mint.
- * @param maxDisplayDecimals Fractional digits to include (0–6). Default 1.
- * @returns Human-readable string such as "18.4B", "1.0T", or "842".
- */
-export function localDecimalsToMaxSupplyWholeTokens(localDecimals: number, maxDisplayDecimals = 1) {
-    const whole = localDecimalsToMaxSupply(localDecimals)
-    return formatAmount(whole, maxDisplayDecimals)
-}
