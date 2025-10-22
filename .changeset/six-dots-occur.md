@@ -3,4 +3,4 @@
 "@layerzerolabs/oft-solana-example": patch
 ---
 
-add warning and require confirmation if Solana local decimals set to higher than recommended
+oft-solana: require user to confirm max total token supply given a local decimals value
