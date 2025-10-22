@@ -69,7 +69,7 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
         uint256 _assetAmount,
         SendParam memory _sendParam,
         address _refundAddress
-    ) external payable {
+    ) external payable nonReentrant {
         if (msg.value < _assetAmount) revert AmountExceedsMsgValue();
 
         IWETH(ASSET_ERC20).deposit{ value: _assetAmount }();
