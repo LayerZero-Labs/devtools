@@ -46,11 +46,11 @@ const UNITS = [
  * Max whole-token supply on Solana for a given localDecimals,
  * formatted as T/B/M/K, else plain number. Rounded half up.
  */
-export function maxSupplyHuman(localDecimals: number, precision = 1): string {
+export function maxSupplyWholeTokens(localDecimals: number, maxDisplayDecimals = 1): string {
     if (!Number.isInteger(localDecimals) || localDecimals < 0) {
         throw new Error('localDecimals must be a non-negative integer')
     }
-    if (!Number.isInteger(precision) || precision < 0 || precision > 6) {
+    if (!Number.isInteger(maxDisplayDecimals) || maxDisplayDecimals < 0 || maxDisplayDecimals > 6) {
         throw new Error('precision must be an integer between 0 and 6')
     }
 
@@ -60,7 +60,7 @@ export function maxSupplyHuman(localDecimals: number, precision = 1): string {
     for (let i = 0; i < UNITS.length; i++) {
         const { base, suffix } = UNITS[i]
         if (whole >= base) {
-            const pow = 10n ** BigInt(precision)
+            const pow = 10n ** BigInt(maxDisplayDecimals)
             let scaled = (whole * pow + base / 2n) / base
             let intPart = scaled / pow
 
@@ -69,12 +69,14 @@ export function maxSupplyHuman(localDecimals: number, precision = 1): string {
                 scaled = (whole * pow + higher.base / 2n) / higher.base
                 intPart = scaled / pow
                 const frac = scaled % pow
-                const fracStr = precision === 0 ? '' : frac.toString().padStart(precision, '0').replace(/0+$/, '')
+                const fracStr =
+                    maxDisplayDecimals === 0 ? '' : frac.toString().padStart(maxDisplayDecimals, '0').replace(/0+$/, '')
                 return fracStr ? `${intPart}.${fracStr}${higher.suffix}` : `${intPart}${higher.suffix}`
             }
 
             const frac = scaled % pow
-            const fracStr = precision === 0 ? '' : frac.toString().padStart(precision, '0').replace(/0+$/, '')
+            const fracStr =
+                maxDisplayDecimals === 0 ? '' : frac.toString().padStart(maxDisplayDecimals, '0').replace(/0+$/, '')
             return fracStr ? `${intPart}.${fracStr}${suffix}` : `${intPart}${suffix}`
         }
     }
