@@ -11,8 +11,12 @@ import { VaultComposerSyncNativeBaseTest } from "./VaultComposerSyncNative_Base.
 
 contract VaultComposerSyncNativeUnitTest is VaultComposerSyncUnitTest, VaultComposerSyncNativeBaseTest {
     function _feedAssets(address _addr, uint256 _amount) internal override {
-        /// @dev Send ETH directly to the composer since it holds ETH until lzCompose wraps it
-        vm.deal(_addr, _amount);
+        /// @dev Send ETH from ASSET_OFT to the composer to simulate real scenario
+        /// @dev This is needed because the receive() function only accepts ETH from ASSET_OFT
+        vm.deal(address(assetOFT_arb), _amount);
+        vm.prank(address(assetOFT_arb));
+        (bool success, ) = payable(_addr).call{ value: _amount }("");
+        require(success, "ETH transfer failed");
     }
 
     function _getUndustedAssetAmount(uint256 _amount) internal pure override returns (uint256) {
@@ -144,5 +148,31 @@ contract VaultComposerSyncNativeUnitTest is VaultComposerSyncUnitTest, VaultComp
         assertEq(vault_arb.totalSupply(), 0, "No shares should be minted due to refund");
         // After refund, composer should have no ETH since it was sent out as refund
         assertEq(address(vaultComposer).balance, 0, "Composer should have no ETH after refund");
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════════════════
+    // GAS LIMIT TESTS - Ensure compatibility with Stargate's 2300 gas transfer limit
+    // ═══════════════════════════════════════════════════════════════════════════════════════
+
+    function test_receive_stargate_valid_sender_2300_gas() public {
+        // Test valid sender using Stargate's exact transfer pattern
+        uint256 ethAmount = 1 ether;
+
+        bool success = _stargatePoolLzReceive(address(assetOFT_arb), address(vaultComposer), ethAmount);
+
+        assertTrue(success, "ETH transfer should succeed");
+        // The function should succeed and ETH should be received
+        assertEq(address(vaultComposer).balance, ethAmount, "ETH should be received from valid sender");
+    }
+
+    function test_receive_stargate_invalid_sender_reverts() public {
+        // Test invalid sender using Stargate's transfer pattern
+        uint256 ethAmount = 1 ether;
+        address invalidSender = makeAddr("invalidSender");
+
+        bool success = _stargatePoolLzReceive(invalidSender, address(vaultComposer), ethAmount);
+
+        assertFalse(success, "ETH transfer should fail");
+        assertEq(address(vaultComposer).balance, 0, "No ETH should be received on revert");
     }
 }

@@ -130,5 +130,8 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
         IERC20(assetERC20).forceApprove(address(VAULT), type(uint256).max);
     }
 
-    receive() external payable virtual {}
+    receive() external payable virtual {
+        /// @dev From ASSET_OFT for NativeOFT::lzReceive and from ASSET_ERC20 for WETH::withdraw
+        if (msg.sender != ASSET_OFT && msg.sender != ASSET_ERC20) revert ETHTransferOnlyFromAssetOFT();
+    }
 }

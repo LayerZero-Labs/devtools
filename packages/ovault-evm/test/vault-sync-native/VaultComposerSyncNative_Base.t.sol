@@ -90,4 +90,12 @@ contract VaultComposerSyncNativeBaseTest is VaultComposerSyncBaseTest {
         shareOFT_eth.setEnforcedOptions(enforcedOptions);
         shareOFT_pol.setEnforcedOptions(enforcedOptions);
     }
+
+    function _stargatePoolLzReceive(address _from, address _recipient, uint256 _amt) internal returns (bool success) {
+        vm.deal(_from, _amt);
+        vm.prank(_from);
+        assembly {
+            success := call(2300, _recipient, _amt, 0, 0, 0, 0)
+        }
+    }
 }
