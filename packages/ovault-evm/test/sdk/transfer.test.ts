@@ -22,9 +22,9 @@ interface ChainConfig {
     vault?: `0x${string}`
 }
 
-const hubChain = 'ethereum'
+const hubChainKey = 'ethereum'
 
-// This is for the Resolve mainnet deployment
+// This is for the Resolv mainnet deployment
 const chainInputs: Record<string, ChainConfig> = {
     ethereum: {
         eid: 30101,
@@ -33,7 +33,7 @@ const chainInputs: Record<string, ChainConfig> = {
         assetErc20: '0x66a1E37c9b0eAddca17d3662D6c05F4DECf3e110',
         share: '0xab17c1fE647c37ceb9b96d1c27DD189bf8451978',
         shareErc20: '0x1202F5C7b4B9E47a1A484E8B270be34dbbC75055',
-        composer: '0x4ad165d7902b292d46b442ce2a4a25d5a891dd9d',
+        composer: '0x683467864a918951a75f472dd8853e31Fad50959',
         vault: '0x1202F5C7b4B9E47a1A484E8B270be34dbbC75055',
     },
     arbitrum: {
@@ -46,41 +46,66 @@ const chainInputs: Record<string, ChainConfig> = {
     },
 } as const
 
+// Native Wallet test
+const nativeChainInputs: Record<string, ChainConfig> = {
+    ethereum: {
+        eid: 30101,
+        chain: mainnet,
+        asset: '0x77b2043768d28E9C9aB44E1aBfC95944bcE57931',
+        assetErc20: '0x0',
+        share: '0x5610118dA36A56c86390282D5E2b8Ac2FD9B7C6f',
+        shareErc20: '0x76e1908646F3Bf45862972072484548Dff22472d',
+        composer: '0x9A3b4Ab009B65A0713Cf0E6EC216161F3a0a7694',
+        vault: '0x76e1908646F3Bf45862972072484548Dff22472d',
+    },
+    arbitrum: {
+        eid: 30110,
+        chain: arbitrum,
+        asset: '0xa45b5130f36cdca45667738e2a258ab09f4a5f7f', // Stargate vault. Implements the OFT interface
+        assetErc20: '0x0', // Use native token
+        share: '0x3a40507905600e9b4a9127A7889eBadE1339282c',
+        shareErc20: '0x3a40507905600e9b4a9127A7889eBadE1339282c',
+    },
+} as const
+
 const walletAddress = privateKeyToAccount(process.env.PRIVATE_KEY as `0x${string}`).address as `0x${string}`
 
 const generateInput = (
-    srcChain: (typeof chainInputs)['base-sepolia'],
-    dstChain: (typeof chainInputs)['base-sepolia'],
+    srcChain: ChainConfig,
+    dstChain: ChainConfig,
+    hubChain: ChainConfig,
     operation: OVaultSyncOperations
 ) => {
     return {
         srcEid: srcChain.eid,
-        hubEid: chainInputs[hubChain]!.eid,
+        hubEid: hubChain.eid,
         dstEid: dstChain.eid,
         walletAddress: walletAddress as `0x${string}`,
-        vaultAddress: chainInputs[hubChain]!.vault as `0x${string}`,
-        composerAddress: chainInputs[hubChain]!.composer as `0x${string}`,
-        hubChain: chainInputs[hubChain]!.chain,
+        vaultAddress: hubChain.vault as `0x${string}`,
+        composerAddress: hubChain.composer as `0x${string}`,
+        hubChain: hubChain.chain,
         sourceChain: srcChain.chain,
         operation: operation,
         hubLzComposeGasLimit: BigInt(800_000),
-        amount: BigInt('10000000000000000'),
+        amount: BigInt('10000000000000'),
         slippage: 0.01, // 1% slippage
+        // buffer: 0.1, // 10% buffer
         oftAddress: operation === OVaultSyncOperations.DEPOSIT ? srcChain.asset : srcChain.share,
         tokenAddress: operation === OVaultSyncOperations.DEPOSIT ? srcChain.assetErc20 : srcChain.shareErc20,
     }
 }
 
-describe.skip('generateOVaultInputs', function () {
+describe('generateOVaultInputs', function () {
     // Increase timeout due to the time it takes to execute the transactions
     this.timeout(10_000)
 
     async function executeTransaction(
-        srcChain: (typeof chainInputs)['arbitrum-sepolia'],
-        dstChain: (typeof chainInputs)['arbitrum-sepolia'],
+        srcChain: ChainConfig,
+        dstChain: ChainConfig,
+        hubChain: ChainConfig,
         operation: OVaultSyncOperations
     ) {
-        const input = await generateInput(srcChain, dstChain, operation)
+        const input = await generateInput(srcChain, dstChain, hubChain, operation)
 
         const inputs = await OVaultSyncMessageBuilder.generateOVaultInputs(input)
         const account = privateKeyToAccount(process.env.PRIVATE_KEY as `0x${string}`)
@@ -99,6 +124,7 @@ describe.skip('generateOVaultInputs', function () {
                 functionName: 'approve',
                 args: [inputs.approval.spender, inputs.approval.amount],
             })
+            console.log({ approvalTx })
             await walletClient.waitForTransactionReceipt({ hash: approvalTx })
             console.log('Approval Completed. Hash: ', approvalTx)
         }
@@ -106,7 +132,7 @@ describe.skip('generateOVaultInputs', function () {
         const tx = await walletClient.writeContract({
             address: inputs.contractAddress,
             abi: inputs.abi,
-            value: inputs.messageFee.nativeFee,
+            value: inputs.messageValue,
             functionName: inputs.contractFunctionName,
             args: inputs.txArgs as any,
         })
@@ -114,66 +140,135 @@ describe.skip('generateOVaultInputs', function () {
         console.log('Transaction Submitted. Hash: ', tx)
     }
 
-    /**
-     * Deposit
-     */
-    it.skip('Deposit B->B->B', async () => {
-        const srcChain = chainInputs[hubChain]!
-        const dstChain = chainInputs[hubChain]!
+    describe('Native Vaulting', () => {
+        const hubChain = nativeChainInputs[hubChainKey]!
+        /**
+         * Deposit
+         */
+        it('Deposit B->B->B', async () => {
+            const srcChain = hubChain
+            const dstChain = hubChain
 
-        await executeTransaction(srcChain, dstChain, OVaultSyncOperations.DEPOSIT)
+            await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.DEPOSIT)
+        })
+
+        it('Deposit A->B->A', async () => {
+            const srcChain = nativeChainInputs['arbitrum']!
+            const dstChain = nativeChainInputs['arbitrum']!
+
+            await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.DEPOSIT)
+        })
+
+        it('Deposit B->B->A', async () => {
+            const srcChain = hubChain
+            const dstChain = nativeChainInputs['arbitrum']!
+
+            await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.DEPOSIT)
+        })
+
+        it('Deposit A->B->B', async () => {
+            const srcChain = nativeChainInputs['arbitrum']!
+            const dstChain = hubChain
+
+            await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.DEPOSIT)
+        })
+
+        /**
+         * Redeem
+         */
+
+        it('Redeem B->B->B', async () => {
+            const srcChain = hubChain
+            const dstChain = hubChain
+
+            await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.REDEEM)
+        })
+
+        it('Redeem A->B->A', async () => {
+            const srcChain = nativeChainInputs['arbitrum']!
+            const dstChain = nativeChainInputs['arbitrum']!
+
+            await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.REDEEM)
+        })
+
+        it('Redeem B->B->A', async () => {
+            const srcChain = hubChain
+            const dstChain = nativeChainInputs['arbitrum']!
+
+            await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.REDEEM)
+        })
+
+        it.only('Redeem A->B->B', async () => {
+            const srcChain = nativeChainInputs['arbitrum']!
+            const dstChain = hubChain
+
+            await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.REDEEM)
+        })
     })
 
-    it.skip('Deposit A->B->A', async () => {
-        const srcChain = chainInputs['arbitrum']!
-        const dstChain = chainInputs['arbitrum']!
+    describe.skip('OFT Vaulting', () => {
+        const hubChain = chainInputs[hubChainKey]!
+        /**
+         * Deposit
+         */
+        it('Deposit B->B->B', async () => {
+            const srcChain = chainInputs[hubChainKey]!
+            const dstChain = chainInputs[hubChainKey]!
 
-        await executeTransaction(srcChain, dstChain, OVaultSyncOperations.DEPOSIT)
-    })
+            await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.DEPOSIT)
+        })
 
-    it.skip('Deposit B->B->A', async () => {
-        const srcChain = chainInputs[hubChain]!
-        const dstChain = chainInputs['arbitrum']!
+        it('Deposit A->B->A', async () => {
+            const srcChain = chainInputs['arbitrum']!
+            const dstChain = chainInputs['arbitrum']!
 
-        await executeTransaction(srcChain, dstChain, OVaultSyncOperations.DEPOSIT)
-    })
+            await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.DEPOSIT)
+        })
 
-    it.skip('Deposit A->B->B', async () => {
-        const srcChain = chainInputs['arbitrum']!
-        const dstChain = chainInputs[hubChain]!
+        it('Deposit B->B->A', async () => {
+            const srcChain = chainInputs[hubChainKey]!
+            const dstChain = chainInputs['arbitrum']!
 
-        await executeTransaction(srcChain, dstChain, OVaultSyncOperations.DEPOSIT)
-    })
+            await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.DEPOSIT)
+        })
 
-    /**
-     * Redeem
-     */
+        it('Deposit A->B->B', async () => {
+            const srcChain = chainInputs['arbitrum']!
+            const dstChain = chainInputs[hubChainKey]!
 
-    it.skip('Redeem B->B->B', async () => {
-        const srcChain = chainInputs[hubChain]!
-        const dstChain = chainInputs[hubChain]!
+            await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.DEPOSIT)
+        })
 
-        await executeTransaction(srcChain, dstChain, OVaultSyncOperations.REDEEM)
-    })
+        /**
+         * Redeem
+         */
 
-    it.only('Redeem A->B->A', async () => {
-        const srcChain = chainInputs['arbitrum']!
-        const dstChain = chainInputs['arbitrum']!
+        it('Redeem B->B->B', async () => {
+            const srcChain = chainInputs[hubChainKey]!
+            const dstChain = chainInputs[hubChainKey]!
 
-        await executeTransaction(srcChain, dstChain, OVaultSyncOperations.REDEEM)
-    })
+            await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.REDEEM)
+        })
 
-    it('Redeem B->B->A', async () => {
-        const srcChain = chainInputs[hubChain]!
-        const dstChain = chainInputs['arbitrum']!
+        it('Redeem A->B->A', async () => {
+            const srcChain = chainInputs['arbitrum']!
+            const dstChain = chainInputs['arbitrum']!
 
-        await executeTransaction(srcChain, dstChain, OVaultSyncOperations.REDEEM)
-    })
+            await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.REDEEM)
+        })
 
-    it.skip('Redeem A->B->B', async () => {
-        const srcChain = chainInputs['arbitrum']!
-        const dstChain = chainInputs[hubChain]!
+        it('Redeem B->B->A', async () => {
+            const srcChain = chainInputs[hubChainKey]!
+            const dstChain = chainInputs['arbitrum']!
 
-        await executeTransaction(srcChain, dstChain, OVaultSyncOperations.REDEEM)
+            await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.REDEEM)
+        })
+
+        it('Redeem A->B->B', async () => {
+            const srcChain = chainInputs['arbitrum']!
+            const dstChain = chainInputs[hubChainKey]!
+
+            await executeTransaction(srcChain, dstChain, hubChain, OVaultSyncOperations.REDEEM)
+        })
     })
 })
