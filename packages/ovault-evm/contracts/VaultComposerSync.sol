@@ -427,6 +427,4 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         /// @dev Approve the vault to spend the asset tokens held by this contract
         IERC20(assetERC20).approve(address(VAULT), type(uint256).max);
     }
-
-    receive() external payable virtual {}
 }

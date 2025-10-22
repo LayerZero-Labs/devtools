@@ -126,4 +126,6 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
 
         IWETH(assetERC20).approve(address(VAULT), type(uint256).max);
     }
+
+    receive() external payable virtual {}
 }

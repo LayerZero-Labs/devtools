@@ -18,4 +18,7 @@ interface IVaultComposerSyncNative {
         SendParam memory _sendParam,
         address _refundAddress
     ) external payable;
+
+    /// ========================== Receive =====================================
+    receive() external payable;
 }
