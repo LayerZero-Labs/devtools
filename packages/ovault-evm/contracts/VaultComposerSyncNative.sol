@@ -3,6 +3,8 @@ pragma solidity ^0.8.22;
 
 import { IOFT, SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import { IVaultComposerSyncNative } from "./interfaces/IVaultComposerSyncNative.sol";
 import { IWETH } from "./interfaces/IWETH.sol";
@@ -21,6 +23,7 @@ import { VaultComposerSync } from "./VaultComposerSync.sol";
  */
 contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative {
     using OFTComposeMsgCodec for bytes;
+    using SafeERC20 for IERC20;
 
     /**
      * @notice Initializes the VaultComposerSyncPoolNative contract with vault and OFT token addresses
@@ -122,9 +125,9 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
         if (IOFT(ASSET_OFT).token() != address(0)) revert AssetOFTTokenNotNative();
 
         /// @dev The asset OFT does NOT need approval since it operates in native ETH.
-        // if (IOFT(ASSET_OFT).approvalRequired()) IERC20(assetERC20).approve(ASSET_OFT, type(uint256).max);
+        // if (IOFT(ASSET_OFT).approvalRequired()) IERC20(assetERC20).forceApprove(ASSET_OFT, type(uint256).max);
 
-        IWETH(assetERC20).approve(address(VAULT), type(uint256).max);
+        IERC20(assetERC20).forceApprove(address(VAULT), type(uint256).max);
     }
 
     receive() external payable virtual {}
