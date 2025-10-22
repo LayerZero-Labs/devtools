@@ -92,44 +92,44 @@ const UNITS = [
     { base: 1000n, suffix: 'K' },
 ]
 /**
- * Computes the maximum whole-token supply representable by a Solana SPL mint
- * given its local decimal precision, formatted for readability.
+ * Compute the maximum whole-token supply for a Solana SPL mint given its
+ * local decimal precision.
  *
- * Behavior:
- * - Uses compact units when large enough: K (thousand), M (million), B (billion), T (trillion).
- * - Values < 1000 are returned as a plain whole number string without a suffix.
- * - Rounds "half up" to the provided display precision.
- * - Near unit boundaries, rounding can promote the value to the next unit
- *   (e.g., 999.6B -> 1.0T) which matches typical human-readable expectations.
+ * - Uses the u64 max value ((1 << 64) - 1) divided by the scaling factor
+ *   10^localDecimals to derive the whole-token cap.
+ * - Returns the whole-token cap as a bigint.
  *
- * Parameters:
- * - localDecimals: Non-negative integer count of decimals on the SPL mint.
- * - maxDisplayDecimals: Fractional digits to include in the compact representation (0–6). Default is 1.
- *
- * Returns:
- * - A human-readable string such as "18.4B", "1.0T", or "842".
- *
- * Throws:
- * - If localDecimals is negative or not an integer.
- * - If maxDisplayDecimals is not an integer in the inclusive range [0, 6].
- *
- * Examples:
- * - maxSupplyWholeTokens(9)  -> "18.4B"   // typical 9-decimal mint
- * - maxSupplyWholeTokens(12) -> "18.4M"
- * - maxSupplyWholeTokens(18) -> "18"      // < 1K, returned as a plain number
+ * @param localDecimals Non-negative integer count of decimals on the SPL mint.
+ * @returns bigint Whole-token maximum supply.
+ * @throws Error if localDecimals is not a non-negative integer.
  */
-export function localDecimalsToMaxSupplyWholeTokens(localDecimals: number, maxDisplayDecimals = 1) {
+export function localDecimalsToMaxSupply(localDecimals: number): bigint {
     if (!Number.isInteger(localDecimals) || localDecimals < 0) {
         throw new Error('localDecimals must be a non-negative integer')
     }
+    const scalingFactor = 10n ** BigInt(localDecimals)
+    return U64_MAX / scalingFactor
+}
+
+/**
+ * Format a whole-token amount into a compact human-readable string using
+ * unit suffixes: K (thousand), M (million), B (billion), T (trillion).
+ *
+ * Behavior:
+ * - Values < 1000 are returned as a plain whole number string (no suffix).
+ * - Rounds half up to the requested precision.
+ * - At boundaries, rounding may promote to the next unit (e.g., 999.6B → 1.0T).
+ *
+ * @param whole The whole-token quantity to format.
+ * @param maxDisplayDecimals Fractional digits to include (0–6). Default 1.
+ * @returns Human-readable string such as "18.4B", "1.0T", or "842".
+ * @throws Error if maxDisplayDecimals is not an integer in [0, 6].
+ */
+export function formatAmount(whole: bigint, maxDisplayDecimals = 1): string {
     if (!Number.isInteger(maxDisplayDecimals) || maxDisplayDecimals < 0 || maxDisplayDecimals > 6) {
         throw new Error('precision must be an integer between 0 and 6')
     }
 
-    const denom = 10n ** BigInt(localDecimals)
-    const whole = U64_MAX / denom // whole-token cap
-
-    // choose largest unit that fits
     for (let i = 0; i < UNITS.length; i++) {
         const { base, suffix } = UNITS[i]
         if (whole >= base) {
@@ -159,4 +159,17 @@ export function localDecimalsToMaxSupplyWholeTokens(localDecimals: number, maxDi
 
     // < 1K -> show plain whole number
     return whole.toString()
+}
+/**
+ * Convenience wrapper: computes the whole-token maximum from localDecimals and
+ * formats it using compact units. Delegates to `localDecimalsToMaxSupply` and
+ * `formatAmount`. Kept for compatibility with prior APIs.
+ *
+ * @param localDecimals Non-negative integer count of decimals on the SPL mint.
+ * @param maxDisplayDecimals Fractional digits to include (0–6). Default 1.
+ * @returns Human-readable string such as "18.4B", "1.0T", or "842".
+ */
+export function localDecimalsToMaxSupplyWholeTokens(localDecimals: number, maxDisplayDecimals = 1) {
+    const whole = localDecimalsToMaxSupply(localDecimals)
+    return formatAmount(whole, maxDisplayDecimals)
 }

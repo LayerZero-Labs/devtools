@@ -69,16 +69,20 @@ const UNITS = [
  * - maxSupplyWholeTokens(12) -> "18.4M"
  * - maxSupplyWholeTokens(18) -> "18"      // < 1K, returned as a plain number
  */
-export function localDecimalsToMaxSupplyWholeTokens(localDecimals: number, maxDisplayDecimals = 1): string {
+/** Returns the maximum whole-token supply (as bigint) for a given local decimal precision. */
+export function localDecimalsToMaxSupply(localDecimals: number): bigint {
     if (!Number.isInteger(localDecimals) || localDecimals < 0) {
         throw new Error('localDecimals must be a non-negative integer')
     }
+    const scalingFactor = 10n ** BigInt(localDecimals)
+    return U64_MAX / scalingFactor
+}
+
+/** Formats a whole-token amount into a compact human-readable form using K/M/B/T. */
+export function formatAmount(whole: bigint, maxDisplayDecimals = 1): string {
     if (!Number.isInteger(maxDisplayDecimals) || maxDisplayDecimals < 0 || maxDisplayDecimals > 6) {
         throw new Error('precision must be an integer between 0 and 6')
     }
-
-    const denom = 10n ** BigInt(localDecimals)
-    const whole = U64_MAX / denom
 
     for (let i = 0; i < UNITS.length; i++) {
         const { base, suffix } = UNITS[i]
@@ -105,4 +109,18 @@ export function localDecimalsToMaxSupplyWholeTokens(localDecimals: number, maxDi
     }
 
     return whole.toString()
+}
+
+/**
+ * Convenience wrapper: computes the whole-token maximum from localDecimals and
+ * formats it using compact units. Delegates to `localDecimalsToMaxSupply` and
+ * `formatAmount`. Kept for compatibility with prior APIs.
+ *
+ * @param localDecimals Non-negative integer count of decimals on the SPL mint.
+ * @param maxDisplayDecimals Fractional digits to include (0–6). Default 1.
+ * @returns Human-readable string such as "18.4B", "1.0T", or "842".
+ */
+export function localDecimalsToMaxSupplyWholeTokens(localDecimals: number, maxDisplayDecimals = 1): string {
+    const whole = localDecimalsToMaxSupply(localDecimals)
+    return formatAmount(whole, maxDisplayDecimals)
 }
