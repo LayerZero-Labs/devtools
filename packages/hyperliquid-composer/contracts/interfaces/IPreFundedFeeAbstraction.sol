@@ -32,6 +32,7 @@ interface IPreFundedFeeAbstraction {
     error MaxUsersPerBlockCanOnlyBeIncremented();
     /// @notice Cannot activate on fee withdrawal block.
     error CannotActivateOnFeeWithdrawalBlock();
+    error InsufficientCoreBalanceForActivation();
 
     /**
      * @notice Emitted when activation fee is collected.
@@ -49,6 +50,9 @@ interface IPreFundedFeeAbstraction {
     function QUOTE_ASSET_DECIMALS() external view returns (uint64);
     function SPOT_PRICE_DECIMALS() external view returns (uint64);
     function ACTIVATION_FEE_NUMERATOR() external view returns (uint128);
+
+    function maxUsersPerBlock() external view returns (uint64);
+    function feeWithdrawalBlockNumber() external view returns (uint256);
 
     /**
      * @notice Retrieves quote tokens from HyperCore to a specified address

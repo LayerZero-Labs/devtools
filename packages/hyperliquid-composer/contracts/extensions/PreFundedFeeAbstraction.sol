@@ -40,11 +40,6 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     /// @dev Hyperliquid protocol requires 1 quote token for activation.
     uint64 internal constant BASE_ACTIVATION_FEE_CENTS = 100;
 
-    /// @dev USD value of the minimum pre-fund amount. Not scaled to core spot decimals.
-    /// @dev The maximum number of transactions that can be fit in a single HyperEVM block.
-    /// @dev This is because `spotBalance` returns the same value for all transactions in a HyperEVM block.
-    uint64 public MAX_USERS_PER_BLOCK = 100;
-
     /// @dev If fee is withdrawn on a block revert all activations
     uint256 public feeWithdrawalBlockNumber = 0;
 
@@ -64,6 +59,11 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     /// @dev Pre-calculated numerator for activation fee calculation: (ACTIVATION_COST * SPOT_PRICE_DECIMALS).
     /// @dev Stored as immutable to save gas on every activationFee() call.
     uint128 public immutable ACTIVATION_FEE_NUMERATOR;
+
+    /// @dev USD value of the minimum pre-fund amount. Not scaled to core spot decimals.
+    /// @dev The maximum number of transactions that can be fit in a single HyperEVM block.
+    /// @dev This is because `spotBalance` returns the same value for all transactions in a HyperEVM block.
+    uint64 public maxUsersPerBlock = 100;
 
     /**
      * @notice Constructor for the `PreFundedFeeAbstraction` extension.
@@ -104,7 +104,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
         /// @dev u64 * u64 = u128, so no overflow possible.
         ACTIVATION_FEE_NUMERATOR = ACTIVATION_COST * SPOT_PRICE_DECIMALS;
 
-        if (uint256(MAX_USERS_PER_BLOCK) * uint256(QUOTE_ASSET_DECIMALS) > type(uint64).max)
+        if (uint256(maxUsersPerBlock) * uint256(QUOTE_ASSET_DECIMALS) > type(uint64).max)
             revert MinUSDAmtGreaterThanU64Max();
     }
 
@@ -134,7 +134,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
 
                 uint64 coreBalance = spotBalance(address(this), QUOTE_ASSET_INDEX).total;
                 /// @dev Otherwise, this could revert silently if multiple users try to activate in the same block.
-                if (coreBalance < (MAX_USERS_PER_BLOCK * QUOTE_ASSET_DECIMALS)) {
+                if (coreBalance < (maxUsersPerBlock * QUOTE_ASSET_DECIMALS)) {
                     revert InsufficientCoreAmountForActivation();
                 }
 
@@ -180,9 +180,9 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
      * @param _maxUsersPerBlock The new maximum number of users per block
      */
     function updateMaxUsersPerBlock(uint64 _maxUsersPerBlock) public virtual onlyRecoveryAddress {
-        if (_maxUsersPerBlock <= MAX_USERS_PER_BLOCK) revert MaxUsersPerBlockCanOnlyBeIncremented();
-        MAX_USERS_PER_BLOCK = _maxUsersPerBlock;
-        emit MaxUsersPerBlockUpdated(MAX_USERS_PER_BLOCK);
+        if (_maxUsersPerBlock <= maxUsersPerBlock) revert MaxUsersPerBlockCanOnlyBeIncremented();
+        maxUsersPerBlock = _maxUsersPerBlock;
+        emit MaxUsersPerBlockUpdated(maxUsersPerBlock);
     }
 
     /**
