@@ -48,6 +48,7 @@ interface IPreFundedFeeAbstraction {
     function QUOTE_ASSET_INDEX() external view returns (uint64);
     function QUOTE_ASSET_DECIMALS() external view returns (uint64);
     function SPOT_PRICE_DECIMALS() external view returns (uint64);
+    function ACTIVATION_FEE_NUMERATOR() external view returns (uint128);
 
     /**
      * @notice Retrieves quote tokens from HyperCore to a specified address

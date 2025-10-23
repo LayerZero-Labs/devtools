@@ -61,6 +61,9 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     uint64 public immutable QUOTE_ASSET_DECIMALS;
     /// @dev Pre-calculated spot price decimals for gas efficiency: (8 - `szDecimals`).
     uint64 public immutable SPOT_PRICE_DECIMALS;
+    /// @dev Pre-calculated numerator for activation fee calculation: (ACTIVATION_COST * SPOT_PRICE_DECIMALS).
+    /// @dev Stored as immutable to save gas on every activationFee() call.
+    uint128 public immutable ACTIVATION_FEE_NUMERATOR;
 
     /**
      * @notice Constructor for the `PreFundedFeeAbstraction` extension.
@@ -96,6 +99,10 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
 
         uint64 totalCentsAmount = BASE_ACTIVATION_FEE_CENTS + _activationOverheadFee;
         ACTIVATION_COST = uint64((totalCentsAmount * QUOTE_ASSET_DECIMALS) / 100);
+
+        /// @dev Pre-calculate the numerator for gas efficiency in activationFee() calls.
+        /// @dev u64 * u64 = u128, so no overflow possible.
+        ACTIVATION_FEE_NUMERATOR = ACTIVATION_COST * SPOT_PRICE_DECIMALS;
 
         if (uint256(MAX_USERS_PER_BLOCK) * uint256(QUOTE_ASSET_DECIMALS) > type(uint64).max)
             revert MinUSDAmtGreaterThanU64Max();
@@ -148,7 +155,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
      */
     function activationFee() public view virtual override returns (uint64) {
         uint64 rawPrice = _spotPx(SPOT_PAIR_ID);
-        return (ACTIVATION_COST * SPOT_PRICE_DECIMALS) / rawPrice;
+        return uint64(ACTIVATION_FEE_NUMERATOR / rawPrice);
     }
 
     /**
