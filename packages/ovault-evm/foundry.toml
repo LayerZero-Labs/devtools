@@ -31,5 +31,11 @@ remappings = [
     '@openzeppelin/=node_modules/@openzeppelin/',
 ]
 
+[rpc_endpoints]
+ethereum_mainnet = "https://mainnet.gateway.tenderly.co"
+
 [fuzz]
-runs = 1000
+runs = 128
+
+[profile.ci.fuzz]
+runs = 8
