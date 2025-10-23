@@ -3,6 +3,8 @@ pragma solidity ^0.8.22;
 
 import { IOFT, SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import { IVaultComposerSyncNative } from "./interfaces/IVaultComposerSyncNative.sol";
 import { IWETH } from "./interfaces/IWETH.sol";
@@ -13,13 +15,15 @@ import { VaultComposerSync } from "./VaultComposerSync.sol";
  * @title Synchronous Vault Composer with Stargate NativePools as Asset and WETH as Share
  * @author LayerZero Labs (@shankars99)
  * @dev Extends VaultComposerSync with Pool-specific behavior such as oft.token wrapping
- * @dev WETH is used as the share token for the vault instead of native token (ETH)
- * @dev DepositAndSend and Deposit use WETH instead of native token (ETH)
+ * @dev WETH is used as the asset token for the vault instead of native token (ETH)
+ * @dev DepositAndSend and Deposit use asset token (WETH) instead of native token (ETH)
  * @dev DepositNativeAndSend allows for deposits with ETH
+ * @dev Redemptions always output the asset token (WETH)
  * @dev Compatible with ERC4626 vaults and requires Share OFT to be an adapter
  */
 contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative {
     using OFTComposeMsgCodec for bytes;
+    using SafeERC20 for IERC20;
 
     /**
      * @notice Initializes the VaultComposerSyncPoolNative contract with vault and OFT token addresses
@@ -65,7 +69,7 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
         uint256 _assetAmount,
         SendParam memory _sendParam,
         address _refundAddress
-    ) external payable {
+    ) external payable nonReentrant {
         if (msg.value < _assetAmount) revert AmountExceedsMsgValue();
 
         IWETH(ASSET_ERC20).deposit{ value: _assetAmount }();
@@ -121,8 +125,13 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
         if (IOFT(ASSET_OFT).token() != address(0)) revert AssetOFTTokenNotNative();
 
         /// @dev The asset OFT does NOT need approval since it operates in native ETH.
-        // if (IOFT(ASSET_OFT).approvalRequired()) IERC20(assetERC20).approve(ASSET_OFT, type(uint256).max);
+        // if (IOFT(ASSET_OFT).approvalRequired()) IERC20(assetERC20).forceApprove(ASSET_OFT, type(uint256).max);
 
-        IWETH(assetERC20).approve(address(VAULT), type(uint256).max);
+        IERC20(assetERC20).forceApprove(address(VAULT), type(uint256).max);
+    }
+
+    receive() external payable virtual {
+        /// @dev From ASSET_OFT for NativeOFT::lzReceive and from ASSET_ERC20 for WETH::withdraw
+        if (msg.sender != ASSET_OFT && msg.sender != ASSET_ERC20) revert ETHTransferOnlyFromAssetOFT();
     }
 }

@@ -72,7 +72,4 @@ interface IVaultComposerSync is IOAppComposer {
         uint256 vaultInAmount,
         SendParam memory sendParam
     ) external view returns (MessagingFee memory);
-
-    /// ========================== Receive =====================================
-    receive() external payable;
 }

@@ -404,7 +404,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         if (!IOFT(SHARE_OFT).approvalRequired()) revert ShareOFTNotAdapter(SHARE_OFT);
 
         /// @dev Approve the share adapter with the share tokens held by this contract
-        IERC20(shareERC20).approve(SHARE_OFT, type(uint256).max);
+        IERC20(shareERC20).forceApprove(SHARE_OFT, type(uint256).max);
     }
 
     /**
@@ -422,11 +422,9 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         }
 
         /// @dev If the asset OFT is an adapter, approve it as well
-        if (IOFT(ASSET_OFT).approvalRequired()) IERC20(assetERC20).approve(ASSET_OFT, type(uint256).max);
+        if (IOFT(ASSET_OFT).approvalRequired()) IERC20(assetERC20).forceApprove(ASSET_OFT, type(uint256).max);
 
         /// @dev Approve the vault to spend the asset tokens held by this contract
-        IERC20(assetERC20).approve(address(VAULT), type(uint256).max);
+        IERC20(assetERC20).forceApprove(address(VAULT), type(uint256).max);
     }
-
-    receive() external payable virtual {}
 }
