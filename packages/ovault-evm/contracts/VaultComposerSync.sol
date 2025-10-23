@@ -329,16 +329,15 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @param _oft The OFT contract address to determine which token to transfer
      * @param _sendParam The parameters for the send operation
      * @dev _refundAddress Address to receive excess payment of the LZ fees (unused for local transfers)
-     * @param _msgValue The amount of native tokens sent with the transaction (must be 0 for local transfers)
+     * @dev _msgValue The amount of native tokens sent with the transaction (must be 0 for local transfers)
+                Accidental transfers accumulate in the contract and are locked
      */
     function _sendLocal(
         address _oft,
         SendParam memory _sendParam,
         address /*_refundAddress*/,
-        uint256 _msgValue
+        uint256 /*_msgValue*/
     ) internal virtual {
-        if (_msgValue > 0) revert NoMsgValueExpected();
-
         /// @dev Can do this because _oft is validated before this function is called
         address erc20 = _oft == ASSET_OFT ? ASSET_ERC20 : SHARE_ERC20;
         IERC20(erc20).safeTransfer(_sendParam.to.bytes32ToAddress(), _sendParam.amountLD);
