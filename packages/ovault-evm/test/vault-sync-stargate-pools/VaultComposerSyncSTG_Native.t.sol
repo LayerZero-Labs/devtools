@@ -129,11 +129,18 @@ contract VaultComposerSyncSTG_NativeForkTest is VaultComposerSyncSTG_ERC20ForkTe
         uint256 ethBalanceBefore = address(ethComposer).balance;
 
         vm.deal(address(this), amt);
-        (bool success, ) = payable(address(ethComposer)).call{ value: amt }("");
-        require(success, "ETH transfer failed");
+        (bool success, bytes memory returnData) = payable(address(ethComposer)).call{ value: amt }("");
+
+        // ETH transfers from non-pool addresses should now fail due to receive() restriction
+        assertFalse(success, "ETH transfer from non-pool address should fail");
+
+        // Check that the failure is due to the expected error
+        bytes4 expectedErrorSignature = bytes4(keccak256("ETHTransferOnlyFromAssetOFT()"));
+        bytes4 actualErrorSignature = bytes4(returnData);
+        assertEq(actualErrorSignature, expectedErrorSignature, "Should fail with ETHTransferOnlyFromAssetOFT error");
 
         assertEq(wethBalanceBefore, weth.balanceOf(address(ethComposer)), "WETH should not be wrapped");
-        assertEq(address(ethComposer).balance, ethBalanceBefore + amt, "ETH balance should remain the same");
+        assertEq(address(ethComposer).balance, ethBalanceBefore, "ETH balance should remain unchanged");
     }
 
     /**

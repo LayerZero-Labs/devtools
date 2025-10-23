@@ -6,6 +6,7 @@ import { SendParam } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol"
 interface IVaultComposerSyncNative {
     error AssetOFTTokenNotNative(); // 0xb599c975
     error AmountExceedsMsgValue(); // 0x0f971d59
+    error ETHTransferOnlyFromAssetOFT(); // 0x61c07af9
 
     /**
      * @notice Deposits Native token (ETH) from the caller into the vault and sends them to the recipient
@@ -18,4 +19,7 @@ interface IVaultComposerSyncNative {
         SendParam memory _sendParam,
         address _refundAddress
     ) external payable;
+
+    /// ========================== Receive =====================================
+    receive() external payable;
 }
