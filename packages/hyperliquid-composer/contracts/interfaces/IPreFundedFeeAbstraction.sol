@@ -26,7 +26,10 @@ interface IPreFundedFeeAbstraction {
     error ZeroActivationOverheadFee();
     /// @notice Quote asset decimals exceed safe limit for activation fee calculation.
     error ExcessiveDecimalDifference();
+    /// @notice HYPE activation is not allowed.
     error HYPEActivationNotAllowed();
+    /// @notice Max users can only be incremented.
+    error MaxUsersPerBlockCanOnlyBeIncremented();
 
     /**
      * @notice Emitted when activation fee is collected.
@@ -34,6 +37,9 @@ interface IPreFundedFeeAbstraction {
      * @param amount Activation fee collected in quote asset decimals.
      */
     event FeeCollected(address indexed user, uint256 amount);
+
+    /// @notice Emitted when max users per block is updated.
+    event MaxUsersPerBlockUpdated(uint64 maxUsersPerBlock);
 
     function ACTIVATION_COST() external view returns (uint64);
     function SPOT_PAIR_ID() external view returns (uint64);
@@ -49,4 +55,6 @@ interface IPreFundedFeeAbstraction {
      * @param to Destination address to receive the retrieved quote tokens
      */
     function retrieveQuoteTokens(uint64 coreAmount, address to) external;
+
+    function updateMaxUsersPerBlock(uint64 maxUsersPerBlock) external;
 }

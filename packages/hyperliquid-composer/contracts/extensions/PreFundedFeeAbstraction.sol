@@ -43,7 +43,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     /// @dev USD value of the minimum pre-fund amount. Not scaled to core spot decimals.
     /// @dev The maximum number of transactions that can be fit in a single HyperEVM block.
     /// @dev This is because `spotBalance` returns the same value for all transactions in a HyperEVM block.
-    uint64 private constant MAX_USERS_PER_BLOCK = 50;
+    uint64 public MAX_USERS_PER_BLOCK = 100;
 
     /// @dev Total activation cost in quote token wei (base + overhead). Scaled to core spot decimals.
     uint64 public immutable ACTIVATION_COST;
@@ -156,6 +156,18 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
 
         _submitCoreWriterTransfer(_to, QUOTE_ASSET_INDEX, maxTransferAmt);
         emit Retrieved(QUOTE_ASSET_INDEX, maxTransferAmt, _to);
+    }
+
+    /**
+     * @notice Updates the maximum number of users per block.
+     * @dev Required if hyperliquid increases the block size.
+     * @dev Can only be called by the recovery address
+     * @param _maxUsersPerBlock The new maximum number of users per block
+     */
+    function updateMaxUsersPerBlock(uint64 _maxUsersPerBlock) public virtual onlyRecoveryAddress {
+        if (_maxUsersPerBlock <= MAX_USERS_PER_BLOCK) revert MaxUsersPerBlockCanOnlyBeIncremented();
+        MAX_USERS_PER_BLOCK = _maxUsersPerBlock;
+        emit MaxUsersPerBlockUpdated(MAX_USERS_PER_BLOCK);
     }
 
     /**
