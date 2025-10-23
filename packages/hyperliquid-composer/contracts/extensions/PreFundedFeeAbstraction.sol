@@ -33,6 +33,10 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     /// @dev Hyperliquid protocol constant: spot prices use `MAX_DECIMALS` of 8.
     uint8 internal constant SPOT_PRICE_MAX_DECIMALS = 8;
 
+    /// @dev Maximum safe decimal difference to prevent overflow in activationFee calculation.
+    /// @dev Ensures `ACTIVATION_COST * SPOT_PRICE_DECIMALS` stays within uint64 bounds.
+    uint8 internal constant MAX_DECIMAL_DIFFERENCE = 11;
+
     /// @dev Hyperliquid protocol requires 1 quote token for activation.
     uint64 internal constant BASE_ACTIVATION_FEE_CENTS = 100;
 
@@ -75,6 +79,13 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
 
         TokenInfo memory baseAssetInfo = _tokenInfo(assetIndex);
         TokenInfo memory quoteAssetInfo = _tokenInfo(QUOTE_ASSET_INDEX);
+
+        /// @dev Future-proof: Validate decimals won't cause overflow in activationFee calculation.
+        /// @dev Currently unnecessary given quote assets have fixed weiDecimals=8 and szDecimals=2,
+        ///      but protects against future protocol changes where quote assets might have different decimals.
+        if (quoteAssetInfo.weiDecimals > baseAssetInfo.szDecimals + MAX_DECIMAL_DIFFERENCE) {
+            revert ExcessiveDecimalDifference();
+        }
 
         /// @dev Hyperliquid protocol uses (8 - `szDecimals`) for spot price decimal encoding.
         SPOT_PRICE_DECIMALS = uint64(10 ** (SPOT_PRICE_MAX_DECIMALS - baseAssetInfo.szDecimals));

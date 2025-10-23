@@ -24,6 +24,8 @@ interface IPreFundedFeeAbstraction {
     error MinUSDAmtGreaterThanU64Max();
     /// @notice Activation overhead fee must be greater than 0.
     error ZeroActivationOverheadFee();
+    /// @notice Quote asset decimals exceed safe limit for activation fee calculation.
+    error ExcessiveDecimalDifference();
     error HYPEActivationNotAllowed();
 
     /**
