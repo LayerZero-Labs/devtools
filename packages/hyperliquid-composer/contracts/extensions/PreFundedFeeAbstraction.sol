@@ -155,6 +155,15 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
      */
     function activationFee() public view virtual override returns (uint64) {
         uint64 rawPrice = _spotPx(SPOT_PAIR_ID);
+
+        /// @dev Prevent zero-fee edge case: When rawPrice > ACTIVATION_FEE_NUMERATOR,
+        ///      the division ACTIVATION_FEE_NUMERATOR / rawPrice < 1 rounds down to 0.
+        ///      This would cause silent failures where Core expects payment but contract calculates zero fee.
+        /// @dev Trigger thresholds (ACTIVATION_COST ≈ $1.50):
+        ///      - szDecimals = 0 (min): token_price > $1B USD
+        ///      - szDecimals = 5 (max): token_price > $150M USD (ex: BTC)
+        if (rawPrice > ACTIVATION_FEE_NUMERATOR) revert PriceExceedsActivationFeeNumerator(rawPrice);
+
         return uint64(ACTIVATION_FEE_NUMERATOR / rawPrice);
     }
 

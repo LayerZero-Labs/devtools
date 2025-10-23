@@ -34,6 +34,8 @@ interface IPreFundedFeeAbstraction {
     error CannotActivateOnFeeWithdrawalBlock();
     /// @notice Insufficient core balance for activation.
     error InsufficientCoreBalance(uint64 coreBalance, uint256 requiredCoreBalance);
+    /// @notice Spot price exceeds activation fee numerator, which would cause fee to round to zero.
+    error PriceExceedsActivationFeeNumerator(uint64 rawPrice);
 
     /**
      * @notice Emitted when activation fee is collected.
