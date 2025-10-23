@@ -24,6 +24,7 @@ interface IPreFundedFeeAbstraction {
     error MinUSDAmtGreaterThanU64Max();
     /// @notice Activation overhead fee must be greater than 0.
     error ZeroActivationOverheadFee();
+    error HYPEActivationNotAllowed();
 
     /**
      * @notice Emitted when activation fee is collected.

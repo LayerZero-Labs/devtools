@@ -99,12 +99,14 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
             _amountLD
         );
 
+        bool isActivated = coreUserExists(_to).exists;
+
         if (amounts.evm != 0) {
             uint64 originalAmount = amounts.core;
             uint64 coreAmount = _getFinalCoreAmount(_to, originalAmount);
 
-            /// @dev When the user is not activated we collect the activation fee.
-            if (originalAmount > coreAmount) {
+            /// @dev When user is activated originalAmount = coreAmount, so no fee is collected.
+            if (isActivated) {
                 uint64 coreBalance = spotBalance(address(this), QUOTE_ASSET_INDEX).total;
                 /// @dev Otherwise, this could revert silently if multiple users try to activate in the same block.
                 if (coreBalance < (MAX_USERS_PER_BLOCK * QUOTE_ASSET_DECIMALS)) {
@@ -117,6 +119,8 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
 
             IERC20(ERC20).safeTransfer(ERC20_ASSET_BRIDGE, amounts.evm);
             _submitCoreWriterTransfer(_to, ERC20_CORE_INDEX_ID, coreAmount);
+        } else {
+            if (msg.value > 0 && isActivated) revert HYPEActivationNotAllowed();
         }
     }
 
