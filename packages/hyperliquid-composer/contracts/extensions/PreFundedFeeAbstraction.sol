@@ -133,10 +133,10 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
                 if (block.number == feeWithdrawalBlockNumber) revert CannotActivateOnFeeWithdrawalBlock();
 
                 uint64 coreBalance = spotBalance(address(this), QUOTE_ASSET_INDEX).total;
+
                 /// @dev Otherwise, this could revert silently if multiple users try to activate in the same block.
-                if (coreBalance < (maxUsersPerBlock * QUOTE_ASSET_DECIMALS)) {
-                    revert InsufficientCoreAmountForActivation();
-                }
+                uint256 requiredCoreBalance = maxUsersPerBlock * QUOTE_ASSET_DECIMALS;
+                if (coreBalance < requiredCoreBalance) revert InsufficientCoreBalance(coreBalance, requiredCoreBalance);
 
                 uint64 feeCollected = originalAmount - coreAmount;
                 emit FeeCollected(_to, feeCollected);

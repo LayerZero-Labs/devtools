@@ -32,7 +32,8 @@ interface IPreFundedFeeAbstraction {
     error MaxUsersPerBlockCanOnlyBeIncremented();
     /// @notice Cannot activate on fee withdrawal block.
     error CannotActivateOnFeeWithdrawalBlock();
-    error InsufficientCoreBalanceForActivation();
+    /// @notice Insufficient core balance for activation.
+    error InsufficientCoreBalance(uint64 coreBalance, uint256 requiredCoreBalance);
 
     /**
      * @notice Emitted when activation fee is collected.
