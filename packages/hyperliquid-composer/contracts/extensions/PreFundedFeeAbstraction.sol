@@ -45,6 +45,9 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     /// @dev This is because `spotBalance` returns the same value for all transactions in a HyperEVM block.
     uint64 public MAX_USERS_PER_BLOCK = 100;
 
+    /// @dev If fee is withdrawn on a block revert all activations
+    uint256 public feeWithdrawalBlockNumber = 0;
+
     /// @dev Total activation cost in quote token wei (base + overhead). Scaled to core spot decimals.
     uint64 public immutable ACTIVATION_COST;
 
@@ -118,6 +121,10 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
 
             /// @dev When user is activated originalAmount = coreAmount, so no fee is collected.
             if (isActivated) {
+                /// @dev If fee is withdrawn on a block revert all activations
+                /// @dev Transactions executed before the fee withdrawal tx will be activated
+                if (block.number == feeWithdrawalBlockNumber) revert CannotActivateOnFeeWithdrawalBlock();
+
                 uint64 coreBalance = spotBalance(address(this), QUOTE_ASSET_INDEX).total;
                 /// @dev Otherwise, this could revert silently if multiple users try to activate in the same block.
                 if (coreBalance < (MAX_USERS_PER_BLOCK * QUOTE_ASSET_DECIMALS)) {
@@ -155,6 +162,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
         uint64 maxTransferAmt = _getMaxTransferAmount(QUOTE_ASSET_INDEX, _coreAmount);
 
         _submitCoreWriterTransfer(_to, QUOTE_ASSET_INDEX, maxTransferAmt);
+        feeWithdrawalBlockNumber = block.number;
         emit Retrieved(QUOTE_ASSET_INDEX, maxTransferAmt, _to);
     }
 

@@ -30,6 +30,8 @@ interface IPreFundedFeeAbstraction {
     error HYPEActivationNotAllowed();
     /// @notice Max users can only be incremented.
     error MaxUsersPerBlockCanOnlyBeIncremented();
+    /// @notice Cannot activate on fee withdrawal block.
+    error CannotActivateOnFeeWithdrawalBlock();
 
     /**
      * @notice Emitted when activation fee is collected.
