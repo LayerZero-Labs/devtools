@@ -22,19 +22,25 @@ const deploy: DeployFunction = async (hre) => {
     const lzNetworkName = endpointIdToNetwork(eid)
     const { address: endpointAddress } = getDeploymentAddressAndAbi(lzNetworkName, 'EndpointV2')
 
-    await deployProxyAdmin({
+    const { address: proxyAdminAddress } = await deployProxyAdmin({
         hre,
-        deployer,
-        owner: deployer,
-        skipIfAlreadyDeployed: true,
+        deployOptions: {
+            from: deployer,
+            args: [deployer], // owner
+            skipIfAlreadyDeployed: true,
+        },
+        deploymentName: contractName,
     })
 
     const { address: implementationAddress } = await deployImplementation({
         hre,
-        contractName,
-        deployer,
-        args: [endpointAddress],
-        skipIfAlreadyDeployed: true,
+        deployOptions: {
+            from: deployer,
+            args: [endpointAddress], // constructor arguments
+            skipIfAlreadyDeployed: true,
+            contract: contractName,
+        },
+        deploymentName: contractName,
     })
 
     const initializeInterface = new hre.ethers.utils.Interface([
@@ -42,18 +48,19 @@ const deploy: DeployFunction = async (hre) => {
     ])
     const initializeData = initializeInterface.encodeFunctionData('initialize', ['MyOFT', 'MOFT', deployer])
 
-    await deployProxy({
+    const { address: proxyAddress } = await deployProxy({
         hre,
-        contractName,
-        deployer,
-        implementationAddress,
-        initializeData,
-        skipIfAlreadyDeployed: true,
+        deployOptions: {
+            from: deployer,
+            args: [implementationAddress, proxyAdminAddress, initializeData], // initialize arguments
+            skipIfAlreadyDeployed: true,
+        },
+        deploymentName: contractName,
     })
 
     await saveCombinedDeployment({ hre, deploymentName: contractName })
 }
 
-deploy.tags = [contractName]
+deploy.tags = ['new']
 
 export default deploy
