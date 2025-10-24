@@ -9,7 +9,7 @@ artifacts/*
 !artifacts/VaultComposerSync_E2E.t.sol
 !artifacts/VaultComposerSync_ProxySend.t.sol
 !artifacts/VaultComposerSync_Unit.t.sol
-
+!artifacts/VaultComposerSyncDepositOnly.sol/
 
 # sdk 
 .env
