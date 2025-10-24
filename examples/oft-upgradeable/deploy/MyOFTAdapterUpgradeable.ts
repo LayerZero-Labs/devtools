@@ -33,6 +33,7 @@ const deploy: DeployFunction = async (hre) => {
         contractName,
         deployer,
         owner: deployer,
+        skipIfAlreadyDeployed: true,
     })
 
     const { address: implementationAddress } = await deployImplementation({
@@ -40,6 +41,7 @@ const deploy: DeployFunction = async (hre) => {
         contractName,
         deployer,
         args: [tokenAddress, endpointAddress],
+        skipIfAlreadyDeployed: true,
     })
 
     const initializeInterface = new hre.ethers.utils.Interface(['function initialize(address delegate)'])
@@ -52,6 +54,7 @@ const deploy: DeployFunction = async (hre) => {
         implementationAddress,
         proxyAdminAddress,
         initializeData,
+        skipIfAlreadyDeployed: true,
     })
 
     await saveCombinedDeployment({ hre, contractName })

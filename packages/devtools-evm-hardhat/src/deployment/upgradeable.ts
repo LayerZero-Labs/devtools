@@ -16,11 +16,13 @@ export async function deployProxyAdmin({
     contractName,
     deployer,
     owner = deployer,
+    skipIfAlreadyDeployed = true,
 }: {
     hre: HardhatRuntimeEnvironment
     contractName: string
     deployer: string
     owner?: string
+    skipIfAlreadyDeployed?: boolean
 }): Promise<DeployResult> {
     const { deploy } = hre.deployments
 
@@ -35,7 +37,7 @@ export async function deployProxyAdmin({
         args: [owner],
         log: true,
         waitConfirmations: 1,
-        skipIfAlreadyDeployed: true,
+        skipIfAlreadyDeployed,
     })
 }
 
@@ -54,11 +56,13 @@ export async function deployImplementation({
     contractName,
     deployer,
     args,
+    skipIfAlreadyDeployed = true,
 }: {
     hre: HardhatRuntimeEnvironment
     contractName: string
     deployer: string
     args: unknown[]
+    skipIfAlreadyDeployed?: boolean
 }): Promise<DeployResult> {
     const { deploy } = hre.deployments
 
@@ -70,7 +74,7 @@ export async function deployImplementation({
         args,
         log: true,
         waitConfirmations: 1,
-        skipIfAlreadyDeployed: true,
+        skipIfAlreadyDeployed,
     })
 }
 
@@ -93,6 +97,7 @@ export async function deployProxy({
     implementationAddress,
     proxyAdminAddress,
     initializeData,
+    skipIfAlreadyDeployed = true,
 }: {
     hre: HardhatRuntimeEnvironment
     contractName: string
@@ -100,6 +105,7 @@ export async function deployProxy({
     implementationAddress: string
     proxyAdminAddress: string
     initializeData: string
+    skipIfAlreadyDeployed?: boolean
 }): Promise<DeployResult> {
     const { deploy } = hre.deployments
 
@@ -114,7 +120,7 @@ export async function deployProxy({
         args: [implementationAddress, proxyAdminAddress, initializeData],
         log: true,
         waitConfirmations: 1,
-        skipIfAlreadyDeployed: true,
+        skipIfAlreadyDeployed,
     })
 }
 
