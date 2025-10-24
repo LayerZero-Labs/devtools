@@ -30,12 +30,8 @@ contract VaultComposerSyncDepositOnly is VaultComposerSync {
     ) VaultComposerSync(_vault, _assetOFT, _shareOFT) {}
 
     /**
-     * @notice Cross-chain redemptions are disabled for ethena's sUSDe vault
-     * @dev Users should interact with the vault directly for redemption 
-     * @dev Ethena vaults operate with a 2 step redemption which is not supported in synchronous vaults
-     * @dev Functions that are disabled: 
-            1. lzCompose(..args) to redeem 
-            2. redeemAndShare(..args)
+     * @notice Cross-chain redemptions are disabled for this vault
+     * @dev Users should interact with the vault directly for redemption
      */
     function _redeem(
         bytes32 /*_redeemer*/,
