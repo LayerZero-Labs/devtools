@@ -53,15 +53,6 @@ interface IRecoverableComposer {
     function retrieveCoreHYPE(uint64 _coreAmount) external;
 
     /**
-     * @notice Retrieves USDC tokens from HyperCore to a specified address
-     * @dev Transfers USDC tokens from the composer's HyperCore balance to the specified address
-     * @dev Can only be called by the recovery address
-     * @param _coreAmount Amount of USDC tokens to retrieve in HyperCore decimals, or FULL_TRANSFER for all
-     * @param _to Destination address to receive the retrieved USDC tokens
-     */
-    function retrieveCoreUSDC(uint64 _coreAmount, address _to) external;
-
-    /**
      * @notice Recovers ERC20 tokens from HyperEVM to the recovery address
      * @dev Convenience function that recovers tokens to the recovery address
      * @dev Can only be called by the recovery address
