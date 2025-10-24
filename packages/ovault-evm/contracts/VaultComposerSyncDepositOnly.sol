@@ -6,8 +6,8 @@ import { VaultComposerSync } from "./VaultComposerSync.sol";
 /**
  * @title VaultComposerSyncDepositOnly
  * @author LayerZero Labs (@ravinagill15)
- * @notice Cross-chain vault composer enabling omnichain vault operations via LayerZero
- * @notice This composer only supports Deposit actions. Redemption is disabled and will revert
+ * @notice Cross-chain vault composer enabling omnichain vault operations via LayerZero.
+ * @notice This composer only supports Deposit actions. Redemption is disabled and will revert.
  *
  * @dev IMPORTANT: This contract intentionally disables redemption functionality by overriding _redeem()
  *      to always revert. This causes unreachable code warnings in the parent VaultComposerSync
@@ -17,11 +17,15 @@ contract VaultComposerSyncDepositOnly is VaultComposerSync {
     error RedemptionDisabled();
 
     /**
-     * @notice Creates a new cross-chain vault composer
-     * @dev Initializes the composer with vault and OFT contracts for omnichain operations
-     * @param _vault The vault contract implementing ERC4626 for deposit/redeem operations
-     * @param _assetOFT The OFT contract for cross-chain asset transfers
-     * @param _shareOFT The OFT contract for cross-chain share transfers
+     * @notice Initializes the VaultComposerSyncDepositOnly contract with vault and OFT token addresses.
+     * @param _vault The address of the ERC4626 vault contract
+     * @param _assetOFT The address of the asset OFT (Omnichain Fungible Token) contract
+     * @param _shareOFT The address of the share OFT contract (must be an adapter)
+     *
+     * Requirements:
+     * - Share token must be the vault itself
+     * - Asset token should match the vault's underlying asset (overridable behavior)
+     * - Share OFT must be an adapter (approvalRequired() returns true)
      */
     constructor(
         address _vault,
@@ -30,14 +34,17 @@ contract VaultComposerSyncDepositOnly is VaultComposerSync {
     ) VaultComposerSync(_vault, _assetOFT, _shareOFT) {}
 
     /**
-     * @notice Cross-chain redemptions are disabled for this vault
-     * @dev Users should interact with the vault directly for redemption
+     * @notice Redemptions are disabled for this vault.
+     * @dev Users should interact with the vault directly for redemption.
+     *      When called via redeemAndSend, this will revert atomically, preventing the redemption.
+     *      When called via lzCompose during cross-chain operations, the revert will trigger
+     *      a refund back to the original source chain.
      */
     function _redeem(
         bytes32 /*_redeemer*/,
         uint256 /*_shareAmount*/
     ) internal pure override returns (uint256 /*assetAmount*/) {
-        // Disable redemption to prevent cross-chain redemptions
+        /// @dev Disable all redemptions
         revert RedemptionDisabled();
     }
 }
