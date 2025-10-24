@@ -1,4 +1,4 @@
-import { DeployResult } from 'hardhat-deploy/dist/types'
+import { DeployResult, DeployOptions } from 'hardhat-deploy/dist/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 /**
@@ -19,16 +19,12 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
  */
 export async function deployProxyAdmin({
     hre,
-    deployer,
-    deploymentName = 'Default',
-    owner = deployer,
-    skipIfAlreadyDeployed = true,
+    deployOptions,
+    deploymentName,
 }: {
     hre: HardhatRuntimeEnvironment
+    deployOptions: DeployOptions
     deploymentName?: string
-    deployer: string
-    owner?: string
-    skipIfAlreadyDeployed?: boolean
 }): Promise<DeployResult> {
     const { deploy } = hre.deployments
 
@@ -36,16 +32,14 @@ export async function deployProxyAdmin({
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const proxyAdminContract = require('hardhat-deploy/extendedArtifacts/ProxyAdmin.json')
 
-    const fileName = deploymentName + 'ProxyAdmin'
-    await checkDeploymentExists(hre, fileName)
+    const proxyAdminFileName = deploymentName ? deploymentName + '_ProxyAdmin' : 'DefaultProxyAdmin'
+    await checkDeploymentExists(hre, proxyAdminFileName)
 
-    return await deploy(fileName, {
-        from: deployer,
+    return await deploy(proxyAdminFileName, {
         contract: proxyAdminContract,
-        args: [owner],
         log: true,
         waitConfirmations: 1,
-        skipIfAlreadyDeployed,
+        ...deployOptions,
     })
 }
 
@@ -64,32 +58,21 @@ export async function deployProxyAdmin({
  */
 export async function deployImplementation({
     hre,
-    deployer,
-    contractName,
-    args,
-    deploymentName = contractName,
-    skipIfAlreadyDeployed = true,
+    deployOptions,
+    deploymentName,
 }: {
     hre: HardhatRuntimeEnvironment
-    contractName: string
-    deployer: string
-    args: unknown[]
+    deployOptions: DeployOptions
     deploymentName?: string
-    skipIfAlreadyDeployed?: boolean
 }): Promise<DeployResult> {
     const { deploy } = hre.deployments
-    const fileName = deploymentName + '_Implementation'
-
-    await checkDeploymentExists(hre, fileName)
-
-    return await deploy(fileName, {
-        from: deployer,
-        contract: contractName,
-        args,
-        log: true,
-        waitConfirmations: 1,
-        skipIfAlreadyDeployed,
-    })
+    const fileName = deploymentName || deployOptions.contract
+    if (!fileName) {
+        throw new Error('deploymentName or deployOptions.contract is required')
+    }
+    const resolvedContractName = fileName + '_Implementation'
+    await checkDeploymentExists(hre, resolvedContractName)
+    return await deploy(resolvedContractName, { log: true, waitConfirmations: 1, ...deployOptions })
 }
 
 /**
@@ -112,51 +95,27 @@ export async function deployImplementation({
  */
 export async function deployProxy({
     hre,
-    contractName,
-    deploymentName = contractName,
-    deployer,
-    implementationAddress,
-    proxyAdminAddress,
-    proxyAdminDeploymentName,
-    initializeData,
-    skipIfAlreadyDeployed = true,
+    deployOptions,
+    deploymentName,
 }: {
     hre: HardhatRuntimeEnvironment
-    contractName: string
-    deploymentName?: string
-    deployer: string
-    implementationAddress: string
-    proxyAdminAddress?: string
-    proxyAdminDeploymentName?: string
-    initializeData: string
-    skipIfAlreadyDeployed?: boolean
+    deployOptions: DeployOptions
+    deploymentName: string
 }): Promise<DeployResult> {
     const { deploy } = hre.deployments
-
-    // Resolve ProxyAdmin address
-    let resolvedProxyAdminAddress: string
-    if (proxyAdminAddress) {
-        resolvedProxyAdminAddress = proxyAdminAddress
-    } else {
-        // Auto-resolve ProxyAdmin deployment name by appending 'ProxyAdmin' to deploymentName
-        const autoProxyAdminName = (proxyAdminDeploymentName || 'Default') + 'ProxyAdmin'
-        const proxyAdminDeployment = await hre.deployments.get(autoProxyAdminName)
-        resolvedProxyAdminAddress = proxyAdminDeployment.address
-    }
 
     // Use require for JSON to avoid ES module import assertion issues
     // Using TransparentUpgradeableProxy to match hardhat-deploy's default behavior
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const proxyContract = require('hardhat-deploy/extendedArtifacts/TransparentUpgradeableProxy.json')
-    const proxyName = deploymentName + '_Proxy'
-    await checkDeploymentExists(hre, proxyName)
-    return await deploy(proxyName, {
-        from: deployer,
+
+    const proxyFileName = deploymentName + '_Proxy'
+    await checkDeploymentExists(hre, proxyFileName)
+    return await deploy(proxyFileName, {
         contract: proxyContract,
-        args: [implementationAddress, resolvedProxyAdminAddress, initializeData],
         log: true,
         waitConfirmations: 1,
-        skipIfAlreadyDeployed,
+        ...deployOptions,
     })
 }
 
