@@ -175,6 +175,10 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
      * @param _to Destination address to receive the retrieved quote tokens
      */
     function retrieveQuoteTokens(uint64 _coreAmount, address _to) public virtual onlyRecoveryAddress {
+        /// @dev Balance reads are asynchronous: spotBalance() returns the state from the previous HyperCore block.
+        ///      If activation txs executed earlier in this block (ex: tx 1-4) and this withdrawal is later (ex: tx 5),
+        ///      those activations consumed quote tokens but the balance reduction won't be visible until next block.
+        ///      Withdrawing the full visible balance may fail on Core since actual balance is already lower.
         uint64 maxTransferAmt = _getMaxTransferAmount(QUOTE_ASSET_INDEX, _coreAmount);
 
         _submitCoreWriterTransfer(_to, QUOTE_ASSET_INDEX, maxTransferAmt);
