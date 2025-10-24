@@ -120,14 +120,14 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
             _amountLD
         );
 
-        bool isActivated = coreUserExists(_to).exists;
+        bool shouldActivate = !coreUserExists(_to).exists;
 
         if (amounts.evm != 0) {
             uint64 originalAmount = amounts.core;
             uint64 coreAmount = _getFinalCoreAmount(_to, originalAmount);
 
             /// @dev When user is activated originalAmount = coreAmount, so no fee is collected.
-            if (isActivated) {
+            if (shouldActivate) {
                 /// @dev If fee is withdrawn on a block revert all activations
                 /// @dev Transactions executed before the fee withdrawal tx will be activated
                 if (block.number == feeWithdrawalBlockNumber) revert CannotActivateOnFeeWithdrawalBlock();
@@ -145,7 +145,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
             IERC20(ERC20).safeTransfer(ERC20_ASSET_BRIDGE, amounts.evm);
             _submitCoreWriterTransfer(_to, ERC20_CORE_INDEX_ID, coreAmount);
         } else {
-            if (msg.value > 0 && isActivated) revert HYPEActivationNotAllowed();
+            if (msg.value > 0 && shouldActivate) revert HYPEActivationNotAllowed();
         }
     }
 
