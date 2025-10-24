@@ -22,9 +22,8 @@ const deploy: DeployFunction = async (hre) => {
     const lzNetworkName = endpointIdToNetwork(eid)
     const { address: endpointAddress } = getDeploymentAddressAndAbi(lzNetworkName, 'EndpointV2')
 
-    const { address: proxyAdminAddress } = await deployProxyAdmin({
+    await deployProxyAdmin({
         hre,
-        contractName,
         deployer,
         owner: deployer,
         skipIfAlreadyDeployed: true,
@@ -48,12 +47,11 @@ const deploy: DeployFunction = async (hre) => {
         contractName,
         deployer,
         implementationAddress,
-        proxyAdminAddress,
         initializeData,
         skipIfAlreadyDeployed: true,
     })
 
-    await saveCombinedDeployment({ hre, contractName })
+    await saveCombinedDeployment({ hre, deploymentName: contractName })
 }
 
 deploy.tags = [contractName]

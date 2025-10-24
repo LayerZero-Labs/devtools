@@ -30,7 +30,6 @@ const deploy: DeployFunction = async (hre) => {
 
     const { address: proxyAdminAddress } = await deployProxyAdmin({
         hre,
-        contractName,
         deployer,
         owner: deployer,
         skipIfAlreadyDeployed: true,
@@ -57,7 +56,7 @@ const deploy: DeployFunction = async (hre) => {
         skipIfAlreadyDeployed: true,
     })
 
-    await saveCombinedDeployment({ hre, contractName })
+    await saveCombinedDeployment({ hre, deploymentName: contractName })
 }
 
 deploy.tags = [contractName]
