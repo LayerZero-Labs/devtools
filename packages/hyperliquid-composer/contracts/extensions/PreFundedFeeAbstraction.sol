@@ -63,7 +63,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     /// @dev USD value of the minimum pre-fund amount. Not scaled to core spot decimals.
     /// @dev The maximum number of transactions that can be fit in a single HyperEVM block.
     /// @dev This is because `spotBalance` returns the same value for all transactions in a HyperEVM block.
-    uint64 public maxUsersPerBlock = 100;
+    uint64 public maxUsersPerBlock = 50;
 
     /**
      * @notice Constructor for the `PreFundedFeeAbstraction` extension.
