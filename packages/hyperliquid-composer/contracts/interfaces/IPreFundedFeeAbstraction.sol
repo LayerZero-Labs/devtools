@@ -40,7 +40,7 @@ interface IPreFundedFeeAbstraction {
     /**
      * @notice Emitted when activation fee is collected.
      * @param user Address to be activated in HyperCore.
-     * @param amount Activation fee collected in quote asset decimals.
+     * @param amount Activation fee collected in core asset decimals (base asset units).
      */
     event FeeCollected(address indexed user, uint256 amount);
 
