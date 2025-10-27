@@ -78,7 +78,21 @@ export function localDecimalsToMaxSupply(localDecimals: number): bigint {
     return U64_MAX / scalingFactor
 }
 
-/** Formats a whole-token amount into a compact human-readable form using K/M/B/T. */
+/**
+ * Format a whole-token amount into a compact human-readable string using
+ * unit suffixes: K (thousand), M (million), B (billion), T (trillion).
+ *
+ * Behavior:
+ * - Values < 1000 are returned as a plain whole number string (no suffix).
+ * - Rounds half up to the requested precision, but avoids unit roll-over by
+ *   increasing fractional precision up to 6 when needed. For example,
+ *   999_950_000_000 will render as "999.95B" instead of promoting to "1T".
+ *
+ * @param whole The whole-token quantity to format.
+ * @param maxDisplayDecimals Fractional digits to include (0–6). Default 1.
+ * @returns Human-readable string such as "18.4B", "1.0T", or "842".
+ * @throws Error if maxDisplayDecimals is not an integer in [0, 6].
+ */
 export function formatAmount(whole: bigint, maxDisplayDecimals = 1): string {
     if (!Number.isInteger(maxDisplayDecimals) || maxDisplayDecimals < 0 || maxDisplayDecimals > 6) {
         throw new Error('precision must be an integer between 0 and 6')
@@ -87,26 +101,33 @@ export function formatAmount(whole: bigint, maxDisplayDecimals = 1): string {
     for (let i = 0; i < UNITS.length; i++) {
         const { base, suffix } = UNITS[i]
         if (whole >= base) {
-            const pow = 10n ** BigInt(maxDisplayDecimals)
-            let scaled = (whole * pow + base / 2n) / base
-            let intPart = scaled / pow
-
-            if (intPart >= 1000n && i === 1) {
-                const higher = UNITS[0]
-                scaled = (whole * pow + higher.base / 2n) / higher.base
-                intPart = scaled / pow
-                const frac = scaled % pow
-                const fracStr =
-                    maxDisplayDecimals === 0 ? '' : frac.toString().padStart(maxDisplayDecimals, '0').replace(/0+$/, '')
-                return fracStr ? `${intPart}.${fracStr}${higher.suffix}` : `${intPart}${higher.suffix}`
+            // Try increasing precision up to 6 to avoid rolling over to the next unit
+            for (let decimals = maxDisplayDecimals; decimals <= 6; decimals++) {
+                const pow = 10n ** BigInt(decimals)
+                const scaled = (whole * pow + base / 2n) / base // round half up
+                const intPart = scaled / pow
+                if (intPart < 1000n) {
+                    const frac = scaled % pow
+                    const fracStr = decimals === 0 ? '' : frac.toString().padStart(decimals, '0').replace(/0+$/, '')
+                    return fracStr ? `${intPart}.${fracStr}${suffix}` : `${intPart}${suffix}`
+                }
             }
-
+            // If still >= 1000 after max precision, promote to the next unit (or keep at topmost)
+            const next = i - 1 >= 0 ? UNITS[i - 1] : UNITS[i]
+            const baseNext = next.base
+            const suffixNext = next.suffix
+            const pow = 10n ** BigInt(Math.max(maxDisplayDecimals, 1))
+            const scaled = (whole * pow + baseNext / 2n) / baseNext
+            const intPart = scaled / pow
             const frac = scaled % pow
-            const fracStr =
-                maxDisplayDecimals === 0 ? '' : frac.toString().padStart(maxDisplayDecimals, '0').replace(/0+$/, '')
-            return fracStr ? `${intPart}.${fracStr}${suffix}` : `${intPart}${suffix}`
+            const fracStr = frac
+                .toString()
+                .padStart(Number(pow.toString().length - 1), '0')
+                .replace(/0+$/, '')
+            return fracStr ? `${intPart}.${fracStr}${suffixNext}` : `${intPart}${suffixNext}`
         }
     }
 
+    // < 1K -> show plain whole number
     return whole.toString()
 }
