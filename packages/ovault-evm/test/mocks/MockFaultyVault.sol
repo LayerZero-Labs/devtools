@@ -7,9 +7,9 @@ import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.s
 
 /**
  * @title MockFaultyVault
- * @notice A faulty ERC4626 vault implementation that simulates async behavior by giving 0 tokens
+ * @notice A faulty ERC4626 vault implementation that simulates async behavior by not transferring tokens
  * @dev This mock is designed to test slippage protection in vault operations
- *      - On deposit: Mints expected shares but transfers 0 tokens (async deposit)
+ *      - On deposit: Transfers expected assets but mints 0 shares (async deposit)
  *      - On redeem: Burns shares but transfers 0 assets (async redeem)
  */
 contract MockFaultyVault is ERC4626 {
