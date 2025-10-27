@@ -57,10 +57,10 @@ contract VaultComposerSyncSlippageProtectionTest is VaultComposerSyncBaseTest {
     }
 
     /**
-     * @notice Test async deposit slippage protection with user-defined minAmountLD
+     * @notice Test depositAndSend reverts when received shares are under minAmountLD slippage protection
      * @dev Faulty vault gives 0 shares immediately (async), balance check should catch this
      */
-    function test_async_deposit_insufficient_shares_reverts() public {
+    function test_depositAndSend_Revert_UnderSlippage() public {
         uint256 assetAmount = 1000 ether;
         uint256 expectedShares = faultyVault.previewDeposit(assetAmount); // 1000 shares expected
 
@@ -95,10 +95,10 @@ contract VaultComposerSyncSlippageProtectionTest is VaultComposerSyncBaseTest {
     }
 
     /**
-     * @notice Test async deposit succeeds when user accepts 0 tokens (realistic for async vault)
+     * @notice Test depositAndSend succeeds when minAmountLD is set to zero (accepts async vault behavior)
      * @dev User sets minAmountLD = 0, accepting async behavior where tokens come later
      */
-    function test_async_deposit_succeeds_with_minAmountLD_zero() public {
+    function test_depositAndSend_Succeed_ZeroSlippage() public {
         uint256 assetAmount = 1000 ether;
 
         // Fund user and approve
@@ -124,10 +124,10 @@ contract VaultComposerSyncSlippageProtectionTest is VaultComposerSyncBaseTest {
     }
 
     /**
-     * @notice Test async redeem slippage protection with user-defined minAmountLD
+     * @notice Test redeemAndSend reverts when received assets are under minAmountLD slippage protection
      * @dev Faulty vault gives 0 assets immediately (async), balance check should catch this
      */
-    function test_async_redeem_insufficient_assets_reverts() public {
+    function test_redeemAndSend_Revert_UnderSlippage() public {
         uint256 shareAmount = 1000 ether;
 
         // Mint shares to user (1:1 ratio with initial bootstrap)
@@ -166,10 +166,10 @@ contract VaultComposerSyncSlippageProtectionTest is VaultComposerSyncBaseTest {
     }
 
     /**
-     * @notice Test async redeem succeeds when user accepts 0 tokens (realistic for async vault)
+     * @notice Test redeemAndSend succeeds when minAmountLD is set to zero (accepts async vault behavior)
      * @dev User sets minAmountLD = 0, accepting async behavior where tokens come later
      */
-    function test_async_redeem_succeeds_with_minAmountLD_zero() public {
+    function test_redeemAndSend_Succeed_ZeroSlippage() public {
         uint256 shareAmount = 1000 ether;
 
         // Mint shares to user (1:1 ratio with initial bootstrap)
