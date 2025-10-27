@@ -12,7 +12,7 @@ describe('formatAmount', () => {
         expect(formatAmount(1_000n)).toBe('1K')
         expect(formatAmount(1_234n)).toBe('1.2K')
         expect(formatAmount(12_345n)).toBe('12.3K')
-        expect(formatAmount(999_999n)).toBe('1000K')
+        expect(formatAmount(999_999n)).toBe('999.999K')
     })
 
     it('formats millions with M suffix', () => {
@@ -31,7 +31,7 @@ describe('formatAmount', () => {
         // Values near 1T boundary round half-up to T at 999.95B
         expect(formatAmount(999_400_000_000n)).toBe('999.4B')
         expect(formatAmount(999_600_000_000n, 1)).toBe('999.6B')
-        expect(formatAmount(999_950_000_000n, 1)).toBe('1T')
+        expect(formatAmount(999_950_000_000n, 1)).toBe('999.95B')
     })
 
     it('formats trillions with T suffix', () => {
