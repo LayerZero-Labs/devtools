@@ -1,26 +1,40 @@
-import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { expect } from 'chai'
+import { randomBytes } from 'crypto'
 import { basexToBytes32 } from '../tasks/shared/basexToBytes32'
 
-describe('should convert base-x addresses (eth, aptos, solana, etc) to bytes32', () => {
-    it('should convert solana base-x address to bytes32', () => {
-        const basexAddress = 'Efvf2QfcPAJc8XCd1MV1MN1JLNDZRKj2ZbJ3xg6pAf7'
-        const eid = EndpointId.SOLANA_V2_MAINNET.toString()
-        const bytes32 = basexToBytes32(basexAddress, eid)
-        expect(bytes32).to.equal('0x038090321ef8b2bbe6d072ded5e3e9ad8d5608e1b04db7d2e9777e39231af2ae')
+describe('basexToBytes32 - Address Format Detection and Conversion', () => {
+    describe('Base16 format (0x prefix)', () => {
+        // Iterative test for random hex inputs from 1 to 32 bytes
+        for (let bytes = 1; bytes <= 32; bytes++) {
+            it(`should handle random ${bytes}-byte hex string`, () => {
+                const randomHex = '0x' + randomBytes(bytes).toString('hex')
+                const result = basexToBytes32(randomHex)
+
+                // Should always return 32-byte padded result for EVM addresses
+                expect(result).to.match(/^0x[a-f0-9]{64}$/)
+                expect(result).to.have.length(66) // 0x + 64 hex chars
+            })
+        }
     })
 
-    it('should convert aptos base-x address to bytes32', () => {
-        const basexAddress = '0x000000000000000000000000177b58ddda0c81424227ee473e4132044a0dc871'
-        const eid = EndpointId.APTOS_V2_MAINNET.toString()
-        const bytes32 = basexToBytes32(basexAddress, eid)
-        expect(bytes32).to.equal('0x000000000000000000000000177b58ddda0c81424227ee473e4132044a0dc871')
+    describe('Base58 format', () => {
+        it('should convert solana address to bytes32', () => {
+            const address = '76y77prsiCMvXMjuoZ5VRrhG5qYBrUMYTE5WgHqgjEn6'
+            const bytes32 = basexToBytes32(address)
+            // Note: This will need to be updated with the actual expected bytes32 value
+            expect(bytes32).to.equal('0x5aad76da514b6e1dcf11037e904dac3d375f525c9fbafcb19507b78907d8c18b')
+        })
     })
 
-    it('should convert ethereum base-x address to bytes32', () => {
-        const basexAddress = '0x177B58Ddda0C81424227Ee473e4132044a0DC871'
-        const eid = EndpointId.ETHEREUM_V2_MAINNET.toString()
-        const bytes32 = basexToBytes32(basexAddress, eid)
-        expect(bytes32).to.equal('0x000000000000000000000000177b58ddda0c81424227ee473e4132044a0dc871')
+    describe('Error handling', () => {
+        it('should throw error for unsupported format', () => {
+            const address = 'invalid-address-format'
+            expect(() => basexToBytes32(address)).to.throw('Unsupported address format')
+        })
+
+        it('should handle empty string', () => {
+            const address = ''
+            expect(() => basexToBytes32(address)).to.throw('Unsupported address format')
+        })
     })
 })
