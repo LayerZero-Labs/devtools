@@ -150,6 +150,9 @@ importers:
       '@solana/web3.js':
         specifier: ^1.95.8
         version: 1.98.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
     devDependencies:
       '@babel/core':
         specifier: ^7.23.9
@@ -9198,7 +9201,7 @@ packages:
       jest-util: 29.7.0
       jest-validate: 29.7.0
       jest-watcher: 29.7.0
-      micromatch: 4.0.5
+      micromatch: 4.0.8
       pretty-format: 29.7.0
       slash: 3.0.0
       strip-ansi: 6.0.1
