@@ -39,6 +39,7 @@ if (accounts == null) {
 const config: HardhatUserConfig = {
     paths: {
         cache: 'cache/hardhat',
+        tests: 'test/hardhat', // prevents test/scripts from being run
     },
     solidity: {
         compilers: [
