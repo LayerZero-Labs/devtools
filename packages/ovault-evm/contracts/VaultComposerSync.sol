@@ -176,7 +176,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         uint256 _msgValue
     ) internal virtual {
         uint256 preShareBalance = IERC20(SHARE_ERC20).balanceOf(address(this));
-        /// @dev Async functions may return an amount on deposit() but not give us any tokens
+        /// @dev Async functions may return an amount on `deposit`, but not transfer share tokens.
         _deposit(_depositor, _assetAmount);
         uint256 postShareBalance = IERC20(SHARE_ERC20).balanceOf(address(this));
 
@@ -242,7 +242,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         uint256 _msgValue
     ) internal virtual {
         uint256 preAssetBalance = IERC20(ASSET_ERC20).balanceOf(address(this));
-        /// @dev Async functions may return an amount on redeem() but not give us any tokens
+        /// @dev Async functions may return an amount on `redeem`, but not transfer asset tokens.
         _redeem(_redeemer, _shareAmount);
         uint256 postAssetBalance = IERC20(ASSET_ERC20).balanceOf(address(this));
 
