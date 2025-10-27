@@ -4,7 +4,7 @@ pragma solidity ^0.8.22;
 import { SendParam } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 
 interface IVaultComposerSyncNative {
-    error AssetOFTTokenNotNative(); // 0xb599c975
+    error AssetOFTTokenNotNative(); // 0xd61c4b4a
     error AmountExceedsMsgValue(); // 0x0f971d59
     error ETHTransferOnlyFromAssetOFT(); // 0x61c07af9
 

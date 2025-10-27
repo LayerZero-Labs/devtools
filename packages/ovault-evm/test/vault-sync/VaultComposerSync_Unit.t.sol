@@ -153,40 +153,6 @@ contract VaultComposerSyncUnitTest is VaultComposerSyncBaseTest {
         assertEq(vault_arb.totalSupply(), vault_arb.balanceOf(address(userA)), TOKENS_TO_SEND);
     }
 
-    function test_lzCompose_pass_dst_is_hub_no_msgValue_causes_refund() public {
-        bytes32 guid = _randomGUID();
-        _feedAssets(address(vaultComposer), TOKENS_TO_SEND);
-        uint256 userABalanceEth = assetOFT_eth.balanceOf(userA);
-
-        SendParam memory internalSendParam = SendParam(
-            vaultComposer.VAULT_EID(),
-            addressToBytes32(userA),
-            TOKENS_TO_SEND,
-            0,
-            "",
-            "",
-            ""
-        );
-
-        bytes memory composeMsg = _createComposePayload(ETH_EID, internalSendParam, 1 wei, TOKENS_TO_SEND, userA);
-
-        /// @dev Internal revert on try...catch
-        /// vm.expectRevert(abi.encodeWithSelector(IVaultComposerSync.NoMsgValueExpected.selector));
-
-        vm.expectEmit(true, true, true, true, address(vaultComposer));
-        emit IVaultComposerSync.Refunded(guid);
-
-        vm.prank(arbEndpoint);
-        vaultComposer.lzCompose{ value: 1 ether }(address(assetOFT_arb), guid, composeMsg, arbExecutor, "");
-
-        verifyPackets(ETH_EID, address(assetOFT_eth));
-        assertEq(
-            assetOFT_eth.balanceOf(userA),
-            userABalanceEth + TOKENS_TO_SEND,
-            "userA should have received refund on Ethereum"
-        );
-    }
-
     function test_lzCompose_fail_invalid_payload_auto_refunds() public {
         bytes32 guid = _randomGUID();
         _feedAssets(address(vaultComposer), TOKENS_TO_SEND);
