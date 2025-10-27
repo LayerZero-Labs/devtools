@@ -27,11 +27,10 @@ export function basexToBytes32(address: string): string {
  * Auto-detects address format and decodes to bytes.
  *
  * Detection algorithm (in order of priority):
- * 2. Hex character set (with or without 0x) → Raw hex format
- * 3. Base58 character set + typical length → Base58 format (Solana, etc.)
- * 4. Base64 character set + padding → Base64 format (TON, etc.)
+ * 1. Hex character set (with or without 0x) → Raw hex format
+ * 2. Base58 character set + typical length → Base58 format (Solana, etc.)
  *
- * Note: When formats the most specific format is used.
+ * Note: When formats overlap, the most specific format is used.
  *
  * @param address - Address string to decode
  * @returns Uint8Array of decoded bytes
