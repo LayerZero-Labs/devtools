@@ -33,13 +33,15 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     /// @dev Hyperliquid protocol constant: spot prices use `MAX_DECIMALS` of 8.
     uint8 internal constant SPOT_PRICE_MAX_DECIMALS = 8;
 
+    /// @dev Maximum safe decimal difference to prevent overflow in activationFee calculation.
+    /// @dev Ensures `ACTIVATION_COST * SPOT_PRICE_DECIMALS` stays within uint64 bounds.
+    uint8 internal constant MAX_DECIMAL_DIFFERENCE = 11;
+
     /// @dev Hyperliquid protocol requires 1 quote token for activation.
     uint64 internal constant BASE_ACTIVATION_FEE_CENTS = 100;
 
-    /// @dev USD value of the minimum pre-fund amount. Not scaled to core spot decimals.
-    /// @dev The maximum number of transactions that can be fit in a single HyperEVM block.
-    /// @dev This is because `spotBalance` returns the same value for all transactions in a HyperEVM block.
-    uint64 private constant MAX_USERS_PER_BLOCK = 50;
+    /// @dev If fee is withdrawn on a block revert all activations
+    uint256 public feeWithdrawalBlockNumber = 0;
 
     /// @dev Total activation cost in quote token wei (base + overhead). Scaled to core spot decimals.
     uint64 public immutable ACTIVATION_COST;
@@ -54,6 +56,15 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     uint64 public immutable QUOTE_ASSET_DECIMALS;
     /// @dev Pre-calculated spot price decimals for gas efficiency: (8 - `szDecimals`).
     uint64 public immutable SPOT_PRICE_DECIMALS;
+    /// @dev Pre-calculated numerator for activation fee calculation: (ACTIVATION_COST * SPOT_PRICE_DECIMALS).
+    /// @dev Stored as immutable to save gas on every activationFee() call.
+    uint128 public immutable ACTIVATION_FEE_NUMERATOR;
+
+    /// @dev USD value of the minimum pre-fund amount. Not scaled to core spot decimals.
+    /// @dev The maximum number of transactions that can be fit in a single HyperEVM block.
+    /// @dev This is because `spotBalance` returns the same value for all transactions in a HyperEVM block.
+    /// @dev Higher than usual number to account for multi-lzCompose calls that are slightly cheaper than a single lzCompose call.
+    uint64 public maxUsersPerBlock = 250;
 
     /**
      * @notice Constructor for the `PreFundedFeeAbstraction` extension.
@@ -76,6 +87,13 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
         TokenInfo memory baseAssetInfo = _tokenInfo(assetIndex);
         TokenInfo memory quoteAssetInfo = _tokenInfo(QUOTE_ASSET_INDEX);
 
+        /// @dev Future-proof: Validate decimals won't cause overflow in activationFee calculation.
+        /// @dev Currently unnecessary given quote assets have fixed weiDecimals=8 and szDecimals=2,
+        ///      but protects against future protocol changes where quote assets might have different decimals.
+        if (quoteAssetInfo.weiDecimals > baseAssetInfo.szDecimals + MAX_DECIMAL_DIFFERENCE) {
+            revert ExcessiveDecimalDifference();
+        }
+
         /// @dev Hyperliquid protocol uses (8 - `szDecimals`) for spot price decimal encoding.
         SPOT_PRICE_DECIMALS = uint64(10 ** (SPOT_PRICE_MAX_DECIMALS - baseAssetInfo.szDecimals));
         QUOTE_ASSET_DECIMALS = uint64(10 ** quoteAssetInfo.weiDecimals);
@@ -83,7 +101,11 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
         uint64 totalCentsAmount = BASE_ACTIVATION_FEE_CENTS + _activationOverheadFee;
         ACTIVATION_COST = uint64((totalCentsAmount * QUOTE_ASSET_DECIMALS) / 100);
 
-        if (uint256(MAX_USERS_PER_BLOCK) * uint256(QUOTE_ASSET_DECIMALS) > type(uint64).max)
+        /// @dev Pre-calculate the numerator for gas efficiency in activationFee() calls.
+        /// @dev u64 * u64 = u128, so no overflow possible.
+        ACTIVATION_FEE_NUMERATOR = ACTIVATION_COST * SPOT_PRICE_DECIMALS;
+
+        if (uint256(maxUsersPerBlock) * uint256(QUOTE_ASSET_DECIMALS) > type(uint64).max)
             revert MinUSDAmtGreaterThanU64Max();
     }
 
@@ -99,17 +121,23 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
             _amountLD
         );
 
+        bool shouldActivate = !coreUserExists(_to).exists;
+
         if (amounts.evm != 0) {
             uint64 originalAmount = amounts.core;
             uint64 coreAmount = _getFinalCoreAmount(_to, originalAmount);
 
-            /// @dev When the user is not activated we collect the activation fee.
-            if (originalAmount > coreAmount) {
+            /// @dev When user is activated originalAmount = coreAmount, so no fee is collected.
+            if (shouldActivate) {
+                /// @dev If fee is withdrawn on a block revert all activations
+                /// @dev Transactions executed before the fee withdrawal tx will be activated
+                if (block.number == feeWithdrawalBlockNumber) revert CannotActivateOnFeeWithdrawalBlock();
+
                 uint64 coreBalance = spotBalance(address(this), QUOTE_ASSET_INDEX).total;
+
                 /// @dev Otherwise, this could revert silently if multiple users try to activate in the same block.
-                if (coreBalance < (MAX_USERS_PER_BLOCK * QUOTE_ASSET_DECIMALS)) {
-                    revert InsufficientCoreAmountForActivation();
-                }
+                uint256 requiredCoreBalance = maxUsersPerBlock * QUOTE_ASSET_DECIMALS;
+                if (coreBalance < requiredCoreBalance) revert InsufficientCoreBalance(coreBalance, requiredCoreBalance);
 
                 uint64 feeCollected = originalAmount - coreAmount;
                 emit FeeCollected(_to, feeCollected);
@@ -117,6 +145,8 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
 
             IERC20(ERC20).safeTransfer(ERC20_ASSET_BRIDGE, amounts.evm);
             _submitCoreWriterTransfer(_to, ERC20_CORE_INDEX_ID, coreAmount);
+        } else {
+            if (msg.value > 0 && shouldActivate) revert HYPEActivationNotAllowed();
         }
     }
 
@@ -126,7 +156,16 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
      */
     function activationFee() public view virtual override returns (uint64) {
         uint64 rawPrice = _spotPx(SPOT_PAIR_ID);
-        return (ACTIVATION_COST * SPOT_PRICE_DECIMALS) / rawPrice;
+
+        /// @dev Prevent zero-fee edge case: When rawPrice > ACTIVATION_FEE_NUMERATOR,
+        ///      the division ACTIVATION_FEE_NUMERATOR / rawPrice < 1 rounds down to 0.
+        ///      This would cause silent failures where Core expects payment but contract calculates zero fee.
+        /// @dev Trigger thresholds (ACTIVATION_COST ≈ $1.50):
+        ///      - szDecimals = 0 (min): token_price > $1B USD
+        ///      - szDecimals = 5 (max): token_price > $150M USD (ex: BTC)
+        if (rawPrice > ACTIVATION_FEE_NUMERATOR) revert PriceExceedsActivationFeeNumerator(rawPrice);
+
+        return uint64(ACTIVATION_FEE_NUMERATOR / rawPrice);
     }
 
     /**
@@ -137,10 +176,27 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
      * @param _to Destination address to receive the retrieved quote tokens
      */
     function retrieveQuoteTokens(uint64 _coreAmount, address _to) public virtual onlyRecoveryAddress {
+        /// @dev Balance reads are asynchronous: spotBalance() returns the state from the previous HyperCore block.
+        ///      If activation txs executed earlier in this block (ex: tx 1-4) and this withdrawal is later (ex: tx 5),
+        ///      those activations consumed quote tokens but the balance reduction won't be visible until next block.
+        ///      Withdrawing the full visible balance may fail on Core since actual balance is already lower.
         uint64 maxTransferAmt = _getMaxTransferAmount(QUOTE_ASSET_INDEX, _coreAmount);
 
         _submitCoreWriterTransfer(_to, QUOTE_ASSET_INDEX, maxTransferAmt);
+        feeWithdrawalBlockNumber = block.number;
         emit Retrieved(QUOTE_ASSET_INDEX, maxTransferAmt, _to);
+    }
+
+    /**
+     * @notice Updates the maximum number of users per block.
+     * @dev Required if hyperliquid increases the block size.
+     * @dev Can only be called by the recovery address
+     * @param _maxUsersPerBlock The new maximum number of users per block
+     */
+    function updateMaxUsersPerBlock(uint64 _maxUsersPerBlock) public virtual onlyRecoveryAddress {
+        if (_maxUsersPerBlock <= maxUsersPerBlock) revert MaxUsersPerBlockCanOnlyBeIncremented();
+        maxUsersPerBlock = _maxUsersPerBlock;
+        emit MaxUsersPerBlockUpdated(maxUsersPerBlock);
     }
 
     /**
