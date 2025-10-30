@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@solana/web3.js': ^1.95.8
+  '@solana/web3.js': ^1.98.0
   '@ton/ton': npm:@layerzerolabs/ton@15.2.0-rc.3
   es5-ext: git://github.com/LayerZero-Labs/es5-ext
   ethers: ^5.7.2
@@ -148,7 +148,7 @@ importers:
         specifier: ^0.4.12
         version: 0.4.12(@solana/web3.js@1.98.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@solana/web3.js':
-        specifier: ^1.95.8
+        specifier: ^1.98.0
         version: 1.98.0
     devDependencies:
       '@babel/core':
@@ -1050,7 +1050,7 @@ importers:
         specifier: ~2.8.1
         version: 2.8.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@solana/web3.js':
-        specifier: ^1.95.8
+        specifier: ^1.98.0
         version: 1.98.0
       '@types/chai':
         specifier: ^4.3.11
@@ -2467,7 +2467,7 @@ importers:
         specifier: ^0.4.8
         version: 0.4.8(@solana/web3.js@1.98.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@solana/web3.js':
-        specifier: ^1.95.8
+        specifier: ^1.98.0
         version: 1.98.0
       '@sqds/sdk':
         specifier: ^2.0.4
@@ -4066,7 +4066,7 @@ importers:
         specifier: ~0.0.5
         version: link:../test-devtools-solana
       '@solana/web3.js':
-        specifier: ^1.95.8
+        specifier: ^1.98.0
         version: 1.98.0
       '@sqds/multisig':
         specifier: ^2.1.3
@@ -5031,7 +5031,7 @@ importers:
         specifier: ^0.9.2
         version: 0.9.2(@metaplex-foundation/umi@0.9.2)(@solana/web3.js@1.98.0)
       '@solana/web3.js':
-        specifier: ^1.95.8
+        specifier: ^1.98.0
         version: 1.98.0
       '@swc/core':
         specifier: ^1.4.0
@@ -5223,7 +5223,7 @@ importers:
   packages/test-devtools-solana:
     devDependencies:
       '@solana/web3.js':
-        specifier: ^1.95.8
+        specifier: ^1.98.0
         version: 1.98.0
       bs58:
         specifier: ~6.0.0
@@ -5707,7 +5707,7 @@ importers:
         specifier: ^0.9.2
         version: 0.9.2(@metaplex-foundation/umi@0.9.2)(@solana/web3.js@1.98.0)
       '@solana/web3.js':
-        specifier: ^1.95.8
+        specifier: ^1.98.0
         version: 1.98.0
       '@swc/core':
         specifier: ^1.4.0
@@ -7290,7 +7290,7 @@ packages:
     resolution: {integrity: sha512-uCZ0xus0CszQPHYfWAqKS5swS1UxvePu83oOF+TWpUkedsNlg6p2p4azxZNSSqwXb9uXMFgxhuMBX9r3Xoi0vQ==}
     engines: {node: '>=10'}
     peerDependencies:
-      '@solana/web3.js': ^1.95.8
+      '@solana/web3.js': ^1.98.0
     dependencies:
       '@solana/web3.js': 1.98.0
       bn.js: 5.2.1
@@ -7301,7 +7301,7 @@ packages:
     resolution: {integrity: sha512-s7VFVa3a0oqpkuRloWVPdCK7hMbAMY270geZOGfCnaqexrP5dTIpbEHL33req6IYPPJ0hYa71cdvJ1h6V55/oQ==}
     engines: {node: '>=10'}
     peerDependencies:
-      '@solana/web3.js': ^1.95.8
+      '@solana/web3.js': ^1.98.0
     dependencies:
       '@solana/web3.js': 1.98.0
       bn.js: 5.2.1
@@ -7311,7 +7311,7 @@ packages:
     resolution: {integrity: sha512-aaxswpPrCFKl8vZTbxLssA2RvwX2zmKLlRCIktJOwW+VpVwYtXRtlWiIP+c2pPRKneiTiWCN2GEMSH9j1zTlWQ==}
     engines: {node: '>=10'}
     peerDependencies:
-      '@solana/web3.js': ^1.95.8
+      '@solana/web3.js': ^1.98.0
     dependencies:
       '@solana/web3.js': 1.98.0
       bn.js: 5.2.1
@@ -7321,7 +7321,7 @@ packages:
     resolution: {integrity: sha512-9N8AU9F0ubriKfNE3g1WF0/4dtlGXoBN/hd1PvbNBamBNwRgHxH4P+o3Zt7rSEloW1HUs6LfZEchlx9fW7POYw==}
     engines: {node: '>=10'}
     peerDependencies:
-      '@solana/web3.js': ^1.95.8
+      '@solana/web3.js': ^1.98.0
     dependencies:
       '@solana/web3.js': 1.98.0
       bn.js: 5.2.1
@@ -12237,7 +12237,7 @@ packages:
     resolution: {integrity: sha512-kV3tfvgvRjVP1p9OFOtH+ibOtN9omVJSwKr0We4/9r45e5LTj+32su0V/rixZUkG1EZzzOYBsxhtIE0kIw/Hrw==}
     peerDependencies:
       '@metaplex-foundation/umi': ^0.9.2
-      '@solana/web3.js': ^1.95.8
+      '@solana/web3.js': ^1.98.0
     dependencies:
       '@metaplex-foundation/umi': 0.9.2
       '@metaplex-foundation/umi-downloader-http': 0.9.2(@metaplex-foundation/umi@0.9.2)
@@ -12263,7 +12263,7 @@ packages:
     resolution: {integrity: sha512-hhPCxXbYIp4BC4z9gK78sXpWLkNSrfv4ndhF5ruAkdIp7GcRVYKj0QnOUO6lGYGiIkNlw20yoTwOe1CT//OfTQ==}
     peerDependencies:
       '@metaplex-foundation/umi': ^0.9.2
-      '@solana/web3.js': ^1.95.8
+      '@solana/web3.js': ^1.98.0
     dependencies:
       '@metaplex-foundation/umi': 0.9.2
       '@metaplex-foundation/umi-web3js-adapters': 0.9.2(@metaplex-foundation/umi@0.9.2)(@solana/web3.js@1.98.0)
@@ -12306,7 +12306,7 @@ packages:
     resolution: {integrity: sha512-MqcsBz8B4wGl6jxsf2Jo/rAEpYReU9VCSR15QSjhvADHMmdFxCIZCCAgE+gDE2Vuanfl437VhOcP3g5Uw8C16Q==}
     peerDependencies:
       '@metaplex-foundation/umi': ^0.9.2
-      '@solana/web3.js': ^1.95.8
+      '@solana/web3.js': ^1.98.0
     dependencies:
       '@metaplex-foundation/umi': 0.9.2
       '@metaplex-foundation/umi-web3js-adapters': 0.9.2(@metaplex-foundation/umi@0.9.2)(@solana/web3.js@1.98.0)
@@ -12345,7 +12345,7 @@ packages:
     resolution: {integrity: sha512-fR1Kf21uylMFd1Smkltmj4jTNxhqSWf416owsJ+T+cvJi2VCOcOwq/3UFzOrpz78fA0RhsajKYKj0HYsRnQI1g==}
     peerDependencies:
       '@metaplex-foundation/umi': ^0.9.2
-      '@solana/web3.js': ^1.95.8
+      '@solana/web3.js': ^1.98.0
     dependencies:
       '@metaplex-foundation/umi': 0.9.2
       '@metaplex-foundation/umi-web3js-adapters': 0.9.2(@metaplex-foundation/umi@0.9.2)(@solana/web3.js@1.98.0)
@@ -12355,7 +12355,7 @@ packages:
     resolution: {integrity: sha512-RQqUTtHYY9fmEMnq7s3Hiv/81flGaoI0ZVVoafnFVaQLnxU6QBKxtboRZHk43XtD9CiFh5f9izrMJX7iK7KlOA==}
     peerDependencies:
       '@metaplex-foundation/umi': ^0.9.2
-      '@solana/web3.js': ^1.95.8
+      '@solana/web3.js': ^1.98.0
     dependencies:
       '@metaplex-foundation/umi': 0.9.2
       '@solana/web3.js': 1.98.0
@@ -13871,7 +13871,7 @@ packages:
     resolution: {integrity: sha512-CLJnWEcdoUBpQJfx9WEbX3h6nTdNiUzswfFdkABUik7HVwSNA98u5AYvBVK2H93d9PGMOHAak2lHW9xr+zAJGQ==}
     engines: {node: '>=16'}
     peerDependencies:
-      '@solana/web3.js': ^1.95.8
+      '@solana/web3.js': ^1.98.0
     dependencies:
       '@solana/codecs': 2.0.0-preview.4(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@solana/spl-type-length-value': 0.1.0
@@ -13885,7 +13885,7 @@ packages:
     resolution: {integrity: sha512-V1N/iX7Cr7H0uazWUT2uk27TMqlqedpXHRqqAbVO2gvmJyT0E0ummMEAVQeXZ05ZhQ/xF39DLSdBp90XebWEug==}
     engines: {node: '>=16'}
     peerDependencies:
-      '@solana/web3.js': ^1.95.8
+      '@solana/web3.js': ^1.98.0
     dependencies:
       '@solana/codecs': 2.0.0-rc.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@solana/web3.js': 1.98.0
@@ -13897,7 +13897,7 @@ packages:
     resolution: {integrity: sha512-N3gZ8DlW6NWDV28+vCCDJoTqaCZiF/jDUnk3o8GRkAFzHObiR60Bs1gXHBa8zCPdvOwiG6Z3dg5pg7+RW6XNsQ==}
     engines: {node: '>=16'}
     peerDependencies:
-      '@solana/web3.js': ^1.95.8
+      '@solana/web3.js': ^1.98.0
     dependencies:
       '@solana/codecs': 2.0.0-preview.2(fastestsmallesttextencoderdecoder@1.0.22)
       '@solana/spl-type-length-value': 0.1.0
@@ -13909,7 +13909,7 @@ packages:
     resolution: {integrity: sha512-7sMt1rsm/zQOQcUWllQX9mD2O6KhSAtY1hFR2hfFwgqfFWzSY9E9GDvFVNYUI1F0iQKcm6HmePU9QbKRXTEBiA==}
     engines: {node: '>=16'}
     peerDependencies:
-      '@solana/web3.js': ^1.95.8
+      '@solana/web3.js': ^1.98.0
     dependencies:
       '@solana/codecs': 2.0.0-rc.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@solana/web3.js': 1.98.0
@@ -13921,7 +13921,7 @@ packages:
     resolution: {integrity: sha512-bvohO3rIMSVL24Pb+I4EYTJ6cL82eFpInEXD/I8K8upOGjpqHsKUoAempR/RnUlI1qSFNyFlWJfu6MNUgfbCQQ==}
     engines: {node: '>=16'}
     peerDependencies:
-      '@solana/web3.js': ^1.95.8
+      '@solana/web3.js': ^1.98.0
     dependencies:
       '@solana/buffer-layout': 4.0.1
       '@solana/buffer-layout-utils': 0.2.0
@@ -13939,7 +13939,7 @@ packages:
     resolution: {integrity: sha512-K6CxzSoO1vC+WBys25zlSDaW0w4UFZO/IvEZquEI35A/PjqXNQHeVigmDCZYEJfESvYarKwsr8tYr/29lPtvaw==}
     engines: {node: '>=16'}
     peerDependencies:
-      '@solana/web3.js': ^1.95.8
+      '@solana/web3.js': ^1.98.0
     dependencies:
       '@solana/buffer-layout': 4.0.1
       '@solana/buffer-layout-utils': 0.2.0
@@ -13958,7 +13958,7 @@ packages:
     resolution: {integrity: sha512-RO0JD9vPRi4LsAbMUdNbDJ5/cv2z11MGhtAvFeRzT4+hAGE/FUzRi0tkkWtuCfSIU3twC6CtmAihRp/+XXjWsA==}
     engines: {node: '>=16'}
     peerDependencies:
-      '@solana/web3.js': ^1.95.8
+      '@solana/web3.js': ^1.98.0
     dependencies:
       '@solana/buffer-layout': 4.0.1
       '@solana/buffer-layout-utils': 0.2.0
