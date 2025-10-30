@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rm -rf target artifacts cache out .anchor",
     "compile": "concurrently -c auto --names forge,hardhat,anchor '$npm_execpath run compile:forge' '$npm_execpath run compile:hardhat' '$npm_execpath run compile:anchor'",
-    "compile:anchor": "RUSTUP_TOOLCHAIN=1.84.1 ANCHOR_SKIP_RUSTUP=1 anchor build",
+    "compile:anchor": "RUSTUP_TOOLCHAIN=1.84.1 anchor build",
     "compile:forge": "forge build",
     "compile:hardhat": "hardhat compile",
     "lint": "$npm_execpath run lint:js && $npm_execpath run lint:sol",
