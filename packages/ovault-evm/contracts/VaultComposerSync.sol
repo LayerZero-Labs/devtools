@@ -175,14 +175,19 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         address _refundAddress,
         uint256 _msgValue
     ) internal virtual {
-        uint256 shareAmount = _deposit(_depositor, _assetAmount);
-        _assertSlippage(shareAmount, _sendParam.minAmountLD);
+        uint256 preShareBalance = IERC20(SHARE_ERC20).balanceOf(address(this));
+        /// @dev Async functions may return an amount on `deposit`, but not transfer share tokens.
+        _deposit(_depositor, _assetAmount);
+        uint256 postShareBalance = IERC20(SHARE_ERC20).balanceOf(address(this));
 
-        _sendParam.amountLD = shareAmount;
+        uint256 shareAmountReceived = postShareBalance - preShareBalance;
+        _assertSlippage(shareAmountReceived, _sendParam.minAmountLD);
+
+        _sendParam.amountLD = shareAmountReceived;
         _sendParam.minAmountLD = 0;
 
         _send(SHARE_OFT, _sendParam, _refundAddress, _msgValue);
-        emit Deposited(_depositor, _sendParam.to, _sendParam.dstEid, _assetAmount, shareAmount);
+        emit Deposited(_depositor, _sendParam.to, _sendParam.dstEid, _assetAmount, shareAmountReceived);
     }
 
     /**
@@ -236,14 +241,19 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         address _refundAddress,
         uint256 _msgValue
     ) internal virtual {
-        uint256 assetAmount = _redeem(_redeemer, _shareAmount);
-        _assertSlippage(assetAmount, _sendParam.minAmountLD);
+        uint256 preAssetBalance = IERC20(ASSET_ERC20).balanceOf(address(this));
+        /// @dev Async functions may return an amount on `redeem`, but not transfer asset tokens.
+        _redeem(_redeemer, _shareAmount);
+        uint256 postAssetBalance = IERC20(ASSET_ERC20).balanceOf(address(this));
 
-        _sendParam.amountLD = assetAmount;
+        uint256 assetAmountReceived = postAssetBalance - preAssetBalance;
+        _assertSlippage(assetAmountReceived, _sendParam.minAmountLD);
+
+        _sendParam.amountLD = assetAmountReceived;
         _sendParam.minAmountLD = 0;
 
         _send(ASSET_OFT, _sendParam, _refundAddress, _msgValue);
-        emit Redeemed(_redeemer, _sendParam.to, _sendParam.dstEid, _shareAmount, assetAmount);
+        emit Redeemed(_redeemer, _sendParam.to, _sendParam.dstEid, _shareAmount, assetAmountReceived);
     }
 
     /**

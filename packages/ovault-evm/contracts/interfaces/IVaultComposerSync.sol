@@ -25,7 +25,7 @@ interface IVaultComposerSync is IOAppComposer {
 
     error InsufficientMsgValue(uint256 expectedMsgValue, uint256 actualMsgValue); // 0x7cb769dc
 
-    error SlippageExceeded(uint256 amountLD, uint256 minAmountLD); // 0x71c4efed
+    error SlippageExceeded(uint256 vaultAmountOut, uint256 minVaultAmountOut); // 0x71c4efed
 
     /// ========================== GLOBAL VARIABLE FUNCTIONS =====================================
     function VAULT() external view returns (IERC4626);
