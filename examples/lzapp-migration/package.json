@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rm -rf target artifacts cache out .anchor",
     "compile": "concurrently -c auto --names forge,hardhat,anchor '$npm_execpath run compile:forge' '$npm_execpath run compile:hardhat' '$npm_execpath run compile:anchor'",
-    "compile:anchor": "ANCHOR_SKIP_RUSTUP=1 anchor build",
+    "compile:anchor": "SOLANA_INSTALL_UPDATE_SKIP=1 SOLANA_INSTALL_RUSTUP_INIT_SKIP=1 ANCHOR_SKIP_RUSTUP=1 anchor build",
     "compile:forge": "forge build",
     "compile:hardhat": "hardhat compile",
     "lint": "$npm_execpath run lint:js && $npm_execpath run lint:sol",
@@ -19,6 +19,10 @@
     "test:hardhat": "hardhat test"
   },
   "resolutions": {
+    "ethers": "^5.7.2",
+    "hardhat-deploy": "^0.12.1"
+  },
+  "overrides": {
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1"
   },
@@ -98,9 +102,5 @@
       "ethers": "^5.7.2",
       "hardhat-deploy": "^0.12.1"
     }
-  },
-  "overrides": {
-    "ethers": "^5.7.2",
-    "hardhat-deploy": "^0.12.1"
   }
 }
