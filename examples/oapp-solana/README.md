@@ -25,7 +25,7 @@ For a more thorough walkthrough of how a Solana OApp works, refer to [Solana OAp
 
 ## Requirements
 
-- Rust `nightly-2025-05-01`
+- Rust `1.84.1`
 - Anchor `v0.31.1`
 - Solana CLI `v2.2.20`
 - Docker
