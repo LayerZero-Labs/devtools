@@ -3,6 +3,7 @@ anchor_version = "0.31.1"
 
 [features]
 seeds = false
+resolution = false
 skip-lint = false
 
 [programs.localnet]
