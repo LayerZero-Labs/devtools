@@ -1,5 +1,11 @@
 # @layerzerolabs/mint-burn-oft-adapter-example
 
+## 0.1.4
+
+### Patch Changes
+
+- 608915a: Fix extra option parsing to avoid overflow in `sendEvm` script
+
 ## 0.1.3
 
 ### Patch Changes

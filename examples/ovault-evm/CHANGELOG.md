@@ -1,5 +1,11 @@
 # @layerzerolabs/ovault-evm-example
 
+## 0.0.9
+
+### Patch Changes
+
+- 608915a: Fix extra option parsing to avoid overflow in `sendEvm` script
+
 ## 0.0.8
 
 ### Patch Changes

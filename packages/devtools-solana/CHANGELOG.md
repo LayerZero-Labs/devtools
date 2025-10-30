@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-solana
 
+## 3.0.1
+
+### Patch Changes
+
+- d34cbbd: add isSquadsV4Vault helper
+
 ## 3.0.0
 
 ### Minor Changes

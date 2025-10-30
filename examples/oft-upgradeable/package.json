@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-upgradeable-example",
-  "version": "0.3.5",
+  "version": "0.3.7",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
-    "@layerzerolabs/devtools-evm-hardhat": "^4.0.0",
+    "@layerzerolabs/devtools-evm-hardhat": "^4.0.1",
     "@layerzerolabs/eslint-config-next": "~2.3.39",
     "@layerzerolabs/io-devtools": "~0.3.0",
     "@layerzerolabs/lz-definitions": "^3.0.75",

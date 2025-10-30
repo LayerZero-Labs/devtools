@@ -1,5 +1,18 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.12.4
+
+### Patch Changes
+
+- 002caa2: Add support for multiple ALTs when sending OFTs from Solana, fix extra options and compose message parsing bugs
+
+## 0.12.3
+
+### Patch Changes
+
+- d34cbbd: add nonce account check to debug script
+- d34cbbd: debug script displays dvn name
+
 ## 0.12.2
 
 ### Patch Changes

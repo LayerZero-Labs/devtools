@@ -62,6 +62,8 @@ You will then recieve an `OVaultInputs` object back containing all information y
 
 ### Example
 
+#### Base Functionality
+
 Below is an example of how to deposit tokens using the Viem client on a server side environment.
 
 ```typescript
@@ -123,3 +125,18 @@ const tx = await walletClient.writeContract({
 
 For more example usage you can check `./test/sdk.test.ts`. It will run transactions against the deployed OVault contracts
 on Base-Sepolia and Arbitrum-Sepolia
+
+#### Adding Buffer to Hub Chain Fee
+You can add a buffer to the fee on the hub chain by override the `calculateHubChainFee` function.
+
+```typescript
+class OVaultSyncMessageBuilderWithBuffer extends OVaultSyncMessageBuilder {
+    static override async calculateHubChainFee(input: SendParamsInput, useWalletAddress = true) {
+        const fee = await super.calculateHubChainFee(input, useWalletAddress)
+        return {
+            nativeFee: (fee.nativeFee * 3n) / 2n, // Add 1.5x buffer to the fee
+            lzTokenFee: fee.lzTokenFee,
+        }
+    }
+}
+```

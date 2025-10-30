@@ -1,5 +1,17 @@
 # @layerzerolabs/native-oft-adapter-example
 
+## 0.2.12
+
+### Patch Changes
+
+- 608915a: Fix extra option parsing to avoid overflow in `sendEvm` script
+
+## 0.2.11
+
+### Patch Changes
+
+- e9dde41: add send task
+
 ## 0.2.10
 
 ### Patch Changes

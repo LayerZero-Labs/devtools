@@ -1,6 +1,6 @@
 import { createModuleLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 
-import { getERC20abi, getHyperEVMOAppDeployment, writeCoreSpotDeployment } from '@/io'
+import { getERC20abi, writeCoreSpotDeployment } from '@/io'
 import { getSpotMeta, getHipTokenInfo, getSpotDeployState } from '@/operations'
 import { toAssetBridgeAddress } from '@/types'
 import type {
@@ -24,7 +24,6 @@ export async function coreSpotDeployment(args: CoreSpotDeploymentArgs): Promise<
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.CORE_SPOT_DEPLOYMENT, args.logLevel)
 
-    const oappConfig = args.oappConfig
     const network = args.network
     const tokenIndex = args.tokenIndex
     const action = args.action
@@ -33,54 +32,35 @@ export async function coreSpotDeployment(args: CoreSpotDeploymentArgs): Promise<
     const coreSpot: CoreSpotMetaData = await getSpotMeta(null, isTestnet, args.logLevel, tokenIndex)
 
     if (action === 'create') {
-        let token_txHash: string
-        let token_address: string
+        const { tokenAddress, tokenTxHash } = await inquirer.prompt([
+            {
+                type: 'input',
+                name: 'tokenAddress',
+                message: 'Enter the token address',
+            },
+            {
+                type: 'input',
+                name: 'tokenTxHash',
+                message: 'Enter the token tx hash',
+            },
+        ])
 
-        try {
-            const { deployment } = await getHyperEVMOAppDeployment(oappConfig!, network, logger)
-            if (!deployment) {
-                logger.error(`Deployment file not found for ${network}`)
-                return
-            }
+        let shouldQuit = false
+        const token_txHash = ethers.utils.isHexString(tokenTxHash) ? tokenTxHash : ''
+        if (!token_txHash) {
+            logger.error('Invalid token tx hash')
+            shouldQuit = true
+        }
 
-            token_txHash = deployment['transactionHash']
-            token_address = deployment['address']
-            logger.verbose(`Tx hash: ${token_txHash}, address: ${token_address}`)
-        } catch {
-            logger.error(
-                `Error fetching deployment for ${network} for oapp-config ${oappConfig}. \n\n Can you please provide the token address and tx hash manually?`
-            )
+        const token_address = ethers.utils.isAddress(tokenAddress) ? tokenAddress : ''
+        if (!token_address) {
+            logger.error('Invalid token address')
+            shouldQuit = true
+        }
 
-            const { tokenAddress, tokenTxHash } = await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'tokenAddress',
-                    message: 'Enter the token address',
-                },
-                {
-                    type: 'input',
-                    name: 'tokenTxHash',
-                    message: 'Enter the token tx hash',
-                },
-            ])
-
-            let shouldQuit = false
-            token_txHash = ethers.utils.isHexString(tokenTxHash) ? tokenTxHash : ''
-            if (!token_txHash) {
-                logger.error('Invalid token tx hash')
-                shouldQuit = true
-            }
-
-            token_address = ethers.utils.isAddress(tokenAddress) ? tokenAddress : ''
-            if (!token_address) {
-                logger.error('Invalid token address')
-                shouldQuit = true
-            }
-
-            if (shouldQuit) {
-                logger.info('Quitting...')
-                process.exit(1)
-            }
+        if (shouldQuit) {
+            logger.info('Quitting...')
+            process.exit(1)
         }
 
         const token_abi = await getERC20abi()
@@ -104,7 +84,7 @@ export async function coreSpotDeployment(args: CoreSpotDeploymentArgs): Promise<
         const decimals = await contract.decimals()
         logger.verbose(`Token name: ${tokenName}, Decimals: ${decimals}`)
 
-        const weiDiff = decimals.parseInt() - coreSpot.weiDecimals
+        const weiDiff = decimals - coreSpot.weiDecimals
         logger.verbose(`Wei diff: ${weiDiff}`)
 
         const assetBridgeAddress = toAssetBridgeAddress(parseInt(tokenIndex))
