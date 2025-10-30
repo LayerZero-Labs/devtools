@@ -1,4 +1,4 @@
 [toolchain]
 channel = "1.84.1"
 # channel = "nightly-2024-02-04" # if you want to expand the macro, you need to use nightly version
-# components = ["rustfmt", "clippy"]
+components = ["rustfmt", "clippy"]
