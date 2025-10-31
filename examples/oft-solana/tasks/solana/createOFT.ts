@@ -26,7 +26,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OFT_DECIMALS as DEFAULT_SHARED_DECIMALS, oft } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { checkMultisigSigners, createMintAuthorityMultisig } from './multisig'
-import { formatTokenAmount, localDecimalsToMaxSupply } from './utils'
+import { formatTokenAmount, localDecimalsToMaxWholeTokens } from './utils'
 
 import {
     TransactionType,
@@ -231,7 +231,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
 
             // EOF: Validate combination of parameters
 
-            const maxSupply = formatTokenAmount(localDecimalsToMaxSupply(decimals))
+            const maxSupply = formatTokenAmount(localDecimalsToMaxWholeTokens(decimals))
             const maxSupplyStatement = `You have chosen ${decimals} local decimals. The maximum supply of your Solana OFT token will be ${maxSupply}.\n`
             const confirmMaxSupply = await promptToContinue(maxSupplyStatement)
             if (!confirmMaxSupply) {

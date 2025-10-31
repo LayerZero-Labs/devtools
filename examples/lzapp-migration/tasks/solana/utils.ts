@@ -33,5 +33,5 @@ export function silenceSolana429(connection: Connection): void {
     }) as typeof process.stderr.write
 }
 
-export { localDecimalsToMaxSupply } from '@layerzerolabs/devtools-solana'
+export { localDecimalsToMaxWholeTokens } from '@layerzerolabs/devtools-solana'
 export { formatTokenAmount } from '@layerzerolabs/devtools'
