@@ -1,6 +1,6 @@
 import { formatTokenAmount } from '../src/common/numbers'
 
-describe('formatAmount', () => {
+describe('formatTokenAmount', () => {
     it('returns plain number for values < 1000', () => {
         expect(formatTokenAmount(BigInt(0))).toBe('0')
         expect(formatTokenAmount(BigInt(1))).toBe('1')
