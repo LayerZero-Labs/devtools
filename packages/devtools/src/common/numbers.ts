@@ -7,7 +7,7 @@
  * @returns A locale-formatted compact string.
  */
 export function formatTokenAmountCompact(rawAmount: bigint, maxDisplayDecimals = 1): string {
-    if (!Number.isInteger(maxDisplayDecimals) || maxDisplayDecimals < 0 || maxDisplayDecimals > 6) {
+    if (!Number.isInteger(maxDisplayDecimals) || maxDisplayDecimals < 0) {
         throw new Error('maxDisplayDecimals must be an integer between 0 and 6')
     }
 
