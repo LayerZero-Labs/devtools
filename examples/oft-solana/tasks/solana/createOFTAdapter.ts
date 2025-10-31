@@ -68,8 +68,10 @@ task('lz:oft-adapter:solana:create', 'Creates new OFT Adapter (OFT Store PDA)')
             const mintPDA = await getMint(connection, new PublicKey(mintStr), undefined, new PublicKey(tokenProgramStr))
             const mintDecimals = mintPDA.decimals
 
-            const maxSupply = formatTokenAmountCompact(localDecimalsToMaxWholeTokens(mintDecimals))
-            const maxSupplyStatement = `You provided Token Mint ${mintDecimals} local decimals. The maximum supply of your Solana OFT token will be ${maxSupply}.\n`
+            const maxSupplyRaw = localDecimalsToMaxWholeTokens(mintDecimals)
+            const maxSupplyFormatted = new Intl.NumberFormat('en-US').format(maxSupplyRaw)
+            const maxSupplyCompacted = formatTokenAmountCompact(maxSupplyRaw)
+            const maxSupplyStatement = `You have chosen ${mintDecimals} local decimals. The maximum supply of your Solana OFT token will be ${maxSupplyFormatted} (~${maxSupplyCompacted}).\n`
             const confirmMaxSupply = await promptToContinue(maxSupplyStatement)
             if (!confirmMaxSupply) {
                 return
