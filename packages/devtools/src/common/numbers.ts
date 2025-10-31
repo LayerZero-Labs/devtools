@@ -8,7 +8,7 @@ const UNITS = [
     { base: BigInt(1000), suffix: 'K' },
 ]
 
-export function formatTokenAmount(whole: bigint, maxDisplayDecimals = 1): string {
+export function formatTokenAmount(rawAmount: bigint, maxDisplayDecimals = 1): string {
     if (!Number.isInteger(maxDisplayDecimals) || maxDisplayDecimals < 0 || maxDisplayDecimals > 6) {
         throw new Error('precision must be an integer between 0 and 6')
     }
@@ -16,11 +16,11 @@ export function formatTokenAmount(whole: bigint, maxDisplayDecimals = 1): string
     for (let i = 0; i < UNITS.length; i++) {
         const unit = UNITS[i]!
         const { base, suffix } = unit
-        if (whole >= base) {
+        if (rawAmount >= base) {
             // Try increasing precision up to 6 to avoid rolling over to the next unit
             for (let decimals = maxDisplayDecimals; decimals <= 6; decimals++) {
                 const pow = BigInt(10) ** BigInt(decimals)
-                const scaled = (whole * pow + base / BigInt(2)) / base // round half up
+                const scaled = (rawAmount * pow + base / BigInt(2)) / base // round half up
                 const intPart = scaled / pow
                 if (intPart < BigInt(1000)) {
                     const frac = scaled % pow
@@ -34,7 +34,7 @@ export function formatTokenAmount(whole: bigint, maxDisplayDecimals = 1): string
             const baseNext = nextUnit.base
             const suffixNext = nextUnit.suffix
             const pow = BigInt(10) ** BigInt(Math.max(maxDisplayDecimals, 1))
-            const scaled = (whole * pow + baseNext / BigInt(2)) / baseNext
+            const scaled = (rawAmount * pow + baseNext / BigInt(2)) / baseNext
             const intPart = scaled / pow
             const frac = scaled % pow
             const fracStr = frac
@@ -46,5 +46,5 @@ export function formatTokenAmount(whole: bigint, maxDisplayDecimals = 1): string
     }
 
     // < 1K -> show plain whole number
-    return whole.toString()
+    return rawAmount.toString()
 }
