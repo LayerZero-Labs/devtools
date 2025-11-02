@@ -9,7 +9,7 @@ import { promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OFT_DECIMALS, oft } from '@layerzerolabs/oft-v2-solana-sdk'
 
-import { formatTokenAmountCompact, localDecimalsToMaxWholeTokens } from './utils'
+import { formatTokenAmount, localDecimalsToMaxWholeTokens } from './utils'
 
 import {
     TransactionType,
@@ -69,9 +69,8 @@ task('lz:oft-adapter:solana:create', 'Creates new OFT Adapter (OFT Store PDA)')
             const mintDecimals = mintPDA.decimals
 
             const maxSupplyRaw = localDecimalsToMaxWholeTokens(mintDecimals)
-            const maxSupplyFormatted = new Intl.NumberFormat('en-US').format(maxSupplyRaw)
-            const maxSupplyCompacted = formatTokenAmountCompact(maxSupplyRaw)
-            const maxSupplyStatement = `You have chosen ${mintDecimals} local decimals. The maximum supply of your Solana OFT token will be ${maxSupplyFormatted} (~${maxSupplyCompacted}).\n`
+            const maxSupplyFormatted = formatTokenAmount(maxSupplyRaw)
+            const maxSupplyStatement = `You have chosen ${mintDecimals} local decimals. The maximum supply of your Solana OFT token will be ${maxSupplyFormatted.full} (~${maxSupplyFormatted.compact}).\n`
             const confirmMaxSupply = await promptToContinue(maxSupplyStatement)
             if (!confirmMaxSupply) {
                 return

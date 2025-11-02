@@ -34,4 +34,4 @@ export function silenceSolana429(connection: Connection): void {
 }
 
 export { localDecimalsToMaxWholeTokens } from '@layerzerolabs/devtools-solana'
-export { formatTokenAmountCompact } from '@layerzerolabs/devtools'
+export { formatTokenAmount } from '@layerzerolabs/devtools'
