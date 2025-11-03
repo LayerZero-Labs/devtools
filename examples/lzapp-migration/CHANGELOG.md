@@ -1,5 +1,11 @@
 # @layerzerolabs/lzapp-migration-example
 
+## 0.3.5
+
+### Patch Changes
+
+- 77ba155: update links
+
 ## 0.3.4
 
 ### Patch Changes
