@@ -22,7 +22,7 @@ https://docs.initia.xyz/build-on-initia/initiad
 After installation, generate a new key and add it to the keyring:
 
 ```bash
-initiad keys add <your-key-name> --key-type secp256k1 --coin-type 118 --keyring-backend test
+initiad keys add <your-key-name> --keyring-backend test
 ```
 
 For more information on key management please reference the Initiad docs: https://docs.initia.xyz/build-on-initia/initiad#managing-keys
@@ -291,12 +291,13 @@ pnpm run lz:sdk:move:mint-to-move-oft --oapp-config move.layerzero.config.ts --a
 
 ```bash
 pnpm run lz:sdk:move:send-from-move-oft \
+  --oapp-config move.layerzero.config.ts \
   --amount-ld <your-amount-ld> \
   --min-amount-ld <your-min-amount-ld> \
   --src-address <your-source-account-address> \
   --to-address <your-destination-account-address> \
   --gas-limit <your-gas-limit> \
-  --dst-eid <your-dst-eid>\
+  --dst-eid <your-dst-eid>
 ```
 
 ## Send from EVM

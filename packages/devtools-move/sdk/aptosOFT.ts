@@ -67,12 +67,13 @@ export class aptosOFT implements IOFT {
 
     initializeAdapterFAPayload(
         tokenMetadataAddress: string,
-        sharedDecimals: number
+        sharedDecimals: number,
+        localDecimals?: number
     ): TypedInputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oft_adapter_fa::initialize`,
-            functionArguments: [tokenMetadataAddress, sharedDecimals],
-            types: ['address', 'u8'],
+            functionArguments: [tokenMetadataAddress, sharedDecimals, localDecimals || 0],
+            types: ['address', 'u8', 'u8'],
         }
     }
 

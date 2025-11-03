@@ -52,14 +52,9 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
-        'arbitrum-sepolia': {
-            eid: EndpointId.ARBSEP_V2_TESTNET,
-            url: process.env.RPC_URL_ARB_SEPOLIA || 'https://arbitrum-sepolia.gateway.tenderly.co',
-            accounts,
-        },
-        'base-sepolia': {
-            eid: EndpointId.BASESEP_V2_TESTNET,
-            url: process.env.RPC_URL_BASE_SEPOLIA || 'https://base-sepolia.gateway.tenderly.co',
+        'bsc-testnet': {
+            eid: EndpointId.BSC_V2_TESTNET,
+            url: process.env.RPC_URL_BSC_TESTNET || 'https://data-seed-prebsc-1-s1.binance.org:8545',
             accounts,
         },
         hardhat: {
