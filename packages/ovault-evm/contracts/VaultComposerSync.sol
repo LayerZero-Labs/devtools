@@ -398,8 +398,8 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @dev Internal function to validate the share token compatibility
      * @dev Validate part of the constructor in an overridable function due to differences in asset and OFT token
      * @return shareERC20 The address of the share ERC20 token
-     * @notice Share token must be the vault itself
-     * @notice Share OFT must be an adapter (approvalRequired() returns true)
+     * @dev requirement Share token must be the vault itself
+     * @dev requirement Share OFT must be an adapter (approvalRequired() returns true)
      */
     function _initializeShareToken() internal virtual returns (address shareERC20) {
         shareERC20 = IOFT(SHARE_OFT).token();
