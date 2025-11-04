@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-evm
 
+## 0.3.3
+
+### Patch Changes
+
+- f10766d: Remove `RateLimiter` contract
+
 ## 0.3.2
 
 ### Patch Changes
