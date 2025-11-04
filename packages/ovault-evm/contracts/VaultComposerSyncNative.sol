@@ -14,10 +14,10 @@ import { VaultComposerSync } from "./VaultComposerSync.sol";
 /**
  * @title Synchronous Vault Composer with Stargate NativePools as Asset and WETH as Share
  * @author LayerZero Labs (@shankars99)
- * @dev Extends VaultComposerSync with Pool-specific behavior such as oft.token wrapping
+ * @dev Extends VaultComposerSync with Pool-specific behavior such as OFT token wrapping
  * @dev WETH is used as the asset token for the vault instead of native token (ETH)
- * @dev DepositAndSend and Deposit use asset token (WETH) instead of native token (ETH)
- * @dev DepositNativeAndSend allows for deposits with ETH
+ * @dev `depositAndSend` uses asset token (WETH)
+ * @dev `depositNativeAndSend` allows for deposits with ETH
  * @dev Redemptions always output the asset token (WETH)
  * @dev Compatible with ERC4626 vaults and requires Share OFT to be an adapter
  */
@@ -43,7 +43,7 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
      * @dev Reduction of ComposerNative into ComposerBase by wrapping ETH into WETH
      * @dev All internal logic handles WETH as the asset token making deposit symmetric to redemption
      * @dev The native token used here was sent during lzReceive from the Pool
-     * @dev lzCompose calls comes from the Endpoint and are not affected by the wrapNative call
+     @dev Inherits entry authorization from parent contract
      */
     function lzCompose(
         address _composeSender, // The OFT used on refund, also the vaultIn token.
@@ -53,6 +53,7 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
         bytes calldata _extraData
     ) public payable virtual override {
         /// @dev Wrap ETH received during lzReceive into WETH
+        /// @dev Conversion happens here to avoid running out of gas in the receive function
         if (_composeSender == ASSET_OFT) IWETH(ASSET_ERC20).deposit{ value: _message.amountLD() }();
 
         /// @dev Since lzCompose is public, the msg.value called to pay the tx Fee is automatically forwarded
@@ -103,8 +104,8 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
 
         /// @dev Safe because this is the only function in VaultComposerSync that calls oft.send()
         if (_oft == ASSET_OFT) {
-            /// @dev In deposit's lzReceive() we converted ETH to WETH.
-            /// @dev Incase of redemption the vault outputs WETH.
+            /// @dev In deposit's lzCompose() we converted ETH to WETH.
+            /// @dev In a redemption, the vault outputs WETH.
             /// @dev So we always have WETH at this point which we unwrap to ETH for the Stargate Pool
             IWETH(ASSET_ERC20).withdraw(_sendParam.amountLD);
             /// @dev MsgValue passed to Stargate Pool is nativeFee + amountLD
@@ -132,6 +133,6 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
 
     receive() external payable virtual {
         /// @dev From ASSET_OFT for NativeOFT::lzReceive and from ASSET_ERC20 for WETH::withdraw
-        if (msg.sender != ASSET_OFT && msg.sender != ASSET_ERC20) revert ETHTransferOnlyFromAssetOFT();
+        if (msg.sender != ASSET_OFT && msg.sender != ASSET_ERC20) revert ETHTransferNotFromAsset();
     }
 }
