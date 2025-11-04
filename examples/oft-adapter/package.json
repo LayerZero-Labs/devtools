@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-adapter-example",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "private": true,
   "license": "MIT",
   "scripts": {
