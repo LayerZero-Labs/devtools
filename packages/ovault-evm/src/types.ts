@@ -46,7 +46,8 @@ export interface SendParamsInput {
     // Defaults to 375_000 for cross chain operations and 175_000 for same chain operations.
     hubLzComposeGasLimit?: bigint
 
-    // The amount of extra buffer gas to add to the message fee calculation
+    // Additional percentage to add to the message fee calculation, with 2 decimal precision.
+    // For example, `0.05` and `0.051` both yield an extra 5%. 
     buffer?: number
 }
 
