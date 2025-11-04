@@ -19,6 +19,6 @@ idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build", "oapp/idl-build"]
 [dependencies]
 anchor-lang = { version = "0.31.1", features = ["init-if-needed"] }
 anchor-spl = "0.31.1"
-oapp = { package = "oapp-latest", git = "https://github.com/LayerZero-Labs/LayerZero-v2.git", rev = "200cda2" }
-utils = { package = "utils-latest", git = "https://github.com/LayerZero-Labs/LayerZero-v2.git", rev = "200cda2" }
+oapp = { package = "oapp-latest", git = "https://github.com/LayerZero-Labs/LayerZero-v2.git", rev = "c09287a" }
+utils = { package = "utils-latest", git = "https://github.com/LayerZero-Labs/LayerZero-v2.git", rev = "c09287a" }
 solana-helper = "0.1.0"

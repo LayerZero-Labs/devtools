@@ -467,7 +467,7 @@ checksum = "7c74b8349d32d297c9134b8c88677813a227df8f779daa29bfc29c183fe3dca6"
 [[package]]
 name = "cpi-helper"
 version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=200cda2#200cda254120375f40ed0a7e89931afb897b8891"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=c09287a#c09287a8b1f236fcc057f474d8a773a0fb7758df"
 dependencies = [
  "bs58",
  "proc-macro2",
@@ -551,7 +551,7 @@ dependencies = [
 [[package]]
 name = "endpoint-interface"
 version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=200cda2#200cda254120375f40ed0a7e89931afb897b8891"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=c09287a#c09287a8b1f236fcc057f474d8a773a0fb7758df"
 dependencies = [
  "anchor-lang",
  "cpi-helper",
@@ -787,7 +787,7 @@ dependencies = [
 [[package]]
 name = "messagelib-interface-latest"
 version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=200cda2#200cda254120375f40ed0a7e89931afb897b8891"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=c09287a#c09287a8b1f236fcc057f474d8a773a0fb7758df"
 dependencies = [
  "anchor-lang",
 ]
@@ -843,7 +843,7 @@ dependencies = [
 [[package]]
 name = "oapp-latest"
 version = "0.2.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=200cda2#200cda254120375f40ed0a7e89931afb897b8891"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=c09287a#c09287a8b1f236fcc057f474d8a773a0fb7758df"
 dependencies = [
  "anchor-lang",
  "endpoint-interface",
@@ -2122,7 +2122,7 @@ checksum = "d4c87d22b6e3f4a18d4d40ef354e97c90fcb14dd91d7dc0aa9d8a1172ebf7202"
 [[package]]
 name = "utils-latest"
 version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=200cda2#200cda254120375f40ed0a7e89931afb897b8891"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=c09287a#c09287a8b1f236fcc057f474d8a773a0fb7758df"
 dependencies = [
  "anchor-lang",
 ]

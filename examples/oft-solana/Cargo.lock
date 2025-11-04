@@ -531,7 +531,7 @@ checksum = "7c74b8349d32d297c9134b8c88677813a227df8f779daa29bfc29c183fe3dca6"
 [[package]]
 name = "cpi-helper"
 version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=200cda2#200cda254120375f40ed0a7e89931afb897b8891"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=34321ac15e47e0dafd25d66659e2f3d1b9b6db8f#34321ac15e47e0dafd25d66659e2f3d1b9b6db8f"
 dependencies = [
  "bs58",
  "proc-macro2",
@@ -542,7 +542,7 @@ dependencies = [
 [[package]]
 name = "cpi-helper"
 version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=34321ac15e47e0dafd25d66659e2f3d1b9b6db8f#34321ac15e47e0dafd25d66659e2f3d1b9b6db8f"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=c09287a#c09287a8b1f236fcc057f474d8a773a0fb7758df"
 dependencies = [
  "bs58",
  "proc-macro2",
@@ -649,10 +649,10 @@ checksum = "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
 [[package]]
 name = "endpoint-interface"
 version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=200cda2#200cda254120375f40ed0a7e89931afb897b8891"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=c09287a#c09287a8b1f236fcc057f474d8a773a0fb7758df"
 dependencies = [
  "anchor-lang",
- "cpi-helper 0.1.0 (git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=200cda2)",
+ "cpi-helper 0.1.0 (git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=c09287a)",
  "messagelib-interface-latest",
  "solana-helper",
  "utils-latest",
@@ -938,7 +938,7 @@ dependencies = [
 [[package]]
 name = "messagelib-interface-latest"
 version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=200cda2#200cda254120375f40ed0a7e89931afb897b8891"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=c09287a#c09287a8b1f236fcc057f474d8a773a0fb7758df"
 dependencies = [
  "anchor-lang",
 ]
@@ -1007,7 +1007,7 @@ dependencies = [
 [[package]]
 name = "oapp-latest"
 version = "0.2.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=200cda2#200cda254120375f40ed0a7e89931afb897b8891"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=c09287a#c09287a8b1f236fcc057f474d8a773a0fb7758df"
 dependencies = [
  "anchor-lang",
  "endpoint-interface",
@@ -2784,7 +2784,7 @@ dependencies = [
 [[package]]
 name = "utils-latest"
 version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=200cda2#200cda254120375f40ed0a7e89931afb897b8891"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=c09287a#c09287a8b1f236fcc057f474d8a773a0fb7758df"
 dependencies = [
  "anchor-lang",
 ]
