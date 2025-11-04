@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/lzapp-migration-example",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -58,7 +58,7 @@
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.75",
     "@layerzerolabs/lz-solana-sdk-v2": "^3.0.118",
     "@layerzerolabs/lz-v2-utilities": "^3.0.75",
-    "@layerzerolabs/oapp-evm": "^0.3.2",
+    "@layerzerolabs/oapp-evm": "^0.3.3",
     "@layerzerolabs/prettier-config-next": "^2.3.39",
     "@layerzerolabs/solhint-config": "^3.0.12",
     "@layerzerolabs/test-devtools-evm-foundry": "~7.0.0",

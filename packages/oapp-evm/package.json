@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oapp-evm",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "LayerZero Labs reference EVM OmniChain Application (OApp) implementation",
   "keywords": [
     "LayerZero",
