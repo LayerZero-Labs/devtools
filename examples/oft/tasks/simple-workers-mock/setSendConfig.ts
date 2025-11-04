@@ -11,7 +11,7 @@ task(
     'Set send configuration for Simple Workers (SimpleDVNMock and SimpleExecutorMock)'
 )
     .addParam('dstEid', 'Destination chain EID', undefined, types.int)
-    .addParam('contractName', 'Name of the contract in deployments', 'MyOFTMock', types.string)
+    .addParam('contractName', 'Name of the contract in deployments', 'MyOFT', types.string)
     .addOptionalParam('executorAddress', 'Executor address (defaults to SimpleExecutorMock)', undefined, types.string)
     .setAction(async (args: SetSendConfigArgs, hre: HardhatRuntimeEnvironment) => {
         const signer = (await hre.ethers.getSigners())[0]

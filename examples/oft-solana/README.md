@@ -209,7 +209,7 @@ Rent-exempt minimum: 3.87415872 SOL
 
 :information_source: LayerZero's default deployment path for Solana OFTs require you to deploy your own OFT program as this means you own the Upgrade Authority and don't rely on LayerZero to manage that authority for you. Read [this](https://neodyme.io/en/blog/solana_upgrade_authority/) to understand more on why this is important.
 
-To deploy a Solana OFT, you need to both deploy an OFT Program and also create the OFT Store, alongside the other configuration steps that are handled by the provided tasks. To understand the relationship between the OFT Program and the OFT Store, read the section ['The OFT Program'](https://docs.layerzero.network/v2/developers/solana/oft/account#the-oft-program) on the LayerZero docs.
+To deploy a Solana OFT, you need to both deploy an OFT Program and also create the OFT Store, alongside the other configuration steps that are handled by the provided tasks. To understand the relationship between the OFT Program and the OFT Store, read the section ['The OFT Program'](https://docs.layerzero.network/v2/developers/solana/oft/overview#the-oft-program) on the LayerZero docs.
 
 ### Deploy the Solana OFT Program
 
@@ -264,6 +264,8 @@ The above command will create a Solana OFT which will have only the OFT Store as
 ```bash
 pnpm hardhat lz:deploy # follow the prompts
 ```
+
+> For EVM OFTs used in this flow, if you need initial tokens on testnet, open the EVM `contracts/MyOFT.sol` and uncomment `_mint(msg.sender, 100000 * (10 ** 18));` in the constructor. Ensure you remove this line for production.
 
 ## Enable Messaging
 
@@ -390,8 +392,7 @@ pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <
 
 Before deploying, ensure the following:
 
-- (required) you are not using `MyOFTMock`, which has a public `mint` function
-  - In `layerzero.config.ts`, ensure you are not using `MyOFTMock` as the `contractName` for any of the contract objects.
+- (required) for EVM OFTs used in this flow, if you uncommented the testnet mint line in `contracts/MyOFT.sol`, ensure it is commented out for production
 - (recommended) you have profiled the gas usage of `lzReceive` on your destination chains
 <!-- TODO: mention https://docs.layerzero.network/v2/developers/evm/technical-reference/integration-checklist#set-security-and-executor-configurations after it has been updated to reference the CLI -->
 
@@ -573,7 +574,7 @@ spl-token mint <TOKEN_MINT> <AMOUNT> --multisig-signer ~/.config/solana/id.json 
 
 ### Solana Program Verification
 
-Refer to [Verify the OFT Program](https://docs.layerzero.network/v2/developers/solana/oft/program#optional-verify-the-oft-program).
+Refer to [Verify the OFT Program](https://docs.layerzero.network/v2/developers/solana/oft/overview#optional-verify-the-oft-program).
 
 ### Troubleshooting
 

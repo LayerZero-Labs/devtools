@@ -9,7 +9,6 @@ artifacts/*
 !artifacts/IOAppReceiver.sol
 !artifacts/OAppOptionsType3.sol
 !artifacts/OptionsBuilder.sol
-!artifacts/RateLimiter.sol
 !artifacts/OApp.sol
 !artifacts/OAppCore.sol
 !artifacts/OAppReceiver.sol

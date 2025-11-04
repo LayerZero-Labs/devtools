@@ -179,7 +179,7 @@ importers:
         specifier: ^3.0.75
         version: 3.0.75
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.2
+        specifier: ^0.3.3
         version: link:../../packages/oapp-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -1722,7 +1722,7 @@ importers:
         specifier: ^7.23.9
         version: 7.23.9
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ^4.0.0
+        specifier: ^4.0.1
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -2374,7 +2374,7 @@ importers:
         specifier: ^3.0.0
         version: link:../../packages/metadata-tools
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.2
+        specifier: ^0.3.3
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
         specifier: ^3.2.0
@@ -2560,7 +2560,7 @@ importers:
         specifier: ^7.23.9
         version: 7.23.9
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ^4.0.0
+        specifier: ^4.0.1
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39

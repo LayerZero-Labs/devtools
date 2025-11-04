@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 1.0.5
+
+### Patch Changes
+
+- 39ddee8: remove usage of MyOFTMock
+
 ## 1.0.4
 
 ### Patch Changes
