@@ -22,7 +22,7 @@ contract VaultComposerSyncProxySendTest is VaultComposerSyncBaseTest {
         vm.deal(userA, 100 ether);
     }
 
-    function test_target_is_hub_reverts_when_msg_value_provided() public {
+    function test_target_is_hub_does_not_revert_when_msg_value_provided() public {
         SendParam memory sendParam = SendParam(ARB_EID, addressToBytes32(userA), TOKENS_TO_SEND, 0, "", "", "");
         assetOFT_arb.mint(address(userA), TOKENS_TO_SEND);
         vault_arb.mint(address(userA), TOKENS_TO_SEND);
