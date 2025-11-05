@@ -12,6 +12,7 @@ if (dirs.length === 0) {
 }
 
 const pnpmVersion = getPnpmVersionFromPath();
+console.log(`Using pnpm version: ${pnpmVersion}`);
 const expectedVersion = getExpectedVersionFromPackageJson();
 // assert pnpm V
 if (pnpmVersion !== expectedVersion) {
@@ -62,19 +63,14 @@ function getExpectedVersionFromPackageJson() {
 }
 
 function getPnpmVersionFromPath() {
-    const { status, stdout, error } = spawnSync('pnpm', ['--version'], {
-        encoding: 'utf8',
-    });
-
-    // Not found (e.g., ENOENT) or non-zero exit
+    const { status, stdout, error } = spawnSync('pnpm', ['--version'], { encoding: 'utf8' });
     if (status !== 0) {
-        const hint = error.code === 'ENOENT' ? 'pnpm is not on PATH.' : 'failed to run "pnpm --version".';
+        const hint = error?.code === 'ENOENT' ? 'pnpm is not on PATH.' : 'failed to run "pnpm --version".';
         throw new Error(`Could not determine pnpm version: ${hint}`);
     }
-
-    const v = stdout.trim();
-    if (!v) {
+    const version = stdout.trim();
+    if (!version) {
         throw new Error('Empty version output from "pnpm --version".');
     }
-    return v;
+    return version;
 }
