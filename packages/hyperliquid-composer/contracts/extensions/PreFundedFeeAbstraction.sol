@@ -144,7 +144,8 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
             IERC20(ERC20).safeTransfer(ERC20_ASSET_BRIDGE, amounts.evm);
             _submitCoreWriterTransfer(_to, ERC20_CORE_INDEX_ID, coreAmount);
         } else {
-            ///@dev revert when the user is trying to activate with native tokens
+            /// @dev Contract does not manage HYPE activations since we do not manage HYPE spot market
+            /// @dev If a user sends across 0 ERC20 but has non-zero HYPE then the composer should not activate the user
             if (msg.value > 0 && !coreUserExists(_to).exists) revert HYPEActivationNotAllowed();
         }
     }
