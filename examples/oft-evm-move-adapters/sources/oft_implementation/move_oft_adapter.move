@@ -13,6 +13,7 @@ module oft::move_oft_adapter {
     use std::option::{Self, Option};
     use std::primary_fungible_store;
     use std::signer::address_of;
+    use aptos_framework::account;
 
     use endpoint_v2_common::bytes32::Bytes32;
     use oft::oapp_core::{assert_admin, combine_options};
@@ -56,6 +57,9 @@ module oft::move_oft_adapter {
 
         // unlock the amount from escrow
         let escrow_signer = &object::generate_signer_for_extending(&store().escrow_extend_ref);
+
+        // Create recipient account if it doesn't exist
+        account::create_account_if_does_not_exist(to);
 
         // Deposit the extracted amount to the recipient, or redirect to the admin if the recipient is blocklisted
         primary_fungible_store::transfer(
