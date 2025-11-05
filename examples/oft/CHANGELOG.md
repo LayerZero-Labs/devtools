@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.7.10
+
+### Patch Changes
+
+- 39ddee8: remove usage of MyOFTMock
+
 ## 0.7.9
 
 ### Patch Changes

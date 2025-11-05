@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-adapter-example
 
+## 0.5.5
+
+### Patch Changes
+
+- 39ddee8: remove usage of MyOFTMock
+
 ## 0.5.4
 
 ### Patch Changes
