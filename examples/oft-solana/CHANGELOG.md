@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.12.6
+
+### Patch Changes
+
+- 39ddee8: remove usage of MyOFTMock
+
 ## 0.12.5
 
 ### Patch Changes
