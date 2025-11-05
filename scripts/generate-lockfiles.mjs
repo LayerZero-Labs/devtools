@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { getExampleDirs } from './common-lockfiles.mjs';
@@ -8,6 +8,14 @@ const dirs = getExampleDirs();
 
 if (dirs.length === 0) {
     console.error('No packages found under examples/');
+    process.exit(1);
+}
+
+const pnpmVersion = getPnpmVersionFromPath();
+const expectedVersion = getExpectedVersionFromPackageJson();
+// assert pnpm V
+if (pnpmVersion !== expectedVersion) {
+    console.error(`Expected pnpm version ${expectedVersion}, got ${pnpmVersion}`);
     process.exit(1);
 }
 
@@ -43,3 +51,30 @@ if (failures) {
 }
 
 console.log('\nDone.');
+
+function getExpectedVersionFromPackageJson() {
+    const packageJson = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8'));
+    const packageManager = packageJson.packageManager;
+    if (!packageManager?.startsWith('pnpm@')) {
+        throw new Error(`Invalid packageManager: ${packageManager || 'missing'}. Expected format: "pnpm@x.y.z"`);
+    }
+    return packageManager.slice(5); // Remove "pnpm@" prefix
+}
+
+function getPnpmVersionFromPath() {
+    const { status, stdout, error } = spawnSync('pnpm', ['--version'], {
+        encoding: 'utf8',
+    });
+
+    // Not found (e.g., ENOENT) or non-zero exit
+    if (status !== 0) {
+        const hint = error.code === 'ENOENT' ? 'pnpm is not on PATH.' : 'failed to run "pnpm --version".';
+        throw new Error(`Could not determine pnpm version: ${hint}`);
+    }
+
+    const v = stdout.trim();
+    if (!v) {
+        throw new Error('Empty version output from "pnpm --version".');
+    }
+    return v;
+}
