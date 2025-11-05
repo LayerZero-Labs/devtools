@@ -8,6 +8,7 @@
 /// because there is not a rebalancing mechanism that can ensure pools maintain sufficient balance.
 module oft::move_oft_adapter {
     use std::coin::Coin;
+    use std::event::emit;
     use std::fungible_asset::{Self, FungibleAsset, Metadata};
     use std::object::{Self, address_to_object, ExtendRef, Object, object_exists};
     use std::option::{Self, Option};
@@ -16,9 +17,10 @@ module oft::move_oft_adapter {
     use aptos_framework::account;
 
     use endpoint_v2_common::bytes32::Bytes32;
-    use oft::oapp_core::{assert_admin, combine_options};
+    use oft::oapp_core::{assert_admin, combine_options, get_admin};
     use oft::oapp_store::OAPP_ADDRESS;
     use oft::oft_core;
+    use oft::oft_store;
     use oft::oft_impl_config::{
         Self,
         assert_not_blocklisted,
@@ -39,6 +41,11 @@ module oft::move_oft_adapter {
         metadata: Option<Object<Metadata>>,
         escrow_extend_ref: ExtendRef,
     }
+
+    // =================================================== Pauser Store ==================================================
+
+    /// Separate resource to keep upgrades safe (no change to OftImpl layout)
+    struct PauserStore has key { pauser: address, paused: bool }
 
     // ================================================= OFT Handlers =================================================
 
@@ -80,9 +87,11 @@ module oft::move_oft_adapter {
         fa: &mut FungibleAsset,
         min_amount_ld: u64,
         dst_eid: u32,
-    ): (u64, u64) acquires OftImpl {
+    ): (u64, u64) acquires OftImpl, PauserStore {
         assert_not_blocklisted(sender);
         assert_metadata(fa);
+        // Global outflow pause gate
+        assert!(!is_paused(), EPAUSED);
 
         // Calculate the exact send amount
         let amount_ld = fungible_asset::amount(fa);
@@ -270,6 +279,38 @@ module oft::move_oft_adapter {
         oft_limit::new_oft_limit(0, oft_impl_config::rate_limit_capacity(eid))
     }
 
+    // ==================================================== Pauser Logic ===================================================
+
+    #[view]
+    public fun is_paused(): bool acquires PauserStore {
+        let admin_addr = get_admin();
+        if (!exists<PauserStore>(admin_addr)) { return false };
+        borrow_global<PauserStore>(admin_addr).paused
+    }
+
+    /// Set the pauser address (admin-only). Creates the store at current admin address if missing.
+    public entry fun set_pauser(admin: &signer, pauser: address) acquires PauserStore {
+        let admin_addr = address_of(admin);
+        assert_admin(admin_addr);
+        if (exists<PauserStore>(admin_addr)) {
+            borrow_global_mut<PauserStore>(admin_addr).pauser = pauser;
+        } else {
+            move_to<PauserStore>(admin, PauserStore { pauser, paused: false });
+        }
+    }
+
+    /// Toggle pause (pauser or admin can call)
+    public entry fun set_paused(caller: &signer, paused: bool) acquires PauserStore {
+        let admin_addr = get_admin();
+        assert!(exists<PauserStore>(admin_addr), ENOT_INITIALIZED);
+        let caller_addr = address_of(caller);
+        let store_mut = borrow_global_mut<PauserStore>(admin_addr);
+        assert!(caller_addr == admin_addr || caller_addr == store_mut.pauser, EUNAUTHORIZED);
+        assert!(store_mut.paused != paused, ENO_CHANGE);
+        store_mut.paused = paused;
+        emit(OutflowPauseSet { paused });
+    }
+
     #[view]
     /// Total value locked in the contract
     public fun tvl(): u64 acquires OftImpl {
@@ -317,6 +358,177 @@ module oft::move_oft_adapter {
         init_module(&std::account::create_signer_for_test(OAPP_ADDRESS()));
     }
 
+    // ================================================ Tests: Pauser =================================================
+    #[test_only]
+    public fun outflow_pause_set_event(paused: bool): OutflowPauseSet { OutflowPauseSet { paused } }
+
+    #[test]
+    fun test_pauser_toggle() acquires PauserStore {
+        // Init minimal stores needed
+        oft::oapp_store::init_module_for_test();
+
+        let admin_addr = get_admin();
+        let admin_signer = &std::account::create_signer_for_test(admin_addr);
+        let pauser_addr = @0x1234;
+
+        set_pauser(admin_signer, pauser_addr);
+        assert!(!is_paused(), 0);
+
+        let pauser_signer = &std::account::create_signer_for_test(pauser_addr);
+        set_paused(pauser_signer, true);
+        assert!(is_paused(), 1);
+
+        set_paused(admin_signer, false);
+        assert!(!is_paused(), 2);
+    }
+
+    #[test_only]
+    fun setup_for_debit_tests(amount_ld: u64): FungibleAsset acquires OftImpl {
+        // Initialize required modules and config
+        oft::oapp_store::init_module_for_test();
+        oft_store::init_module_for_test();
+        init_module_for_test();
+        oft_impl_config::init_module_for_test();
+
+        // Create a simple test FungibleAsset and mint amount_ld
+        let creator = &std::account::create_signer_for_test(@0xCAFE);
+        let constructor_ref = &object::create_named_object(creator, b"test_fa");
+        primary_fungible_store::create_primary_store_enabled_fungible_asset(
+            constructor_ref,
+            option::none(),
+            std::string::utf8(b""),
+            std::string::utf8(b""),
+            8,
+            std::string::utf8(b""),
+            std::string::utf8(b""),
+        );
+
+        let mint_ref = fungible_asset::generate_mint_ref(constructor_ref);
+        let fa = fungible_asset::mint(&mint_ref, amount_ld);
+
+        // Initialize adapter metadata to match the created asset
+        let admin_signer = &std::account::create_signer_for_test(get_admin());
+        let metadata_addr = object::address_from_constructor_ref(constructor_ref);
+        initialize(admin_signer, metadata_addr, 6);
+
+        fa
+    }
+
+    #[test]
+    #[expected_failure(abort_code = EUNAUTHORIZED)]
+    fun test_only_pauser_or_admin_can_toggle() acquires PauserStore {
+        oft::oapp_store::init_module_for_test();
+
+        let admin_addr = get_admin();
+        let admin_signer = &std::account::create_signer_for_test(admin_addr);
+        let pauser_addr = @0x1111;
+        let rando = &std::account::create_signer_for_test(@0x2222);
+
+        set_pauser(admin_signer, pauser_addr);
+        // Expect unauthorized when random account attempts to pause
+        set_paused(rando, true);
+    }
+
+    #[test]
+    #[expected_failure(abort_code = EPAUSED)]
+    fun test_paused_blocks_debit() acquires OftImpl, PauserStore {
+        let amount_ld = 1000u64;
+        let fa = setup_for_debit_tests(amount_ld);
+
+        let admin_signer = &std::account::create_signer_for_test(get_admin());
+        let pauser_addr = @0xABCD;
+        set_pauser(admin_signer, pauser_addr);
+        let pauser_signer = &std::account::create_signer_for_test(pauser_addr);
+        set_paused(pauser_signer, true);
+
+        let (_sent, _received) = debit_fungible_asset(@0x4444, &mut fa, 0u64, 101u32);
+        // consume FA to satisfy linear type system even though test aborts
+        primary_fungible_store::deposit(@oft_admin, fa);
+    }
+
+    #[test]
+    fun test_unpause_restores_debit() acquires OftImpl, PauserStore {
+        let amount_ld = 2000u64;
+        let fa = setup_for_debit_tests(amount_ld);
+
+        let admin_signer = &std::account::create_signer_for_test(get_admin());
+        let pauser_addr = @0xBEEF;
+        set_pauser(admin_signer, pauser_addr);
+        let pauser_signer = &std::account::create_signer_for_test(pauser_addr);
+        set_paused(pauser_signer, true);
+        set_paused(admin_signer, false);
+
+        let (sent, received) = debit_fungible_asset(@0x5555, &mut fa, 0u64, 101u32);
+        assert!(sent == amount_ld, 0);
+        assert!(received == amount_ld, 1);
+        assert!(fungible_asset::amount(&fa) == 0, 2);
+        // consume FA to satisfy linear type system
+        primary_fungible_store::deposit(@oft_admin, fa);
+    }
+
+    #[test]
+    #[expected_failure(abort_code = EUNAUTHORIZED)]
+    fun test_change_pauser_old_loses_ability_step1() acquires PauserStore {
+        oft::oapp_store::init_module_for_test();
+
+        let admin_signer = &std::account::create_signer_for_test(get_admin());
+        let pauser1 = @0xAAA1;
+        let pauser2 = @0xAAA2;
+        set_pauser(admin_signer, pauser1);
+
+        // Reassign pauser to pauser2
+        set_pauser(admin_signer, pauser2);
+
+        // Old pauser attempts to toggle and should fail
+        let pauser1_signer = &std::account::create_signer_for_test(pauser1);
+        set_paused(pauser1_signer, true);
+    }
+
+    #[test]
+    fun test_change_pauser_new_can_toggle() acquires PauserStore {
+        oft::oapp_store::init_module_for_test();
+
+        let admin_signer = &std::account::create_signer_for_test(get_admin());
+        let pauser2 = @0xAAA2;
+        // Ensure store exists and pauser2 is current pauser
+        if (!exists<PauserStore>(get_admin())) {
+            set_pauser(admin_signer, pauser2);
+        } else {
+            set_pauser(admin_signer, pauser2);
+        };
+
+        let pauser2_signer = &std::account::create_signer_for_test(pauser2);
+        set_paused(pauser2_signer, true);
+        assert!(is_paused(), 0);
+        set_paused(admin_signer, false);
+        assert!(!is_paused(), 1);
+    }
+
+    #[test]
+    #[expected_failure(abort_code = ENO_CHANGE)]
+    fun test_pause_idempotent_true() acquires PauserStore {
+        oft::oapp_store::init_module_for_test();
+
+        let admin_signer = &std::account::create_signer_for_test(get_admin());
+        let pauser = &std::account::create_signer_for_test(@0xDEAD);
+        set_pauser(admin_signer, @0xDEAD);
+        set_paused(pauser, true);
+        // Second pause should fail with ENO_CHANGE
+        set_paused(pauser, true);
+    }
+
+    #[test]
+    #[expected_failure(abort_code = ENO_CHANGE)]
+    fun test_pause_idempotent_false() acquires PauserStore {
+        oft::oapp_store::init_module_for_test();
+
+        let admin_signer = &std::account::create_signer_for_test(get_admin());
+        let pauser = &std::account::create_signer_for_test(@0xDEAE);
+        set_pauser(admin_signer, @0xDEAE);
+        // Already unpaused by default; first unpause sets to false and should fail since no change
+        set_paused(pauser, false);
+    }
+
     // ================================================ Storage Helpers ===============================================
 
     #[view]
@@ -337,4 +549,13 @@ module oft::move_oft_adapter {
     const EINVALID_METADATA_ADDRESS: u64 = 1;
     const ENOT_IMPLEMENTED: u64 = 2;
     const EWRONG_FA_METADATA: u64 = 3;
+    const EPAUSED: u64 = 4;
+    const EUNAUTHORIZED: u64 = 5;
+    const ENO_CHANGE: u64 = 6;
+    const ENOT_INITIALIZED: u64 = 7;
+
+    // ==================================================== Events ====================================================
+
+    #[event]
+    struct OutflowPauseSet has store, drop { paused: bool }
 }
