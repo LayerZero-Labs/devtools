@@ -4,12 +4,12 @@ import { PublicKey } from '@solana/web3.js'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
 
+import { formatTokenAmount } from '@layerzerolabs/devtools'
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
+import { localDecimalsToMaxWholeTokens } from '@layerzerolabs/devtools-solana'
 import { promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OFT_DECIMALS, oft } from '@layerzerolabs/oft-v2-solana-sdk'
-
-import { formatTokenAmount, localDecimalsToMaxWholeTokens } from './utils'
 
 import {
     TransactionType,
