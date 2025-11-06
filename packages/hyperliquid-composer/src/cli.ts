@@ -114,6 +114,7 @@ optionGroups
             .command(CLI_COMMANDS.SET_BLOCK)
             .description('Set block size')
             .requiredOption('-s, --size <size>', 'Block size (big/small)')
+            .option('--ci', 'CI mode - skip confirmation prompts', false)
     )
     .option(...commonOptions.privateKey())
     .action(withNormalizedNetwork(setBlock))
