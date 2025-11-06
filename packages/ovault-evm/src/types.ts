@@ -47,7 +47,7 @@ export interface SendParamsInput {
     hubLzComposeGasLimit?: bigint
 
     // Additional percentage to add to the message fee calculation, with 2 decimal precision.
-    // For example, `0.05` and `0.051` both yield an extra 5%. 
+    // For example, `0.05` and `0.051` both yield an extra 5%.
     buffer?: number
 }
 
