@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-solana-example
 
+## 0.1.4
+
+### Patch Changes
+
+- 7ef51d7: bump up versions for anchor, solana, rust
+
 ## 0.1.3
 
 ### Patch Changes

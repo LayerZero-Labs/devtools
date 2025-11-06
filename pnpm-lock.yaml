@@ -2022,7 +2022,7 @@ importers:
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/hyperliquid-composer':
-        specifier: ^1.0.3
+        specifier: ^1.0.5
         version: link:../../packages/hyperliquid-composer
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
@@ -3085,7 +3085,7 @@ importers:
         specifier: ^3.1.2
         version: link:../../packages/oft-evm
       '@layerzerolabs/ovault-evm':
-        specifier: ^0.0.6
+        specifier: ^0.1.0
         version: link:../../packages/ovault-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39

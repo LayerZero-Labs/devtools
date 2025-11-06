@@ -1,5 +1,11 @@
 # @layerzerolabs/ovault-evm
 
+## 0.1.0
+
+### Minor Changes
+
+- 057f68d: composer sync 1.1 + native token support
+
 ## 0.0.6
 
 ### Patch Changes
