@@ -231,8 +231,8 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             // EOF: Validate combination of parameters
 
             const maxSupplyRaw = localDecimalsToMaxWholeTokens(decimals)
-            const maxSupplyFormatted = formatTokenAmount(maxSupplyRaw)
-            const maxSupplyStatement = `You have chosen ${decimals} local decimals. The maximum supply of your Solana OFT token will be ${maxSupplyFormatted.full} (~${maxSupplyFormatted.compact}).\n`
+            const { full, compact } = formatTokenAmount(maxSupplyRaw)
+            const maxSupplyStatement = `You have chosen ${decimals} local decimals. The maximum supply of your Solana OFT token will be ${full} (~${compact}).\n`
             const confirmMaxSupply = await promptToContinue(maxSupplyStatement)
             if (!confirmMaxSupply) {
                 return
