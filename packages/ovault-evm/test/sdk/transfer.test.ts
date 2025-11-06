@@ -206,6 +206,7 @@ describe('generateOVaultInputs', function () {
         })
     })
 
+    // These tests should be run manually.
     describe.skip('OFT Vaulting', () => {
         const hubChain = chainInputs[hubChainKey]!
         /**

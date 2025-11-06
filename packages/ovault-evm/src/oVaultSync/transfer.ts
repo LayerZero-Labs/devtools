@@ -241,8 +241,7 @@ export class OVaultSyncMessageBuilder {
     }
 
     static async buildSendParams(input: SendParamsInput) {
-        const { amount, srcEid, dstEid, composerAddress, hubEid, dstAmount, minDstAmount, tokenAddress, slippage } =
-            input
+        const { amount, srcEid, dstEid, composerAddress, hubEid, dstAmount, minDstAmount, slippage } = input
 
         const options = Options.newOptions()
 
@@ -267,14 +266,9 @@ export class OVaultSyncMessageBuilder {
         const gasLimit = input.hubLzComposeGasLimit ?? (dstIsHubChain ? 175_000n : 375_000n)
         options.addExecutorComposeOption(0, gasLimit, hubMessageFee.nativeFee)
 
-        let minAmountLD = amount // If it's an OFT transfer there should be no slippage
-
-        if (hexToBigInt(tokenAddress) === 0n) {
-            // If sending native tokens, we need to account for slippage
-            const amountDst = await this.getOutputAmount(input)
-            const slippageAmount = (amountDst * BigInt(Number(slippage.toFixed(3)) * 1000)) / 1000n
-            minAmountLD = amountDst - slippageAmount
-        }
+        const amountDst = await this.getOutputAmount(input)
+        const slippageAmount = (amountDst * BigInt(Number(slippage.toFixed(3)) * 1000)) / 1000n
+        const minAmountLD = amountDst - slippageAmount
 
         return {
             // If the src chain is not the same as the hub chain, then the first message will be to the hub chain
