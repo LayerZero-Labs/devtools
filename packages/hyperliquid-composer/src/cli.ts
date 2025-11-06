@@ -45,16 +45,51 @@ const logger = createModuleLogger(LOGGER_MODULES.SDK_HYPERLIQUID_COMPOSER, LogLe
 // Reusable option builders
 const commonOptions = {
     tokenIndex: () => ['-idx, --token-index <token-index>', 'Token index'] as const,
-    network: () => ['-n, --network <network>', 'Network (mainnet/testnet)'] as const,
+    network: () => ['-n, --network <network>', 'Network (mainnet/m or testnet/t)', 'mainnet'] as const,
     logLevel: () => ['-l, --log-level <level>', 'Log level', LogLevel.info] as const,
     privateKey: () => ['-pk, --private-key <0x>', 'Private key'] as const,
     userAddress: () => ['-u, --user <0x>', 'User address'] as const,
 }
 
+// Network normalization helper
+const normalizeNetwork = (network: string, wasDefaulted: boolean): { network: string; wasExpanded: boolean } => {
+    const normalized = network.toLowerCase()
+    let wasExpanded = false
+    let result = normalized
+
+    if (normalized === 'm') {
+        result = 'mainnet'
+        wasExpanded = true
+    } else if (normalized === 't') {
+        result = 'testnet'
+        wasExpanded = true
+    }
+
+    // Log network selection for transparency
+    if (wasDefaulted || wasExpanded) {
+        logger.info(`Using network: ${result}`)
+    }
+
+    return { network: result, wasExpanded }
+}
+
+// Wrapper to normalize options before passing to command handlers
+const withNormalizedNetwork = <T extends (...args: any[]) => any>(fn: T): T => {
+    return ((...args: any[]) => {
+        if (args[0] && typeof args[0] === 'object' && 'network' in args[0]) {
+            const originalNetwork = args[0].network
+            const wasDefaulted = originalNetwork === 'mainnet' && !process.argv.some((arg) => arg.includes('network'))
+            const { network } = normalizeNetwork(originalNetwork, wasDefaulted)
+            args[0].network = network
+        }
+        return fn(...args)
+    }) as T
+}
+
 // Combined option groups - apply multiple options at once
 const optionGroups = {
     // Base group: network + log-level (used by almost all commands)
-    base: (cmd: Command) => cmd.requiredOption(...commonOptions.network()).option(...commonOptions.logLevel()),
+    base: (cmd: Command) => cmd.option(...commonOptions.network()).option(...commonOptions.logLevel()),
 
     // Standard deployment: base + token-index + private-key
     deployment: (cmd: Command) =>
@@ -81,7 +116,7 @@ optionGroups
             .requiredOption('-s, --size <size>', 'Block size (big/small)')
     )
     .option(...commonOptions.privateKey())
-    .action(setBlock)
+    .action(withNormalizedNetwork(setBlock))
 
 // === Core Spot Management ===
 optionGroups
@@ -92,7 +127,7 @@ optionGroups
             .option('-a, --action <action>', 'Action (create/get)', 'get')
             .requiredOption(...commonOptions.tokenIndex())
     )
-    .action(coreSpotDeployment)
+    .action(withNormalizedNetwork(coreSpotDeployment))
 
 // === HIP-1 Deployment Workflow ===
 optionGroups
@@ -101,7 +136,7 @@ optionGroups
             .command(CLI_COMMANDS.ENABLE_FREEZE_PRIVILEGE)
             .description('HIP-1 Deployment 1. Enable freeze privilege (must be done before genesis)')
     )
-    .action(enableTokenFreezePrivilege)
+    .action(withNormalizedNetwork(enableTokenFreezePrivilege))
 
 optionGroups
     .deployment(
@@ -110,17 +145,19 @@ optionGroups
             .description('HIP-1 Deployment 2. Set user genesis allocations')
             .option('-a, --action <action>', 'Action (userAndWei/existingTokenAndWei/blacklistUsers)', '*')
     )
-    .action(async (options) => {
-        const validActions = ['*', 'userAndWei', 'existingTokenAndWei', 'blacklistUsers']
-        if (!validActions.includes(options.action)) {
-            throw new Error(`Invalid action: ${options.action}. Valid actions are: ${validActions.join(', ')}`)
-        }
-        await userGenesis(options)
-    })
+    .action(
+        withNormalizedNetwork(async (options) => {
+            const validActions = ['*', 'userAndWei', 'existingTokenAndWei', 'blacklistUsers']
+            if (!validActions.includes(options.action)) {
+                throw new Error(`Invalid action: ${options.action}. Valid actions are: ${validActions.join(', ')}`)
+            }
+            await userGenesis(options)
+        })
+    )
 
 optionGroups
     .deployment(program.command(CLI_COMMANDS.SET_GENESIS).description('HIP-1 Deployment 3. Deploy token with genesis'))
-    .action(genesis)
+    .action(withNormalizedNetwork(genesis))
 
 optionGroups
     .deployment(
@@ -128,7 +165,7 @@ optionGroups
             .command(CLI_COMMANDS.CREATE_SPOT_DEPLOYMENT)
             .description('HIP-1 Deployment 4. Create spot deployment without hyperliquidity')
     )
-    .action(createSpotDeployment)
+    .action(withNormalizedNetwork(createSpotDeployment))
 
 optionGroups
     .deployment(
@@ -136,7 +173,7 @@ optionGroups
             .command(CLI_COMMANDS.REGISTER_SPOT)
             .description('HIP-1 Deployment 5. Register trading spot against USDC')
     )
-    .action(registerTradingSpot)
+    .action(withNormalizedNetwork(registerTradingSpot))
 
 // === Optional HIP-1 Features ===
 optionGroups
@@ -146,7 +183,7 @@ optionGroups
             .description('HIP-1 Deployment Optional. Set deployer trading fee share')
             .requiredOption('-s, --share <share>', 'Share')
     )
-    .action(tradingFee)
+    .action(withNormalizedNetwork(tradingFee))
 
 optionGroups
     .deployment(
@@ -156,7 +193,7 @@ optionGroups
                 'HIP-1 Deployment Optional. Enable token as quote asset - requirements: https://t.me/hyperliquid_api/243'
             )
     )
-    .action(enableTokenQuoteAsset)
+    .action(withNormalizedNetwork(enableTokenQuoteAsset))
 
 // === EVM-HyperCore Linking ===
 optionGroups
@@ -166,13 +203,13 @@ optionGroups
             .description('Linking 1. Request to link HyperCore token to EVM contract')
     )
     .option('-pk, --private-key <0x>', 'HyperCore Asset deployer private key')
-    .action(requestEvmContract)
+    .action(withNormalizedNetwork(requestEvmContract))
 
 optionGroups
     .evmLinking(
         program.command(CLI_COMMANDS.FINALIZE_EVM_CONTRACT).description('Linking 2. Finalize the EVM contract linking')
     )
-    .action(finalizeEvmContract)
+    .action(withNormalizedNetwork(finalizeEvmContract))
 
 // === Post-Launch Management ===
 optionGroups
@@ -183,7 +220,7 @@ optionGroups
             .requiredOption('-u, --user-address <0x>', 'User address to freeze/unfreeze')
             .requiredOption('-f, --freeze <true|false>', 'True to freeze, false to unfreeze')
     )
-    .action(freezeTokenUser)
+    .action(withNormalizedNetwork(freezeTokenUser))
 
 optionGroups
     .deployment(
@@ -191,7 +228,7 @@ optionGroups
             .command(CLI_COMMANDS.REVOKE_FREEZE_PRIVILEGE)
             .description('Permanently revoke freeze privilege (irreversible)')
     )
-    .action(revokeTokenFreezePrivilege)
+    .action(withNormalizedNetwork(revokeTokenFreezePrivilege))
 
 // === Info & Queries ===
 optionGroups
@@ -205,7 +242,7 @@ optionGroups
             )
             .option('-da, --deployer-address <0x>', 'Core spot deployer address (optional)')
     )
-    .action(spotDeployState)
+    .action(withNormalizedNetwork(spotDeployState))
 
 optionGroups
     .base(
@@ -214,16 +251,18 @@ optionGroups
             .description('Get detailed information about a HyperCore HIP-1 token')
             .requiredOption(...commonOptions.tokenIndex())
     )
-    .action(hipTokenInfo)
+    .action(withNormalizedNetwork(hipTokenInfo))
 
 optionGroups
     .userQuery(
         program.command(CLI_COMMANDS.IS_ACCOUNT_ACTIVATED).description('Check if an address is activated on HyperCore')
     )
-    .action(async (options) => {
-        const res = await isAccountActivated(options)
-        logger.info(`Account activated: ${res}`)
-    })
+    .action(
+        withNormalizedNetwork(async (options) => {
+            const res = await isAccountActivated(options)
+            logger.info(`Account activated: ${res}`)
+        })
+    )
 
 optionGroups
     .userQuery(
@@ -232,10 +271,12 @@ optionGroups
             .description('Get core balances for a user')
             .option('--show-zero', 'Show balances with zero amounts', false)
     )
-    .action(async (options) => {
-        const balances = await getCoreBalances(options)
-        logger.info(formatBalancesTable(balances, options.showZero))
-    })
+    .action(
+        withNormalizedNetwork(async (options) => {
+            const balances = await getCoreBalances(options)
+            logger.info(formatBalancesTable(balances, options.showZero))
+        })
+    )
 
 optionGroups
     .base(
@@ -244,7 +285,7 @@ optionGroups
             .description('List all spot trading pairs for a given token index')
             .requiredOption(...commonOptions.tokenIndex())
     )
-    .action(listSpotPairs)
+    .action(withNormalizedNetwork(listSpotPairs))
 
 optionGroups
     .base(
@@ -252,7 +293,7 @@ optionGroups
             .command(CLI_COMMANDS.SPOT_AUCTION_STATUS)
             .description('Show current spot pair deploy auction status and gas costs')
     )
-    .action(spotAuctionStatus)
+    .action(withNormalizedNetwork(spotAuctionStatus))
 
 // === Utilities ===
 optionGroups
@@ -262,6 +303,6 @@ optionGroups
             .description('Convert token index to bridge address')
             .requiredOption(...commonOptions.tokenIndex())
     )
-    .action(intoAssetBridgeAddress)
+    .action(withNormalizedNetwork(intoAssetBridgeAddress))
 
 program.parse()
