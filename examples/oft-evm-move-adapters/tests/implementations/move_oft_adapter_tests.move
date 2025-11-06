@@ -30,6 +30,7 @@ module oft::move_oft_adapter_tests {
         is_blocklisted,
         set_paused,
         set_pauser,
+        remove_pauser,
         set_fee_bps,
         set_fee_deposit_address,
     };
@@ -177,6 +178,25 @@ module oft::move_oft_adapter_tests {
         set_paused(ps, true);
 
         let _ = credit(@0x7777, amount_ld, src_eid, option::none());
+    }
+
+    #[test]
+    #[expected_failure(abort_code = 5)] // EUNAUTHORIZED
+    fun test_removed_pauser_loses_ability() {
+        setup();
+
+        let admin = &create_signer_for_test(@oft_admin);
+        let p1 = @0x111;
+        let p2 = @0x222;
+        set_pauser(admin, p1);
+        set_pauser(admin, p2);
+
+        // Remove p1
+        remove_pauser(admin, p1);
+
+        // p1 should no longer be authorized
+        let ps1 = &create_signer_for_test(p1);
+        set_paused(ps1, true);
     }
 
     #[test]

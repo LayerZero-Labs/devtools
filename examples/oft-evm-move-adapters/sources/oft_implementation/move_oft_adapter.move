@@ -290,7 +290,7 @@ module oft::move_oft_adapter {
         borrow_global<PauserStore>(admin_addr).paused
     }
 
-    /// Set the pauser address (admin-only). Creates the store at current admin address if missing.
+    /// Add a pauser address (admin-only). Creates the store at current admin address if missing.
     public entry fun set_pauser(admin: &signer, pauser: address) acquires PauserStore {
         let admin_addr = address_of(admin);
         assert_admin(admin_addr);
@@ -302,6 +302,23 @@ module oft::move_oft_adapter {
         } else {
             move_to<PauserStore>(admin, PauserStore { pausers: vector[pauser], paused: false });
         }
+    }
+
+    /// Remove a pauser address (admin-only). No-op if the address is not present.
+    public entry fun remove_pauser(admin: &signer, pauser: address) acquires PauserStore {
+        let admin_addr = address_of(admin);
+        assert_admin(admin_addr);
+        assert!(exists<PauserStore>(admin_addr), ENOT_INITIALIZED);
+        let store_mut = borrow_global_mut<PauserStore>(admin_addr);
+        let i = 0u64;
+        let n = vector::length(&store_mut.pausers);
+        while (i < n) {
+            if (*vector::borrow(&store_mut.pausers, i) == pauser) {
+                vector::remove(&mut store_mut.pausers, i);
+                return
+            };
+            i = i + 1;
+        };
     }
 
     /// Toggle pause (pauser or admin can call)
