@@ -104,7 +104,7 @@
     "typescript": "^5.4.4"
   },
   "engines": {
-    "node": ">=18.16.0"
+    "node": ">=20.19.5"
   },
   "pnpm": {
     "overrides": {
