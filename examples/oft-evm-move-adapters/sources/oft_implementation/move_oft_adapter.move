@@ -8,14 +8,17 @@
 /// because there is not a rebalancing mechanism that can ensure pools maintain sufficient balance.
 module oft::move_oft_adapter {
     use std::coin::Coin;
+    use std::event::emit;
     use std::fungible_asset::{Self, FungibleAsset, Metadata};
     use std::object::{Self, address_to_object, ExtendRef, Object, object_exists};
     use std::option::{Self, Option};
+    use std::vector;
     use std::primary_fungible_store;
     use std::signer::address_of;
+    use aptos_framework::account;
 
     use endpoint_v2_common::bytes32::Bytes32;
-    use oft::oapp_core::{assert_admin, combine_options};
+    use oft::oapp_core::{assert_admin, combine_options, get_admin};
     use oft::oapp_store::OAPP_ADDRESS;
     use oft::oft_core;
     use oft::oft_impl_config::{
@@ -39,6 +42,11 @@ module oft::move_oft_adapter {
         escrow_extend_ref: ExtendRef,
     }
 
+    // =================================================== Pauser Store ==================================================
+
+    /// Separate resource to keep upgrades safe (no change to OftImpl layout)
+    struct PauserStore has key { pausers: vector<address>, paused: bool }
+
     // ================================================= OFT Handlers =================================================
 
     /// The default *credit* behavior for a Adapter OFT is to unlock the amount from escrow and credit the recipient
@@ -47,7 +55,9 @@ module oft::move_oft_adapter {
         amount_ld: u64,
         src_eid: u32,
         lz_receive_value: Option<FungibleAsset>,
-    ): u64 acquires OftImpl {
+    ): u64 acquires OftImpl, PauserStore {
+        // Global inflow pause gate
+        assert!(!is_paused(), EPAUSED);
         // Default implementation does not make special use of LZ Receive Value sent; just deposit to the OFT address
         option::for_each(lz_receive_value, |fa| primary_fungible_store::deposit(@oft_admin, fa));
 
@@ -56,6 +66,9 @@ module oft::move_oft_adapter {
 
         // unlock the amount from escrow
         let escrow_signer = &object::generate_signer_for_extending(&store().escrow_extend_ref);
+
+        // Create recipient account if it doesn't exist
+        account::create_account_if_does_not_exist(to);
 
         // Deposit the extracted amount to the recipient, or redirect to the admin if the recipient is blocklisted
         primary_fungible_store::transfer(
@@ -76,9 +89,11 @@ module oft::move_oft_adapter {
         fa: &mut FungibleAsset,
         min_amount_ld: u64,
         dst_eid: u32,
-    ): (u64, u64) acquires OftImpl {
+    ): (u64, u64) acquires OftImpl, PauserStore {
         assert_not_blocklisted(sender);
         assert_metadata(fa);
+        // Global outflow pause gate
+        assert!(!is_paused(), EPAUSED);
 
         // Calculate the exact send amount
         let amount_ld = fungible_asset::amount(fa);
@@ -266,6 +281,65 @@ module oft::move_oft_adapter {
         oft_limit::new_oft_limit(0, oft_impl_config::rate_limit_capacity(eid))
     }
 
+    // ==================================================== Pauser Logic ===================================================
+
+    #[view]
+    public fun is_paused(): bool acquires PauserStore {
+        let admin_addr = get_admin();
+        if (!exists<PauserStore>(admin_addr)) { return false };
+        borrow_global<PauserStore>(admin_addr).paused
+    }
+
+    /// Add a pauser address (admin-only). Creates the store at current admin address if missing.
+    public entry fun set_pauser(admin: &signer, pauser: address) acquires PauserStore {
+        let admin_addr = address_of(admin);
+        assert_admin(admin_addr);
+        if (exists<PauserStore>(admin_addr)) {
+            let store_mut = borrow_global_mut<PauserStore>(admin_addr);
+            if (!vector::contains(&store_mut.pausers, &pauser)) {
+                vector::push_back(&mut store_mut.pausers, pauser);
+            };
+        } else {
+            move_to<PauserStore>(admin, PauserStore { pausers: vector[pauser], paused: false });
+        }
+    }
+
+    /// Remove a pauser address (admin-only). No-op if the address is not present.
+    public entry fun remove_pauser(admin: &signer, pauser: address) acquires PauserStore {
+        let admin_addr = address_of(admin);
+        assert_admin(admin_addr);
+        assert!(exists<PauserStore>(admin_addr), ENOT_INITIALIZED);
+        let store_mut = borrow_global_mut<PauserStore>(admin_addr);
+        let i = 0u64;
+        let n = vector::length(&store_mut.pausers);
+        while (i < n) {
+            if (*vector::borrow(&store_mut.pausers, i) == pauser) {
+                vector::remove(&mut store_mut.pausers, i);
+                return
+            };
+            i = i + 1;
+        };
+    }
+
+    /// Toggle pause (pauser or admin can call)
+    public entry fun set_paused(caller: &signer, paused: bool) acquires PauserStore {
+        let admin_addr = get_admin();
+        assert!(exists<PauserStore>(admin_addr), ENOT_INITIALIZED);
+        let caller_addr = address_of(caller);
+        let store_mut = borrow_global_mut<PauserStore>(admin_addr);
+        assert!(caller_addr == admin_addr || vector::contains(&store_mut.pausers, &caller_addr), EUNAUTHORIZED);
+        assert!(store_mut.paused != paused, ENO_CHANGE);
+        store_mut.paused = paused;
+        emit(PauseSet { paused });
+    }
+
+    #[view]
+    public fun is_pauser(addr: address): bool acquires PauserStore {
+        let admin_addr = get_admin();
+        if (!exists<PauserStore>(admin_addr)) { return false };
+        vector::contains(&borrow_global<PauserStore>(admin_addr).pausers, &addr)
+    }
+
     #[view]
     /// Total value locked in the contract
     public fun tvl(): u64 acquires OftImpl {
@@ -313,6 +387,10 @@ module oft::move_oft_adapter {
         init_module(&std::account::create_signer_for_test(OAPP_ADDRESS()));
     }
 
+    // ================================================ Tests Helpers =================================================
+    #[test_only]
+    public fun pause_set_event(paused: bool): PauseSet { PauseSet { paused } }
+
     // ================================================ Storage Helpers ===============================================
 
     #[view]
@@ -333,4 +411,13 @@ module oft::move_oft_adapter {
     const EINVALID_METADATA_ADDRESS: u64 = 1;
     const ENOT_IMPLEMENTED: u64 = 2;
     const EWRONG_FA_METADATA: u64 = 3;
+    const EPAUSED: u64 = 4;
+    const EUNAUTHORIZED: u64 = 5;
+    const ENO_CHANGE: u64 = 6;
+    const ENOT_INITIALIZED: u64 = 7;
+
+    // ==================================================== Events ====================================================
+
+    #[event]
+    struct PauseSet has store, drop { paused: bool }
 }

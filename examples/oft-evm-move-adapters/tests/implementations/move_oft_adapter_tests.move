@@ -22,9 +22,15 @@ module oft::move_oft_adapter_tests {
     use oft::move_oft_adapter::{
         Self,
         escrow_address,
+        credit,
+        debit_fungible_asset,
         fee_bps,
         fee_deposit_address,
+        is_paused,
         is_blocklisted,
+        set_paused,
+        set_pauser,
+        remove_pauser,
         set_fee_bps,
         set_fee_deposit_address,
     };
@@ -57,6 +63,140 @@ module oft::move_oft_adapter_tests {
         );
 
         mint_ref
+    }
+
+    // ============================= Pauser Tests (moved from source) =============================
+
+    #[test]
+    fun test_pauser_toggle() {
+        setup();
+
+        let admin = &create_signer_for_test(@oft_admin);
+        let p = @0x1234;
+        set_pauser(admin, p);
+        assert!(!is_paused(), 0);
+
+        let ps = &create_signer_for_test(p);
+        set_paused(ps, true);
+        assert!(is_paused(), 1);
+
+        set_paused(admin, false);
+        assert!(!is_paused(), 2);
+    }
+
+    #[test]
+    #[expected_failure(abort_code = 5)] // EUNAUTHORIZED
+    fun test_only_pauser_or_admin_can_toggle() {
+        setup();
+
+        let admin = &create_signer_for_test(@oft_admin);
+        let p = @0x1111;
+        let rando = &create_signer_for_test(@0x2222);
+        set_pauser(admin, p);
+        set_paused(rando, true);
+    }
+
+    #[test]
+    #[expected_failure(abort_code = 4)] // EPAUSED
+    fun test_paused_blocks_debit() {
+        let mint_ref = setup();
+        let admin = &create_signer_for_test(@oft_admin);
+        let p = @0xABCD;
+        set_pauser(admin, p);
+        let ps = &create_signer_for_test(p);
+        set_paused(ps, true);
+
+        let fa = mint(&mint_ref, 1000);
+        let (_s, _r) = debit_fungible_asset(@0x4444, &mut fa, 0, 101);
+        // Consume FA to satisfy linear types even though test aborts
+        burn_token_for_test(fa);
+    }
+
+    #[test]
+    fun test_unpause_restores_debit() {
+        let mint_ref = setup();
+        let admin = &create_signer_for_test(@oft_admin);
+        let p = @0xBEEF;
+        set_pauser(admin, p);
+        let ps = &create_signer_for_test(p);
+        set_paused(ps, true);
+        set_paused(admin, false);
+
+        let fa = mint(&mint_ref, 2000);
+        let (sent, received) = debit_fungible_asset(@0x5555, &mut fa, 0, 101);
+        assert!(sent == 2000, 0);
+        assert!(received == 2000, 1);
+        assert!(fungible_asset::amount(&fa) == 0, 2);
+        burn_token_for_test(fa);
+    }
+
+    #[test]
+    fun test_additional_pauser_can_toggle() {
+        setup();
+
+        let admin = &create_signer_for_test(@oft_admin);
+        let p1 = @0xAAA1;
+        let p2 = @0xAAA2;
+        set_pauser(admin, p1);
+        set_pauser(admin, p2);
+
+        let ps1 = &create_signer_for_test(p1);
+        set_paused(ps1, true);
+        assert!(is_paused(), 0);
+        let ps2 = &create_signer_for_test(p2);
+        set_paused(ps2, false);
+        assert!(!is_paused(), 1);
+    }
+
+    #[test]
+    #[expected_failure(abort_code = 5)] // EUNAUTHORIZED
+    fun test_non_pauser_still_unauthorized() {
+        setup();
+        let admin = &create_signer_for_test(@oft_admin);
+        let p = @0xAAA2;
+        set_pauser(admin, p);
+        let r = &create_signer_for_test(@0xCAFE);
+        set_paused(r, true);
+    }
+
+    #[test]
+    #[expected_failure(abort_code = 4)] // EPAUSED
+    fun test_credit_blocked_when_paused() {
+        let mint_ref = setup();
+        let amount_ld = 500u64;
+
+        // Prepare escrow balance
+        let deposit = mint(&mint_ref, amount_ld);
+        let src_eid = 101u32;
+        let (_s2, _r2) = debit_fungible_asset(@0x444, &mut deposit, 0, src_eid);
+        burn_token_for_test(deposit);
+
+        let admin = &create_signer_for_test(@oft_admin);
+        let p = @0xD00D;
+        set_pauser(admin, p);
+        let ps = &create_signer_for_test(p);
+        set_paused(ps, true);
+
+        let _ = credit(@0x7777, amount_ld, src_eid, option::none());
+    }
+
+    #[test]
+    #[expected_failure(abort_code = 5)] // EUNAUTHORIZED
+    fun test_removed_pauser_loses_ability() {
+        setup();
+
+        let admin = &create_signer_for_test(@oft_admin);
+        let p1 = @0x111;
+        let p2 = @0x222;
+        set_pauser(admin, p1);
+        set_pauser(admin, p2);
+
+        // Remove p1
+        remove_pauser(admin, p1);
+
+        // p1 should no longer be authorized
+        let ps1 = &create_signer_for_test(p1);
+        set_paused(ps1, true);
     }
 
     #[test]
