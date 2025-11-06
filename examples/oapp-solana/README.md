@@ -25,9 +25,9 @@ For a more thorough walkthrough of how a Solana OApp works, refer to [Solana OAp
 
 ## Requirements
 
-- Rust `v1.75.0`
-- Anchor `v0.29`
-- Solana CLI `v1.17.31`
+- Rust `1.84.1`
+- Anchor `v0.31.1`
+- Solana CLI `v2.2.20`
 - Docker
 - Node.js
 
@@ -38,8 +38,6 @@ We recommend using `pnpm` as a package manager (but you can of course use a pack
 [Docker](https://docs.docker.com/get-started/get-docker/) is required to build using anchor. We highly recommend that you use the most up-to-date Docker version to avoid any issues with anchor
 builds.
 
-:warning: You need anchor version `0.29` and solana version `1.17.31` specifically to compile the build artifacts. Using higher Anchor and Solana versions can introduce unexpected issues during compilation. See the following issues in Anchor's repo: [1](https://github.com/coral-xyz/anchor/issues/3089), [2](https://github.com/coral-xyz/anchor/issues/2835). After compiling the correct build artifacts, you can change the Solana version to higher versions.
-
 ### Install Rust
 
 ```bash
@@ -49,7 +47,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ### Install Solana
 
 ```bash
-sh -c "$(curl -sSfL https://release.anza.xyz/v1.17.31/install)"
+sh -c "$(curl -sSfL https://release.anza.xyz/v2.2.20/install)"
 ```
 
 If this is your first time installing the Solana CLI, run the following to [generate a keypair](https://solana.com/docs/intro/installation#create-wallet) at the default keypair path (`~/.config/solana/id.json`):
@@ -63,7 +61,7 @@ solana-keygen new
 Install and use the correct version
 
 ```bash
-cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 anchor-cli --locked
+cargo install --git https://github.com/solana-foundation/anchor --tag v0.31.1 anchor-cli --locked
 ```
 
 ### Get the code
@@ -178,16 +176,6 @@ Where `<OAPP_PROGRAM_ID>` is replaced with your OApp Program ID copied from the 
 
 #### Deploy the Solana OApp
 
-While for building, we must use Solana `v1.17.31`, for deploying, we will be using `v1.18.26` as it provides an improved program deployment experience (i.e. ability to attach priority fees and also exact-sized on-chain program length which prevents needing to provide 2x the rent as in `v1.17.31`).
-
-##### Temporarily switch to Solana `v1.18.26`
-
-First, we switch to Solana `v1.18.26` (remember to switch back to `v1.17.31` later)
-
-```bash
-sh -c "$(curl -sSfL https://release.anza.xyz/v1.18.26/install)"
-```
-
 ##### Run the deploy command
 
 ```bash
@@ -199,14 +187,6 @@ solana program deploy --program-id target/deploy/my_oapp-keypair.json target/ver
 :information_source: the `-u` flag specifies the RPC URL that should be used. The options are `mainnet-beta, devnet, testnet, localhost`, which also have their respective shorthands: `-um, -ud, -ut, -ul`
 
 :warning: If the deployment is slow, it could be that the network is congested and you might need to increase the priority fee.
-
-##### Switch back to Solana `1.17.31`
-
-:warning: After deploying, make sure to switch back to v1.17.31 after deploying. If you need to rebuild artifacts, you must use Solana CLI version `1.17.31` and Anchor version `0.29.0`
-
-```bash
-sh -c "$(curl -sSfL https://release.anza.xyz/v1.17.31/install)"
-```
 
 ### Initialize the Solana OApp account
 

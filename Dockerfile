@@ -1,3 +1,5 @@
+# check=skip=SecretsUsedInArgOrEnv
+
 # We will alow consumers to specify the node version in case we want
 # to test under different versions (since we cannot control users environment)
 # 
@@ -10,7 +12,7 @@
 # 
 # This issue does not affect users, it's only related to the test runner
 # so the code will still work on node 18.16.0
-ARG NODE_VERSION=20.10.0
+ARG NODE_VERSION=20.19
 
 # We will allow consumers to override build stages with prebuilt images
 # 
@@ -65,7 +67,7 @@ ARG INITIA_NODE_IMAGE=node-initia-localnet
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM node:$NODE_VERSION AS machine
+FROM node:$NODE_VERSION-bookworm AS machine
 
 ENV PATH="/root/.cargo/bin:$PATH"
 
@@ -94,15 +96,23 @@ RUN apt-get install --yes \
     libatomic1 libssl-dev \
     # Required to build the base image
     build-essential \
+    # Required for node-gyp to build native Node.js modules (like utf-8-validate, bufferutil)
+    python3 python3-dev python3-setuptools python3-pip \
+    # Additional build tools required for ARM64 native module compilation
+    make g++ \
     # speed up llvm builds
-    ninja-build
-
+    ninja-build && \
+    # Clean up apt cache to reduce image size
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ### Setup rust
-# Install rust and set the default toolchain to 1.75.0
-ARG RUST_TOOLCHAIN_VERSION=1.75.0
-ENV RUSTUP_VERSION=${RUST_TOOLCHAIN_VERSION}
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${RUST_TOOLCHAIN_VERSION}
+# Install rust and set the default toolchain to 1.84.1
+# https://github.com/anza-xyz/agave/blob/v2.2.20/rust-toolchain.toml
+ARG RUST_TOOLCHAIN_VERSION=1.84.1
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
+    | sh -s -- -y --profile minimal --default-toolchain ${RUST_TOOLCHAIN_VERSION}
+RUN rustup toolchain install 1.84.1
 RUN rustc --version
 
 ### Setup go
@@ -131,6 +141,9 @@ RUN aptosup -l
 
 # Install docker
 RUN curl -sSL https://get.docker.com/ | sh
+
+# Print glibc version
+RUN ldd --version | head -n1
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -214,32 +227,30 @@ RUN initiad version --long
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 #
-#               Image that builds AVM & Anchor
+#               Image that builds Anchor
 #
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM machine AS avm
+FROM machine AS anchor
 
-WORKDIR /app/avm
+WORKDIR /app/anchor
 
-ENV RUST_TOOLCHAIN_VERSION_ANCHOR=1.83.0
+ENV RUST_TOOLCHAIN_VERSION_ANCHOR=1.84.1
 RUN rustup default ${RUST_TOOLCHAIN_VERSION_ANCHOR}
-ARG ANCHOR_VERSION=0.29.0
+ARG ANCHOR_VERSION=0.31.1
 
-# Configure cargo. We want to provide a way of limiting cargo resources
-# on the github runner since it is not large enough to support multiple cargo builds
+# Configure cargo for faster builds
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
+ENV CARGO_NET_GIT_FETCH_WITH_CLI=true
+ENV CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
 
-RUN cargo +${RUST_TOOLCHAIN_VERSION_ANCHOR} install --git https://github.com/coral-xyz/anchor avm
-
-# Install AVM - Anchor version manager for Solana
-RUN avm install ${ANCHOR_VERSION}
-RUN avm use ${ANCHOR_VERSION}
+# Install anchor-cli with optimizations
+RUN cargo install --git https://github.com/solana-foundation/anchor --tag v${ANCHOR_VERSION} anchor-cli \
+    --profile release --locked
 
 ENV PATH="/root/.avm/bin:$PATH"
-RUN avm --version
 RUN anchor --version
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
@@ -255,16 +266,19 @@ FROM machine AS solana
 
 WORKDIR /app/solana
 
-ENV RUST_TOOLCHAIN_VERSION_SOLANA=1.75.0
-ARG SOLANA_VERSION=1.18.26
-ARG PLATFORM_TOOLS_VERSION=1.41
+ENV RUST_TOOLCHAIN_VERSION_SOLANA=1.84.1
+ARG SOLANA_VERSION=2.2.20
 
 RUN rustup default ${RUST_TOOLCHAIN_VERSION_SOLANA}
 
-# Configure cargo. We want to provide a way of limiting cargo resources
-# on the github runner since it is not large enough to support multiple cargo builds
+# Configure cargo with optimizations for CI builds
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
+# Use sccache if available and configure cargo for faster builds
+ENV CARGO_NET_GIT_FETCH_WITH_CLI=true
+ENV CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
+ENV CARGO_PROFILE_RELEASE_LTO=thin
+ENV CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
 
 RUN BUILD_FROM_SOURCE=true; \
     # Install Solana using a binary with a fallback to installing from source. 
@@ -278,44 +292,65 @@ RUN BUILD_FROM_SOURCE=true; \
     # List of machines that need to be built from source:
     # - arm64/linux - last checked on Feb 11, 2025
     if [ "$BUILD_FROM_SOURCE" = "true" ]; then \
-            git clone https://github.com/anza-xyz/agave.git --depth 1 --branch v${SOLANA_VERSION} ~/solana-v${SOLANA_VERSION} && \
-            # Produces the same directory structure as the prebuilt binaries
-            # Make the active release point to the new release
-            bash ~/solana-v${SOLANA_VERSION}/scripts/cargo-install-all.sh ~/.local/share/solana/install/releases/${SOLANA_VERSION} && \
-            ln --symbolic ~/.local/share/solana/install/releases/${SOLANA_VERSION} ~/.local/share/solana/install/active_release && \
-            # Clean up the source code
-            rm -rf ~/solana-v${SOLANA_VERSION}; \
-        fi
-
-
-RUN mkdir -p /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools && \
+        git clone https://github.com/anza-xyz/agave.git --depth 1 --branch v${SOLANA_VERSION} ~/solana-v${SOLANA_VERSION} && \
+        # Produces the same directory structure as the prebuilt binaries
+        # Make the active release point to the new release
+        bash ~/solana-v${SOLANA_VERSION}/scripts/cargo-install-all.sh ~/.local/share/solana/install/releases/${SOLANA_VERSION} && \
+        ln --symbolic ~/.local/share/solana/install/releases/${SOLANA_VERSION} ~/.local/share/solana/install/active_release && \
+        # Clean up the source code
+        rm -rf ~/solana-v${SOLANA_VERSION}; \
+    fi
+        
+# Install platform tools with better caching and parallel builds
+# https://github.dev/anza-xyz/agave/blob/v2.2.20/sbf/scripts/install.sh
+ARG PLATFORM_TOOLS_VERSION=1.48
+RUN --mount=type=cache,target=/tmp/platform-tools-cache \
+    set -e; \
+    mkdir -p /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools; \
     BUILD_FROM_SOURCE=true; \
-    # If we are NOT building from source, we can simply grab the prebuilt binaries
-    if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
-        # Platform tools v1.41 has prebuilt binaries for amd64/linux - we extract and move it to the cache directory
-        curl -sL https://github.com/anza-xyz/platform-tools/releases/download/v1.41/platform-tools-linux-x86_64.tar.bz2 | tar -xj && \
-        mv llvm/ rust/ version.md /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools/; \
-        BUILD_FROM_SOURCE=false; \
-    fi && \
-    # List of machines that need to be built from source:
-    # - arm64/linux - last checked on Feb 10, 2025
+    arch_deb="$(dpkg --print-architecture)"; \
+    case "$arch_deb" in \
+        amd64) gh_arch="x86_64" ;; \
+        arm64) gh_arch="aarch64" ;; \
+        *) gh_arch="" ;; \
+    esac; \
+    if [ -n "$gh_arch" ]; then \
+        # try prebuilt with cache
+        if [ -f "/tmp/platform-tools-cache/platform-tools-linux-${gh_arch}-${PLATFORM_TOOLS_VERSION}.tar.bz2" ]; then \
+            echo "Using cached platform tools"; \
+            tar -xjf "/tmp/platform-tools-cache/platform-tools-linux-${gh_arch}-${PLATFORM_TOOLS_VERSION}.tar.bz2"; \
+            mv llvm/ rust/ version.md /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools/; \
+            BUILD_FROM_SOURCE=false; \
+        elif curl -fsSL "https://github.com/anza-xyz/platform-tools/releases/download/v${PLATFORM_TOOLS_VERSION}/platform-tools-linux-${gh_arch}.tar.bz2" \
+            -o "/tmp/platform-tools-cache/platform-tools-linux-${gh_arch}-${PLATFORM_TOOLS_VERSION}.tar.bz2" && \
+            tar -xjf "/tmp/platform-tools-cache/platform-tools-linux-${gh_arch}-${PLATFORM_TOOLS_VERSION}.tar.bz2"; then \
+            mv llvm/ rust/ version.md /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools/; \
+            BUILD_FROM_SOURCE=false; \
+        else \
+            echo "No prebuilt available for v${PLATFORM_TOOLS_VERSION} (${gh_arch}) — will build from source."; \
+        fi; \
+    fi; \
+    # Build from source with optimizations for CI
     if [ "$BUILD_FROM_SOURCE" = "true" ]; then \
-            # Grab platform tools's source code at the version tagged in PLATFORM_TOOLS_VERSION
-            curl -sL https://github.com/anza-xyz/platform-tools/archive/refs/tags/v${PLATFORM_TOOLS_VERSION}.tar.gz | tar -xz && \
-            cd platform-tools-${PLATFORM_TOOLS_VERSION} && \
-            # Optimizing (and transforming) the build.sh script
-            # Only cloning the latest commit across the several git clones
-            sed -i '/^git clone/ s/$/ --depth 1/' build.sh && \
-            # Comment out the line that contains *llvm/lib/python (it is line 120) in build.sh to prevent the build from failing due to missing llvm python - not required for solana
-            sed -i '/llvm\/lib\/python/ s/^/#/' build.sh && \
-            # Now that we're done with the modifications, we can build the binaries into the folder "target"
-            ./build.sh target && \
-            # Extract the binaries to the cache directory
-            tar -xf platform-tools-linux-aarch64.tar.bz2 && \
-            mv llvm/ rust/ version.md /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools/ && \
-            # Clean up the source code
-            cd ../ && rm -rf platform-tools-${PLATFORM_TOOLS_VERSION}; \
-        fi
+        curl -fsSL "https://github.com/anza-xyz/platform-tools/archive/refs/tags/v${PLATFORM_TOOLS_VERSION}.tar.gz" | tar -xz; \
+        cd "platform-tools-${PLATFORM_TOOLS_VERSION}"; \
+        # Optimizing (and transforming) the build.sh script
+        # Only cloning the latest commit across the several git clones
+        sed -i '/^git clone/ s/$/ --depth 1/' build.sh; \
+        # Comment out the line that contains *llvm/lib/python (it is line 120) in build.sh to prevent the build from failing due to missing llvm python - not required for solan
+        sed -i '/llvm\/lib\/python/ s/^/#/' build.sh; \
+        # Use available CPU cores for faster builds
+        export MAKEFLAGS="-j$(nproc)"; \
+        ./build.sh target; \
+        case "$arch_deb" in \
+            amd64)  tar -xf platform-tools-linux-x86_64.tar.bz2 ;; \
+            arm64)  tar -xf platform-tools-linux-aarch64.tar.bz2 ;; \
+            *)      echo "Unknown arch: $arch_deb" >&2; exit 1 ;; \
+        esac; \
+        mv llvm/ rust/ version.md /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools/; \
+        cd .. && rm -rf "platform-tools-${PLATFORM_TOOLS_VERSION}"; \
+    fi
+
 
 # Copy the active release directory into /root/.solana and make it available in the PATH
 RUN mkdir -p /root/.solana
@@ -403,12 +438,28 @@ RUN cast --version
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+# Create a minimal Node.js base without blockchain tools
+FROM machine AS node-base
+
+WORKDIR /app
+
+ENV NPM_TOKEN=""
+ENV NPM_CONFIG_STORE_DIR=/pnpm
+
+# Enable corepack and configure node
+RUN corepack enable && \
+    npm install -g node-gyp@latest && \
+    # Configure npm for better performance
+    echo 'prefer-online=true' >> ~/.npmrc && \
+    echo 'progress=false' >> ~/.npmrc
+
+# Full base with all blockchain tooling
 FROM machine AS base
 
 WORKDIR /app
 
 # We'll add an empty NPM_TOKEN to suppress any warnings
-ENV NPM_TOKEN=
+ENV NPM_TOKEN=""
 ENV NPM_CONFIG_STORE_DIR=/pnpm
 ENV TON_PATH="/root/.ton/bin"
 ENV INITIA_PATH="/root/.initia/bin"
@@ -433,9 +484,7 @@ COPY --from=initia /root/.initia/lib /root/.initia/lib
 RUN echo "/root/.initia/lib" > /etc/ld.so.conf.d/initia.conf && ldconfig
 
 # Get solana tooling
-COPY --from=avm /root/.cargo/bin/anchor /root/.cargo/bin/anchor
-COPY --from=avm /root/.cargo/bin/avm /root/.cargo/bin/avm
-COPY --from=avm /root/.avm /root/.avm
+COPY --from=anchor /root/.cargo/bin/anchor /root/.cargo/bin/anchor
 
 # Copy solana cache (for platform-tools) and binaries
 COPY --from=solana /root/.cache/solana /root/.cache/solana
@@ -450,17 +499,18 @@ COPY --from=evm /root/.cargo/bin/svm /root/.cargo/bin/svm
 COPY --from=evm /root/.foundry /root/.foundry
 COPY --from=evm /root/.svm /root/.svm
 
-# Enable corepack, new node package manager manager
-# 
-# See more here https://nodejs.org/api/corepack.html
-RUN corepack enable
+# Enable corepack and configure node
+RUN corepack enable && \
+    npm install -g node-gyp@latest && \
+    # Configure npm for better performance
+    echo 'prefer-online=true' >> ~/.npmrc && \
+    echo 'progress=false' >> ~/.npmrc
 
 # Output versions
 RUN node -v
 RUN pnpm --version
 RUN git --version
 RUN anchor --version
-RUN avm --version
 RUN aptos --version
 RUN initiad version
 RUN forge --version
@@ -476,6 +526,30 @@ RUN docker compose version
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 #
+#     Image that prepares Solana-only development environment
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM node-base AS solana-dev-base
+
+ENV NPM_CONFIG_PACKAGE_IMPORT_METHOD=copy
+ENV NPM_CONFIG_BUILD_FROM_SOURCE=true
+ENV NPM_CONFIG_TARGET_ARCH=auto
+
+WORKDIR /app
+
+# Only copy Solana tooling (no EVM, Aptos, TON, etc.)
+COPY --from=anchor /root/.cargo/bin/anchor /root/.cargo/bin/anchor
+COPY --from=solana /root/.cache/solana /root/.cache/solana
+COPY --from=solana /root/.solana/bin /root/.solana/bin
+
+ENV PATH="/root/.solana/bin:$PATH"
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
 #        Image that prepares the project for development
 #
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
@@ -485,6 +559,9 @@ FROM $BASE_IMAGE AS development
 
 ENV NPM_CONFIG_STORE_DIR=/pnpm
 ENV NPM_CONFIG_PACKAGE_IMPORT_METHOD=copy
+# Set build parallelism to prevent ARM64 build issues
+ENV NPM_CONFIG_BUILD_FROM_SOURCE=true
+ENV NPM_CONFIG_TARGET_ARCH=auto
 
 WORKDIR /app
 
@@ -502,7 +579,10 @@ RUN \
     #  Mount pnpm store
     --mount=type=cache,id=pnpm-store,target=/pnpm \
     # Install dependencies (fail if we forgot to update the lockfile)
-    pnpm install --recursive --offline --frozen-lockfile
+    # Use --ignore-scripts first to avoid native build issues during dependency resolution
+    pnpm install --recursive --offline --frozen-lockfile --ignore-scripts && \
+    # Then rebuild native modules separately with better error handling
+    pnpm rebuild --recursive
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -528,7 +608,7 @@ HEALTHCHECK --interval=2s --retries=20 CMD curl -f http://0.0.0.0:8080/v1 || exi
 # Node API                          8080
 # Transaction stream                50051
 # Faucet is ready                   8081
-ENTRYPOINT aptos
+ENTRYPOINT ["aptos"]
 
 CMD ["node", "run-local-testnet", "--force-restart", "--assume-yes"]
 
@@ -628,7 +708,7 @@ RUN corepack enable
 HEALTHCHECK --interval=2s --retries=20 CMD curl -f http://0.0.0.0:8545 || exit 1
 
 # Run the shit
-ENTRYPOINT pnpm start
+ENTRYPOINT ["pnpm", "start"]
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
