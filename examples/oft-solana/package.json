@@ -2,6 +2,7 @@
   "name": "@layerzerolabs/oft-solana-example",
   "version": "0.12.6",
   "private": true,
+  "type": "commonjs",
   "scripts": {
     "clean": "rm -rf target artifacts cache out .anchor",
     "compile": "concurrently -c auto --names forge,hardhat,anchor '$npm_execpath run compile:forge' '$npm_execpath run compile:hardhat' '$npm_execpath run compile:anchor'",
