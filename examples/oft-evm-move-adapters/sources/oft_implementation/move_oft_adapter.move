@@ -330,7 +330,7 @@ module oft::move_oft_adapter {
         assert!(caller_addr == admin_addr || vector::contains(&store_mut.pausers, &caller_addr), EUNAUTHORIZED);
         assert!(store_mut.paused != paused, ENO_CHANGE);
         store_mut.paused = paused;
-        emit(OutflowPauseSet { paused });
+        emit(PauseSet { paused });
     }
 
     #[view]
@@ -389,7 +389,7 @@ module oft::move_oft_adapter {
 
     // ================================================ Tests Helpers =================================================
     #[test_only]
-    public fun outflow_pause_set_event(paused: bool): OutflowPauseSet { OutflowPauseSet { paused } }
+    public fun pause_set_event(paused: bool): PauseSet { PauseSet { paused } }
 
     // ================================================ Storage Helpers ===============================================
 
@@ -419,5 +419,5 @@ module oft::move_oft_adapter {
     // ==================================================== Events ====================================================
 
     #[event]
-    struct OutflowPauseSet has store, drop { paused: bool }
+    struct PauseSet has store, drop { paused: bool }
 }
