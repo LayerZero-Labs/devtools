@@ -65,7 +65,12 @@ describe('formatTokenAmount', () => {
 
     it('throws on invalid precision values', () => {
         expect(() => formatTokenAmount(BigInt(1_000), -1 as unknown as number)).toThrow()
-        expect(() => formatTokenAmount(BigInt(1_000), 7)).not.toThrow()
         expect(() => formatTokenAmount(BigInt(1_000), 1.5 as unknown as number)).toThrow()
+    })
+
+    it('does not throw on valid precision values', () => {
+        expect(() => formatTokenAmount(BigInt(1_000), 0)).not.toThrow()
+        expect(() => formatTokenAmount(BigInt(1_000), 1)).not.toThrow()
+        expect(() => formatTokenAmount(BigInt(1_000), 7)).not.toThrow()
     })
 })
