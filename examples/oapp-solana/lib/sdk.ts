@@ -383,34 +383,100 @@ export class CustomOAppSDK extends OmniSDK implements IOApp {
         throw new TypeError(`getCallerBpsCap() not implemented on Solana OFT SDK`)
     }
 
-    public async sendConfigIsInitialized(_eid: EndpointId): Promise<boolean> {
-        const deriver = new MessageLibPDADeriver(UlnProgram.PROGRAM_ID)
-        const [sendConfig] = deriver.sendConfig(_eid, new PublicKey(this.point.address))
-        const accountInfo = await this.connection.getAccountInfo(sendConfig)
-        return accountInfo != null
+    public async sendConfigIsInitialized(eid: EndpointId): Promise<boolean> {
+        // This method should check the same conditions that initConfig checks
+        // All components must be initialized: send/receive libraries, and ULN config accounts
+
+        // Check send/receive libraries are initialized
+        const sendLibInitialized = await this.isSendLibraryInitialized(eid)
+        const receiveLibInitialized = await this.isReceiveLibraryInitialized(eid)
+
+        if (!sendLibInitialized || !receiveLibInitialized) {
+            return false
+        }
+
+        // Check ULN config accounts using MessageLibPDADeriver (same as wire command)
+        try {
+            const deriver = new MessageLibPDADeriver(UlnProgram.PROGRAM_ID)
+            const [sendConfig, receiveConfig] = await Promise.all([
+                deriver.sendConfig(eid, new PublicKey(this.point.address)),
+                deriver.receiveConfig(eid, new PublicKey(this.point.address)),
+            ])
+
+            const [sendConfigInfo, receiveConfigInfo] = await Promise.all([
+                this.connection.getAccountInfo(sendConfig[0]),
+                this.connection.getAccountInfo(receiveConfig[0]),
+            ])
+
+            return sendConfigInfo != null && receiveConfigInfo != null
+        } catch (error) {
+            this.logger.debug(`ULN config check failed for eid ${eid}: ${error}`)
+            return false
+        }
     }
 
     public async initConfig(eid: EndpointId): Promise<OmniTransaction | undefined> {
+        // Check if everything is already initialized - if so, no action needed
+        if (await this.sendConfigIsInitialized(eid)) {
+            return undefined
+        }
+
         const delegateAddress = await this.getDelegate()
         // delegate may be undefined if it has not yet been set.  In this case, use admin, which must exist.
         const delegate = delegateAddress ? createNoopSigner(publicKey(delegateAddress)) : await this._getAdmin()
+        const instructions: WrappedInstruction[] = []
+
+        // Check individual components to determine which instructions to add
+        const sendLibInitialized = await this.isSendLibraryInitialized(eid)
+        const receiveLibInitialized = await this.isReceiveLibraryInitialized(eid)
+
+        // Check ULN config accounts
+        const deriver = new MessageLibPDADeriver(UlnProgram.PROGRAM_ID)
+        const [sendConfig, receiveConfig] = await Promise.all([
+            deriver.sendConfig(eid, new PublicKey(this.point.address)),
+            deriver.receiveConfig(eid, new PublicKey(this.point.address)),
+        ])
+
+        const [sendConfigInfo, receiveConfigInfo] = await Promise.all([
+            this.connection.getAccountInfo(sendConfig[0]),
+            this.connection.getAccountInfo(receiveConfig[0]),
+        ])
+
+        const ulnConfigExists = sendConfigInfo != null && receiveConfigInfo != null
+
+        // Add oapp.initConfig if ULN config accounts don't exist
+        if (!ulnConfigExists) {
+            instructions.push(
+                myoapp.initConfig(
+                    this.umiProgramId,
+                    {
+                        admin: delegate,
+                        payer: delegate,
+                    },
+                    eid,
+                    {
+                        msgLib: fromWeb3JsPublicKey(UlnProgram.PROGRAM_ID),
+                    }
+                )
+            )
+        }
+
+        // Add send/receive library initialization if needed
+        if (!sendLibInitialized) {
+            instructions.push(myoapp.initSendLibrary({ admin: delegate, oapp: this.umiPublicKey }, eid))
+        }
+
+        if (!receiveLibInitialized) {
+            instructions.push(myoapp.initReceiveLibrary({ admin: delegate, oapp: this.umiPublicKey }, eid))
+        }
+
+        if (instructions.length === 0) {
+            return undefined
+        }
+
         return {
-            ...(await this.createTransaction(
-                this._umiToWeb3Tx([
-                    myoapp.initConfig(
-                        this.umiProgramId,
-                        {
-                            admin: delegate,
-                            payer: delegate,
-                        },
-                        eid,
-                        {
-                            msgLib: fromWeb3JsPublicKey(UlnProgram.PROGRAM_ID),
-                        }
-                    ),
-                ])
-            )),
-            description: `oapp.initConfig(${eid})`,
+            ...(await this.createTransaction(this._umiToWeb3Tx(instructions))),
+            description: `Initializing OApp config for eid ${eid} (${formatEid(eid)})`,
         }
     }
 
