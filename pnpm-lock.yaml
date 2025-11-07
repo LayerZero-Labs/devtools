@@ -4616,7 +4616,7 @@ importers:
         specifier: ^0.0.7
         version: link:../devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^1.0.9
+        specifier: ^1.0.13
         version: link:../devtools-move
       '@layerzerolabs/io-devtools':
         specifier: ^0.3.0

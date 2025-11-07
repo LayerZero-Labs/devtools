@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-move
 
+## 1.1.1
+
+### Patch Changes
+
+- f27462a: baseX converter does not depend on chainType
+
 ## 1.1.0
 
 ### Minor Changes
