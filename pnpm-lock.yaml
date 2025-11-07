@@ -155,8 +155,8 @@ importers:
         specifier: ^7.23.9
         version: 7.23.9
       '@coral-xyz/anchor':
-        specifier: ^0.29.0
-        version: 0.29.0
+        specifier: ^0.31.1
+        version: 0.31.1
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
@@ -179,7 +179,7 @@ importers:
         specifier: ^3.0.75
         version: 3.0.75
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.2
+        specifier: ^0.3.3
         version: link:../../packages/oapp-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -936,8 +936,8 @@ importers:
         specifier: ^7.23.9
         version: 7.23.9
       '@coral-xyz/anchor':
-        specifier: ^0.29.0
-        version: 0.29.0
+        specifier: ^0.31.1
+        version: 0.31.1
       '@layerzerolabs/devtools':
         specifier: ~2.0.0
         version: link:../../packages/devtools
@@ -2022,7 +2022,7 @@ importers:
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/hyperliquid-composer':
-        specifier: ^1.0.3
+        specifier: ^1.0.5
         version: link:../../packages/hyperliquid-composer
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
@@ -2314,8 +2314,8 @@ importers:
   examples/oft-solana:
     devDependencies:
       '@coral-xyz/anchor':
-        specifier: ^0.29.0
-        version: 0.29.0
+        specifier: ^0.31.1
+        version: 0.31.1
       '@ethersproject/abi':
         specifier: ^5.7.0
         version: 5.7.0
@@ -2371,7 +2371,7 @@ importers:
         specifier: ^3.0.0
         version: link:../../packages/metadata-tools
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.2
+        specifier: ^0.3.3
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
         specifier: ^3.2.0
@@ -3082,7 +3082,7 @@ importers:
         specifier: ^3.1.2
         version: link:../../packages/oft-evm
       '@layerzerolabs/ovault-evm':
-        specifier: ^0.0.6
+        specifier: ^0.1.0
         version: link:../../packages/ovault-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -4299,6 +4299,9 @@ importers:
       tsup:
         specifier: ^8.4.0
         version: 8.4.0(typescript@5.5.3)
+      typescript:
+        specifier: ^5.4.4
+        version: 5.5.3
 
   packages/io-devtools:
     dependencies:
@@ -7186,6 +7189,11 @@ packages:
     resolution: {integrity: sha512-9Mkradf5yS5xiLWrl9WrpjqOrAV+/W2RQHDlbnAZBivoGpOs1ECjoDCkVk4aRG8ZdiFiB8zQEVlxf+8fKkmSfQ==}
     engines: {node: '>=10'}
 
+  /@coral-xyz/anchor-errors@0.31.1:
+    resolution: {integrity: sha512-NhNEku4F3zzUSBtrYz84FzYWm48+9OvmT1Hhnwr6GnPQry2dsEqH/ti/7ASjjpoFTWRnPXrjAIT1qM6Isop+LQ==}
+    engines: {node: '>=10'}
+    dev: true
+
   /@coral-xyz/anchor@0.26.0:
     resolution: {integrity: sha512-PxRl+wu5YyptWiR9F2MBHOLLibm87Z4IMUBPreX+DYBtPM+xggvcPi0KAN7+kIL4IrIhXI8ma5V0MCXxSN1pHg==}
     engines: {node: '>=11'}
@@ -7216,7 +7224,7 @@ packages:
     engines: {node: '>=11'}
     dependencies:
       '@coral-xyz/borsh': 0.29.0(@solana/web3.js@1.98.0)
-      '@noble/hashes': 1.7.0
+      '@noble/hashes': 1.8.0
       '@solana/web3.js': 1.98.0
       bn.js: 5.2.1
       bs58: 4.0.1
@@ -7240,7 +7248,7 @@ packages:
     dependencies:
       '@coral-xyz/anchor-errors': 0.30.1
       '@coral-xyz/borsh': 0.30.1(@solana/web3.js@1.98.0)
-      '@noble/hashes': 1.7.1
+      '@noble/hashes': 1.8.0
       '@solana/web3.js': 1.98.0
       bn.js: 5.2.1
       bs58: 4.0.1
@@ -7257,6 +7265,29 @@ packages:
       - bufferutil
       - encoding
       - utf-8-validate
+
+  /@coral-xyz/anchor@0.31.1:
+    resolution: {integrity: sha512-QUqpoEK+gi2S6nlYc2atgT2r41TT3caWr/cPUEL8n8Md9437trZ68STknq897b82p5mW0XrTBNOzRbmIRJtfsA==}
+    engines: {node: '>=17'}
+    dependencies:
+      '@coral-xyz/anchor-errors': 0.31.1
+      '@coral-xyz/borsh': 0.31.1(@solana/web3.js@1.98.0)
+      '@noble/hashes': 1.8.0
+      '@solana/web3.js': 1.98.0
+      bn.js: 5.2.1
+      bs58: 4.0.1
+      buffer-layout: 1.2.2
+      camelcase: 6.3.0
+      cross-fetch: 3.1.8
+      eventemitter3: 4.0.7
+      pako: 2.1.0
+      superstruct: 0.15.5
+      toml: 3.0.0
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
+    dev: true
 
   /@coral-xyz/borsh@0.26.0(@solana/web3.js@1.98.0):
     resolution: {integrity: sha512-uCZ0xus0CszQPHYfWAqKS5swS1UxvePu83oOF+TWpUkedsNlg6p2p4azxZNSSqwXb9uXMFgxhuMBX9r3Xoi0vQ==}
@@ -7288,6 +7319,17 @@ packages:
       '@solana/web3.js': 1.98.0
       bn.js: 5.2.1
       buffer-layout: 1.2.2
+
+  /@coral-xyz/borsh@0.31.1(@solana/web3.js@1.98.0):
+    resolution: {integrity: sha512-9N8AU9F0ubriKfNE3g1WF0/4dtlGXoBN/hd1PvbNBamBNwRgHxH4P+o3Zt7rSEloW1HUs6LfZEchlx9fW7POYw==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      '@solana/web3.js': ^1.95.8
+    dependencies:
+      '@solana/web3.js': 1.98.0
+      bn.js: 5.2.1
+      buffer-layout: 1.2.2
+    dev: true
 
   /@cspotcode/source-map-support@0.8.1:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -12415,10 +12457,6 @@ packages:
   /@noble/hashes@1.3.3:
     resolution: {integrity: sha512-V7/fPHgl+jsVPXqqeOzT8egNj2iBIVt+ECeMMG8TdcnTikP3oaBtUVqpT/gYCR68aEBJSF+XbYUxStjbFMqIIA==}
     engines: {node: '>= 16'}
-
-  /@noble/hashes@1.7.0:
-    resolution: {integrity: sha512-HXydb0DgzTpDPwbVeDGCG1gIu7X6+AuU6Zl6av/E/KG8LMsvPntvq+w17CHRpKBmN6Ybdrt1eP3k4cj8DJa78w==}
-    engines: {node: ^14.21.3 || >=16}
 
   /@noble/hashes@1.7.1:
     resolution: {integrity: sha512-B8XBPsn4vT/KJAGqDzbwztd+6Yte3P4V7iafm24bxgDe/mlRuK6xmWPuCNrKt2vDafZ8MfJLlchDG/vYafQEjQ==}

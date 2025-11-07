@@ -16,18 +16,18 @@ const logger = createLogger()
 
 const arbitrumContract: OmniPointHardhat = {
     eid: EndpointId.ARBSEP_V2_TESTNET, // Change to your network's endpoint ID
-    contractName: 'MyOFTMock', // Change to your deployed contract name
+    contractName: 'MyOFT', // Change to your deployed contract name
 }
 
 const baseContract: OmniPointHardhat = {
     eid: EndpointId.BASESEP_V2_TESTNET, // Change to your network's endpoint ID
-    contractName: 'MyOFTMock', // Change to your deployed contract name
+    contractName: 'MyOFT', // Change to your deployed contract name
 }
 
 // Add more contracts here if you have more chains:
 // const baseContract: OmniPointHardhat = {
 //     eid: EndpointId.BASE_V2_TESTNET,
-//     contractName: 'MyOFTMock',
+//     contractName: 'MyOFT',
 // }
 
 // ============================================================================

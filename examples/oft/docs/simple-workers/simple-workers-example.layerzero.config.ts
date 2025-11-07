@@ -13,12 +13,12 @@ import type { OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
 const arbitrumContract: OmniPointHardhat = {
     eid: EndpointId.ARBSEP_V2_TESTNET,
-    contractName: 'MyOFTMock', // Note: change this to 'MyOFT' or your production contract name
+    contractName: 'MyOFT',
 }
 
 const baseContract: OmniPointHardhat = {
     eid: EndpointId.BASESEP_V2_TESTNET,
-    contractName: 'MyOFTMock', // Note: change this to 'MyOFT' or your production contract name
+    contractName: 'MyOFT',
 }
 
 // TODO: Fill in your Simple Workers addresses from deployment files
