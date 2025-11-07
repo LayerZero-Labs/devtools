@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oapp-solana-example",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "license": "MIT",
   "type": "commonjs",
@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
-    "@coral-xyz/anchor": "^0.29.0",
+    "@coral-xyz/anchor": "^0.31.1",
     "@layerzerolabs/devtools": "~2.0.0",
     "@layerzerolabs/devtools-evm-hardhat": "^4.0.0",
     "@layerzerolabs/devtools-solana": "~3.0.0",

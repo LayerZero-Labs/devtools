@@ -50,41 +50,20 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      *
      * Requirements:
      * - Share token must be the vault itself
-     * - Asset token must match the vault's underlying asset
+     * - Asset token should match the vault's underlying asset (overridable behavior)
      * - Share OFT must be an adapter (approvalRequired() returns true)
      */
     constructor(address _vault, address _assetOFT, address _shareOFT) {
         VAULT = IERC4626(_vault);
 
-        ASSET_OFT = _assetOFT;
-        ASSET_ERC20 = IOFT(ASSET_OFT).token();
         SHARE_OFT = _shareOFT;
-        SHARE_ERC20 = IOFT(SHARE_OFT).token();
+        ASSET_OFT = _assetOFT;
+
+        SHARE_ERC20 = _initializeShareToken();
+        ASSET_ERC20 = _initializeAssetToken();
 
         ENDPOINT = address(IOAppCore(ASSET_OFT).endpoint());
         VAULT_EID = ILayerZeroEndpointV2(ENDPOINT).eid();
-
-        if (SHARE_ERC20 != address(VAULT)) {
-            revert ShareTokenNotVault(SHARE_ERC20, address(VAULT));
-        }
-
-        if (ASSET_ERC20 != address(VAULT.asset())) {
-            revert AssetTokenNotVaultAsset(ASSET_ERC20, address(VAULT.asset()));
-        }
-
-        /// @dev ShareOFT must be an OFT adapter. We can infer this by checking 'approvalRequired()'.
-        /// @dev burn() on tokens when a user sends changes totalSupply() which the asset:share ratio depends on.
-        if (!IOFT(SHARE_OFT).approvalRequired()) revert ShareOFTNotAdapter(SHARE_OFT);
-
-        /// @dev Approve the vault to spend the asset tokens held by this contract
-        IERC20(ASSET_ERC20).approve(_vault, type(uint256).max);
-        /// @dev Approving the vault for the share erc20 is not required when the vault is the share erc20
-        // IERC20(SHARE_ERC20).approve(_vault, type(uint256).max);
-
-        /// @dev Approve the share adapter with the share tokens held by this contract
-        IERC20(SHARE_ERC20).approve(_shareOFT, type(uint256).max);
-        /// @dev If the asset OFT is an adapter, approve it as well
-        if (IOFT(_assetOFT).approvalRequired()) IERC20(ASSET_ERC20).approve(_assetOFT, type(uint256).max);
     }
 
     /**
@@ -101,7 +80,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         bytes calldata _message, // expected to contain a composeMessage = abi.encode(SendParam hopSendParam,uint256 minMsgValue)
         address /*_executor*/,
         bytes calldata /*_extraData*/
-    ) external payable virtual override {
+    ) public payable virtual override {
         if (msg.sender != ENDPOINT) revert OnlyEndpoint(msg.sender);
         if (_composeSender != ASSET_OFT && _composeSender != SHARE_OFT) revert OnlyValidComposeCaller(_composeSender);
 
@@ -114,14 +93,14 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
             emit Sent(_guid);
         } catch (bytes memory _err) {
             /// @dev A revert where the msg.value passed is lower than the min expected msg.value is handled separately
-            /// This is because it is possible to re-trigger from the endpoint the compose operation with the right msg.value
+            /// @dev This is because it is possible to re-trigger from the endpoint the compose operation with the right msg.value
             if (bytes4(_err) == InsufficientMsgValue.selector) {
                 assembly {
                     revert(add(32, _err), mload(_err))
                 }
             }
 
-            _refund(_composeSender, _message, amount, tx.origin);
+            _refund(_composeSender, _message, amount, tx.origin, msg.value);
             emit Refunded(_guid);
         }
     }
@@ -146,14 +125,14 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         if (msg.sender != address(this)) revert OnlySelf(msg.sender);
 
         /// @dev SendParam defines how the composer will handle the user's funds
-        /// @dev The minMsgValue is the minimum amount of msg.value that must be sent, failing to do so will revert and the transaction will be retained in the endpoint for future retries
+        /// @dev When msg.value < minMsgValue we revert and payload will stay in the endpoint for future retries
         (SendParam memory sendParam, uint256 minMsgValue) = abi.decode(_composeMsg, (SendParam, uint256));
         if (msg.value < minMsgValue) revert InsufficientMsgValue(minMsgValue, msg.value);
 
         if (_oftIn == ASSET_OFT) {
-            _depositAndSend(_composeFrom, _amount, sendParam, tx.origin);
+            _depositAndSend(_composeFrom, _amount, sendParam, tx.origin, msg.value);
         } else {
-            _redeemAndSend(_composeFrom, _amount, sendParam, tx.origin);
+            _redeemAndSend(_composeFrom, _amount, sendParam, tx.origin, msg.value);
         }
     }
 
@@ -169,7 +148,13 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         address _refundAddress
     ) external payable virtual nonReentrant {
         IERC20(ASSET_ERC20).safeTransferFrom(msg.sender, address(this), _assetAmount);
-        _depositAndSend(OFTComposeMsgCodec.addressToBytes32(msg.sender), _assetAmount, _sendParam, _refundAddress);
+        _depositAndSend(
+            OFTComposeMsgCodec.addressToBytes32(msg.sender),
+            _assetAmount,
+            _sendParam,
+            _refundAddress,
+            msg.value
+        );
     }
 
     /**
@@ -178,24 +163,31 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @param _assetAmount The number of assets to deposit
      * @param _sendParam Parameter that defines how to send the shares
      * @param _refundAddress Address to receive excess payment of the LZ fees
+     * @param _msgValue The amount of native tokens sent with the transaction
      * @notice This function first deposits the assets to mint shares, validates the shares meet minimum slippage requirements,
      *         then sends the minted shares cross-chain using the OFT (Omnichain Fungible Token) protocol
-     * @notice The _sendParam.amountLD is updated to the actual share amount minted, and minAmountLD is reset to 0 for the send operation
+     * @notice _sendParam.amountLD is set to the share amount minted, and minAmountLD is reset to 0 for send operation
      */
     function _depositAndSend(
         bytes32 _depositor,
         uint256 _assetAmount,
         SendParam memory _sendParam,
-        address _refundAddress
+        address _refundAddress,
+        uint256 _msgValue
     ) internal virtual {
-        uint256 shareAmount = _deposit(_depositor, _assetAmount);
-        _assertSlippage(shareAmount, _sendParam.minAmountLD);
+        uint256 preShareBalance = IERC20(SHARE_ERC20).balanceOf(address(this));
+        /// @dev Async functions may return an amount on `deposit`, but not transfer share tokens.
+        _deposit(_depositor, _assetAmount);
+        uint256 postShareBalance = IERC20(SHARE_ERC20).balanceOf(address(this));
 
-        _sendParam.amountLD = shareAmount;
+        uint256 shareAmountReceived = postShareBalance - preShareBalance;
+        _assertSlippage(shareAmountReceived, _sendParam.minAmountLD);
+
+        _sendParam.amountLD = shareAmountReceived;
         _sendParam.minAmountLD = 0;
 
-        _send(SHARE_OFT, _sendParam, _refundAddress);
-        emit Deposited(_depositor, _sendParam.to, _sendParam.dstEid, _assetAmount, shareAmount);
+        _send(SHARE_OFT, _sendParam, _refundAddress, _msgValue);
+        emit Deposited(_depositor, _sendParam.to, _sendParam.dstEid, _assetAmount, shareAmountReceived);
     }
 
     /**
@@ -220,7 +212,13 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         address _refundAddress
     ) external payable virtual nonReentrant {
         IERC20(SHARE_ERC20).safeTransferFrom(msg.sender, address(this), _shareAmount);
-        _redeemAndSend(OFTComposeMsgCodec.addressToBytes32(msg.sender), _shareAmount, _sendParam, _refundAddress);
+        _redeemAndSend(
+            OFTComposeMsgCodec.addressToBytes32(msg.sender),
+            _shareAmount,
+            _sendParam,
+            _refundAddress,
+            msg.value
+        );
     }
 
     /**
@@ -229,6 +227,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @param _shareAmount The number of shares to redeem
      * @param _sendParam Parameter that defines how to send the assets
      * @param _refundAddress Address to receive excess payment of the LZ fees
+     * @param _msgValue The amount of native tokens sent with the transaction
      * @notice This function first redeems the specified share amount for the underlying asset,
      *         validates the received amount against slippage protection, then initiates a cross-chain
      *         transfer of the redeemed assets using the OFT (Omnichain Fungible Token) protocol
@@ -239,16 +238,22 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         bytes32 _redeemer,
         uint256 _shareAmount,
         SendParam memory _sendParam,
-        address _refundAddress
+        address _refundAddress,
+        uint256 _msgValue
     ) internal virtual {
-        uint256 assetAmount = _redeem(_redeemer, _shareAmount);
-        _assertSlippage(assetAmount, _sendParam.minAmountLD);
+        uint256 preAssetBalance = IERC20(ASSET_ERC20).balanceOf(address(this));
+        /// @dev Async functions may return an amount on `redeem`, but not transfer asset tokens.
+        _redeem(_redeemer, _shareAmount);
+        uint256 postAssetBalance = IERC20(ASSET_ERC20).balanceOf(address(this));
 
-        _sendParam.amountLD = assetAmount;
+        uint256 assetAmountReceived = postAssetBalance - preAssetBalance;
+        _assertSlippage(assetAmountReceived, _sendParam.minAmountLD);
+
+        _sendParam.amountLD = assetAmountReceived;
         _sendParam.minAmountLD = 0;
 
-        _send(ASSET_OFT, _sendParam, _refundAddress);
-        emit Redeemed(_redeemer, _sendParam.to, _sendParam.dstEid, _shareAmount, assetAmount);
+        _send(ASSET_OFT, _sendParam, _refundAddress, _msgValue);
+        emit Redeemed(_redeemer, _sendParam.to, _sendParam.dstEid, _shareAmount, assetAmountReceived);
     }
 
     /**
@@ -288,7 +293,7 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
         uint256 _vaultInAmount,
         SendParam memory _sendParam
     ) external view virtual returns (MessagingFee memory) {
-        /// @dev When quoting the asset OFT, the function input is shares and the SendParam.amountLD into quoteSend() should be assets (and vice versa)
+        /// @dev When quoting the asset OFT, if the input is shares, SendParam.amountLD must be assets (and vice versa)
 
         if (_targetOFT == ASSET_OFT) {
             uint256 maxRedeem = VAULT.maxRedeem(_from);
@@ -309,24 +314,60 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
     }
 
     /**
-     * @dev Internal function that handles token transfer to the recipient
-     * @dev If the destination eid is the same as the current eid, it transfers the tokens directly to the recipient
-     * @dev If the destination eid is different, it sends a LayerZero cross-chain transaction
+     * @dev Internal function that routes token transfers to local or remote destinations
      * @param _oft The OFT contract address to use for sending
      * @param _sendParam The parameters for the send operation
      * @param _refundAddress Address to receive excess payment of the LZ fees
+     * @param _msgValue The amount of native tokens sent with the transaction
      */
-    function _send(address _oft, SendParam memory _sendParam, address _refundAddress) internal {
+    function _send(
+        address _oft,
+        SendParam memory _sendParam,
+        address _refundAddress,
+        uint256 _msgValue
+    ) internal virtual {
         if (_sendParam.dstEid == VAULT_EID) {
-            /// @dev Can do this because _oft is validated before this function is called
-            address erc20 = _oft == ASSET_OFT ? ASSET_ERC20 : SHARE_ERC20;
-
-            if (msg.value > 0) revert NoMsgValueExpected();
-            IERC20(erc20).safeTransfer(_sendParam.to.bytes32ToAddress(), _sendParam.amountLD);
+            _sendLocal(_oft, _sendParam, _refundAddress, _msgValue);
         } else {
-            // crosschain send
-            IOFT(_oft).send{ value: msg.value }(_sendParam, MessagingFee(msg.value, 0), _refundAddress);
+            _sendRemote(_oft, _sendParam, _refundAddress, _msgValue);
         }
+    }
+
+    /**
+     * @dev Internal function that handles token transfer to recipients on the same chain
+     * @dev Transfers tokens directly without LayerZero messaging
+     * @param _oft The OFT contract address to determine which token to transfer
+     * @param _sendParam The parameters for the send operation
+     * @dev _refundAddress Address to receive excess payment of the LZ fees (unused for local transfers)
+     * @dev _msgValue The amount of native tokens sent with the transaction (must be 0 for local transfers)
+                Accidental transfers accumulate in the contract and are locked
+     */
+    function _sendLocal(
+        address _oft,
+        SendParam memory _sendParam,
+        address /*_refundAddress*/,
+        uint256 /*_msgValue*/
+    ) internal virtual {
+        /// @dev Can do this because _oft is validated before this function is called
+        address erc20 = _oft == ASSET_OFT ? ASSET_ERC20 : SHARE_ERC20;
+        IERC20(erc20).safeTransfer(_sendParam.to.bytes32ToAddress(), _sendParam.amountLD);
+    }
+
+    /**
+     * @dev Internal function that handles token transfer to recipients on remote chains
+     * @dev Uses LayerZero messaging to send tokens cross-chain
+     * @param _oft The OFT contract address to use for sending
+     * @param _sendParam The parameters for the send operation
+     * @param _refundAddress Address to receive excess payment of the LZ fees
+     * @param _msgValue The amount of native tokens sent with the transaction
+     */
+    function _sendRemote(
+        address _oft,
+        SendParam memory _sendParam,
+        address _refundAddress,
+        uint256 _msgValue
+    ) internal virtual {
+        IOFT(_oft).send{ value: _msgValue }(_sendParam, MessagingFee(_msgValue, 0), _refundAddress);
     }
 
     /**
@@ -335,16 +376,64 @@ contract VaultComposerSync is IVaultComposerSync, ReentrancyGuard {
      * @param _message The original message that was sent
      * @param _amount The amount of tokens to refund
      * @param _refundAddress Address to receive the refund
+     * @param _msgValue The amount of native tokens sent with the transaction
      */
-    function _refund(address _oft, bytes calldata _message, uint256 _amount, address _refundAddress) internal virtual {
+    function _refund(
+        address _oft,
+        bytes calldata _message,
+        uint256 _amount,
+        address _refundAddress,
+        uint256 _msgValue
+    ) internal virtual {
         /// @dev Extracted from the _message header. Will always be part of the _message since it is created by lzReceive
         SendParam memory refundSendParam;
         refundSendParam.dstEid = OFTComposeMsgCodec.srcEid(_message);
         refundSendParam.to = OFTComposeMsgCodec.composeFrom(_message);
         refundSendParam.amountLD = _amount;
 
-        IOFT(_oft).send{ value: msg.value }(refundSendParam, MessagingFee(msg.value, 0), _refundAddress);
+        _sendRemote(_oft, refundSendParam, _refundAddress, _msgValue);
     }
 
-    receive() external payable {}
+    /**
+     * @dev Internal function to validate the share token compatibility
+     * @dev Validate part of the constructor in an overridable function due to differences in asset and OFT token
+     * @return shareERC20 The address of the share ERC20 token
+     * @dev requirement Share token must be the vault itself
+     * @dev requirement Share OFT must be an adapter (approvalRequired() returns true)
+     */
+    function _initializeShareToken() internal virtual returns (address shareERC20) {
+        shareERC20 = IOFT(SHARE_OFT).token();
+
+        if (shareERC20 != address(VAULT)) {
+            revert ShareTokenNotVault(shareERC20, address(VAULT));
+        }
+
+        /// @dev ShareOFT must be an OFT adapter. We can infer this by checking 'approvalRequired()'.
+        /// @dev burn() on tokens when a user sends changes totalSupply() which the asset:share ratio depends on.
+        if (!IOFT(SHARE_OFT).approvalRequired()) revert ShareOFTNotAdapter(SHARE_OFT);
+
+        /// @dev Approve the share adapter with the share tokens held by this contract
+        IERC20(shareERC20).forceApprove(SHARE_OFT, type(uint256).max);
+    }
+
+    /**
+     * @dev Internal function to validate the asset token compatibility
+     * @dev Validate part of the constructor in an overridable function due to differences in asset and OFT token
+     * @dev For example, in the case of VaultComposerSyncPoolNative, the asset token is WETH but the OFT token is native
+     * @return assetERC20 The address of the asset ERC20 token
+     * @notice Asset token should match the vault's underlying asset (overridable behavior)
+     */
+    function _initializeAssetToken() internal virtual returns (address assetERC20) {
+        assetERC20 = IOFT(ASSET_OFT).token();
+
+        if (assetERC20 != address(VAULT.asset())) {
+            revert AssetTokenNotVaultAsset(assetERC20, address(VAULT.asset()));
+        }
+
+        /// @dev If the asset OFT is an adapter, approve it as well
+        if (IOFT(ASSET_OFT).approvalRequired()) IERC20(assetERC20).forceApprove(ASSET_OFT, type(uint256).max);
+
+        /// @dev Approve the vault to spend the asset tokens held by this contract
+        IERC20(assetERC20).forceApprove(address(VAULT), type(uint256).max);
+    }
 }
