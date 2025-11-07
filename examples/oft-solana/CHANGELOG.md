@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.12.7
+
+### Patch Changes
+
+- 7ef51d7: bump up versions for anchor, solana, rust
+
 ## 0.12.6
 
 ### Patch Changes
