@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-move
 
+## 1.0.13
+
+### Patch Changes
+
+- f27462a: baseX converter does not depend on chainType
+
 ## 1.0.12
 
 ### Patch Changes
