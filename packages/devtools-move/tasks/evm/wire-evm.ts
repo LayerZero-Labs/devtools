@@ -114,7 +114,7 @@ export async function createEvmOmniContracts(args: any, privateKey: string, chai
                 peerAddress = WireOAppDeploymentData.address
         }
 
-        const peer = { eid: toEid, address: basexToBytes32(peerAddress, toEid) }
+        const peer = { eid: toEid, address: basexToBytes32(peerAddress) }
         currPeers.push(peer)
 
         omniContracts[fromEid] = {

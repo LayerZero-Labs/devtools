@@ -21,7 +21,7 @@ import { createSerializableUlnConfig } from './ulnConfigBuilder'
 import { ExecutorConfig, UlnConfig } from '.'
 
 import type { OAppOmniGraphHardhat, Uln302ExecutorConfig } from '@layerzerolabs/toolbox-hardhat'
-import { decodeSolanaAddress } from '../../shared'
+import { basexToBytes32 } from '../../shared'
 import { IEndpoint } from '../../../sdk'
 import { bcs, MsgExecute } from '@initia/initia.js'
 
@@ -50,7 +50,7 @@ export async function createTransferOwnerOAppPayload(
     eid: EndpointId
 ): Promise<TransactionPayload | null> {
     const currOwner = await oft.getAdmin()
-    if (formatAddress(currOwner) == formatAddress(newOwner)) {
+    if (basexToBytes32(currOwner) == basexToBytes32(newOwner)) {
         console.log(`✅ Owner already set to ${newOwner}\n`)
         return null
     } else {
@@ -101,7 +101,7 @@ export async function createSetDelegatePayload(
 ): Promise<TransactionPayload | null> {
     const currDelegate = await oft.getDelegate()
 
-    if (formatAddress(currDelegate) == formatAddress(delegate)) {
+    if (basexToBytes32(currDelegate) == basexToBytes32(delegate)) {
         console.log(`✅ Delegate already set to ${delegate}\n`)
         return null
     } else {
@@ -115,30 +115,6 @@ export async function createSetDelegatePayload(
         const tx = oft.setDelegatePayload(delegate)
         return { payload: tx, description: 'Set Delegate', eid: eid }
     }
-}
-
-function formatAddress(address: string): string {
-    const hex = address.toLowerCase().replace('0x', '')
-    return '0x' + hex.padStart(64, '0')
-}
-
-export function evmAddressToAptos(address: string, eid: string): string {
-    if (!address) {
-        return '0x' + '0'.repeat(64)
-    }
-
-    const chainType = endpointIdToChainType(Number(eid))
-
-    // Handle Solana addresses by decoding base58 first
-    if (chainType === ChainType.SOLANA) {
-        address = decodeSolanaAddress(address)
-    }
-
-    address = address.toLowerCase()
-    const hex = address.replace('0x', '')
-    // Ensure the hex string is exactly 64 chars by padding or truncating
-    const paddedHex = hex.length > 64 ? hex.slice(-64) : hex.padStart(64, '0')
-    return '0x' + paddedHex
 }
 
 /**
@@ -177,15 +153,18 @@ export async function createSetPeerTx(
     if (!contractAddress) {
         return null
     }
-    const newPeer = evmAddressToAptos(contractAddress, connection.to.eid.toString())
+    const newPeer = basexToBytes32(contractAddress)
     const currentPeerHex = await getCurrentPeer(oft, connection.to.eid as EndpointId)
 
-    if (currentPeerHex === newPeer) {
+    // Normalize current peer to bytes32 format for proper comparison
+    const normalizedCurrentPeer = currentPeerHex ? basexToBytes32(currentPeerHex) : ''
+
+    if (normalizedCurrentPeer === newPeer) {
         printAlreadySet('peer', connection)
         return null
     } else {
         const diffMessage = createDiffMessage('peer', connection)
-        diffPrinter(diffMessage, { address: currentPeerHex }, { address: newPeer })
+        diffPrinter(diffMessage, { address: normalizedCurrentPeer }, { address: newPeer })
 
         const payload = oft.setPeerPayload(connection.to.eid as EndpointId, newPeer)
         return {
@@ -262,8 +241,8 @@ export async function createSetReceiveLibraryTx(
 
     // if unset, fallbackToDefault will be true and the receive library should be set regardless of the current value
     if (
-        formatAddress(currentReceiveLibraryAddress) ===
-            formatAddress(connection.config.receiveLibraryConfig.receiveLibrary) &&
+        basexToBytes32(currentReceiveLibraryAddress) ===
+            basexToBytes32(connection.config.receiveLibraryConfig.receiveLibrary) &&
         !isFallbackToDefault
     ) {
         printAlreadySet('Receive library', connection)
@@ -306,7 +285,7 @@ export async function createSetSendLibraryTx(
 
     // if unset, fallbackToDefault will be true and the receive library should be set regardless of the current value
     if (
-        formatAddress(currentSendLibraryAddress) === formatAddress(connection.config.sendLibrary) &&
+        basexToBytes32(currentSendLibraryAddress) === basexToBytes32(connection.config.sendLibrary) &&
         !isFallbackToDefault
     ) {
         printAlreadySet('Send library', connection)
@@ -488,7 +467,7 @@ export async function checkExecutorConfigEqualsDefault(
 ): Promise<boolean> {
     const defaultExecutorConfig = await msgLib.getDefaultExecutorConfig(eid)
     return (
-        formatAddress(newExecutorConfig.executor_address) === formatAddress(defaultExecutorConfig.executor_address) &&
+        basexToBytes32(newExecutorConfig.executor_address) === basexToBytes32(defaultExecutorConfig.executor_address) &&
         newExecutorConfig.max_message_size === defaultExecutorConfig.max_message_size
     )
 }
