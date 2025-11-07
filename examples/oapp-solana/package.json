@@ -3,7 +3,6 @@
   "version": "0.1.4",
   "private": true,
   "license": "MIT",
-  "type": "commonjs",
   "scripts": {
     "clean": "rm -rf artifacts cache out",
     "compile": "concurrently -c auto --names forge,hardhat '$npm_execpath run compile:forge' '$npm_execpath run compile:hardhat' '$npm_execpath run compile:anchor'",
