@@ -51,7 +51,7 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
         bytes calldata _message, // expected to contain a composeMessage = abi.encode(SendParam hopSendParam,uint256 minMsgValue)
         address _executor,
         bytes calldata _extraData
-    ) public payable virtual override {
+    ) public payable override virtual {
         /// @dev Wrap ETH received during lzReceive into WETH
         /// @dev Conversion happens here to avoid running out of gas in the receive function
         if (_composeSender == ASSET_OFT) IWETH(ASSET_ERC20).deposit{ value: _message.amountLD() }();
@@ -70,7 +70,7 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
         uint256 _assetAmount,
         SendParam memory _sendParam,
         address _refundAddress
-    ) external payable nonReentrant {
+    ) external payable virtual nonReentrant {
         if (msg.value < _assetAmount) revert AmountExceedsMsgValue();
 
         IWETH(ASSET_ERC20).deposit{ value: _assetAmount }();
@@ -98,7 +98,7 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
         SendParam memory _sendParam,
         address _refundAddress,
         uint256 _msgValue
-    ) internal override {
+    ) internal override virtual {
         /// @dev _msgValue passed in this call is used as LayerZero fee
         uint256 msgValue = _msgValue;
 
@@ -120,7 +120,7 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
      * @dev In VaultComposerSyncNative, the asset token is WETH but the OFT token is native (ETH)
      * @return assetERC20 The address of the asset ERC20 token
      */
-    function _initializeAssetToken() internal override returns (address assetERC20) {
+    function _initializeAssetToken() internal override virtual returns (address assetERC20) {
         assetERC20 = VAULT.asset();
 
         if (IOFT(ASSET_OFT).token() != address(0)) revert AssetOFTTokenNotNative();
