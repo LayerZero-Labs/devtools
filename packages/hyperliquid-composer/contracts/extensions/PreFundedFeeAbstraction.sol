@@ -44,7 +44,10 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     uint256 public feeWithdrawalBlockNumber = 0;
 
     /// @dev Total activation cost in quote token wei (base + overhead). Scaled to core spot decimals.
-    uint64 public immutable ACTIVATION_COST;
+    uint64 internal immutable ACTIVATION_COST_ASSET;
+
+    /// @dev Total activation cost in USDC.
+    uint64 public immutable ACTIVATION_COST_USDC;
 
     /// @dev Spot pair ID for the asset/quote pair (e.g., 107 for HYPE/USDC).
     uint64 public immutable SPOT_PAIR_ID;
@@ -53,12 +56,12 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     uint64 public immutable QUOTE_ASSET_INDEX;
 
     /// @dev Quote asset core decimals (e.g., 8 for USDC, 8 for HYPE).
-    uint64 public immutable QUOTE_ASSET_DECIMALS;
+    uint64 internal immutable QUOTE_ASSET_DECIMALS;
     /// @dev Pre-calculated spot price decimals for gas efficiency: (8 - `szDecimals`).
-    uint64 public immutable SPOT_PRICE_DECIMALS;
+    uint64 internal immutable SPOT_PRICE_DECIMALS;
     /// @dev Pre-calculated numerator for activation fee calculation: (ACTIVATION_COST * SPOT_PRICE_DECIMALS).
     /// @dev Stored as immutable to save gas on every activationFee() call.
-    uint128 public immutable ACTIVATION_FEE_NUMERATOR;
+    uint128 public immutable ACTIVATION_FEE_WEI;
 
     /// @dev USD value of the minimum pre-fund amount. Not scaled to core spot decimals.
     /// @dev The maximum number of transactions that can be fit in a single HyperEVM block.
@@ -85,28 +88,34 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
         SPOT_PAIR_ID = _spotPairId;
 
         TokenInfo memory baseAssetInfo = _tokenInfo(assetIndex);
-        TokenInfo memory quoteAssetInfo = _tokenInfo(QUOTE_ASSET_INDEX);
+        QUOTE_ASSET_DECIMALS = uint64(10 ** _tokenInfo(QUOTE_ASSET_INDEX).weiDecimals);
 
         /// @dev Future-proof: Validate decimals won't cause overflow in activationFee calculation.
         /// @dev Currently unnecessary given quote assets have fixed weiDecimals=8 and szDecimals=2,
         ///      but protects against future protocol changes where quote assets might have different decimals.
-        if (quoteAssetInfo.weiDecimals > baseAssetInfo.szDecimals + MAX_DECIMAL_DIFFERENCE) {
+        if (baseAssetInfo.weiDecimals > baseAssetInfo.szDecimals + MAX_DECIMAL_DIFFERENCE) {
             revert ExcessiveDecimalDifference();
         }
 
         /// @dev Hyperliquid protocol uses (8 - `szDecimals`) for spot price decimal encoding.
         SPOT_PRICE_DECIMALS = uint64(10 ** (SPOT_PRICE_MAX_DECIMALS - baseAssetInfo.szDecimals));
-        QUOTE_ASSET_DECIMALS = uint64(10 ** quoteAssetInfo.weiDecimals);
 
         uint64 totalCentsAmount = BASE_ACTIVATION_FEE_CENTS + _activationOverheadFee;
-        ACTIVATION_COST = uint64((totalCentsAmount * QUOTE_ASSET_DECIMALS) / 100);
+        ACTIVATION_COST_ASSET = uint64((totalCentsAmount * 10 ** baseAssetInfo.weiDecimals) / 100);
 
         /// @dev Pre-calculate the numerator for gas efficiency in activationFee() calls.
         /// @dev u64 * u64 = u128, so no overflow possible.
-        ACTIVATION_FEE_NUMERATOR = ACTIVATION_COST * SPOT_PRICE_DECIMALS;
+        /// @dev spotPx returns cost of 1 full token (weiDecimals) and shifted by spotPxDecimals
+        ///      Thus the number of tokens for 1 USD is
+        ///               `weiDecimals / (spotPx / SPOT_PRICE_DECIMALS)`
+        ///               `(weiDecimals * SPOT_PRICE_DECIMALS) / spotPx`
+        ACTIVATION_FEE_WEI = ACTIVATION_COST_ASSET * SPOT_PRICE_DECIMALS;
 
         if (uint256(maxUsersPerBlock) * uint256(QUOTE_ASSET_DECIMALS) > type(uint64).max)
             revert MinUSDAmtGreaterThanU64Max();
+
+        /// @dev Compute USDC amount for user display purposes
+        ACTIVATION_COST_USDC = uint64((totalCentsAmount * 10 ** QUOTE_ASSET_DECIMALS) / 100);
     }
 
     /**
@@ -163,9 +172,9 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
         /// @dev Trigger thresholds (ACTIVATION_COST ≈ $1.50):
         ///      - szDecimals = 0 (min): token_price > $1B USD
         ///      - szDecimals = 5 (max): token_price > $150M USD (ex: BTC)
-        if (rawPrice > ACTIVATION_FEE_NUMERATOR) revert PriceExceedsActivationFeeNumerator(rawPrice);
+        if (rawPrice > ACTIVATION_FEE_WEI) revert PriceExceedsActivationFeeNumerator(rawPrice);
 
-        return uint64(ACTIVATION_FEE_NUMERATOR / rawPrice);
+        return uint64(ACTIVATION_FEE_WEI / rawPrice);
     }
 
     /**
