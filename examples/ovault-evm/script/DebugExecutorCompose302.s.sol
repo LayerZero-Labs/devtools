@@ -37,7 +37,7 @@ contract DebugExecutorCompose302 is Script {
         fromAddress = vm.envAddress("FROM_ADDRESS");
         toAddress = vm.envAddress("TO_ADDRESS");
         guid = vm.envBytes32("GUID");
-        index = 0; /// custom:@note This is usually 0 unless you have multiple compose messages in the same transaction
+        index = 0; /// @custom:note This is usually 0 unless you have multiple compose messages in the same transaction
         message = vm.envBytes("MESSAGE"); // This is the payload that was sent in the compose302 message
         extraData = "";
 
