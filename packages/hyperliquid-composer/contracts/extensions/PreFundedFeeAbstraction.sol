@@ -38,7 +38,8 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     uint8 internal constant MAX_DECIMAL_DIFFERENCE = 11;
 
     /// @dev Hyperliquid protocol requires 1 quote token for activation.
-    uint64 internal constant BASE_ACTIVATION_FEE_CENTS = 100;
+    /// @dev Due to rounding with integer division, we add a small buffer to ensure the fee is at least over $1.
+    uint64 internal constant BASE_ACTIVATION_FEE_CENTS = 150;
 
     /// @dev If fee is withdrawn on a block revert all activations
     uint256 public feeWithdrawalBlockNumber = 0;
