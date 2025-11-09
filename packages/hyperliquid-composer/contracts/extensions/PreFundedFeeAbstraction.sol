@@ -116,7 +116,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
             revert MinUSDAmtGreaterThanU64Max();
 
         /// @dev Compute USDC amount for user display purposes
-        ACTIVATION_COST_USDC = uint64((totalCentsAmount * 10 ** QUOTE_ASSET_DECIMALS) / 100);
+        ACTIVATION_COST_USDC = uint64((totalCentsAmount * QUOTE_ASSET_DECIMALS) / 100);
     }
 
     /**
