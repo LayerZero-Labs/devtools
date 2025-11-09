@@ -3,6 +3,7 @@ pragma solidity ^0.8.20;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
 
 import { HyperLiquidComposer } from "../HyperLiquidComposer.sol";
 import { FeeToken } from "../extensions/FeeToken.sol";
@@ -38,8 +39,7 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
     uint8 internal constant MAX_DECIMAL_DIFFERENCE = 11;
 
     /// @dev Hyperliquid protocol requires 1 quote token for activation.
-    /// @dev Due to rounding with integer division, we add a small buffer to ensure the fee is at least over $1.
-    uint64 internal constant BASE_ACTIVATION_FEE_CENTS = 150;
+    uint64 internal constant BASE_ACTIVATION_FEE_CENTS = 100;
 
     /// @dev If fee is withdrawn on a block revert all activations
     uint256 public feeWithdrawalBlockNumber = 0;
@@ -170,12 +170,14 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
         /// @dev Prevent zero-fee edge case: When rawPrice > ACTIVATION_FEE_NUMERATOR,
         ///      the division ACTIVATION_FEE_NUMERATOR / rawPrice < 1 rounds down to 0.
         ///      This would cause silent failures where Core expects payment but contract calculates zero fee.
-        /// @dev Trigger thresholds (ACTIVATION_COST ≈ $1.50):
+        /// @dev Trigger thresholds (ACTIVATION_COST ≈ $1.00 + overhead):
         ///      - szDecimals = 0 (min): token_price > $1B USD
-        ///      - szDecimals = 5 (max): token_price > $150M USD (ex: BTC)
+        ///      - szDecimals = 5 (max): token_price > $100M USD (ex: BTC)
         if (rawPrice > ACTIVATION_FEE_WEI) revert PriceExceedsActivationFeeNumerator(rawPrice);
 
-        return uint64(ACTIVATION_FEE_WEI / rawPrice);
+        /// @dev Use OpenZeppelin's Math.mulDiv with Ceil rounding to ensure fees always round up
+        ///      This guarantees at least 1 token is charged when base fee is $1.00
+        return uint64(Math.mulDiv(ACTIVATION_FEE_WEI, 1, rawPrice, Math.Rounding.Ceil));
     }
 
     /**
