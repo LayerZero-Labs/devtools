@@ -102,6 +102,9 @@ abstract contract PreFundedFeeAbstraction is FeeToken, RecoverableComposer, IPre
         SPOT_PRICE_DECIMALS = uint64(10 ** (SPOT_PRICE_MAX_DECIMALS - baseAssetInfo.szDecimals));
 
         uint64 totalCentsAmount = BASE_ACTIVATION_FEE_CENTS + _activationOverheadFee;
+
+        /// @dev No loss of precision since 10^weiDecimals is at least 1e6
+        /// @dev szDecimals is at least 1 and weiDecimals is at least +5 szDecimals
         ACTIVATION_COST_ASSET = uint64((totalCentsAmount * 10 ** baseAssetInfo.weiDecimals) / 100);
 
         /// @dev Pre-calculate the numerator for gas efficiency in activationFee() calls.
