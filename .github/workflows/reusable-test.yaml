@@ -139,7 +139,6 @@ jobs:
 
   test-user:
     name: User test
-    if: false  # Skip user tests (temporary patch required to publish packages)
     runs-on: ${{ matrix.runner }}
 
     permissions:
