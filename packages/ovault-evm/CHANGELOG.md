@@ -1,5 +1,11 @@
 # @layerzerolabs/ovault-evm
 
+## 0.1.1
+
+### Patch Changes
+
+- c99e667: virtualize native composer functions for overridability
+
 ## 0.1.0
 
 ### Minor Changes
