@@ -1,6 +1,11 @@
 import { type NetworkName } from './types'
 
+// Etherscan API V2 base URL - works for all supported chains
+export const ETHERSCAN_V2_BASE_URL = 'https://api.etherscan.io/v2/api'
+
 export const getDefaultScanApiUrl = (networkName: string): string | undefined => DEFAULT_SCAN_API_URLS.get(networkName)
+
+export const getDefaultChainId = (networkName: string): number | undefined => NETWORK_CHAIN_IDS.get(networkName)
 
 /**
  * Tries to use the scan API url to get a scan browser URL
@@ -37,96 +42,257 @@ export const tryCreateScanContractUrl = (scanBrowserUrl: string, address: string
     }
 }
 
+// For Etherscan API v2, we use a unified base URL but keep legacy URLs as fallback for non-Etherscan explorers
 const DEFAULT_SCAN_API_URLS: Map<NetworkName, string> = new Map([
-    ['amoy', 'https://amoy.polygonscan.com/api'],
-    ['amoy-mainnet', 'https://amoy.polygonscan.com/api'],
-    ['arbitrum', 'https://api.arbiscan.io/api'],
-    ['arbitrum-goerli', 'https://api-goerli.arbiscan.io/api'],
-    ['arbitrum-mainnet', 'https://api.arbiscan.io/api'],
-    ['arbsep-testnet', 'https://api-sepolia.arbiscan.io/api'],
-    ['astar', 'https://astar.blockscout.com/api'],
+    ['amoy', ETHERSCAN_V2_BASE_URL],
+    ['amoy-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['arbitrum', ETHERSCAN_V2_BASE_URL],
+    ['arbitrum-goerli', ETHERSCAN_V2_BASE_URL],
+    ['arbitrum-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['arbsep-testnet', ETHERSCAN_V2_BASE_URL],
+    ['astar', 'https://astar.blockscout.com/api'], // Blockscout - not part of Etherscan network
     ['astar-mainnet', 'https://astar.blockscout.com/api'],
-    ['aurora', 'https://explorer.mainnet.aurora.dev/api'],
+    ['aurora', 'https://explorer.mainnet.aurora.dev/api'], // Aurora explorer - not part of Etherscan network
     ['aurora-mainnet', 'https://explorer.mainnet.aurora.dev/api'],
-    ['avalanche', 'https://api.snowtrace.io/api'],
-    ['avalanche-mainnet', 'https://api.snowtrace.io/api'],
-    ['avalanche-testnet', 'https://api-testnet.snowtrace.io/api'],
-    ['base', 'https://api.basescan.org/api'],
-    ['base-goerli', 'https://api-goerli.basescan.org/api'],
-    ['base-mainnet', 'https://api.basescan.org/api'],
-    ['blast', 'https://api.blastscan.io/api'],
-    ['blast-mainnet', 'https://api.blastscan.io/api'],
-    ['bsc', 'https://api.bscscan.com/api'],
-    ['bsc-mainnet', 'https://api.bscscan.com/api'],
-    ['bsc-testnet', 'https://api-testnet.bscscan.com/api'],
-    ['ebi', 'https://explorer.ebi.xyz/api'],
+    ['avalanche', ETHERSCAN_V2_BASE_URL],
+    ['avalanche-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['avalanche-testnet', ETHERSCAN_V2_BASE_URL],
+    ['base', ETHERSCAN_V2_BASE_URL],
+    ['base-goerli', ETHERSCAN_V2_BASE_URL],
+    ['base-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['blast', ETHERSCAN_V2_BASE_URL],
+    ['blast-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['bsc', ETHERSCAN_V2_BASE_URL],
+    ['bsc-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['bsc-testnet', ETHERSCAN_V2_BASE_URL],
+    ['ebi', 'https://explorer.ebi.xyz/api'], // Custom explorer
     ['ebi-mainnet', 'https://explorer.ebi.xyz/api'],
-    ['ethereum', 'https://api.etherscan.io/api'],
-    ['ethereum-goerli', 'https://api-goerli.etherscan.io/api'],
-    ['ethereum-mainnet', 'https://api.etherscan.io/api'],
-    ['etherlink', 'https://explorer.etherlink.com/api'],
+    ['ethereum', ETHERSCAN_V2_BASE_URL],
+    ['ethereum-goerli', ETHERSCAN_V2_BASE_URL],
+    ['ethereum-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['etherlink', 'https://explorer.etherlink.com/api'], // Custom explorer
     ['etherlink-mainnet', 'https://explorer.etherlink.com/api'],
-    ['fantom', 'https://api.ftmscan.com/api'],
-    ['fantom-mainnet', 'https://api.ftmscan.com/api'],
-    ['fantom-testnet', 'https://api-testnet.ftmscan.com/api'],
-    ['flare', 'https://api.routescan.io/v2/network/mainnet/evm/14/etherscan'],
+    ['fantom', ETHERSCAN_V2_BASE_URL],
+    ['fantom-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['fantom-testnet', ETHERSCAN_V2_BASE_URL],
+    ['flare', 'https://api.routescan.io/v2/network/mainnet/evm/14/etherscan'], // Routescan - not part of Etherscan network
     ['flare-mainnet', 'https://api.routescan.io/v2/network/mainnet/evm/14/etherscan'],
-    ['fraxtal', 'https://api.fraxscan.com/api'],
-    ['fraxtal-mainnet', 'https://api.fraxscan.com/api'],
-    ['fuji', 'https://api-testnet.snowtrace.io/api'],
-    ['fuji-mainnet', 'https://api-testnet.snowtrace.io/api'],
-    ['gnosis', 'https://api.gnosisscan.io/api'],
-    ['gnosis-mainnet', 'https://api.gnosisscan.io/api'],
-    ['goerli', 'https://api-goerli.etherscan.io/api'],
-    ['goerli-mainnet', 'https://api-goerli.etherscan.io/api'],
-    ['gravity', 'https://explorer.gravity.xyz/api'],
+    ['fraxtal', ETHERSCAN_V2_BASE_URL],
+    ['fraxtal-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['fuji', ETHERSCAN_V2_BASE_URL],
+    ['fuji-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['gnosis', ETHERSCAN_V2_BASE_URL],
+    ['gnosis-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['goerli', ETHERSCAN_V2_BASE_URL],
+    ['goerli-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['gravity', 'https://explorer.gravity.xyz/api'], // Custom explorer
     ['gravity-mainnet', 'https://explorer.gravity.xyz/api'],
-    ['iota', 'https://explorer.evm.iota.org/api'],
+    ['iota', 'https://explorer.evm.iota.org/api'], // Custom explorer
     ['iota-mainnet', 'https://explorer.evm.iota.org/api'],
-    ['kava', 'https://kavascan.com/api'],
+    ['kava', 'https://kavascan.com/api'], // Kavascan - not part of Etherscan network
     ['kava-mainnet', 'https://kavascan.com/api'],
     ['kava-testnet', 'https://testnet.kavascan.com/api'],
-    ['klaytn', 'https://api-cypress.klaytnscope.com/api'],
+    ['klaytn', 'https://api-cypress.klaytnscope.com/api'], // Klaytnscope - not part of Etherscan network
     ['klaytn-mainnet', 'https://api-cypress.klaytnscope.com/api'],
     ['klaytn-testnet', 'https://api-baobab.klaytnscope.com/api'],
-    ['linea', 'https://api.lineascan.build/api'],
-    ['linea-mainnet', 'https://api.lineascan.build/api'],
-    ['mantle', 'https://explorer.mantle.xyz/api'],
+    ['linea', ETHERSCAN_V2_BASE_URL],
+    ['linea-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['mantle', 'https://explorer.mantle.xyz/api'], // Mantle explorer - not part of Etherscan network
     ['mantle-mainnet', 'https://explorer.mantle.xyz/api'],
-    ['manta', 'https://pacific-explorer.manta.network/api'],
+    ['manta', 'https://pacific-explorer.manta.network/api'], // Manta explorer - not part of Etherscan network
     ['manta-mainnet', 'https://pacific-explorer.manta.network/api'],
-    ['metis', 'https://api.routescan.io/v2/network/mainnet/evm/1088/etherscan'],
+    ['metis', 'https://api.routescan.io/v2/network/mainnet/evm/1088/etherscan'], // Routescan - not part of Etherscan network
     ['metis-mainnet', 'https://api.routescan.io/v2/network/mainnet/evm/1088/etherscan'],
-    ['mode', 'https://explorer.mode.network/api'],
+    ['mode', 'https://explorer.mode.network/api'], // Mode explorer - not part of Etherscan network
     ['mode-mainnet', 'https://explorer.mode.network/api'],
-    ['moonbeam', 'https://api-moonbeam.moonscan.io/api'],
-    ['moonbeam-mainnet', 'https://api-moonbeam.moonscan.io/api'],
-    ['moonbeam-testnet', 'https://api-moonbase.moonscan.io/api'],
-    ['moonriver', 'https://api-moonriver.moonscan.io/api'],
-    ['moonriver-mainnet', 'https://api-moonriver.moonscan.io/api'],
-    ['optimism', 'https://api-optimistic.etherscan.io/api'],
-    ['optimism-goerli', 'https://api-goerli-optimistic.etherscan.io/api'],
-    ['optimism-mainnet', 'https://api-optimistic.etherscan.io/api'],
-    ['optsep-testnet', 'https://api-sepolia-optimistic.etherscan.io/api'],
-    ['polygon', 'https://api.polygonscan.com/api'],
-    ['polygon-mainnet', 'https://api.polygonscan.com/api'],
-    ['rarible', 'https://mainnet.explorer.rarichain.org/api'],
+    ['moonbeam', ETHERSCAN_V2_BASE_URL],
+    ['moonbeam-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['moonbeam-testnet', ETHERSCAN_V2_BASE_URL],
+    ['moonriver', ETHERSCAN_V2_BASE_URL],
+    ['moonriver-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['optimism', ETHERSCAN_V2_BASE_URL],
+    ['optimism-goerli', ETHERSCAN_V2_BASE_URL],
+    ['optimism-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['optsep-testnet', ETHERSCAN_V2_BASE_URL],
+    ['polygon', ETHERSCAN_V2_BASE_URL],
+    ['polygon-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['rarible', 'https://mainnet.explorer.rarichain.org/api'], // Rarible explorer - not part of Etherscan network
     ['rarible-mainnet', 'https://mainnet.explorer.rarichain.org/api'],
-    ['sepolia-testnet', 'https://api-sepolia.etherscan.io/api'],
-    ['scroll', 'https://api.scrollscan.com/api'],
-    ['scroll-mainnet', 'https://api.scrollscan.com/api'],
-    ['sei', 'https://seitrace.com/pacific-1/api'],
+    ['sepolia-testnet', ETHERSCAN_V2_BASE_URL],
+    ['scroll', ETHERSCAN_V2_BASE_URL],
+    ['scroll-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['sei', 'https://seitrace.com/pacific-1/api'], // Seitrace - not part of Etherscan network
     ['sei-mainnet', 'https://seitrace.com/pacific-1/api'],
-    ['taiko', 'https://api.taikoscan.io/api'],
-    ['taiko-mainnet', 'https://api.taikoscan.io/api'],
-    ['xchain', 'https://xchain-explorer.idex.io/api'],
+    ['taiko', ETHERSCAN_V2_BASE_URL],
+    ['taiko-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['xchain', 'https://xchain-explorer.idex.io/api'], // IDEX explorer - not part of Etherscan network
     ['xchain-mainnet', 'https://xchain-explorer.idex.io/api'],
-    ['xlayer', 'https://www.oklink.com/api/v5/explorer/contract/verify-source-code-plugin/XLAYER'],
+    ['xlayer', 'https://www.oklink.com/api/v5/explorer/contract/verify-source-code-plugin/XLAYER'], // OKLink - not part of Etherscan network
     ['xlayer-mainnet', 'https://www.oklink.com/api/v5/explorer/contract/verify-source-code-plugin/XLAYER'],
-    ['zkatana', 'https://astar-zkevm.explorer.startale.com/api'],
+    ['zkatana', 'https://astar-zkevm.explorer.startale.com/api'], // Startale explorer - not part of Etherscan network
     ['zkatana-mainnet', 'https://astar-zkevm.explorer.startale.com/api'],
-    ['zkconsensys', 'https://api.lineascan.build/api'],
-    ['zkconsensys-mainnet', 'https://api.lineascan.build/api'],
-    ['zkpolygon', 'https://api-zkevm.polygonscan.com/api'],
-    ['zkpolygon-mainnet', 'https://api-zkevm.polygonscan.com/api'],
+    ['zkconsensys', ETHERSCAN_V2_BASE_URL],
+    ['zkconsensys-mainnet', ETHERSCAN_V2_BASE_URL],
+    ['zkpolygon', ETHERSCAN_V2_BASE_URL],
+    ['zkpolygon-mainnet', ETHERSCAN_V2_BASE_URL],
+])
+
+// Standard EVM chain IDs for Etherscan API v2
+const NETWORK_CHAIN_IDS: Map<NetworkName, number> = new Map([
+    // Ethereum
+    ['ethereum', 1],
+    ['ethereum-mainnet', 1],
+    ['ethereum-goerli', 5],
+    ['goerli', 5],
+    ['goerli-mainnet', 5],
+    ['sepolia-testnet', 11155111],
+
+    // Polygon
+    ['polygon', 137],
+    ['polygon-mainnet', 137],
+    ['amoy', 80002],
+    ['amoy-mainnet', 80002],
+    ['zkpolygon', 1101],
+    ['zkpolygon-mainnet', 1101],
+
+    // Arbitrum
+    ['arbitrum', 42161],
+    ['arbitrum-mainnet', 42161],
+    ['arbitrum-goerli', 421613],
+    ['arbsep-testnet', 421614],
+
+    // Optimism
+    ['optimism', 10],
+    ['optimism-mainnet', 10],
+    ['optimism-goerli', 420],
+    ['optsep-testnet', 11155420],
+
+    // Base
+    ['base', 8453],
+    ['base-mainnet', 8453],
+    ['base-goerli', 84531],
+
+    // Avalanche
+    ['avalanche', 43114],
+    ['avalanche-mainnet', 43114],
+    ['avalanche-testnet', 43113],
+    ['fuji', 43113],
+    ['fuji-mainnet', 43113],
+
+    // BSC
+    ['bsc', 56],
+    ['bsc-mainnet', 56],
+    ['bsc-testnet', 97],
+
+    // Fantom
+    ['fantom', 250],
+    ['fantom-mainnet', 250],
+    ['fantom-testnet', 4002],
+
+    // Gnosis
+    ['gnosis', 100],
+    ['gnosis-mainnet', 100],
+
+    // Aurora
+    ['aurora', 1313161554],
+    ['aurora-mainnet', 1313161554],
+
+    // Blast
+    ['blast', 81457],
+    ['blast-mainnet', 81457],
+
+    // Linea
+    ['linea', 59144],
+    ['linea-mainnet', 59144],
+    ['zkconsensys', 59144],
+    ['zkconsensys-mainnet', 59144],
+
+    // Scroll
+    ['scroll', 534352],
+    ['scroll-mainnet', 534352],
+
+    // Moonbeam
+    ['moonbeam', 1284],
+    ['moonbeam-mainnet', 1284],
+    ['moonbeam-testnet', 1287],
+
+    // Moonriver
+    ['moonriver', 1285],
+    ['moonriver-mainnet', 1285],
+
+    // Fraxtal
+    ['fraxtal', 252],
+    ['fraxtal-mainnet', 252],
+
+    // Kava
+    ['kava', 2222],
+    ['kava-mainnet', 2222],
+    ['kava-testnet', 2221],
+
+    // Klaytn
+    ['klaytn', 8217],
+    ['klaytn-mainnet', 8217],
+    ['klaytn-testnet', 1001],
+
+    // Mantle
+    ['mantle', 5000],
+    ['mantle-mainnet', 5000],
+
+    // Manta
+    ['manta', 169],
+    ['manta-mainnet', 169],
+
+    // Metis
+    ['metis', 1088],
+    ['metis-mainnet', 1088],
+
+    // Mode
+    ['mode', 34443],
+    ['mode-mainnet', 34443],
+
+    // Taiko
+    ['taiko', 167000],
+    ['taiko-mainnet', 167000],
+
+    // Flare
+    ['flare', 14],
+    ['flare-mainnet', 14],
+
+    // Astar
+    ['astar', 592],
+    ['astar-mainnet', 592],
+    ['zkatana', 1261120],
+    ['zkatana-mainnet', 1261120],
+
+    // Sei
+    ['sei', 1329],
+    ['sei-mainnet', 1329],
+
+    // Gravity
+    ['gravity', 1625],
+    ['gravity-mainnet', 1625],
+
+    // IOTA
+    ['iota', 8822],
+    ['iota-mainnet', 8822],
+
+    // Etherlink
+    ['etherlink', 42793],
+    ['etherlink-mainnet', 42793],
+
+    // Rarible
+    ['rarible', 1380012617],
+    ['rarible-mainnet', 1380012617],
+
+    // EBI
+    ['ebi', 2910],
+    ['ebi-mainnet', 2910],
+
+    // X Chain
+    ['xchain', 7762959],
+    ['xchain-mainnet', 7762959],
+
+    // X Layer
+    ['xlayer', 196],
+    ['xlayer-mainnet', 196],
 ])
