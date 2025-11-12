@@ -314,7 +314,6 @@ pnpm test
   Join our <a href="https://layerzero.network/community" style="color: #a77dff">community</a>! | Follow us on <a href="https://x.com/LayerZero_Labs" style="color: #a77dff">X (formerly Twitter)</a>
 </p>
 
-
 ## Modifying for your use case
 
 After going through the above and having successfully sent cross-chain messages using the template, you might want to start customizing the Solana program to fit your actual use case.
