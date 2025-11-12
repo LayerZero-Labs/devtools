@@ -42,13 +42,114 @@ The package automatically handles chain IDs for well-known networks. For custom 
 
 ### CLI
 
-This package comes with a CLI interface:
+This package comes with a CLI interface for command-line contract verification:
 
 ```bash
 npx @layerzerolabs/verify-contract --help
 ```
 
-Using the CLI, contracts can be verified one network at a time.
+#### CLI Commands
+
+The CLI provides two main commands: `target` (default) and `non-target`.
+
+##### Target Verification (Default)
+
+Verifies contracts that have their own deployment files:
+
+```bash
+# Basic usage - verify all contracts in a network
+npx @layerzerolabs/verify-contract target \
+  --network ethereum \
+  --api-key YOUR_ETHERSCAN_API_KEY \
+  --deployments ./deployments
+
+# Verify specific contracts only
+npx @layerzerolabs/verify-contract target \
+  --network ethereum \
+  --api-key YOUR_ETHERSCAN_API_KEY \
+  --deployments ./deployments \
+  --contracts FRNTAdapter,DefaultProxyAdmin
+
+# Dry run (preview without actually verifying)
+npx @layerzerolabs/verify-contract target \
+  --network ethereum \
+  --api-key YOUR_ETHERSCAN_API_KEY \
+  --deployments ./deployments \
+  --dry-run
+
+# Custom explorer (non-Etherscan networks)
+npx @layerzerolabs/verify-contract target \
+  --network aurora \
+  --api-url https://explorer.mainnet.aurora.dev/api \
+  --api-key YOUR_AURORA_API_KEY \
+  --deployments ./deployments
+```
+
+##### Non-Target Verification
+
+Verifies contracts without deployment files (e.g., deployed dynamically):
+
+```bash
+# Verify a contract deployed by another contract
+npx @layerzerolabs/verify-contract non-target \
+  --network ethereum \
+  --api-key YOUR_ETHERSCAN_API_KEY \
+  --deployments ./deployments \
+  --address 0x123... \
+  --name "contracts/MyContract.sol:MyContract" \
+  --deployment MyFactory.json \
+  --arguments '[1000, "0x456..."]'
+
+# With encoded constructor arguments
+npx @layerzerolabs/verify-contract non-target \
+  --network ethereum \
+  --api-key YOUR_ETHERSCAN_API_KEY \
+  --deployments ./deployments \
+  --address 0x123... \
+  --name "contracts/MyContract.sol:MyContract" \
+  --deployment MyFactory.json \
+  --arguments 0x000000000000000000000000...
+```
+
+#### CLI Options
+
+**Common Options:**
+- `-n, --network <network>` - Network name (required) - e.g., ethereum, polygon, arbitrum
+- `-k, --api-key <key>` - Scan API Key (or use environment variable)
+- `-u, --api-url <url>` - Custom scan API URL (auto-detected for known networks)
+- `--chain-id <id>` - Chain ID for Etherscan API v2 (auto-detected for known networks)
+- `-d, --deployments <path>` - Path to deployments folder
+- `--dry-run` - Preview verification without executing
+- `-l, --log-level <level>` - Log level: error, warn, info, verbose, debug (default: info)
+
+**Target Command Options:**
+- `-c, --contracts <names>` - Comma-separated list of contract names to verify
+
+**Non-Target Command Options:**
+- `--address <address>` - Contract address to verify (required)
+- `--name <contract name>` - Fully qualified contract name (required)
+- `--deployment <file>` - Deployment file name to use as source (required)
+- `--arguments <args>` - Constructor arguments as JSON array or encoded hex
+
+#### Using Environment Variables with CLI
+
+Instead of passing API keys on the command line, use environment variables:
+
+```bash
+# Set environment variables
+export SCAN_API_KEY_ethereum="your-etherscan-api-key"
+export SCAN_API_KEY_polygon="your-etherscan-api-key"
+
+# Then just specify the network
+npx @layerzerolabs/verify-contract target \
+  --network ethereum \
+  --deployments ./deployments
+```
+
+The CLI automatically:
+- Uses the correct API URL for known networks
+- Sets the correct chain ID for Etherscan API v2
+- Pulls API keys from environment variables if not specified on command line
 
 ### Programmatic usage
 
