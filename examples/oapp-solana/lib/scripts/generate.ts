@@ -6,8 +6,6 @@ import { AnchorIdl, rootNodeFromAnchor } from '@kinobi-so/nodes-from-anchor'
 import { renderVisitor } from '@kinobi-so/renderers-js-umi'
 import { createFromRoot } from 'kinobi'
 
-import { moveGenEventFiles } from './exchange'
-
 async function sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms))
 }
@@ -20,8 +18,6 @@ async function generateTypeScriptSDK(): Promise<void> {
     console.error('Generating TypeScript SDK to %s. IDL from %s', generatedSDKDir, anchorIdlPath)
     const kinobi = createFromRoot(rootNodeFromAnchor(anchorIdl as AnchorIdl))
     void kinobi.accept(renderVisitor(generatedSDKDir))
-    await sleep(1000)
-    await moveGenEventFiles(generatedSDKDir, anchorIdl.events ?? [])
 }
 
 ;(async (): Promise<void> => {
