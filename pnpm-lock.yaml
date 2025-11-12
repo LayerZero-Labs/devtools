@@ -577,6 +577,9 @@ importers:
       '@rushstack/eslint-patch':
         specifier: ^1.7.0
         version: 1.7.0
+      '@safe-global/safe-core-sdk-types':
+        specifier: ^2.3.0
+        version: 2.3.0
       '@types/chai':
         specifier: ^4.3.11
         version: 4.3.11
@@ -13306,7 +13309,7 @@ packages:
     dependencies:
       '@ethersproject/bignumber': 5.8.0
       '@ethersproject/contracts': 5.7.0
-      '@safe-global/safe-deployments': 1.33.0
+      '@safe-global/safe-deployments': 1.37.48
       web3-core: 1.10.4
       web3-utils: 1.10.4
     transitivePeerDependencies:
@@ -13323,7 +13326,6 @@ packages:
     resolution: {integrity: sha512-SeRkHlKDwtRarhpU2Ow7dFebJRppIGoYCMMeiTcW/MPovswvQGkPlki2/VoYKKKkRupTRXJ2VyRygdeKYz6VeQ==}
     dependencies:
       semver: 7.7.3
-    dev: false
 
   /@safe-global/safe-modules-deployments@2.2.20:
     resolution: {integrity: sha512-nhsrswfOX7U5TMshomW4x11sg4NXBnFwWUXnlwrD3VBaOV4ICaRXkmFuL38+d6eU/rtEsX4F5JP5dEdqsiPgag==}
@@ -14537,7 +14539,6 @@ packages:
     resolution: {integrity: sha512-Xh8vSwUeMKeYYrj3cX4lGQgFSF/N03r+tv4AiLl1SucqV+uTQpxRcnM8AkXKHwYP9ZPXOYXRr2KPXpVlIvqh9w==}
     dependencies:
       '@types/node': 18.18.14
-    dev: true
 
   /@types/cacheable-request@6.0.3:
     resolution: {integrity: sha512-IQ3EbTzGxIigb1I3qPZc1rWJnH0BmSKv5QYTalEwweFvyBDLSAe24zP0le/hyi7ecGfZVlIVAg4BZqb8WBwKqw==}
@@ -23806,7 +23807,6 @@ packages:
     resolution: {integrity: sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==}
     engines: {node: '>=10'}
     hasBin: true
-    dev: false
 
   /send@0.18.0:
     resolution: {integrity: sha512-qqWzuOjSFOuqPjFe4NOsMLafToQQwBSOEpS+FwEt3A2V3vKubTquT3vmLTQpFgMXp8AlFWFuP1qKaJZOtPpVXg==}
@@ -25790,7 +25790,7 @@ packages:
     resolution: {integrity: sha512-B6elffYm81MYZDTrat7aEhnhdtVE3lDBUZft16Z8awYMZYJDbnykEbJVS+l3mnA7AQTnSDr/1MjWofGDLBJPww==}
     engines: {node: '>=8.0.0'}
     dependencies:
-      '@types/bn.js': 5.1.5
+      '@types/bn.js': 5.1.6
       '@types/node': 12.20.55
       bignumber.js: 9.1.2
       web3-core-helpers: 1.10.4
