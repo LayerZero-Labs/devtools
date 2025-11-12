@@ -84,6 +84,9 @@ devDependencies:
   '@rushstack/eslint-patch':
     specifier: ^1.7.0
     version: 1.14.1
+  '@safe-global/safe-core-sdk-types':
+    specifier: ^2.3.0
+    version: 2.3.0
   '@types/chai':
     specifier: ^4.3.11
     version: 4.3.20
@@ -434,7 +437,7 @@ packages:
       '@ethersproject/abstract-provider': 5.8.0
       '@ethersproject/address': 5.8.0
       '@ethersproject/bignumber': 5.8.0
-      '@ethersproject/bytes': 5.7.0
+      '@ethersproject/bytes': 5.8.0
       '@ethersproject/constants': 5.8.0
       '@ethersproject/contracts': 5.8.0
       '@ethersproject/hash': 5.8.0
