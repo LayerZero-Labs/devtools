@@ -71,9 +71,9 @@ Please provide the API key:
             logger.debug(`Could not find chain ID for network ${chalk.bold(networkName)}
 
   Chain ID is required for Etherscan API v2.
-          
+
   Please provide the chain ID:
-  
+ 
   - As a chainId config parameter in ${networkName} config
   - As a SCAN_CHAIN_ID_${networkName} environment variable
   - As a SCAN_CHAIN_ID_${normalizeNetworkName(networkName)} environment variable`)

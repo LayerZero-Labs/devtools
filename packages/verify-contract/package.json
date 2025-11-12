@@ -17,8 +17,7 @@
   "bin": "./cli.js",
   "files": [
     "./dist/*",
-    "./cli.js",
-    "./src/common/networks.yaml"
+    "./cli.js"
   ],
   "scripts": {
     "prebuild": "tsc -noEmit",

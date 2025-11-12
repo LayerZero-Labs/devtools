@@ -20,6 +20,7 @@ export default defineConfig([
         treeshake: true,
         minify: true,
         format: ['cjs'],
+        shims: true, // Preserve __filename and __dirname
         esbuildPlugins: [
             copy({
                 resolveFrom: 'cwd',

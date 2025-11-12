@@ -5,274 +5,496 @@
 etherscanV2Url: &etherscan_v2_url https://api.etherscan.io/v2/api
 
 networks:
-  # Ethereum
-  ethereum:
-    chainId: 1
-    apiUrl: *etherscan_v2_url
-    aliases: [ethereum-mainnet]
-  
-  goerli:
-    chainId: 5
-    apiUrl: *etherscan_v2_url
-    aliases: [ethereum-goerli, goerli-mainnet]
-  
-  sepolia:
-    chainId: 11155111
-    apiUrl: *etherscan_v2_url
-    aliases: [sepolia-testnet]
+# Ethereum
+ethereum:
+  chainId: 1
+  apiUrl: *etherscan_v2_url
+  aliases: [ethereum-mainnet]
 
-  # Polygon
-  polygon:
-    chainId: 137
-    apiUrl: *etherscan_v2_url
-    aliases: [polygon-mainnet]
-  
-  amoy:
-    chainId: 80002
-    apiUrl: *etherscan_v2_url
-    aliases: [amoy-mainnet]
-  
-  zkpolygon:
-    chainId: 1101
-    apiUrl: *etherscan_v2_url
-    aliases: [zkpolygon-mainnet]
+goerli: # DEPRECATED
+  chainId: 5
+  apiUrl: *etherscan_v2_url
+  aliases: [ethereum-goerli]
 
-  # Arbitrum
-  arbitrum:
-    chainId: 42161
-    apiUrl: *etherscan_v2_url
-    aliases: [arbitrum-mainnet]
-  
-  arbitrum-goerli:
-    chainId: 421613
-    apiUrl: *etherscan_v2_url
-  
-  arbsep:
-    chainId: 421614
-    apiUrl: *etherscan_v2_url
-    aliases: [arbsep-testnet]
+sepolia:
+  chainId: 11155111
+  apiUrl: *etherscan_v2_url
+  aliases: [sepolia-testnet, eth-sepolia, ethereum-sepolia]
 
-  # Optimism
-  optimism:
-    chainId: 10
-    apiUrl: *etherscan_v2_url
-    aliases: [optimism-mainnet]
-  
-  optimism-goerli:
-    chainId: 420
-    apiUrl: *etherscan_v2_url
-  
-  optsep:
-    chainId: 11155420
-    apiUrl: *etherscan_v2_url
-    aliases: [optsep-testnet]
+holesky:
+  chainId: 17000
+  apiUrl: *etherscan_v2_url
+  aliases: [holesky-testnet, ethereum-holesky]
 
-  # Base
-  base:
-    chainId: 8453
-    apiUrl: *etherscan_v2_url
-    aliases: [base-mainnet]
-  
-  base-goerli:
-    chainId: 84531
-    apiUrl: *etherscan_v2_url
+hoodi:
+  chainId: 560048
+  apiUrl: *etherscan_v2_url
+  aliases: [hoodi-testnet, ethereum-hoodi]
 
-  # Avalanche
-  avalanche:
-    chainId: 43114
-    apiUrl: *etherscan_v2_url
-    aliases: [avalanche-mainnet]
-  
-  fuji:
-    chainId: 43113
-    apiUrl: *etherscan_v2_url
-    aliases: [avalanche-testnet, fuji-mainnet]
+# Polygon
+polygon:
+  chainId: 137
+  apiUrl: *etherscan_v2_url
+  aliases: [polygon-mainnet]
 
-  # BSC
-  bsc:
-    chainId: 56
-    apiUrl: *etherscan_v2_url
-    aliases: [bsc-mainnet]
-  
-  bsc-testnet:
-    chainId: 97
-    apiUrl: *etherscan_v2_url
+amoy:
+  chainId: 80002
+  apiUrl: *etherscan_v2_url
+  aliases: [polygon-amoy, polygon-sepolia, polygon-testnet]
 
-  # Fantom
-  fantom:
-    chainId: 250
-    apiUrl: *etherscan_v2_url
-    aliases: [fantom-mainnet]
-  
-  fantom-testnet:
-    chainId: 4002
-    apiUrl: *etherscan_v2_url
+zkpolygon:
+  chainId: 1101
+  apiUrl: *etherscan_v2_url
+  aliases: [zkpolygon-mainnet]
 
-  # Gnosis
-  gnosis:
-    chainId: 100
-    apiUrl: *etherscan_v2_url
-    aliases: [gnosis-mainnet]
+# Arbitrum
+arbitrum:
+  chainId: 42161
+  apiUrl: *etherscan_v2_url
+  aliases: [arbitrum-mainnet]
 
-  # Blast
-  blast:
-    chainId: 81457
-    apiUrl: *etherscan_v2_url
-    aliases: [blast-mainnet]
+arbitrum-nova:
+  chainId: 42170
+  apiUrl: *etherscan_v2_url
+  aliases: [arbitrum-nova-mainnet]
 
-  # Linea / zkConsensys
-  linea:
-    chainId: 59144
-    apiUrl: *etherscan_v2_url
-    aliases: [linea-mainnet, zkconsensys, zkconsensys-mainnet]
+arbitrum-goerli: # DEPRECATED
+  chainId: 421613
+  apiUrl: *etherscan_v2_url
 
-  # Scroll
-  scroll:
-    chainId: 534352
-    apiUrl: *etherscan_v2_url
-    aliases: [scroll-mainnet]
+arbsep:
+  chainId: 421614
+  apiUrl: *etherscan_v2_url
+  aliases: [arbsep-testnet, arbitrum-sepolia, arbitrum-testnet]
 
-  # Moonbeam
-  moonbeam:
-    chainId: 1284
-    apiUrl: *etherscan_v2_url
-    aliases: [moonbeam-mainnet]
-  
-  moonbeam-testnet:
-    chainId: 1287
-    apiUrl: *etherscan_v2_url
+# Optimism
+optimism:
+  chainId: 10
+  apiUrl: *etherscan_v2_url
+  aliases: [optimism-mainnet]
 
-  # Moonriver
-  moonriver:
-    chainId: 1285
-    apiUrl: *etherscan_v2_url
-    aliases: [moonriver-mainnet]
+optimism-goerli: # DEPRECATED
+  chainId: 420
+  apiUrl: *etherscan_v2_url
 
-  # Fraxtal
-  fraxtal:
-    chainId: 252
-    apiUrl: *etherscan_v2_url
-    aliases: [fraxtal-mainnet]
+optsep:
+  chainId: 11155420
+  apiUrl: *etherscan_v2_url
+  aliases: [optsep-testnet, optimism-sepolia, optimism-testnet]
 
-  # Taiko
-  taiko:
-    chainId: 167000
-    apiUrl: *etherscan_v2_url
-    aliases: [taiko-mainnet]
+# Base
+base:
+  chainId: 8453
+  apiUrl: *etherscan_v2_url
+  aliases: [base-mainnet]
 
-  # Non-Etherscan Networks (custom explorers)
-  
-  # Astar
-  astar:
-    chainId: 592
-    apiUrl: https://astar.blockscout.com/api
-    aliases: [astar-mainnet]
-  
-  zkatana:
-    chainId: 1261120
-    apiUrl: https://astar-zkevm.explorer.startale.com/api
-    aliases: [zkatana-mainnet]
+base-sepolia:
+  chainId: 84532
+  apiUrl: *etherscan_v2_url
+  aliases: [base-testnet]
 
-  # Aurora
-  aurora:
-    chainId: 1313161554
-    apiUrl: https://explorer.mainnet.aurora.dev/api
-    aliases: [aurora-mainnet]
+base-goerli: # DEPRECATED
+  chainId: 84531
+  apiUrl: *etherscan_v2_url
 
-  # EBI
-  ebi:
-    chainId: 2910
-    apiUrl: https://explorer.ebi.xyz/api
-    aliases: [ebi-mainnet]
+# Avalanche
+avalanche:
+  chainId: 43114
+  apiUrl: *etherscan_v2_url
+  aliases: [avalanche-mainnet]
 
-  # Etherlink
-  etherlink:
-    chainId: 42793
-    apiUrl: https://explorer.etherlink.com/api
-    aliases: [etherlink-mainnet]
+fuji:
+  chainId: 43113
+  apiUrl: *etherscan_v2_url
+  aliases: [avalanche-testnet, avalanche-fuji]
 
-  # Flare
-  flare:
-    chainId: 14
-    apiUrl: https://api.routescan.io/v2/network/mainnet/evm/14/etherscan
-    aliases: [flare-mainnet]
+# BSC
+bsc:
+  chainId: 56
+  apiUrl: *etherscan_v2_url
+  aliases: [bsc-mainnet]
 
-  # Gravity
-  gravity:
-    chainId: 1625
-    apiUrl: https://explorer.gravity.xyz/api
-    aliases: [gravity-mainnet]
+bsc-testnet:
+  chainId: 97
+  apiUrl: *etherscan_v2_url
 
-  # IOTA
-  iota:
-    chainId: 8822
-    apiUrl: https://explorer.evm.iota.org/api
-    aliases: [iota-mainnet]
+# Fantom
+fantom:
+  chainId: 250
+  apiUrl: *etherscan_v2_url
+  aliases: [fantom-mainnet]
 
-  # Kava
-  kava:
-    chainId: 2222
-    apiUrl: https://kavascan.com/api
-    aliases: [kava-mainnet]
-  
-  kava-testnet:
-    chainId: 2221
-    apiUrl: https://testnet.kavascan.com/api
+fantom-testnet:
+  chainId: 4002
+  apiUrl: *etherscan_v2_url
 
-  # Klaytn
-  klaytn:
-    chainId: 8217
-    apiUrl: https://api-cypress.klaytnscope.com/api
-    aliases: [klaytn-mainnet]
-  
-  klaytn-testnet:
-    chainId: 1001
-    apiUrl: https://api-baobab.klaytnscope.com/api
+# Gnosis
+gnosis:
+  chainId: 100
+  apiUrl: *etherscan_v2_url
+  aliases: [gnosis-mainnet]
 
-  # Mantle
-  mantle:
-    chainId: 5000
-    apiUrl: https://explorer.mantle.xyz/api
-    aliases: [mantle-mainnet]
+# Blast
+blast:
+  chainId: 81457
+  apiUrl: *etherscan_v2_url
+  aliases: [blast-mainnet]
 
-  # Manta
-  manta:
-    chainId: 169
-    apiUrl: https://pacific-explorer.manta.network/api
-    aliases: [manta-mainnet]
+blast-sepolia:
+  chainId: 168587773
+  apiUrl: *etherscan_v2_url
+  aliases: [blast-sepolia-testnet, blast-testnet]
 
-  # Metis
-  metis:
-    chainId: 1088
-    apiUrl: https://api.routescan.io/v2/network/mainnet/evm/1088/etherscan
-    aliases: [metis-mainnet]
+# Linea / zkConsensys
+linea:
+  chainId: 59144
+  apiUrl: *etherscan_v2_url
+  aliases: [linea-mainnet, zkconsensys, zkconsensys-mainnet]
 
-  # Mode
-  mode:
-    chainId: 34443
-    apiUrl: https://explorer.mode.network/api
-    aliases: [mode-mainnet]
+linea-sepolia:
+  chainId: 59141
+  apiUrl: *etherscan_v2_url
+  aliases: [linea-sepolia-testnet, linea-testnet]
 
-  # Rarible
-  rarible:
-    chainId: 1380012617
-    apiUrl: https://mainnet.explorer.rarichain.org/api
-    aliases: [rarible-mainnet]
+# Scroll
+scroll:
+  chainId: 534352
+  apiUrl: *etherscan_v2_url
+  aliases: [scroll-mainnet]
 
-  # Sei
-  sei:
-    chainId: 1329
-    apiUrl: https://seitrace.com/pacific-1/api
-    aliases: [sei-mainnet]
+scroll-sepolia:
+  chainId: 534351
+  apiUrl: *etherscan_v2_url
+  aliases: [scroll-sepolia-testnet, scroll-testnet]
 
-  # X Chain
-  xchain:
-    chainId: 7762959
-    apiUrl: https://xchain-explorer.idex.io/api
-    aliases: [xchain-mainnet]
+# Moonbeam
+moonbeam:
+  chainId: 1284
+  apiUrl: *etherscan_v2_url
+  aliases: [moonbeam-mainnet]
 
-  # X Layer
-  xlayer:
-    chainId: 196
-    apiUrl: https://www.oklink.com/api/v5/explorer/contract/verify-source-code-plugin/XLAYER
-    aliases: [xlayer-mainnet]
+moonbeam-testnet:
+  chainId: 1287
+  apiUrl: *etherscan_v2_url
+
+# Moonriver
+moonriver:
+  chainId: 1285
+  apiUrl: *etherscan_v2_url
+  aliases: [moonriver-mainnet]
+
+# Fraxtal
+fraxtal:
+  chainId: 252
+  apiUrl: *etherscan_v2_url
+  aliases: [fraxtal-mainnet]
+
+fraxtal-hoodi:
+  chainId: 2523
+  apiUrl: *etherscan_v2_url
+  aliases: [fraxtal-hoodi-testnet, fraxtal-testnet]
+
+# Taiko
+taiko:
+  chainId: 167000
+  apiUrl: *etherscan_v2_url
+  aliases: [taiko-mainnet]
+
+taiko-hoodi:
+  chainId: 167013
+  apiUrl: *etherscan_v2_url
+  aliases: [taiko-hoodi-testnet, taiko-testnet]
+
+# Abstract
+abstract:
+  chainId: 2741
+  apiUrl: *etherscan_v2_url
+  aliases: [abstract-mainnet]
+
+abstract-sepolia:
+  chainId: 11124
+  apiUrl: *etherscan_v2_url
+  aliases: [abstract-sepolia-testnet, abstract-testnet]
+
+# ApeChain
+apechain:
+  chainId: 33139
+  apiUrl: *etherscan_v2_url
+  aliases: [apechain-mainnet]
+
+apechain-curtis:
+  chainId: 33111
+  apiUrl: *etherscan_v2_url
+  aliases: [apechain-curtis-testnet, apechain-testnet]
+
+# Berachain
+berachain:
+  chainId: 80094
+  apiUrl: *etherscan_v2_url
+  aliases: [berachain-mainnet]
+
+berachain-bepolia:
+  chainId: 80069
+  apiUrl: *etherscan_v2_url
+  aliases: [berachain-bepolia-testnet, berachain-testnet]
+
+# BitTorrent
+bittorrent:
+  chainId: 199
+  apiUrl: *etherscan_v2_url
+  aliases: [bittorrent-mainnet]
+
+bittorrent-testnet:
+  chainId: 1029
+  apiUrl: *etherscan_v2_url
+
+# Celo
+celo:
+  chainId: 42220
+  apiUrl: *etherscan_v2_url
+  aliases: [celo-mainnet]
+
+celo-sepolia:
+  chainId: 11142220
+  apiUrl: *etherscan_v2_url
+  aliases: [celo-sepolia-testnet, celo-testnet]
+
+# HyperEVM
+hyperevm:
+  chainId: 999
+  apiUrl: *etherscan_v2_url
+  aliases: [hyperevm-mainnet]
+
+# Katana
+katana:
+  chainId: 747474
+  apiUrl: *etherscan_v2_url
+  aliases: [katana-mainnet]
+
+katana-bokuto:
+  chainId: 737373
+  apiUrl: *etherscan_v2_url
+  aliases: [katana-bokuto-testnet, katana-testnet]
+
+# Mantle
+mantle:
+  chainId: 5000
+  apiUrl: *etherscan_v2_url
+  aliases: [mantle-mainnet]
+
+mantle-sepolia:
+  chainId: 5003
+  apiUrl: *etherscan_v2_url
+  aliases: [mantle-sepolia-testnet, mantle-testnet]
+
+# Memecore
+memecore:
+  chainId: 43521
+  apiUrl: *etherscan_v2_url
+  aliases: [memecore-testnet]
+
+# Monad
+monad:
+  chainId: 10143
+  apiUrl: *etherscan_v2_url
+  aliases: [monad-testnet]
+
+# opBNB
+opbnb:
+  chainId: 204
+  apiUrl: *etherscan_v2_url
+  aliases: [opbnb-mainnet]
+
+opbnb-testnet:
+  chainId: 5611
+  apiUrl: *etherscan_v2_url
+
+# Sei
+sei:
+  chainId: 1329
+  apiUrl: *etherscan_v2_url
+  aliases: [sei-mainnet]
+
+sei-testnet:
+  chainId: 1328
+  apiUrl: *etherscan_v2_url
+
+# Sonic
+sonic:
+  chainId: 146
+  apiUrl: *etherscan_v2_url
+  aliases: [sonic-mainnet]
+
+sonic-testnet:
+  chainId: 14601
+  apiUrl: *etherscan_v2_url
+
+# Sophon (DEPRECATED - will be deprecated on November 22, 2025)
+sophon:
+  chainId: 50104
+  apiUrl: *etherscan_v2_url
+  aliases: [sophon-mainnet]
+
+sophon-sepolia:
+  chainId: 531050104
+  apiUrl: *etherscan_v2_url
+  aliases: [sophon-sepolia-testnet, sophon-testnet]
+
+# Swellchain
+swellchain:
+  chainId: 1923
+  apiUrl: *etherscan_v2_url
+  aliases: [swellchain-mainnet]
+
+swellchain-testnet:
+  chainId: 1924
+  apiUrl: *etherscan_v2_url
+
+# Unichain
+unichain:
+  chainId: 130
+  apiUrl: *etherscan_v2_url
+  aliases: [unichain-mainnet]
+
+unichain-sepolia:
+  chainId: 1301
+  apiUrl: *etherscan_v2_url
+  aliases: [unichain-sepolia-testnet, unichain-testnet]
+
+# World
+world:
+  chainId: 480
+  apiUrl: *etherscan_v2_url
+  aliases: [world-mainnet]
+
+world-sepolia:
+  chainId: 4801
+  apiUrl: *etherscan_v2_url
+  aliases: [world-sepolia-testnet, world-testnet]
+
+# XDC
+xdc:
+  chainId: 50
+  apiUrl: *etherscan_v2_url
+  aliases: [xdc-mainnet]
+
+xdc-apothem:
+  chainId: 51
+  apiUrl: *etherscan_v2_url
+  aliases: [xdc-apothem-testnet, xdc-testnet]
+
+# zkSync
+zksync:
+  chainId: 324
+  apiUrl: *etherscan_v2_url
+  aliases: [zksync-mainnet]
+
+zksync-sepolia:
+  chainId: 300
+  apiUrl: *etherscan_v2_url
+  aliases: [zksync-sepolia-testnet, zksync-testnet]
+
+# Non-Etherscan Networks (custom explorers)
+
+# Astar
+astar:
+  chainId: 592
+  apiUrl: https://astar.blockscout.com/api
+  aliases: [astar-mainnet]
+
+zkatana:
+  chainId: 1261120
+  apiUrl: https://astar-zkevm.explorer.startale.com/api
+  aliases: [zkatana-mainnet]
+
+# Aurora
+aurora:
+  chainId: 1313161554
+  apiUrl: https://explorer.mainnet.aurora.dev/api
+  aliases: [aurora-mainnet]
+
+# EBI
+ebi:
+  chainId: 2910
+  apiUrl: https://explorer.ebi.xyz/api
+  aliases: [ebi-mainnet]
+
+# Etherlink
+etherlink:
+  chainId: 42793
+  apiUrl: https://explorer.etherlink.com/api
+  aliases: [etherlink-mainnet]
+
+# Flare
+flare:
+  chainId: 14
+  apiUrl: https://api.routescan.io/v2/network/mainnet/evm/14/etherscan
+  aliases: [flare-mainnet]
+
+# Gravity
+gravity:
+  chainId: 1625
+  apiUrl: https://explorer.gravity.xyz/api
+  aliases: [gravity-mainnet]
+
+# IOTA
+iota:
+  chainId: 8822
+  apiUrl: https://explorer.evm.iota.org/api
+  aliases: [iota-mainnet]
+
+# Kava
+kava:
+  chainId: 2222
+  apiUrl: https://kavascan.com/api
+  aliases: [kava-mainnet]
+
+kava-testnet:
+  chainId: 2221
+  apiUrl: https://testnet.kavascan.com/api
+
+# Klaytn
+klaytn:
+  chainId: 8217
+  apiUrl: https://api-cypress.klaytnscope.com/api
+  aliases: [klaytn-mainnet]
+
+klaytn-testnet:
+  chainId: 1001
+  apiUrl: https://api-baobab.klaytnscope.com/api
+
+# Manta
+manta:
+  chainId: 169
+  apiUrl: https://pacific-explorer.manta.network/api
+  aliases: [manta-mainnet]
+
+# Metis
+metis:
+  chainId: 1088
+  apiUrl: https://api.routescan.io/v2/network/mainnet/evm/1088/etherscan
+  aliases: [metis-mainnet]
+
+# Mode
+mode:
+  chainId: 34443
+  apiUrl: https://explorer.mode.network/api
+  aliases: [mode-mainnet]
+
+# Rarible
+rarible:
+  chainId: 1380012617
+  apiUrl: https://mainnet.explorer.rarichain.org/api
+  aliases: [rarible-mainnet]
+
+# X Chain
+xchain:
+  chainId: 7762959
+  apiUrl: https://xchain-explorer.idex.io/api
+  aliases: [xchain-mainnet]
+
+# X Layer
+xlayer:
+  chainId: 196
+  apiUrl: https://www.oklink.com/api/v5/explorer/contract/verify-source-code-plugin/XLAYER
+  aliases: [xlayer-mainnet]
