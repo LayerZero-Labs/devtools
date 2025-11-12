@@ -140,6 +140,9 @@ devDependencies:
   '@rushstack/eslint-patch':
     specifier: ^1.7.0
     version: 1.15.0
+  '@safe-global/safe-core-sdk-types':
+    specifier: ^2.3.0
+    version: 2.3.0
   '@solana-developers/helpers':
     specifier: ~2.8.1
     version: 2.8.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)
