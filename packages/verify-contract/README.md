@@ -16,53 +16,91 @@
   <a href="https://www.npmjs.com/package/@layerzerolabs/verify-contract"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/verify-contract"/></a>
 </p>
 
+## Overview
+
+A comprehensive tool for verifying smart contracts on block explorers. Supports both CLI and programmatic usage, with built-in support for Etherscan API v2 and 60+ EVM networks.
+
+### Etherscan API v2 Support
+
+This package supports **Etherscan API v2**, providing a unified multichain experience:
+
+- **Unified API URL**: All Etherscan-compatible chains use `https://api.etherscan.io/v2/api`
+- **Single API Key**: One Etherscan API key works across all supported chains
+- **Automatic Chain ID**: Chain IDs are automatically set for well-known networks
+
 ## Installation
 
 ```bash
-yarn add @layerzerolabs/verify-contract
-
-pnpm add @layerzerolabs/verify-contract
-
 npm install @layerzerolabs/verify-contract
+# or
+yarn add @layerzerolabs/verify-contract
+# or
+pnpm add @layerzerolabs/verify-contract
 ```
 
-## Etherscan API v2 Support
-
-This package now supports **Etherscan API v2**, which provides a unified multichain experience across 60+ supported networks using a single API key. 
-
-### Key Changes
-
-- **Unified API URL**: All Etherscan-compatible chains now use `https://api.etherscan.io/v2/api` as the base URL
-- **Single API Key**: One Etherscan API key works across all supported chains
-- **Chain ID Required**: API v2 requires a `chainId` parameter to identify the target network
-
-The package automatically handles chain IDs for well-known networks. For custom networks or if you need to override the default chain ID, you can specify it explicitly in your network configuration.
-
-## Usage
+## Quick Start
 
 ### CLI
 
-This package comes with a CLI interface for command-line contract verification:
-
 ```bash
-npx @layerzerolabs/verify-contract --help
-```
-
-#### CLI Commands
-
-The CLI provides two main commands: `target` (default) and `non-target`.
-
-##### Target Verification (Default)
-
-Verifies contracts that have their own deployment files:
-
-```bash
-# Basic usage - verify all contracts in a network
+# Verify all contracts on Ethereum
 npx @layerzerolabs/verify-contract target \
   --network ethereum \
   --api-key YOUR_ETHERSCAN_API_KEY \
   --deployments ./deployments
+```
 
+### Programmatic
+
+```typescript
+import { verifyHardhatDeployTarget } from "@layerzerolabs/verify-contract";
+
+verifyHardhatDeployTarget({
+  paths: { deployments: "./deployments" },
+  networks: {
+    ethereum: {
+      apiUrl: "https://api.etherscan.io/v2/api",
+      apiKey: "your-etherscan-api-key",
+    },
+  },
+});
+```
+
+## CLI Usage
+
+The CLI provides two verification modes: `target` (default) and `non-target`.
+
+### Target Verification
+
+Verifies contracts that have their own deployment files (most common case).
+
+#### Basic Usage
+
+```bash
+# Verify all contracts in a network
+npx @layerzerolabs/verify-contract target \
+  --network ethereum \
+  --api-key YOUR_ETHERSCAN_API_KEY \
+  --deployments ./deployments
+```
+
+#### Options
+
+**Common Options:**
+- `-n, --network <network>` - Network name (required) - e.g., `ethereum`, `polygon`, `arbitrum`
+- `-k, --api-key <key>` - Scan API Key (or use environment variable)
+- `-u, --api-url <url>` - Custom scan API URL (auto-detected for known networks)
+- `--chain-id <id>` - Chain ID for Etherscan API v2 (auto-detected for known networks)
+- `-d, --deployments <path>` - Path to deployments folder
+- `--dry-run` - Preview verification without executing
+- `-l, --log-level <level>` - Log level: `error`, `warn`, `info`, `verbose`, `debug` (default: `info`)
+
+**Target-Specific Options:**
+- `-c, --contracts <names>` - Comma-separated list of contract names to verify
+
+#### Examples
+
+```bash
 # Verify specific contracts only
 npx @layerzerolabs/verify-contract target \
   --network ethereum \
@@ -85,12 +123,35 @@ npx @layerzerolabs/verify-contract target \
   --deployments ./deployments
 ```
 
-##### Non-Target Verification
+### Non-Target Verification
 
-Verifies contracts without deployment files (e.g., deployed dynamically):
+Verifies contracts without deployment files (e.g., deployed dynamically by factory contracts).
+
+#### Basic Usage
 
 ```bash
-# Verify a contract deployed by another contract
+npx @layerzerolabs/verify-contract non-target \
+  --network ethereum \
+  --api-key YOUR_ETHERSCAN_API_KEY \
+  --deployments ./deployments \
+  --address 0x123... \
+  --name "contracts/MyContract.sol:MyContract" \
+  --deployment MyFactory.json \
+  --arguments '[1000, "0x456..."]'
+```
+
+#### Options
+
+**Non-Target-Specific Options:**
+- `--address <address>` - Contract address to verify (required)
+- `--name <contract name>` - Fully qualified contract name (required)
+- `--deployment <file>` - Deployment file name to use as source (required)
+- `--arguments <args>` - Constructor arguments as JSON array or encoded hex
+
+#### Examples
+
+```bash
+# With JSON constructor arguments
 npx @layerzerolabs/verify-contract non-target \
   --network ethereum \
   --api-key YOUR_ETHERSCAN_API_KEY \
@@ -111,27 +172,7 @@ npx @layerzerolabs/verify-contract non-target \
   --arguments 0x000000000000000000000000...
 ```
 
-#### CLI Options
-
-**Common Options:**
-- `-n, --network <network>` - Network name (required) - e.g., ethereum, polygon, arbitrum
-- `-k, --api-key <key>` - Scan API Key (or use environment variable)
-- `-u, --api-url <url>` - Custom scan API URL (auto-detected for known networks)
-- `--chain-id <id>` - Chain ID for Etherscan API v2 (auto-detected for known networks)
-- `-d, --deployments <path>` - Path to deployments folder
-- `--dry-run` - Preview verification without executing
-- `-l, --log-level <level>` - Log level: error, warn, info, verbose, debug (default: info)
-
-**Target Command Options:**
-- `-c, --contracts <names>` - Comma-separated list of contract names to verify
-
-**Non-Target Command Options:**
-- `--address <address>` - Contract address to verify (required)
-- `--name <contract name>` - Fully qualified contract name (required)
-- `--deployment <file>` - Deployment file name to use as source (required)
-- `--arguments <args>` - Constructor arguments as JSON array or encoded hex
-
-#### Using Environment Variables with CLI
+### Environment Variables
 
 Instead of passing API keys on the command line, use environment variables:
 
@@ -149,21 +190,19 @@ npx @layerzerolabs/verify-contract target \
 The CLI automatically:
 - Uses the correct API URL for known networks
 - Sets the correct chain ID for Etherscan API v2
-- Pulls API keys from environment variables if not specified on command line
+- Pulls API keys from environment variables if not specified
 
-### Programmatic usage
+## Programmatic Usage
 
-The package provides two types of verification for hardhat deploy: _target_ and _non-target_.
+The package provides two verification functions: `verifyHardhatDeployTarget` and `verifyHardhatDeployNonTarget`.
 
-#### Target verification
+### Target Verification
 
-This is suitable for verifying contracts that have been the compilation targets for a deployment, i.e. they have their own deployment file.
-This is the default and easiest case for which we know all the information we need from the deployment file.
+Verifies contracts that have their own deployment files. This is the default and easiest case.
 
 ```typescript
 import { verifyHardhatDeployTarget } from "@layerzerolabs/verify-contract";
 
-// Programmatic usage allows for more fine-grained and multi-network verification
 verifyHardhatDeployTarget({
   paths: {
     deployments: "./my/little/deployments/folder",
@@ -192,32 +231,30 @@ verifyHardhatDeployTarget({
       chainId: 12345,
     },
   },
-  // The filter option allows you to limit the scope of verification to
-  // specific contracts
-  //
-  // It supports several ways of scoping the verification:
-  //
+  // Filter option allows you to limit verification scope
+  // Supports multiple formats:
+  
   // A list of case-sensitive contract names
   filter: ["Factory", "Router"],
+  
   // A single contract name
   filter: "ONFT1155",
-  // Boolean to toggle the verification as a whole
+  
+  // Boolean to toggle verification
   filter: false,
-  // A function that gets passed the contract name and an relative contract path and returns a boolean to signify the contract needs to be verified
+  
+  // A function that receives contract name and path, returns boolean
   filter: (name, path) => name.startsWith("Potato721"),
 });
 ```
 
-#### Non-target verification
+### Non-Target Verification
 
-This is suitable for verifying contracts that have been e.g. deployed dynamically from other contracts within the deployment.
-
-In this case we need to know more information - the specific deployment file to use, the address of the contract and also its constructor arguments.
+Verifies contracts deployed dynamically (e.g., by factory contracts) that don't have their own deployment files.
 
 ```typescript
 import { verifyHardhatDeployNonTarget } from "@layerzerolabs/verify-contract";
 
-// Programmatic usage allows for more fine-grained and multi-network verification
 verifyHardhatDeployNonTarget({
   paths: {
     deployments: "./my/little/deployments/folder",
@@ -230,24 +267,27 @@ verifyHardhatDeployNonTarget({
       chainId: 12345, // Specify chain ID for custom networks
     },
   },
-  // The contracts array is used to pass the contract details
+  // The contracts array specifies which contracts to verify
   contracts: [
     {
       address: "0x0",
       network: "whatachain",
-      // We'll need to pass the name of the deployment file to use (relative to the deployments path)
+      // Deployment file name (relative to deployments path)
       deployment: "OtherContract.json",
+      // Constructor arguments
       constructorArguments: [1000, "0x0"],
-      // In this case we'll need to pass a fully-qualified contract name
+      // Fully-qualified contract name
       contractName: "contracts/examples/Pool.sol",
     },
   ],
 });
 ```
 
+## Configuration
+
 ### Environment Variables
 
-You can configure API keys, URLs, browser URLs, and chain IDs using environment variables:
+Configure API keys, URLs, browser URLs, and chain IDs using environment variables:
 
 ```bash
 # API Key - same key works for all Etherscan v2 compatible chains
@@ -267,17 +307,17 @@ SCAN_BROWSER_URL_ethereum=https://etherscan.io
 SCAN_BROWSER_URL_polygon=https://polygonscan.com
 ```
 
-Environment variable names are case-insensitive and support both hyphenated and underscored network names:
+**Note:** Environment variable names are case-insensitive and support both hyphenated and underscored network names:
 - `SCAN_API_KEY_ethereum` or `SCAN_API_KEY_ETHEREUM`
 - `SCAN_API_KEY_base-sepolia` or `SCAN_API_KEY_BASE_SEPOLIA`
 
-### Default configuration
+### Default Network Configuration
 
-The package is preconfigured for scan API URLs and chain IDs for several well-known networks.
+The package is preconfigured with scan API URLs and chain IDs for well-known networks.
 
-#### Etherscan v2 Compatible Networks (use single API key)
+#### Etherscan v2 Compatible Networks
 
-Most major EVM networks now use the Etherscan API v2 unified endpoint (`https://api.etherscan.io/v2/api`):
+Most major EVM networks use the Etherscan API v2 unified endpoint (`https://api.etherscan.io/v2/api`). These networks can share a single API key:
 
 | Network                                                        | Chain ID  | API URL (v2)                            |
 | -------------------------------------------------------------- | --------- | --------------------------------------- |
@@ -311,7 +351,7 @@ Most major EVM networks now use the Etherscan API v2 unified endpoint (`https://
 | `fraxtal`, `fraxtal-mainnet`                                   | 252       | `https://api.etherscan.io/v2/api`       |
 | `taiko`, `taiko-mainnet`                                       | 167000    | `https://api.etherscan.io/v2/api`       |
 
-#### Non-Etherscan Explorers (require separate API keys)
+#### Non-Etherscan Explorers
 
 Some networks use their own explorer infrastructure and require separate API keys:
 
