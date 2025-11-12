@@ -85,6 +85,40 @@ Make sure you select the **OApp (Solana)** example from the dropdown:
 ❯   OApp (Solana)
 ```
 
+## Project Structure
+
+The repository is organized as follows:
+
+```
+examples/oapp-solana/
+├── contracts/              # Solidity contracts for EVM side
+├── deploy/                 # Hardhat deploy scripts for EVM contracts
+├── deployments/            # Deployment files (Only created after deployment)
+├── docs/                   # Additional guides (compose, ordered execution)
+├── lib/                    # TypeScript client SDK and generated bindings
+│   ├── client/
+│   │   ├── generated/      # Auto-generated TypeScript files from Solana IDL (run `pnpm gen:api`)
+│   │   └── myoapp.ts       # TypeScript client for interacting with the Solana OApp
+├── programs/               # Grouping folder for Solana program
+│   └── my_oapp/            # Solana OApp program
+├── tasks/                  # Hardhat tasks for deployment, config, send, etc.
+├── test/                  # Stub folder for tests
+├── .env.example            # Example environment variables
+├── layerzero.config.ts     # OApp mesh configuration
+├── README.md               # This documentation
+└── ...                     # Other project files
+```
+
+- **contracts/**: Solidity contracts for the EVM side of the OApp (if applicable).
+- **deploy/**: Hardhat deploy scripts for EVM contracts.
+- **docs/**: Project-specific documentation, guides, and references.
+- **lib/client/generated/my_oapp**: TypeScript bindings generated from the Solana program's IDL. Regenerate after program changes with `pnpm gen:api`.
+- **lib/client/myoapp.ts**: Main TypeScript client for interacting with the Solana OApp.
+- **programs/my_oapp**: Anchor-based Solana program source code.
+- **scripts/**: Automation scripts for deployment and setup.
+- **tasks/**: Custom Hardhat tasks for deployment, configuration, and wiring.
+- **tests/**: Project tests for both EVM and Solana components.
+
 ## Developing Contracts
 
 #### Compiling your contracts
