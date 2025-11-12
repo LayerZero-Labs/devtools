@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-evm-upgradeable
 
+## 3.2.1
+
+### Patch Changes
+
+- 04768d9: update natspec tags to use custom prefix
+
 ## 3.2.0
 
 ### Minor Changes

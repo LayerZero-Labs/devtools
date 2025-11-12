@@ -4619,7 +4619,7 @@ importers:
         specifier: ^0.0.7
         version: link:../devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^1.0.13
+        specifier: ^1.0.14
         version: link:../devtools-move
       '@layerzerolabs/io-devtools':
         specifier: ^0.3.0
@@ -11013,7 +11013,7 @@ packages:
     resolution: {integrity: sha512-D09DF3kXtwBGwyI8WcLv8AWfUHrCTJwXoMe7U+EuXH+TOsOmwVhLAk8fulRjR9fHnvQvGEyl1blHUebtY2nt3A==}
     dependencies:
       '@layerzerolabs/lz-corekit-solana': 3.0.120(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
-      '@layerzerolabs/lz-definitions': 3.0.145
+      '@layerzerolabs/lz-definitions': 3.0.120
       '@layerzerolabs/lz-foundation': 3.0.120(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
       '@layerzerolabs/lz-serdes': 3.0.120(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
       '@layerzerolabs/lz-utilities': 3.0.120(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
