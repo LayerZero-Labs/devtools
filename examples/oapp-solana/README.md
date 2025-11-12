@@ -8,7 +8,7 @@
   <a href="https://layerzero.network" style="color: #a77dff">Homepage</a> | <a href="https://docs.layerzero.network/" style="color: #a77dff">Docs</a> | <a href="https://layerzero.network/developers" style="color: #a77dff">Developers</a>
 </p>
 
-<h1 align="center">OApp Example</h1>
+<h1 align="center">Solana OApp Example</h1>
 
 <p align="center">
   <a href="https://docs.layerzero.network/v2/concepts/getting-started/what-is-layerzero" style="color: #a77dff">Core Concepts</a> | <a href="https://docs.layerzero.network/v2/developers/evm/configuration/options" style="color: #a77dff">Message Execution Options</a> | <a href="https://docs.layerzero.network/v2/deployments/deployed-contracts" style="color: #a77dff">Endpoint Addresses</a>
@@ -279,3 +279,20 @@ pnpm test
 <p align="center">
   Join our <a href="https://layerzero.network/community" style="color: #a77dff">community</a>! | Follow us on <a href="https://x.com/LayerZero_Labs" style="color: #a77dff">X (formerly Twitter)</a>
 </p>
+
+
+## Modifying for your use case
+
+After going through the above and having successfully sent cross-chain messages using the template, you might want to start customizing the Solana program to fit your actual use case.
+
+First, ensure you have built the program after making the necessary updates, to ensure the latest changes to the IDL are reflected.
+
+Next, run:
+
+```bash
+pnpm gen:api
+```
+
+This will update the files under `lib/client/generated/my_oapp` which is used by `lib/client/myoapp.ts`, which you will also need to adapt to your updated program.
+
+For guidance, read the [Solana OApp Reference](https://docs.layerzero.network/v2/developers/solana/oapp/overview).
