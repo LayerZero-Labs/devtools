@@ -2,54 +2,8 @@ import fs from 'fs'
 import path from 'path'
 import readline from 'readline'
 
-import { Idl } from '@coral-xyz/anchor'
 import { IdlEvent } from '@coral-xyz/anchor/dist/cjs/idl'
 import { camelCase } from 'kinobi'
-
-interface TypeField {
-    index: boolean
-    name: string
-    type: any
-}
-
-interface TypeSubItem {
-    kind: 'struct'
-    fields: TypeField[]
-}
-
-interface TypeItem {
-    name: string
-    type: TypeSubItem
-}
-
-/**
- * modify the idl json file, move events to types
- * @param path idl file path
- */
-export function exchangeIDLJson(path: string): Idl {
-    const content = fs.readFileSync(path, 'utf8')
-    const jsonContent = JSON.parse(content) as Idl
-    const types = jsonContent.types ?? []
-    const { events } = jsonContent
-    if (events) {
-        for (const event of events) {
-            const { name } = event
-            const { fields } = event
-
-            const typeFields: TypeField[] = fields
-            const typeSubItem: TypeSubItem = {
-                kind: 'struct',
-                fields: typeFields,
-            }
-            const newType: TypeItem = {
-                name: name,
-                type: typeSubItem,
-            }
-            types.push(newType)
-        }
-    }
-    return jsonContent
-}
 
 /**
  * move generated event files to events folder
@@ -79,10 +33,11 @@ export async function moveGenEventFiles(generatedSDKDir: string, events: IdlEven
         eventFileNames.forEach((fileName) => {
             const originalPath = path.join(generatedTypesDir, fileName)
             const newPath = path.join(generatedEventsDir, fileName)
-            //move event file from types to events
-            fs.renameSync(originalPath, newPath)
-            //fix event file issue
-            fixEventFiles(newPath)
+            // move event file from types to events, if it exists
+            if (fs.existsSync(originalPath)) {
+                fs.renameSync(originalPath, newPath)
+                fixEventFiles(newPath)
+            }
         })
 
         //move invalid lines from types/index.ts to events/index.ts
