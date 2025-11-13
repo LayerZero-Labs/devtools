@@ -9,6 +9,9 @@ import 'hardhat-deploy'
 import 'hardhat-contract-sizer'
 import '@nomiclabs/hardhat-ethers'
 import '@layerzerolabs/toolbox-hardhat'
+
+import './tasks/index'
+
 import { HardhatUserConfig, HttpNetworkAccountsUserConfig } from 'hardhat/types'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions'
@@ -52,19 +55,14 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
-        'sepolia-testnet': {
-            eid: EndpointId.SEPOLIA_V2_TESTNET,
-            url: process.env.RPC_URL_SEPOLIA || 'https://rpc.sepolia.org/',
+        'arbitrum-mainnet': {
+            eid: EndpointId.ARBITRUM_V2_MAINNET,
+            url: process.env.RPC_URL_ARBITRUM || 'https://arbitrum.gateway.tenderly.co',
             accounts,
         },
-        'avalanche-testnet': {
-            eid: EndpointId.AVALANCHE_V2_TESTNET,
-            url: process.env.RPC_URL_FUJI || 'https://rpc.ankr.com/avalanche_fuji',
-            accounts,
-        },
-        'amoy-testnet': {
-            eid: EndpointId.AMOY_V2_TESTNET,
-            url: process.env.RPC_URL_AMOY || 'https://polygon-amoy-bor-rpc.publicnode.com',
+        'base-mainnet': {
+            eid: EndpointId.BASE_V2_MAINNET,
+            url: process.env.RPC_URL_BASE || 'https://base.gateway.tenderly.co',
             accounts,
         },
         hardhat: {
