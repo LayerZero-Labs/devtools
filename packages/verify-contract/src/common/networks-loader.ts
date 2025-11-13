@@ -1,29 +1,13 @@
-import { readFileSync, existsSync } from 'fs'
-import { join } from 'path'
-import { parse } from 'yaml'
 import { type NetworkName } from './types'
-
-interface NetworkConfigYaml {
-    chainId: number
-    apiUrl?: string
-    aliases?: string[]
-}
-
-interface NetworksYaml {
-    etherscanV2Url: string
-    networks: Record<string, NetworkConfigYaml>
-}
+import { networks } from './networks'
 
 class NetworkRegistry {
     private apiUrls: Map<NetworkName, string> = new Map()
     private chainIds: Map<NetworkName, number> = new Map()
 
-    constructor(yamlPath: string) {
-        const yamlContent = readFileSync(yamlPath, 'utf8')
-        const config: NetworksYaml = parse(yamlContent)
-
+    constructor() {
         // Process each network
-        for (const [canonicalName, network] of Object.entries(config.networks)) {
+        for (const [canonicalName, network] of Object.entries(networks)) {
             const apiUrl = network.apiUrl
             const chainId = network.chainId
 
@@ -76,14 +60,8 @@ class NetworkRegistry {
     }
 }
 
-// Load the networks configuration
-// Try two locations:
-// 1. Development: src/common/networks.yaml (__dirname is src/common/)
-// 2. Production: dist/common/networks.yaml (__dirname is dist/ after bundling)
-const devPath = join(__dirname, 'networks.yaml')
-const prodPath = join(__dirname, 'common', 'networks.yaml')
-const networksYamlPath = existsSync(devPath) ? devPath : prodPath
-const networkRegistry = new NetworkRegistry(networksYamlPath)
+// Load the networks configuration from TypeScript config
+const networkRegistry = new NetworkRegistry()
 
 // Export lookup functions (backward compatible with existing code)
 export const getDefaultScanApiUrl = (networkName: string): string | undefined => networkRegistry.getApiUrl(networkName)

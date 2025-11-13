@@ -327,4 +327,4 @@ The package supports 60+ EVM networks with preconfigured scan API URLs and chain
 | `polygon`            | 137      | `https://api.etherscan.io/v2/api` |
 | `aurora`             | 1313161554 | `https://explorer.mainnet.aurora.dev/api` |
 
-For the complete list of supported networks, network aliases, and their configurations, see [`src/common/networks.yaml`](src/common/networks.yaml).
+For the complete list of supported networks, network aliases, and their configurations, see [`src/common/networks.ts`](src/common/networks.ts).

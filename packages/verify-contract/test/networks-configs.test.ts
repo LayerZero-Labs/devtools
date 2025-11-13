@@ -1,6 +1,6 @@
 import { getDefaultScanApiUrl, getDefaultChainId } from '../src/common/url'
 
-describe('YAML-based network configuration', () => {
+describe('TypeScript-based network configuration', () => {
     describe('getDefaultScanApiUrl', () => {
         it('should return Etherscan V2 URL for Ethereum mainnet', () => {
             expect(getDefaultScanApiUrl('ethereum')).toBe('https://api.etherscan.io/v2/api')

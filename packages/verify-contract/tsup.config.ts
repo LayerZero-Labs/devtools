@@ -29,10 +29,6 @@ export default defineConfig([
                         from: ['./node_modules/@solidity-parser/parser/dist/antlr/*'],
                         to: ['./dist/antlr'],
                     },
-                    {
-                        from: ['./src/common/networks.yaml'],
-                        to: ['./dist/common'],
-                    },
                 ],
             }),
         ],

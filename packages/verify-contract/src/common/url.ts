@@ -1,7 +1,8 @@
 // Etherscan API V2 base URL - works for all supported chains
-export const ETHERSCAN_V2_BASE_URL = 'https://api.etherscan.io/v2/api'
+// Re-export from networks config for consistency
+export { ETHERSCAN_V2_URL as ETHERSCAN_V2_BASE_URL } from './networks'
 
-// Re-export network lookup functions from the YAML-based loader
+// Re-export network lookup functions from the TypeScript-based loader
 export { getDefaultScanApiUrl, getDefaultChainId } from './networks-loader'
 
 /**
