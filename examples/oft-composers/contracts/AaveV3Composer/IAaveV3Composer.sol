@@ -22,10 +22,7 @@ interface IAaveV3Composer {
      * @param recipient The address of the recipient of the aTokens tokens.
      * @param amountLD The amount of LD tokens being supplied.
      */
-    event SupplyExecuted(
-        address indexed recipient,
-        uint256 amountLD
-    );
+    event SupplyExecuted(address indexed recipient, uint256 amountLD);
 
     /**
      * @notice Emitted when a token supply fails and the OFT tokens are refunded to the recipient.
@@ -34,4 +31,4 @@ interface IAaveV3Composer {
      * @param amountLD The amount of LD tokens being refunded.
      */
     event SupplyFailedAndRefunded(address indexed recipient, uint256 amountLD);
-}   
+}

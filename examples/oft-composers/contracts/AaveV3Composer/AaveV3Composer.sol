@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.19;
 
-import { IERC20 } from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
-import { SafeERC20 } from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-import { ILayerZeroComposer } from '@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol';
-import { OFTComposeMsgCodec } from '@layerzerolabs/lz-evm-oapp-v2/contracts/oft/libs/OFTComposeMsgCodec.sol';
+import { ILayerZeroComposer } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol";
+import { OFTComposeMsgCodec } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oft/libs/OFTComposeMsgCodec.sol";
 import { IOAppCore } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol";
-import { IStargate } from '@stargatefinance/stg-evm-v2/src/interfaces/IStargate.sol';
+import { IStargate } from "@stargatefinance/stg-evm-v2/src/interfaces/IStargate.sol";
 
-import { IAaveV3Composer } from './IAaveV3Composer.sol';
-import { IPool } from './IAaveV3Pool.sol';
+import { IAaveV3Composer } from "./IAaveV3Composer.sol";
+import { IPool } from "./IAaveV3Pool.sol";
 
 /**
  * @title AaveV3Composer
@@ -47,9 +47,9 @@ contract AaveV3Composer is ILayerZeroComposer, IAaveV3Composer {
 
     /**
      * @notice Deploys the composer and connects it to Stargate and Aave pools.
-     * 
+     *
      * @dev  Assuming the Stargate contract is already configured with the correct LayerZero Endpoint.
-     *       
+     *
      *       A **one-time `maxApprove`** is granted to the Aave Pool because:
      *         1. Funds only arrive via `lzReceive` → `lzCompose` from the trusted Stargate Pool.
      *         2. The pool can only transfer what the composeMsg allows.
@@ -58,16 +58,13 @@ contract AaveV3Composer is ILayerZeroComposer, IAaveV3Composer {
      * @param _aavePool Address of the target Aave V3 pool.
      * @param _stargatePool StargatePool expected to receive the supplied tokens.
      */
-    constructor(
-        address _aavePool,
-        address _stargatePool
-    ) {
+    constructor(address _aavePool, address _stargatePool) {
         if (_aavePool == address(0)) revert InvalidAavePool();
         if (_stargatePool == address(0)) revert InvalidStargatePool();
 
         // Initialize the Aave pool.
         AAVE = IPool(_aavePool);
-        
+
         // Initialize the Stargate Pool.
         STARGATE = _stargatePool;
 
@@ -96,7 +93,7 @@ contract AaveV3Composer is ILayerZeroComposer, IAaveV3Composer {
 
     /**
      * @notice Consumes composed messages and supplies the received tokens into the Aave V3 pool.
-    * @dev  `_message` is encoded by the OFT.send() caller on the source chain via
+     * @dev  `_message` is encoded by the OFT.send() caller on the source chain via
      *       `OFTComposeMsgCodec.encode()` and has the following layout:
      *
      *       ```
@@ -126,11 +123,12 @@ contract AaveV3Composer is ILayerZeroComposer, IAaveV3Composer {
         if (msg.sender != ENDPOINT) revert UnauthorizedEndpoint();
 
         // Step 2️: Decode the recipient address and amount from the message.
-        (address _to) = abi.decode(OFTComposeMsgCodec.composeMsg(_message), (address));
+        address _to = abi.decode(OFTComposeMsgCodec.composeMsg(_message), (address));
         uint256 amountLD = OFTComposeMsgCodec.amountLD(_message);
 
         // Step 3: Execute the supply or refund to target recipient.
-        try AAVE.supply(TOKEN_IN, amountLD, _to, 0) {  // 0 is the referral code
+        try AAVE.supply(TOKEN_IN, amountLD, _to, 0) {
+            // 0 is the referral code
             emit SupplyExecuted(_to, amountLD);
         } catch {
             IERC20(TOKEN_IN).safeTransfer(_to, amountLD);
