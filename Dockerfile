@@ -410,24 +410,26 @@ RUN rustup default ${RUST_TOOLCHAIN_VERSION_ANCHOR}
 ARG SOLC_VERSION=0.8.22
 ARG SVM_RS_VERSION=0.5.4
 
+# Stable version as of November 10, 2025
+# Updating this can cause breaking changes with linters, etc.
+# commit hash: 05794498bf @ 2025-11-03T23:44:37.220085507Z
+ARG FOUNDRY_VERSION=1.4.4
+
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 # Install foundry - this needs rust >= 1.81.0
 ENV PATH="/root/.foundry/bin:$PATH"
-RUN curl -L https://foundry.paradigm.xyz | bash
-RUN foundryup
+RUN curl -L https://foundry.paradigm.xyz | bash && \
+    foundryup -i ${FOUNDRY_VERSION} && \
+    foundryup -u ${FOUNDRY_VERSION}
 
-RUN cargo +${RUST_TOOLCHAIN_VERSION_ANCHOR} install svm-rs@${SVM_RS_VERSION}
+# Install SVM and Solidity compiler in single layer
+RUN cargo +${RUST_TOOLCHAIN_VERSION_ANCHOR} install svm-rs@${SVM_RS_VERSION} && \
+    svm install ${SOLC_VERSION}
 
-# Install solc 0.8.22
-RUN svm install ${SOLC_VERSION}
-
-# Make sure we can execute the binaries
-RUN forge --version
-RUN anvil --version
-RUN chisel --version
-RUN cast --version
+# Verify all tools work
+RUN forge --version && anvil --version && chisel --version && cast --version
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
