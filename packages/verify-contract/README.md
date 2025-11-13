@@ -315,56 +315,16 @@ SCAN_BROWSER_URL_polygon=https://polygonscan.com
 
 The package is preconfigured with scan API URLs and chain IDs for well-known networks.
 
-#### Etherscan v2 Compatible Networks
+#### Supported Networks
 
-Most major EVM networks use the Etherscan API v2 unified endpoint (`https://api.etherscan.io/v2/api`). These networks can share a single API key:
+The package supports 60+ EVM networks with preconfigured scan API URLs and chain IDs. Most major EVM networks use the Etherscan API v2 unified endpoint (`https://api.etherscan.io/v2/api`) and can share a single API key.
 
-| Network                                                        | Chain ID  | API URL (v2)                            |
-| -------------------------------------------------------------- | --------- | --------------------------------------- |
-| `ethereum`, `ethereum-mainnet`                                 | 1         | `https://api.etherscan.io/v2/api`       |
-| `ethereum-goerli`, `goerli`, `goerli-mainnet`                  | 5         | `https://api.etherscan.io/v2/api`       |
-| `sepolia-testnet`                                              | 11155111  | `https://api.etherscan.io/v2/api`       |
-| `polygon`, `polygon-mainnet`                                   | 137       | `https://api.etherscan.io/v2/api`       |
-| `amoy`, `amoy-mainnet`                                         | 80002     | `https://api.etherscan.io/v2/api`       |
-| `arbitrum`, `arbitrum-mainnet`                                 | 42161     | `https://api.etherscan.io/v2/api`       |
-| `arbitrum-goerli`                                              | 421613    | `https://api.etherscan.io/v2/api`       |
-| `arbsep-testnet`                                               | 421614    | `https://api.etherscan.io/v2/api`       |
-| `optimism`, `optimism-mainnet`                                 | 10        | `https://api.etherscan.io/v2/api`       |
-| `optimism-goerli`                                              | 420       | `https://api.etherscan.io/v2/api`       |
-| `optsep-testnet`                                               | 11155420  | `https://api.etherscan.io/v2/api`       |
-| `base`, `base-mainnet`                                         | 8453      | `https://api.etherscan.io/v2/api`       |
-| `base-goerli`                                                  | 84531     | `https://api.etherscan.io/v2/api`       |
-| `avalanche`, `avalanche-mainnet`                               | 43114     | `https://api.etherscan.io/v2/api`       |
-| `fuji`, `avalanche-testnet`, `fuji-mainnet`                    | 43113     | `https://api.etherscan.io/v2/api`       |
-| `bsc`, `bsc-mainnet`                                           | 56        | `https://api.etherscan.io/v2/api`       |
-| `bsc-testnet`                                                  | 97        | `https://api.etherscan.io/v2/api`       |
-| `fantom`, `fantom-mainnet`                                     | 250       | `https://api.etherscan.io/v2/api`       |
-| `fantom-testnet`                                               | 4002      | `https://api.etherscan.io/v2/api`       |
-| `gnosis`, `gnosis-mainnet`                                     | 100       | `https://api.etherscan.io/v2/api`       |
-| `blast`, `blast-mainnet`                                       | 81457     | `https://api.etherscan.io/v2/api`       |
-| `linea`, `linea-mainnet`, `zkconsensys`, `zkconsensys-mainnet` | 59144     | `https://api.etherscan.io/v2/api`       |
-| `scroll`, `scroll-mainnet`                                     | 534352    | `https://api.etherscan.io/v2/api`       |
-| `zkpolygon`, `zkpolygon-mainnet`                               | 1101      | `https://api.etherscan.io/v2/api`       |
-| `moonbeam`, `moonbeam-mainnet`                                 | 1284      | `https://api.etherscan.io/v2/api`       |
-| `moonbeam-testnet`                                             | 1287      | `https://api.etherscan.io/v2/api`       |
-| `moonriver`, `moonriver-mainnet`                               | 1285      | `https://api.etherscan.io/v2/api`       |
-| `fraxtal`, `fraxtal-mainnet`                                   | 252       | `https://api.etherscan.io/v2/api`       |
-| `taiko`, `taiko-mainnet`                                       | 167000    | `https://api.etherscan.io/v2/api`       |
+**Examples:**
 
-#### Non-Etherscan Explorers
+| Network              | Chain ID | API URL (v2)                      |
+| -------------------- | -------- | --------------------------------- |
+| `ethereum`           | 1        | `https://api.etherscan.io/v2/api` |
+| `polygon`            | 137      | `https://api.etherscan.io/v2/api` |
+| `aurora`             | 1313161554 | `https://explorer.mainnet.aurora.dev/api` |
 
-Some networks use their own explorer infrastructure and require separate API keys:
-
-| Network                     | Chain ID    | API URL                                                           |
-| --------------------------- | ----------- | ----------------------------------------------------------------- |
-| `astar`, `astar-mainnet`    | 592         | `https://astar.blockscout.com/api`                                |
-| `aurora`, `aurora-mainnet`  | 1313161554  | `https://explorer.mainnet.aurora.dev/api`                         |
-| `kava`, `kava-mainnet`      | 2222        | `https://kavascan.com/api`                                        |
-| `kava-testnet`              | 2221        | `https://testnet.kavascan.com/api`                                |
-| `klaytn`, `klaytn-mainnet`  | 8217        | `https://api-cypress.klaytnscope.com/api`                         |
-| `klaytn-testnet`            | 1001        | `https://api-baobab.klaytnscope.com/api`                          |
-| `mantle`, `mantle-mainnet`  | 5000        | `https://explorer.mantle.xyz/api`                                 |
-| `manta`, `manta-mainnet`    | 169         | `https://pacific-explorer.manta.network/api`                      |
-| `metis`, `metis-mainnet`    | 1088        | `https://api.routescan.io/v2/network/mainnet/evm/1088/etherscan` |
-| `mode`, `mode-mainnet`      | 34443       | `https://explorer.mode.network/api`                               |
-| `flare`, `flare-mainnet`    | 14          | `https://api.routescan.io/v2/network/mainnet/evm/14/etherscan`   |
+For the complete list of supported networks, network aliases, and their configurations, see [`src/common/networks.yaml`](src/common/networks.yaml).
