@@ -164,7 +164,3 @@ task('stargate:supply-aave', 'Sends tokens through Stargate and composes into Aa
     .addOptionalParam('refundAddress', 'Address receiving any leftover native fee')
     .addOptionalParam('payInLzToken', 'Set to true to pay LayerZero fees with the LZ token (default false)', 'false')
     .setAction(async (args: SendArgs, hre) => sendSupply(hre, args))
-
-/*
-pnpm hardhat stargate:supply-aave --network arbitrum-mainnet --stargate 0xe8cdf27acd73a434d661c84887215f7598e7d0d3 --dst-eid 30184 --composer 0xb38c4fc4b7c7672EfdA6f8b3a386e615049eed30 --amount-ld 1000000
-*/

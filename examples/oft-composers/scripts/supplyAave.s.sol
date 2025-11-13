@@ -85,9 +85,3 @@ contract SupplyAaveScript is Script {
         }
     }
 }
-
-/*
-    forge script scripts/supplyAave.s.sol:SupplyAaveScript \
-    --rpc-url https://arbitrum.gateway.tenderly.co \
-    --broadcast -vv --via-ir
-*/
