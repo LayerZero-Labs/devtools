@@ -4,7 +4,10 @@ import { PublicKey } from '@solana/web3.js'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
 
+import { formatTokenAmount } from '@layerzerolabs/devtools'
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
+import { localDecimalsToMaxWholeTokens } from '@layerzerolabs/devtools-solana'
+import { promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OFT_DECIMALS, oft } from '@layerzerolabs/oft-v2-solana-sdk'
 
@@ -63,6 +66,15 @@ task('lz:oft-adapter:solana:create', 'Creates new OFT Adapter (OFT Store PDA)')
             const mint = publicKey(mintStr)
 
             const mintPDA = await getMint(connection, new PublicKey(mintStr), undefined, new PublicKey(tokenProgramStr))
+            const mintDecimals = mintPDA.decimals
+
+            const maxSupplyRaw = localDecimalsToMaxWholeTokens(mintDecimals)
+            const { full, compact } = formatTokenAmount(maxSupplyRaw)
+            const maxSupplyStatement = `The underlying token has ${mintDecimals} local decimals. Its maximum supply is ${full} (~${compact}).\n`
+            const confirmMaxSupply = await promptToContinue(maxSupplyStatement)
+            if (!confirmMaxSupply) {
+                return
+            }
 
             const mintAuthority = mintPDA.mintAuthority
 

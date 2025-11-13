@@ -19,8 +19,9 @@ import { PublicKey } from '@solana/web3.js'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
 
+import { formatTokenAmount } from '@layerzerolabs/devtools'
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
-import { assertAccountInitialized } from '@layerzerolabs/devtools-solana'
+import { assertAccountInitialized, localDecimalsToMaxWholeTokens } from '@layerzerolabs/devtools-solana'
 import { promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OFT_DECIMALS as DEFAULT_SHARED_DECIMALS, oft } from '@layerzerolabs/oft-v2-solana-sdk'
@@ -117,6 +118,11 @@ interface CreateOFTTaskArgs {
      * The freeze authority address (only supported in onlyOftStore mode).
      */
     freezeAuthority?: string
+
+    /**
+     * Whether to continue without confirmation.
+     */
+    ci: boolean
 }
 
 // Define a Hardhat task for creating OFT on Solana
@@ -158,6 +164,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
         true
     )
     .addParam('computeUnitPriceScaleFactor', 'The compute unit price scale factor', 4, devtoolsTypes.float, true)
+    .addFlag('ci', 'Continue without confirmation')
     .setAction(
         async ({
             amount,
@@ -176,6 +183,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             uri,
             freezeAuthority: freezeAuthorityStr,
             computeUnitPriceScaleFactor,
+            ci,
         }: CreateOFTTaskArgs) => {
             const isMABA = !!mintStr // the difference between MABA and OFT Adapter is that MABA uses mint/burn mechanism whereas OFT Adapter uses lock/unlock mechanism
             if (tokenProgramStr !== TOKEN_PROGRAM_ID.toBase58() && !isMABA) {
@@ -212,7 +220,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                 )
             }
 
-            if (onlyOftStore) {
+            if (onlyOftStore && !ci) {
                 const continueWithOnlyOftStore = await promptToContinue(
                     `You have chosen \`--only-oft-store true\`. This means that only the OFT Store will be able to mint new tokens${freezeAuthorityStr ? '' : ' and that the Freeze Authority will be immediately renounced'}.  Continue?`
                 )
@@ -222,6 +230,14 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             }
 
             // EOF: Validate combination of parameters
+
+            const maxSupplyRaw = localDecimalsToMaxWholeTokens(decimals)
+            const { full, compact } = formatTokenAmount(maxSupplyRaw)
+            const maxSupplyStatement = `You have chosen ${decimals} local decimals. The maximum supply of your Solana OFT token will be ${full} (~${compact}).\n`
+            const confirmMaxSupply = await promptToContinue(maxSupplyStatement)
+            if (!confirmMaxSupply) {
+                return
+            }
 
             let mintAuthorityPublicKey: PublicKey = toWeb3JsPublicKey(oftStorePda) // we default to the OFT Store as the Mint Authority when there are no additional minters
 

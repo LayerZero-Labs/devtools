@@ -16,7 +16,8 @@
     "test": "$npm_execpath run test:hardhat",
     "test:anchor": "anchor test",
     "test:forge": "forge test",
-    "test:hardhat": "hardhat test"
+    "test:hardhat": "hardhat test",
+    "test:scripts": "jest --config jest.config.ts --runInBand --testMatch \"**/*.script.test.ts\""
   },
   "resolutions": {
     "ethers": "^5.7.2",
@@ -45,7 +46,8 @@
     "@metaplex-foundation/umi-web3js-adapters": "^0.9.2",
     "@solana-developers/helpers": "^2.7.0",
     "@solana/spl-token": "^0.4.12",
-    "@solana/web3.js": "~1.95.8"
+    "@solana/web3.js": "~1.95.8",
+    "jest": "^29.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
