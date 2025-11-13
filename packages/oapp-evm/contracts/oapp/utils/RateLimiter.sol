@@ -101,7 +101,6 @@ pragma solidity ^0.8.0;
  *                          [ --------------- Extended 60 Second Window --------------- ]
  */
 abstract contract RateLimiter {
-
     /**
      * @notice Rate Limit struct.
      * @param amountInFlight The amount in the current window.
@@ -161,7 +160,7 @@ abstract contract RateLimiter {
      */
     function getAmountCanBeSent(
         uint32 _dstEid
-    ) external view virtual returns (uint256 currentAmountInFlight, uint256 amountCanBeSent) {
+    ) public view virtual returns (uint256 currentAmountInFlight, uint256 amountCanBeSent) {
         RateLimit memory rl = rateLimits[_dstEid];
         return _amountCanBeSent(rl.amountInFlight, rl.lastUpdated, rl.limit, rl.window);
     }
