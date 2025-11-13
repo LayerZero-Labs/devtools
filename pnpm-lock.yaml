@@ -5793,9 +5793,6 @@ importers:
       typescript:
         specifier: ^5.4.4
         version: 5.5.3
-      yaml:
-        specifier: ^2.6.1
-        version: 2.7.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
