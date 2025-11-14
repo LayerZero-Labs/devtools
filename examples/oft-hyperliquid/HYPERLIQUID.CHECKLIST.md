@@ -54,67 +54,91 @@ Block switching is not present in the default oft deploy script.
 | Blocked by                       | OFT Deployer      | Step 0                                    | Step 3       |
 | Blocked by                       | CoreSpot Deployer | Step 1                                    | Step 2.2     |
 
-- [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-16-purchase-the-ticker)
+- [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-0-purchase-the-ticker)
 - [ ] Core spot deployer needs OFT address and deployed transaction hash
 
-### Step 2.2 : Set the user genesis
+### Step 2.2 : Enable freeze privilege (Optional)
+
+| Action                  | Performed by      | Actionable with                           | Required for |
+| ----------------------- | ----------------- | ----------------------------------------- | ------------ |
+| Enable Freeze Privilege | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
+| Blocked by              | CoreSpot Deployer | Step 2.1                                  | Step 2.2     |
+
+- [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-16-enablefreezeprivilege-optional)
+- [ ] **MUST be done before genesis** if you want freeze capability
+- [ ] Enables post-launch user freeze/unfreeze operations
+- [ ] Once set, can only be revoked (irreversible)
+
+### Step 2.3 : Set the user genesis
 
 | Action           | Performed by      | Actionable with                           | Required for |
 | ---------------- | ----------------- | ----------------------------------------- | ------------ |
 | Set User Genesis | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
-| Blocked by       | CoreSpot Deployer | Step 2.1                                  | Step 2.4     |
+| Blocked by       | CoreSpot Deployer | Step 2.1                                  | Step 2.3     |
 
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-26-usergenesis)
 - [ ] HyperCore balances are u64 - the max balance is `2.pow(64) - 1 = 18446744073709551615`
 - [ ] Make sure the total balances in the json does not exceed this value.
 - [ ] Re-runnable until the next step is executed.
 - [ ] UserGenesis transactions stack : If you set the balance of address X to `18446744073709551615` and then set the balance of address Y to `18446744073709551615` after removing X from the json, the net effect is that both X and Y will have `18446744073709551615` tokens.
-- You can either mint the entire amount to the asset bridge address (default) or the deployer address.
+- You can either mint the entire amount to the asset bridge address or the deployer address.
 - You can read more about the asset bridge address - [in the docs](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#make-changes-to-the-underlying-oft-if-you-want-to)
 
-### Step 2.3 - Confirm the user genesis
+### Step 2.4 - Confirm the user genesis
 
 | Action               | Performed by      | Actionable with                           | Required for |
 | -------------------- | ----------------- | ----------------------------------------- | ------------ |
 | Confirm User Genesis | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
-| Blocked by           | CoreSpot Deployer | Step 2.2                                  | Step 2.5     |
+| Blocked by           | CoreSpot Deployer | Step 2.2                                  | Step 2.4     |
 
-- [ ] Follow the [guide](://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-36-genesis)
+- [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-36-genesis)
 - [ ] Locks in the user genesis step and is now immutable.
 
-### Step 2.4 - Register the spot
+### Step 2.5 : Create spot deployment
+
+| Action                 | Performed by      | Actionable with                           | Required for |
+| ---------------------- | ----------------- | ----------------------------------------- | ------------ |
+| Create Spot Deployment | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
+| Blocked by             | CoreSpot Deployer | Step 2.3                                  | Step 2.5     |
+
+- [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-46-createspotdeployment)
+- Step MUST be run even though we set `noHyperliquidity=true` in genesis
+- This can be run even after deployment and linking
+
+### Step 2.6 : Register the spot
 
 | Action        | Performed by      | Actionable with                           | Required for |
 | ------------- | ----------------- | ----------------------------------------- | ------------ |
 | Register Spot | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
-| Blocked by    | CoreSpot Deployer | Step 2.3                                  | Step 3       |
+| Blocked by    | CoreSpot Deployer | Step 2.4                                  | Step 3       |
 
-- [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-46-registerspot)
+- [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-56-registerspot)
 - [ ] Only USDC is supported on HyperCore at the moment - the sdk defaults to USDC.
 - [ ] Make sure the asset bridge address on HyperCore has all the tokens minted in Step 2.3. Partial funding is not supported.
-
-### Step 2.5 : Register Hyperliquidity
-
-| Action                  | Performed by      | Actionable with                           | Required for |
-| ----------------------- | ----------------- | ----------------------------------------- | ------------ |
-| Register Hyperliquidity | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
-| Blocked by              | OFT Deployer      | Step 0                                    | Step 6       |
-| Blocked by              | CoreSpot Deployer | Step 2.1                                  | none         |
-
-- [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-56-createspotdeployment)
-- Step MUST be run even though we set `noHyperliquidity=true` in genesis
-- This can be run even after deployment and linking
 - The final step to be executed after which the token will be listed on the spot order book.
 
-### Step 2.6 : Set deployer fee share
+### Step 2.7 : Enable quote token capability (Optional)
+
+| Action             | Performed by      | Actionable with                           | Required for |
+| ------------------ | ----------------- | ----------------------------------------- | ------------ |
+| Enable Quote Token | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
+| Blocked by         | CoreSpot Deployer | Step 2.5                                  | none         |
+
+- [ ] **Review requirements first**: Check [Hyperliquid API requirements](https://t.me/hyperliquid_api/243) for eligibility criteria
+- [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-66-enablequotetoken-optional)
+- [ ] Enables the token to be used as a quote asset for trading pairs (e.g., OTHER_TOKEN/YOUR_TOKEN)
+- [ ] Can be executed after trading fee share is set
+- [ ] This can be run even after deployment and linking are complete
+
+### Step 2.8 : Set deployer fee share (Optional)
 
 | Action                 | Performed by      | Actionable with                           | Required for |
 | ---------------------- | ----------------- | ----------------------------------------- | ------------ |
 | Set Deployer Fee Share | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
-| Blocked by             | OFT Deployer      | Step 0                                    | Step 6       |
+| Blocked by             | OFT Deployer      | Step 0                                    | none         |
 | Blocked by             | CoreSpot Deployer | Step 2.1                                  | none         |
 
-- [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-14-setdeployertradingfeeshare)
+- [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#optional-setdeployertradingfeeshare)
 - [ ] Trading fee share is usually 100% (default value) - this allocates the trading fees to the token deployer instead of burning it.
 - [ ] Do not lose or burn your deployer address as it collects tokens.
 - [ ] Step can be re-run as long as the new fee% is lower than the current one.
@@ -149,7 +173,7 @@ Block switching is not present in the default oft deploy script.
 
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-22-finalizeevmcontract)
 - Deployer script in the oft repo will deploy the composer - it also handles block switching.
-- [ ] Make sure the Composer's address is activated on HyperCore (sending it at least $1 worth of `HYPE` or `USDC`).
+- [ ] Make sure the Composer's address is activated on HyperCore - transferring any spot amount on `app.hyperliquid.xyz` to the address will prompt you that you are paying $1 as an activation fee. `app.hyperliquid-testnet.xyz` should be used for a testnet deployment.
 - Composer is re-deployable and independent of the oft and does not need to be linked with anything.
 
 ## Step 5 : Listing on spot order books
@@ -171,3 +195,29 @@ This is automatically completed when all steps in Step 2 are completed.
 This is controlled by the hyperliquid community - [source](https://hyperliquid.gitbook.io/hyperliquid-docs/trading/perpetual-assets)
 
 > Hyperliquid currently supports trading of 100+ assets. Assets are added according to community input.
+
+## Step 7 : Post-Launch Management (Optional)
+
+### Step 7.1 : Freeze/Unfreeze Users
+
+| Action       | Performed by      | Actionable with                           | Required for |
+| ------------ | ----------------- | ----------------------------------------- | ------------ |
+| Freeze Users | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
+| Blocked by   | CoreSpot Deployer | Step 2.1.1 (Enable Freeze)                | none         |
+
+- [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#freezeunfreeze-users)
+- [ ] Only available if freeze privilege was enabled before genesis
+- [ ] Can freeze/unfreeze individual users
+- [ ] Updates deployment JSON with blacklist status
+
+### Step 7.2 : Revoke Freeze Privilege
+
+| Action        | Performed by      | Actionable with                           | Required for |
+| ------------- | ----------------- | ----------------------------------------- | ------------ |
+| Revoke Freeze | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
+| Blocked by    | CoreSpot Deployer | Step 2.1.1 (Enable Freeze)                | none         |
+
+- [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#revoke-freeze-privilege)
+- [ ] **Permanently removes freeze capability (irreversible)**
+- [ ] No longer able to freeze/unfreeze any users
+- [ ] Use with caution - cannot be undone

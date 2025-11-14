@@ -1,5 +1,43 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 1.0.6
+
+### Patch Changes
+
+- 48c9d7f: sdk improvements - add USDH, ci mode for set-block, and default --network to mainnet
+- d512816: new activation to activate users with the erc20 tokens that they are bridging across
+
+## 1.0.5
+
+### Patch Changes
+
+- 39ddee8: remove usage of MyOFTMock
+
+## 1.0.4
+
+### Patch Changes
+
+- c44e657: update evm networks used
+- 286c350: Update lockfiles
+
+## 1.0.3
+
+### Patch Changes
+
+- 97f506f: update register-spot command and add in commands to track spotMarket gas and current deployment for a token
+
+## 1.0.2
+
+### Patch Changes
+
+- 5e15a8d: Add lockfiles to example packages
+
+## 1.0.1
+
+### Patch Changes
+
+- 90417ab: adding in freeze and quote asset during hip-1 deployment
+
 ## 1.0.0
 
 ### Major Changes

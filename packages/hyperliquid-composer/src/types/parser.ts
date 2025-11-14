@@ -11,6 +11,8 @@ export interface CoreSpotMetaData {
     }
     fullName: string | null
     deployerTradingFeeShare: string
+    freezePrivilegeEnabled?: boolean
+    quoteAssetEnabled?: boolean
 }
 
 export interface TxData {
@@ -107,4 +109,29 @@ export interface SpotBalance {
 
 export interface SpotBalancesResponse {
     balances: SpotBalance[]
+}
+
+export interface SpotPair {
+    tokens: number[]
+    name: string
+    index: number
+    isCanonical: boolean
+}
+
+export interface SpotMetaUniverse {
+    universe: SpotPair[]
+    tokens: CoreSpotMetaData[]
+}
+
+export interface SpotPairsWithMetadata {
+    pairs: SpotPair[]
+    tokens: CoreSpotMetaData[]
+}
+
+export interface SpotPairDeployAuctionStatus {
+    startTimeSeconds: number
+    durationSeconds: number
+    startGas: string
+    currentGas: string
+    endGas: string | null
 }

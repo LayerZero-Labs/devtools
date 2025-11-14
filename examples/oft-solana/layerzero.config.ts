@@ -8,9 +8,9 @@ import { getOftStoreAddress } from './tasks/solana'
 
 // Note:  Do not use address for EVM OmniPointHardhat contracts.  Contracts are loaded using hardhat-deploy.
 // If you do use an address, ensure artifacts exists.
-const sepoliaContract: OmniPointHardhat = {
-    eid: EndpointId.SEPOLIA_V2_TESTNET,
-    contractName: 'MyOFT',
+const arbitrumContract: OmniPointHardhat = {
+    eid: EndpointId.ARBSEP_V2_TESTNET,
+    contractName: 'MyOFT', // Note: change this to your production contract name
 }
 
 const solanaContract: OmniPointHardhat = {
@@ -48,7 +48,7 @@ const SOLANA_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
     },
 ]
 
-// Learn about Message Execution Options: https://docs.layerzero.network/v2/developers/solana/oft/account#message-execution-options
+// Learn about Message Execution Options: https://docs.layerzero.network/v2/developers/solana/oft/overview#message-execution-options
 // Learn more about the Simple Config Generator - https://docs.layerzero.network/v2/developers/evm/technical-reference/simple-config
 // Learn about DVNs - https://docs.layerzero.network/v2/concepts/modular-security/security-stack-dvns
 export default async function () {
@@ -56,7 +56,7 @@ export default async function () {
     // if you declare A,B there's no need to declare B,A
     const connections = await generateConnectionsConfig([
         [
-            sepoliaContract, // Chain A contract
+            arbitrumContract, // Chain A contract
             solanaContract, // Chain B contract
             [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
             [15, 32], // [A to B confirmations, B to A confirmations]
@@ -65,7 +65,7 @@ export default async function () {
     ])
 
     return {
-        contracts: [{ contract: sepoliaContract }, { contract: solanaContract }],
+        contracts: [{ contract: arbitrumContract }, { contract: solanaContract }],
         connections,
     }
 }

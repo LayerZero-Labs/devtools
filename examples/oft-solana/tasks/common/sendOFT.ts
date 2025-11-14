@@ -33,6 +33,7 @@ interface MasterArgs {
     computeUnitPriceScaleFactor?: number
     /** Solana only (so far): minimum value needed successful lzReceive on the destination chain */
     minimumLzReceiveValue?: number
+    addressLookupTables?: string
 }
 
 task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
@@ -52,6 +53,7 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
         undefined,
         types.string
     )
+    .addOptionalParam('composeMsg', 'Arbitrary bytes message to deliver alongside the OFT', undefined, types.string)
     .addOptionalParam(
         'oftAddress',
         'Override the source local deployment OFT address (20-byte hex for EVM, base58 PDA for Solana)',
@@ -67,6 +69,12 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
     .addOptionalParam('oftProgramId', 'Solana only: override the OFT program ID (base58)', undefined, types.string)
     .addOptionalParam('tokenProgram', 'Solana Token Program pubkey', undefined, types.string)
     .addOptionalParam('computeUnitPriceScaleFactor', 'Solana compute unit price scale factor', 4, types.float)
+    .addOptionalParam(
+        'addressLookupTables',
+        'Solana address lookup tables (comma separated base58 list)',
+        undefined,
+        types.string
+    )
     .setAction(async (args: MasterArgs, hre: HardhatRuntimeEnvironment) => {
         const srcChainType = endpointIdToChainType(args.srcEid)
         const dstChainType = endpointIdToChainType(args.dstEid)
@@ -98,7 +106,10 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
         if (srcChainType === ChainType.EVM) {
             result = await sendEvm(args as EvmArgs, hre)
         } else if (srcChainType === ChainType.SOLANA) {
-            result = await sendSolana(args as SolanaArgs)
+            result = await sendSolana({
+                ...args,
+                addressLookupTables: args.addressLookupTables ? args.addressLookupTables.split(',') : [],
+            } as SolanaArgs)
         } else {
             throw new Error(`The chain type ${srcChainType} is not implemented in sendOFT for this example`)
         }

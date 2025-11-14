@@ -108,29 +108,9 @@ export class Uln302 extends OmniSDK implements IUln302 {
         this.logger.debug(`Current App ULN ${type} config: ${printJson(currentSerializedConfig)}`)
         this.logger.debug(`Incoming App ULN ${type} config: ${printJson(serializedConfig)}`)
 
-        // On Solana, a confirmation value of 0 in the configuration indicates that the config has been initialized but not explicitly set.
-        // This is different from EVM where a 0 value might act as a default placeholder.
-        //
-        // If a user explicitly sets the confirmations to 0, it indicates they want to use the default configuration.
-        // Therefore, we need to handle this case specially:
-        //
-        // - If the current chain config returns 0 for confirmations, it means the config is initialized but not explicitly set.
-        // - If the incoming config has a 0 value for confirmations, this function will return false, allowing the user to set the default configuration.
-        // - If the incoming config has a non-zero value for confirmations, the configs would not match anyway, so normal behavior applies.
-        //
-        // It's important to note that on Solana, a 0 value for confirmations doesn't mean turning off block confirmations; instead,
-        // it's used as a signal to apply default settings. Unlike EVM, Solana requires explicitly setting this 0 value to activate the defaults.
-        const hasZeroConfirmations = currentConfig.confirmations === BigInt(0)
-        if (hasZeroConfirmations) {
-            this.logger.verbose(
-                `Received 0 value for confirmations for ULN ${type} config. This will be treated as a non-matching config`
-            )
-        }
-
         const areEqual = isDeepEqual(serializedConfig, currentSerializedConfig)
-        const hasConfig = areEqual && !hasZeroConfirmations
 
-        return this.logger.verbose(`Checked App ULN ${type} configs: ${printBoolean(hasConfig)}`), hasConfig
+        return this.logger.verbose(`Checked App ULN ${type} configs: ${printBoolean(areEqual)}`), areEqual
     }
 
     /**
@@ -228,13 +208,20 @@ export class Uln302 extends OmniSDK implements IUln302 {
         requiredDVNs,
         optionalDVNs = [],
         optionalDVNThreshold = 0,
+        requiredDVNCount,
     }: Uln302UlnUserConfig): SerializedUln302UlnConfig {
+        // NIL_DVN_COUNT is used to indicate no DVNs are required
+        // It has to be used instead of 0, because 0 falls back to default value
+        const NIL_DVN_COUNT = 255 // type(uint8).max
+
         return {
             confirmations,
             optionalDVNThreshold,
             requiredDVNs: serializeDVNs(requiredDVNs),
             optionalDVNs: serializeDVNs(optionalDVNs),
-            requiredDVNCount: requiredDVNs.length,
+            // If requiredDVNCount is explicitly provided, use it
+            // Otherwise, calculate based on array length (using NIL_DVN_COUNT for empty arrays)
+            requiredDVNCount: requiredDVNCount ?? (requiredDVNs.length > 0 ? requiredDVNs.length : NIL_DVN_COUNT),
             optionalDVNCount: optionalDVNs.length,
         }
     }

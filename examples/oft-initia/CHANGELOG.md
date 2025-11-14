@@ -1,5 +1,23 @@
 # @layerzerolabs/oft-initia-example
 
+## 0.0.9
+
+### Patch Changes
+
+- 39ddee8: remove usage of MyOFTMock
+
+## 0.0.8
+
+### Patch Changes
+
+- c44e657: update evm networks used
+
+## 0.0.7
+
+### Patch Changes
+
+- 5e15a8d: Add lockfiles to example packages
+
 ## 0.0.6
 
 ### Patch Changes

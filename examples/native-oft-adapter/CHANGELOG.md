@@ -1,5 +1,35 @@
 # @layerzerolabs/native-oft-adapter-example
 
+## 0.2.13
+
+### Patch Changes
+
+- 39ddee8: remove usage of MyOFTMock
+
+## 0.2.12
+
+### Patch Changes
+
+- 608915a: Fix extra option parsing to avoid overflow in `sendEvm` script
+
+## 0.2.11
+
+### Patch Changes
+
+- e9dde41: add send task
+
+## 0.2.10
+
+### Patch Changes
+
+- c44e657: update evm networks used
+
+## 0.2.9
+
+### Patch Changes
+
+- 5e15a8d: Add lockfiles to example packages
+
 ## 0.2.8
 
 ### Patch Changes

@@ -1,5 +1,22 @@
 # @layerzerolabs/protocol-devtools-solana
 
+## 8.0.3
+
+### Patch Changes
+
+- b239e19: No longer flagging incoming and current configs as mismatched if current confirmations are 0 since that indicates default
+
+## 8.0.2
+
+### Patch Changes
+
+- db3a1d4: add block msg lib support on evm and optional dvns support on evm and solana
+- db3a1d4: Updates simple config to support blocked messageLib on Solana and EVM
+- Updated dependencies [db3a1d4]
+- Updated dependencies [db3a1d4]
+  - @layerzerolabs/protocol-devtools@3.0.1
+  - @layerzerolabs/ua-devtools@5.0.1
+
 ## 8.0.1
 
 ### Patch Changes

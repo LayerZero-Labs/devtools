@@ -8,6 +8,7 @@ pragma solidity ^0.8.20;
  * @dev Defines the public API for recovery mechanisms for both HyperEVM and HyperCore assets
  */
 interface IRecoverableComposer {
+    error InvalidRecoveryAddress();
     error MaxRetrieveAmountExceeded(uint256 maxAmount, uint256 requestedAmount);
     error NotRecoveryAddress();
     error TransferFailed();
@@ -50,15 +51,6 @@ interface IRecoverableComposer {
      * @param _coreAmount Amount of HYPE tokens to retrieve in HyperCore decimals, or FULL_TRANSFER for all
      */
     function retrieveCoreHYPE(uint64 _coreAmount) external;
-
-    /**
-     * @notice Retrieves USDC tokens from HyperCore to a specified address
-     * @dev Transfers USDC tokens from the composer's HyperCore balance to the specified address
-     * @dev Can only be called by the recovery address
-     * @param _coreAmount Amount of USDC tokens to retrieve in HyperCore decimals, or FULL_TRANSFER for all
-     * @param _to Destination address to receive the retrieved USDC tokens
-     */
-    function retrieveCoreUSDC(uint64 _coreAmount, address _to) external;
 
     /**
      * @notice Recovers ERC20 tokens from HyperEVM to the recovery address

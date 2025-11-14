@@ -14,20 +14,20 @@ const logger = createLogger()
 // Define your OApp contracts on each chain
 // Update these with your actual contract names and endpoint IDs
 
-const optimismContract: OmniPointHardhat = {
-    eid: EndpointId.OPTSEP_V2_TESTNET, // Change to your network's endpoint ID
-    contractName: 'MyOFTMock', // Change to your deployed contract name
-}
-
 const arbitrumContract: OmniPointHardhat = {
     eid: EndpointId.ARBSEP_V2_TESTNET, // Change to your network's endpoint ID
-    contractName: 'MyOFTMock', // Change to your deployed contract name
+    contractName: 'MyOFT', // Change to your deployed contract name
+}
+
+const baseContract: OmniPointHardhat = {
+    eid: EndpointId.BASESEP_V2_TESTNET, // Change to your network's endpoint ID
+    contractName: 'MyOFT', // Change to your deployed contract name
 }
 
 // Add more contracts here if you have more chains:
 // const baseContract: OmniPointHardhat = {
 //     eid: EndpointId.BASE_V2_TESTNET,
-//     contractName: 'MyOFTMock',
+//     contractName: 'MyOFT',
 // }
 
 // ============================================================================
@@ -58,7 +58,7 @@ const customFetchMetadata = async (): Promise<IMetadata> => {
     const defaultMetadata = await defaultFetchMetadata()
 
     // Collect all unique endpoint IDs from configured contracts
-    const configuredContracts = [optimismContract, arbitrumContract] // <-- ADD YOUR CONTRACTS HERE TOO
+    const configuredContracts = [arbitrumContract, baseContract] // <-- ADD YOUR CONTRACTS HERE TOO
     const configuredEids = [...new Set(configuredContracts.map((contract) => contract.eid))]
 
     // Discover chainKeys for configured endpoints
@@ -96,15 +96,15 @@ const customFetchMetadata = async (): Promise<IMetadata> => {
     // Get addresses from: ./deployments/<network-name>/YourContract.json
 
     const customExecutorsByEid: Record<number, { address: string }> = {
-        [EndpointId.OPTSEP_V2_TESTNET]: { address: '0xBA91a98827706c94f0b26F195E865DB08bA2D63d' }, // <-- YOUR OPTIMISM EXECUTOR
-        [EndpointId.ARBSEP_V2_TESTNET]: { address: '0xDd320b7755cAcf40c3A2045310Bf96e2e7151c34' }, // <-- YOUR ARBITRUM EXECUTOR
+        [EndpointId.BASESEP_V2_TESTNET]: { address: '' }, // <-- EDIT THIS: YOUR BASE EXECUTOR
+        [EndpointId.ARBSEP_V2_TESTNET]: { address: '' }, // <-- EDIT THIS: YOUR ARBITRUM EXECUTOR
         // Add more executors for other chains:
         // [EndpointId.BASE_V2_TESTNET]: { address: '0xYOUR_BASE_EXECUTOR_ADDRESS' },
     }
 
     const customDVNsByEid: Record<number, { address: string }> = {
-        [EndpointId.OPTSEP_V2_TESTNET]: { address: '0xA91A576133F140BdE0AF6a9651778b697352a239' }, // <-- YOUR OPTIMISM DVN
-        [EndpointId.ARBSEP_V2_TESTNET]: { address: '0xf6d5B5a53b94B4828d23675fbd21C2e299d110F3' }, // <-- YOUR ARBITRUM DVN
+        [EndpointId.BASESEP_V2_TESTNET]: { address: '' }, // <-- EDIT THIS: YOUR BASE DVN
+        [EndpointId.ARBSEP_V2_TESTNET]: { address: '' }, // <-- EDIT THIS: YOUR ARBITRUM DVN
         // Add more DVNs for other chains:
         // [EndpointId.BASE_V2_TESTNET]: { address: '0xYOUR_BASE_DVN_ADDRESS' },
     }
@@ -172,8 +172,8 @@ const customFetchMetadata = async (): Promise<IMetadata> => {
 
 const pathways: TwoWayConfig[] = [
     [
-        optimismContract, // Source contract
-        arbitrumContract, // Destination contract
+        arbitrumContract, // Source contract
+        baseContract, // Destination contract
         [['MyCustomDVN'], []], // DVN configuration: [[requiredDVNs], [optionalDVNs]]
         [1, 1], // Confirmations: [srcToDestConfirmations, destToSrcConfirmations]
         [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Gas options for each direction
@@ -201,7 +201,7 @@ export default async function () {
     const connections = await generateConnectionsConfig(pathways, { fetchMetadata: customFetchMetadata })
     return {
         contracts: [
-            { contract: optimismContract },
+            { contract: baseContract },
             { contract: arbitrumContract },
             // Add more contracts here if you have more chains:
             // { contract: baseContract },

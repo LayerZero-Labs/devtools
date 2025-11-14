@@ -11,6 +11,9 @@ interface IVaultComposerSync is IOAppComposer {
     event Sent(bytes32 indexed guid); // 0x27b5aea9
     event Refunded(bytes32 indexed guid); // 0xfe509803
 
+    event Deposited(bytes32 sender, bytes32 recipient, uint32 dstEid, uint256 assetAmt, uint256 shareAmt); // 0xa53b96f2
+    event Redeemed(bytes32 sender, bytes32 recipient, uint32 dstEid, uint256 shareAmt, uint256 assetAmt); // 0x57e232f1
+
     /// ========================== Error Messages =====================================
     error ShareOFTNotAdapter(address shareOFT); // 0xfc1514ae
     error ShareTokenNotVault(address shareERC20, address vault); // 0x0e178ab6
@@ -21,9 +24,8 @@ interface IVaultComposerSync is IOAppComposer {
     error OnlyValidComposeCaller(address caller); // 0x84fb3f0d
 
     error InsufficientMsgValue(uint256 expectedMsgValue, uint256 actualMsgValue); // 0x7cb769dc
-    error NoMsgValueExpected(); // 0x7578d2bd
 
-    error SlippageExceeded(uint256 amountLD, uint256 minAmountLD); // 0x71c4efed
+    error SlippageExceeded(uint256 vaultAmountOut, uint256 minVaultAmountOut); // 0x71c4efed
 
     /// ========================== GLOBAL VARIABLE FUNCTIONS =====================================
     function VAULT() external view returns (IERC4626);
@@ -69,7 +71,4 @@ interface IVaultComposerSync is IOAppComposer {
         uint256 vaultInAmount,
         SendParam memory sendParam
     ) external view returns (MessagingFee memory);
-
-    /// ========================== Receive =====================================
-    receive() external payable;
 }

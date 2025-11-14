@@ -1,5 +1,13 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 8.0.2
+
+### Patch Changes
+
+- a6fc1d6: check nonce account existence in setPeer call
+- Updated dependencies [d34cbbd]
+  - @layerzerolabs/devtools-solana@3.0.1
+
 ## 8.0.1
 
 ### Patch Changes
