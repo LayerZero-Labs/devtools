@@ -1,14 +1,10 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { Idl } from '@coral-xyz/anchor/dist/cjs/idl'
+import { Idl } from '@coral-xyz/anchor'
 import { AnchorIdl, rootNodeFromAnchor } from '@kinobi-so/nodes-from-anchor'
 import { renderVisitor } from '@kinobi-so/renderers-js-umi'
 import { createFromRoot } from 'kinobi'
-
-async function sleep(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms))
-}
 
 async function generateTypeScriptSDK(): Promise<void> {
     const generatedSDKDir = path.join(__dirname, '..', 'client', 'generated', 'my_oapp')
