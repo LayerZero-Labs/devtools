@@ -55,12 +55,6 @@ export const networks: Record<string, NetworkDefinition> = {
         aliases: ['polygon-amoy', 'polygon-sepolia', 'polygon-testnet'],
     },
 
-    zkpolygon: {
-        chainId: 1101,
-        apiUrl: ETHERSCAN_V2_URL,
-        aliases: ['zkpolygon-mainnet'],
-    },
-
     // Arbitrum
     arbitrum: {
         chainId: 42161,
@@ -115,7 +109,7 @@ export const networks: Record<string, NetworkDefinition> = {
     'base-sepolia': {
         chainId: 84532,
         apiUrl: ETHERSCAN_V2_URL,
-        aliases: ['base-testnet'],
+        aliases: ['base-testnet', 'basesep'],
     },
 
     'base-goerli': {
@@ -191,7 +185,7 @@ export const networks: Record<string, NetworkDefinition> = {
     'linea-sepolia': {
         chainId: 59141,
         apiUrl: ETHERSCAN_V2_URL,
-        aliases: ['linea-sepolia-testnet', 'linea-testnet'],
+        aliases: ['linea-sepolia-testnet', 'linea-testnet', 'lineasep'],
     },
 
     // Scroll
@@ -269,26 +263,26 @@ export const networks: Record<string, NetworkDefinition> = {
     apechain: {
         chainId: 33139,
         apiUrl: ETHERSCAN_V2_URL,
-        aliases: ['apechain-mainnet'],
+        aliases: ['apechain-mainnet', 'ape'],
     },
 
     'apechain-curtis': {
         chainId: 33111,
         apiUrl: ETHERSCAN_V2_URL,
-        aliases: ['apechain-curtis-testnet', 'apechain-testnet'],
+        aliases: ['apechain-curtis-testnet', 'apechain-testnet', 'curtis'],
     },
 
     // Berachain
     berachain: {
         chainId: 80094,
         apiUrl: ETHERSCAN_V2_URL,
-        aliases: ['berachain-mainnet'],
+        aliases: ['berachain-mainnet', 'bera'],
     },
 
     'berachain-bepolia': {
         chainId: 80069,
         apiUrl: ETHERSCAN_V2_URL,
-        aliases: ['berachain-bepolia-testnet', 'berachain-testnet'],
+        aliases: ['berachain-bepolia-testnet', 'berachain-testnet', 'bepolia'],
     },
 
     // BitTorrent
@@ -320,7 +314,7 @@ export const networks: Record<string, NetworkDefinition> = {
     hyperevm: {
         chainId: 999,
         apiUrl: ETHERSCAN_V2_URL,
-        aliases: ['hyperevm-mainnet'],
+        aliases: ['hyperevm-mainnet', 'hyperliquid'],
     },
 
     // Katana
@@ -346,21 +340,20 @@ export const networks: Record<string, NetworkDefinition> = {
     'mantle-sepolia': {
         chainId: 5003,
         apiUrl: ETHERSCAN_V2_URL,
-        aliases: ['mantle-sepolia-testnet', 'mantle-testnet'],
+        aliases: ['mantle-sepolia-testnet', 'mantle-testnet', 'mantlesep'],
     },
 
     // Memecore
-    memecore: {
+    'memecore-testnet': {
         chainId: 43521,
         apiUrl: ETHERSCAN_V2_URL,
-        aliases: ['memecore-testnet'],
+        aliases: ['memecoreformicarium'],
     },
 
     // Monad
-    monad: {
+    'monad-testnet': {
         chainId: 10143,
         apiUrl: ETHERSCAN_V2_URL,
-        aliases: ['monad-testnet'],
     },
 
     // opBNB
@@ -416,7 +409,7 @@ export const networks: Record<string, NetworkDefinition> = {
     swellchain: {
         chainId: 1923,
         apiUrl: ETHERSCAN_V2_URL,
-        aliases: ['swellchain-mainnet'],
+        aliases: ['swellchain-mainnet', 'swell'],
     },
 
     'swellchain-testnet': {
@@ -441,7 +434,7 @@ export const networks: Record<string, NetworkDefinition> = {
     world: {
         chainId: 480,
         apiUrl: ETHERSCAN_V2_URL,
-        aliases: ['world-mainnet'],
+        aliases: ['world-mainnet', 'worldchain'],
     },
 
     'world-sepolia': {
@@ -473,128 +466,129 @@ export const networks: Record<string, NetworkDefinition> = {
     'zksync-sepolia': {
         chainId: 300,
         apiUrl: ETHERSCAN_V2_URL,
-        aliases: ['zksync-sepolia-testnet', 'zksync-testnet'],
+        aliases: ['zksync-sepolia-testnet', 'zksync-testnet', 'zksyncsep'],
     },
 
     // Non-Etherscan Networks (custom explorers)
+    // chainId is not used for these networks
 
     // Astar
     astar: {
-        chainId: 592,
+        chainId: 0,
         apiUrl: 'https://astar.blockscout.com/api',
         aliases: ['astar-mainnet'],
     },
 
     zkatana: {
-        chainId: 1261120,
+        chainId: 0,
         apiUrl: 'https://astar-zkevm.explorer.startale.com/api',
         aliases: ['zkatana-mainnet'],
     },
 
     // Aurora
     aurora: {
-        chainId: 1313161554,
+        chainId: 0,
         apiUrl: 'https://explorer.mainnet.aurora.dev/api',
         aliases: ['aurora-mainnet'],
     },
 
     // EBI
     ebi: {
-        chainId: 2910,
+        chainId: 0,
         apiUrl: 'https://explorer.ebi.xyz/api',
         aliases: ['ebi-mainnet'],
     },
 
     // Etherlink
     etherlink: {
-        chainId: 42793,
+        chainId: 0,
         apiUrl: 'https://explorer.etherlink.com/api',
         aliases: ['etherlink-mainnet'],
     },
 
     // Flare
     flare: {
-        chainId: 14,
+        chainId: 0,
         apiUrl: 'https://api.routescan.io/v2/network/mainnet/evm/14/etherscan',
         aliases: ['flare-mainnet'],
     },
 
     // Gravity
     gravity: {
-        chainId: 1625,
+        chainId: 0,
         apiUrl: 'https://explorer.gravity.xyz/api',
         aliases: ['gravity-mainnet'],
     },
 
     // IOTA
     iota: {
-        chainId: 8822,
+        chainId: 0,
         apiUrl: 'https://explorer.evm.iota.org/api',
         aliases: ['iota-mainnet'],
     },
 
     // Kava
     kava: {
-        chainId: 2222,
+        chainId: 0,
         apiUrl: 'https://kavascan.com/api',
         aliases: ['kava-mainnet'],
     },
 
     'kava-testnet': {
-        chainId: 2221,
+        chainId: 0,
         apiUrl: 'https://testnet.kavascan.com/api',
     },
 
     // Klaytn
     klaytn: {
-        chainId: 8217,
+        chainId: 0,
         apiUrl: 'https://api-cypress.klaytnscope.com/api',
         aliases: ['klaytn-mainnet'],
     },
 
     'klaytn-testnet': {
-        chainId: 1001,
+        chainId: 0,
         apiUrl: 'https://api-baobab.klaytnscope.com/api',
     },
 
     // Manta
     manta: {
-        chainId: 169,
+        chainId: 0,
         apiUrl: 'https://pacific-explorer.manta.network/api',
         aliases: ['manta-mainnet'],
     },
 
     // Metis
     metis: {
-        chainId: 1088,
+        chainId: 0,
         apiUrl: 'https://api.routescan.io/v2/network/mainnet/evm/1088/etherscan',
         aliases: ['metis-mainnet'],
     },
 
     // Mode
     mode: {
-        chainId: 34443,
+        chainId: 0,
         apiUrl: 'https://explorer.mode.network/api',
         aliases: ['mode-mainnet'],
     },
 
     // Rarible
     rarible: {
-        chainId: 1380012617,
+        chainId: 0,
         apiUrl: 'https://mainnet.explorer.rarichain.org/api',
         aliases: ['rarible-mainnet'],
     },
 
     // X Chain
     xchain: {
-        chainId: 7762959,
+        chainId: 0,
         apiUrl: 'https://xchain-explorer.idex.io/api',
         aliases: ['xchain-mainnet'],
     },
 
     // X Layer
     xlayer: {
-        chainId: 196,
+        chainId: 0,
         apiUrl: 'https://www.oklink.com/api/v5/explorer/contract/verify-source-code-plugin/XLAYER',
         aliases: ['xlayer-mainnet'],
     },
