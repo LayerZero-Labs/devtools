@@ -1,5 +1,5 @@
 import path from 'path'
-import { createLogger } from '@layerzerolabs/io-devtools'
+import type { Logger } from '@layerzerolabs/io-devtools'
 import { verifyTarget, verifyNonTarget } from '@/hardhat-deploy/verify'
 import got from 'got'
 
@@ -7,8 +7,20 @@ jest.mock('got', () => jest.fn())
 
 const mockFetch = got as unknown as jest.Mock
 
+// Create a mock logger for tests
+const createMockLogger = (): Logger =>
+    ({
+        error: jest.fn(),
+        warn: jest.fn(),
+        info: jest.fn(),
+        http: jest.fn(),
+        verbose: jest.fn(),
+        debug: jest.fn(),
+        silly: jest.fn(),
+    }) as unknown as Logger
+
 describe('verifyTarget', () => {
-    const logger = createLogger('error')
+    const logger = createMockLogger()
 
     beforeEach(() => {
         mockFetch.mockReset()
@@ -96,7 +108,7 @@ describe('verifyTarget', () => {
 })
 
 describe('verifyNonTarget', () => {
-    const logger = createLogger('error')
+    const logger = createMockLogger()
 
     beforeEach(() => {
         mockFetch.mockReset()

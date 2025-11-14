@@ -16,129 +16,317 @@
   <a href="https://www.npmjs.com/package/@layerzerolabs/verify-contract"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/verify-contract"/></a>
 </p>
 
+## Overview
+
+A comprehensive tool for verifying smart contracts on block explorers. Supports both CLI and programmatic usage, with built-in support for Etherscan API v2 and 60+ EVM networks.
+
+### Etherscan API v2 Support
+
+This package supports **Etherscan API v2**, providing a unified multichain experience:
+
+- **Unified API URL**: All Etherscan-compatible chains use `https://api.etherscan.io/v2/api`
+- **Single API Key**: One Etherscan API key works across all supported chains
+- **Automatic Chain ID**: Chain IDs are automatically set for well-known networks
+
 ## Installation
 
 ```bash
-yarn add @layerzerolabs/verify-contract
-
-pnpm add @layerzerolabs/verify-contract
-
 npm install @layerzerolabs/verify-contract
+# or
+yarn add @layerzerolabs/verify-contract
+# or
+pnpm add @layerzerolabs/verify-contract
 ```
 
-## Usage
+## Quick Start
 
 ### CLI
 
-This package comes with a CLI interface:
-
 ```bash
-npx @layerzerolabs/verify-contract --help
+# Verify all contracts on Ethereum
+npx @layerzerolabs/verify-contract target \
+  --network ethereum \
+  --api-key YOUR_ETHERSCAN_API_KEY \
+  --deployments ./deployments
 ```
 
-Using the CLI, contracts can be verified one network at a time.
-
-### Programmatic usage
-
-The package provides two types of verification for hardhat deploy: _target_ and _non-target_.
-
-#### Target verification
-
-This is suitable for verifying contracts that have been the compilation targets for a deployment, i.e. they have their own deployment file.
-This is the default and easiest case for which we know all the information we need from the deployment file.
+### Programmatic
 
 ```typescript
 import { verifyHardhatDeployTarget } from "@layerzerolabs/verify-contract";
 
-// Programmatic usage allows for more fine-grained and multi-network verification
+verifyHardhatDeployTarget({
+  paths: { deployments: "./deployments" },
+  networks: {
+    ethereum: {
+      apiUrl: "https://api.etherscan.io/v2/api",
+      apiKey: "your-etherscan-api-key",
+    },
+  },
+});
+```
+
+## CLI Usage
+
+The CLI provides two verification modes: `target` (default) and `non-target`.
+
+### Target Verification
+
+Verifies contracts that have their own deployment files (most common case).
+
+#### Basic Usage
+
+```bash
+# Verify all contracts in a network
+npx @layerzerolabs/verify-contract target \
+  --network ethereum \
+  --api-key YOUR_ETHERSCAN_API_KEY \
+  --deployments ./deployments
+```
+
+#### Options
+
+**Common Options:**
+- `-n, --network <network>` - Network name (required) - e.g., `ethereum`, `polygon`, `arbitrum`
+- `-k, --api-key <key>` - Scan API Key (or use environment variable)
+- `-u, --api-url <url>` - Custom scan API URL (auto-detected for known networks)
+- `--chain-id <id>` - Chain ID for Etherscan API v2 (auto-detected for known networks)
+- `-d, --deployments <path>` - Path to deployments folder
+- `--dry-run` - Preview verification without executing
+- `-l, --log-level <level>` - Log level: `error`, `warn`, `info`, `verbose`, `debug` (default: `info`)
+
+**Target-Specific Options:**
+- `-c, --contracts <names>` - Comma-separated list of contract names to verify
+
+#### Examples
+
+```bash
+# Verify specific contracts only
+npx @layerzerolabs/verify-contract target \
+  --network ethereum \
+  --api-key YOUR_ETHERSCAN_API_KEY \
+  --deployments ./deployments \
+  --contracts FRNTAdapter,DefaultProxyAdmin
+
+# Dry run (preview without actually verifying)
+npx @layerzerolabs/verify-contract target \
+  --network ethereum \
+  --api-key YOUR_ETHERSCAN_API_KEY \
+  --deployments ./deployments \
+  --dry-run
+
+# Custom explorer (non-Etherscan networks)
+npx @layerzerolabs/verify-contract target \
+  --network aurora \
+  --api-url https://explorer.mainnet.aurora.dev/api \
+  --api-key YOUR_AURORA_API_KEY \
+  --deployments ./deployments
+```
+
+### Non-Target Verification
+
+Verifies contracts without deployment files (e.g., deployed dynamically by factory contracts).
+
+#### Basic Usage
+
+```bash
+npx @layerzerolabs/verify-contract non-target \
+  --network ethereum \
+  --api-key YOUR_ETHERSCAN_API_KEY \
+  --deployments ./deployments \
+  --address 0x123... \
+  --name "contracts/MyContract.sol:MyContract" \
+  --deployment MyFactory.json \
+  --arguments '[1000, "0x456..."]'
+```
+
+#### Options
+
+**Non-Target-Specific Options:**
+- `--address <address>` - Contract address to verify (required)
+- `--name <contract name>` - Fully qualified contract name (required)
+- `--deployment <file>` - Deployment file name to use as source (required)
+- `--arguments <args>` - Constructor arguments as JSON array or encoded hex
+
+#### Examples
+
+```bash
+# With JSON constructor arguments
+npx @layerzerolabs/verify-contract non-target \
+  --network ethereum \
+  --api-key YOUR_ETHERSCAN_API_KEY \
+  --deployments ./deployments \
+  --address 0x123... \
+  --name "contracts/MyContract.sol:MyContract" \
+  --deployment MyFactory.json \
+  --arguments '[1000, "0x456..."]'
+
+# With encoded constructor arguments
+npx @layerzerolabs/verify-contract non-target \
+  --network ethereum \
+  --api-key YOUR_ETHERSCAN_API_KEY \
+  --deployments ./deployments \
+  --address 0x123... \
+  --name "contracts/MyContract.sol:MyContract" \
+  --deployment MyFactory.json \
+  --arguments 0x000000000000000000000000...
+```
+
+### Environment Variables
+
+Instead of passing API keys on the command line, use environment variables:
+
+```bash
+# Set environment variables
+export SCAN_API_KEY_ethereum="your-etherscan-api-key"
+export SCAN_API_KEY_polygon="your-etherscan-api-key"
+
+# Then just specify the network
+npx @layerzerolabs/verify-contract target \
+  --network ethereum \
+  --deployments ./deployments
+```
+
+The CLI automatically:
+- Uses the correct API URL for known networks
+- Sets the correct chain ID for Etherscan API v2
+- Pulls API keys from environment variables if not specified
+
+## Programmatic Usage
+
+The package provides two verification functions: `verifyHardhatDeployTarget` and `verifyHardhatDeployNonTarget`.
+
+### Target Verification
+
+Verifies contracts that have their own deployment files. This is the default and easiest case.
+
+```typescript
+import { verifyHardhatDeployTarget } from "@layerzerolabs/verify-contract";
+
 verifyHardhatDeployTarget({
   paths: {
     deployments: "./my/little/deployments/folder",
   },
   networks: {
+    // Using Etherscan API v2 (recommended)
+    ethereum: {
+      // The v2 base URL is used by default for Etherscan-compatible chains
+      apiUrl: "https://api.etherscan.io/v2/api",
+      apiKey: "your-etherscan-api-key",
+      // Chain ID is automatically set for well-known networks
+      // For Ethereum mainnet, chainId: 1 is set automatically
+    },
+    polygon: {
+      // For Etherscan v2, you can use the same API key and URL for all chains
+      apiUrl: "https://api.etherscan.io/v2/api",
+      apiKey: "your-etherscan-api-key",
+      // Chain ID is automatically set for well-known networks
+      // For Polygon, chainId: 137 is set automatically
+    },
+    // Custom network example
     whatachain: {
       apiUrl: "https://api.whatachain.io/api",
       apiKey: "david.hasselhoff.1234",
+      // For custom networks, specify the chain ID explicitly
+      chainId: 12345,
     },
   },
-  // The filter option allows you to limit the scope of verification to
-  // specific contracts
-  //
-  // It supports several ways of scoping the verification:
-  //
+  // Filter option allows you to limit verification scope
+  // Supports multiple formats:
+  
   // A list of case-sensitive contract names
   filter: ["Factory", "Router"],
+  
   // A single contract name
   filter: "ONFT1155",
-  // Boolean to toggle the verification as a whole
+  
+  // Boolean to toggle verification
   filter: false,
-  // A function that gets passed the contract name and an relative contract path and returns a boolean to signify the contract needs to be verified
+  
+  // A function that receives contract name and path, returns boolean
   filter: (name, path) => name.startsWith("Potato721"),
 });
 ```
 
-#### Non-target verification
+### Non-Target Verification
 
-This is suitable for verifying contracts that have been e.g. deployed dynamically from other contracts within the deployment.
-
-In this case we need to know more information - the specific deployment file to use, the address of the contract and also its constructor arguments.
+Verifies contracts deployed dynamically (e.g., by factory contracts) that don't have their own deployment files.
 
 ```typescript
 import { verifyHardhatDeployNonTarget } from "@layerzerolabs/verify-contract";
 
-// Programmatic usage allows for more fine-grained and multi-network verification
 verifyHardhatDeployNonTarget({
   paths: {
     deployments: "./my/little/deployments/folder",
   },
   networks: {
     whatachain: {
-      apiUrl: "https://api.whatachain.io/api",
-      apiKey: "david.hasselhoff.1234",
+      // Using Etherscan API v2
+      apiUrl: "https://api.etherscan.io/v2/api",
+      apiKey: "your-etherscan-api-key",
+      chainId: 12345, // Specify chain ID for custom networks
     },
   },
-  // The contracts array is used to pass the contract details
+  // The contracts array specifies which contracts to verify
   contracts: [
     {
       address: "0x0",
       network: "whatachain",
-      // We'll need to pass the name of the deployment file to use (relative to the deployments path)
+      // Deployment file name (relative to deployments path)
       deployment: "OtherContract.json",
+      // Constructor arguments
       constructorArguments: [1000, "0x0"],
-      // In this case we'll need to pass a fully-qualified contract name
+      // Fully-qualified contract name
       contractName: "contracts/examples/Pool.sol",
     },
   ],
 });
 ```
 
-### Default configuration
+## Configuration
 
-The package is preconfigured for scan API URLs for several well-known networks:
+### Environment Variables
 
-| Network                                                        | API URL                                          |
-| -------------------------------------------------------------- | ------------------------------------------------ |
-| `avalanche`, `avalanche-mainnet`                               | `https://api.snowtrace.io/api`                   |
-| `fuji`, `avalanche-testnet`                                    | `https://api-testnet.snowtrace.io/api`           |
-| `bsc`                                                          | `https://api.bscscan.com/api`                    |
-| `bsc-testnet`                                                  | `https://api-testnet.bscscan.com/api`            |
-| `ethereum`                                                     | `https://api.etherscan.io/api`                   |
-| `ethereum-goerli`                                              | `https://api-goerli.etherscan.io/api`            |
-| `goerli`                                                       | `https://api-goerli.etherscan.io/api`            |
-| `fantom`                                                       | `https://api.ftmscan.com/api`                    |
-| `fantom-testnet`                                               | `https://api-testnet.ftmscan.com/api`            |
-| `arbitrum`                                                     | `https://api.arbiscan.io/api`                    |
-| `arbitrum-goerli`                                              | `https://api-goerli.arbiscan.io/api`             |
-| `polygon`                                                      | `https://api.polygonscan.com/api`                |
-| `mumbai`                                                       | `https://api-testnet.polygonscan.com/api`        |
-| `optimism`                                                     | `https://api-optimistic.etherscan.io/api`        |
-| `optimism-goerli`                                              | `https://api-goerli-optimistic.etherscan.io/api` |
-| `gnosis`                                                       | `https://api.gnosisscan.io/api`                  |
-| `zkpolygon`, `zkpolygon-mainnet`                               | `https://api-zkevm.polygonscan.com/api`          |
-| `base`, `base-mainnet`                                         | `https://api.basescan.org/api`                   |
-| `base-goerli`                                                  | `https://api-goerli.basescan.org/api`            |
-| `zkconsensys`, `zkconsensys-mainnet`, `linea`, `linea-mainnet` | `https://api.lineascan.build/api`                |
-| `moonbeam`                                                     | `https://api-moonbeam.moonscan.io/api`           |
-| `moonbeam-testnet`                                             | `https://api-moonbase.moonscan.io/api`           |
-| `kava`, `kava-mainnet`                                         | `https://kavascan.com/api`                       |
-| `kava-testnet`                                                 | `https://testnet.kavascan.com/api`               |
+Configure API keys, URLs, browser URLs, and chain IDs using environment variables:
+
+```bash
+# API Key - same key works for all Etherscan v2 compatible chains
+SCAN_API_KEY_ethereum=your-etherscan-api-key
+SCAN_API_KEY_polygon=your-etherscan-api-key
+
+# API URL - uses v2 base URL by default for Etherscan chains
+SCAN_API_URL_ethereum=https://api.etherscan.io/v2/api
+SCAN_API_URL_polygon=https://api.etherscan.io/v2/api
+
+# Chain ID - automatically set for well-known networks, but can be overridden
+SCAN_CHAIN_ID_ethereum=1
+SCAN_CHAIN_ID_polygon=137
+
+# Browser URL for displaying verified contract links
+SCAN_BROWSER_URL_ethereum=https://etherscan.io
+SCAN_BROWSER_URL_polygon=https://polygonscan.com
+```
+
+> **Note:**  
+> Environment variable names for network configuration are **not case-sensitive** and support both hyphens (`-`) and underscores (`_`) in network names. For maximum compatibility across systems and shells, it is recommended to define variables using uppercase characters, underscores, and the canonical network name, e.g.:
+>
+> - `SCAN_API_KEY_ETHEREUM`
+> - `SCAN_API_KEY_BASE_SEPOLIA`
+
+### Default Network Configuration
+
+The package is preconfigured with scan API URLs and chain IDs for well-known networks.
+
+#### Supported Networks
+
+The package supports 60+ EVM networks with preconfigured scan API URLs and chain IDs. Most major EVM networks use the Etherscan API v2 unified endpoint (`https://api.etherscan.io/v2/api`) and can share a single API key.
+
+**Examples:**
+
+| Network              | Chain ID | API URL (v2)                      |
+| -------------------- | -------- | --------------------------------- |
+| `ethereum`           | 1        | `https://api.etherscan.io/v2/api` |
+| `polygon`            | 137      | `https://api.etherscan.io/v2/api` |
+| `aurora`             | 1313161554 | `https://explorer.mainnet.aurora.dev/api` |
+
+For the complete list of supported networks, network aliases, and their configurations, see [`src/common/networks.ts`](src/common/networks.ts).

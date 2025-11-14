@@ -106,6 +106,7 @@ export const verifyNonTarget = async (
         const submitProps: SubmitForVerificationProps = {
             apiUrl: networkConfig.apiUrl,
             apiKey: networkConfig.apiKey,
+            chainId: networkConfig.chainId,
             address,
             contractName: `${contractName}:${contractClassName}`,
             constructorArguments,
@@ -257,6 +258,7 @@ export const verifyTarget = async (
                     const submitProps: SubmitForVerificationProps = {
                         apiUrl: networkConfig.apiUrl,
                         apiKey: networkConfig.apiKey,
+                        chainId: networkConfig.chainId,
                         address: deployment.address,
                         contractName: `${compilationTarget}:${contractName}`,
                         constructorArguments,
