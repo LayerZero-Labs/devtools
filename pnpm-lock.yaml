@@ -3935,7 +3935,7 @@ importers:
         specifier: ~2.0.0
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~3.0.0
+        specifier: ~3.0.1
         version: link:../devtools-evm
       '@layerzerolabs/io-devtools':
         specifier: ~0.3.0
@@ -5045,7 +5045,7 @@ importers:
         specifier: ~2.0.0
         version: link:../devtools
       '@layerzerolabs/devtools-solana':
-        specifier: ~3.0.0
+        specifier: ~3.0.2
         version: link:../devtools-solana
       '@layerzerolabs/io-devtools':
         specifier: ~0.3.0
@@ -5703,7 +5703,7 @@ importers:
         specifier: ~2.0.0
         version: link:../devtools
       '@layerzerolabs/devtools-solana':
-        specifier: ~3.0.1
+        specifier: ~3.0.2
         version: link:../devtools-solana
       '@layerzerolabs/io-devtools':
         specifier: ~0.3.0
@@ -5724,7 +5724,7 @@ importers:
         specifier: ~3.0.0
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-solana':
-        specifier: ~8.0.1
+        specifier: ~8.0.4
         version: link:../protocol-devtools-solana
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.6
