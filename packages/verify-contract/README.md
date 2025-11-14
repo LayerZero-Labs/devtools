@@ -307,9 +307,11 @@ SCAN_BROWSER_URL_ethereum=https://etherscan.io
 SCAN_BROWSER_URL_polygon=https://polygonscan.com
 ```
 
-**Note:** Environment variable names are case-insensitive and support both hyphenated and underscored network names:
-- `SCAN_API_KEY_ethereum` or `SCAN_API_KEY_ETHEREUM`
-- `SCAN_API_KEY_base-sepolia` or `SCAN_API_KEY_BASE_SEPOLIA`
+> **Note:**  
+> Environment variable names for network configuration are **not case-sensitive** and support both hyphens (`-`) and underscores (`_`) in network names. For maximum compatibility across systems and shells, it is recommended to define variables using uppercase characters, underscores, and the canonical network name, e.g.:
+>
+> - `SCAN_API_KEY_ETHEREUM`
+> - `SCAN_API_KEY_BASE_SEPOLIA`
 
 ### Default Network Configuration
 
