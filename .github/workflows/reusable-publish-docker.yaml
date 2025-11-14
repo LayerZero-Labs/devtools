@@ -38,7 +38,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Build image & push the digest
         uses: ./.github/workflows/actions/docker-build-image
@@ -84,7 +84,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Build image & push the digest
         uses: ./.github/workflows/actions/docker-build-image
@@ -130,7 +130,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Build image & push the digest
         uses: ./.github/workflows/actions/docker-build-image
@@ -175,7 +175,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Build image & push the digest
         uses: ./.github/workflows/actions/docker-build-image
@@ -220,7 +220,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Build image & push the digest
         uses: ./.github/workflows/actions/docker-build-image
@@ -262,7 +262,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Build image & push the digest
         uses: ./.github/workflows/actions/docker-build-image
@@ -299,7 +299,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Push image
         uses: ./.github/workflows/actions/docker-push-image
@@ -336,7 +336,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Push image
         uses: ./.github/workflows/actions/docker-push-image
@@ -373,7 +373,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Push image
         uses: ./.github/workflows/actions/docker-push-image
@@ -410,7 +410,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Push image
         uses: ./.github/workflows/actions/docker-push-image
@@ -447,7 +447,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Push image
         uses: ./.github/workflows/actions/docker-push-image
@@ -485,7 +485,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Push image
         uses: ./.github/workflows/actions/docker-push-image
