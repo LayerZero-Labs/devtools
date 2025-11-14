@@ -8,7 +8,7 @@
   <a href="https://layerzero.network" style="color: #a77dff">Homepage</a> | <a href="https://docs.layerzero.network/" style="color: #a77dff">Docs</a> | <a href="https://layerzero.network/developers" style="color: #a77dff">Developers</a>
 </p>
 
-<h1 align="center">OApp Example</h1>
+<h1 align="center">Solana OApp Example</h1>
 
 <p align="center">
   <a href="https://docs.layerzero.network/v2/concepts/getting-started/what-is-layerzero" style="color: #a77dff">Core Concepts</a> | <a href="https://docs.layerzero.network/v2/developers/evm/configuration/options" style="color: #a77dff">Message Execution Options</a> | <a href="https://docs.layerzero.network/v2/deployments/deployed-contracts" style="color: #a77dff">Endpoint Addresses</a>
@@ -84,6 +84,39 @@ Make sure you select the **OApp (Solana)** example from the dropdown:
     OFT (Solana)
 ❯   OApp (Solana)
 ```
+
+## Project Structure
+
+The repository is organized as follows:
+
+```
+examples/oapp-solana/
+├── contracts/              # Solidity contracts for EVM side
+├── deploy/                 # Hardhat deploy scripts for EVM contracts
+├── deployments/            # Deployment files (Only created after deployment)
+├── docs/                   # Additional guides (compose, ordered execution)
+├── lib/                    # TypeScript client SDK and generated bindings
+│   ├── client/
+│   │   ├── generated/      # Auto-generated TypeScript files from Solana IDL (run `pnpm gen:api`)
+│   │   └── myoapp.ts       # TypeScript client for interacting with the Solana OApp
+├── programs/               # Grouping folder for Solana program
+│   └── my_oapp/            # Solana OApp program
+├── tasks/                  # Hardhat tasks for deployment, config, send, etc.
+├── test/                  # Stub folder for tests
+├── .env.example            # Example environment variables
+├── layerzero.config.ts     # OApp mesh configuration
+├── README.md               # This documentation
+└── ...                     # Other project files
+```
+
+- **contracts/**: Solidity contracts for the EVM side of the OApp (if applicable).
+- **deploy/**: Hardhat deploy scripts for EVM contracts.
+- **docs/**: Project-specific documentation, guides, and references.
+- **lib/client/generated/my_oapp**: TypeScript bindings generated from the Solana program's IDL. Regenerate after program changes with `pnpm gen:api`.
+- **lib/client/myoapp.ts**: Main TypeScript client for interacting with the Solana OApp.
+- **programs/my_oapp**: Anchor-based Solana program source code.
+- **tasks/**: Custom Hardhat tasks for deployment, configuration, and wiring.
+- **tests/**: Project tests for both EVM and Solana components.
 
 ## Developing Contracts
 
@@ -279,3 +312,19 @@ pnpm test
 <p align="center">
   Join our <a href="https://layerzero.network/community" style="color: #a77dff">community</a>! | Follow us on <a href="https://x.com/LayerZero_Labs" style="color: #a77dff">X (formerly Twitter)</a>
 </p>
+
+## Modifying for your use case
+
+After going through the above and having successfully sent cross-chain messages using the template, you might want to start customizing the Solana program to fit your actual use case.
+
+First, ensure you have built the program after making the necessary updates, to ensure the latest changes to the IDL are reflected.
+
+Next, run:
+
+```bash
+pnpm gen:api
+```
+
+This will update the files under `lib/client/generated/my_oapp` which is used by `lib/client/myoapp.ts`, which you will also need to adapt to your updated program.
+
+For guidance, read the [Solana OApp Reference](https://docs.layerzero.network/v2/developers/solana/oapp/overview).
