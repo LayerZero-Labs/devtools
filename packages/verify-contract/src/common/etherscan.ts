@@ -202,9 +202,6 @@ const submitRequest = async (
     const response = await got(url.toString(), {
         method: 'POST',
         form: request,
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        },
     }).json()
 
     return ScanResponseSchema.parse(response)
