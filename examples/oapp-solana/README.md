@@ -115,7 +115,6 @@ examples/oapp-solana/
 - **lib/client/generated/my_oapp**: TypeScript bindings generated from the Solana program's IDL. Regenerate after program changes with `pnpm gen:api`.
 - **lib/client/myoapp.ts**: Main TypeScript client for interacting with the Solana OApp.
 - **programs/my_oapp**: Anchor-based Solana program source code.
-- **scripts/**: Automation scripts for deployment and setup.
 - **tasks/**: Custom Hardhat tasks for deployment, configuration, and wiring.
 - **tests/**: Project tests for both EVM and Solana components.
 
