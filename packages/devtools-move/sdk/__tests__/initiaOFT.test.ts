@@ -7,12 +7,16 @@ import { initializeTaskContext } from '../baseTaskHelper'
 import dotenv from 'dotenv'
 import path from 'path'
 import * as utils from '../../tasks/move/utils/utils'
+import * as config from '../../tasks/move/utils/config'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 // Mock the getMoveVMOAppAddress function
 jest.spyOn(utils, 'getMoveVMOAppAddress').mockImplementation(
     () => '0x884E0D02D306E54D579910C7F87F697F07030F2D503C7CB5A04A6F135352B936'
 )
+
+// Mock promptUserContractSelection to avoid interactive prompts in CI
+jest.spyOn(config, 'promptUserContractSelection').mockImplementation(async (contracts) => contracts[0])
 
 dotenv.config({ path: path.resolve(__dirname, '.env') })
 
@@ -37,15 +41,20 @@ describe('InitiaOFT View Methods', () => {
     let restClient: RESTClient
 
     beforeAll(async () => {
-        // Get actual REST client
-        restClient = getConnection('initia', 'testnet') as RESTClient
+        try {
+            // Get actual REST client
+            restClient = getConnection('initia', 'testnet') as RESTClient
 
-        // Initialize with local config - using path relative to workspace root
-        const configPath = './sdk/__tests__/test.layerzero.config.ts'
-        const context = await initializeTaskContext(configPath)
-        oft = context.oft as InitiaOFT
-        // Use the real REST client
-        oft.moveVMConnection = restClient
+            // Initialize with local config - using path relative to workspace root
+            const configPath = './sdk/__tests__/test.layerzero.config.ts'
+            const context = await initializeTaskContext(configPath)
+            oft = context.oft as InitiaOFT
+            // Use the real REST client
+            oft.moveVMConnection = restClient
+        } catch (error) {
+            console.error('Setup failed:', error)
+            throw error
+        }
     })
 
     describe('getRateLimitConfig', () => {

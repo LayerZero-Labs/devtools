@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-evm
 
+## 0.4.0
+
+### Minor Changes
+
+- b858717: Added `RateLimiter` contract struct packing (updated `_setRateLimits` params) and new `_resetRateLimits` function
+
 ## 0.3.3
 
 ### Patch Changes
