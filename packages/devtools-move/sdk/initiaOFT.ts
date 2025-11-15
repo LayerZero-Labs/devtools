@@ -583,7 +583,8 @@ export class InitiaOFT implements IOFT {
 
     initializeAdapterFAPayload(
         tokenMetadataAddress: string,
-        sharedDecimals: number
+        sharedDecimals: number,
+        localDecimals?: number
     ): TypedInputGenerateTransactionPayloadData {
         const msg = new MsgExecute(
             this.accountAddress,
@@ -591,11 +592,15 @@ export class InitiaOFT implements IOFT {
             'oft_adapter_fa',
             'initialize',
             [],
-            [bcs.address().serialize(tokenMetadataAddress).toBase64(), bcs.u8().serialize(sharedDecimals).toBase64()]
+            [
+                bcs.address().serialize(tokenMetadataAddress).toBase64(),
+                bcs.u8().serialize(sharedDecimals).toBase64(),
+                bcs.option(bcs.u8()).serialize(localDecimals).toBase64(),
+            ]
         )
         return Object.assign(msg, {
-            types: ['address', 'u8'],
-            multiSigArgs: [tokenMetadataAddress, sharedDecimals],
+            types: ['address', 'u8', 'u8'],
+            multiSigArgs: [tokenMetadataAddress, sharedDecimals, localDecimals || 0],
         })
     }
 

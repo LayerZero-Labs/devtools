@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@aptos-labs/ts-sdk": "^1.33.1",
-    "@initia/initia.js": "^0.2.28",
+    "@initia/initia.js": "^1.0.0",
     "@jest/globals": "^29.7.0",
     "@layerzerolabs/devtools-extensible-cli": "^0.0.7",
     "@layerzerolabs/io-devtools": "^0.3.1",

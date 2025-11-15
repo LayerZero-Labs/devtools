@@ -9,7 +9,7 @@ enum MsgType {
 }
 
 const bscContract: OmniPointHardhat = {
-    eid: EndpointId.ARBSEP_V2_TESTNET,
+    eid: EndpointId.BSC_V2_TESTNET,
     contractName: 'MyOFT',
 }
 
@@ -90,7 +90,7 @@ const config: OAppOmniGraphHardhat = {
                 receiveConfig: {
                     ulnConfig: {
                         // The number of block confirmations to expect from the `to` chain.
-                        confirmations: BigInt(5),
+                        confirmations: BigInt(10),
                         // The address of the DVNs your `receiveConfig` expects to receive verifications from on the `from` chain.
                         // The `from` chain's OApp will wait until the configured threshold of `requiredDVNs` verify the message.
                         requiredDVNs: ['0x3f12330ba9e26a604e2149b4b67c0710d32fcbc3de0bea76dd43dbb6b747bc8c'],
@@ -136,14 +136,14 @@ const config: OAppOmniGraphHardhat = {
                         executor: '0x31894b190a8bAbd9A067Ce59fde0BfCFD2B18470',
                     },
                     ulnConfig: {
-                        confirmations: BigInt(5),
+                        confirmations: BigInt(10),
                         requiredDVNs: ['0x0eE552262f7B562eFcED6DD4A7e2878AB897d405'],
                         optionalDVNThreshold: 0,
                     },
                 },
                 receiveConfig: {
                     ulnConfig: {
-                        confirmations: BigInt(10),
+                        confirmations: BigInt(2),
                         requiredDVNs: ['0x0eE552262f7B562eFcED6DD4A7e2878AB897d405'],
                         optionalDVNThreshold: 0,
                     },

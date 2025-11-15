@@ -22,7 +22,12 @@ class InitOFTFAAdapter implements INewOperation {
 
         const taskContext = await initializeTaskContext(args.oapp_config)
 
-        await initOFTAdapterFA(taskContext, oftMetadata.move_vm_fa_address, oftMetadata.sharedDecimals)
+        await initOFTAdapterFA(
+            taskContext,
+            oftMetadata.move_vm_fa_address,
+            oftMetadata.sharedDecimals,
+            oftMetadata.localDecimals
+        )
     }
 }
 

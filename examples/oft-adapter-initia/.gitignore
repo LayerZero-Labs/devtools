@@ -30,3 +30,4 @@ shell-scripts
 
 transactions/*
 !transactions/.gitkeep
+deployments
