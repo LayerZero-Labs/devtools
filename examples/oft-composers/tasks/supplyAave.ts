@@ -51,7 +51,7 @@ async function sendSupply(hre: HardhatRuntimeEnvironment, args: SendArgs) {
     // 1. Build compose message payload expected by AaveV3Composer (address)
     const composeMsg = abiCoder.encode(['address'], [args.tokenReceiver ?? signer.address])
 
-    const composeGasLimit = ethers.BigNumber.from(args.composeGasLimit ?? '200000').toString()
+    const composeGasLimit = ethers.BigNumber.from(args.composeGasLimit ?? '395000').toString()
 
     const extraOptions = Options.newOptions()
         .addExecutorComposeOption(
@@ -149,12 +149,12 @@ async function sendSupply(hre: HardhatRuntimeEnvironment, args: SendArgs) {
         value: valueToSend,
     })
 
-    logger.info(`Stargate transaction submitted: ${tx.hash}`)
+    logger.info(`Transaction submitted: ${tx.hash}`)
     await tx.wait()
-    logger.info(`Stargate transaction confirmed.`)
+    logger.info(`Transaction confirmed.`)
 }
 
-task('stargate:supply-aave', 'Sends tokens through Stargate and composes into AaveV3Composer')
+task('aave:supply', 'Sends tokens through Stargate and composes into AaveV3Composer')
     .addParam('stargate', 'Stargate pool address')
     .addParam('dstEid', 'Destination endpoint ID')
     .addParam('composer', 'Composer contract address on the destination chain')
