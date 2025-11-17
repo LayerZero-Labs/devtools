@@ -10,25 +10,16 @@ pragma solidity ^0.8.0;
  * contract definitions from implementation logic.
  */
 interface IAaveV3Composer {
-    /// @notice Custom errors for more gas-efficient reverts.
+    /// ========================== Error Messages =====================================
     error InvalidAavePool();
     error InvalidStargatePool();
-    error UnauthorizedStargatePool();
-    error UnauthorizedEndpoint();
+    error OnlyValidComposerCaller(address sender);
+    error OnlyEndpoint(address endpoint);
+    error OnlySelf(address caller);
 
-    /**
-     * @notice Emitted when a token supply is successfully executed.
-     *
-     * @param recipient The address of the recipient of the aTokens tokens.
-     * @param amountLD The amount of LD tokens being supplied.
-     */
-    event SupplyExecuted(address indexed recipient, uint256 amountLD);
-
-    /**
-     * @notice Emitted when a token supply fails and the OFT tokens are refunded to the recipient.
-     *
-     * @param recipient The address of the recipient of the aTokens tokens.
-     * @param amountLD The amount of LD tokens being refunded.
-     */
-    event SupplyFailedAndRefunded(address indexed recipient, uint256 amountLD);
+    /// ========================== EVENTS =====================================
+    event Sent(bytes32 guid);
+    event Refunded(bytes32 guid);
+    event Supplied(address indexed recipient, uint256 amountLd);
+    event SupplyFailedAndRefunded(address indexed recipient, uint256 amountLd);
 }

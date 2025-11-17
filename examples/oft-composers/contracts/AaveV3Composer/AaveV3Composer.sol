@@ -7,6 +7,7 @@ import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.s
 import { ILayerZeroComposer } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oft/libs/OFTComposeMsgCodec.sol";
 import { IOAppCore } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol";
+import { IOFT, SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { IStargate } from "@stargatefinance/stg-evm-v2/src/interfaces/IStargate.sol";
 
 import { IAaveV3Composer } from "./IAaveV3Composer.sol";
@@ -105,34 +106,76 @@ contract AaveV3Composer is ILayerZeroComposer, IAaveV3Composer {
      *       `abi.encode(address onBehalfOf)`.
      *
      *
-     * @param _oft     Address of the originating OFT; must equal the trusted `stargate`.
+     * @param _sender     Address of the stargate contract; must equal the trusted `stargate`.
      * @dev _guid    Message hash (unused, but kept for future extensibility).
      * @param _message ABI-encoded compose payload containing recipient address.
      * @dev _executor Executor that relayed the message (unused).
      * @dev _extraData Extra data from executor (unused).
      */
     function lzCompose(
-        address _oft,
-        bytes32 /* _guid */,
+        address _sender,
+        bytes32 _guid,
         bytes calldata _message,
         address /* _executor */,
         bytes calldata /* _extraData */
     ) external payable {
-        // Step 1️: Authenticate call logic source.
-        if (_oft != STARGATE) revert UnauthorizedStargatePool();
-        if (msg.sender != ENDPOINT) revert UnauthorizedEndpoint();
+        // Authenticate call logic source.
+        if (_sender != STARGATE) revert OnlyValidComposerCaller(_sender);
+        if (msg.sender != ENDPOINT) revert OnlyEndpoint(msg.sender);
 
-        // Step 2️: Decode the recipient address and amount from the message.
-        address _to = abi.decode(OFTComposeMsgCodec.composeMsg(_message), (address));
+        // Decode the amount in local decimals and the compose message from the message.
         uint256 amountLD = OFTComposeMsgCodec.amountLD(_message);
 
-        // Step 3: Execute the supply or refund to target recipient.
-        try AAVE.supply(TOKEN_IN, amountLD, _to, 0) {
-            // 0 is the referral code
-            emit SupplyExecuted(_to, amountLD);
+        // Try to decompose the message, refund if it fails.
+        try this.handleCompose{ value: msg.value }(_message, amountLD) {
+            emit Sent(_guid);
         } catch {
-            IERC20(TOKEN_IN).safeTransfer(_to, amountLD);
-            emit SupplyFailedAndRefunded(_to, amountLD);
+            _refund(STARGATE, _message, amountLD, tx.origin, msg.value);
+            emit Refunded(_guid);
         }
+    }
+
+    /**
+     * @notice Handles the compose operation for OFT (Omnichain Fungible Token) transactions
+     * @dev This function can only be called by the contract itself (self-call restriction)
+     *      Decodes the compose message to extract SendParam and minimum message value
+     * @param _message The original message that was sent
+     * @param _amountLD The amount of tokens to supply
+     */
+    function handleCompose(bytes calldata _message, uint256 _amountLD) external payable {
+        if (msg.sender != address(this)) revert OnlySelf(msg.sender);
+
+        address _to = abi.decode(OFTComposeMsgCodec.composeMsg(_message), (address));
+
+        // Try to execute the supply or refund to target recipient.
+        try AAVE.supply(TOKEN_IN, _amountLD, _to, 0) {
+            emit Supplied(_to, _amountLD);
+        } catch {
+            _refund(STARGATE, _message, _amountLD, tx.origin, msg.value);
+            emit SupplyFailedAndRefunded(_to, _amountLD);
+        }
+    }
+
+    /**
+     * @dev Internal function to refund input tokens to sender on source during a failed transaction
+     * @param _stargate The OFT contract address used for refunding
+     * @param _message The original message that was sent
+     * @param _amount The amount of tokens to refund
+     * @param _refundAddress Address to receive the refund
+     * @param _msgValue The amount of native tokens sent with the transaction
+     */
+     function _refund(
+        address _stargate,
+        bytes calldata _message,
+        uint256 _amount,
+        address _refundAddress,
+        uint256 _msgValue
+    ) internal virtual {
+        SendParam memory refundSendParam;
+        refundSendParam.dstEid = OFTComposeMsgCodec.srcEid(_message);
+        refundSendParam.to = OFTComposeMsgCodec.composeFrom(_message);
+        refundSendParam.amountLD = _amount;
+
+        IOFT(_stargate).send{ value: _msgValue }(refundSendParam, MessagingFee(_msgValue, 0), _refundAddress);
     }
 }
