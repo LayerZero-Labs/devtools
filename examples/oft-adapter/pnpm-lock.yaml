@@ -75,6 +75,9 @@ devDependencies:
   '@rushstack/eslint-patch':
     specifier: ^1.7.0
     version: 1.14.1
+  '@safe-global/safe-core-sdk-types':
+    specifier: ^2.3.0
+    version: 2.3.0
   '@types/chai':
     specifier: ^4.3.11
     version: 4.3.20
