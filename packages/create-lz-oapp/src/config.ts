@@ -214,6 +214,17 @@ export const getExamples = (): Example[] => {
                   },
               ]
             : []),
+        ...(process.env.LZ_ENABLE_OFT_COMPOSERS
+            ? [
+                  {
+                      id: 'oft-composers',
+                      label: 'OFT Composers',
+                      repository,
+                      directory: 'examples/oft-composers',
+                      ref,
+                  },
+              ]
+            : []),
         ...(process.env.LZ_ENABLE_COMPOSER_EXAMPLE
             ? [
                   {
