@@ -1,7 +1,8 @@
-import { fetchMetadataFromSeeds } from '@metaplex-foundation/mpl-token-metadata'
+import { safeFetchMetadataFromSeeds } from '@metaplex-foundation/mpl-token-metadata'
 import { fetchMint } from '@metaplex-foundation/mpl-toolbox'
 import { PublicKey as UmiPublicKey, publicKey, unwrapOption } from '@metaplex-foundation/umi'
 import { fromWeb3JsPublicKey, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
+import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { Keypair, PublicKey } from '@solana/web3.js'
 import { task } from 'hardhat/config'
 
@@ -27,6 +28,7 @@ const DEBUG_ACTIONS = {
     CHECKS: 'checks',
     GET_TOKEN: 'token',
     GET_PEERS: 'peers',
+    RATE_LIMITS: 'rate-limits',
 }
 
 /**
@@ -56,6 +58,20 @@ function formatDvnAddresses(addresses: string[], metadata?: IMetadata, chainKey?
         | Record<string, { canonicalName?: string }>
         | undefined
     return addresses.map((addr) => dvnMap?.[addr]?.canonicalName ?? addr).join(', ')
+}
+
+function tokenProgramAddressToName(tokenProgramAddress: string | PublicKey): 'SPL' | 'Token2022' {
+    const address = typeof tokenProgramAddress === 'string' ? new PublicKey(tokenProgramAddress) : tokenProgramAddress
+    const tokenProgramMap: Record<string, 'SPL' | 'Token2022'> = {
+        [TOKEN_PROGRAM_ID.toBase58()]: 'SPL',
+        [TOKEN_2022_PROGRAM_ID.toBase58()]: 'Token2022',
+    }
+    const addressStr = address.toBase58()
+    const name = tokenProgramMap[addressStr]
+    if (!name) {
+        throw new Error(`Invalid token program address: ${addressStr}. Expected either SPL Token or Token2022.`)
+    }
+    return name
 }
 
 type DebugTaskArgs = {
@@ -122,7 +138,7 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
 
         const oftDeriver = new OftPDA(oftStoreInfo.header.owner)
 
-        const tokenMetadata = await fetchMetadataFromSeeds(umi, { mint: oftStoreInfo.tokenMint })
+        const tokenMetadata = await safeFetchMetadataFromSeeds(umi, { mint: oftStoreInfo.tokenMint })
 
         const adminIsSquadsV4Vault = await isSquadsV4Vault(oftStoreInfo.admin)
         const delegateIsSquadsV4Vault = await isSquadsV4Vault(oAppRegistryInfo?.delegate?.toBase58())
@@ -152,13 +168,15 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
 
         const printToken = async () => {
             DebugLogger.header('Token Information')
+            DebugLogger.keyValue('Mint Address', oftStoreInfo.tokenMint)
+            DebugLogger.keyValue('Token Program', tokenProgramAddressToName(mintAccount.header.owner))
             DebugLogger.keyValue('Mint Authority', unwrapOption(mintAccount.mintAuthority))
             DebugLogger.keyValue(
                 'Freeze Authority',
                 unwrapOption(mintAccount.freezeAuthority, () => 'None')
             )
-            DebugLogger.keyValue('Update Authority', tokenMetadata.updateAuthority)
-            DebugLogger.keyValue('Metadata is mutable', tokenMetadata.isMutable)
+            DebugLogger.keyValue('Update Authority', tokenMetadata?.updateAuthority ?? 'N/A (no Metaplex Metadata)')
+            DebugLogger.keyValue('Metadata is mutable', tokenMetadata?.isMutable ?? 'N/A')
             DebugLogger.separator()
         }
 
@@ -193,7 +211,16 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
             DebugLogger.separator()
         }
 
-        const printPeerConfigs = async () => {
+        let peerConfigsCache: {
+            peerConfigs: UmiPublicKey[]
+            peerConfigInfos: Awaited<ReturnType<typeof oft.accounts.safeFetchAllPeerConfig>>
+            endpointV2Sdk: EndpointV2
+        } | null = null
+        const fetchPeerConfigsAndSdk = async () => {
+            if (peerConfigsCache) {
+                return peerConfigsCache
+            }
+
             const peerConfigs = dstEids.map((dstEid) => {
                 const peerConfig = oftDeriver.peer(oftStore, dstEid)
                 return publicKey(peerConfig)
@@ -209,9 +236,16 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
                 mockKeypair.publicKey // doesn't matter as we are not sending transactions
             )
 
-            DebugLogger.header('Peer Configurations')
-
             const peerConfigInfos = await oft.accounts.safeFetchAllPeerConfig(umi, peerConfigs)
+
+            peerConfigsCache = { peerConfigs, peerConfigInfos, endpointV2Sdk }
+            return peerConfigsCache
+        }
+
+        const printPeerConfigs = async () => {
+            const { peerConfigs, peerConfigInfos, endpointV2Sdk } = await fetchPeerConfigsAndSdk()
+
+            DebugLogger.header('Peer Configurations')
             for (let index = 0; index < dstEids.length; index++) {
                 const dstEid = dstEids[index]
                 const info = peerConfigInfos[index]
@@ -258,6 +292,29 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
                 DebugLogger.separator()
             }
         }
+
+        const printRateLimits = async () => {
+            const { peerConfigInfos } = await fetchPeerConfigsAndSdk()
+
+            DebugLogger.header('Rate Limits')
+
+            for (let index = 0; index < dstEids.length; index++) {
+                const dstEid = dstEids[index]
+                const info = peerConfigInfos[index]
+                const network = getNetworkForChainId(dstEid)
+
+                DebugLogger.header(`${dstEid} (${network.chainName})`)
+
+                if (info) {
+                    const { outboundRateLimiter, inboundRateLimiter } = info
+                    printRateLimitsForPeer(outboundRateLimiter, inboundRateLimiter)
+                } else {
+                    DebugLogger.keyValue('PeerConfig', 'Not found', 1)
+                }
+
+                DebugLogger.separator()
+            }
+        }
         if (action) {
             switch (action) {
                 case DEBUG_ACTIONS.OFT_STORE:
@@ -277,6 +334,9 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
                     break
                 case DEBUG_ACTIONS.GET_PEERS:
                     await printPeerConfigs()
+                    break
+                case DEBUG_ACTIONS.RATE_LIMITS:
+                    await printRateLimits()
                     break
                 default:
                     console.error(`Invalid action specified. Use any of ${Object.keys(DEBUG_ACTIONS)}.`)
@@ -360,4 +420,45 @@ function printOAppSendConfigs(
             DebugLogger.keyValue(`${sendOappConfigIndexesToKeys[i]}`, String(item), 2)
         }
     }
+}
+
+type RateLimiter = {
+    __option: 'Some' | 'None'
+    value?: {
+        capacity: bigint
+        tokens: bigint
+        refillPerSecond: bigint
+        lastRefillTime: bigint
+    }
+}
+
+function formatUnixSecondsToUtc(secs: bigint): string {
+    const millis = Number(secs) * 1000
+    const iso = new Date(millis).toISOString()
+    return iso.replace('T', ' ').replace('.000Z', ' UTC')
+}
+
+function printSingleRateLimiter(label: string, limiter: RateLimiter | null | undefined) {
+    DebugLogger.keyValue(label, '', 1)
+
+    if (!limiter || limiter.__option !== 'Some' || !limiter.value) {
+        DebugLogger.keyValue('status', 'None', 2)
+        return
+    }
+
+    const { capacity, tokens, refillPerSecond, lastRefillTime } = limiter.value
+
+    DebugLogger.keyValue('capacity', String(capacity), 2)
+    DebugLogger.keyValue('tokens (available allowance)', String(tokens), 2)
+    DebugLogger.keyValue('refillPerSecond', String(refillPerSecond), 2)
+    DebugLogger.keyValue('lastRefillTime', formatUnixSecondsToUtc(lastRefillTime), 2)
+}
+
+function printRateLimitsForPeer(
+    outboundRateLimiter: RateLimiter | null | undefined,
+    inboundRateLimiter: RateLimiter | null | undefined
+) {
+    DebugLogger.keyValue('Rate Limits', '')
+    printSingleRateLimiter('Outbound', outboundRateLimiter)
+    printSingleRateLimiter('Inbound', inboundRateLimiter)
 }
