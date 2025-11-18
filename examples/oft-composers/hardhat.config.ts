@@ -55,14 +55,14 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
-        'arbitrum-mainnet': {
-            eid: EndpointId.ARBITRUM_V2_MAINNET,
-            url: process.env.RPC_URL_ARBITRUM || 'https://arbitrum.gateway.tenderly.co',
+        'arbitrum-sepolia': {
+            eid: EndpointId.ARBSEP_V2_TESTNET,
+            url: process.env.RPC_URL_ARB_SEPOLIA || 'https://arbitrum-sepolia.gateway.tenderly.co',
             accounts,
         },
-        'base-mainnet': {
-            eid: EndpointId.BASE_V2_MAINNET,
-            url: process.env.RPC_URL_BASE || 'https://base.gateway.tenderly.co',
+        'ethereum-sepolia': {
+            eid: EndpointId.SEPOLIA_V2_TESTNET,
+            url: process.env.RPC_URL_SEPOLIA || 'https://sepolia.gateway.tenderly.co',
             accounts,
         },
         hardhat: {

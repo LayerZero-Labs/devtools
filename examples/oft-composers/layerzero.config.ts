@@ -7,52 +7,28 @@ const sepoliaContract: OmniPointHardhat = {
     contractName: 'MyOFT',
 }
 
-const fujiContract: OmniPointHardhat = {
-    eid: EndpointId.AVALANCHE_V2_TESTNET,
-    contractName: 'MyOFT',
-}
-
-const amoyContract: OmniPointHardhat = {
-    eid: EndpointId.AMOY_V2_TESTNET,
+const arbitrumSepoliaContract: OmniPointHardhat = {
+    eid: EndpointId.ARBSEP_V2_TESTNET,
     contractName: 'MyOFT',
 }
 
 const config: OAppOmniGraphHardhat = {
     contracts: [
         {
-            contract: fujiContract,
-        },
-        {
             contract: sepoliaContract,
         },
         {
-            contract: amoyContract,
+            contract: arbitrumSepoliaContract,
         },
     ],
     connections: [
         {
-            from: fujiContract,
-            to: sepoliaContract,
-        },
-        {
-            from: fujiContract,
-            to: amoyContract,
-        },
-        {
             from: sepoliaContract,
-            to: fujiContract,
+            to: arbitrumSepoliaContract,
         },
         {
-            from: sepoliaContract,
-            to: amoyContract,
-        },
-        {
-            from: amoyContract,
+            from: arbitrumSepoliaContract,
             to: sepoliaContract,
-        },
-        {
-            from: amoyContract,
-            to: fujiContract,
         },
     ],
 }
