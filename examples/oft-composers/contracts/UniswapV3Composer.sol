@@ -12,7 +12,7 @@ import { IOFT } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 import { IOAppCore } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol";
 
-import { IUniswapV3Composer } from "./IUniswapV3Composer.sol";
+import { IUniswapV3Composer } from "./interfaces/IUniswapV3Composer.sol";
 
 /**
  * @title UniswapV3Composer

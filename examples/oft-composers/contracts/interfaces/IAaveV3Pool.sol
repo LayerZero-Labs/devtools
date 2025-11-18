@@ -6,7 +6,7 @@ pragma solidity ^0.8.0;
  * @author Aave
  * @notice Defines the basic interface for an Aave Pool.
  */
-interface IPool {
+interface IAaveV3Pool {
     /**
      * @notice Supplies an `amount` of underlying asset into the reserve, receiving in return overlying aTokens.
      * - E.g. User supplies 100 USDC and gets in return 100 aUSDC

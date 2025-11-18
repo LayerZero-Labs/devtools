@@ -4,14 +4,14 @@ pragma solidity ^0.8.19;
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-import { ILayerZeroComposer } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oft/libs/OFTComposeMsgCodec.sol";
-import { IOAppCore } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol";
 import { IOFT, SendParam, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
-import { IStargate } from "@stargatefinance/stg-evm-v2/src/interfaces/IStargate.sol";
+import { ILayerZeroComposer } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol";
+import { IStargateEndpoint } from "./interfaces/IStargateEndpoint.sol";
 
-import { IAaveV3Composer } from "./IAaveV3Composer.sol";
-import { IPool } from "./IAaveV3Pool.sol";
+import { IAaveV3Composer } from "./interfaces/IAaveV3Composer.sol";
+import { IAaveV3Pool } from "./interfaces/IAaveV3Pool.sol";
+
 
 /**
  * @title AaveV3Composer
@@ -25,7 +25,7 @@ contract AaveV3Composer is ILayerZeroComposer, IAaveV3Composer {
     using SafeERC20 for IERC20;
 
     /// @notice Aave V3 pool that receives supplied liquidity.
-    IPool public immutable AAVE;
+    IAaveV3Pool public immutable AAVE;
 
     /// @notice LayerZero Endpoint trusted to invoke `lzCompose`.
     address public immutable ENDPOINT;
@@ -64,16 +64,16 @@ contract AaveV3Composer is ILayerZeroComposer, IAaveV3Composer {
         if (_stargatePool == address(0)) revert InvalidStargatePool();
 
         // Initialize the Aave pool.
-        AAVE = IPool(_aavePool);
+        AAVE = IAaveV3Pool(_aavePool);
 
         // Initialize the Stargate Pool.
         STARGATE = _stargatePool;
 
         // Gran the endpoint from the StargatePool.
-        ENDPOINT = address(IOAppCore(STARGATE).endpoint());
+        ENDPOINT = address(IStargateEndpoint(_stargatePool).endpoint());
 
         // Grab the underlying token from the StargatePool.
-        TOKEN_IN = IStargate(_stargatePool).token();
+        TOKEN_IN = IOFT(_stargatePool).token();
 
         // Grant a one-time unlimited allowance so Aave can pull funds during supply.
         IERC20(TOKEN_IN).approve(address(AAVE), type(uint256).max);
@@ -176,6 +176,6 @@ contract AaveV3Composer is ILayerZeroComposer, IAaveV3Composer {
         refundSendParam.to = OFTComposeMsgCodec.composeFrom(_message);
         refundSendParam.amountLD = _amount;
 
-        IOFT(_stargate).send{ value: _msgValue }(refundSendParam, MessagingFee(_msgValue, 0), _refundAddress);
+        IOFT(_stargate).send{ value: _msgValue }(refundSendParam, MessagingFee({ nativeFee: _msgValue, lzTokenFee: 0 }), _refundAddress);
     }
 }
