@@ -1,5 +1,13 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 4.0.2
+
+### Patch Changes
+
+- ca5a1f9: add support for Safe API keys
+- Updated dependencies [ca5a1f9]
+  - @layerzerolabs/devtools-evm@3.0.1
+
 ## 4.0.1
 
 ### Patch Changes

@@ -25,6 +25,7 @@ const config: HardhatUserConfig = {
             safeConfig: {
                 safeAddress: '0x565786AbE5BA0f9D307AdfA681379F0788bEdEf7',
                 safeUrl: 'https://wrong-url.safe.global/',
+                safeApiKey: '',
             },
         },
     },
