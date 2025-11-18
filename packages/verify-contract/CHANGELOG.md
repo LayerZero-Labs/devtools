@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.2.0
+
+### Minor Changes
+
+- b3e96b4: Moving to Etherscan API v2
+
 ## 1.1.33
 
 ### Patch Changes
