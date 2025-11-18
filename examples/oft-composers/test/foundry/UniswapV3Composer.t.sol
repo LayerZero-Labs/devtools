@@ -3,9 +3,9 @@ pragma solidity ^0.8.20;
 
 // Import necessary testing libraries and contracts
 import "forge-std/Test.sol";
-import { UniswapV3Composer } from "../../contracts/UniswapV3Composer/UniswapV3Composer.sol";
+import { UniswapV3Composer } from "../../contracts/UniswapV3Composer.sol";
 import { ISwapRouter } from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
-import { IUniswapV3Composer } from "../../contracts/UniswapV3Composer/IUniswapV3Composer.sol";
+import { IUniswapV3Composer } from "../../contracts/interfaces/IUniswapV3Composer.sol";
 
 // Mock imports
 import { OFTMock } from "../mocks/OFTMock.sol";

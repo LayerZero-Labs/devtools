@@ -2,9 +2,9 @@
 pragma solidity ^0.8.20;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { IPool } from "../../contracts/AaveV3Composer/IAaveV3Pool.sol";
+import { IAaveV3Pool } from "../../contracts/interfaces/IAaveV3Pool.sol";
 
-contract AaveV3PoolMock is IPool {
+contract AaveV3PoolMock is IAaveV3Pool {
     address public lastAsset;
     uint256 public lastAmount;
     address public lastOnBehalfOf;

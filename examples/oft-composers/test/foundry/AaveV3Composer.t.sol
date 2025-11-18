@@ -6,8 +6,8 @@ import "forge-std/Test.sol";
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 
 // Composer contracts
-import { AaveV3Composer } from "../../contracts/AaveV3Composer/AaveV3Composer.sol";
-import { IAaveV3Composer } from "../../contracts/AaveV3Composer/IAaveV3Composer.sol";
+import { AaveV3Composer } from "../../contracts/AaveV3Composer.sol";
+import { IAaveV3Composer } from "../../contracts/interfaces/IAaveV3Composer.sol";
 
 // LayerZero helpers
 import { OFTComposeMsgCodec } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oft/libs/OFTComposeMsgCodec.sol";
