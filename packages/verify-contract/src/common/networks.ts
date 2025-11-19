@@ -314,7 +314,7 @@ export const networks: Record<string, NetworkDefinition> = {
     hyperevm: {
         chainId: 999,
         apiUrl: ETHERSCAN_V2_URL,
-        aliases: ['hyperevm-mainnet', 'hyperliquid'],
+        aliases: ['hyperevm-mainnet', 'hyperliquid', 'hyperliquid-mainnet'],
     },
 
     // Katana
@@ -351,6 +351,11 @@ export const networks: Record<string, NetworkDefinition> = {
     },
 
     // Monad
+    monad: {
+        chainId: 143,
+        apiUrl: ETHERSCAN_V2_URL,
+        aliases: ['monad-mainnet'],
+    },
     'monad-testnet': {
         chainId: 10143,
         apiUrl: ETHERSCAN_V2_URL,
