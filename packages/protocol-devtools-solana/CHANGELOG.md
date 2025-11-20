@@ -1,5 +1,13 @@
 # @layerzerolabs/protocol-devtools-solana
 
+## 8.0.4
+
+### Patch Changes
+
+- ca5a1f9: add support for Safe API keys
+- Updated dependencies [ca5a1f9]
+  - @layerzerolabs/devtools-solana@3.0.2
+
 ## 8.0.3
 
 ### Patch Changes

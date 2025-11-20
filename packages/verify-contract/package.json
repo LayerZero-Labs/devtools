@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/verify-contract",
-  "version": "1.1.33",
+  "version": "1.2.0",
   "description": "Verify Solidity contracts on supported block explorers",
   "bugs": {
     "url": "https://github.com/LayerZero-Labs/devtools/issues"
@@ -13,7 +13,7 @@
   "license": "MIT",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
-  "types": "./dist.index.d.ts",
+  "types": "./dist/index.d.ts",
   "bin": "./cli.js",
   "files": [
     "./dist/*",

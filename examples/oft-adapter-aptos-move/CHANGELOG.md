@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-adapter-aptos-move-example
 
+## 1.0.10
+
+### Patch Changes
+
+- 39ddee8: remove usage of MyOFTMock
+
 ## 1.0.9
 
 ### Patch Changes

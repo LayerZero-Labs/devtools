@@ -68,17 +68,20 @@ export class OmniSignerEVM extends OmniSignerEVMBase {
 /**
  * Implements an OmniSigner interface for EVM-compatible chains using Gnosis Safe.
  */
-export class GnosisOmniSignerEVM<TSafeConfig extends ConnectSafeConfig> extends OmniSignerEVMBase {
+export class GnosisOmniSignerEVM<
+    TSafeConfig extends ConnectSafeConfig & { safeApiKey: string },
+> extends OmniSignerEVMBase {
     constructor(
         eid: EndpointId,
         signer: Signer,
         protected readonly safeUrl: string,
         protected readonly safeConfig: TSafeConfig,
+        protected readonly chainId: bigint,
         protected readonly ethAdapter = new EthersAdapter({
             ethers,
             signerOrProvider: signer,
         }),
-        protected readonly apiKit = new SafeApiKit({ txServiceUrl: safeUrl, ethAdapter }),
+        protected readonly apiKit = new SafeApiKit({ txServiceUrl: safeUrl, apiKey: safeConfig.safeApiKey, chainId }),
         protected readonly safeSdkPromise: Safe | Promise<Safe> = Safe.create({
             ethAdapter,
             safeAddress: safeConfig.safeAddress!,
@@ -135,13 +138,13 @@ export class GnosisOmniSignerEVM<TSafeConfig extends ConnectSafeConfig> extends 
 
         const safeSdk = await this.safeSdkPromise
         const safeAddress = await safeSdk.getAddress()
-        const nonce = await this.apiKit.getNextNonce(safeAddress)
+        const nonce = parseInt(await this.apiKit.getNextNonce(safeAddress), 10)
 
         return safeSdk.createTransaction({
             safeTransactionData: transactions.map((transaction) => this.#serializeTransaction(transaction)),
             options: { nonce },
             onlyCalls: true,
-        } as any)
+        })
     }
 
     #serializeTransaction(transaction: OmniTransaction): MetaTransactionData {

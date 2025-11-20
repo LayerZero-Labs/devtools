@@ -12,10 +12,12 @@ export class HyperliquidClient {
     private readonly baseUrl: string
     private readonly isTestnet: boolean
     private readonly logger: Logger
+    private readonly skipPrompt: boolean
 
-    constructor(isTestnet: boolean, logLevel: string) {
+    constructor(isTestnet: boolean, logLevel: string, skipPrompt?: boolean) {
         this.baseUrl = isTestnet ? HYPERLIQUID_URLS.TESTNET : HYPERLIQUID_URLS.MAINNET
         this.isTestnet = isTestnet
+        this.skipPrompt = skipPrompt ?? false
         this.logger = createModuleInteractionLogger('hyperliquid-client', logLevel)
         this.client = axios.create({
             baseURL: this.baseUrl,
@@ -54,18 +56,24 @@ export class HyperliquidClient {
             this.logger.info(
                 `Transaction is sent from ${wallet.address} on network hypercore-${this.isTestnet ? 'testnet' : 'mainnet'}`
             )
-            const { executeTx } = await inquirer.prompt([
-                {
-                    type: 'confirm',
-                    name: 'executeTx',
-                    message: `Do you want to execute the transaction ${JSON.stringify(payload, null, 2)}?`,
-                    default: false,
-                },
-            ])
 
-            if (!executeTx) {
-                this.logger.info('Transaction bundle cancelled - quitting.')
-                process.exit(1)
+            if (this.skipPrompt) {
+                this.logger.info('CI mode enabled - skipping confirmation prompt')
+                this.logger.debug(`Transaction payload: ${JSON.stringify(payload, null, 2)}`)
+            } else {
+                const { executeTx } = await inquirer.prompt([
+                    {
+                        type: 'confirm',
+                        name: 'executeTx',
+                        message: `Do you want to execute the transaction ${JSON.stringify(payload, null, 2)}?`,
+                        default: false,
+                    },
+                ])
+
+                if (!executeTx) {
+                    this.logger.info('Transaction bundle cancelled - quitting.')
+                    process.exit(1)
+                }
             }
         }
 

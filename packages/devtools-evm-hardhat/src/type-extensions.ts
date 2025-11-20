@@ -95,6 +95,7 @@ declare module 'hardhat/types/config' {
     interface SafeConfig extends ConnectSafeConfigWithSafeAddress {
         safeUrl: string // Note:  This is the URL of the Safe API, not the safe itself
         safeAddress: string // override to make ConnectSafeConfig.safeAddress mandatory
+        safeApiKey: string
     }
 
     interface HardhatUserConfig {

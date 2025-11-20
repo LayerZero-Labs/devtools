@@ -25,6 +25,7 @@ const config: HardhatUserConfig = {
             safeConfig: {
                 safeAddress: '0xCDa8e3ADD00c95E5035617F970096118Ca2F4C92',
                 safeUrl: '',
+                safeApiKey: '',
             },
         },
     },
