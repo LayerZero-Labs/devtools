@@ -20,16 +20,23 @@ const deploy: DeployFunction = async (hre) => {
 
     const { address: proxyAdminAddress } = await deployProxyAdmin({
         hre,
-        contractName,
-        deployer,
-        owner: deployer,
+        deployOptions: {
+            from: deployer,
+            args: [deployer], // owner
+            skipIfAlreadyDeployed: true,
+        },
+        deploymentName: contractName,
     })
 
     const { address: implementationAddress } = await deployImplementation({
         hre,
-        contractName,
-        deployer,
-        args: [endpointV2AltDeployment.address],
+        deployOptions: {
+            from: deployer,
+            args: [endpointV2AltDeployment.address],
+            skipIfAlreadyDeployed: true,
+            contract: contractName,
+        },
+        deploymentName: contractName,
     })
 
     const initializeInterface = new hre.ethers.utils.Interface([
@@ -39,14 +46,15 @@ const deploy: DeployFunction = async (hre) => {
 
     await deployProxy({
         hre,
-        contractName,
-        deployer,
-        implementationAddress,
-        proxyAdminAddress,
-        initializeData,
+        deployOptions: {
+            from: deployer,
+            args: [implementationAddress, proxyAdminAddress, initializeData],
+            skipIfAlreadyDeployed: true,
+        },
+        deploymentName: contractName,
     })
 
-    await saveCombinedDeployment({ hre, contractName })
+    await saveCombinedDeployment({ hre, deploymentName: contractName })
 }
 
 deploy.tags = [contractName]
