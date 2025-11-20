@@ -8,14 +8,14 @@
   <a href="https://layerzero.network" style="color: #a77dff">Homepage</a> | <a href="https://docs.layerzero.network/" style="color: #a77dff">Docs</a> | <a href="https://layerzero.network/developers" style="color: #a77dff">Developers</a>
 </p>
 
-<h1 align="center">LayerZero OFT Composer Library</h1>
+<h1 align="center">LayerZero OFT Composer Examples</h1>
 
 <p align="center">
   <a href="https://docs.layerzero.network/v2/developers/evm/oft/quickstart" style="color: #a77dff">Quickstart</a> | <a href="https://docs.layerzero.network/contracts/oapp-configuration" style="color: #a77dff">Configuration</a> | <a href="https://docs.layerzero.network/contracts/options" style="color: #a77dff">Message Execution Options</a> | <a href="https://docs.layerzero.network/v2/developers/evm/composer/overview" style="color: #a77dff">Composer Overview</a>
 </p>
 
 <p align="center">
-  A Composer library to integrate LayerZero composer contracts with the Omnichain Fungible Token (OFT) standard.
+  A set of Composer examples to integrate LayerZero composer contracts with the Omnichain Fungible Token (OFT) standard.
 </p>
 
 ## Table of Contents
@@ -58,7 +58,7 @@ The OFT Composer library demonstrates how to run **post-bridge workflows** on th
 - `UniswapV3Composer` routes bridged tokens into a Uniswap V3 swap.
 - `AaveV3Composer` routes bridged tokens through Stargate and supplies them to an Aave v3 pool.
 
-The example mirrors the [OVault walkthrough](./EX_README.md) so you can reuse the same workflow: configure networks, deploy composable endpoints, wire messaging, and finally execute cross-chain operations with helpful Hardhat tasks.
+Learn more about [OFT (Omnichain Fungible Token)](https://docs.layerzero.network/v2/concepts/glossary#oft-omnichain-fungible-token)
 
 ## Requirements
 
@@ -222,7 +222,8 @@ This task bridges tokens through Stargate and composes into `AaveV3Composer` to 
      --stargate <0xStargatePoolAddress> \
      --dst-eid 30184 \
      --composer <0xComposerAddress> \
-     --amount-ld 1000000 
+     --amount-ld 1000000 \
+     --network <network-defined-in-hardhat-config>
    ```
 
    - `amount-ld` is specified in local decimals (1,000,000 = 1 USDC if the pool uses 6 decimals).
