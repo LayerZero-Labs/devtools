@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-alt-example
 
+## 0.0.7
+
+### Patch Changes
+
+- 7617b25: patch: make upgradeable deploy script similar to hardhat-deploy
+
 ## 0.0.6
 
 ### Patch Changes
