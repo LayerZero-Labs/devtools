@@ -30,8 +30,8 @@ contract AaveV3Composer is ILayerZeroComposer, IAaveV3Composer {
     /// @notice LayerZero Endpoint trusted to invoke `lzCompose`.
     address public immutable ENDPOINT;
 
-    /// @notice Stargate OFT that is authorized to trigger Aave supplies on this chain.
-    address public immutable STARGATE;
+    /// @notice OFT that is authorized to trigger Aave supplies on this chain.
+    address public immutable OFT_IN;
 
     /// @notice Underlying ERC20 token that backs the trusted Stargate OFT.
     address public immutable TOKEN_IN;
@@ -57,23 +57,23 @@ contract AaveV3Composer is ILayerZeroComposer, IAaveV3Composer {
      *         3. Saves ~5k gas on every compose execution.
      *
      * @param _aavePool Address of the target Aave V3 pool.
-     * @param _stargatePool StargatePool expected to receive the supplied tokens.
+     * @param _oftIn OFT expected to receive the supplied tokens.
      */
-    constructor(address _aavePool, address _stargatePool) {
+    constructor(address _aavePool, address _oftIn) {
         if (_aavePool == address(0)) revert InvalidAavePool();
-        if (_stargatePool == address(0)) revert InvalidStargatePool();
+        if (_oftIn == address(0)) revert InvalidStargatePool();
 
         // Initialize the Aave pool.
         AAVE = IAaveV3Pool(_aavePool);
 
-        // Initialize the Stargate Pool.
-        STARGATE = _stargatePool;
+        // Initialize the OFT address (Stargate Pool / OFT).
+        OFT_IN = _oftIn;
 
-        // Gran the endpoint from the StargatePool.
-        ENDPOINT = address(IStargateEndpoint(_stargatePool).endpoint());
+        // Gran the endpoint from OFT.
+        ENDPOINT = address(IStargateEndpoint(_oftIn).endpoint());
 
-        // Grab the underlying token from the StargatePool.
-        TOKEN_IN = IOFT(_stargatePool).token();
+        // Grab the underlying token from the OFT.
+        TOKEN_IN = IOFT(_oftIn).token();
 
         // Grant a one-time unlimited allowance so Aave can pull funds during supply.
         IERC20(TOKEN_IN).approve(address(AAVE), type(uint256).max);
@@ -120,7 +120,7 @@ contract AaveV3Composer is ILayerZeroComposer, IAaveV3Composer {
         bytes calldata /* _extraData */
     ) external payable {
         // Authenticate call logic source.
-        if (_sender != STARGATE) revert OnlyValidComposerCaller(_sender);
+        if (_sender != OFT_IN) revert OnlyValidComposerCaller(_sender);
         if (msg.sender != ENDPOINT) revert OnlyEndpoint(msg.sender);
 
         // Decode the amount in local decimals and the compose message from the message.
@@ -130,7 +130,7 @@ contract AaveV3Composer is ILayerZeroComposer, IAaveV3Composer {
         try this.handleCompose{ value: msg.value }(_message, amountLD) {
             emit Sent(_guid);
         } catch {
-            _refund(STARGATE, _message, amountLD, tx.origin, msg.value);
+            _refund(OFT_IN, _message, amountLD, tx.origin, msg.value);
             emit Refunded(_guid);
         }
     }
@@ -151,21 +151,21 @@ contract AaveV3Composer is ILayerZeroComposer, IAaveV3Composer {
         try AAVE.supply(TOKEN_IN, _amountLD, _to, 0) {
             emit Supplied(_to, _amountLD);
         } catch {
-            _refund(STARGATE, _message, _amountLD, tx.origin, msg.value);
+            _refund(OFT_IN, _message, _amountLD, tx.origin, msg.value);
             emit SupplyFailedAndRefunded(_to, _amountLD);
         }
     }
 
     /**
      * @dev Internal function to refund input tokens to sender on source during a failed transaction
-     * @param _stargate The OFT contract address used for refunding
+     * @param _oftIn The OFT contract address used for refunding
      * @param _message The original message that was sent
      * @param _amount The amount of tokens to refund
      * @param _refundAddress Address to receive the refund
      * @param _msgValue The amount of native tokens sent with the transaction
      */
      function _refund(
-        address _stargate,
+        address _oftIn,
         bytes calldata _message,
         uint256 _amount,
         address _refundAddress,
@@ -176,6 +176,6 @@ contract AaveV3Composer is ILayerZeroComposer, IAaveV3Composer {
         refundSendParam.to = OFTComposeMsgCodec.composeFrom(_message);
         refundSendParam.amountLD = _amount;
 
-        IOFT(_stargate).send{ value: _msgValue }(refundSendParam, MessagingFee({ nativeFee: _msgValue, lzTokenFee: 0 }), _refundAddress);
+        IOFT(_oftIn).send{ value: _msgValue }(refundSendParam, MessagingFee({ nativeFee: _msgValue, lzTokenFee: 0 }), _refundAddress);
     }
 }
