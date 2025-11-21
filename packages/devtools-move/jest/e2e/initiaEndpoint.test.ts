@@ -23,7 +23,6 @@ afterAll(() => {
     delete process.env.INITIA_ACCOUNT_ADDRESS
 })
 
-// skipped due to Initia Testnet RPC being down for upgrade
 describe('InitiaEndpoint View Methods', () => {
     let endpoint: InitiaEndpoint
     let restClient: any
