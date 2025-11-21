@@ -67,6 +67,9 @@ function decodeWithFormat(address: string, format: AddressFormat): Uint8Array {
     try {
         switch (format) {
             case 'hex': {
+                if (address === '0x0' || address === '0x') {
+                    return new Uint8Array(32)
+                }
                 const hexAddress = address.startsWith('0x') ? address : `0x${address}`
                 return ethers.utils.arrayify(hexAddress)
             }
@@ -87,6 +90,9 @@ function decodeWithFormat(address: string, format: AddressFormat): Uint8Array {
  * Checks if a string is valid hexadecimal.
  */
 function isHex(str: string): boolean {
+    if (str === '0x0' || str === '0x') {
+        return true
+    }
     if (str.startsWith('0x')) {
         str = str.slice(2)
     }
