@@ -147,6 +147,8 @@ jobs:
     permissions:
       contents: read
       packages: read
+      issues: write
+      pull-requests: write
 
     steps:
       - name: Checkout repo
@@ -177,7 +179,9 @@ jobs:
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Test E2E
+        id: test-e2e
         run: pnpm test:ci:e2e
+        continue-on-error: true
         env:
           # Disable parallel execution for now
           LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION: false
@@ -201,17 +205,48 @@ jobs:
 
       # We'll collect the docker compose logs from all containers on failure
       - name: Collect docker logs on failure
-        if: failure()
+        if: steps.test-e2e.outcome == 'failure'
         uses: jwalton/gh-docker-logs@v2
         with:
           dest: "./logs"
 
       # We'll collect the docker compose logs from all containers on failure
       - name: Store docker logs
-        if: failure()
+        if: steps.test-e2e.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
           path: ./logs
+
+      # Post comment on E2E test failure
+      - name: Comment on E2E failure
+        if: steps.test-e2e.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const prNumber = context.payload.pull_request?.number;
+
+            if (prNumber) {
+              const comment = "## 🚨 E2E Tests Failed\n\n" +
+                "The E2E tests failed during CI. These tests validate real blockchain interactions and may fail due to:\n" +
+                "- Network connectivity issues\n" +
+                "- RPC rate limiting\n" +
+                "- External service downtime\n" +
+                "**Action Run:** " + runUrl + "\n\n" +
+                "This is **non-blocking** and does not prevent merging. Check the action logs above for detailed failure information.";
+
+              try {
+                await github.rest.issues.createComment({
+                  issue_number: prNumber,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: comment
+                });
+              } catch (error) {
+                // Silently fail if we don't have permission to comment (e.g., on forks)
+                console.log('Could not post comment to PR:', error.message);
+              }
+            }
 
   test-user:
     name: User test (Parallel)
