@@ -177,6 +177,7 @@ jobs:
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Test E2E
+        id: test-e2e
         run: pnpm test:ci:e2e
         continue-on-error: true
         env:
@@ -202,21 +203,21 @@ jobs:
 
       # We'll collect the docker compose logs from all containers on failure
       - name: Collect docker logs on failure
-        if: failure()
+        if: steps.test-e2e.outcome == 'failure'
         uses: jwalton/gh-docker-logs@v2
         with:
           dest: "./logs"
 
       # We'll collect the docker compose logs from all containers on failure
       - name: Store docker logs
-        if: failure()
+        if: steps.test-e2e.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
           path: ./logs
 
       # Post comment on E2E test failure
       - name: Comment on E2E failure
-        if: failure()
+        if: steps.test-e2e.outcome == 'failure'
         uses: actions/github-script@v7
         with:
           script: |
