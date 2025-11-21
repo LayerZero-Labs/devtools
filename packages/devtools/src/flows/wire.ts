@@ -3,8 +3,9 @@ import { createLogger, printJson, pluralizeNoun, type Logger } from '@layerzerol
 import type { ConfigExecuteFlow } from './config.execute'
 import type { SignAndSendFlow } from './sign.and.send'
 import type { OmniGraph } from '@/omnigraph'
-import { formatOmniTransaction, type OmniTransaction, type SignAndSendResult } from '@/transactions'
+import { formatOmniTransaction, type OmniTransaction } from '@/transactions'
 import { printRecords } from '@layerzerolabs/io-devtools/swag'
+import { SignAndSendResult } from '@/transactions/signerTypes'
 
 export interface CreateWireFlowArgs<TOmniGraph extends OmniGraph> {
     logger?: Logger

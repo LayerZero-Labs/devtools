@@ -1,4 +1,4 @@
-import { type Logger } from 'winston'
+import { type Logger } from '@layerzerolabs/io-devtools'
 import type { NetworkConfig, NetworkName } from './types'
 import { getDefaultScanApiUrl, getDefaultChainId, tryGetScanBrowserUrlFromScanUrl } from './url'
 import assert from 'assert'
