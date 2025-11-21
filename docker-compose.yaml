@@ -150,8 +150,8 @@ services:
       - FOUNDRY_PROFILE=${FOUNDRY_PROFILE}
       # E2E specific environment variables
       - PRIVATE_KEY=${PRIVATE_KEY}
-      - NETWORK_URL_TON=${NETWORK_URL_TON}
-      - RPC_URL_HYPERLIQUID=${RPC_URL_HYPERLIQUID}
+      - NETWORK_URL_TON=http://network-ton:8081/jsonRPC
+      - NETWORK_URL_HYPERLIQUID=http://network-hyperliquid:8546
     volumes:
       - ./node_modules/.cache/turbo:/app/node_modules/.cache/turbo
       # Hardhat has an issue with caching compilers inside a docker container,
