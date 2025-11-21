@@ -189,6 +189,7 @@ export async function getSolanaTokenMetadata(
             return {
                 updateAuthority: response?.updateAuthority ? fromWeb3JsPublicKey(response?.updateAuthority) : undefined,
                 // If the update authority is renounced via setting the update authority to the System Program address
+                // note: https://docs.rs/spl-token-metadata-interface/0.8.0/spl_token_metadata_interface/state/struct.TokenMetadata.html
                 isMutable: response?.updateAuthority != PublicKey.default,
                 name: response?.name,
                 symbol: response?.symbol,
