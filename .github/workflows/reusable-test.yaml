@@ -122,6 +122,71 @@ jobs:
           FOUNDRY_PROFILE: "ci"
           RPC_URL_HYPERLIQUID: "http://127.0.0.1:8546"
           RPC_URL_HYPERLIQUID_UPSTREAM: ${{ secrets.RPC_URL_HYPERLIQUID_UPSTREAM || 'https://rpc.hyperliquid.xyz/evm' }}
+          # Exclude e2e tests from regular CI
+          JEST_TEST_PATH_IGNORE_PATTERNS: '["<rootDir>/**/test/e2e/**"]'
+
+      # We'll collect the docker compose logs from all containers on failure
+      - name: Collect docker logs on failure
+        if: failure()
+        uses: jwalton/gh-docker-logs@v2
+        with:
+          dest: "./logs"
+
+      # We'll collect the docker compose logs from all containers on failure
+      - name: Store docker logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./logs
+
+  test-e2e:
+    name: Test E2E
+    runs-on: ubuntu-latest-16xlarge
+
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: "true"
+
+      - name: Setup environment
+        uses: ./.github/workflows/actions/setup-environment
+
+      - name: Setup build cache
+        uses: ./.github/workflows/actions/setup-build-cache
+
+      # There is a small bug in docker compose that will cause 401 if we don't pull the base image manually
+      #
+      # See more here https://github.com/docker/compose-cli/issues/1545
+      - name: Authenticate to GHCR
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Test E2E
+        run: pnpm test:ci:e2e
+        env:
+          # Disable parallel execution for now
+          LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION: false
+          JEST_TIMEOUT: 120_000  # Increase timeout for ARM builds (2 minutes)
+          TEST_TIMEOUT: 1_200_000 # 20 minutes timeout for long-running e2e tests
+          # We'll use the prebuilt base image
+          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:main
+          # And the prebuilt hardhat EVM node image
+          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:main
+          # And the prebuilt TON node image
+          DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:main
+          # Enable Solana tests for e2e
+          LZ_DEVTOOLS_ENABLE_SOLANA_TESTS: 1
+          RPC_URL_SOLANA_MAINNET: ${{ secrets.RPC_URL_SOLANA_MAINNET || 'https://rpc.ankr.com/solana' }}
+          RPC_URL_SOLANA_TESTNET: ${{ secrets.RPC_URL_SOLANA_TESTNET || 'https://api.devnet.solana.com' }}
+          FOUNDRY_PROFILE: "ci"
+          RPC_URL_HYPERLIQUID: "http://127.0.0.1:8546"
+          RPC_URL_HYPERLIQUID_UPSTREAM: ${{ secrets.RPC_URL_HYPERLIQUID_UPSTREAM || 'https://rpc.hyperliquid.xyz/evm' }}
+          # Run only e2e tests
+          JEST_TEST_PATH_PATTERN: 'test/e2e'
 
       # We'll collect the docker compose logs from all containers on failure
       - name: Collect docker logs on failure
