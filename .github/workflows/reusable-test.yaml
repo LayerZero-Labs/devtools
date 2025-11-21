@@ -213,22 +213,12 @@ jobs:
           path: ./logs
 
   test-user:
-    name: User test
-    runs-on: ${{ matrix.runner }}
+    name: User test (Parallel)
+    runs-on: ubuntu-latest-16xlarge
 
     permissions:
       contents: read
       packages: read
-
-    strategy:
-      matrix:
-        include:
-          - platform: linux/amd64
-            runner: ubuntu-latest-16xlarge
-            arch: amd64
-          - platform: linux/arm64
-            runner: ubuntu-latest-16xlarge-arm
-            arch: arm64
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
