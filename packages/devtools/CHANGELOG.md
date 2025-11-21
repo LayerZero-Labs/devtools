@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 2.0.2
+
+### Patch Changes
+
+- 06dc63b: quality of life improvements
+
 ## 2.0.1
 
 ### Patch Changes

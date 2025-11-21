@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.2.1
+
+### Patch Changes
+
+- 06dc63b: quality of life improvements
+
 ## 1.2.0
 
 ### Minor Changes
