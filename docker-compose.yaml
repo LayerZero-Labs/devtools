@@ -117,6 +117,40 @@ services:
       - RPC_URL_SOLANA_TESTNET=${RPC_URL_SOLANA_TESTNET}
       - LZ_DEVTOOLS_ENABLE_SOLANA_TESTS=${LZ_DEVTOOLS_ENABLE_SOLANA_TESTS}
       - FOUNDRY_PROFILE=${FOUNDRY_PROFILE}
+
+  #
+  # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+  #                       E2E Tests (Live RPC Tests)
+  # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+  #
+  tests-e2e:
+    extends:
+      file: docker-compose.templates.yaml
+      service: project
+    depends_on:
+      network-vengaboys:
+        condition: service_healthy
+      network-britney:
+        condition: service_healthy
+      network-tango:
+        condition: service_healthy
+      network-ton:
+        condition: service_healthy
+      network-hyperliquid:
+        condition: service_healthy
+    logging:
+      driver: none
+    # E2E tests run against live networks, no local network URLs needed
+    environment:
+      - DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=$DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS
+      # E2E tests use live RPC URLs
+      - RPC_URL_SOLANA_MAINNET=${RPC_URL_SOLANA_MAINNET}
+      - RPC_URL_SOLANA_TESTNET=${RPC_URL_SOLANA_TESTNET}
+      - LZ_DEVTOOLS_ENABLE_SOLANA_TESTS=${LZ_DEVTOOLS_ENABLE_SOLANA_TESTS}
+      - FOUNDRY_PROFILE=${FOUNDRY_PROFILE}
+      # E2E specific environment variables
+      - PRIVATE_KEY=${PRIVATE_KEY}
+      - NETWORK_URL_TON=${NETWORK_URL_TON}
       - RPC_URL_HYPERLIQUID=${RPC_URL_HYPERLIQUID}
     volumes:
       - ./node_modules/.cache/turbo:/app/node_modules/.cache/turbo
