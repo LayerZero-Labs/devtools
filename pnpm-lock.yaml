@@ -4356,6 +4356,9 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@22.15.3)(ts-node@10.9.2)
+      rimraf:
+        specifier: ^5.0.5
+        version: 5.0.9
       tsup:
         specifier: ^8.4.0
         version: 8.4.0(typescript@5.5.3)
