@@ -140,7 +140,7 @@ jobs:
           path: ./logs
 
   test-e2e:
-    name: Test E2E
+    name: Test E2E (Non-blocking)
     runs-on: ubuntu-latest-16xlarge
 
     permissions:
@@ -158,6 +158,16 @@ jobs:
 
       - name: Setup build cache
         uses: ./.github/workflows/actions/setup-build-cache
+
+      - name: E2E Test Notice
+        run: |
+          echo "::notice::🧪 E2E tests are non-blocking and run against live networks"
+          echo "::notice::These tests validate real blockchain interactions but may fail due to:"
+          echo "::notice::  - Network connectivity issues"
+          echo "::notice::  - RPC rate limiting"
+          echo "::notice::  - External service downtime"
+          echo "::notice::  - Gas price fluctuations"
+          echo "::notice::E2E test failures do NOT block the main CI pipeline"
 
       # There is a small bug in docker compose that will cause 401 if we don't pull the base image manually
       #
