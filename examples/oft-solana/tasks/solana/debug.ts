@@ -1,4 +1,3 @@
-import { safeFetchMetadataFromSeeds } from '@metaplex-foundation/mpl-token-metadata'
 import { fetchMint } from '@metaplex-foundation/mpl-toolbox'
 import { PublicKey as UmiPublicKey, publicKey, unwrapOption } from '@metaplex-foundation/umi'
 import { fromWeb3JsPublicKey, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
@@ -17,7 +16,14 @@ import { OftPDA, oft } from '@layerzerolabs/oft-v2-solana-sdk'
 import { EndpointV2 } from '@layerzerolabs/protocol-devtools-solana'
 
 import { getSolanaReceiveConfig, getSolanaSendConfig } from '../common/taskHelper'
-import { DebugLogger, createSolanaConnectionFactory, decodeLzReceiveOptions, uint8ArrayToHex } from '../common/utils'
+import {
+    DebugLogger,
+    SolanaTokenProgramType,
+    createSolanaConnectionFactory,
+    decodeLzReceiveOptions,
+    getSolanaTokenMetadata,
+    uint8ArrayToHex,
+} from '../common/utils'
 
 import { deriveConnection, getSolanaDeployment } from './index'
 
@@ -60,11 +66,11 @@ function formatDvnAddresses(addresses: string[], metadata?: IMetadata, chainKey?
     return addresses.map((addr) => dvnMap?.[addr]?.canonicalName ?? addr).join(', ')
 }
 
-function tokenProgramAddressToName(tokenProgramAddress: string | PublicKey): 'SPL' | 'Token2022' {
+function tokenProgramAddressToType(tokenProgramAddress: string | PublicKey): SolanaTokenProgramType {
     const address = typeof tokenProgramAddress === 'string' ? new PublicKey(tokenProgramAddress) : tokenProgramAddress
-    const tokenProgramMap: Record<string, 'SPL' | 'Token2022'> = {
-        [TOKEN_PROGRAM_ID.toBase58()]: 'SPL',
-        [TOKEN_2022_PROGRAM_ID.toBase58()]: 'Token2022',
+    const tokenProgramMap: Record<string, SolanaTokenProgramType> = {
+        [TOKEN_PROGRAM_ID.toBase58()]: SolanaTokenProgramType.SPL,
+        [TOKEN_2022_PROGRAM_ID.toBase58()]: SolanaTokenProgramType.Token2022,
     }
     const addressStr = address.toBase58()
     const name = tokenProgramMap[addressStr]
@@ -123,6 +129,7 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
         > = {}
 
         const mintAccount = await fetchMint(umi, publicKey(oftStoreInfo.tokenMint))
+        const tokenProgramType = tokenProgramAddressToType(mintAccount.header.owner)
 
         const epDeriver = new EndpointPDADeriver(new PublicKey(endpoint))
         const [oAppRegistry] = epDeriver.oappRegistry(toWeb3JsPublicKey(oftStore))
@@ -138,7 +145,7 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
 
         const oftDeriver = new OftPDA(oftStoreInfo.header.owner)
 
-        const tokenMetadata = await safeFetchMetadataFromSeeds(umi, { mint: oftStoreInfo.tokenMint })
+        const tokenMetadata = await getSolanaTokenMetadata(umi, publicKey(oftStoreInfo.tokenMint), tokenProgramType)
 
         const adminIsSquadsV4Vault = await isSquadsV4Vault(oftStoreInfo.admin)
         const delegateIsSquadsV4Vault = await isSquadsV4Vault(oAppRegistryInfo?.delegate?.toBase58())
@@ -169,7 +176,9 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
         const printToken = async () => {
             DebugLogger.header('Token Information')
             DebugLogger.keyValue('Mint Address', oftStoreInfo.tokenMint)
-            DebugLogger.keyValue('Token Program', tokenProgramAddressToName(mintAccount.header.owner))
+            DebugLogger.keyValue('Token Name', tokenMetadata?.name ?? 'N/A')
+            DebugLogger.keyValue('Token Symbol', tokenMetadata?.symbol ?? 'N/A')
+            DebugLogger.keyValue('Token Program', tokenProgramType)
             DebugLogger.keyValue('Mint Authority', unwrapOption(mintAccount.mintAuthority))
             DebugLogger.keyValue(
                 'Freeze Authority',
