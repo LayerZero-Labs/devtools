@@ -279,7 +279,8 @@ module oft::oft_adapter_fa {
     public entry fun initialize(
         account: &signer,
         token_metadata_address: address,
-        shared_decimals: u8
+        shared_decimals: u8,
+        local_decimals: Option<u8>
     ) acquires OftImpl {
         // Only the admin can initialize the OFT
         assert_admin(address_of(account));
@@ -289,8 +290,14 @@ module oft::oft_adapter_fa {
         let metadata = address_to_object<Metadata>(token_metadata_address);
         store_mut().metadata = option::some(metadata);
 
+        // compute the local decimals
+        let local_decimals = if (option::is_some(&local_decimals)) {
+            *option::borrow(&local_decimals)
+        } else {
+            fungible_asset::decimals(metadata)
+        };
+
         // Initialize the OFT Core
-        let local_decimals = fungible_asset::decimals(metadata);
         oft_core::initialize(local_decimals, shared_decimals);
     }
 
