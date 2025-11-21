@@ -1,9 +1,9 @@
 import { describe, expect, test, beforeAll, jest, afterAll } from '@jest/globals'
-import { InitiaOFT } from '../initiaOFT'
+import { InitiaOFT } from '../../sdk/initiaOFT'
 import { RESTClient } from '@initia/initia.js'
-import { OFTType } from '../IOFT'
-import { getConnection } from '../moveVMConnectionBuilder'
-import { initializeTaskContext } from '../baseTaskHelper'
+import { OFTType } from '../../sdk/IOFT'
+import { getConnection } from '../../sdk/moveVMConnectionBuilder'
+import { initializeTaskContext } from '../../sdk/baseTaskHelper'
 import dotenv from 'dotenv'
 import path from 'path'
 import * as utils from '../../tasks/move/utils/utils'
@@ -46,7 +46,7 @@ describe('InitiaOFT View Methods', () => {
             restClient = getConnection('initia', 'testnet') as RESTClient
 
             // Initialize with local config - using path relative to workspace root
-            const configPath = './sdk/__tests__/test.layerzero.config.ts'
+            const configPath = '../test.layerzero.config.ts'
             const context = await initializeTaskContext(configPath)
             oft = context.oft as InitiaOFT
             // Use the real REST client

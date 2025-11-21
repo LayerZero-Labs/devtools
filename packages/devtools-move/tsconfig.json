@@ -1,6 +1,6 @@
 {
   "exclude": ["dist", "node_modules"],
-  "include": ["cli", "sdk", "tasks", "types"],
+  "include": ["cli", "sdk", "tasks", "types", "jest/e2e"],
   "compilerOptions": {
     "target": "es2020",
     "module": "commonjs",
