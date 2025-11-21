@@ -298,6 +298,8 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
 
             DebugLogger.header('Rate Limits')
 
+            const sourceNetwork = getNetworkForChainId(eid)
+
             for (let index = 0; index < dstEids.length; index++) {
                 const dstEid = dstEids[index]
                 const info = peerConfigInfos[index]
@@ -307,7 +309,12 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
 
                 if (info) {
                     const { outboundRateLimiter, inboundRateLimiter } = info
-                    printRateLimitsForPeer(outboundRateLimiter, inboundRateLimiter)
+                    printRateLimitsForPeer(
+                        outboundRateLimiter,
+                        inboundRateLimiter,
+                        sourceNetwork.chainName,
+                        network.chainName
+                    )
                 } else {
                     DebugLogger.keyValue('PeerConfig', 'Not found', 1)
                 }
@@ -456,9 +463,11 @@ function printSingleRateLimiter(label: string, limiter: RateLimiter | null | und
 
 function printRateLimitsForPeer(
     outboundRateLimiter: RateLimiter | null | undefined,
-    inboundRateLimiter: RateLimiter | null | undefined
+    inboundRateLimiter: RateLimiter | null | undefined,
+    sourceChainName: string,
+    destinationChainName: string
 ) {
     DebugLogger.keyValue('Rate Limits', '')
-    printSingleRateLimiter('Outbound', outboundRateLimiter)
-    printSingleRateLimiter('Inbound', inboundRateLimiter)
+    printSingleRateLimiter(`Outbound (${sourceChainName} to ${destinationChainName})`, outboundRateLimiter)
+    printSingleRateLimiter(`Inbound (${destinationChainName} to ${sourceChainName})`, inboundRateLimiter)
 }
