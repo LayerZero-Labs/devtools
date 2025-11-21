@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 4.0.3
+
+### Patch Changes
+
+- 7617b25: patch: make upgradeable deploy script similar to hardhat-deploy
+
 ## 4.0.2
 
 ### Patch Changes
