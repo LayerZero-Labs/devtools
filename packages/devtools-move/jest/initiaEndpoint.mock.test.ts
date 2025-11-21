@@ -1,6 +1,6 @@
 import { describe, expect, test, beforeEach, jest } from '@jest/globals'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { InitiaEndpoint } from '../initiaEndpoint'
+import { InitiaEndpoint } from '../sdk/initiaEndpoint'
 import { RESTClient } from '@initia/initia.js'
 
 describe('InitiaEndpoint View Methods', () => {

@@ -1,7 +1,7 @@
 import { describe, expect, test, beforeEach, jest } from '@jest/globals'
-import { InitiaOFT } from '../initiaOFT'
+import { InitiaOFT } from '../sdk/initiaOFT'
 import { RESTClient } from '@initia/initia.js'
-import { OFTType } from '../IOFT'
+import { OFTType } from '../sdk/IOFT'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 describe('InitiaOFT View Methods', () => {

@@ -31,7 +31,8 @@
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
-    "test": "INITIA_CHAIN_ID=\"initiation-2\" jest"
+    "test": "INITIA_CHAIN_ID=\"initiation-2\" jest --testPathIgnorePatterns=\"jest/e2e/\" --passWithNoTests",
+    "test:e2e": "INITIA_CHAIN_ID=\"initiation-2\" jest jest/e2e/"
   },
   "dependencies": {
     "inquirer": "^12.3.3"

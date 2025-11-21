@@ -29,7 +29,8 @@
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
-    "test": "jest --ci"
+    "test": "jest --ci --testPathIgnorePatterns=\"test/e2e/\" --passWithNoTests",
+    "test:e2e": "jest --ci test/e2e/"
   },
   "dependencies": {
     "@ton/core": "^0.59.0",
