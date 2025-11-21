@@ -147,6 +147,8 @@ jobs:
     permissions:
       contents: read
       packages: read
+      issues: write
+      pull-requests: write
 
     steps:
       - name: Checkout repo
@@ -233,12 +235,17 @@ jobs:
                 "**Action Run:** " + runUrl + "\n\n" +
                 "This is **non-blocking** and does not prevent merging. Check the action logs above for detailed failure information.";
 
-              await github.rest.issues.createComment({
-                issue_number: prNumber,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: comment
-              });
+              try {
+                await github.rest.issues.createComment({
+                  issue_number: prNumber,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: comment
+                });
+              } catch (error) {
+                // Silently fail if we don't have permission to comment (e.g., on forks)
+                console.log('Could not post comment to PR:', error.message);
+              }
             }
 
   test-user:
