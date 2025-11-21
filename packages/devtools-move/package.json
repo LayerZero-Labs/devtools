@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-move",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "license": "MIT",
   "exports": {
     ".": {
