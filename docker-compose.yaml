@@ -166,5 +166,5 @@ services:
       # This would normally be fine, but if we have more than 1 solana examples anchor tries building them in parallel.
       # Anchor does not respect file locks on the rustup directory, so the builds fail as it can't overwrite the other example's rustup.
       # Running rustup default before pnpm test ensures that the rustup directory is present and up to date.
-    command: "pnpm test:ci:e2e"
+    command: "pnpm turbo test:e2e"
 
