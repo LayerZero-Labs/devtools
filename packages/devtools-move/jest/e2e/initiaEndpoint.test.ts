@@ -24,7 +24,7 @@ afterAll(() => {
 })
 
 // skipped due to Initia Testnet RPC being down for upgrade
-describe.skip('InitiaEndpoint View Methods', () => {
+describe('InitiaEndpoint View Methods', () => {
     let endpoint: InitiaEndpoint
     let restClient: any
 
