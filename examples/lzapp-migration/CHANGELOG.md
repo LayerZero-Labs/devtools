@@ -1,5 +1,14 @@
 # @layerzerolabs/lzapp-migration-example
 
+## 0.3.7
+
+### Patch Changes
+
+- ccc14e0: fix default ALTs not used
+- Updated dependencies [06dc63b]
+  - @layerzerolabs/devtools-solana@3.0.3
+  - @layerzerolabs/devtools@2.0.2
+
 ## 0.3.6
 
 ### Patch Changes
