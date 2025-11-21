@@ -82,13 +82,13 @@ importers:
   examples/lzapp-migration:
     dependencies:
       '@layerzerolabs/devtools':
-        specifier: ^2.0.0
+        specifier: ^2.0.2
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-evm-hardhat':
         specifier: ^4.0.0
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/devtools-solana':
-        specifier: ^3.0.0
+        specifier: ^3.0.3
         version: link:../../packages/devtools-solana
       '@layerzerolabs/export-deployments':
         specifier: ^0.0.16
@@ -2380,7 +2380,7 @@ importers:
         specifier: ^5.7.0
         version: 5.7.2
       '@layerzerolabs/devtools':
-        specifier: ~2.0.0
+        specifier: ~2.0.2
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-evm':
         specifier: ~3.0.0
@@ -2389,7 +2389,7 @@ importers:
         specifier: ^4.0.0
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/devtools-solana':
-        specifier: ~3.0.1
+        specifier: ~3.0.3
         version: link:../../packages/devtools-solana
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -4111,7 +4111,7 @@ importers:
         version: 4.0.4
     devDependencies:
       '@layerzerolabs/devtools':
-        specifier: ~2.0.0
+        specifier: ~2.0.2
         version: link:../devtools
       '@layerzerolabs/io-devtools':
         specifier: ~0.3.0
@@ -4193,7 +4193,7 @@ importers:
         version: 4.0.4
     devDependencies:
       '@layerzerolabs/devtools':
-        specifier: ~2.0.0
+        specifier: ~2.0.2
         version: link:../devtools
       '@layerzerolabs/io-devtools':
         specifier: ~0.3.0
