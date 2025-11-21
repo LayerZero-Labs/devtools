@@ -22,12 +22,17 @@ const validateSafeConfig = async (config: any): Promise<boolean> => {
         return false
     }
 
-    // Construct the API URL to read safe
-    const apiUrl = `${config.safeUrl}/api/v1/safes/${config.safeAddress}/`
+    const headers: HeadersInit = {}
+    if (config.safeApiKey) {
+        headers.Authorization = `Bearer ${config.safeApiKey}`
+    }
 
     try {
         // Make the API request to read safe
-        const response = await fetch(apiUrl)
+        const response = await fetch(`${config.safeUrl}/v1/safes/${config.safeAddress}/`, {
+            method: 'GET',
+            headers,
+        })
 
         // Check if the response is successful
         if (!response.ok) {

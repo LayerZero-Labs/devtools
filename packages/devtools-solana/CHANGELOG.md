@@ -1,5 +1,19 @@
 # @layerzerolabs/devtools-solana
 
+## 3.0.3
+
+### Patch Changes
+
+- 06dc63b: quality of life improvements
+- Updated dependencies [06dc63b]
+  - @layerzerolabs/devtools@2.0.2
+
+## 3.0.2
+
+### Patch Changes
+
+- ca5a1f9: add support for Safe API keys
+
 ## 3.0.1
 
 ### Patch Changes

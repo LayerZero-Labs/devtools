@@ -47,12 +47,11 @@ interface IPreFundedFeeAbstraction {
     /// @notice Emitted when max users per block is updated.
     event MaxUsersPerBlockUpdated(uint64 maxUsersPerBlock);
 
-    function ACTIVATION_COST() external view returns (uint64);
+    function ACTIVATION_COST_USDC() external view returns (uint64);
+
     function SPOT_PAIR_ID() external view returns (uint64);
     function QUOTE_ASSET_INDEX() external view returns (uint64);
-    function QUOTE_ASSET_DECIMALS() external view returns (uint64);
-    function SPOT_PRICE_DECIMALS() external view returns (uint64);
-    function ACTIVATION_FEE_NUMERATOR() external view returns (uint128);
+    function ACTIVATION_FEE_WEI() external view returns (uint128);
 
     function maxUsersPerBlock() external view returns (uint64);
     function feeWithdrawalBlockNumber() external view returns (uint256);

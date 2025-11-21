@@ -1,5 +1,17 @@
 # @layerzerolabs/devtools-move
 
+## 1.0.15
+
+### Patch Changes
+
+- 06dc63b: quality of life improvements
+
+## 1.0.14
+
+### Patch Changes
+
+- 84d469f: update packages for non-evm support
+
 ## 1.0.13
 
 ### Patch Changes

@@ -1,4 +1,4 @@
-import { createAccount, initializeMultisig } from '@metaplex-foundation/mpl-toolbox'
+import { createAccount } from '@metaplex-foundation/mpl-toolbox'
 import {
     KeypairSigner,
     Umi,
@@ -6,8 +6,13 @@ import {
     transactionBuilder,
     publicKey as umiPublicKey,
 } from '@metaplex-foundation/umi'
-import { toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
-import { MULTISIG_SIZE, TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { fromWeb3JsInstruction, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
+import {
+    MULTISIG_SIZE,
+    TOKEN_2022_PROGRAM_ID,
+    TOKEN_PROGRAM_ID,
+    createInitializeMultisigInstruction,
+} from '@solana/spl-token'
 import { Connection, PublicKey } from '@solana/web3.js'
 import bs58 from 'bs58'
 
@@ -27,6 +32,13 @@ export async function createMultisig(
     programId = TOKEN_PROGRAM_ID,
     computeUnitPriceScaleFactor?: number
 ): Promise<PublicKey> {
+    const initMultisigIx = createInitializeMultisigInstruction(
+        toWeb3JsPublicKey(keypair.publicKey),
+        signers,
+        m,
+        programId
+    )
+
     let txBuilder = transactionBuilder()
         .add(
             createAccount(umi, {
@@ -36,19 +48,11 @@ export async function createMultisig(
                 programId: umiPublicKey(programId.toBase58()),
             })
         )
-        .add(
-            initializeMultisig(umi, {
-                multisig: keypair.publicKey,
-                rent: undefined,
-                m,
-            }).addRemainingAccounts(
-                signers.map((signer) => ({
-                    pubkey: umiPublicKey(signer.toBase58()),
-                    isWritable: false,
-                    isSigner: false,
-                }))
-            )
-        )
+        .add({
+            instruction: fromWeb3JsInstruction(initMultisigIx),
+            signers: [],
+            bytesCreatedOnChain: 0,
+        })
 
     if (computeUnitPriceScaleFactor) {
         txBuilder = await addComputeUnitInstructions(
