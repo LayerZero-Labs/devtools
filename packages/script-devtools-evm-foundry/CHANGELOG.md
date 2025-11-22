@@ -1,5 +1,13 @@
 # @layerzerolabs/script-devtools-evm-foundry
 
+## 2.0.0
+
+### Patch Changes
+
+- Updated dependencies [b858717]
+  - @layerzerolabs/oapp-evm@0.4.0
+  - @layerzerolabs/oft-evm@4.0.0
+
 ## 1.0.0
 
 ### Patch Changes

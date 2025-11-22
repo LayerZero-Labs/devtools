@@ -1,5 +1,31 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 2.0.2
+
+### Patch Changes
+
+- 06dc63b: quality of life improvements
+
+## 2.0.1
+
+### Patch Changes
+
+- f3783c4: patch computing fee
+
+## 2.0.0
+
+### Patch Changes
+
+- Updated dependencies [b858717]
+  - @layerzerolabs/oapp-evm@0.4.0
+
+## 1.0.5
+
+### Patch Changes
+
+- 48c9d7f: sdk improvements - add USDH, ci mode for set-block, and default --network to mainnet
+- d512816: new activation to activate users with the erc20 tokens that they are bridging across
+
 ## 1.0.4
 
 ### Patch Changes

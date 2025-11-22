@@ -1,5 +1,18 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 1.0.6
+
+### Patch Changes
+
+- 48c9d7f: sdk improvements - add USDH, ci mode for set-block, and default --network to mainnet
+- d512816: new activation to activate users with the erc20 tokens that they are bridging across
+
+## 1.0.5
+
+### Patch Changes
+
+- 39ddee8: remove usage of MyOFTMock
+
 ## 1.0.4
 
 ### Patch Changes

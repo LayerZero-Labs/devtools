@@ -28,7 +28,8 @@ runs:
     # Install the dependencies and run the post-install scripts
     - name: Install Dependencies
       shell: bash
-      run: pnpm install --frozen-lockfile --offline
+      # --no-optional: Skip optional native deps (utf-8-validate, bufferutil) to avoid node-gyp build failures in CI
+      run: pnpm install --frozen-lockfile --offline --no-optional
 
     # Rebuild native bindings
     - name: Rebuild NPM packages

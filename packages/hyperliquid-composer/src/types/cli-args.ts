@@ -26,6 +26,7 @@ export interface UserArgs extends BaseArgs {
 // Specific command argument interfaces
 export interface SetBlockArgs extends PrivateKeyArgs {
     size: 'big' | 'small'
+    ci?: boolean
 }
 
 export interface CoreSpotDeploymentArgs extends TokenIndexArgs {
