@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/test-devtools-ton",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "description": "Helpers for testing LayerZero TON contracts",
   "repository": {
@@ -26,7 +26,8 @@
   "scripts": {
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
-    "test": "jest --ci"
+    "test": "jest --ci --testPathIgnorePatterns=\"test/e2e/\" --passWithNoTests",
+    "test:e2e": "jest --ci test/e2e/"
   },
   "devDependencies": {
     "@swc/core": "^1.4.0",
