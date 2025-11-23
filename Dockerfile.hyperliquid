@@ -1,12 +1,29 @@
 # syntax=docker/dockerfile:1.4
+# Use the official Foundry image as the base
 FROM ghcr.io/foundry-rs/foundry:latest
 
-WORKDIR /anvil
+# Define default environment variables for Anvil for convenience.
+# These can be overridden at runtime.
+ENV HOST 0.0.0.0
+ENV PORT 8545
+ENV FORK_URL ""
 
-# Install curl for healthcheck
+# Install necessary utilities (like curl for health checks) as root.
 USER root
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+# Install curl in a single RUN layer for efficiency and smaller image size.
+RUN apt-get update \
+    && apt-get install -y curl \
+    # Clean up the package lists immediately after installation
+    && rm -rf /var/lib/apt/lists/*
 
+# Revert to the default non-root user defined in the base image 
+# to follow the Principle of Least Privilege.
+USER nonroot 
+
+# Define the default command to execute when the container starts.
+# We use the shell form ("sh -c") to ensure dynamic environment variables are resolved.
+# Note: $FORK_URL will be empty by default, resulting in a non-forked Anvil instance.
 ENTRYPOINT ["sh", "-c", "anvil --fork-url $FORK_URL --host $HOST --port $PORT"]
 
+# Document the standard port Anvil listens on.
 EXPOSE 8545
