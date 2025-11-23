@@ -1,14 +1,29 @@
 #!/usr/bin/env bash
 
-# Helper for expanding env files to a local shell
-# 
+# -----------------------------------------------------------------------------
+# Environment Variable Loader
+# -----------------------------------------------------------------------------
 # Usage:
-# 
-# . bin/env
-# . bin/env .env.local
-# 
-# (The "." will execute this inside the current shell instead of creating a child one)
+#   . bin/env             # Loads .env by default
+#   . bin/env .env.local  # Loads specific file
+# -----------------------------------------------------------------------------
 
+# 1. Determine the target file
+ENV_FILE="${1:-.env}"
+
+# 2. Safety Check: Ensure file exists
+if [ ! -f "$ENV_FILE" ]; then
+    echo "❌ Error: Environment file '$ENV_FILE' not found." >&2
+    # TRICK: 'return' is needed if sourced, 'exit' if executed directly.
+    # This prevents the terminal window from closing if the user sources a missing file.
+    return 1 2>/dev/null || exit 1
+fi
+
+# 3. Auto-Export Variables
+# 'set -a' causes all variables defined from now on to be exported.
 set -a
-source ${1:-.env}
+. "$ENV_FILE"
 set +a
+
+# 4. User Feedback
+echo "✅ Environment variables loaded from '$ENV_FILE'"
