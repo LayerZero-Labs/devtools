@@ -9,6 +9,7 @@ import { OAppCoreUpgradeable } from "./OAppCoreUpgradeable.sol";
 /**
  * @title OAppSender
  * @dev Abstract contract implementing the OAppSender functionality for sending messages to a LayerZero endpoint.
+ * @dev ADAPTED FOR: Storage-based endpoint (endpoint is now a function, not immutable variable)
  */
 abstract contract OAppSenderUpgradeable is OAppCoreUpgradeable {
     using SafeERC20 for IERC20;
@@ -26,8 +27,9 @@ abstract contract OAppSenderUpgradeable is OAppCoreUpgradeable {
      * @dev Ownable is not initialized here on purpose. It should be initialized in the child contract to
      * accommodate the different version of Ownable.
      */
-    function __OAppSender_init(address _delegate) internal onlyInitializing {
-        __OAppCore_init(_delegate);
+    /// @dev Initializes OAppSender with endpoint and delegate
+    function __OAppSender_init(address _endpoint, address _delegate) internal onlyInitializing {
+        __OAppCore_init(_endpoint, _delegate);
     }
 
     function __OAppSender_init_unchained() internal onlyInitializing {}
@@ -55,6 +57,7 @@ abstract contract OAppSenderUpgradeable is OAppCoreUpgradeable {
      *      - nativeFee: The native fee for the message.
      *      - lzTokenFee: The LZ token fee for the message.
      */
+    /// @dev Quotes LayerZero messaging fee using storage-based endpoint
     function _quote(
         uint32 _dstEid,
         bytes memory _message,
@@ -62,7 +65,7 @@ abstract contract OAppSenderUpgradeable is OAppCoreUpgradeable {
         bool _payInLzToken
     ) internal view virtual returns (MessagingFee memory fee) {
         return
-            endpoint.quote(
+            endpoint().quote(
                 MessagingParams(_dstEid, _getPeerOrRevert(_dstEid), _message, _options, _payInLzToken),
                 address(this)
             );
@@ -82,6 +85,7 @@ abstract contract OAppSenderUpgradeable is OAppCoreUpgradeable {
      *      - nonce: The nonce of the sent message.
      *      - fee: The LayerZero fee incurred for the message.
      */
+    /// @dev Sends LayerZero message using storage-based endpoint
     function _lzSend(
         uint32 _dstEid,
         bytes memory _message,
@@ -95,7 +99,7 @@ abstract contract OAppSenderUpgradeable is OAppCoreUpgradeable {
 
         return
             // solhint-disable-next-line check-send-result
-            endpoint.send{ value: messageValue }(
+            endpoint().send{ value: messageValue }(
                 MessagingParams(_dstEid, _getPeerOrRevert(_dstEid), _message, _options, _fee.lzTokenFee > 0),
                 _refundAddress
             );
@@ -124,12 +128,13 @@ abstract contract OAppSenderUpgradeable is OAppCoreUpgradeable {
      * @dev If the caller is trying to pay in the specified lzToken, then the lzTokenFee is passed to the endpoint.
      * @dev Any excess sent, is passed back to the specified _refundAddress in the _lzSend().
      */
+    /// @dev Pays LZ token fee using storage-based endpoint
     function _payLzToken(uint256 _lzTokenFee) internal virtual {
         // @dev Cannot cache the token because it is not immutable in the endpoint.
-        address lzToken = endpoint.lzToken();
+        address lzToken = endpoint().lzToken();
         if (lzToken == address(0)) revert LzTokenUnavailable();
 
         // Pay LZ token fee by sending tokens to the endpoint.
-        IERC20(lzToken).safeTransferFrom(msg.sender, address(endpoint), _lzTokenFee);
+        IERC20(lzToken).safeTransferFrom(msg.sender, address(endpoint()), _lzTokenFee);
     }
 }

@@ -13,6 +13,7 @@ import { OAppCoreUpgradeable } from "./OAppCoreUpgradeable.sol";
 /**
  * @title OApp
  * @dev Abstract contract serving as the base for OApp implementation, combining OAppSender and OAppReceiver functionality.
+ * @dev ADAPTED FOR: Storage-based endpoint + AccessControl (not Ownable)
  */
 abstract contract OAppUpgradeable is OAppSenderUpgradeable, OAppReceiverUpgradeable {
     /**
@@ -29,8 +30,9 @@ abstract contract OAppUpgradeable is OAppSenderUpgradeable, OAppReceiverUpgradea
      * @dev Ownable is not initialized here on purpose. It should be initialized in the child contract to
      * accommodate the different version of Ownable.
      */
-    function __OApp_init(address _delegate) internal onlyInitializing {
-        __OAppCore_init(_delegate);
+    /// @dev Initializes OApp with endpoint and delegate
+    function __OApp_init(address _endpoint, address _delegate) internal onlyInitializing {
+        __OAppCore_init(_endpoint, _delegate);
         __OAppReceiver_init_unchained();
         __OAppSender_init_unchained();
     }
