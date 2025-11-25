@@ -5,8 +5,8 @@ import { OAppEnforcedOption } from '@layerzerolabs/toolbox-hardhat'
 
 import type { OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
-const baseContract: OmniPointHardhat = {
-    eid: EndpointId.BASESEP_V2_TESTNET,
+const hyperevmContract: OmniPointHardhat = {
+    eid: EndpointId.HYPERLIQUID_V2_TESTNET,
     contractName: 'MyOFT', // Use 'MyOFT' for both testnet and production
 }
 
@@ -25,7 +25,7 @@ const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
     {
         msgType: 1,
         optionType: ExecutorOptionType.LZ_RECEIVE,
-        gas: 80_000,
+        gas: 80000,
         value: 0,
     },
 ]
@@ -34,10 +34,10 @@ const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
 // i.e. if you declare A,B there's no need to declare B,A
 const pathways: TwoWayConfig[] = [
     [
-        baseContract, // Chain A contract
+        hyperevmContract, // Chain A contract
         arbitrumContract, // Chain B contract
         [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
-        [1, 1], // [A to B confirmations, B to A confirmations]
+        [1, 15], // [A to B confirmations, B to A confirmations]
         [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain B enforcedOptions, Chain A enforcedOptions
     ],
 ]
@@ -46,7 +46,8 @@ export default async function () {
     // Generate the connections config based on the pathways
     const connections = await generateConnectionsConfig(pathways)
     return {
-        contracts: [{ contract: baseContract }, { contract: arbitrumContract }],
+        contracts: [{ contract: hyperevmContract }, { contract: arbitrumContract }],
         connections,
+        hyperevmContract,
     }
 }
