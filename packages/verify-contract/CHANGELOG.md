@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.2.2
+
+### Patch Changes
+
+- ef2d797: add Monad network support
+
 ## 1.2.1
 
 ### Patch Changes
