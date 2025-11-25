@@ -16,6 +16,7 @@ Deploy **omnichain ERC-4626 vaults** that enable users to deposit assets from an
 
 - [Prerequisite Knowledge](#prerequisite-knowledge)
 - [Introduction](#introduction)
+- [Composer Types](#composer-types)
 - [Requirements](#requirements)
 - [Scaffold this Example](#scaffold-this-example)
 - [Helper Tasks](#helper-tasks)
@@ -44,6 +45,34 @@ OVault extends the ERC-4626 tokenized vault standard with LayerZero's omnichain 
 - **Spoke Chains**: Host Asset OFTs and Share OFTs that connect to the hub
 
 OVault makes it extremely easy to move assets and shares between any supported chains, while also enabling cross-chain vault operations. Users can deposit assets from any chain to receive shares on any destination chain, redeem shares from any chain to receive assets on any destination chain, or simply transfer these tokens between chains - all through a unified interface.
+
+## Composer Types
+
+OVault supports two types of composers to handle different asset types:
+
+### MyOVaultComposerERC20
+
+Use this composer when your vault's underlying asset is a standard **ERC20 token**:
+
+- Works with any ERC20-based OFT (e.g., USDC, USDT, DAI OFTs)
+- Direct integration with ERC-4626 vaults
+- Standard approval and transfer flow
+
+### MyOVaultComposerNative
+
+Use this composer when your vault's underlying asset is based on the **chain's native token** (e.g., ETH):
+
+- Required for native token OFTs like `NativeOFTAdapter` or Stargate `NativePool`
+- Automatically wraps native tokens (ETH) into WETH before depositing to the vault
+- Necessary because ERC-4626 vaults only support ERC20 tokens
+- Transparent to end users - they send native tokens and receive shares
+
+**Which Composer Should You Use?**
+
+The composer type depends on your asset OFT's underlying token:
+
+- If `assetOFT.token()` returns an ERC20 address → use `MyOVaultComposerERC20`
+- If `assetOFT.token()` returns `address(0)` (native token) → use `MyOVaultComposerNative`
 
 ## Requirements
 
@@ -117,6 +146,12 @@ Configure your vault deployment in `devtools/deployConfig.ts`. This file control
 
 > **Note**: If your asset is already an OFT, you do not need to deploy a separate mesh. The only requirement is that the asset OFT supports the hub chain you are deploying to.
 
+> **Important - Composer Selection**: Choose the correct composer type based on your asset:
+> - Use `MyOVaultComposerERC20` for standard ERC20 asset OFTs
+> - Use `MyOVaultComposerNative` for native token OFTs (e.g., `NativeOFTAdapter`, Stargate `NativePool`)
+> 
+> See the [Composer Types](#composer-types) section for details.
+
 ```typescript
 import { EndpointId } from "@layerzerolabs/lz-definitions";
 
@@ -134,7 +169,7 @@ export const DEPLOYMENT_CONFIG = {
     contracts: {
       vault: "MyERC4626",
       shareAdapter: "MyShareOFTAdapter",
-      composer: "MyOVaultComposer",
+      composer: "MyOVaultComposerERC20", // Use MyOVaultComposerNative for native token assets
     },
     // IF YOU HAVE EXISTING CONTRACTS, SET THE ADDRESSES HERE
     vaultAddress: undefined, // Set to '0x...' to use existing vault
