@@ -21,7 +21,7 @@ const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
 
     const { deploy } = deployments
-    const { deployer, recoveryAddress } = await getNamedAccounts()
+    const { deployer, recovery: recoveryAddress } = await getNamedAccounts()
     assert(deployer, 'Missing named deployer account')
     assert(recoveryAddress, 'Missing recovery address. Please set RECOVERY_ADDRESS in .env file')
 
@@ -67,7 +67,7 @@ const deploy: DeployFunction = async (hre) => {
                 },
             ])
 
-            return oftAddress
+            return { address: oftAddress }
         } else {
             throw new Error(`Needs ${contractName_oft} to be deployed before deploying MyHyperLiquidComposer`)
         }
@@ -81,7 +81,7 @@ const deploy: DeployFunction = async (hre) => {
 
     if (!isDeployed_composer) {
         console.log(`Switching to hyperliquid big block for the address ${deployer} to deploy ${contractName_composer}`)
-        const res = await useBigBlock(wallet, isTestnet, loglevel)
+        const res = await useBigBlock(wallet, isTestnet, loglevel, true)
         console.log(res)
         console.log(`Deplying a contract uses big block which is mined at a transaction per minute.`)
     }
@@ -106,7 +106,7 @@ const deploy: DeployFunction = async (hre) => {
     // Set small block eitherway as we do not have a method to check which hyperliquidblock we are on
     {
         console.log(`Using small block with address ${deployer} for faster transactions`)
-        const res = await useSmallBlock(wallet, isTestnet, loglevel)
+        const res = await useSmallBlock(wallet, isTestnet, loglevel, true)
         console.log(JSON.stringify(res, null, 2))
     }
 }

@@ -1,5 +1,23 @@
 # @layerzerolabs/ovault-evm-example
 
+## 0.0.11
+
+### Patch Changes
+
+- 04768d9: update natspec tags to use custom prefix
+
+## 0.0.10
+
+### Patch Changes
+
+- 057f68d: composer sync 1.1 + native token support
+
+## 0.0.9
+
+### Patch Changes
+
+- 608915a: Fix extra option parsing to avoid overflow in `sendEvm` script
+
 ## 0.0.8
 
 ### Patch Changes

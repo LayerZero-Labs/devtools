@@ -1,5 +1,30 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.12.8
+
+### Patch Changes
+
+- ccc14e0: fix default ALTs not used
+
+## 0.12.7
+
+### Patch Changes
+
+- 7ef51d7: bump up versions for anchor, solana, rust
+
+## 0.12.6
+
+### Patch Changes
+
+- 39ddee8: remove usage of MyOFTMock
+
+## 0.12.5
+
+### Patch Changes
+
+- 77ba155: update links
+- 87dd61e: updateMetadata supports when Update Authority is a Multisig
+
 ## 0.12.4
 
 ### Patch Changes

@@ -8,6 +8,7 @@ import { version } from '../package.json'
 interface CommonArgs {
     apiKey?: string
     apiUrl?: string
+    chainId?: number
     deployments?: string
     dryRun?: boolean
     logLevel: LogLevel
@@ -38,6 +39,11 @@ const apiUrlOption = new Option('-u,--api-url <url>', 'Scan API URL (fully quali
 
 const apiKeyOption = new Option('-k,--api-key <key>', 'Scan API Key')
 
+const chainIdOption = new Option(
+    '--chain-id <id>',
+    'Chain ID for Etherscan API v2 (automatically set for well-known networks)'
+).argParser((value: string) => parseInt(value, 10))
+
 const verifyNonTargetCommand = new Command('non-target')
     .description(
         'Verifies a contract that does not have its own deployment file, i.e. has not been a target of a deployment'
@@ -48,6 +54,7 @@ const verifyNonTargetCommand = new Command('non-target')
     .addOption(networkOption)
     .addOption(apiUrlOption)
     .addOption(apiKeyOption)
+    .addOption(chainIdOption)
     .requiredOption('--address <address>', 'Contract address to verify')
     .requiredOption('--name <contract name>', 'Fully qualified contract name to verify, e.g. contracts/MyToken.sol')
     .requiredOption('--deployment <deployment file name>', 'Deployment file name, e.g. MyOtherToken.json')
@@ -83,6 +90,7 @@ const verifyNonTargetCommand = new Command('non-target')
                 [args.network]: {
                     apiUrl: args.apiUrl,
                     apiKey: args.apiKey,
+                    chainId: args.chainId,
                 },
             },
             contracts: [
@@ -117,6 +125,7 @@ const verifyTargetCommand = new Command('target')
     .addOption(networkOption)
     .addOption(apiUrlOption)
     .addOption(apiKeyOption)
+    .addOption(chainIdOption)
     .option(
         '-c,--contracts <contract names>',
         'Comma-separated list of case-sensitive contract names to verify',
@@ -135,6 +144,7 @@ const verifyTargetCommand = new Command('target')
                 [args.network]: {
                     apiUrl: args.apiUrl,
                     apiKey: args.apiKey,
+                    chainId: args.chainId,
                 },
             },
             filter: args.contracts,

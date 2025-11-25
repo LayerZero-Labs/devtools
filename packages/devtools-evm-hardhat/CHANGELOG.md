@@ -1,5 +1,25 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 4.0.3
+
+### Patch Changes
+
+- 7617b25: patch: make upgradeable deploy script similar to hardhat-deploy
+
+## 4.0.2
+
+### Patch Changes
+
+- ca5a1f9: add support for Safe API keys
+- Updated dependencies [ca5a1f9]
+  - @layerzerolabs/devtools-evm@3.0.1
+
+## 4.0.1
+
+### Patch Changes
+
+- 9d3e558: use manual TUP instead of hardhat-deploy for upgradeable deploy scripts
+
 ## 4.0.0
 
 ### Patch Changes

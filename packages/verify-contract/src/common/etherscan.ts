@@ -8,6 +8,7 @@ import got from 'got'
 export interface SubmitForVerificationProps {
     apiKey?: string
     apiUrl: string
+    chainId?: number
     address: string
     contractName: string
     compilerVersion: string
@@ -109,7 +110,7 @@ class Verification extends EventEmitter implements IVerification {
         return await retry(
             async () => {
                 // We'll retry if the request itself fails
-                const response = await submitRequest(this.props.apiUrl, request)
+                const response = await submitRequest(this.props.apiUrl, request, this.props.chainId, this.props.apiKey)
 
                 this.logger.verbose(`Received raw response from ${this.props.apiUrl}:\n\n${JSON.stringify(response)}`)
 
@@ -137,7 +138,7 @@ class Verification extends EventEmitter implements IVerification {
         while (true) {
             this.emit('poll', guid)
 
-            const result = await checkGuid(this.props.apiUrl, guid)
+            const result = await checkGuid(this.props.apiUrl, guid, this.props.chainId, this.props.apiKey)
             this.logger.verbose(`Received raw polling response from ${this.props.apiUrl}:\n\n${JSON.stringify(result)}`)
 
             if (result.status === 1) {
@@ -178,30 +179,55 @@ const isAlreadyVerifiedResult = (result: string | null | undefined): boolean => 
 
 const isApiRateLimitedResult = (result: string | null | undefined): boolean => !!result?.match(/rate/)
 
-const submitRequest = async (apiUrl: string, request: SubmitForVerificationRequest): Promise<ScanResponse> => {
-    try {
-        const response = await got(apiUrl, {
-            method: 'POST',
-            form: request,
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            },
-        }).json()
+const submitRequest = async (
+    apiUrl: string,
+    request: SubmitForVerificationRequest,
+    chainId?: number,
+    apiKey?: string
+): Promise<ScanResponse> => {
+    // For Etherscan API v2, include chainid in the URL
+    // Only add chainid for Etherscan v2 URLs, not for custom explorers
+    const url = new URL(apiUrl)
+    const isEtherscanV2 = apiUrl.includes('api.etherscan.io/v2')
 
-        return ScanResponseSchema.parse(response)
-    } catch (error) {
-        throw new Error(`Failed to submit verification request: ${error}`)
+    if (chainId !== undefined && isEtherscanV2) {
+        url.searchParams.set('chainid', String(chainId))
     }
+
+    // Include API key if provided
+    if (apiKey) {
+        url.searchParams.set('apikey', apiKey)
+    }
+
+    const response = await got(url.toString(), {
+        method: 'POST',
+        form: request,
+    }).json()
+
+    return ScanResponseSchema.parse(response)
 }
 
 /**
  * Helper function that will try to get the verification result by GUID
  */
-const checkGuid = async (apiUrl: string, guid: string): Promise<ScanResponse> => {
+const checkGuid = async (apiUrl: string, guid: string, chainId?: number, apiKey?: string): Promise<ScanResponse> => {
     const url = new URL(apiUrl)
     url.searchParams.set('module', 'contract')
     url.searchParams.set('action', 'checkverifystatus')
     url.searchParams.set('guid', guid)
+
+    // For Etherscan API v2, include chainid in the URL
+    // Only add chainid for Etherscan v2 URLs, not for custom explorers
+    const isEtherscanV2 = apiUrl.includes('api.etherscan.io/v2')
+
+    if (chainId !== undefined && isEtherscanV2) {
+        url.searchParams.set('chainid', String(chainId))
+    }
+
+    // Include API key if provided
+    if (apiKey) {
+        url.searchParams.set('apikey', apiKey)
+    }
 
     try {
         const data = await got(url).json()

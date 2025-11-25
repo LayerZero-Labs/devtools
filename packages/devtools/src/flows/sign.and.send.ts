@@ -1,5 +1,6 @@
 import { formatOmniTransaction } from '@/transactions/format'
-import { createSignAndSend, type SignAndSendResult } from '@/transactions/signer'
+import { createSignAndSend } from '@/transactions/signer'
+import { SignAndSendResult } from '@/transactions/signerTypes'
 import type {
     OmniSignerFactory,
     OmniTransaction,

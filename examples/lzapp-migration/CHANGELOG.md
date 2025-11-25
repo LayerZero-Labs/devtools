@@ -1,5 +1,26 @@
 # @layerzerolabs/lzapp-migration-example
 
+## 0.3.7
+
+### Patch Changes
+
+- ccc14e0: fix default ALTs not used
+- Updated dependencies [06dc63b]
+  - @layerzerolabs/devtools-solana@3.0.3
+  - @layerzerolabs/devtools@2.0.2
+
+## 0.3.6
+
+### Patch Changes
+
+- 7ef51d7: bump up versions for anchor, solana, rust
+
+## 0.3.5
+
+### Patch Changes
+
+- 77ba155: update links
+
 ## 0.3.4
 
 ### Patch Changes

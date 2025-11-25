@@ -1,5 +1,17 @@
 # @layerzerolabs/oft-initia-example
 
+## 0.0.10
+
+### Patch Changes
+
+- c5966ba: Allow zero hex addresses in `basexToBytes32` util and update docs
+
+## 0.0.9
+
+### Patch Changes
+
+- 39ddee8: remove usage of MyOFTMock
+
 ## 0.0.8
 
 ### Patch Changes

@@ -31,7 +31,9 @@ const deploy: DeployFunction = async (hre) => {
     //     eid: EndpointId.AVALANCHE_V2_TESTNET
     //   }
     // }
-    const endpointV2Deployment = await hre.deployments.get('EndpointAltV2')
+
+    /// EndpointV2Alt deployments are also saved under the filename: EndpointV2
+    const endpointV2AltDeployment = await hre.deployments.get('EndpointV2')
 
     // The token address must be defined in hardhat.config.ts
     // If the token address is not defined, the deployment will log a warning and skip the deployment
@@ -45,7 +47,7 @@ const deploy: DeployFunction = async (hre) => {
         from: deployer,
         args: [
             hre.network.config.oftAdapter.tokenAddress, // LayerZero's EndpointV2 address
-            endpointV2Deployment.address, // LayerZero's EndpointV2 address
+            endpointV2AltDeployment.address, // LayerZero's EndpointV2 address
             deployer, // owner
         ],
         log: true,
