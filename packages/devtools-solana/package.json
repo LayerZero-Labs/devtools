@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-solana",
-  "version": "3.0.1",
+  "version": "3.0.3",
   "description": "Utilities for LayerZero Solana projects",
   "repository": {
     "type": "git",
@@ -34,14 +34,15 @@
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
     "test": "$npm_execpath test:jest",
-    "test:jest": "jest --ci"
+    "test:e2e": "jest --ci test/e2e/",
+    "test:jest": "jest --ci --testPathIgnorePatterns=\"test/e2e/\" --passWithNoTests"
   },
   "dependencies": {
     "@solana-developers/helpers": "2.8.0",
     "p-memoize": "~4.0.4"
   },
   "devDependencies": {
-    "@layerzerolabs/devtools": "~2.0.0",
+    "@layerzerolabs/devtools": "~2.0.2",
     "@layerzerolabs/io-devtools": "~0.3.0",
     "@layerzerolabs/lz-definitions": "^3.0.75",
     "@layerzerolabs/test-devtools": "~0.4.6",
@@ -65,7 +66,7 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "@layerzerolabs/devtools": "~2.0.0",
+    "@layerzerolabs/devtools": "~2.0.2",
     "@layerzerolabs/io-devtools": "~0.3.0",
     "@layerzerolabs/lz-definitions": "^3.0.75",
     "@solana/web3.js": "^1.95.8",

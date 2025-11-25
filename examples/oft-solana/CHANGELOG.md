@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.12.8
+
+### Patch Changes
+
+- ccc14e0: fix default ALTs not used
+
 ## 0.12.7
 
 ### Patch Changes
