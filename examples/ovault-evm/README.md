@@ -147,9 +147,10 @@ Configure your vault deployment in `devtools/deployConfig.ts`. This file control
 > **Note**: If your asset is already an OFT, you do not need to deploy a separate mesh. The only requirement is that the asset OFT supports the hub chain you are deploying to.
 
 > **Important - Composer Selection**: Choose the correct composer type based on your asset:
+>
 > - Use `MyOVaultComposerERC20` for standard ERC20 asset OFTs
 > - Use `MyOVaultComposerNative` for native token OFTs (e.g., `NativeOFTAdapter`, Stargate `NativePool`)
-> 
+>
 > See the [Composer Types](#composer-types) section for details.
 
 ```typescript

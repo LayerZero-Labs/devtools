@@ -15,5 +15,9 @@ contract MyOVaultComposerNative is VaultComposerSyncNative {
      * @param _assetOFT The OFT contract for cross-chain asset transfers of the chain's native asset
      * @param _shareOFT The OFT contract for cross-chain share transfers
      */
-    constructor(address _vault, address _assetOFT, address _shareOFT) VaultComposerSyncNative(_vault, _assetOFT, _shareOFT) {}
+    constructor(
+        address _vault,
+        address _assetOFT,
+        address _shareOFT
+    ) VaultComposerSyncNative(_vault, _assetOFT, _shareOFT) {}
 }
