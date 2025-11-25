@@ -2206,7 +2206,7 @@ importers:
         specifier: ^0.0.7
         version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^1.0.9
+        specifier: ^1.0.16
         version: link:../../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
