@@ -1,14 +1,30 @@
 #!/usr/bin/env bash
 
-# Helper for expanding env files to a local shell
-# 
+# Helper script for sourcing an environment file into the current shell.
+# This must be run using the 'source' or '.' command, not executed directly.
+#
 # Usage:
-# 
-# . bin/env
-# . bin/env .env.local
-# 
-# (The "." will execute this inside the current shell instead of creating a child one)
+# . bin/env                        # Loads the default file: .env
+# . bin/env .env.local             # Loads a custom file: .env.local
 
-set -a
-source ${1:-.env}
-set +a
+# Define the environment file path, defaulting to '.env' if no argument is provided.
+ENV_FILE=${1:-.env}
+
+# Check if the environment file exists before attempting to source it.
+if [ -f "$ENV_FILE" ]; then
+    # Print a notification to the user
+    echo "Sourcing environment variables from: $ENV_FILE"
+
+    # 'set -a' automatically exports all subsequently defined variables
+    set -a
+
+    # 'source' (or '.') executes the script in the current shell environment
+    source "$ENV_FILE"
+
+    # 'set +a' disables automatic exporting
+    set +a
+else
+    # Handle case where the specified file does not exist
+    echo "Warning: Environment file not found: $ENV_FILE"
+    # Note: Using 'return 1' instead of 'exit 1' prevents the parent shell from closing
+fi
