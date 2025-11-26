@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 8.0.4
+
+### Patch Changes
+
+- 90e4924: remove redundant init of send lib and receive lib PDAs
+
 ## 8.0.3
 
 ### Patch Changes

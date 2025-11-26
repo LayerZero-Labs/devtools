@@ -11,7 +11,7 @@ module.exports = {
         'import/no-unresolved': [
             'error',
             {
-                ignore: ['@layerzerolabs/hyperliquid-composer'],
+                ignore: ['@layerzerolabs/hyperliquid-composer', '@layerzerolabs/metadata-tools'],
             },
         ],
     },
