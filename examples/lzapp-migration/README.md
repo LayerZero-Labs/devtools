@@ -20,7 +20,7 @@
 - Anchor `0.31.1`
 - Solana CLI `2.2.20`
 - Docker `28.3.0`
-- Node.js `>=18.16.0`
+- Node.js `>=20.19.5`
 
 ## Setup
 
