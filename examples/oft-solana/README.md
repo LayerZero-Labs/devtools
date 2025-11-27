@@ -179,29 +179,7 @@ anchor build -v -e OFT_ID=<OFT_PROGRAM_ID>
 
 Where `<OFT_PROGRAM_ID>` is replaced with your OFT Program ID copied from the previous step.
 
-<!-- TODO: move the following 'preview rent costs' into docs and replace below with link to docs page -->
-
-<details>
-<summary> Preview Rent Costs for the Solana OFT</summary>
-
-:information_source: The majority of the SOL required to deploy your program will be for [**rent**](https://solana.com/docs/core/fees#rent) (specifically, for the minimum balance of SOL required for [rent-exemption](https://solana.com/docs/core/fees#rent-exempt)), which is calculated based on the amount of bytes the program or account uses. Programs typically require more rent than PDAs as more bytes are required to store the program's executable code.
-
-In our case, the OFT Program's rent accounts for roughly 99% of the SOL needed during deployment, while the other accounts' rent, OFT Store, Mint, Mint Authority Multisig and Escrow make up for only a fraction of the SOL needed.
-
-You can preview how much SOL would be needed for the program account. Note that the total SOL required would to be slightly higher than just this, to account for the other accounts that need to be created.
-
-```bash
-solana rent $(wc -c < target/verifiable/oft.so)
-```
-
-You should see an output such as
-
-```bash
-Rent-exempt minimum: 3.87415872 SOL
-```
-
-</details>
-<br>
+> :information_source: For a breakdown of expected rent-exempt costs before deployment, see https://docs.layerzero.network/v2/developers/solana/technical-reference/solana-guidance#previewing-solana-rent-costs.
 
 ## Deploy
 
