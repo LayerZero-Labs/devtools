@@ -63,8 +63,18 @@ export async function createEvmOmniContracts(args: any, privateKey: string, chai
         const OAppDeploymentPath = path.resolve(`deployments/${fromNetworkFolderString}/${conn.from.contractName}.json`)
         const OAppDeploymentData = JSON.parse(fs.readFileSync(OAppDeploymentPath, 'utf8'))
 
-        const WireOAppDeploymentPath = path.resolve(`deployments/${toNetworkFolderString}/${conn.to.contractName}.json`)
-        const WireOAppDeploymentData = JSON.parse(fs.readFileSync(WireOAppDeploymentPath, 'utf8'))
+        // Check if 'to' contract has an address field; if so, use it directly instead of reading deployment file
+        let WireOAppDeploymentData
+        if (conn.to.address) {
+            // Use the address directly from the config
+            WireOAppDeploymentData = { address: conn.to.address }
+        } else {
+            // Fall back to reading from deployment file
+            const WireOAppDeploymentPath = path.resolve(
+                `deployments/${toNetworkFolderString}/${conn.to.contractName}.json`
+            )
+            WireOAppDeploymentData = JSON.parse(fs.readFileSync(WireOAppDeploymentPath, 'utf8'))
+        }
 
         // @layerzerolabs/lz-evm-sdk-v2 's getDeploymentAddressAndAbi looks at the local deployments folder
         // This is incorrect and it should look at the node_modules folder where the lz-evm-sdk-v2 is installed

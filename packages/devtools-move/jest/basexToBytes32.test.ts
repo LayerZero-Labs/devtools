@@ -4,6 +4,18 @@ import { basexToBytes32 } from '../tasks/shared/basexToBytes32'
 
 describe('basexToBytes32 - Address Format Detection and Conversion', () => {
     describe('Base16 format (0x prefix)', () => {
+        it('should convert 0x0 to bytes32', () => {
+            const address = '0x0'
+            const bytes32 = basexToBytes32(address)
+            expect(bytes32).to.equal('0x0000000000000000000000000000000000000000000000000000000000000000')
+        })
+
+        it('should convert 0x to bytes32', () => {
+            const address = '0x'
+            const bytes32 = basexToBytes32(address)
+            expect(bytes32).to.equal('0x0000000000000000000000000000000000000000000000000000000000000000')
+        })
+
         // Iterative test for random hex inputs from 1 to 32 bytes
         for (let bytes = 1; bytes <= 32; bytes++) {
             it(`should handle random ${bytes}-byte hex string`, () => {

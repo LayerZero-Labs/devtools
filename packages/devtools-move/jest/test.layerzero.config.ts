@@ -5,7 +5,7 @@ const config: OAppOmniGraphHardhat = {
     contracts: [
         {
             contract: {
-                eid: EndpointId.INITIA_V2_TESTNET,
+                eid: EndpointId.INITIA_V2_TESTNET.valueOf(),
                 contractName: 'TestOFT',
             },
             config: {

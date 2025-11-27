@@ -1,5 +1,12 @@
 # @layerzerolabs/ovault-evm
 
+## 1.0.0
+
+### Patch Changes
+
+- Updated dependencies [b858717]
+  - @layerzerolabs/oapp-evm@0.4.0
+
 ## 0.1.1
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/script-devtools-evm-foundry",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Scripts to help develop LayerZero EVM contracts using foundry",
   "repository": {
     "type": "git",
@@ -35,8 +35,8 @@
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
-    "@layerzerolabs/oapp-evm": "^0.3.2",
-    "@layerzerolabs/oft-evm": "^3.2.0",
+    "@layerzerolabs/oapp-evm": "^0.4.0",
+    "@layerzerolabs/oft-evm": "^4.0.0",
     "@openzeppelin/contracts": "^4.9.5 || ^5.0.0",
     "@openzeppelin/contracts-upgradeable": "^4.9.5 || ^5.0.0"
   },

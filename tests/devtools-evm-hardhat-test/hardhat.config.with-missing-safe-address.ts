@@ -25,6 +25,7 @@ const config: HardhatUserConfig = {
             safeConfig: {
                 safeAddress: '',
                 safeUrl: 'https://safe-transaction-mainnet.safe.global/',
+                safeApiKey: '',
             },
         },
     },

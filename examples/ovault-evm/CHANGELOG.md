@@ -1,5 +1,11 @@
 # @layerzerolabs/ovault-evm-example
 
+## 0.0.11
+
+### Patch Changes
+
+- 04768d9: update natspec tags to use custom prefix
+
 ## 0.0.10
 
 ### Patch Changes

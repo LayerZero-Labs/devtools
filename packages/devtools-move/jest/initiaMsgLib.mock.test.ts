@@ -1,8 +1,8 @@
 import { describe, expect, test, beforeAll, afterAll } from '@jest/globals'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { InitiaMsgLib } from '../initiaMsgLib'
+import { InitiaMsgLib } from '../sdk/initiaMsgLib'
 import { RESTClient } from '@initia/initia.js'
-import { getConnection } from '../moveVMConnectionBuilder'
+import { getConnection } from '../sdk/moveVMConnectionBuilder'
 import dotenv from 'dotenv'
 import path from 'path'
 

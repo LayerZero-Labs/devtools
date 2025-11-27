@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-move
 
+## 1.1.2
+
+### Patch Changes
+
+- 84d469f: update packages for non-evm support
+
 ## 1.1.1
 
 ### Patch Changes
