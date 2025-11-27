@@ -1,5 +1,13 @@
 # @layerzerolabs/devtools-solana
 
+## 3.0.4
+
+### Patch Changes
+
+- d720011: print max supply given solana local decimals
+- Updated dependencies [d720011]
+  - @layerzerolabs/devtools@2.0.3
+
 ## 3.0.3
 
 ### Patch Changes
