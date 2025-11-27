@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 1.0.7
+
+### Patch Changes
+
+- fe104a3: update layerzero config to use metadata
+
 ## 1.0.6
 
 ### Patch Changes

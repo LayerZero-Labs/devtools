@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-move
 
+## 1.0.16
+
+### Patch Changes
+
+- c5966ba: Allow zero hex addresses in `basexToBytes32` util and update docs
+
 ## 1.0.15
 
 ### Patch Changes

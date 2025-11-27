@@ -150,6 +150,9 @@ importers:
       '@solana/web3.js':
         specifier: ^1.95.8
         version: 1.98.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
     devDependencies:
       '@babel/core':
         specifier: ^7.23.9
@@ -2081,6 +2084,9 @@ importers:
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.86
+      '@layerzerolabs/metadata-tools':
+        specifier: ^3.0.2
+        version: link:../../packages/metadata-tools
       '@layerzerolabs/oapp-evm':
         specifier: ^0.4.0
         version: link:../../packages/oapp-evm
@@ -2203,7 +2209,7 @@ importers:
         specifier: ^0.0.7
         version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^1.0.9
+        specifier: ^1.0.16
         version: link:../../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -9658,7 +9664,7 @@ packages:
       jest-util: 29.7.0
       jest-validate: 29.7.0
       jest-watcher: 29.7.0
-      micromatch: 4.0.5
+      micromatch: 4.0.8
       pretty-format: 29.7.0
       slash: 3.0.0
       strip-ansi: 6.0.1
