@@ -37,7 +37,7 @@ export const DEPLOYMENT_CONFIG: DeploymentConfig = {
         contracts: {
             vault: 'MyERC4626',
             shareAdapter: 'MyShareOFTAdapter',
-            composer: 'MyOVaultComposer',
+            composer: 'MyOVaultComposerERC20',
         },
         // IF YOU HAVE EXISTING CONTRACTS, SET THE ADDRESSES HERE
         // This will skip deployment and use your existing hubEid contract deployments instead
