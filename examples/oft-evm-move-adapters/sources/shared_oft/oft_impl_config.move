@@ -213,7 +213,7 @@ module oft::oft_impl_config {
 
     /// Checkpoint the in-flight amount for a given EID for the provided timestamp.
     /// This should whenever there is a change in rate limit or before consuming rate limit capacity
-    public fun checkpoint_rate_limit_in_flight(eid: u32, timestamp: u64) acquires Config {
+    public(friend) fun checkpoint_rate_limit_in_flight(eid: u32, timestamp: u64) acquires Config {
         let inflight = in_flight_at_time(eid, timestamp);
         let rate_limit = table::borrow_mut(&mut store_mut().rate_limit_by_eid, eid);
         rate_limit.in_flight_on_last_update = inflight;
