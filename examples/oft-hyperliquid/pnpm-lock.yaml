@@ -31,8 +31,8 @@ devDependencies:
     specifier: ^3.0.12
     version: 3.0.142(@openzeppelin/contracts-upgradeable@5.4.0)(@openzeppelin/contracts@5.4.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.4)
   '@layerzerolabs/lz-evm-sdk-v2':
-    specifier: ^3.0.75
-    version: 3.0.142
+    specifier: ^3.0.148
+    version: 3.0.148
   '@layerzerolabs/lz-evm-v1-0.7':
     specifier: ^3.0.12
     version: 3.0.142(@openzeppelin/contracts-upgradeable@5.4.0)(@openzeppelin/contracts@5.4.0)(hardhat-deploy@0.12.4)
@@ -1243,6 +1243,15 @@ packages:
       - utf-8-validate
     dev: true
 
+  /@layerzerolabs/evm-sdks-core@3.0.148:
+    resolution: {integrity: sha512-wN3wVfA6MPRJVW2FJQMdz7jTHy4YW9Pg7OsO7nTW31vX4KpkFVsoh282WT++IAH8+cOSqWU9RpnhJgo3BI92gw==}
+    dependencies:
+      ethers: 5.8.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: true
+
   /@layerzerolabs/export-deployments@0.0.16:
     resolution: {integrity: sha512-tI+mKMx51qCrj+G42mrVR+5jAiRaiLCpnXiogjW7E3krbNbJenI1eYYX7U62ssXWXwTZfYSJ1Bw/zLAbs59sqw==}
     hasBin: true
@@ -1374,10 +1383,10 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@layerzerolabs/lz-evm-sdk-v2@3.0.142:
-    resolution: {integrity: sha512-P5Fi2NyYmeKzQFmsDGKziyEcWI9TX/k0LPT5E+zb8zakg2s+pIlp0o68Q+oMdJdgkv5bh2K2hVdoWpuQdTB7wA==}
+  /@layerzerolabs/lz-evm-sdk-v2@3.0.148:
+    resolution: {integrity: sha512-r+y/E/rtyw+tn8wrHMbQNIZx586qKqakAl10ZeZQyYbEGUqfxFrRwDj+LilSU4yvRhNkpjIucWG5ImYq0m16OA==}
     dependencies:
-      '@layerzerolabs/evm-sdks-core': 3.0.142
+      '@layerzerolabs/evm-sdks-core': 3.0.148
       ethers: 5.8.0
     transitivePeerDependencies:
       - bufferutil
@@ -1571,7 +1580,7 @@ packages:
       '@layerzerolabs/io-devtools': 0.3.1(ink-gradient@2.0.0)(ink-table@3.1.0)(ink@3.2.0)(react@17.0.2)(yoga-layout-prebuilt@1.10.0)(zod@3.25.76)
       '@layerzerolabs/lz-definitions': 3.0.142
       '@layerzerolabs/lz-evm-sdk-v1': 3.0.142
-      '@layerzerolabs/lz-evm-sdk-v2': 3.0.142
+      '@layerzerolabs/lz-evm-sdk-v2': 3.0.148
       '@layerzerolabs/lz-v2-utilities': 3.0.142
       '@layerzerolabs/protocol-devtools': 3.0.1(@layerzerolabs/devtools@2.0.1)(@layerzerolabs/io-devtools@0.3.1)(@layerzerolabs/lz-definitions@3.0.142)(zod@3.25.76)
       '@layerzerolabs/protocol-devtools-evm': 5.0.1(@ethersproject/abstract-provider@5.8.0)(@ethersproject/abstract-signer@5.8.0)(@ethersproject/bignumber@5.8.0)(@ethersproject/constants@5.8.0)(@ethersproject/contracts@5.8.0)(@ethersproject/providers@5.8.0)(@layerzerolabs/devtools-evm@3.0.0)(@layerzerolabs/devtools@2.0.1)(@layerzerolabs/io-devtools@0.3.1)(@layerzerolabs/lz-definitions@3.0.142)(@layerzerolabs/protocol-devtools@3.0.1)(zod@3.25.76)
