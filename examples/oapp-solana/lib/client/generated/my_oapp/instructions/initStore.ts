@@ -21,6 +21,7 @@ export type InitStoreInstructionAccounts = {
     payer?: Signer
     store: PublicKey | Pda
     lzReceiveTypesAccounts: PublicKey | Pda
+    alt?: PublicKey | Pda
     systemProgram?: PublicKey | Pda
 }
 
@@ -62,7 +63,8 @@ export function initStore(
         payer: { index: 0, isWritable: true as boolean, value: input.payer ?? null },
         store: { index: 1, isWritable: true as boolean, value: input.store ?? null },
         lzReceiveTypesAccounts: { index: 2, isWritable: true as boolean, value: input.lzReceiveTypesAccounts ?? null },
-        systemProgram: { index: 3, isWritable: false as boolean, value: input.systemProgram ?? null },
+        alt: { index: 3, isWritable: false as boolean, value: input.alt ?? null },
+        systemProgram: { index: 4, isWritable: false as boolean, value: input.systemProgram ?? null },
     } satisfies ResolvedAccountsWithIndices
 
     // Arguments.
