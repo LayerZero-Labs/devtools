@@ -36,6 +36,7 @@ impl InitStore<'_> {
         ctx.accounts.store.bump = ctx.bumps.store;
         ctx.accounts.store.endpoint_program = params.endpoint;
         ctx.accounts.lz_receive_types_accounts.store = ctx.accounts.store.key();
+        ctx.accounts.lz_receive_types_accounts.bump = ctx.bumps.lz_receive_types_accounts;
         // the above lines are required for all OApp implementations
 
         // the line below is specific to this string-passing example
