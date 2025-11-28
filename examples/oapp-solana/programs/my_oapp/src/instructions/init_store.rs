@@ -1,4 +1,9 @@
 use crate::*;
+use anchor_lang::{
+    solana_program::{
+        address_lookup_table::program::ID as ALT_PROGRAM_ID,
+    },
+};
 use oapp::endpoint::{instructions::RegisterOAppParams, ID as ENDPOINT_ID};
 
 #[derive(Accounts)]
@@ -24,6 +29,8 @@ pub struct InitStore<'info> {
         bump
     )]
     pub lz_receive_types_accounts: Account<'info, LzReceiveTypesAccounts>,
+    #[account(owner = ALT_PROGRAM_ID)]
+    pub alt: Option<UncheckedAccount<'info>>,
     pub system_program: Program<'info, System>,
 }
 
@@ -36,6 +43,12 @@ impl InitStore<'_> {
         ctx.accounts.store.bump = ctx.bumps.store;
         ctx.accounts.store.endpoint_program = params.endpoint;
         ctx.accounts.lz_receive_types_accounts.store = ctx.accounts.store.key();
+        ctx.accounts.lz_receive_types_accounts.alt = ctx
+            .accounts
+            .alt
+            .as_ref()
+            .map(|a| a.key())
+            .unwrap_or_default();
         ctx.accounts.lz_receive_types_accounts.bump = ctx.bumps.lz_receive_types_accounts;
         // the above lines are required for all OApp implementations
 
