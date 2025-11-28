@@ -6,9 +6,15 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
-import { PublicKey } from '@metaplex-foundation/umi'
-import { Serializer, array, publicKey as publicKeySerializer, struct, u8 } from '@metaplex-foundation/umi/serializers'
-import { Instruction, InstructionArgs, getInstructionSerializer } from '.'
+import { PublicKey } from '@metaplex-foundation/umi';
+import {
+  Serializer,
+  array,
+  publicKey as publicKeySerializer,
+  struct,
+  u8,
+} from '@metaplex-foundation/umi/serializers';
+import { Instruction, InstructionArgs, getInstructionSerializer } from '.';
 
 /**
  * Output of the lz_receive_types_v2 instruction.
@@ -19,48 +25,51 @@ import { Instruction, InstructionArgs, getInstructionSerializer } from '.'
  */
 
 export type LzReceiveTypesV2Result = {
-    /** The version of context account */
-    contextVersion: number
-    /**
-     * ALTs required for this execution context
-     * Used by the Executor to resolve AltIndex references in AccountMetaRef
-     * Enables efficient account list compression for complex transactions
-     */
-    alts: Array<PublicKey>
-    /**
-     * The complete list of instructions required for LzReceive execution
-     * MUST include exactly one LzReceive instruction
-     * MAY include additional Standard instructions for preprocessing/postprocessing
-     * Instructions are executed in the order returned
-     */
-    instructions: Array<Instruction>
-}
+  /** The version of context account */
+  contextVersion: number;
+  /**
+   * ALTs required for this execution context
+   * Used by the Executor to resolve AltIndex references in AccountMetaRef
+   * Enables efficient account list compression for complex transactions
+   */
+  alts: Array<PublicKey>;
+  /**
+   * The complete list of instructions required for LzReceive execution
+   * MUST include exactly one LzReceive instruction
+   * MAY include additional Standard instructions for preprocessing/postprocessing
+   * Instructions are executed in the order returned
+   */
+  instructions: Array<Instruction>;
+};
 
 export type LzReceiveTypesV2ResultArgs = {
-    /** The version of context account */
-    contextVersion: number
-    /**
-     * ALTs required for this execution context
-     * Used by the Executor to resolve AltIndex references in AccountMetaRef
-     * Enables efficient account list compression for complex transactions
-     */
-    alts: Array<PublicKey>
-    /**
-     * The complete list of instructions required for LzReceive execution
-     * MUST include exactly one LzReceive instruction
-     * MAY include additional Standard instructions for preprocessing/postprocessing
-     * Instructions are executed in the order returned
-     */
-    instructions: Array<InstructionArgs>
-}
+  /** The version of context account */
+  contextVersion: number;
+  /**
+   * ALTs required for this execution context
+   * Used by the Executor to resolve AltIndex references in AccountMetaRef
+   * Enables efficient account list compression for complex transactions
+   */
+  alts: Array<PublicKey>;
+  /**
+   * The complete list of instructions required for LzReceive execution
+   * MUST include exactly one LzReceive instruction
+   * MAY include additional Standard instructions for preprocessing/postprocessing
+   * Instructions are executed in the order returned
+   */
+  instructions: Array<InstructionArgs>;
+};
 
-export function getLzReceiveTypesV2ResultSerializer(): Serializer<LzReceiveTypesV2ResultArgs, LzReceiveTypesV2Result> {
-    return struct<LzReceiveTypesV2Result>(
-        [
-            ['contextVersion', u8()],
-            ['alts', array(publicKeySerializer())],
-            ['instructions', array(getInstructionSerializer())],
-        ],
-        { description: 'LzReceiveTypesV2Result' }
-    ) as Serializer<LzReceiveTypesV2ResultArgs, LzReceiveTypesV2Result>
+export function getLzReceiveTypesV2ResultSerializer(): Serializer<
+  LzReceiveTypesV2ResultArgs,
+  LzReceiveTypesV2Result
+> {
+  return struct<LzReceiveTypesV2Result>(
+    [
+      ['contextVersion', u8()],
+      ['alts', array(publicKeySerializer())],
+      ['instructions', array(getInstructionSerializer())],
+    ],
+    { description: 'LzReceiveTypesV2Result' }
+  ) as Serializer<LzReceiveTypesV2ResultArgs, LzReceiveTypesV2Result>;
 }

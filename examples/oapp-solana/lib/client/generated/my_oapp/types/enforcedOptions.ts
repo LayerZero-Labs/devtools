@@ -6,18 +6,26 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
-import { Serializer, bytes, struct, u32 } from '@metaplex-foundation/umi/serializers'
+import {
+  Serializer,
+  bytes,
+  struct,
+  u32,
+} from '@metaplex-foundation/umi/serializers';
 
-export type EnforcedOptions = { send: Uint8Array; sendAndCall: Uint8Array }
+export type EnforcedOptions = { send: Uint8Array; sendAndCall: Uint8Array };
 
-export type EnforcedOptionsArgs = EnforcedOptions
+export type EnforcedOptionsArgs = EnforcedOptions;
 
-export function getEnforcedOptionsSerializer(): Serializer<EnforcedOptionsArgs, EnforcedOptions> {
-    return struct<EnforcedOptions>(
-        [
-            ['send', bytes({ size: u32() })],
-            ['sendAndCall', bytes({ size: u32() })],
-        ],
-        { description: 'EnforcedOptions' }
-    ) as Serializer<EnforcedOptionsArgs, EnforcedOptions>
+export function getEnforcedOptionsSerializer(): Serializer<
+  EnforcedOptionsArgs,
+  EnforcedOptions
+> {
+  return struct<EnforcedOptions>(
+    [
+      ['send', bytes({ size: u32() })],
+      ['sendAndCall', bytes({ size: u32() })],
+    ],
+    { description: 'EnforcedOptions' }
+  ) as Serializer<EnforcedOptionsArgs, EnforcedOptions>;
 }

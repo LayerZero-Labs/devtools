@@ -6,34 +6,46 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
-import { ClusterFilter, Context, Program, PublicKey } from '@metaplex-foundation/umi'
-import { getMyOappErrorFromCode, getMyOappErrorFromName } from '../errors'
+import {
+  ClusterFilter,
+  Context,
+  Program,
+  PublicKey,
+} from '@metaplex-foundation/umi';
+import { getMyOappErrorFromCode, getMyOappErrorFromName } from '../errors';
 
-export const MY_OAPP_PROGRAM_ID = '' as PublicKey<''>
+export const MY_OAPP_PROGRAM_ID = '' as PublicKey<''>;
 
 export function createMyOappProgram(): Program {
-    return {
-        name: 'myOapp',
-        publicKey: MY_OAPP_PROGRAM_ID,
-        getErrorFromCode(code: number, cause?: Error) {
-            return getMyOappErrorFromCode(code, this, cause)
-        },
-        getErrorFromName(name: string, cause?: Error) {
-            return getMyOappErrorFromName(name, this, cause)
-        },
-        isOnCluster() {
-            return true
-        },
-    }
+  return {
+    name: 'myOapp',
+    publicKey: MY_OAPP_PROGRAM_ID,
+    getErrorFromCode(code: number, cause?: Error) {
+      return getMyOappErrorFromCode(code, this, cause);
+    },
+    getErrorFromName(name: string, cause?: Error) {
+      return getMyOappErrorFromName(name, this, cause);
+    },
+    isOnCluster() {
+      return true;
+    },
+  };
 }
 
 export function getMyOappProgram<T extends Program = Program>(
-    context: Pick<Context, 'programs'>,
-    clusterFilter?: ClusterFilter
+  context: Pick<Context, 'programs'>,
+  clusterFilter?: ClusterFilter
 ): T {
-    return context.programs.get<T>('myOapp', clusterFilter)
+  return context.programs.get<T>('myOapp', clusterFilter);
 }
 
-export function getMyOappProgramId(context: Pick<Context, 'programs'>, clusterFilter?: ClusterFilter): PublicKey {
-    return context.programs.getPublicKey('myOapp', MY_OAPP_PROGRAM_ID, clusterFilter)
+export function getMyOappProgramId(
+  context: Pick<Context, 'programs'>,
+  clusterFilter?: ClusterFilter
+): PublicKey {
+  return context.programs.getPublicKey(
+    'myOapp',
+    MY_OAPP_PROGRAM_ID,
+    clusterFilter
+  );
 }

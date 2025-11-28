@@ -6,86 +6,119 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
-import { Context, Pda, PublicKey, TransactionBuilder, transactionBuilder } from '@metaplex-foundation/umi'
-import { Serializer, bytes, mapSerializer, struct } from '@metaplex-foundation/umi/serializers'
-import { ResolvedAccount, ResolvedAccountsWithIndices, getAccountMetasAndSigners } from '../shared'
-import { LzReceiveParams, LzReceiveParamsArgs, getLzReceiveParamsSerializer } from '../types'
+import {
+  Context,
+  Pda,
+  PublicKey,
+  TransactionBuilder,
+  transactionBuilder,
+} from '@metaplex-foundation/umi';
+import {
+  Serializer,
+  bytes,
+  mapSerializer,
+  struct,
+} from '@metaplex-foundation/umi/serializers';
+import {
+  ResolvedAccount,
+  ResolvedAccountsWithIndices,
+  getAccountMetasAndSigners,
+} from '../shared';
+import {
+  LzReceiveParams,
+  LzReceiveParamsArgs,
+  getLzReceiveParamsSerializer,
+} from '../types';
 
 // Accounts.
 export type LzReceiveInstructionAccounts = {
-    /**
-     * OApp Store PDA.  This account represents the "address" of your OApp on
-     * Solana and can contain any state relevant to your application.
-     * Customize the fields in `Store` as needed.
-     */
+  /**
+   * OApp Store PDA.  This account represents the "address" of your OApp on
+   * Solana and can contain any state relevant to your application.
+   * Customize the fields in `Store` as needed.
+   */
 
-    store: PublicKey | Pda
-    /** Peer config PDA for the sending chain. Ensures `params.sender` can only be the allowed peer from that remote chain. */
-    peer: PublicKey | Pda
-}
+  store: PublicKey | Pda;
+  /** Peer config PDA for the sending chain. Ensures `params.sender` can only be the allowed peer from that remote chain. */
+  peer: PublicKey | Pda;
+};
 
 // Data.
 export type LzReceiveInstructionData = {
-    discriminator: Uint8Array
-    params: LzReceiveParams
-}
+  discriminator: Uint8Array;
+  params: LzReceiveParams;
+};
 
-export type LzReceiveInstructionDataArgs = { params: LzReceiveParamsArgs }
+export type LzReceiveInstructionDataArgs = { params: LzReceiveParamsArgs };
 
 export function getLzReceiveInstructionDataSerializer(): Serializer<
-    LzReceiveInstructionDataArgs,
-    LzReceiveInstructionData
+  LzReceiveInstructionDataArgs,
+  LzReceiveInstructionData
 > {
-    return mapSerializer<LzReceiveInstructionDataArgs, any, LzReceiveInstructionData>(
-        struct<LzReceiveInstructionData>(
-            [
-                ['discriminator', bytes({ size: 8 })],
-                ['params', getLzReceiveParamsSerializer()],
-            ],
-            { description: 'LzReceiveInstructionData' }
-        ),
-        (value) => ({
-            ...value,
-            discriminator: new Uint8Array([8, 179, 120, 109, 33, 118, 189, 80]),
-        })
-    ) as Serializer<LzReceiveInstructionDataArgs, LzReceiveInstructionData>
+  return mapSerializer<
+    LzReceiveInstructionDataArgs,
+    any,
+    LzReceiveInstructionData
+  >(
+    struct<LzReceiveInstructionData>(
+      [
+        ['discriminator', bytes({ size: 8 })],
+        ['params', getLzReceiveParamsSerializer()],
+      ],
+      { description: 'LzReceiveInstructionData' }
+    ),
+    (value) => ({
+      ...value,
+      discriminator: new Uint8Array([8, 179, 120, 109, 33, 118, 189, 80]),
+    })
+  ) as Serializer<LzReceiveInstructionDataArgs, LzReceiveInstructionData>;
 }
 
 // Args.
-export type LzReceiveInstructionArgs = LzReceiveInstructionDataArgs
+export type LzReceiveInstructionArgs = LzReceiveInstructionDataArgs;
 
 // Instruction.
 export function lzReceive(
-    context: Pick<Context, 'programs'>,
-    input: LzReceiveInstructionAccounts & LzReceiveInstructionArgs
+  context: Pick<Context, 'programs'>,
+  input: LzReceiveInstructionAccounts & LzReceiveInstructionArgs
 ): TransactionBuilder {
-    // Program ID.
-    const programId = context.programs.getPublicKey('myOapp', '')
+  // Program ID.
+  const programId = context.programs.getPublicKey('myOapp', '');
 
-    // Accounts.
-    const resolvedAccounts = {
-        store: {
-            index: 0,
-            isWritable: true as boolean,
-            value: input.store ?? null,
-        },
-        peer: { index: 1, isWritable: false as boolean, value: input.peer ?? null },
-    } satisfies ResolvedAccountsWithIndices
+  // Accounts.
+  const resolvedAccounts = {
+    store: {
+      index: 0,
+      isWritable: true as boolean,
+      value: input.store ?? null,
+    },
+    peer: { index: 1, isWritable: false as boolean, value: input.peer ?? null },
+  } satisfies ResolvedAccountsWithIndices;
 
-    // Arguments.
-    const resolvedArgs: LzReceiveInstructionArgs = { ...input }
+  // Arguments.
+  const resolvedArgs: LzReceiveInstructionArgs = { ...input };
 
-    // Accounts in order.
-    const orderedAccounts: ResolvedAccount[] = Object.values(resolvedAccounts).sort((a, b) => a.index - b.index)
+  // Accounts in order.
+  const orderedAccounts: ResolvedAccount[] = Object.values(
+    resolvedAccounts
+  ).sort((a, b) => a.index - b.index);
 
-    // Keys and Signers.
-    const [keys, signers] = getAccountMetasAndSigners(orderedAccounts, 'programId', programId)
+  // Keys and Signers.
+  const [keys, signers] = getAccountMetasAndSigners(
+    orderedAccounts,
+    'programId',
+    programId
+  );
 
-    // Data.
-    const data = getLzReceiveInstructionDataSerializer().serialize(resolvedArgs as LzReceiveInstructionDataArgs)
+  // Data.
+  const data = getLzReceiveInstructionDataSerializer().serialize(
+    resolvedArgs as LzReceiveInstructionDataArgs
+  );
 
-    // Bytes Created On Chain.
-    const bytesCreatedOnChain = 0
+  // Bytes Created On Chain.
+  const bytesCreatedOnChain = 0;
 
-    return transactionBuilder([{ instruction: { keys, programId, data }, signers, bytesCreatedOnChain }])
+  return transactionBuilder([
+    { instruction: { keys, programId, data }, signers, bytesCreatedOnChain },
+  ]);
 }

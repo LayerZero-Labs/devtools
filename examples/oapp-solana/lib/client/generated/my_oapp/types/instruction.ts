@@ -6,19 +6,23 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
-import { PublicKey } from '@metaplex-foundation/umi'
+import { PublicKey } from '@metaplex-foundation/umi';
 import {
-    GetDataEnumKind,
-    GetDataEnumKindContent,
-    Serializer,
-    array,
-    bytes,
-    dataEnum,
-    publicKey as publicKeySerializer,
-    struct,
-    u32,
-} from '@metaplex-foundation/umi/serializers'
-import { AccountMetaRef, AccountMetaRefArgs, getAccountMetaRefSerializer } from '.'
+  GetDataEnumKind,
+  GetDataEnumKindContent,
+  Serializer,
+  array,
+  bytes,
+  dataEnum,
+  publicKey as publicKeySerializer,
+  struct,
+  u32,
+} from '@metaplex-foundation/umi/serializers';
+import {
+  AccountMetaRef,
+  AccountMetaRefArgs,
+  getAccountMetaRefSerializer,
+} from '.';
 
 /**
  * The list of instructions that can be executed in the LzReceive transaction.
@@ -31,95 +35,100 @@ import { AccountMetaRef, AccountMetaRefArgs, getAccountMetaRefSerializer } from 
  */
 
 export type Instruction =
-    | {
-          __kind: 'LzReceive'
-          /**
-           * Account list for the lz_receive instruction
-           * Uses AddressLocator for flexible address resolution
-           */
-          accounts: Array<AccountMetaRef>
-      }
-    | {
-          __kind: 'Standard'
-          /** Target program ID for the custom instruction */
-          programId: PublicKey
-          /**
-           * Account list for the custom instruction
-           * Uses same AddressLocator system as LzReceive
-           */
-          accounts: Array<AccountMetaRef>
-          /**
-           * Instruction data payload
-           * Raw bytes containing the instruction's parameters
-           */
-          data: Uint8Array
-      }
+  | {
+      __kind: 'LzReceive';
+      /**
+       * Account list for the lz_receive instruction
+       * Uses AddressLocator for flexible address resolution
+       */
+      accounts: Array<AccountMetaRef>;
+    }
+  | {
+      __kind: 'Standard';
+      /** Target program ID for the custom instruction */
+      programId: PublicKey;
+      /**
+       * Account list for the custom instruction
+       * Uses same AddressLocator system as LzReceive
+       */
+      accounts: Array<AccountMetaRef>;
+      /**
+       * Instruction data payload
+       * Raw bytes containing the instruction's parameters
+       */
+      data: Uint8Array;
+    };
 
 export type InstructionArgs =
-    | {
-          __kind: 'LzReceive'
-          /**
-           * Account list for the lz_receive instruction
-           * Uses AddressLocator for flexible address resolution
-           */
-          accounts: Array<AccountMetaRefArgs>
-      }
-    | {
-          __kind: 'Standard'
-          /** Target program ID for the custom instruction */
-          programId: PublicKey
-          /**
-           * Account list for the custom instruction
-           * Uses same AddressLocator system as LzReceive
-           */
-          accounts: Array<AccountMetaRefArgs>
-          /**
-           * Instruction data payload
-           * Raw bytes containing the instruction's parameters
-           */
-          data: Uint8Array
-      }
+  | {
+      __kind: 'LzReceive';
+      /**
+       * Account list for the lz_receive instruction
+       * Uses AddressLocator for flexible address resolution
+       */
+      accounts: Array<AccountMetaRefArgs>;
+    }
+  | {
+      __kind: 'Standard';
+      /** Target program ID for the custom instruction */
+      programId: PublicKey;
+      /**
+       * Account list for the custom instruction
+       * Uses same AddressLocator system as LzReceive
+       */
+      accounts: Array<AccountMetaRefArgs>;
+      /**
+       * Instruction data payload
+       * Raw bytes containing the instruction's parameters
+       */
+      data: Uint8Array;
+    };
 
-export function getInstructionSerializer(): Serializer<InstructionArgs, Instruction> {
-    return dataEnum<Instruction>(
-        [
-            [
-                'LzReceive',
-                struct<GetDataEnumKindContent<Instruction, 'LzReceive'>>([
-                    ['accounts', array(getAccountMetaRefSerializer())],
-                ]),
-            ],
-            [
-                'Standard',
-                struct<GetDataEnumKindContent<Instruction, 'Standard'>>([
-                    ['programId', publicKeySerializer()],
-                    ['accounts', array(getAccountMetaRefSerializer())],
-                    ['data', bytes({ size: u32() })],
-                ]),
-            ],
-        ],
-        { description: 'Instruction' }
-    ) as Serializer<InstructionArgs, Instruction>
+export function getInstructionSerializer(): Serializer<
+  InstructionArgs,
+  Instruction
+> {
+  return dataEnum<Instruction>(
+    [
+      [
+        'LzReceive',
+        struct<GetDataEnumKindContent<Instruction, 'LzReceive'>>([
+          ['accounts', array(getAccountMetaRefSerializer())],
+        ]),
+      ],
+      [
+        'Standard',
+        struct<GetDataEnumKindContent<Instruction, 'Standard'>>([
+          ['programId', publicKeySerializer()],
+          ['accounts', array(getAccountMetaRefSerializer())],
+          ['data', bytes({ size: u32() })],
+        ]),
+      ],
+    ],
+    { description: 'Instruction' }
+  ) as Serializer<InstructionArgs, Instruction>;
 }
 
 // Data Enum Helpers.
 export function instruction(
-    kind: 'LzReceive',
-    data: GetDataEnumKindContent<InstructionArgs, 'LzReceive'>
-): GetDataEnumKind<InstructionArgs, 'LzReceive'>
+  kind: 'LzReceive',
+  data: GetDataEnumKindContent<InstructionArgs, 'LzReceive'>
+): GetDataEnumKind<InstructionArgs, 'LzReceive'>;
 export function instruction(
-    kind: 'Standard',
-    data: GetDataEnumKindContent<InstructionArgs, 'Standard'>
-): GetDataEnumKind<InstructionArgs, 'Standard'>
+  kind: 'Standard',
+  data: GetDataEnumKindContent<InstructionArgs, 'Standard'>
+): GetDataEnumKind<InstructionArgs, 'Standard'>;
 export function instruction<K extends InstructionArgs['__kind']>(
-    kind: K,
-    data?: any
+  kind: K,
+  data?: any
 ): Extract<InstructionArgs, { __kind: K }> {
-    return Array.isArray(data) ? { __kind: kind, fields: data } : { __kind: kind, ...(data ?? {}) }
+  return Array.isArray(data)
+    ? { __kind: kind, fields: data }
+    : { __kind: kind, ...(data ?? {}) };
 }
 export function isInstruction<K extends Instruction['__kind']>(
-    kind: K,
-    value: Instruction
+  kind: K,
+  value: Instruction
 ): value is Instruction & { __kind: K } {
-    return value.__kind === kind
+  return value.__kind === kind;
 }

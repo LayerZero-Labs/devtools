@@ -6,18 +6,18 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
-import { PublicKey } from '@metaplex-foundation/umi'
+import { PublicKey } from '@metaplex-foundation/umi';
 import {
-    GetDataEnumKind,
-    GetDataEnumKindContent,
-    Serializer,
-    dataEnum,
-    publicKey as publicKeySerializer,
-    struct,
-    tuple,
-    u8,
-    unit,
-} from '@metaplex-foundation/umi/serializers'
+  GetDataEnumKind,
+  GetDataEnumKindContent,
+  Serializer,
+  dataEnum,
+  publicKey as publicKeySerializer,
+  struct,
+  tuple,
+  u8,
+  unit,
+} from '@metaplex-foundation/umi/serializers';
 
 /**
  * A generic account locator used in LZ execution planning for V2.
@@ -33,54 +33,75 @@ import {
  */
 
 export type AddressLocator =
-    | { __kind: 'Address'; fields: [PublicKey] }
-    | { __kind: 'AltIndex'; fields: [number, number] }
-    | { __kind: 'Payer' }
-    | { __kind: 'Signer'; fields: [number] }
-    | { __kind: 'Context' }
+  | { __kind: 'Address'; fields: [PublicKey] }
+  | { __kind: 'AltIndex'; fields: [number, number] }
+  | { __kind: 'Payer' }
+  | { __kind: 'Signer'; fields: [number] }
+  | { __kind: 'Context' };
 
-export type AddressLocatorArgs = AddressLocator
+export type AddressLocatorArgs = AddressLocator;
 
-export function getAddressLocatorSerializer(): Serializer<AddressLocatorArgs, AddressLocator> {
-    return dataEnum<AddressLocator>(
-        [
-            [
-                'Address',
-                struct<GetDataEnumKindContent<AddressLocator, 'Address'>>([['fields', tuple([publicKeySerializer()])]]),
-            ],
-            ['AltIndex', struct<GetDataEnumKindContent<AddressLocator, 'AltIndex'>>([['fields', tuple([u8(), u8()])]])],
-            ['Payer', unit()],
-            ['Signer', struct<GetDataEnumKindContent<AddressLocator, 'Signer'>>([['fields', tuple([u8()])]])],
-            ['Context', unit()],
-        ],
-        { description: 'AddressLocator' }
-    ) as Serializer<AddressLocatorArgs, AddressLocator>
+export function getAddressLocatorSerializer(): Serializer<
+  AddressLocatorArgs,
+  AddressLocator
+> {
+  return dataEnum<AddressLocator>(
+    [
+      [
+        'Address',
+        struct<GetDataEnumKindContent<AddressLocator, 'Address'>>([
+          ['fields', tuple([publicKeySerializer()])],
+        ]),
+      ],
+      [
+        'AltIndex',
+        struct<GetDataEnumKindContent<AddressLocator, 'AltIndex'>>([
+          ['fields', tuple([u8(), u8()])],
+        ]),
+      ],
+      ['Payer', unit()],
+      [
+        'Signer',
+        struct<GetDataEnumKindContent<AddressLocator, 'Signer'>>([
+          ['fields', tuple([u8()])],
+        ]),
+      ],
+      ['Context', unit()],
+    ],
+    { description: 'AddressLocator' }
+  ) as Serializer<AddressLocatorArgs, AddressLocator>;
 }
 
 // Data Enum Helpers.
 export function addressLocator(
-    kind: 'Address',
-    data: GetDataEnumKindContent<AddressLocatorArgs, 'Address'>['fields']
-): GetDataEnumKind<AddressLocatorArgs, 'Address'>
+  kind: 'Address',
+  data: GetDataEnumKindContent<AddressLocatorArgs, 'Address'>['fields']
+): GetDataEnumKind<AddressLocatorArgs, 'Address'>;
 export function addressLocator(
-    kind: 'AltIndex',
-    data: GetDataEnumKindContent<AddressLocatorArgs, 'AltIndex'>['fields']
-): GetDataEnumKind<AddressLocatorArgs, 'AltIndex'>
-export function addressLocator(kind: 'Payer'): GetDataEnumKind<AddressLocatorArgs, 'Payer'>
+  kind: 'AltIndex',
+  data: GetDataEnumKindContent<AddressLocatorArgs, 'AltIndex'>['fields']
+): GetDataEnumKind<AddressLocatorArgs, 'AltIndex'>;
 export function addressLocator(
-    kind: 'Signer',
-    data: GetDataEnumKindContent<AddressLocatorArgs, 'Signer'>['fields']
-): GetDataEnumKind<AddressLocatorArgs, 'Signer'>
-export function addressLocator(kind: 'Context'): GetDataEnumKind<AddressLocatorArgs, 'Context'>
+  kind: 'Payer'
+): GetDataEnumKind<AddressLocatorArgs, 'Payer'>;
+export function addressLocator(
+  kind: 'Signer',
+  data: GetDataEnumKindContent<AddressLocatorArgs, 'Signer'>['fields']
+): GetDataEnumKind<AddressLocatorArgs, 'Signer'>;
+export function addressLocator(
+  kind: 'Context'
+): GetDataEnumKind<AddressLocatorArgs, 'Context'>;
 export function addressLocator<K extends AddressLocatorArgs['__kind']>(
-    kind: K,
-    data?: any
+  kind: K,
+  data?: any
 ): Extract<AddressLocatorArgs, { __kind: K }> {
-    return Array.isArray(data) ? { __kind: kind, fields: data } : { __kind: kind, ...(data ?? {}) }
+  return Array.isArray(data)
+    ? { __kind: kind, fields: data }
+    : { __kind: kind, ...(data ?? {}) };
 }
 export function isAddressLocator<K extends AddressLocator['__kind']>(
-    kind: K,
-    value: AddressLocator
+  kind: K,
+  value: AddressLocator
 ): value is AddressLocator & { __kind: K } {
-    return value.__kind === kind
+  return value.__kind === kind;
 }

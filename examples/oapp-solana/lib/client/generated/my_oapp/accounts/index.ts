@@ -6,7 +6,7 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
-export * from './endpointSettings'
-export * from './lzReceiveTypesAccounts'
-export * from './peerConfig'
-export * from './store'
+export * from './endpointSettings';
+export * from './lzReceiveTypesAccounts';
+export * from './peerConfig';
+export * from './store';

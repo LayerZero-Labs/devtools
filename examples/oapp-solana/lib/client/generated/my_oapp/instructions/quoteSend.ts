@@ -6,98 +6,130 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
-import { Context, Pda, PublicKey, TransactionBuilder, transactionBuilder } from '@metaplex-foundation/umi'
-import { Serializer, bool, bytes, mapSerializer, string, struct, u32 } from '@metaplex-foundation/umi/serializers'
-import { ResolvedAccount, ResolvedAccountsWithIndices, getAccountMetasAndSigners } from '../shared'
+import {
+  Context,
+  Pda,
+  PublicKey,
+  TransactionBuilder,
+  transactionBuilder,
+} from '@metaplex-foundation/umi';
+import {
+  Serializer,
+  bool,
+  bytes,
+  mapSerializer,
+  string,
+  struct,
+  u32,
+} from '@metaplex-foundation/umi/serializers';
+import {
+  ResolvedAccount,
+  ResolvedAccountsWithIndices,
+  getAccountMetasAndSigners,
+} from '../shared';
 
 // Accounts.
 export type QuoteSendInstructionAccounts = {
-    store: PublicKey | Pda
-    peer: PublicKey | Pda
-    endpoint: PublicKey | Pda
-}
+  store: PublicKey | Pda;
+  peer: PublicKey | Pda;
+  endpoint: PublicKey | Pda;
+};
 
 // Data.
 export type QuoteSendInstructionData = {
-    discriminator: Uint8Array
-    dstEid: number
-    receiver: Uint8Array
-    message: string
-    options: Uint8Array
-    payInLzToken: boolean
-}
+  discriminator: Uint8Array;
+  dstEid: number;
+  receiver: Uint8Array;
+  message: string;
+  options: Uint8Array;
+  payInLzToken: boolean;
+};
 
 export type QuoteSendInstructionDataArgs = {
-    dstEid: number
-    receiver: Uint8Array
-    message: string
-    options: Uint8Array
-    payInLzToken: boolean
-}
+  dstEid: number;
+  receiver: Uint8Array;
+  message: string;
+  options: Uint8Array;
+  payInLzToken: boolean;
+};
 
 export function getQuoteSendInstructionDataSerializer(): Serializer<
-    QuoteSendInstructionDataArgs,
-    QuoteSendInstructionData
+  QuoteSendInstructionDataArgs,
+  QuoteSendInstructionData
 > {
-    return mapSerializer<QuoteSendInstructionDataArgs, any, QuoteSendInstructionData>(
-        struct<QuoteSendInstructionData>(
-            [
-                ['discriminator', bytes({ size: 8 })],
-                ['dstEid', u32()],
-                ['receiver', bytes({ size: 32 })],
-                ['message', string()],
-                ['options', bytes({ size: u32() })],
-                ['payInLzToken', bool()],
-            ],
-            { description: 'QuoteSendInstructionData' }
-        ),
-        (value) => ({
-            ...value,
-            discriminator: new Uint8Array([207, 0, 49, 214, 160, 211, 76, 211]),
-        })
-    ) as Serializer<QuoteSendInstructionDataArgs, QuoteSendInstructionData>
+  return mapSerializer<
+    QuoteSendInstructionDataArgs,
+    any,
+    QuoteSendInstructionData
+  >(
+    struct<QuoteSendInstructionData>(
+      [
+        ['discriminator', bytes({ size: 8 })],
+        ['dstEid', u32()],
+        ['receiver', bytes({ size: 32 })],
+        ['message', string()],
+        ['options', bytes({ size: u32() })],
+        ['payInLzToken', bool()],
+      ],
+      { description: 'QuoteSendInstructionData' }
+    ),
+    (value) => ({
+      ...value,
+      discriminator: new Uint8Array([207, 0, 49, 214, 160, 211, 76, 211]),
+    })
+  ) as Serializer<QuoteSendInstructionDataArgs, QuoteSendInstructionData>;
 }
 
 // Args.
-export type QuoteSendInstructionArgs = QuoteSendInstructionDataArgs
+export type QuoteSendInstructionArgs = QuoteSendInstructionDataArgs;
 
 // Instruction.
 export function quoteSend(
-    context: Pick<Context, 'programs'>,
-    input: QuoteSendInstructionAccounts & QuoteSendInstructionArgs
+  context: Pick<Context, 'programs'>,
+  input: QuoteSendInstructionAccounts & QuoteSendInstructionArgs
 ): TransactionBuilder {
-    // Program ID.
-    const programId = context.programs.getPublicKey('myOapp', '')
+  // Program ID.
+  const programId = context.programs.getPublicKey('myOapp', '');
 
-    // Accounts.
-    const resolvedAccounts = {
-        store: {
-            index: 0,
-            isWritable: false as boolean,
-            value: input.store ?? null,
-        },
-        peer: { index: 1, isWritable: false as boolean, value: input.peer ?? null },
-        endpoint: {
-            index: 2,
-            isWritable: false as boolean,
-            value: input.endpoint ?? null,
-        },
-    } satisfies ResolvedAccountsWithIndices
+  // Accounts.
+  const resolvedAccounts = {
+    store: {
+      index: 0,
+      isWritable: false as boolean,
+      value: input.store ?? null,
+    },
+    peer: { index: 1, isWritable: false as boolean, value: input.peer ?? null },
+    endpoint: {
+      index: 2,
+      isWritable: false as boolean,
+      value: input.endpoint ?? null,
+    },
+  } satisfies ResolvedAccountsWithIndices;
 
-    // Arguments.
-    const resolvedArgs: QuoteSendInstructionArgs = { ...input }
+  // Arguments.
+  const resolvedArgs: QuoteSendInstructionArgs = { ...input };
 
-    // Accounts in order.
-    const orderedAccounts: ResolvedAccount[] = Object.values(resolvedAccounts).sort((a, b) => a.index - b.index)
+  // Accounts in order.
+  const orderedAccounts: ResolvedAccount[] = Object.values(
+    resolvedAccounts
+  ).sort((a, b) => a.index - b.index);
 
-    // Keys and Signers.
-    const [keys, signers] = getAccountMetasAndSigners(orderedAccounts, 'programId', programId)
+  // Keys and Signers.
+  const [keys, signers] = getAccountMetasAndSigners(
+    orderedAccounts,
+    'programId',
+    programId
+  );
 
-    // Data.
-    const data = getQuoteSendInstructionDataSerializer().serialize(resolvedArgs as QuoteSendInstructionDataArgs)
+  // Data.
+  const data = getQuoteSendInstructionDataSerializer().serialize(
+    resolvedArgs as QuoteSendInstructionDataArgs
+  );
 
-    // Bytes Created On Chain.
-    const bytesCreatedOnChain = 0
+  // Bytes Created On Chain.
+  const bytesCreatedOnChain = 0;
 
-    return transactionBuilder([{ instruction: { keys, programId, data }, signers, bytesCreatedOnChain }])
+  return transactionBuilder([
+    { instruction: { keys, programId, data }, signers, bytesCreatedOnChain },
+  ]);
 }

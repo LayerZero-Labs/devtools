@@ -6,36 +6,45 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
-import { Serializer, bytes, struct, u32, u64 } from '@metaplex-foundation/umi/serializers'
+import {
+  Serializer,
+  bytes,
+  struct,
+  u32,
+  u64,
+} from '@metaplex-foundation/umi/serializers';
 
 export type LzReceiveParams = {
-    srcEid: number
-    sender: Uint8Array
-    nonce: bigint
-    guid: Uint8Array
-    message: Uint8Array
-    extraData: Uint8Array
-}
+  srcEid: number;
+  sender: Uint8Array;
+  nonce: bigint;
+  guid: Uint8Array;
+  message: Uint8Array;
+  extraData: Uint8Array;
+};
 
 export type LzReceiveParamsArgs = {
-    srcEid: number
-    sender: Uint8Array
-    nonce: number | bigint
-    guid: Uint8Array
-    message: Uint8Array
-    extraData: Uint8Array
-}
+  srcEid: number;
+  sender: Uint8Array;
+  nonce: number | bigint;
+  guid: Uint8Array;
+  message: Uint8Array;
+  extraData: Uint8Array;
+};
 
-export function getLzReceiveParamsSerializer(): Serializer<LzReceiveParamsArgs, LzReceiveParams> {
-    return struct<LzReceiveParams>(
-        [
-            ['srcEid', u32()],
-            ['sender', bytes({ size: 32 })],
-            ['nonce', u64()],
-            ['guid', bytes({ size: 32 })],
-            ['message', bytes({ size: u32() })],
-            ['extraData', bytes({ size: u32() })],
-        ],
-        { description: 'LzReceiveParams' }
-    ) as Serializer<LzReceiveParamsArgs, LzReceiveParams>
+export function getLzReceiveParamsSerializer(): Serializer<
+  LzReceiveParamsArgs,
+  LzReceiveParams
+> {
+  return struct<LzReceiveParams>(
+    [
+      ['srcEid', u32()],
+      ['sender', bytes({ size: 32 })],
+      ['nonce', u64()],
+      ['guid', bytes({ size: 32 })],
+      ['message', bytes({ size: u32() })],
+      ['extraData', bytes({ size: u32() })],
+    ],
+    { description: 'LzReceiveParams' }
+  ) as Serializer<LzReceiveParamsArgs, LzReceiveParams>;
 }

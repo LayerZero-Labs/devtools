@@ -6,92 +6,128 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
-import { Context, Pda, PublicKey, TransactionBuilder, transactionBuilder } from '@metaplex-foundation/umi'
-import { Serializer, bytes, mapSerializer, struct } from '@metaplex-foundation/umi/serializers'
-import { ResolvedAccount, ResolvedAccountsWithIndices, getAccountMetasAndSigners } from '../shared'
-import { LzReceiveParams, LzReceiveParamsArgs, getLzReceiveParamsSerializer } from '../types'
+import {
+  Context,
+  Pda,
+  PublicKey,
+  TransactionBuilder,
+  transactionBuilder,
+} from '@metaplex-foundation/umi';
+import {
+  Serializer,
+  bytes,
+  mapSerializer,
+  struct,
+} from '@metaplex-foundation/umi/serializers';
+import {
+  ResolvedAccount,
+  ResolvedAccountsWithIndices,
+  getAccountMetasAndSigners,
+} from '../shared';
+import {
+  LzReceiveParams,
+  LzReceiveParamsArgs,
+  getLzReceiveParamsSerializer,
+} from '../types';
 
 // Accounts.
 export type LzReceiveTypesInfoInstructionAccounts = {
-    store: PublicKey | Pda
-    /**
-     * PDA account containing the versioned data structure for V2
-     * Contains the accounts needed to construct lz_receive_types_v2 instruction
-     */
+  store: PublicKey | Pda;
+  /**
+   * PDA account containing the versioned data structure for V2
+   * Contains the accounts needed to construct lz_receive_types_v2 instruction
+   */
 
-    lzReceiveTypesAccounts: PublicKey | Pda
-}
+  lzReceiveTypesAccounts: PublicKey | Pda;
+};
 
 // Data.
 export type LzReceiveTypesInfoInstructionData = {
-    discriminator: Uint8Array
-    params: LzReceiveParams
-}
+  discriminator: Uint8Array;
+  params: LzReceiveParams;
+};
 
 export type LzReceiveTypesInfoInstructionDataArgs = {
-    params: LzReceiveParamsArgs
-}
+  params: LzReceiveParamsArgs;
+};
 
 export function getLzReceiveTypesInfoInstructionDataSerializer(): Serializer<
+  LzReceiveTypesInfoInstructionDataArgs,
+  LzReceiveTypesInfoInstructionData
+> {
+  return mapSerializer<
+    LzReceiveTypesInfoInstructionDataArgs,
+    any,
+    LzReceiveTypesInfoInstructionData
+  >(
+    struct<LzReceiveTypesInfoInstructionData>(
+      [
+        ['discriminator', bytes({ size: 8 })],
+        ['params', getLzReceiveParamsSerializer()],
+      ],
+      { description: 'LzReceiveTypesInfoInstructionData' }
+    ),
+    (value) => ({
+      ...value,
+      discriminator: new Uint8Array([43, 148, 213, 93, 101, 127, 37, 170]),
+    })
+  ) as Serializer<
     LzReceiveTypesInfoInstructionDataArgs,
     LzReceiveTypesInfoInstructionData
-> {
-    return mapSerializer<LzReceiveTypesInfoInstructionDataArgs, any, LzReceiveTypesInfoInstructionData>(
-        struct<LzReceiveTypesInfoInstructionData>(
-            [
-                ['discriminator', bytes({ size: 8 })],
-                ['params', getLzReceiveParamsSerializer()],
-            ],
-            { description: 'LzReceiveTypesInfoInstructionData' }
-        ),
-        (value) => ({
-            ...value,
-            discriminator: new Uint8Array([43, 148, 213, 93, 101, 127, 37, 170]),
-        })
-    ) as Serializer<LzReceiveTypesInfoInstructionDataArgs, LzReceiveTypesInfoInstructionData>
+  >;
 }
 
 // Args.
-export type LzReceiveTypesInfoInstructionArgs = LzReceiveTypesInfoInstructionDataArgs
+export type LzReceiveTypesInfoInstructionArgs =
+  LzReceiveTypesInfoInstructionDataArgs;
 
 // Instruction.
 export function lzReceiveTypesInfo(
-    context: Pick<Context, 'programs'>,
-    input: LzReceiveTypesInfoInstructionAccounts & LzReceiveTypesInfoInstructionArgs
+  context: Pick<Context, 'programs'>,
+  input: LzReceiveTypesInfoInstructionAccounts &
+    LzReceiveTypesInfoInstructionArgs
 ): TransactionBuilder {
-    // Program ID.
-    const programId = context.programs.getPublicKey('myOapp', '')
+  // Program ID.
+  const programId = context.programs.getPublicKey('myOapp', '');
 
-    // Accounts.
-    const resolvedAccounts = {
-        store: {
-            index: 0,
-            isWritable: false as boolean,
-            value: input.store ?? null,
-        },
-        lzReceiveTypesAccounts: {
-            index: 1,
-            isWritable: false as boolean,
-            value: input.lzReceiveTypesAccounts ?? null,
-        },
-    } satisfies ResolvedAccountsWithIndices
+  // Accounts.
+  const resolvedAccounts = {
+    store: {
+      index: 0,
+      isWritable: false as boolean,
+      value: input.store ?? null,
+    },
+    lzReceiveTypesAccounts: {
+      index: 1,
+      isWritable: false as boolean,
+      value: input.lzReceiveTypesAccounts ?? null,
+    },
+  } satisfies ResolvedAccountsWithIndices;
 
-    // Arguments.
-    const resolvedArgs: LzReceiveTypesInfoInstructionArgs = { ...input }
+  // Arguments.
+  const resolvedArgs: LzReceiveTypesInfoInstructionArgs = { ...input };
 
-    // Accounts in order.
-    const orderedAccounts: ResolvedAccount[] = Object.values(resolvedAccounts).sort((a, b) => a.index - b.index)
+  // Accounts in order.
+  const orderedAccounts: ResolvedAccount[] = Object.values(
+    resolvedAccounts
+  ).sort((a, b) => a.index - b.index);
 
-    // Keys and Signers.
-    const [keys, signers] = getAccountMetasAndSigners(orderedAccounts, 'programId', programId)
+  // Keys and Signers.
+  const [keys, signers] = getAccountMetasAndSigners(
+    orderedAccounts,
+    'programId',
+    programId
+  );
 
-    // Data.
-    const data = getLzReceiveTypesInfoInstructionDataSerializer().serialize(
-        resolvedArgs as LzReceiveTypesInfoInstructionDataArgs
-    )
+  // Data.
+  const data = getLzReceiveTypesInfoInstructionDataSerializer().serialize(
+    resolvedArgs as LzReceiveTypesInfoInstructionDataArgs
+  );
 
-    // Bytes Created On Chain.
-    const bytesCreatedOnChain = 0
+  // Bytes Created On Chain.
+  const bytesCreatedOnChain = 0;
 
-    return transactionBuilder([{ instruction: { keys, programId, data }, signers, bytesCreatedOnChain }])
+  return transactionBuilder([
+    { instruction: { keys, programId, data }, signers, bytesCreatedOnChain },
+  ]);
 }

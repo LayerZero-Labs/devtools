@@ -7,133 +7,162 @@
  */
 
 import {
-    Account,
-    Context,
-    Pda,
-    PublicKey,
-    RpcAccount,
-    RpcGetAccountOptions,
-    RpcGetAccountsOptions,
-    assertAccountExists,
-    deserializeAccount,
-    gpaBuilder,
-    publicKey as toPublicKey,
-} from '@metaplex-foundation/umi'
+  Account,
+  Context,
+  Pda,
+  PublicKey,
+  RpcAccount,
+  RpcGetAccountOptions,
+  RpcGetAccountsOptions,
+  assertAccountExists,
+  deserializeAccount,
+  gpaBuilder,
+  publicKey as toPublicKey,
+} from '@metaplex-foundation/umi';
 import {
-    Serializer,
-    bytes,
-    mapSerializer,
-    publicKey as publicKeySerializer,
-    struct,
-    u8,
-} from '@metaplex-foundation/umi/serializers'
+  Serializer,
+  bytes,
+  mapSerializer,
+  publicKey as publicKeySerializer,
+  struct,
+  u8,
+} from '@metaplex-foundation/umi/serializers';
 
-export type LzReceiveTypesAccounts = Account<LzReceiveTypesAccountsAccountData>
+export type LzReceiveTypesAccounts = Account<LzReceiveTypesAccountsAccountData>;
 
 export type LzReceiveTypesAccountsAccountData = {
-    discriminator: Uint8Array
-    store: PublicKey
-    alt: PublicKey
-    bump: number
-}
+  discriminator: Uint8Array;
+  store: PublicKey;
+  alt: PublicKey;
+  bump: number;
+};
 
 export type LzReceiveTypesAccountsAccountDataArgs = {
-    store: PublicKey
-    alt: PublicKey
-    bump: number
-}
+  store: PublicKey;
+  alt: PublicKey;
+  bump: number;
+};
 
 export function getLzReceiveTypesAccountsAccountDataSerializer(): Serializer<
+  LzReceiveTypesAccountsAccountDataArgs,
+  LzReceiveTypesAccountsAccountData
+> {
+  return mapSerializer<
+    LzReceiveTypesAccountsAccountDataArgs,
+    any,
+    LzReceiveTypesAccountsAccountData
+  >(
+    struct<LzReceiveTypesAccountsAccountData>(
+      [
+        ['discriminator', bytes({ size: 8 })],
+        ['store', publicKeySerializer()],
+        ['alt', publicKeySerializer()],
+        ['bump', u8()],
+      ],
+      { description: 'LzReceiveTypesAccountsAccountData' }
+    ),
+    (value) => ({
+      ...value,
+      discriminator: new Uint8Array([248, 87, 167, 117, 5, 251, 21, 126]),
+    })
+  ) as Serializer<
     LzReceiveTypesAccountsAccountDataArgs,
     LzReceiveTypesAccountsAccountData
-> {
-    return mapSerializer<LzReceiveTypesAccountsAccountDataArgs, any, LzReceiveTypesAccountsAccountData>(
-        struct<LzReceiveTypesAccountsAccountData>(
-            [
-                ['discriminator', bytes({ size: 8 })],
-                ['store', publicKeySerializer()],
-                ['alt', publicKeySerializer()],
-                ['bump', u8()],
-            ],
-            { description: 'LzReceiveTypesAccountsAccountData' }
-        ),
-        (value) => ({
-            ...value,
-            discriminator: new Uint8Array([248, 87, 167, 117, 5, 251, 21, 126]),
-        })
-    ) as Serializer<LzReceiveTypesAccountsAccountDataArgs, LzReceiveTypesAccountsAccountData>
+  >;
 }
 
-export function deserializeLzReceiveTypesAccounts(rawAccount: RpcAccount): LzReceiveTypesAccounts {
-    return deserializeAccount(rawAccount, getLzReceiveTypesAccountsAccountDataSerializer())
+export function deserializeLzReceiveTypesAccounts(
+  rawAccount: RpcAccount
+): LzReceiveTypesAccounts {
+  return deserializeAccount(
+    rawAccount,
+    getLzReceiveTypesAccountsAccountDataSerializer()
+  );
 }
 
 export async function fetchLzReceiveTypesAccounts(
-    context: Pick<Context, 'rpc'>,
-    publicKey: PublicKey | Pda,
-    options?: RpcGetAccountOptions
+  context: Pick<Context, 'rpc'>,
+  publicKey: PublicKey | Pda,
+  options?: RpcGetAccountOptions
 ): Promise<LzReceiveTypesAccounts> {
-    const maybeAccount = await context.rpc.getAccount(toPublicKey(publicKey, false), options)
-    assertAccountExists(maybeAccount, 'LzReceiveTypesAccounts')
-    return deserializeLzReceiveTypesAccounts(maybeAccount)
+  const maybeAccount = await context.rpc.getAccount(
+    toPublicKey(publicKey, false),
+    options
+  );
+  assertAccountExists(maybeAccount, 'LzReceiveTypesAccounts');
+  return deserializeLzReceiveTypesAccounts(maybeAccount);
 }
 
 export async function safeFetchLzReceiveTypesAccounts(
-    context: Pick<Context, 'rpc'>,
-    publicKey: PublicKey | Pda,
-    options?: RpcGetAccountOptions
+  context: Pick<Context, 'rpc'>,
+  publicKey: PublicKey | Pda,
+  options?: RpcGetAccountOptions
 ): Promise<LzReceiveTypesAccounts | null> {
-    const maybeAccount = await context.rpc.getAccount(toPublicKey(publicKey, false), options)
-    return maybeAccount.exists ? deserializeLzReceiveTypesAccounts(maybeAccount) : null
+  const maybeAccount = await context.rpc.getAccount(
+    toPublicKey(publicKey, false),
+    options
+  );
+  return maybeAccount.exists
+    ? deserializeLzReceiveTypesAccounts(maybeAccount)
+    : null;
 }
 
 export async function fetchAllLzReceiveTypesAccounts(
-    context: Pick<Context, 'rpc'>,
-    publicKeys: Array<PublicKey | Pda>,
-    options?: RpcGetAccountsOptions
+  context: Pick<Context, 'rpc'>,
+  publicKeys: Array<PublicKey | Pda>,
+  options?: RpcGetAccountsOptions
 ): Promise<LzReceiveTypesAccounts[]> {
-    const maybeAccounts = await context.rpc.getAccounts(
-        publicKeys.map((key) => toPublicKey(key, false)),
-        options
-    )
-    return maybeAccounts.map((maybeAccount) => {
-        assertAccountExists(maybeAccount, 'LzReceiveTypesAccounts')
-        return deserializeLzReceiveTypesAccounts(maybeAccount)
-    })
+  const maybeAccounts = await context.rpc.getAccounts(
+    publicKeys.map((key) => toPublicKey(key, false)),
+    options
+  );
+  return maybeAccounts.map((maybeAccount) => {
+    assertAccountExists(maybeAccount, 'LzReceiveTypesAccounts');
+    return deserializeLzReceiveTypesAccounts(maybeAccount);
+  });
 }
 
 export async function safeFetchAllLzReceiveTypesAccounts(
-    context: Pick<Context, 'rpc'>,
-    publicKeys: Array<PublicKey | Pda>,
-    options?: RpcGetAccountsOptions
+  context: Pick<Context, 'rpc'>,
+  publicKeys: Array<PublicKey | Pda>,
+  options?: RpcGetAccountsOptions
 ): Promise<LzReceiveTypesAccounts[]> {
-    const maybeAccounts = await context.rpc.getAccounts(
-        publicKeys.map((key) => toPublicKey(key, false)),
-        options
-    )
-    return maybeAccounts
-        .filter((maybeAccount) => maybeAccount.exists)
-        .map((maybeAccount) => deserializeLzReceiveTypesAccounts(maybeAccount as RpcAccount))
+  const maybeAccounts = await context.rpc.getAccounts(
+    publicKeys.map((key) => toPublicKey(key, false)),
+    options
+  );
+  return maybeAccounts
+    .filter((maybeAccount) => maybeAccount.exists)
+    .map((maybeAccount) =>
+      deserializeLzReceiveTypesAccounts(maybeAccount as RpcAccount)
+    );
 }
 
-export function getLzReceiveTypesAccountsGpaBuilder(context: Pick<Context, 'rpc' | 'programs'>) {
-    const programId = context.programs.getPublicKey('myOapp', '')
-    return gpaBuilder(context, programId)
-        .registerFields<{
-            discriminator: Uint8Array
-            store: PublicKey
-            alt: PublicKey
-            bump: number
-        }>({
-            discriminator: [0, bytes({ size: 8 })],
-            store: [8, publicKeySerializer()],
-            alt: [40, publicKeySerializer()],
-            bump: [72, u8()],
-        })
-        .deserializeUsing<LzReceiveTypesAccounts>((account) => deserializeLzReceiveTypesAccounts(account))
-        .whereField('discriminator', new Uint8Array([248, 87, 167, 117, 5, 251, 21, 126]))
+export function getLzReceiveTypesAccountsGpaBuilder(
+  context: Pick<Context, 'rpc' | 'programs'>
+) {
+  const programId = context.programs.getPublicKey('myOapp', '');
+  return gpaBuilder(context, programId)
+    .registerFields<{
+      discriminator: Uint8Array;
+      store: PublicKey;
+      alt: PublicKey;
+      bump: number;
+    }>({
+      discriminator: [0, bytes({ size: 8 })],
+      store: [8, publicKeySerializer()],
+      alt: [40, publicKeySerializer()],
+      bump: [72, u8()],
+    })
+    .deserializeUsing<LzReceiveTypesAccounts>((account) =>
+      deserializeLzReceiveTypesAccounts(account)
+    )
+    .whereField(
+      'discriminator',
+      new Uint8Array([248, 87, 167, 117, 5, 251, 21, 126])
+    );
 }
 
 export function getLzReceiveTypesAccountsSize(): number {
-    return 73
+  return 73;
 }

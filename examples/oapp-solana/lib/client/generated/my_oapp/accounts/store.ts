@@ -7,132 +7,144 @@
  */
 
 import {
-    Account,
-    Context,
-    Pda,
-    PublicKey,
-    RpcAccount,
-    RpcGetAccountOptions,
-    RpcGetAccountsOptions,
-    assertAccountExists,
-    deserializeAccount,
-    gpaBuilder,
-    publicKey as toPublicKey,
-} from '@metaplex-foundation/umi'
+  Account,
+  Context,
+  Pda,
+  PublicKey,
+  RpcAccount,
+  RpcGetAccountOptions,
+  RpcGetAccountsOptions,
+  assertAccountExists,
+  deserializeAccount,
+  gpaBuilder,
+  publicKey as toPublicKey,
+} from '@metaplex-foundation/umi';
 import {
-    Serializer,
-    bytes,
-    mapSerializer,
-    publicKey as publicKeySerializer,
-    string,
-    struct,
-    u8,
-} from '@metaplex-foundation/umi/serializers'
+  Serializer,
+  bytes,
+  mapSerializer,
+  publicKey as publicKeySerializer,
+  string,
+  struct,
+  u8,
+} from '@metaplex-foundation/umi/serializers';
 
-export type Store = Account<StoreAccountData>
+export type Store = Account<StoreAccountData>;
 
 export type StoreAccountData = {
-    discriminator: Uint8Array
-    admin: PublicKey
-    bump: number
-    endpointProgram: PublicKey
-    string: string
-}
+  discriminator: Uint8Array;
+  admin: PublicKey;
+  bump: number;
+  endpointProgram: PublicKey;
+  string: string;
+};
 
 export type StoreAccountDataArgs = {
-    admin: PublicKey
-    bump: number
-    endpointProgram: PublicKey
-    string: string
-}
+  admin: PublicKey;
+  bump: number;
+  endpointProgram: PublicKey;
+  string: string;
+};
 
-export function getStoreAccountDataSerializer(): Serializer<StoreAccountDataArgs, StoreAccountData> {
-    return mapSerializer<StoreAccountDataArgs, any, StoreAccountData>(
-        struct<StoreAccountData>(
-            [
-                ['discriminator', bytes({ size: 8 })],
-                ['admin', publicKeySerializer()],
-                ['bump', u8()],
-                ['endpointProgram', publicKeySerializer()],
-                ['string', string()],
-            ],
-            { description: 'StoreAccountData' }
-        ),
-        (value) => ({
-            ...value,
-            discriminator: new Uint8Array([130, 48, 247, 244, 182, 191, 30, 26]),
-        })
-    ) as Serializer<StoreAccountDataArgs, StoreAccountData>
+export function getStoreAccountDataSerializer(): Serializer<
+  StoreAccountDataArgs,
+  StoreAccountData
+> {
+  return mapSerializer<StoreAccountDataArgs, any, StoreAccountData>(
+    struct<StoreAccountData>(
+      [
+        ['discriminator', bytes({ size: 8 })],
+        ['admin', publicKeySerializer()],
+        ['bump', u8()],
+        ['endpointProgram', publicKeySerializer()],
+        ['string', string()],
+      ],
+      { description: 'StoreAccountData' }
+    ),
+    (value) => ({
+      ...value,
+      discriminator: new Uint8Array([130, 48, 247, 244, 182, 191, 30, 26]),
+    })
+  ) as Serializer<StoreAccountDataArgs, StoreAccountData>;
 }
 
 export function deserializeStore(rawAccount: RpcAccount): Store {
-    return deserializeAccount(rawAccount, getStoreAccountDataSerializer())
+  return deserializeAccount(rawAccount, getStoreAccountDataSerializer());
 }
 
 export async function fetchStore(
-    context: Pick<Context, 'rpc'>,
-    publicKey: PublicKey | Pda,
-    options?: RpcGetAccountOptions
+  context: Pick<Context, 'rpc'>,
+  publicKey: PublicKey | Pda,
+  options?: RpcGetAccountOptions
 ): Promise<Store> {
-    const maybeAccount = await context.rpc.getAccount(toPublicKey(publicKey, false), options)
-    assertAccountExists(maybeAccount, 'Store')
-    return deserializeStore(maybeAccount)
+  const maybeAccount = await context.rpc.getAccount(
+    toPublicKey(publicKey, false),
+    options
+  );
+  assertAccountExists(maybeAccount, 'Store');
+  return deserializeStore(maybeAccount);
 }
 
 export async function safeFetchStore(
-    context: Pick<Context, 'rpc'>,
-    publicKey: PublicKey | Pda,
-    options?: RpcGetAccountOptions
+  context: Pick<Context, 'rpc'>,
+  publicKey: PublicKey | Pda,
+  options?: RpcGetAccountOptions
 ): Promise<Store | null> {
-    const maybeAccount = await context.rpc.getAccount(toPublicKey(publicKey, false), options)
-    return maybeAccount.exists ? deserializeStore(maybeAccount) : null
+  const maybeAccount = await context.rpc.getAccount(
+    toPublicKey(publicKey, false),
+    options
+  );
+  return maybeAccount.exists ? deserializeStore(maybeAccount) : null;
 }
 
 export async function fetchAllStore(
-    context: Pick<Context, 'rpc'>,
-    publicKeys: Array<PublicKey | Pda>,
-    options?: RpcGetAccountsOptions
+  context: Pick<Context, 'rpc'>,
+  publicKeys: Array<PublicKey | Pda>,
+  options?: RpcGetAccountsOptions
 ): Promise<Store[]> {
-    const maybeAccounts = await context.rpc.getAccounts(
-        publicKeys.map((key) => toPublicKey(key, false)),
-        options
-    )
-    return maybeAccounts.map((maybeAccount) => {
-        assertAccountExists(maybeAccount, 'Store')
-        return deserializeStore(maybeAccount)
-    })
+  const maybeAccounts = await context.rpc.getAccounts(
+    publicKeys.map((key) => toPublicKey(key, false)),
+    options
+  );
+  return maybeAccounts.map((maybeAccount) => {
+    assertAccountExists(maybeAccount, 'Store');
+    return deserializeStore(maybeAccount);
+  });
 }
 
 export async function safeFetchAllStore(
-    context: Pick<Context, 'rpc'>,
-    publicKeys: Array<PublicKey | Pda>,
-    options?: RpcGetAccountsOptions
+  context: Pick<Context, 'rpc'>,
+  publicKeys: Array<PublicKey | Pda>,
+  options?: RpcGetAccountsOptions
 ): Promise<Store[]> {
-    const maybeAccounts = await context.rpc.getAccounts(
-        publicKeys.map((key) => toPublicKey(key, false)),
-        options
-    )
-    return maybeAccounts
-        .filter((maybeAccount) => maybeAccount.exists)
-        .map((maybeAccount) => deserializeStore(maybeAccount as RpcAccount))
+  const maybeAccounts = await context.rpc.getAccounts(
+    publicKeys.map((key) => toPublicKey(key, false)),
+    options
+  );
+  return maybeAccounts
+    .filter((maybeAccount) => maybeAccount.exists)
+    .map((maybeAccount) => deserializeStore(maybeAccount as RpcAccount));
 }
 
 export function getStoreGpaBuilder(context: Pick<Context, 'rpc' | 'programs'>) {
-    const programId = context.programs.getPublicKey('myOapp', '')
-    return gpaBuilder(context, programId)
-        .registerFields<{
-            discriminator: Uint8Array
-            admin: PublicKey
-            bump: number
-            endpointProgram: PublicKey
-            string: string
-        }>({
-            discriminator: [0, bytes({ size: 8 })],
-            admin: [8, publicKeySerializer()],
-            bump: [40, u8()],
-            endpointProgram: [41, publicKeySerializer()],
-            string: [73, string()],
-        })
-        .deserializeUsing<Store>((account) => deserializeStore(account))
-        .whereField('discriminator', new Uint8Array([130, 48, 247, 244, 182, 191, 30, 26]))
+  const programId = context.programs.getPublicKey('myOapp', '');
+  return gpaBuilder(context, programId)
+    .registerFields<{
+      discriminator: Uint8Array;
+      admin: PublicKey;
+      bump: number;
+      endpointProgram: PublicKey;
+      string: string;
+    }>({
+      discriminator: [0, bytes({ size: 8 })],
+      admin: [8, publicKeySerializer()],
+      bump: [40, u8()],
+      endpointProgram: [41, publicKeySerializer()],
+      string: [73, string()],
+    })
+    .deserializeUsing<Store>((account) => deserializeStore(account))
+    .whereField(
+      'discriminator',
+      new Uint8Array([130, 48, 247, 244, 182, 191, 30, 26])
+    );
 }
