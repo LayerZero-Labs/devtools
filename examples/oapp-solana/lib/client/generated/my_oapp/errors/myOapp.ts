@@ -12,7 +12,7 @@ type ProgramErrorConstructor = new (program: Program, cause?: Error) => ProgramE
 const codeToErrorMap: Map<number, ProgramErrorConstructor> = new Map()
 const nameToErrorMap: Map<string, ProgramErrorConstructor> = new Map()
 
-/** InvalidMessageType:  */
+/** InvalidMessageType */
 export class InvalidMessageTypeError extends ProgramError {
     override readonly name: string = 'InvalidMessageType'
 

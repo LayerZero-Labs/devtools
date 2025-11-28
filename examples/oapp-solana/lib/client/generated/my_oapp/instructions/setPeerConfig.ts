@@ -13,11 +13,8 @@ import { PeerConfigParam, PeerConfigParamArgs, getPeerConfigParamSerializer } fr
 
 // Accounts.
 export type SetPeerConfigInstructionAccounts = {
-    /** Admin of the OApp store */
     admin: Signer
-    /** Peer configuration PDA for a specific remote chain */
     peer: PublicKey | Pda
-    /** Store PDA of this OApp */
     store: PublicKey | Pda
     systemProgram?: PublicKey | Pda
 }
@@ -63,7 +60,7 @@ export function setPeerConfig(
     input: SetPeerConfigInstructionAccounts & SetPeerConfigInstructionArgs
 ): TransactionBuilder {
     // Program ID.
-    const programId = context.programs.getPublicKey('myOapp', '')
+    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
 
     // Accounts.
     const resolvedAccounts = {

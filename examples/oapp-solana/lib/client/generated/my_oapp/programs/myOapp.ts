@@ -9,11 +9,12 @@
 import { ClusterFilter, Context, Program, PublicKey } from '@metaplex-foundation/umi'
 import { getMyOappErrorFromCode, getMyOappErrorFromName } from '../errors'
 
-export const MY_OAPP_PROGRAM_ID = '' as PublicKey<''>
+export const MY_OAPP_PROGRAM_ID =
+    'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay' as PublicKey<'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay'>
 
 export function createMyOappProgram(): Program {
     return {
-        name: 'myOapp',
+        name: 'myoapp',
         publicKey: MY_OAPP_PROGRAM_ID,
         getErrorFromCode(code: number, cause?: Error) {
             return getMyOappErrorFromCode(code, this, cause)
