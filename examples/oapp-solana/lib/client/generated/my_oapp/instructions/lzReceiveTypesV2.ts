@@ -12,47 +12,49 @@ import { ResolvedAccount, ResolvedAccountsWithIndices, getAccountMetasAndSigners
 import { LzReceiveParams, LzReceiveParamsArgs, getLzReceiveParamsSerializer } from '../types'
 
 // Accounts.
-export type LzReceiveTypesInstructionAccounts = {
+export type LzReceiveTypesV2InstructionAccounts = {
     store: PublicKey | Pda
 }
 
 // Data.
-export type LzReceiveTypesInstructionData = {
+export type LzReceiveTypesV2InstructionData = {
     discriminator: Uint8Array
     params: LzReceiveParams
 }
 
-export type LzReceiveTypesInstructionDataArgs = { params: LzReceiveParamsArgs }
+export type LzReceiveTypesV2InstructionDataArgs = {
+    params: LzReceiveParamsArgs
+}
 
-export function getLzReceiveTypesInstructionDataSerializer(): Serializer<
-    LzReceiveTypesInstructionDataArgs,
-    LzReceiveTypesInstructionData
+export function getLzReceiveTypesV2InstructionDataSerializer(): Serializer<
+    LzReceiveTypesV2InstructionDataArgs,
+    LzReceiveTypesV2InstructionData
 > {
-    return mapSerializer<LzReceiveTypesInstructionDataArgs, any, LzReceiveTypesInstructionData>(
-        struct<LzReceiveTypesInstructionData>(
+    return mapSerializer<LzReceiveTypesV2InstructionDataArgs, any, LzReceiveTypesV2InstructionData>(
+        struct<LzReceiveTypesV2InstructionData>(
             [
                 ['discriminator', bytes({ size: 8 })],
                 ['params', getLzReceiveParamsSerializer()],
             ],
-            { description: 'LzReceiveTypesInstructionData' }
+            { description: 'LzReceiveTypesV2InstructionData' }
         ),
         (value) => ({
             ...value,
-            discriminator: new Uint8Array([221, 17, 246, 159, 248, 128, 31, 96]),
+            discriminator: new Uint8Array([109, 157, 200, 142, 138, 223, 159, 164]),
         })
-    ) as Serializer<LzReceiveTypesInstructionDataArgs, LzReceiveTypesInstructionData>
+    ) as Serializer<LzReceiveTypesV2InstructionDataArgs, LzReceiveTypesV2InstructionData>
 }
 
 // Args.
-export type LzReceiveTypesInstructionArgs = LzReceiveTypesInstructionDataArgs
+export type LzReceiveTypesV2InstructionArgs = LzReceiveTypesV2InstructionDataArgs
 
 // Instruction.
-export function lzReceiveTypes(
+export function lzReceiveTypesV2(
     context: Pick<Context, 'programs'>,
-    input: LzReceiveTypesInstructionAccounts & LzReceiveTypesInstructionArgs
+    input: LzReceiveTypesV2InstructionAccounts & LzReceiveTypesV2InstructionArgs
 ): TransactionBuilder {
     // Program ID.
-    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
+    const programId = context.programs.getPublicKey('myOapp', '')
 
     // Accounts.
     const resolvedAccounts = {
@@ -64,7 +66,7 @@ export function lzReceiveTypes(
     } satisfies ResolvedAccountsWithIndices
 
     // Arguments.
-    const resolvedArgs: LzReceiveTypesInstructionArgs = { ...input }
+    const resolvedArgs: LzReceiveTypesV2InstructionArgs = { ...input }
 
     // Accounts in order.
     const orderedAccounts: ResolvedAccount[] = Object.values(resolvedAccounts).sort((a, b) => a.index - b.index)
@@ -73,8 +75,8 @@ export function lzReceiveTypes(
     const [keys, signers] = getAccountMetasAndSigners(orderedAccounts, 'programId', programId)
 
     // Data.
-    const data = getLzReceiveTypesInstructionDataSerializer().serialize(
-        resolvedArgs as LzReceiveTypesInstructionDataArgs
+    const data = getLzReceiveTypesV2InstructionDataSerializer().serialize(
+        resolvedArgs as LzReceiveTypesV2InstructionDataArgs
     )
 
     // Bytes Created On Chain.
