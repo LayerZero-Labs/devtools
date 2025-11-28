@@ -1,8 +1,9 @@
 #[test_only]
 module oft::oft_impl_config_tests {
-    use std::account::create_account_for_test;
+    use std::account::{create_account_for_test, create_signer_for_test};
     use std::event::was_event_emitted;
     use std::string::utf8;
+    use std::timestamp;
     use std::vector;
 
     use oft::oapp_store;
@@ -12,6 +13,7 @@ module oft::oft_impl_config_tests {
         assert_not_blocklisted,
         blocked_amount_redirected_event,
         blocklisting_disabled_event,
+        checkpoint_rate_limit_in_flight,
         debit_view_with_possible_fee,
         fee_bps,
         fee_details_with_possible_fee,
@@ -279,6 +281,7 @@ module oft::oft_impl_config_tests {
     #[test]
     fun test_set_rate_limit_net() {
         setup();
+        timestamp::set_time_has_started_for_testing(&create_signer_for_test(@std));
 
         // No rate limit configured
         assert!(has_rate_limit(30100) == false, 2);
@@ -300,7 +303,10 @@ module oft::oft_impl_config_tests {
         assert!(in_flight_at_time(30100, 500) == 10000, 1);
         assert!(rate_limit_capacity_at_time(30100, 500) == 10000, 2);
 
-        // release most of remaining capacity
+        // Release most of remaining capacity
+        // release_rate_limit_capacity will checkpoint at now_seconds() (which is 0 after initialization)
+        // At time 0: in_flight = 20000, so after release of 9000: in_flight_on_last_update = 11000, last_update = 0
+        // At time 500: in_flight = 11000 - (500 * 20000 / 1000) = 11000 - 10000 = 1000
         release_rate_limit_capacity(30100, 9000);
         assert!(in_flight_at_time(30100, 500) == 1000, 1);
         assert!(rate_limit_capacity_at_time(30100, 500) == 19000, 2);
@@ -310,7 +316,9 @@ module oft::oft_impl_config_tests {
         assert!(in_flight_at_time(30100, 500) == 20000, 1);
         assert!(rate_limit_capacity_at_time(30100, 500) == 0, 2);
 
-        // release excess capacity (5x limit) - should not overshoot
+        // Release excess capacity (5x limit) - should not overshoot
+        // First checkpoint at 500 to get correct state, then release will checkpoint at now_seconds()
+        checkpoint_rate_limit_in_flight(30100, 500);
         release_rate_limit_capacity(30100, 100_000);
         assert!(in_flight_at_time(30100, 500) == 0, 1);
         assert!(rate_limit_capacity_at_time(30100, 500) == 20000, 2);
