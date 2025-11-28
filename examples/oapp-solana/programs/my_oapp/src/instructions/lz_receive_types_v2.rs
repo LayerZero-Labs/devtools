@@ -40,8 +40,6 @@ impl LzReceiveTypesV2<'_> {
             Pubkey::find_program_address(&[oapp::endpoint_cpi::EVENT_SEED], &ctx.program_id);
 
         let mut accounts = vec![
-            // payer
-            AccountMetaRef { pubkey: AddressLocator::Payer, is_writable: true },
             // store (writable)
             AccountMetaRef { pubkey: store_key.into(), is_writable: true },
             // peer
