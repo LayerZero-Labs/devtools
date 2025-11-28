@@ -12,6 +12,8 @@ use oapp::{
 #[derive(Accounts)]
 #[instruction(params: LzReceiveParams)]
 pub struct LzReceive<'info> {
+    #[account(mut)]
+    pub payer: Signer<'info>,
     /// OApp Store PDA.  This account represents the "address" of your OApp on
     /// Solana and can contain any state relevant to your application.
     /// Customize the fields in `Store` as needed.
