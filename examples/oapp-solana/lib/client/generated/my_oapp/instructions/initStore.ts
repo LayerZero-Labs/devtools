@@ -21,20 +21,14 @@ export type InitStoreInstructionAccounts = {
     payer?: Signer
     store: PublicKey | Pda
     lzReceiveTypesAccounts: PublicKey | Pda
+    alt?: PublicKey | Pda
     systemProgram?: PublicKey | Pda
 }
 
 // Data.
-export type InitStoreInstructionData = {
-    discriminator: Uint8Array
-    admin: PublicKey
-    endpoint: PublicKey
-}
+export type InitStoreInstructionData = { discriminator: Uint8Array; admin: PublicKey; endpoint: PublicKey }
 
-export type InitStoreInstructionDataArgs = {
-    admin: PublicKey
-    endpoint: PublicKey
-}
+export type InitStoreInstructionDataArgs = { admin: PublicKey; endpoint: PublicKey }
 
 export function getInitStoreInstructionDataSerializer(): Serializer<
     InitStoreInstructionDataArgs,
@@ -49,10 +43,7 @@ export function getInitStoreInstructionDataSerializer(): Serializer<
             ],
             { description: 'InitStoreInstructionData' }
         ),
-        (value) => ({
-            ...value,
-            discriminator: new Uint8Array([250, 74, 6, 95, 163, 188, 19, 181]),
-        })
+        (value) => ({ ...value, discriminator: new Uint8Array([250, 74, 6, 95, 163, 188, 19, 181]) })
     ) as Serializer<InitStoreInstructionDataArgs, InitStoreInstructionData>
 }
 
@@ -65,30 +56,15 @@ export function initStore(
     input: InitStoreInstructionAccounts & InitStoreInstructionArgs
 ): TransactionBuilder {
     // Program ID.
-    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
+    const programId = context.programs.getPublicKey('myOapp', '')
 
     // Accounts.
     const resolvedAccounts = {
-        payer: {
-            index: 0,
-            isWritable: true as boolean,
-            value: input.payer ?? null,
-        },
-        store: {
-            index: 1,
-            isWritable: true as boolean,
-            value: input.store ?? null,
-        },
-        lzReceiveTypesAccounts: {
-            index: 2,
-            isWritable: true as boolean,
-            value: input.lzReceiveTypesAccounts ?? null,
-        },
-        systemProgram: {
-            index: 3,
-            isWritable: false as boolean,
-            value: input.systemProgram ?? null,
-        },
+        payer: { index: 0, isWritable: true as boolean, value: input.payer ?? null },
+        store: { index: 1, isWritable: true as boolean, value: input.store ?? null },
+        lzReceiveTypesAccounts: { index: 2, isWritable: true as boolean, value: input.lzReceiveTypesAccounts ?? null },
+        alt: { index: 3, isWritable: false as boolean, value: input.alt ?? null },
+        systemProgram: { index: 4, isWritable: false as boolean, value: input.systemProgram ?? null },
     } satisfies ResolvedAccountsWithIndices
 
     // Arguments.

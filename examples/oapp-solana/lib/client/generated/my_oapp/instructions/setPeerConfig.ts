@@ -13,23 +13,19 @@ import { PeerConfigParam, PeerConfigParamArgs, getPeerConfigParamSerializer } fr
 
 // Accounts.
 export type SetPeerConfigInstructionAccounts = {
+    /** Admin of the OApp store */
     admin: Signer
+    /** Peer configuration PDA for a specific remote chain */
     peer: PublicKey | Pda
+    /** Store PDA of this OApp */
     store: PublicKey | Pda
     systemProgram?: PublicKey | Pda
 }
 
 // Data.
-export type SetPeerConfigInstructionData = {
-    discriminator: Uint8Array
-    remoteEid: number
-    config: PeerConfigParam
-}
+export type SetPeerConfigInstructionData = { discriminator: Uint8Array; remoteEid: number; config: PeerConfigParam }
 
-export type SetPeerConfigInstructionDataArgs = {
-    remoteEid: number
-    config: PeerConfigParamArgs
-}
+export type SetPeerConfigInstructionDataArgs = { remoteEid: number; config: PeerConfigParamArgs }
 
 export function getSetPeerConfigInstructionDataSerializer(): Serializer<
     SetPeerConfigInstructionDataArgs,
@@ -44,10 +40,7 @@ export function getSetPeerConfigInstructionDataSerializer(): Serializer<
             ],
             { description: 'SetPeerConfigInstructionData' }
         ),
-        (value) => ({
-            ...value,
-            discriminator: new Uint8Array([79, 187, 168, 57, 139, 140, 93, 47]),
-        })
+        (value) => ({ ...value, discriminator: new Uint8Array([79, 187, 168, 57, 139, 140, 93, 47]) })
     ) as Serializer<SetPeerConfigInstructionDataArgs, SetPeerConfigInstructionData>
 }
 
@@ -60,26 +53,14 @@ export function setPeerConfig(
     input: SetPeerConfigInstructionAccounts & SetPeerConfigInstructionArgs
 ): TransactionBuilder {
     // Program ID.
-    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
+    const programId = context.programs.getPublicKey('myOapp', '')
 
     // Accounts.
     const resolvedAccounts = {
-        admin: {
-            index: 0,
-            isWritable: true as boolean,
-            value: input.admin ?? null,
-        },
+        admin: { index: 0, isWritable: true as boolean, value: input.admin ?? null },
         peer: { index: 1, isWritable: true as boolean, value: input.peer ?? null },
-        store: {
-            index: 2,
-            isWritable: false as boolean,
-            value: input.store ?? null,
-        },
-        systemProgram: {
-            index: 3,
-            isWritable: false as boolean,
-            value: input.systemProgram ?? null,
-        },
+        store: { index: 2, isWritable: false as boolean, value: input.store ?? null },
+        systemProgram: { index: 3, isWritable: false as boolean, value: input.systemProgram ?? null },
     } satisfies ResolvedAccountsWithIndices
 
     // Arguments.

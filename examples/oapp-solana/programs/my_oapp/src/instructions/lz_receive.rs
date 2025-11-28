@@ -12,6 +12,8 @@ use oapp::{
 #[derive(Accounts)]
 #[instruction(params: LzReceiveParams)]
 pub struct LzReceive<'info> {
+    #[account(mut)]
+    pub payer: Signer<'info>,
     /// OApp Store PDA.  This account represents the "address" of your OApp on
     /// Solana and can contain any state relevant to your application.
     /// Customize the fields in `Store` as needed.
@@ -56,6 +58,8 @@ impl LzReceive<'_> {
         let string_value = msg_codec::decode(&params.message)?;
         let store = &mut ctx.accounts.store;
         store.string = string_value;
+
+        // You can add logic here to handle compose if the message contains a compose message
 
         Ok(())
     }

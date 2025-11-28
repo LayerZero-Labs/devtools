@@ -6,6 +6,8 @@ import { OmniAppPDA } from '@layerzerolabs/lz-solana-sdk-v2/umi'
 
 const eddsa = createWeb3JsEddsa()
 
+export const LZ_RECEIVE_TYPES_SEED = 'LzReceiveTypes'
+
 export class MyOAppPDA extends OmniAppPDA {
     static STORE_SEED = 'Store'
     static NONCE_SEED = 'Nonce'
@@ -37,5 +39,11 @@ export class MyOAppPDA extends OmniAppPDA {
             u32({ endian: Endian.Big }).serialize(remoteEid),
             sender,
         ])
+    }
+
+    // seeds = [LZ_RECEIVE_TYPES_SEED, &store.key().to_bytes()]
+    lzReceiveTypesAccounts(): Pda {
+        const [store] = this.oapp()
+        return eddsa.findPda(this.programId, [Buffer.from(LZ_RECEIVE_TYPES_SEED, 'utf8'), publicKeyBytes(store)])
     }
 }
