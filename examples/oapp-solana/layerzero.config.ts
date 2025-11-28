@@ -44,7 +44,7 @@ const pathways: TwoWayConfig[] = [
         arbitrumContract, // Arbitrum contract
         solanaContract, // Solana contract
         [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
-        [20, 32], // [Arbitrum to Solana confirmations, Solana to Arbitrum confirmations]
+        [20, 32], // [Arbitrum to Solana outbound confirmations, Solana to Arbitrum outbound confirmations]
         [SOLANA_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Arbitrum to Solana enforcedOptions, Solana to Arbitrum enforcedOptions
     ],
 ]
