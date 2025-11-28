@@ -5,7 +5,9 @@ use oapp::{
     common::{
         compact_accounts_with_alts, AccountMetaRef, AddressLocator, EXECUTION_CONTEXT_VERSION_1,
     },
+    endpoint::ID as ENDPOINT_ID,
     lz_receive_types_v2::{
+        get_accounts_for_clear,
         Instruction, LzReceiveTypesV2Result,
     },
     LzReceiveParams,
@@ -37,7 +39,7 @@ impl LzReceiveTypesV2<'_> {
         let (event_authority_account, _) =
             Pubkey::find_program_address(&[oapp::endpoint_cpi::EVENT_SEED], &ctx.program_id);
 
-        let accounts = vec![
+        let mut accounts = vec![
             // payer
             AccountMetaRef { pubkey: AddressLocator::Payer, is_writable: true },
             // store (writable)
@@ -55,17 +57,32 @@ impl LzReceiveTypesV2<'_> {
             AccountMetaRef { pubkey: crate::ID.into(), is_writable: false },
         ];
 
+        // Add accounts required for LayerZero's clear operation
+        // These accounts handle the core message verification and processing
+        let accounts_for_clear: Vec<AccountMetaRef> = get_accounts_for_clear(
+            ENDPOINT_ID,
+            &store_key,
+            params.src_eid,
+            &params.sender,
+            params.nonce,
+        );
+        accounts.extend(accounts_for_clear);
+
+        // You can add handling of compose message here. Use accounts.extend() to add accounts needed for the send compose operation.
+
         // Return the execution plan (no clear/compose helper accounts)
         Ok(LzReceiveTypesV2Result {
             context_version: EXECUTION_CONTEXT_VERSION_1,
+            // In this example, ALTs are passed in via remaining_accounts
+            // This decision allows for flexibility in terms of passing in any number of ALTs without needing to change the accounts struct
+            // However, if you need stronger schema guarantees and require only a single ALT, you may opt to have it passed in explicitly via ctx.accounts.alt (or similar)
             alts: ctx.remaining_accounts.iter().map(|alt| alt.key()).collect(),
             instructions: vec![
+                // You can add additional instructions before the LzReceive instruction
                 Instruction::LzReceive {
-                    // In this example, ALTs are passed in via remaining_accounts
-                    // This decision allows for flexibility in terms of passing in any number of ALTs without needing to change the accounts struct
-                    // However, if you need stronger schema guarantees and require only a single ALT, you may opt to have it passed in explicitly via ctx.accounts.alt (or similar)
                     accounts: compact_accounts_with_alts(&ctx.remaining_accounts, accounts)?,
                 },
+                // You can add additional instructions after the LzReceive instruction
             ],
         })
     }

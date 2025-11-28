@@ -57,6 +57,8 @@ impl LzReceive<'_> {
         let store = &mut ctx.accounts.store;
         store.string = string_value;
 
+        // You can add logic here to handle compose if the message contains a compose message
+
         Ok(())
     }
 }
