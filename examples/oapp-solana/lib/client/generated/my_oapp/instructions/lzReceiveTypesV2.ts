@@ -17,14 +17,9 @@ export type LzReceiveTypesV2InstructionAccounts = {
 }
 
 // Data.
-export type LzReceiveTypesV2InstructionData = {
-    discriminator: Uint8Array
-    params: LzReceiveParams
-}
+export type LzReceiveTypesV2InstructionData = { discriminator: Uint8Array; params: LzReceiveParams }
 
-export type LzReceiveTypesV2InstructionDataArgs = {
-    params: LzReceiveParamsArgs
-}
+export type LzReceiveTypesV2InstructionDataArgs = { params: LzReceiveParamsArgs }
 
 export function getLzReceiveTypesV2InstructionDataSerializer(): Serializer<
     LzReceiveTypesV2InstructionDataArgs,
@@ -38,10 +33,7 @@ export function getLzReceiveTypesV2InstructionDataSerializer(): Serializer<
             ],
             { description: 'LzReceiveTypesV2InstructionData' }
         ),
-        (value) => ({
-            ...value,
-            discriminator: new Uint8Array([109, 157, 200, 142, 138, 223, 159, 164]),
-        })
+        (value) => ({ ...value, discriminator: new Uint8Array([109, 157, 200, 142, 138, 223, 159, 164]) })
     ) as Serializer<LzReceiveTypesV2InstructionDataArgs, LzReceiveTypesV2InstructionData>
 }
 
@@ -58,11 +50,7 @@ export function lzReceiveTypesV2(
 
     // Accounts.
     const resolvedAccounts = {
-        store: {
-            index: 0,
-            isWritable: false as boolean,
-            value: input.store ?? null,
-        },
+        store: { index: 0, isWritable: false as boolean, value: input.store ?? null },
     } satisfies ResolvedAccountsWithIndices
 
     // Arguments.
