@@ -38,14 +38,14 @@ const SOLANA_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
 // Arbitrum <-> Solana
 
 // With the config generator, pathways declared are automatically bidirectional
-// i.e. if you declare A,B there's no need to declare B,A
+// i.e. if you declare Arbitrum,Solana there's no need to declare Solana,Arbitrum
 const pathways: TwoWayConfig[] = [
     [
-        arbitrumContract, // Chain A contract
-        solanaContract, // Chain B contract
+        arbitrumContract, // Arbitrum contract
+        solanaContract, // Solana contract
         [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
-        [1, 32], // [A to B confirmations, B to A confirmations]
-        [SOLANA_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain B enforcedOptions, Chain A enforcedOptions
+        [20, 32], // [Arbitrum to Solana confirmations, Solana to Arbitrum confirmations]
+        [SOLANA_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Arbitrum to Solana enforcedOptions, Solana to Arbitrum enforcedOptions
     ],
 ]
 
