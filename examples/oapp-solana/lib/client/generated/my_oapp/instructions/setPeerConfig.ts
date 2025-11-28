@@ -6,146 +6,108 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
-import {
-  Context,
-  Pda,
-  PublicKey,
-  Signer,
-  TransactionBuilder,
-  transactionBuilder,
-} from '@metaplex-foundation/umi';
-import {
-  Serializer,
-  bytes,
-  mapSerializer,
-  struct,
-  u32,
-} from '@metaplex-foundation/umi/serializers';
-import {
-  ResolvedAccount,
-  ResolvedAccountsWithIndices,
-  getAccountMetasAndSigners,
-} from '../shared';
-import {
-  PeerConfigParam,
-  PeerConfigParamArgs,
-  getPeerConfigParamSerializer,
-} from '../types';
+import { Context, Pda, PublicKey, Signer, TransactionBuilder, transactionBuilder } from '@metaplex-foundation/umi'
+import { Serializer, bytes, mapSerializer, struct, u32 } from '@metaplex-foundation/umi/serializers'
+import { ResolvedAccount, ResolvedAccountsWithIndices, getAccountMetasAndSigners } from '../shared'
+import { PeerConfigParam, PeerConfigParamArgs, getPeerConfigParamSerializer } from '../types'
 
 // Accounts.
 export type SetPeerConfigInstructionAccounts = {
-  /** Admin of the OApp store */
-  admin: Signer;
-  /** Peer configuration PDA for a specific remote chain */
-  peer: PublicKey | Pda;
-  /** Store PDA of this OApp */
-  store: PublicKey | Pda;
-  systemProgram?: PublicKey | Pda;
-};
+    /** Admin of the OApp store */
+    admin: Signer
+    /** Peer configuration PDA for a specific remote chain */
+    peer: PublicKey | Pda
+    /** Store PDA of this OApp */
+    store: PublicKey | Pda
+    systemProgram?: PublicKey | Pda
+}
 
 // Data.
 export type SetPeerConfigInstructionData = {
-  discriminator: Uint8Array;
-  remoteEid: number;
-  config: PeerConfigParam;
-};
+    discriminator: Uint8Array
+    remoteEid: number
+    config: PeerConfigParam
+}
 
 export type SetPeerConfigInstructionDataArgs = {
-  remoteEid: number;
-  config: PeerConfigParamArgs;
-};
+    remoteEid: number
+    config: PeerConfigParamArgs
+}
 
 export function getSetPeerConfigInstructionDataSerializer(): Serializer<
-  SetPeerConfigInstructionDataArgs,
-  SetPeerConfigInstructionData
+    SetPeerConfigInstructionDataArgs,
+    SetPeerConfigInstructionData
 > {
-  return mapSerializer<
-    SetPeerConfigInstructionDataArgs,
-    any,
-    SetPeerConfigInstructionData
-  >(
-    struct<SetPeerConfigInstructionData>(
-      [
-        ['discriminator', bytes({ size: 8 })],
-        ['remoteEid', u32()],
-        ['config', getPeerConfigParamSerializer()],
-      ],
-      { description: 'SetPeerConfigInstructionData' }
-    ),
-    (value) => ({
-      ...value,
-      discriminator: new Uint8Array([79, 187, 168, 57, 139, 140, 93, 47]),
-    })
-  ) as Serializer<
-    SetPeerConfigInstructionDataArgs,
-    SetPeerConfigInstructionData
-  >;
+    return mapSerializer<SetPeerConfigInstructionDataArgs, any, SetPeerConfigInstructionData>(
+        struct<SetPeerConfigInstructionData>(
+            [
+                ['discriminator', bytes({ size: 8 })],
+                ['remoteEid', u32()],
+                ['config', getPeerConfigParamSerializer()],
+            ],
+            { description: 'SetPeerConfigInstructionData' }
+        ),
+        (value) => ({
+            ...value,
+            discriminator: new Uint8Array([79, 187, 168, 57, 139, 140, 93, 47]),
+        })
+    ) as Serializer<SetPeerConfigInstructionDataArgs, SetPeerConfigInstructionData>
 }
 
 // Args.
-export type SetPeerConfigInstructionArgs = SetPeerConfigInstructionDataArgs;
+export type SetPeerConfigInstructionArgs = SetPeerConfigInstructionDataArgs
 
 // Instruction.
 export function setPeerConfig(
-  context: Pick<Context, 'programs'>,
-  input: SetPeerConfigInstructionAccounts & SetPeerConfigInstructionArgs
+    context: Pick<Context, 'programs'>,
+    input: SetPeerConfigInstructionAccounts & SetPeerConfigInstructionArgs
 ): TransactionBuilder {
-  // Program ID.
-  const programId = context.programs.getPublicKey('myOapp', '');
+    // Program ID.
+    const programId = context.programs.getPublicKey('myOapp', '')
 
-  // Accounts.
-  const resolvedAccounts = {
-    admin: {
-      index: 0,
-      isWritable: true as boolean,
-      value: input.admin ?? null,
-    },
-    peer: { index: 1, isWritable: true as boolean, value: input.peer ?? null },
-    store: {
-      index: 2,
-      isWritable: false as boolean,
-      value: input.store ?? null,
-    },
-    systemProgram: {
-      index: 3,
-      isWritable: false as boolean,
-      value: input.systemProgram ?? null,
-    },
-  } satisfies ResolvedAccountsWithIndices;
+    // Accounts.
+    const resolvedAccounts = {
+        admin: {
+            index: 0,
+            isWritable: true as boolean,
+            value: input.admin ?? null,
+        },
+        peer: { index: 1, isWritable: true as boolean, value: input.peer ?? null },
+        store: {
+            index: 2,
+            isWritable: false as boolean,
+            value: input.store ?? null,
+        },
+        systemProgram: {
+            index: 3,
+            isWritable: false as boolean,
+            value: input.systemProgram ?? null,
+        },
+    } satisfies ResolvedAccountsWithIndices
 
-  // Arguments.
-  const resolvedArgs: SetPeerConfigInstructionArgs = { ...input };
+    // Arguments.
+    const resolvedArgs: SetPeerConfigInstructionArgs = { ...input }
 
-  // Default values.
-  if (!resolvedAccounts.systemProgram.value) {
-    resolvedAccounts.systemProgram.value = context.programs.getPublicKey(
-      'splSystem',
-      '11111111111111111111111111111111'
-    );
-    resolvedAccounts.systemProgram.isWritable = false;
-  }
+    // Default values.
+    if (!resolvedAccounts.systemProgram.value) {
+        resolvedAccounts.systemProgram.value = context.programs.getPublicKey(
+            'splSystem',
+            '11111111111111111111111111111111'
+        )
+        resolvedAccounts.systemProgram.isWritable = false
+    }
 
-  // Accounts in order.
-  const orderedAccounts: ResolvedAccount[] = Object.values(
-    resolvedAccounts
-  ).sort((a, b) => a.index - b.index);
+    // Accounts in order.
+    const orderedAccounts: ResolvedAccount[] = Object.values(resolvedAccounts).sort((a, b) => a.index - b.index)
 
-  // Keys and Signers.
-  const [keys, signers] = getAccountMetasAndSigners(
-    orderedAccounts,
-    'programId',
-    programId
-  );
+    // Keys and Signers.
+    const [keys, signers] = getAccountMetasAndSigners(orderedAccounts, 'programId', programId)
 
-  // Data.
-  const data = getSetPeerConfigInstructionDataSerializer().serialize(
-    resolvedArgs as SetPeerConfigInstructionDataArgs
-  );
+    // Data.
+    const data = getSetPeerConfigInstructionDataSerializer().serialize(resolvedArgs as SetPeerConfigInstructionDataArgs)
 
-  // Bytes Created On Chain.
-  const bytesCreatedOnChain = 0;
+    // Bytes Created On Chain.
+    const bytesCreatedOnChain = 0
 
-  return transactionBuilder([
-    { instruction: { keys, programId, data }, signers, bytesCreatedOnChain },
-  ]);
+    return transactionBuilder([{ instruction: { keys, programId, data }, signers, bytesCreatedOnChain }])
 }

@@ -6,12 +6,8 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
-import { Serializer, bool, struct } from '@metaplex-foundation/umi/serializers';
-import {
-  AddressLocator,
-  AddressLocatorArgs,
-  getAddressLocatorSerializer,
-} from '.';
+import { Serializer, bool, struct } from '@metaplex-foundation/umi/serializers'
+import { AddressLocator, AddressLocatorArgs, getAddressLocatorSerializer } from '.'
 
 /**
  * Account metadata for V2 execution planning.
@@ -23,28 +19,25 @@ import {
  */
 
 export type AccountMetaRef = {
-  /** The account address locator - supports multiple resolution strategies */
-  pubkey: AddressLocator;
-  /** Whether the account should be writable in the final transaction */
-  isWritable: boolean;
-};
+    /** The account address locator - supports multiple resolution strategies */
+    pubkey: AddressLocator
+    /** Whether the account should be writable in the final transaction */
+    isWritable: boolean
+}
 
 export type AccountMetaRefArgs = {
-  /** The account address locator - supports multiple resolution strategies */
-  pubkey: AddressLocatorArgs;
-  /** Whether the account should be writable in the final transaction */
-  isWritable: boolean;
-};
+    /** The account address locator - supports multiple resolution strategies */
+    pubkey: AddressLocatorArgs
+    /** Whether the account should be writable in the final transaction */
+    isWritable: boolean
+}
 
-export function getAccountMetaRefSerializer(): Serializer<
-  AccountMetaRefArgs,
-  AccountMetaRef
-> {
-  return struct<AccountMetaRef>(
-    [
-      ['pubkey', getAddressLocatorSerializer()],
-      ['isWritable', bool()],
-    ],
-    { description: 'AccountMetaRef' }
-  ) as Serializer<AccountMetaRefArgs, AccountMetaRef>;
+export function getAccountMetaRefSerializer(): Serializer<AccountMetaRefArgs, AccountMetaRef> {
+    return struct<AccountMetaRef>(
+        [
+            ['pubkey', getAddressLocatorSerializer()],
+            ['isWritable', bool()],
+        ],
+        { description: 'AccountMetaRef' }
+    ) as Serializer<AccountMetaRefArgs, AccountMetaRef>
 }

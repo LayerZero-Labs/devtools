@@ -7,66 +7,61 @@
  */
 
 import {
-  GetDataEnumKind,
-  GetDataEnumKindContent,
-  Serializer,
-  bytes,
-  dataEnum,
-  struct,
-  tuple,
-  u32,
-} from '@metaplex-foundation/umi/serializers';
+    GetDataEnumKind,
+    GetDataEnumKindContent,
+    Serializer,
+    bytes,
+    dataEnum,
+    struct,
+    tuple,
+    u32,
+} from '@metaplex-foundation/umi/serializers'
 
 export type PeerConfigParam =
-  | { __kind: 'PeerAddress'; fields: [Uint8Array] }
-  | { __kind: 'EnforcedOptions'; send: Uint8Array; sendAndCall: Uint8Array };
+    | { __kind: 'PeerAddress'; fields: [Uint8Array] }
+    | { __kind: 'EnforcedOptions'; send: Uint8Array; sendAndCall: Uint8Array }
 
-export type PeerConfigParamArgs = PeerConfigParam;
+export type PeerConfigParamArgs = PeerConfigParam
 
-export function getPeerConfigParamSerializer(): Serializer<
-  PeerConfigParamArgs,
-  PeerConfigParam
-> {
-  return dataEnum<PeerConfigParam>(
-    [
-      [
-        'PeerAddress',
-        struct<GetDataEnumKindContent<PeerConfigParam, 'PeerAddress'>>([
-          ['fields', tuple([bytes({ size: 32 })])],
-        ]),
-      ],
-      [
-        'EnforcedOptions',
-        struct<GetDataEnumKindContent<PeerConfigParam, 'EnforcedOptions'>>([
-          ['send', bytes({ size: u32() })],
-          ['sendAndCall', bytes({ size: u32() })],
-        ]),
-      ],
-    ],
-    { description: 'PeerConfigParam' }
-  ) as Serializer<PeerConfigParamArgs, PeerConfigParam>;
+export function getPeerConfigParamSerializer(): Serializer<PeerConfigParamArgs, PeerConfigParam> {
+    return dataEnum<PeerConfigParam>(
+        [
+            [
+                'PeerAddress',
+                struct<GetDataEnumKindContent<PeerConfigParam, 'PeerAddress'>>([
+                    ['fields', tuple([bytes({ size: 32 })])],
+                ]),
+            ],
+            [
+                'EnforcedOptions',
+                struct<GetDataEnumKindContent<PeerConfigParam, 'EnforcedOptions'>>([
+                    ['send', bytes({ size: u32() })],
+                    ['sendAndCall', bytes({ size: u32() })],
+                ]),
+            ],
+        ],
+        { description: 'PeerConfigParam' }
+    ) as Serializer<PeerConfigParamArgs, PeerConfigParam>
 }
 
 // Data Enum Helpers.
 export function peerConfigParam(
-  kind: 'PeerAddress',
-  data: GetDataEnumKindContent<PeerConfigParamArgs, 'PeerAddress'>['fields']
-): GetDataEnumKind<PeerConfigParamArgs, 'PeerAddress'>;
+    kind: 'PeerAddress',
+    data: GetDataEnumKindContent<PeerConfigParamArgs, 'PeerAddress'>['fields']
+): GetDataEnumKind<PeerConfigParamArgs, 'PeerAddress'>
 export function peerConfigParam(
-  kind: 'EnforcedOptions',
-  data: GetDataEnumKindContent<PeerConfigParamArgs, 'EnforcedOptions'>
-): GetDataEnumKind<PeerConfigParamArgs, 'EnforcedOptions'>;
+    kind: 'EnforcedOptions',
+    data: GetDataEnumKindContent<PeerConfigParamArgs, 'EnforcedOptions'>
+): GetDataEnumKind<PeerConfigParamArgs, 'EnforcedOptions'>
 export function peerConfigParam<K extends PeerConfigParamArgs['__kind']>(
-  kind: K,
-  data?: any
+    kind: K,
+    data?: any
 ): Extract<PeerConfigParamArgs, { __kind: K }> {
-  return Array.isArray(data)
-    ? { __kind: kind, fields: data }
-    : { __kind: kind, ...(data ?? {}) };
+    return Array.isArray(data) ? { __kind: kind, fields: data } : { __kind: kind, ...(data ?? {}) }
 }
 export function isPeerConfigParam<K extends PeerConfigParam['__kind']>(
-  kind: K,
-  value: PeerConfigParam
+    kind: K,
+    value: PeerConfigParam
 ): value is PeerConfigParam & { __kind: K } {
-  return value.__kind === kind;
+    return value.__kind === kind
 }

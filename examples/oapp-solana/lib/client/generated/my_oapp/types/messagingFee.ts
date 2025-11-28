@@ -6,24 +6,21 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
-import { Serializer, struct, u64 } from '@metaplex-foundation/umi/serializers';
+import { Serializer, struct, u64 } from '@metaplex-foundation/umi/serializers'
 
-export type MessagingFee = { nativeFee: bigint; lzTokenFee: bigint };
+export type MessagingFee = { nativeFee: bigint; lzTokenFee: bigint }
 
 export type MessagingFeeArgs = {
-  nativeFee: number | bigint;
-  lzTokenFee: number | bigint;
-};
+    nativeFee: number | bigint
+    lzTokenFee: number | bigint
+}
 
-export function getMessagingFeeSerializer(): Serializer<
-  MessagingFeeArgs,
-  MessagingFee
-> {
-  return struct<MessagingFee>(
-    [
-      ['nativeFee', u64()],
-      ['lzTokenFee', u64()],
-    ],
-    { description: 'MessagingFee' }
-  ) as Serializer<MessagingFeeArgs, MessagingFee>;
+export function getMessagingFeeSerializer(): Serializer<MessagingFeeArgs, MessagingFee> {
+    return struct<MessagingFee>(
+        [
+            ['nativeFee', u64()],
+            ['lzTokenFee', u64()],
+        ],
+        { description: 'MessagingFee' }
+    ) as Serializer<MessagingFeeArgs, MessagingFee>
 }

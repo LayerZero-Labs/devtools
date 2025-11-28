@@ -6,142 +6,117 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
+import { Context, Pda, PublicKey, Signer, TransactionBuilder, transactionBuilder } from '@metaplex-foundation/umi'
 import {
-  Context,
-  Pda,
-  PublicKey,
-  Signer,
-  TransactionBuilder,
-  transactionBuilder,
-} from '@metaplex-foundation/umi';
-import {
-  Serializer,
-  bytes,
-  mapSerializer,
-  publicKey as publicKeySerializer,
-  struct,
-} from '@metaplex-foundation/umi/serializers';
-import {
-  ResolvedAccount,
-  ResolvedAccountsWithIndices,
-  getAccountMetasAndSigners,
-} from '../shared';
+    Serializer,
+    bytes,
+    mapSerializer,
+    publicKey as publicKeySerializer,
+    struct,
+} from '@metaplex-foundation/umi/serializers'
+import { ResolvedAccount, ResolvedAccountsWithIndices, getAccountMetasAndSigners } from '../shared'
 
 // Accounts.
 export type InitStoreInstructionAccounts = {
-  payer?: Signer;
-  store: PublicKey | Pda;
-  lzReceiveTypesAccounts: PublicKey | Pda;
-  systemProgram?: PublicKey | Pda;
-};
+    payer?: Signer
+    store: PublicKey | Pda
+    lzReceiveTypesAccounts: PublicKey | Pda
+    systemProgram?: PublicKey | Pda
+}
 
 // Data.
 export type InitStoreInstructionData = {
-  discriminator: Uint8Array;
-  admin: PublicKey;
-  endpoint: PublicKey;
-};
+    discriminator: Uint8Array
+    admin: PublicKey
+    endpoint: PublicKey
+}
 
 export type InitStoreInstructionDataArgs = {
-  admin: PublicKey;
-  endpoint: PublicKey;
-};
+    admin: PublicKey
+    endpoint: PublicKey
+}
 
 export function getInitStoreInstructionDataSerializer(): Serializer<
-  InitStoreInstructionDataArgs,
-  InitStoreInstructionData
-> {
-  return mapSerializer<
     InitStoreInstructionDataArgs,
-    any,
     InitStoreInstructionData
-  >(
-    struct<InitStoreInstructionData>(
-      [
-        ['discriminator', bytes({ size: 8 })],
-        ['admin', publicKeySerializer()],
-        ['endpoint', publicKeySerializer()],
-      ],
-      { description: 'InitStoreInstructionData' }
-    ),
-    (value) => ({
-      ...value,
-      discriminator: new Uint8Array([250, 74, 6, 95, 163, 188, 19, 181]),
-    })
-  ) as Serializer<InitStoreInstructionDataArgs, InitStoreInstructionData>;
+> {
+    return mapSerializer<InitStoreInstructionDataArgs, any, InitStoreInstructionData>(
+        struct<InitStoreInstructionData>(
+            [
+                ['discriminator', bytes({ size: 8 })],
+                ['admin', publicKeySerializer()],
+                ['endpoint', publicKeySerializer()],
+            ],
+            { description: 'InitStoreInstructionData' }
+        ),
+        (value) => ({
+            ...value,
+            discriminator: new Uint8Array([250, 74, 6, 95, 163, 188, 19, 181]),
+        })
+    ) as Serializer<InitStoreInstructionDataArgs, InitStoreInstructionData>
 }
 
 // Args.
-export type InitStoreInstructionArgs = InitStoreInstructionDataArgs;
+export type InitStoreInstructionArgs = InitStoreInstructionDataArgs
 
 // Instruction.
 export function initStore(
-  context: Pick<Context, 'payer' | 'programs'>,
-  input: InitStoreInstructionAccounts & InitStoreInstructionArgs
+    context: Pick<Context, 'payer' | 'programs'>,
+    input: InitStoreInstructionAccounts & InitStoreInstructionArgs
 ): TransactionBuilder {
-  // Program ID.
-  const programId = context.programs.getPublicKey('myOapp', '');
+    // Program ID.
+    const programId = context.programs.getPublicKey('myOapp', '')
 
-  // Accounts.
-  const resolvedAccounts = {
-    payer: {
-      index: 0,
-      isWritable: true as boolean,
-      value: input.payer ?? null,
-    },
-    store: {
-      index: 1,
-      isWritable: true as boolean,
-      value: input.store ?? null,
-    },
-    lzReceiveTypesAccounts: {
-      index: 2,
-      isWritable: true as boolean,
-      value: input.lzReceiveTypesAccounts ?? null,
-    },
-    systemProgram: {
-      index: 3,
-      isWritable: false as boolean,
-      value: input.systemProgram ?? null,
-    },
-  } satisfies ResolvedAccountsWithIndices;
+    // Accounts.
+    const resolvedAccounts = {
+        payer: {
+            index: 0,
+            isWritable: true as boolean,
+            value: input.payer ?? null,
+        },
+        store: {
+            index: 1,
+            isWritable: true as boolean,
+            value: input.store ?? null,
+        },
+        lzReceiveTypesAccounts: {
+            index: 2,
+            isWritable: true as boolean,
+            value: input.lzReceiveTypesAccounts ?? null,
+        },
+        systemProgram: {
+            index: 3,
+            isWritable: false as boolean,
+            value: input.systemProgram ?? null,
+        },
+    } satisfies ResolvedAccountsWithIndices
 
-  // Arguments.
-  const resolvedArgs: InitStoreInstructionArgs = { ...input };
+    // Arguments.
+    const resolvedArgs: InitStoreInstructionArgs = { ...input }
 
-  // Default values.
-  if (!resolvedAccounts.payer.value) {
-    resolvedAccounts.payer.value = context.payer;
-  }
-  if (!resolvedAccounts.systemProgram.value) {
-    resolvedAccounts.systemProgram.value = context.programs.getPublicKey(
-      'splSystem',
-      '11111111111111111111111111111111'
-    );
-    resolvedAccounts.systemProgram.isWritable = false;
-  }
+    // Default values.
+    if (!resolvedAccounts.payer.value) {
+        resolvedAccounts.payer.value = context.payer
+    }
+    if (!resolvedAccounts.systemProgram.value) {
+        resolvedAccounts.systemProgram.value = context.programs.getPublicKey(
+            'splSystem',
+            '11111111111111111111111111111111'
+        )
+        resolvedAccounts.systemProgram.isWritable = false
+    }
 
-  // Accounts in order.
-  const orderedAccounts: ResolvedAccount[] = Object.values(
-    resolvedAccounts
-  ).sort((a, b) => a.index - b.index);
+    // Accounts in order.
+    const orderedAccounts: ResolvedAccount[] = Object.values(resolvedAccounts).sort((a, b) => a.index - b.index)
 
-  // Keys and Signers.
-  const [keys, signers] = getAccountMetasAndSigners(
-    orderedAccounts,
-    'programId',
-    programId
-  );
+    // Keys and Signers.
+    const [keys, signers] = getAccountMetasAndSigners(orderedAccounts, 'programId', programId)
 
-  // Data.
-  const data = getInitStoreInstructionDataSerializer().serialize(
-    resolvedArgs as InitStoreInstructionDataArgs
-  );
+    // Data.
+    const data = getInitStoreInstructionDataSerializer().serialize(resolvedArgs as InitStoreInstructionDataArgs)
 
-  // Bytes Created On Chain.
-  const bytesCreatedOnChain = 0;
+    // Bytes Created On Chain.
+    const bytesCreatedOnChain = 0
 
-  return transactionBuilder([
-    { instruction: { keys, programId, data }, signers, bytesCreatedOnChain },
-  ]);
+    return transactionBuilder([{ instruction: { keys, programId, data }, signers, bytesCreatedOnChain }])
 }
