@@ -48,11 +48,6 @@ impl LzReceiveTypesV2<'_> {
             AccountMetaRef { pubkey: peer.into(), is_writable: false },
             // event authority account - used for event logging
             AccountMetaRef { pubkey: event_authority_account.into(), is_writable: false },
-            // system program
-            AccountMetaRef {
-                pubkey: solana_program::system_program::ID.into(),
-                is_writable: false,
-            },
             // program id - the program that is executing this instruction
             AccountMetaRef { pubkey: crate::ID.into(), is_writable: false },
         ];
