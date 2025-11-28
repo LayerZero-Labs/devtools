@@ -45,11 +45,7 @@ impl LzReceiveTypesV2<'_> {
             // store (writable)
             AccountMetaRef { pubkey: store_key.into(), is_writable: true },
             // peer
-            AccountMetaRef { pubkey: peer.into(), is_writable: false },
-            // event authority account - used for event logging
-            AccountMetaRef { pubkey: event_authority_account.into(), is_writable: false },
-            // program id - the program that is executing this instruction
-            AccountMetaRef { pubkey: crate::ID.into(), is_writable: false },
+            AccountMetaRef { pubkey: peer.into(), is_writable: false }
         ];
 
         // Add accounts required for LayerZero's clear operation
