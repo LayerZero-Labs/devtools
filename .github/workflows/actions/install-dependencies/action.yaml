@@ -3,6 +3,19 @@ description: Install everything we need to build this repo
 runs:
   using: "composite"
   steps:
+    # Move the pnpm installation off the /github/home mount (which can be noexec)
+    # so node-gyp can execute its helper scripts during native rebuilds.
+    - name: Relocate pnpm to executable path
+      shell: bash
+      run: |
+        SRC_BIN="$(command -v pnpm)"
+        SRC_ROOT="$(cd "$(dirname "$SRC_BIN")/.." && pwd)"
+        DEST="/opt/pnpm"
+        mkdir -p "$DEST"
+        cp -a "$SRC_ROOT"/. "$DEST"
+        echo "PNPM_HOME=$DEST" >> "$GITHUB_ENV"
+        echo "PATH=$DEST/bin:$PATH" >> "$GITHUB_ENV"
+
     # Clean Hardhat cache directory manually
     # Required because certain packages or dependencies like zksolc on hardhat are architecture specific fetches during the building stage. 
     # We don't want to use the cache of the wrong architecture, so we clean the cache manually.
