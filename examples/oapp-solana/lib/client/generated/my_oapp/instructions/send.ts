@@ -12,7 +12,13 @@ import { ResolvedAccount, ResolvedAccountsWithIndices, getAccountMetasAndSigners
 
 // Accounts.
 export type SendInstructionAccounts = {
+    /**
+     * Configuration for the destination chain. Holds the peer address and any
+     * enforced messaging options.
+     */
+
     peer: PublicKey | Pda
+    /** OApp Store PDA that signs the send instruction */
     store: PublicKey | Pda
     endpoint: PublicKey | Pda
 }
@@ -64,7 +70,7 @@ export function send(
     input: SendInstructionAccounts & SendInstructionArgs
 ): TransactionBuilder {
     // Program ID.
-    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
+    const programId = context.programs.getPublicKey('myOapp', '')
 
     // Accounts.
     const resolvedAccounts = {

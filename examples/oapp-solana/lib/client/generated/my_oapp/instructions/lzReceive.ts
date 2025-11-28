@@ -13,7 +13,14 @@ import { LzReceiveParams, LzReceiveParamsArgs, getLzReceiveParamsSerializer } fr
 
 // Accounts.
 export type LzReceiveInstructionAccounts = {
+    /**
+     * OApp Store PDA.  This account represents the "address" of your OApp on
+     * Solana and can contain any state relevant to your application.
+     * Customize the fields in `Store` as needed.
+     */
+
     store: PublicKey | Pda
+    /** Peer config PDA for the sending chain. Ensures `params.sender` can only be the allowed peer from that remote chain. */
     peer: PublicKey | Pda
 }
 
@@ -53,7 +60,7 @@ export function lzReceive(
     input: LzReceiveInstructionAccounts & LzReceiveInstructionArgs
 ): TransactionBuilder {
     // Program ID.
-    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
+    const programId = context.programs.getPublicKey('myOapp', '')
 
     // Accounts.
     const resolvedAccounts = {
