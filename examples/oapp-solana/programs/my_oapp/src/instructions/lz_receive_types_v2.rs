@@ -26,8 +26,11 @@ impl LzReceiveTypesV2<'_> {
         ctx: &Context<LzReceiveTypesV2>,
         params: &LzReceiveParams,
     ) -> Result<LzReceiveTypesV2Result> {
-        // Derive peer PDA from src_eid
-        let peer_seeds = [PEER_SEED, &params.src_eid.to_be_bytes()];
+        // 1. Store PDA (writable) – matches LzReceive's `store` account
+        let store_key = ctx.accounts.store.key();
+
+        // 2. Derive peer PDA using store key + src_eid to match LzReceive
+        let peer_seeds = [PEER_SEED, store_key.as_ref(), &params.src_eid.to_be_bytes()];
         let (peer, _) = Pubkey::find_program_address(&peer_seeds, ctx.program_id);
 
         // Event authority used for logging
@@ -37,6 +40,8 @@ impl LzReceiveTypesV2<'_> {
         let accounts = vec![
             // payer
             AccountMetaRef { pubkey: AddressLocator::Payer, is_writable: true },
+            // store (writable)
+            AccountMetaRef { pubkey: store_key.into(), is_writable: true },
             // peer
             AccountMetaRef { pubkey: peer.into(), is_writable: false },
             // event authority account - used for event logging
