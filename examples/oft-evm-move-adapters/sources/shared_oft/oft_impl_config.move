@@ -308,6 +308,9 @@ module oft::oft_impl_config {
     public(friend) fun release_rate_limit_capacity(eid: u32, amount: u64) acquires Config {
         if (!has_rate_limit(eid)) return;
 
+        // Checkpoint to account for decay before modifying in_flight_on_last_update
+        checkpoint_rate_limit_in_flight(eid, timestamp::now_seconds());
+
         let rate_limit = table::borrow_mut(&mut store_mut().rate_limit_by_eid, eid);
         if (amount >= rate_limit.in_flight_on_last_update) {
             rate_limit.in_flight_on_last_update = 0;
