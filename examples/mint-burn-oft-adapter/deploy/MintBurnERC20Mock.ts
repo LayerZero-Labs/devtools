@@ -1,49 +1,69 @@
+// 01_deploy_mint_burn_token.ts
+
 import assert from 'assert'
-
 import { type DeployFunction } from 'hardhat-deploy/types'
+import { parseEther, formatEther } from 'ethers/lib/utils' // Directly import required Ethers utilities
 
-const contractName = 'MintBurnERC20Mock'
+const CONTRACT_NAME = 'MintBurnERC20Mock'
 
-const deploy: DeployFunction = async (hre) => {
-    const { getNamedAccounts, deployments } = hre
-
+/**
+ * @title Deploy and Initialize MintBurnERC20Mock
+ * @notice Deploys the mock ERC20 token and mints an initial supply to the deployer.
+ */
+const deployScript: DeployFunction = async (hre) => {
+    // Destructure required objects directly from the Hardhat Runtime Environment (hre)
+    const { getNamedAccounts, deployments, ethers, network } = hre
     const { deploy } = deployments
     const { deployer } = await getNamedAccounts()
 
-    assert(deployer, 'Missing named deployer account')
+    assert(deployer, 'Error: Named deployer account is missing.')
 
-    console.log(`Network: ${hre.network.name}`)
-    console.log(`Deployer: ${deployer}`)
+    console.log(`\n--- Deployment Details ---`)
+    console.log(`Network: ${network.name}`)
+    console.log(`Deployer Address: ${deployer}`)
 
-    // Token configuration
+    // --- Token Configuration ---
     const tokenName = 'Mock Mint Burn Token'
     const tokenSymbol = 'MMBT'
-    const initialMintAmount = hre.ethers.utils.parseEther('1000000') // 1M tokens
+    // Use parseEther helper from Ethers utilities for clarity
+    const initialMintAmount = parseEther('1000000') // 1,000,000 tokens
 
-    const { address } = await deploy(contractName, {
+    // --- Contract Deployment ---
+    const deploymentResult = await deploy(CONTRACT_NAME, {
         from: deployer,
         args: [
-            tokenName, // Token name
+            tokenName,   // Token name
             tokenSymbol, // Token symbol
         ],
-        log: true,
+        log: true, // Log transaction details and address to console
         skipIfAlreadyDeployed: false,
     })
 
-    console.log(`Deployed contract: ${contractName}, network: ${hre.network.name}, address: ${address}`)
-    console.log(`Token: ${tokenName} (${tokenSymbol})`)
+    console.log(`Deployed Contract: ${CONTRACT_NAME}`)
+    console.log(`Contract Address: ${deploymentResult.address}`)
 
-    // Mint initial tokens to the deployer
-    const [signer] = await hre.ethers.getSigners()
-    const mintBurnToken = await hre.ethers.getContractAt(contractName, address, signer)
+    // --- Initial Minting ---
+    
+    // Get the Contract instance, connected to the deployer account (signer)
+    const mintBurnToken = await ethers.getContractAt(
+        CONTRACT_NAME, 
+        deploymentResult.address, 
+        await ethers.getSigner(deployer) // Explicitly get signer for the deployer address
+    )
+
+    console.log(`Attempting to mint ${formatEther(initialMintAmount)} ${tokenSymbol} to deployer...`)
 
     const mintTx = await mintBurnToken.mint(deployer, initialMintAmount)
     await mintTx.wait()
 
+    // --- Verification ---
     const balance = await mintBurnToken.balanceOf(deployer)
-    console.log(`Minted ${hre.ethers.utils.formatEther(balance)} ${tokenSymbol} tokens to deployer: ${deployer}`)
+
+    console.log(`✅ Minting successful.`)
+    console.log(`Deployer Balance: ${formatEther(balance)} ${tokenSymbol}`)
 }
 
-deploy.tags = [contractName]
+// Hardhat Deploy tags
+deployScript.tags = [CONTRACT_NAME, 'MOCK']
 
-export default deploy
+export default deployScript
