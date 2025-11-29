@@ -573,7 +573,8 @@ RUN \
     #  Mount pnpm store
     --mount=type=cache,id=pnpm-store,target=/pnpm \
     # Fetch dependencies to the pnpm store based on the lockfile
-    pnpm fetch --prefer-offline --frozen-lockfile
+    # Use --ignore-scripts to avoid native build issues during fetch
+    pnpm fetch --prefer-offline --frozen-lockfile --ignore-scripts
 
 COPY . .
 
