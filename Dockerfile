@@ -421,8 +421,7 @@ ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 # Install foundry - this needs rust >= 1.81.0
 ENV PATH="/root/.foundry/bin:$PATH"
 RUN curl -L https://foundry.paradigm.xyz | bash && \
-    foundryup -i ${FOUNDRY_VERSION} && \
-    foundryup -u ${FOUNDRY_VERSION}
+    foundryup -v ${FOUNDRY_VERSION}
 
 # Install SVM and Solidity compiler in single layer
 RUN cargo +${RUST_TOOLCHAIN_VERSION_ANCHOR} install svm-rs@${SVM_RS_VERSION} && \
