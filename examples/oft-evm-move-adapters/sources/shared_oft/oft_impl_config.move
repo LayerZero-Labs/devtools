@@ -216,9 +216,7 @@ module oft::oft_impl_config {
     public(friend) fun checkpoint_rate_limit_in_flight(eid: u32, timestamp: u64) acquires Config {
         let inflight = in_flight_at_time(eid, timestamp);
         let rate_limit = table::borrow_mut(&mut store_mut().rate_limit_by_eid, eid);
-        // Cap in_flight_on_last_update to the current limit to prevent it from exceeding the limit
-        // when the limit is lowered
-        rate_limit.in_flight_on_last_update = min(inflight, rate_limit.limit);
+        rate_limit.in_flight_on_last_update = inflight;
         rate_limit.last_update = timestamp;
     }
 
