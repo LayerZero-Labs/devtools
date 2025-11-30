@@ -216,7 +216,9 @@ module oft::oft_impl_config {
     public(friend) fun checkpoint_rate_limit_in_flight(eid: u32, timestamp: u64) acquires Config {
         let inflight = in_flight_at_time(eid, timestamp);
         let rate_limit = table::borrow_mut(&mut store_mut().rate_limit_by_eid, eid);
-        rate_limit.in_flight_on_last_update = inflight;
+        // Cap in_flight_on_last_update to the current limit to prevent it from exceeding the limit
+        // when the limit is lowered
+        rate_limit.in_flight_on_last_update = min(inflight, rate_limit.limit);
         rate_limit.last_update = timestamp;
     }
 
@@ -250,7 +252,8 @@ module oft::oft_impl_config {
             let rate_limit = *table::borrow(&store().rate_limit_by_eid, eid);
             if (timestamp > rate_limit.last_update) {
                 // If the timestamp is greater than the last update, calculate the decayed in-flight amount
-                let elapsed = min(timestamp - rate_limit.last_update, rate_limit.window_seconds);
+                // Remove min() cap to allow decay beyond one window when needed
+                let elapsed = timestamp - rate_limit.last_update;
                 let decay = ((((elapsed as u128) * (rate_limit.limit as u128)) / (rate_limit.window_seconds as u128)) as u64);
 
                 // Ensure the decayed in-flight amount is not negative
