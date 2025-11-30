@@ -1,6 +1,5 @@
 module oft::oft_impl_config {
     use std::event::emit;
-    use std::math64::min;
     use std::string::utf8;
     use std::table::{Self, Table};
     use std::timestamp;
