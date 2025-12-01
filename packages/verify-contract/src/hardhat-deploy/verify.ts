@@ -254,7 +254,26 @@ export const verifyTarget = async (
                     const licenseType = findLicenseType(source.content)
 
                     // Constructor arguments need to come ABI-encoded but without the 0x
-                    const constructorArguments = encodeContructorArguments(deployment.abi, deployment.args)
+                    // Try using deployment ABI first, but fall back to source-based extraction if there's a mismatch
+                    let constructorArguments: string | undefined
+                    try {
+                        constructorArguments = encodeContructorArguments(deployment.abi, deployment.args)
+                    } catch (error) {
+                        // If encoding fails due to argument mismatch, try extracting constructor from source
+                        // This handles cases where the ABI is incomplete but source code has the full signature
+                        try {
+                            const sourceBasedAbi = getContructorABIFromSource(source.content)
+                            constructorArguments = encodeContructorArguments(sourceBasedAbi, deployment.args)
+                        } catch (sourceError) {
+                            // If both fail, log a warning and skip this contract
+                            logger.warn(
+                                `Skipping contract ${contractName} in ${fileName} on network ${networkName} due to constructor encoding error: ${error}. ` +
+                                    `Tried fallback to source-based extraction but that also failed: ${sourceError}`
+                            )
+
+                            return []
+                        }
+                    }
 
                     // Deployment metadata contains solcInput, just a bit rearranged
                     const solcInput = extractSolcInputFromMetadata(deployment.metadata)
