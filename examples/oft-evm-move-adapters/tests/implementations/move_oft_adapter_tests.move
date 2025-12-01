@@ -33,6 +33,8 @@ module oft::move_oft_adapter_tests {
         remove_pauser,
         set_fee_bps,
         set_fee_deposit_address,
+        EPAUSED,
+        EUNAUTHORIZED,
     };
     use oft::oft_impl_config;
     use oft::oft_store;
@@ -85,7 +87,7 @@ module oft::move_oft_adapter_tests {
     }
 
     #[test]
-    #[expected_failure(abort_code = 5)] // EUNAUTHORIZED
+    #[expected_failure(abort_code = EUNAUTHORIZED, location = move_oft_adapter)]
     fun test_only_pauser_or_admin_can_toggle() {
         setup();
 
@@ -97,7 +99,7 @@ module oft::move_oft_adapter_tests {
     }
 
     #[test]
-    #[expected_failure(abort_code = 4)] // EPAUSED
+    #[expected_failure(abort_code = EPAUSED, location = move_oft_adapter)]
     fun test_paused_blocks_debit() {
         let mint_ref = setup();
         let admin = &create_signer_for_test(@oft_admin);
@@ -149,7 +151,7 @@ module oft::move_oft_adapter_tests {
     }
 
     #[test]
-    #[expected_failure(abort_code = 5)] // EUNAUTHORIZED
+    #[expected_failure(abort_code = EUNAUTHORIZED, location = move_oft_adapter)]
     fun test_non_pauser_still_unauthorized() {
         setup();
         let admin = &create_signer_for_test(@oft_admin);
@@ -160,7 +162,7 @@ module oft::move_oft_adapter_tests {
     }
 
     #[test]
-    #[expected_failure(abort_code = 4)] // EPAUSED
+    #[expected_failure(abort_code = EPAUSED, location = move_oft_adapter)]
     fun test_credit_blocked_when_paused() {
         let mint_ref = setup();
         let amount_ld = 500u64;
@@ -181,7 +183,7 @@ module oft::move_oft_adapter_tests {
     }
 
     #[test]
-    #[expected_failure(abort_code = 5)] // EUNAUTHORIZED
+    #[expected_failure(abort_code = EUNAUTHORIZED, location = move_oft_adapter)]
     fun test_removed_pauser_loses_ability() {
         setup();
 
