@@ -43,7 +43,10 @@ const STRINGS = {
 
     // Additional logger-specific strings (when different from CLI command)
     SDK_HYPERLIQUID_COMPOSER: 'sdk-hyperliquid-composer',
+    BASE_SIGNER: 'base-signer',
+    ETHERS_SIGNER: 'ethers-signer',
     FORDEFI_SIGNER: 'fordefi-signer',
+    FIREBLOCKS_SIGNER: 'fireblocks-signer',
     CORE_SPOT_DEPLOYMENT: 'core-spot-deployment',
     HIP_TOKEN_INFO: 'hip-token-info',
     GET_DEPLOY_STATE: 'get-deploy-state',
@@ -99,7 +102,10 @@ export const LOGGER_MODULES = {
     SDK_HYPERLIQUID_COMPOSER: STRINGS.SDK_HYPERLIQUID_COMPOSER,
 
     // Signers
+    BASE_SIGNER: STRINGS.BASE_SIGNER,
+    ETHERS_SIGNER: STRINGS.ETHERS_SIGNER,
     FORDEFI_SIGNER: STRINGS.FORDEFI_SIGNER,
+    FIREBLOCKS_SIGNER: STRINGS.FIREBLOCKS_SIGNER,
 
     // Setup & Environment
     SET_BLOCK: STRINGS.SET_BLOCK,

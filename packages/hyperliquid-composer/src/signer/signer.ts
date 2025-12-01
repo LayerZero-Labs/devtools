@@ -2,14 +2,19 @@ import { encode } from '@msgpack/msgpack'
 import { ethers, Wallet } from 'ethers'
 import { keccak256 } from 'ethers/lib/utils'
 
-import { loadEnv, loadFordefiConfig } from '@/io'
+import { loadEnv, loadFordefiConfig, loadFireblocksConfig } from '@/io'
 import { Hex } from '@layerzerolabs/lz-utilities'
+import { LogLevel, createModuleLogger } from '@layerzerolabs/io-devtools'
 
 import { EthersSigner } from './ethers-signer'
 import { FordefiSigner } from './fordefi-signer'
-import type { IHyperliquidSigner, FordefiConfig } from './interfaces'
+import { FireblocksSigner } from './fireblocks-signer'
+import type { IHyperliquidSigner, FordefiConfig, FireblocksConfig } from './interfaces'
 
 import type { ValueType } from '@/types'
+import { LOGGER_MODULES } from '@/types/cli-constants'
+
+const logger = createModuleLogger(LOGGER_MODULES.BASE_SIGNER, LogLevel.info)
 
 /**
  * Converts a hex string address to a Buffer.
@@ -149,25 +154,35 @@ export function getTimestampMs(): number {
 
 /**
  * Get a Hyperliquid signer from environment variables or CLI args.
- * Supports both private key (Ethers) and Fordefi signing.
+ * Supports private key (Ethers), Fordefi, and Fireblocks signing.
  *
  * Priority:
  * 1. Fordefi config (if provided via args or env)
- * 2. Private key (if provided via args or env)
+ * 2. Fireblocks config (if provided via args or env)
+ * 3. Private key (if provided via args or env)
  *
  * @param privateKey - Optional private key override
  * @param fordefiConfig - Optional Fordefi configuration override
+ * @param fireblocksConfig - Optional Fireblocks configuration override
  * @returns IHyperliquidSigner implementation
  */
 export async function getHyperliquidSigner(
     privateKey?: string,
-    fordefiConfig?: FordefiConfig
+    fordefiConfig?: FordefiConfig,
+    fireblocksConfig?: FireblocksConfig
 ): Promise<IHyperliquidSigner> {
     // Try Fordefi first (from args or env)
     const fordefiConfigResolved = fordefiConfig ?? loadFordefiConfig()
     if (fordefiConfigResolved) {
-        console.log('Using Fordefi signer for Hyperliquid actions')
+        logger.info('Using Fordefi signer for Hyperliquid actions')
         return new FordefiSigner(fordefiConfigResolved)
+    }
+
+    // Try Fireblocks second (from args or env)
+    const fireblocksConfigResolved = fireblocksConfig ?? loadFireblocksConfig()
+    if (fireblocksConfigResolved) {
+        logger.info('Using Fireblocks signer for Hyperliquid actions')
+        return new FireblocksSigner(fireblocksConfigResolved)
     }
 
     // Fall back to private key
@@ -178,10 +193,11 @@ export async function getHyperliquidSigner(
     const env = loadEnv()
     const envPrivateKey = env.PRIVATE_KEY_HYPERLIQUID
     if (!envPrivateKey) {
-        console.error(
+        logger.error(
             'No signing method configured. Please set either:\n' +
                 '  - PRIVATE_KEY_HYPERLIQUID (for Ethers signing), or\n' +
-                '  - FORDEFI_ACCESS_TOKEN, FORDEFI_PRIVATE_KEY, FORDEFI_VAULT_ID, FORDEFI_CHAIN (for Fordefi signing)'
+                '  - FORDEFI_ACCESS_TOKEN, FORDEFI_PRIVATE_KEY, FORDEFI_VAULT_ID, FORDEFI_CHAIN (for Fordefi signing), or\n' +
+                '  - FIREBLOCKS_API_KEY, FIREBLOCKS_SECRET_KEY, FIREBLOCKS_VAULT_ACCOUNT_ID (for Fireblocks signing)'
         )
         process.exit(1)
     }
@@ -200,7 +216,7 @@ export async function getHyperliquidWallet(privateKey?: string): Promise<Wallet>
     const env = loadEnv()
     const envPrivateKey = env.PRIVATE_KEY_HYPERLIQUID
     if (!envPrivateKey) {
-        console.error('PRIVATE_KEY_HYPERLIQUID is not set in .env file')
+        logger.error('PRIVATE_KEY_HYPERLIQUID is not set in .env file')
         process.exit(1)
     }
 
