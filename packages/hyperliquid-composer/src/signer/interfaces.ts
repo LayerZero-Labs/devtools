@@ -74,3 +74,46 @@ export interface FordefiConfig {
      */
     pollingInterval?: number
 }
+
+/**
+ * Configuration for Fireblocks signer
+ */
+export interface FireblocksConfig {
+    /**
+     * Fireblocks API base URL (e.g., https://api.fireblocks.io)
+     * Optional - defaults to https://api.fireblocks.io
+     */
+    apiUrl?: string
+
+    /**
+     * API Key for authentication
+     */
+    apiKey: string
+
+    /**
+     * API Secret key for JWT signing (PEM format RSA private key)
+     * Should be the content of the fireblocks_secret.key file
+     */
+    secretKey: string
+
+    /**
+     * Vault Account ID to use for signing
+     */
+    vaultAccountId: string
+
+    /**
+     * Optional: Address index to use (default: 0 for first address)
+     * Useful if you have multiple addresses in your vault
+     */
+    addressIndex?: number
+
+    /**
+     * Optional: Timeout in milliseconds for waiting for signature (default: 300000 = 5 minutes)
+     */
+    signatureTimeout?: number
+
+    /**
+     * Optional: Polling interval in milliseconds for checking transaction status (default: 2000)
+     */
+    pollingInterval?: number
+}
