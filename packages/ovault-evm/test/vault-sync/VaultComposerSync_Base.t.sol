@@ -11,12 +11,10 @@ import { EnforcedOptionParam } from "@layerzerolabs/oapp-evm/contracts/oapp/inte
 
 import { VaultComposerSync } from "../../contracts/VaultComposerSync.sol";
 
-import { MockOFT } from "../mocks/MockOFT.sol";
-import { MockOFTAdapter } from "../mocks/MockOFT.sol";
+import { MockOFT, MockOFTAdapter } from "../mocks/MockOFT.sol";
 import { MockVault } from "../mocks/MockVault.sol";
-
-// Forge imports
-import "forge-std/console.sol";
+import { MockERC20 } from "../mocks/MockERC20.sol";
+import { MockWETH } from "../mocks/MockWETH.sol";
 
 // DevTools imports
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
@@ -33,6 +31,7 @@ contract VaultComposerSyncBaseTest is TestHelperOz5 {
 
     MockOFT public assetOFT_arb;
     MockOFTAdapter public shareOFT_arb;
+    MockERC20 public assetToken_arb;
 
     MockOFT public assetOFT_eth;
     MockOFT public shareOFT_eth;
@@ -41,7 +40,9 @@ contract VaultComposerSyncBaseTest is TestHelperOz5 {
     MockOFT public shareOFT_pol;
 
     MockVault public vault_arb;
-    VaultComposerSync public VaultComposerSyncArb;
+    VaultComposerSync public vaultComposer;
+
+    MockWETH public weth;
 
     address public userA = makeAddr("userA");
     address public userB = makeAddr("userB");
@@ -57,13 +58,19 @@ contract VaultComposerSyncBaseTest is TestHelperOz5 {
     uint256 public constant msgValueToPass = 250_000_000 wei;
 
     function setUp() public virtual override {
-        super.setUp();
+        TestHelperOz5.setUp();
         setUpEndpoints(subMeshSize, LibraryType.UltraLightNode);
 
         arbEndpoint = address(endpoints[ARB_EID]);
 
+        weth = new MockWETH();
+        vm.deal(address(weth), 100 ether);
+
+        vm.deal(userA, 100 ether);
+
         /// @dev Deploy the Asset OFT (we can expect them to exist before we deploy the VaultComposerSync)
         assetOFT_arb = new MockOFT("arbAsset", "arbAsset", address(endpoints[ARB_EID]), address(this));
+        assetToken_arb = MockERC20(assetOFT_arb.token());
         assetOFT_eth = new MockOFT("ethAsset", "ethAsset", address(endpoints[ETH_EID]), address(this));
         assetOFT_pol = new MockOFT("polAsset", "polAsset", address(endpoints[POL_EID]), address(this));
 
@@ -75,9 +82,9 @@ contract VaultComposerSyncBaseTest is TestHelperOz5 {
         this.wireOApps(assetOFTs);
 
         /// Now the "expansion" is for the arb vault and share ofts on other networks.
-        vault_arb = new MockVault("arbShare", "arbShare", address(assetOFT_arb));
+        vault_arb = new MockVault("arbShare", "arbShare", address(assetToken_arb));
         shareOFT_arb = new MockOFTAdapter(address(vault_arb), address(endpoints[ARB_EID]), address(this));
-        VaultComposerSyncArb = new VaultComposerSync(address(vault_arb), address(assetOFT_arb), address(shareOFT_arb));
+        vaultComposer = new VaultComposerSync(address(vault_arb), address(assetOFT_arb), address(shareOFT_arb));
 
         /// Deploy the Share OFTs on other networks - these are NOT lockbox adapters.
         shareOFT_eth = new MockOFT("ethShare", "ethShare", address(endpoints[ETH_EID]), address(this));
@@ -98,7 +105,7 @@ contract VaultComposerSyncBaseTest is TestHelperOz5 {
         vm.label(address(shareOFT_pol), "ShareOFT::pol");
 
         vm.label(address(vault_arb), "Vault::arb");
-        vm.label(address(VaultComposerSyncArb), "VaultComposerSync::arb");
+        vm.label(address(vaultComposer), "VaultComposerSync::arb");
 
         deal(arbExecutor, INITIAL_BALANCE);
         deal(arbEndpoint, INITIAL_BALANCE);
@@ -173,12 +180,16 @@ contract VaultComposerSyncBaseTest is TestHelperOz5 {
         mintShares = _shareNum * TOKENS_TO_SEND;
 
         vault_arb.mint(address(0xbeef), mintShares);
-        assetOFT_arb.mint(address(vault_arb), mintAssets);
+
+        address assetToken = address(assetOFT_arb.token());
+        if (assetToken == address(0)) assetToken = address(weth);
+
+        MockERC20(assetToken).mint(address(vault_arb), mintAssets);
     }
 
     function _createSendParam(uint256 _amount, bool skipMint) internal returns (SendParam memory) {
         if (!skipMint) {
-            vault_arb.mint(address(VaultComposerSyncArb), _amount);
+            vault_arb.mint(address(vaultComposer), _amount);
         }
 
         SendParam memory sendParam;

@@ -1,3 +1,10 @@
+// Force ts-node to use CommonJS mode
+// This must be set before any imports
+process.env.TS_NODE_COMPILER_OPTIONS = JSON.stringify({
+    module: 'commonjs',
+    esModuleInterop: true,
+})
+
 // Get the environment configuration from .env file
 //
 // To make use of automatic environment setup:
@@ -56,9 +63,9 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
-        'optimism-testnet': {
-            eid: EndpointId.OPTSEP_V2_TESTNET,
-            url: process.env.RPC_URL_OP_SEPOLIA || 'https://optimism-sepolia.gateway.tenderly.co',
+        'arbitrum-sepolia': {
+            eid: EndpointId.ARBSEP_V2_TESTNET,
+            url: process.env.RPC_URL_ARB_SEPOLIA || 'https://arbitrum-sepolia.gateway.tenderly.co',
             accounts,
         },
         hardhat: {

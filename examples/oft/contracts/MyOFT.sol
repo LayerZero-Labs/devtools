@@ -10,5 +10,8 @@ contract MyOFT is OFT {
         string memory _symbol,
         address _lzEndpoint,
         address _delegate
-    ) OFT(_name, _symbol, _lzEndpoint, _delegate) Ownable(_delegate) {}
+    ) OFT(_name, _symbol, _lzEndpoint, _delegate) Ownable(_delegate) {
+        // Uncomment the line below to mint test tokens on deployment (for testnet only)
+        // _mint(msg.sender, 100000 * (10 ** 18));
+    }
 }

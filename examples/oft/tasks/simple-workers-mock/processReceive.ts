@@ -19,7 +19,7 @@ task(
     .addParam('toAddress', 'Receiver on this chain', undefined, types.string)
     .addParam('amount', 'Amount to send (human readable units, e.g. "1.5")', undefined, types.string)
     .addParam('dstEid', 'Destination chain EID', undefined, types.int)
-    .addOptionalParam('dstContractName', 'Name of the destination chain OFT in deployments', 'MyOFTMock', types.string)
+    .addOptionalParam('dstContractName', 'Name of the destination chain OFT in deployments', 'MyOFT', types.string)
     .addOptionalParam('guid', 'Message GUID (if not provided, will be generated)', undefined, types.string)
     .setAction(async (args: ProcessReceiveTaskArgs, hre: HardhatRuntimeEnvironment) => {
         const signer = (await hre.ethers.getSigners())[0]
@@ -29,7 +29,7 @@ task(
         const dvnContract = new Contract(dvnDep.address, dvnDep.abi, signer)
 
         // Get destination OFT contract
-        const dstOappDep = await hre.deployments.get(args.dstContractName || 'MyOFTMock')
+        const dstOappDep = await hre.deployments.get(args.dstContractName || 'MyOFT')
         const dstOftContract = new Contract(dstOappDep.address, dstOappDep.abi, signer)
 
         // Get SimpleExecutorMock contract

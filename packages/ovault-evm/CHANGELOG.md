@@ -1,5 +1,24 @@
 # @layerzerolabs/ovault-evm
 
+## 1.0.0
+
+### Patch Changes
+
+- Updated dependencies [b858717]
+  - @layerzerolabs/oapp-evm@0.4.0
+
+## 0.1.1
+
+### Patch Changes
+
+- c99e667: virtualize native composer functions for overridability
+
+## 0.1.0
+
+### Minor Changes
+
+- 057f68d: composer sync 1.1 + native token support
+
 ## 0.0.6
 
 ### Patch Changes

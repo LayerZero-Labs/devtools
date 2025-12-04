@@ -9,7 +9,7 @@ enum MsgType {
 }
 
 const bscContract: OmniPointHardhat = {
-    eid: EndpointId.BSC_V2_TESTNET,
+    eid: EndpointId.ARBSEP_V2_TESTNET,
     contractName: 'MyOFT',
 }
 

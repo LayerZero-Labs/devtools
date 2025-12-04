@@ -81,7 +81,7 @@ Block switching is not present in the default oft deploy script.
 - [ ] Make sure the total balances in the json does not exceed this value.
 - [ ] Re-runnable until the next step is executed.
 - [ ] UserGenesis transactions stack : If you set the balance of address X to `18446744073709551615` and then set the balance of address Y to `18446744073709551615` after removing X from the json, the net effect is that both X and Y will have `18446744073709551615` tokens.
-- You can either mint the entire amount to the asset bridge address (default) or the deployer address.
+- You can either mint the entire amount to the asset bridge address or the deployer address.
 - You can read more about the asset bridge address - [in the docs](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#make-changes-to-the-underlying-oft-if-you-want-to)
 
 ### Step 2.4 - Confirm the user genesis
@@ -173,7 +173,7 @@ Block switching is not present in the default oft deploy script.
 
 - [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-22-finalizeevmcontract)
 - Deployer script in the oft repo will deploy the composer - it also handles block switching.
-- [ ] Make sure the Composer's address is activated on HyperCore (sending it at least $1 worth of `HYPE` or `USDC`).
+- [ ] Make sure the Composer's address is activated on HyperCore - transferring any spot amount on `app.hyperliquid.xyz` to the address will prompt you that you are paying $1 as an activation fee. `app.hyperliquid-testnet.xyz` should be used for a testnet deployment.
 - Composer is re-deployable and independent of the oft and does not need to be linked with anything.
 
 ## Step 5 : Listing on spot order books

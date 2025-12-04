@@ -1,5 +1,11 @@
 # @layerzerolabs/onft721-example
 
+## 0.3.12
+
+### Patch Changes
+
+- c44e657: update evm networks used
+
 ## 0.3.11
 
 ### Patch Changes

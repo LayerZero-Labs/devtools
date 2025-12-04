@@ -88,7 +88,7 @@ Throughout this walkthrough, helper tasks will be used. For the full list of ava
     PRIVATE_KEY="0xabc...def"
     ```
 
-- Fund this deployer address/account with the native tokens of the chains you want to deploy to. This example by default will deploy to the following chains' testnets: **Optimism** and **Arbitrum**.
+- Fund this deployer address/account with the native tokens of the chains you want to deploy to. This example by default will deploy to the following chains' testnets: **Base Sepolia** and **Arbitrum Sepolia**.
 
 ## Build
 
@@ -111,15 +111,15 @@ pnpm compile:hardhat
 
 ## Deploy
 
-First, deploy the inner token to (only) **Optimism Sepolia**.
+First, deploy the inner token to (only) **Base Sepolia**.
 
 ```bash
-pnpm hardhat lz:deploy --tags MyERC20Mock --networks optimism-testnet
+pnpm hardhat lz:deploy --tags MyERC20Mock --networks base-sepolia
 ```
 
 The deploy script for **MyERC20Mock** will also mint 10 tokens to the deployer address.
 
-On the `Deployed Contract` line, note the `address` logged (inner token's address) upon successful deployment as you need it for the next step. Else, you can also refer to `./deployments/optimism-testnet/MyERC20Mock.json`.
+On the `Deployed Contract` line, note the `address` logged (inner token's address) upon successful deployment as you need it for the next step. Else, you can also refer to `./deployments/base-sepolia/MyERC20Mock.json`.
 
 > :information_source: MyERC20Mock will be used as it provides a public mint function which we require for testing. Ensure you do not use this for production.
 
@@ -132,16 +132,16 @@ oftAdapter: {
 }
 ```
 
-Deploy an OFTAdapter to Optimism Sepolia:
+Deploy an OFTAdapter to Base Sepolia:
 
 ```bash
-pnpm hardhat lz:deploy --tags MyOFTAdapter --networks optimism-testnet
+pnpm hardhat lz:deploy --tags MyOFTAdapter --networks base-sepolia
 ```
 
 Deploy the OFT to Arbitrum Sepolia:
 
 ```bash
-pnpm hardhat lz:deploy --tags MyOFT --networks arbitrum-testnet
+pnpm hardhat lz:deploy --tags MyOFT --networks arbitrum-sepolia
 ```
 
 ## Enable Messaging
@@ -160,13 +160,13 @@ Submit all the transactions to complete wiring. After all transactions confirm, 
 
 With your OFTs wired, you can now send them cross chain.
 
-Send 1 OFT from **Optimism Sepolia** to **Arbitrum Sepolia**:
+Send 1 OFT from **Base Sepolia** to **Arbitrum Sepolia**:
 
 ```bash
-pnpm hardhat lz:oft:send --src-eid 40232 --dst-eid 40231 --amount 1 --to <EVM_ADDRESS>
+pnpm hardhat lz:oft:send --src-eid 40245 --dst-eid 40231 --amount 1 --to <EVM_ADDRESS>
 ```
 
-> :information_source: `40232` and `40106` are the Endpoint IDs of Optimism Sepolia and Arbitrum Sepolia respectively. View the list of chains and their Endpoint IDs on the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.
+> :information_source: `40245` and `40231` are the Endpoint IDs of Base Sepolia and Arbitrum Sepolia respectively. View the list of chains and their Endpoint IDs on the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.
 
 Upon a successful send, the script will provide you with the link to the message on LayerZero Scan.
 
@@ -190,8 +190,7 @@ Now that you've gone through a simplified walkthrough, here are what you can do 
 
 Before deploying, ensure the following:
 
-- (required) you are not using `MyOFTMock`, which has a public `mint` function
-  - In `layerzero.config.ts`, ensure you are not using `MyOFTMock` as the `contractName` for any of the contract objects.
+- (required) if you uncommented the testnet mint line in `contracts/MyOFT.sol`, ensure you remove this line for production
 - (recommended) you have profiled the gas usage of `lzReceive` on your destination chains
 <!-- TODO: mention https://docs.layerzero.network/v2/developers/evm/technical-reference/integration-checklist#set-security-and-executor-configurations after it has been updated to reference the CLI -->
 

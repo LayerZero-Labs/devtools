@@ -1,7 +1,7 @@
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
-import { hexAddrToAptosBytesAddr, evmAddressToAptos, TaskContext } from '@layerzerolabs/devtools-move'
+import { hexAddrToAptosBytesAddr, basexToBytes32, TaskContext } from '@layerzerolabs/devtools-move'
 
 async function quoteSendOFT(
     taskContext: TaskContext,
@@ -13,7 +13,7 @@ async function quoteSendOFT(
     srcAddress: string
 ) {
     // Pad EVM address to 64 chars and convert Solana address to Aptos address
-    toAddress = evmAddressToAptos(toAddress, dstEid.toString())
+    toAddress = basexToBytes32(toAddress)
     const toAddressBytes = hexAddrToAptosBytesAddr(toAddress)
     const options = Options.newOptions().addExecutorLzReceiveOption(BigInt(gasLimit))
 

@@ -1,5 +1,33 @@
 # @layerzerolabs/devtools-solana
 
+## 3.0.4
+
+### Patch Changes
+
+- d720011: print max supply given solana local decimals
+- Updated dependencies [d720011]
+  - @layerzerolabs/devtools@2.0.3
+
+## 3.0.3
+
+### Patch Changes
+
+- 06dc63b: quality of life improvements
+- Updated dependencies [06dc63b]
+  - @layerzerolabs/devtools@2.0.2
+
+## 3.0.2
+
+### Patch Changes
+
+- ca5a1f9: add support for Safe API keys
+
+## 3.0.1
+
+### Patch Changes
+
+- d34cbbd: add isSquadsV4Vault helper
+
 ## 3.0.0
 
 ### Minor Changes

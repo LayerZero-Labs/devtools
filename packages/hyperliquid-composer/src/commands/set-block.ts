@@ -12,13 +12,14 @@ export async function setBlock(args: SetBlockArgs): Promise<void> {
     const wallet = await getHyperliquidWallet(args.privateKey)
     const isTestnet = args.network === 'testnet'
     const blockSize = args.size
+    const skipPrompt = args.ci || false
 
     logger.info(`Switching to hyperliquid ${blockSize} block`)
 
     if (blockSize === 'big') {
         logger.info(`Note: Sending transactions using big block mines at a transaction per minute.`)
-        await useBigBlock(wallet, isTestnet, args.logLevel)
+        await useBigBlock(wallet, isTestnet, args.logLevel, skipPrompt)
     } else {
-        await useSmallBlock(wallet, isTestnet, args.logLevel)
+        await useSmallBlock(wallet, isTestnet, args.logLevel, skipPrompt)
     }
 }

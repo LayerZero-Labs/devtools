@@ -1,5 +1,59 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.12.9
+
+### Patch Changes
+
+- 9ec1a69: oft-solana example: add rate limit print and add support for token2022 metadata
+- d720011: oft-solana: require user to confirm max total token supply given a local decimals value
+- d720011: print max supply given solana local decimals
+
+## 0.12.8
+
+### Patch Changes
+
+- ccc14e0: fix default ALTs not used
+
+## 0.12.7
+
+### Patch Changes
+
+- 7ef51d7: bump up versions for anchor, solana, rust
+
+## 0.12.6
+
+### Patch Changes
+
+- 39ddee8: remove usage of MyOFTMock
+
+## 0.12.5
+
+### Patch Changes
+
+- 77ba155: update links
+- 87dd61e: updateMetadata supports when Update Authority is a Multisig
+
+## 0.12.4
+
+### Patch Changes
+
+- 002caa2: Add support for multiple ALTs when sending OFTs from Solana, fix extra options and compose message parsing bugs
+
+## 0.12.3
+
+### Patch Changes
+
+- d34cbbd: add nonce account check to debug script
+- d34cbbd: debug script displays dvn name
+
+## 0.12.2
+
+### Patch Changes
+
+- e415855: rename retryPayload to retryMessage
+- d48633e: fix oft-solana's debug script when peers are checked
+- c44e657: update evm network used
+
 ## 0.12.1
 
 ### Patch Changes

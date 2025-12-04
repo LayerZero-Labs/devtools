@@ -16,7 +16,7 @@ task('lz:simple-dvn:lz-receive', 'Call endpoint.lzReceive() to deliver the messa
     .addParam('toAddress', 'Receiver on this chain', undefined, types.string)
     .addParam('amount', 'Amount to send (human readable units, e.g. "1.5")', undefined, types.string)
     .addParam('dstEid', 'Destination chain EID', undefined, types.int)
-    .addOptionalParam('dstContractName', 'Name of the destination chain OFT in deployments', 'MyOFTMock', types.string)
+    .addOptionalParam('dstContractName', 'Name of the destination chain OFT in deployments', 'MyOFT', types.string)
     .addOptionalParam('guid', 'Message GUID (32-byte hex)', undefined, types.string)
     .setAction(async (args: LzReceiveArgs, hre: HardhatRuntimeEnvironment) => {
         const signer = (await hre.ethers.getSigners())[0]
@@ -26,7 +26,7 @@ task('lz:simple-dvn:lz-receive', 'Call endpoint.lzReceive() to deliver the messa
         const endpointContract = new Contract(endpointDep.address, endpointDep.abi, signer)
 
         // Get destination OFT contract
-        const dstOappDep = await hre.deployments.get(args.dstContractName || 'MyOFTMock')
+        const dstOappDep = await hre.deployments.get(args.dstContractName || 'MyOFT')
         const dstOftContract = new Contract(dstOappDep.address, dstOappDep.abi, signer)
 
         await lzReceive(endpointContract, dstOftContract, args)

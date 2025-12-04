@@ -2,7 +2,7 @@ import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import * as readline from 'readline'
 
-import { hexAddrToAptosBytesAddr, sendAllTxs, evmAddressToAptos, TaskContext } from '@layerzerolabs/devtools-move'
+import { hexAddrToAptosBytesAddr, sendAllTxs, basexToBytes32, TaskContext } from '@layerzerolabs/devtools-move'
 
 async function sendFromMoveVm(
     taskContext: TaskContext,
@@ -14,7 +14,7 @@ async function sendFromMoveVm(
     srcAddress: string
 ) {
     // Pad EVM address to 64 chars and convert Solana address to Aptos address
-    toAddress = evmAddressToAptos(toAddress, dstEid.toString())
+    toAddress = basexToBytes32(toAddress)
     const toAddressBytes = hexAddrToAptosBytesAddr(toAddress)
     const options = Options.newOptions().addExecutorLzReceiveOption(BigInt(gasLimit))
 

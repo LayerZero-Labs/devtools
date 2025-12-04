@@ -5,8 +5,8 @@ import { OAppEnforcedOption, OmniPointHardhat } from '@layerzerolabs/toolbox-har
 
 import { getSolanaOAppAddress } from './tasks/solana'
 
-const optimismContract: OmniPointHardhat = {
-    eid: EndpointId.OPTSEP_V2_TESTNET,
+const arbitrumContract: OmniPointHardhat = {
+    eid: EndpointId.ARBSEP_V2_TESTNET,
     contractName: 'MyOApp',
 }
 
@@ -35,13 +35,13 @@ const SOLANA_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
 ]
 
 // To connect all the above chains to each other, we need the following pathways:
-// Optimism <-> Solana
+// Arbitrum <-> Solana
 
 // With the config generator, pathways declared are automatically bidirectional
 // i.e. if you declare A,B there's no need to declare B,A
 const pathways: TwoWayConfig[] = [
     [
-        optimismContract, // Chain A contract
+        arbitrumContract, // Chain A contract
         solanaContract, // Chain B contract
         [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
         [1, 32], // [A to B confirmations, B to A confirmations]
@@ -53,7 +53,7 @@ export default async function () {
     // Generate the connections config based on the pathways
     const connections = await generateConnectionsConfig(pathways)
     return {
-        contracts: [{ contract: optimismContract }, { contract: solanaContract }],
+        contracts: [{ contract: arbitrumContract }, { contract: solanaContract }],
         connections,
     }
 }

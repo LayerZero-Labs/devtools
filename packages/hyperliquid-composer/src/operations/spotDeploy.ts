@@ -9,7 +9,7 @@ import {
     updateUserFreezeStatus,
 } from '../io'
 import { HyperliquidClient } from '../signer'
-import { MAX_HYPERCORE_SUPPLY, USDC_TOKEN_ID, USDT0_TOKEN_ID } from '../types'
+import { MAX_HYPERCORE_SUPPLY, QUOTE_TOKENS } from '../types'
 import { getSpotDeployState, getExistingQuoteTokens, getSpotPairDeployAuctionStatus } from './spotMeta'
 import type { SpotDeployAction, SpotDeployStates } from '../types'
 import { RegisterHyperliquidity } from '@/types/spotDeploy'
@@ -233,8 +233,8 @@ export async function registerSpot(wallet: Wallet, isTestnet: boolean, coreSpotT
     // Get existing quote tokens
     const existingQuoteTokens = await getExistingQuoteTokens(isTestnet, coreSpotTokenId, logLevel)
 
-    const usdc_tokenId = isTestnet ? USDC_TOKEN_ID.TESTNET : USDC_TOKEN_ID.MAINNET
-    const usdt0_tokenId = isTestnet ? USDT0_TOKEN_ID.TESTNET : USDT0_TOKEN_ID.MAINNET
+    // Get all quote tokens for the current network
+    const networkQuoteTokens = isTestnet ? QUOTE_TOKENS.TESTNET : QUOTE_TOKENS.MAINNET
 
     const isFirstDeployment = existingQuoteTokens.length === 0
 
@@ -270,10 +270,9 @@ export async function registerSpot(wallet: Wallet, isTestnet: boolean, coreSpotT
         logger.info(`Existing Spot Pairs for Token ${coreSpotTokenId}:`)
         logger.info('-'.repeat(30))
         existingQuoteTokens.forEach((quoteToken) => {
-            if (quoteToken === usdc_tokenId) {
-                logger.info(`• USDC (Token ${quoteToken})`)
-            } else if (quoteToken === usdt0_tokenId) {
-                logger.info(`• USDT0 (Token ${quoteToken})`)
+            const knownToken = networkQuoteTokens.find((t) => t.tokenId === quoteToken)
+            if (knownToken) {
+                logger.info(`• ${knownToken.name} (Token ${quoteToken})`)
             } else {
                 logger.info(`• Token ${quoteToken}`)
             }
@@ -285,21 +284,15 @@ export async function registerSpot(wallet: Wallet, isTestnet: boolean, coreSpotT
     // Build prompt choices - only include tokens that haven't been deployed yet
     const choices: Array<{ name: string; value: number }> = []
 
-    // Only add USDC if not already deployed
-    if (!existingQuoteTokens.includes(usdc_tokenId)) {
-        choices.push({
-            name: `USDC (Token ${usdc_tokenId})`,
-            value: usdc_tokenId,
-        })
-    }
-
-    // Only add USDT0 if not already deployed
-    if (!existingQuoteTokens.includes(usdt0_tokenId)) {
-        choices.push({
-            name: `USDT0 (Token ${usdt0_tokenId})`,
-            value: usdt0_tokenId,
-        })
-    }
+    // Add all network quote tokens that haven't been deployed yet
+    networkQuoteTokens.forEach((quoteToken) => {
+        if (!existingQuoteTokens.includes(quoteToken.tokenId)) {
+            choices.push({
+                name: `${quoteToken.name} (Token ${quoteToken.tokenId})`,
+                value: quoteToken.tokenId,
+            })
+        }
+    })
 
     // Always add custom option
     choices.push({
@@ -314,11 +307,11 @@ export async function registerSpot(wallet: Wallet, isTestnet: boolean, coreSpotT
     })
 
     // Check if all standard quote tokens are already deployed
-    const allStandardTokensDeployed =
-        existingQuoteTokens.includes(usdc_tokenId) && existingQuoteTokens.includes(usdt0_tokenId)
+    const allStandardTokensDeployed = networkQuoteTokens.every((token) => existingQuoteTokens.includes(token.tokenId))
 
     if (allStandardTokensDeployed && choices.length === 2) {
-        logger.info(`\nAll standard quote tokens (USDC, USDT0) are already deployed.`)
+        const tokenNames = networkQuoteTokens.map((t) => t.name).join(', ')
+        logger.info(`\nAll standard quote tokens (${tokenNames}) are already deployed.`)
         logger.info(`You can only deploy against a custom quote token.`)
     }
 
@@ -363,11 +356,8 @@ export async function registerSpot(wallet: Wallet, isTestnet: boolean, coreSpotT
         quoteTokenName = `Token ${quoteTokenId}`
     } else {
         quoteTokenId = selectedQuoteToken
-        if (quoteTokenId === usdc_tokenId) {
-            quoteTokenName = 'USDC'
-        } else {
-            quoteTokenName = 'USDT0'
-        }
+        const knownToken = networkQuoteTokens.find((t) => t.tokenId === quoteTokenId)
+        quoteTokenName = knownToken ? knownToken.name : `Token ${quoteTokenId}`
     }
 
     const { executeTx } = await inquirer.prompt([

@@ -18,8 +18,6 @@ import { RecoverableComposer } from "@layerzerolabs/hyperliquid-composer/contrac
 ///      it is possible that the composer will not be able to send the tokens to the receiver on hypercore.
 ///      Tokens would instead be returned to the sender address on HyperEVM. Front-end handling is recommended.
 contract MyHyperLiquidComposer_Recoverable is HyperLiquidComposer, RecoverableComposer {
-    error InvalidRecoveryAddress();
-
     /// @notice Constructor for the HyperLiquidComposer with RecoverableComposer extension
     ///
     /// @param _oft The address of the OFT
@@ -32,7 +30,5 @@ contract MyHyperLiquidComposer_Recoverable is HyperLiquidComposer, RecoverableCo
         uint64 _hlIndexId,
         int8 _assetDecimalDiff,
         address _recoveryAddress
-    ) HyperLiquidComposer(_oft, _hlIndexId, _assetDecimalDiff) RecoverableComposer(_recoveryAddress) {
-        if (_recoveryAddress == address(0)) revert InvalidRecoveryAddress();
-    }
+    ) HyperLiquidComposer(_oft, _hlIndexId, _assetDecimalDiff) RecoverableComposer(_recoveryAddress) {}
 }

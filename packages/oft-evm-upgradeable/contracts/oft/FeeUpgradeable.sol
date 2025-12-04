@@ -61,7 +61,7 @@ abstract contract FeeUpgradeable is IFee, Initializable, OwnableUpgradeable {
      */
     function getFee(uint32 _dstEid, uint256 _amount) public view virtual returns (uint256) {
         uint16 bps = _getFeeBps(_dstEid);
-        //  @note If amount * bps < BPS_DENOMINATOR, there is no fee
+        //  @custom:note If amount * bps < BPS_DENOMINATOR, there is no fee
         return bps == 0 ? 0 : (_amount * bps) / BPS_DENOMINATOR;
     }
 

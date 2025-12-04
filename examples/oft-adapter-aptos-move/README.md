@@ -109,7 +109,7 @@ Then run `source .env` in order for your values to be mapped.
 
 Before running the deploy and wire commands, first inside of `move.layerzero.config.ts`, set the delegate and owner address to your deployer account address. These can be changed in the future with commands shown later in this README, but for now they should be set to the address you will be running the commands from (deployer account address).
 
-> **Important:** Follow the [LayerZero Project Configuration Guide](https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/project-config) to properly set up your `move.layerzero.config.ts` file with correct endpoint IDs and network configurations before running wiring commands. The configuration can be modified to wire any number supported networks to each other. The current move.layerzero.config.ts file is an example of what is required to deploy and wire BSC testnet to Movement testnet.
+> **Important:** Follow the [LayerZero Project Configuration Guide](https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/project-config) to properly set up your `move.layerzero.config.ts` file with correct endpoint IDs and network configurations before running wiring commands. The configuration can be modified to wire any number supported networks to each other. The current move.layerzero.config.ts file is an example of what is required to deploy and wire Arbitrum Sepolia to Movement testnet.
 
 `move.layerzero.config.ts`:
 
@@ -161,6 +161,8 @@ pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-nam
 ```bash
 npx hardhat lz:deploy
 ```
+
+> If you need initial tokens on testnet for the EVM OFT, open `contracts/MyOFT.sol` and uncomment `_mint(msg.sender, 100000 * (10 ** 18));` in the constructor. Ensure you remove this line for production.
 
 Select only the EVM networks (DO NOT SELECT APTOS or MOVEMENT).
 

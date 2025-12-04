@@ -107,6 +107,8 @@ pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 npx hardhat lz:deploy
 ```
 
+> If you need initial tokens on testnet for the EVM OFT, open `contracts/MyOFT.sol` and uncomment `_mint(msg.sender, 100000 * (10 ** 18));` in the constructor. Ensure you remove this line for production.
+
 Select only the EVM networks you wish to deploy to (do not select Aptos, Movement, Solana, or Initia).
 
 ## Init the OFT
@@ -170,7 +172,7 @@ To wire from Move-VM to EVM:
 
 ### To wire from Move-VM to EVM:
 
-> **⚠️ Important Security Consideration:** When configuring your `move.layerzero.config.ts` file, pay careful attention to the `confirmations` parameter. This value determines the number of block confirmations to wait on Aptos before emitting the message from the source chain. The default value of `5` is for illustration purposes only. For production deployments, it is critical to select an appropriate confirmation value based on your security requirements and risk assessment. Default recommended values can be found at: https://layerzeroscan.com/tools/defaults
+> **⚠️ Important Security Consideration:** When configuring your `move.layerzero.config.ts` file, pay careful attention to the `confirmations` parameter. This value determines the number of block confirmations to wait on Initia before emitting the message from the source chain. The default value of `5` is for illustration purposes only. For production deployments, it is critical to select an appropriate confirmation value based on your security requirements and risk assessment. Default recommended values can be found at: https://layerzeroscan.com/tools/defaults
 
 ```bash
 pnpm run lz:sdk:move:wire --oapp-config move.layerzero.config.ts
@@ -189,7 +191,7 @@ pnpm run lz:sdk:move:set-rate-limit --oapp-config move.layerzero.config.ts --rat
 ```
 
 Rate limit limits how much is sent netted by the amount that is received. It is set on a per pathway basis.
-For example if the rate limit from Aptos to EVM is 100 tokens you can send 100 tokens from Aptos to EVM, however if you receive 50 tokens from EVM to Aptos you are then able to send 150 tokens from Aptos to EVM.
+For example if the rate limit from Initia to EVM is 100 tokens you can send 100 tokens from Initia to EVM, however if you receive 50 tokens from EVM to Initia you are then able to send 150 tokens from Initia to EVM.
 Window is the number of seconds over which the capacity is restored. If the rate limit is 1000 and window is 10 seconds, then each second you get 100 (1000/10) capacity back. The units of the rate limit are the tokens in local decimals.
 
 ## Unset Rate Limit
@@ -226,7 +228,7 @@ There are three steps to transferring ownership of your Move OFT:
 2. Transfer the OApp owner
 3. Transfer the object owner
 
-> **Note:** These ownership transfer commands only affect the Move VM (Aptos/Movement) implementation of your OFT. To transfer ownership of EVM implementations, you'll need to use the corresponding EVM ownership transfer commands.
+> **Note:** These ownership transfer commands only affect the Move VM (Aptos/Movement/Initia) implementation of your OFT. To transfer ownership of EVM implementations, you'll need to use the corresponding EVM ownership transfer commands.
 
 To transfer the delegate, run the following command:
 First ensure that the delegate you wish to transfer to is specified in the move.layerzero.config.ts file.

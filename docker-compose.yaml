@@ -117,7 +117,41 @@ services:
       - RPC_URL_SOLANA_TESTNET=${RPC_URL_SOLANA_TESTNET}
       - LZ_DEVTOOLS_ENABLE_SOLANA_TESTS=${LZ_DEVTOOLS_ENABLE_SOLANA_TESTS}
       - FOUNDRY_PROFILE=${FOUNDRY_PROFILE}
-      - RPC_URL_HYPERLIQUID=${RPC_URL_HYPERLIQUID}
+
+  #
+  # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+  #                       E2E Tests (Live RPC Tests)
+  # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+  #
+  tests-e2e:
+    extends:
+      file: docker-compose.templates.yaml
+      service: project
+    depends_on:
+      network-vengaboys:
+        condition: service_healthy
+      network-britney:
+        condition: service_healthy
+      network-tango:
+        condition: service_healthy
+      network-ton:
+        condition: service_healthy
+      network-hyperliquid:
+        condition: service_healthy
+    logging:
+      driver: none
+    # E2E tests run against live networks, no local network URLs needed
+    environment:
+      - DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=$DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS
+      # E2E tests use live RPC URLs
+      - RPC_URL_SOLANA_MAINNET=${RPC_URL_SOLANA_MAINNET}
+      - RPC_URL_SOLANA_TESTNET=${RPC_URL_SOLANA_TESTNET}
+      - LZ_DEVTOOLS_ENABLE_SOLANA_TESTS=${LZ_DEVTOOLS_ENABLE_SOLANA_TESTS}
+      - FOUNDRY_PROFILE=${FOUNDRY_PROFILE}
+      # E2E specific environment variables
+      - PRIVATE_KEY=${PRIVATE_KEY}
+      - NETWORK_URL_TON=http://network-ton:8081/jsonRPC
+      - NETWORK_URL_HYPERLIQUID=http://network-hyperliquid:8546
     volumes:
       - ./node_modules/.cache/turbo:/app/node_modules/.cache/turbo
       # Hardhat has an issue with caching compilers inside a docker container,
@@ -132,5 +166,5 @@ services:
       # This would normally be fine, but if we have more than 1 solana examples anchor tries building them in parallel.
       # Anchor does not respect file locks on the rustup directory, so the builds fail as it can't overwrite the other example's rustup.
       # Running rustup default before pnpm test ensures that the rustup directory is present and up to date.
-    command: "pnpm test"
+    command: "pnpm turbo test:e2e"
 

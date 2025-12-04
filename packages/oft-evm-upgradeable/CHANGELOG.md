@@ -1,5 +1,18 @@
 # @layerzerolabs/oft-evm-upgradeable
 
+## 4.0.0
+
+### Patch Changes
+
+- Updated dependencies [b858717]
+  - @layerzerolabs/oapp-evm@0.4.0
+
+## 3.2.1
+
+### Patch Changes
+
+- 04768d9: update natspec tags to use custom prefix
+
 ## 3.2.0
 
 ### Minor Changes

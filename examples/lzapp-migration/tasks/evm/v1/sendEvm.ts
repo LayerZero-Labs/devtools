@@ -25,7 +25,7 @@ export interface EvmArgs {
 
 const PT_SEND = 0
 const GAS_LIMIT_SOLANA = 200_000 // Gas limit for the executor when sending to Solana
-const MSG_VALUE_SOLANA = 2_500_000 // For why this is necessary, see: https://docs.layerzero.network/v2/developers/solana/oft/account#setting-enforced-options-inbound-to-solana
+const MSG_VALUE_SOLANA = 2_500_000 // For why this is necessary, see: https://docs.layerzero.network/v2/developers/solana/oft/overview#setting-options-inbound-to-solana
 
 const GAS_LIMIT_DEFAULT = 80_000 // Gas limit for the executor when sending to EVM / Aptos
 const MSG_VALUE_DEFAULT = 0 // No msg.value needed for EVM / Aptos

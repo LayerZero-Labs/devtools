@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ovault-evm",
-  "version": "0.0.6",
+  "version": "1.0.0",
   "description": "LayerZero Labs reference EVM OVault + composer implementation",
   "keywords": [
     "LayerZero",
@@ -59,9 +59,9 @@
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.75",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.75",
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.75",
-    "@layerzerolabs/oapp-evm": "^0.3.2",
-    "@layerzerolabs/oft-evm": "^3.1.4",
-    "@layerzerolabs/test-devtools-evm-foundry": "~6.0.3",
+    "@layerzerolabs/oapp-evm": "^0.4.0",
+    "@layerzerolabs/oft-evm": "^4.0.0",
+    "@layerzerolabs/test-devtools-evm-foundry": "~8.0.0",
     "@layerzerolabs/toolbox-foundry": "^0.1.12",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
@@ -78,7 +78,7 @@
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.75",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.75",
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.75",
-    "@layerzerolabs/oapp-evm": "^0.3.2",
+    "@layerzerolabs/oapp-evm": "^0.4.0",
     "@openzeppelin/contracts": "^4.8.1 || ^5.0.0",
     "@openzeppelin/contracts-upgradeable": "^4.8.1 || ^5.0.0"
   },

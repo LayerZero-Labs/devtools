@@ -11,7 +11,7 @@ task(
     'Set receive configuration for Simple Workers (SimpleDVNMock and SimpleExecutorMock)'
 )
     .addParam('srcEid', 'Source chain EID', undefined, types.int)
-    .addParam('contractName', 'Name of the contract in deployments', 'MyOFTMock', types.string)
+    .addParam('contractName', 'Name of the contract in deployments', 'MyOFT', types.string)
     .setAction(async (args: SetReceiveConfigArgs, hre: HardhatRuntimeEnvironment) => {
         const signer = (await hre.ethers.getSigners())[0]
 

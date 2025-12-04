@@ -27,18 +27,26 @@ export const createGnosisSignerFactory = (
     networkEnvironmentFactory = createGetHreByEid(),
     providerFactory = createProviderFactory(networkEnvironmentFactory),
     signerAddressorIndexFactory = createSignerAddressOrIndexFactory(definition, networkEnvironmentFactory)
-): OmniSignerFactory<GnosisOmniSignerEVM<ConnectSafeConfigWithSafeAddress>> => {
+): OmniSignerFactory<GnosisOmniSignerEVM<ConnectSafeConfigWithSafeAddress & { safeApiKey: string }>> => {
     return pMemoize(async (eid) => {
         const provider = await providerFactory(eid)
         const addressOrIndex = await signerAddressorIndexFactory(eid)
         const signer = provider.getSigner(addressOrIndex)
 
         const env = await networkEnvironmentFactory(eid)
+        const chainId = BigInt(await env.getChainId())
+
         const safeConfig = env.network.config.safeConfig
         if (!safeConfig) {
             throw new Error('No safe config found for the current network')
         }
-        return new GnosisOmniSignerEVM<ConnectSafeConfigWithSafeAddress>(eid, signer, safeConfig.safeUrl, safeConfig)
+        return new GnosisOmniSignerEVM<ConnectSafeConfigWithSafeAddress & { safeApiKey: string }>(
+            eid,
+            signer,
+            safeConfig.safeUrl,
+            safeConfig,
+            chainId
+        )
     })
 }
 

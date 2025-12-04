@@ -32,7 +32,7 @@ import {
 } from '@metaplex-foundation/umi'
 import { mplToolbox } from '@metaplex-foundation/mpl-toolbox'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
-import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
+import { fromWeb3JsPublicKey, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { EndpointProgram, MessageLibPDADeriver, UlnProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 
 // TODO: Use exported interfaces when they are available
@@ -170,6 +170,7 @@ export class OFT extends OmniSDK implements IOApp {
 
     async setPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<OmniTransaction> {
         const eidLabel = formatEid(eid)
+        const endpointDeriver = (await this.getEndpointSDK()).deriver
         // We use the `mapError` and pretend `normalizePeer` is async to avoid having a let and a try/catch block
         const normalizedPeer = await mapError(
             async () => normalizePeer(address, eid),
@@ -177,6 +178,10 @@ export class OFT extends OmniSDK implements IOApp {
                 new Error(`Failed to convert peer ${address} for ${eidLabel} for ${this.label} to bytes: ${error}`)
         )
         const peerAsBytes32 = makeBytes32(normalizedPeer)
+        const [nonceAccount] = endpointDeriver.nonce(toWeb3JsPublicKey(this.umiPublicKey), eid, normalizedPeer)
+        const nonceAccountInfo = await this.connection.getAccountInfo(nonceAccount)
+        const nonceAccountExists = nonceAccountInfo != null
+
         const delegate = await this.safeGetDelegate()
 
         const oftStore = this.umiPublicKey
@@ -186,26 +191,20 @@ export class OFT extends OmniSDK implements IOApp {
         const instructions = [
             await this._createSetPeerAddressIx(normalizedPeer, eid), // admin
         ]
-
-        const isSendLibraryInitialized = await this.isSendLibraryInitialized(eid)
-        if (!isSendLibraryInitialized) {
-            instructions.push(
-                oft.initSendLibrary({ admin: delegate, oftStore }, eid) // delegate
-            )
-        }
-
-        const isReceiveLibraryInitialized = await this.isReceiveLibraryInitialized(eid)
-        if (!isReceiveLibraryInitialized) {
-            instructions.push(
-                oft.initReceiveLibrary({ admin: delegate, oftStore }, eid) // delegate
-            )
-        }
+        // send lib and receive lib should be intialized in the init-config step
 
         // since the order is important, we push the instructions in the order we want them to be executed
         instructions.push(
             await this._setPeerEnforcedOptionsIx(new Uint8Array([0, 3]), new Uint8Array([0, 3]), eid), // admin
-            await this._setPeerFeeBpsIx(eid), // admin
-            oft.initOAppNonce({ admin: delegate, oftStore }, eid, normalizedPeer), // delegate
+            await this._setPeerFeeBpsIx(eid) // admin
+        )
+
+        if (!nonceAccountExists) {
+            // Only initialize the nonce account if it doesn't yet exist
+            instructions.push(oft.initOAppNonce({ admin: delegate, oftStore }, eid, normalizedPeer)) // delegate
+        }
+
+        instructions.push(
             await this._createSetPeerAddressIx(normalizedPeer, eid) // admin but is this needed?  set twice...
         )
 

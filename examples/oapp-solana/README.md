@@ -8,7 +8,7 @@
   <a href="https://layerzero.network" style="color: #a77dff">Homepage</a> | <a href="https://docs.layerzero.network/" style="color: #a77dff">Docs</a> | <a href="https://layerzero.network/developers" style="color: #a77dff">Developers</a>
 </p>
 
-<h1 align="center">OApp Example</h1>
+<h1 align="center">Solana OApp Example</h1>
 
 <p align="center">
   <a href="https://docs.layerzero.network/v2/concepts/getting-started/what-is-layerzero" style="color: #a77dff">Core Concepts</a> | <a href="https://docs.layerzero.network/v2/developers/evm/configuration/options" style="color: #a77dff">Message Execution Options</a> | <a href="https://docs.layerzero.network/v2/deployments/deployed-contracts" style="color: #a77dff">Endpoint Addresses</a>
@@ -25,9 +25,9 @@ For a more thorough walkthrough of how a Solana OApp works, refer to [Solana OAp
 
 ## Requirements
 
-- Rust `v1.75.0`
-- Anchor `v0.29`
-- Solana CLI `v1.17.31`
+- Rust `1.84.1`
+- Anchor `v0.31.1`
+- Solana CLI `v2.2.20`
 - Docker
 - Node.js
 
@@ -38,8 +38,6 @@ We recommend using `pnpm` as a package manager (but you can of course use a pack
 [Docker](https://docs.docker.com/get-started/get-docker/) is required to build using anchor. We highly recommend that you use the most up-to-date Docker version to avoid any issues with anchor
 builds.
 
-:warning: You need anchor version `0.29` and solana version `1.17.31` specifically to compile the build artifacts. Using higher Anchor and Solana versions can introduce unexpected issues during compilation. See the following issues in Anchor's repo: [1](https://github.com/coral-xyz/anchor/issues/3089), [2](https://github.com/coral-xyz/anchor/issues/2835). After compiling the correct build artifacts, you can change the Solana version to higher versions.
-
 ### Install Rust
 
 ```bash
@@ -49,7 +47,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ### Install Solana
 
 ```bash
-sh -c "$(curl -sSfL https://release.anza.xyz/v1.17.31/install)"
+sh -c "$(curl -sSfL https://release.anza.xyz/v2.2.20/install)"
 ```
 
 If this is your first time installing the Solana CLI, run the following to [generate a keypair](https://solana.com/docs/intro/installation#create-wallet) at the default keypair path (`~/.config/solana/id.json`):
@@ -63,7 +61,7 @@ solana-keygen new
 Install and use the correct version
 
 ```bash
-cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 anchor-cli --locked
+cargo install --git https://github.com/solana-foundation/anchor --tag v0.31.1 anchor-cli --locked
 ```
 
 ### Get the code
@@ -86,6 +84,39 @@ Make sure you select the **OApp (Solana)** example from the dropdown:
     OFT (Solana)
 ❯   OApp (Solana)
 ```
+
+## Project Structure
+
+The repository is organized as follows:
+
+```
+examples/oapp-solana/
+├── contracts/              # Solidity contracts for EVM side
+├── deploy/                 # Hardhat deploy scripts for EVM contracts
+├── deployments/            # Deployment files (Only created after deployment)
+├── docs/                   # Additional guides (compose, ordered execution)
+├── lib/                    # TypeScript client SDK and generated bindings
+│   ├── client/
+│   │   ├── generated/      # Auto-generated TypeScript files from Solana IDL (run `pnpm gen:api`)
+│   │   └── myoapp.ts       # TypeScript client for interacting with the Solana OApp
+├── programs/               # Grouping folder for Solana program
+│   └── my_oapp/            # Solana OApp program
+├── tasks/                  # Hardhat tasks for deployment, config, send, etc.
+├── test/                  # Stub folder for tests
+├── .env.example            # Example environment variables
+├── layerzero.config.ts     # OApp mesh configuration
+├── README.md               # This documentation
+└── ...                     # Other project files
+```
+
+- **contracts/**: Solidity contracts for the EVM side of the OApp (if applicable).
+- **deploy/**: Hardhat deploy scripts for EVM contracts.
+- **docs/**: Project-specific documentation, guides, and references.
+- **lib/client/generated/my_oapp**: TypeScript bindings generated from the Solana program's IDL. Regenerate after program changes with `pnpm gen:api`.
+- **lib/client/myoapp.ts**: Main TypeScript client for interacting with the Solana OApp.
+- **programs/my_oapp**: Anchor-based Solana program source code.
+- **tasks/**: Custom Hardhat tasks for deployment, configuration, and wiring.
+- **tests/**: Project tests for both EVM and Solana components.
 
 ## Developing Contracts
 
@@ -178,16 +209,6 @@ Where `<OAPP_PROGRAM_ID>` is replaced with your OApp Program ID copied from the 
 
 #### Deploy the Solana OApp
 
-While for building, we must use Solana `v1.17.31`, for deploying, we will be using `v1.18.26` as it provides an improved program deployment experience (i.e. ability to attach priority fees and also exact-sized on-chain program length which prevents needing to provide 2x the rent as in `v1.17.31`).
-
-##### Temporarily switch to Solana `v1.18.26`
-
-First, we switch to Solana `v1.18.26` (remember to switch back to `v1.17.31` later)
-
-```bash
-sh -c "$(curl -sSfL https://release.anza.xyz/v1.18.26/install)"
-```
-
 ##### Run the deploy command
 
 ```bash
@@ -199,14 +220,6 @@ solana program deploy --program-id target/deploy/my_oapp-keypair.json target/ver
 :information_source: the `-u` flag specifies the RPC URL that should be used. The options are `mainnet-beta, devnet, testnet, localhost`, which also have their respective shorthands: `-um, -ud, -ut, -ul`
 
 :warning: If the deployment is slow, it could be that the network is congested and you might need to increase the priority fee.
-
-##### Switch back to Solana `1.17.31`
-
-:warning: After deploying, make sure to switch back to v1.17.31 after deploying. If you need to rebuild artifacts, you must use Solana CLI version `1.17.31` and Anchor version `0.29.0`
-
-```bash
-sh -c "$(curl -sSfL https://release.anza.xyz/v1.17.31/install)"
-```
 
 ### Initialize the Solana OApp account
 
@@ -268,16 +281,16 @@ With a squads multisig, you can simply append the `--multisig-key` flag to the e
 
 With your OApps wired, you can now send a message.
 
-Send from Solana Devnet (40168) to Optimism Sepolia (40232) :
+Send from Solana Devnet (40168) to Arbitrum Sepolia (40231) :
 
 ```bash
-npx hardhat lz:oapp:send --from-eid 40168 --dst-eid 40232 --message "Hello from Solana Devnet"
+npx hardhat lz:oapp:send --from-eid 40168 --dst-eid 40231 --message "Hello from Solana Devnet"
 ```
 
-Send from Optimism Sepolia (40232) to Solana Devnet (40168) :
+Send from Arbitrum Sepolia (40231) to Solana Devnet (40168) :
 
 ```bash
-npx hardhat --network optimism-testnet lz:oapp:send --from-eid 40232 --dst-eid 40168 --message "Hello from Optimism Sepolia"
+npx hardhat --network arbitrum-sepolia lz:oapp:send --from-eid 40231 --dst-eid 40168 --message "Hello from Arbitrum Sepolia"
 ```
 
 :information_source: For the list of supported chains and their endpoint ID's refer to the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.
@@ -299,3 +312,19 @@ pnpm test
 <p align="center">
   Join our <a href="https://layerzero.network/community" style="color: #a77dff">community</a>! | Follow us on <a href="https://x.com/LayerZero_Labs" style="color: #a77dff">X (formerly Twitter)</a>
 </p>
+
+## Modifying for your use case
+
+After going through the above and having successfully sent cross-chain messages using the template, you might want to start customizing the Solana program to fit your actual use case.
+
+First, ensure you have built the program after making the necessary updates, to ensure the latest changes to the IDL are reflected.
+
+Next, run:
+
+```bash
+pnpm gen:api
+```
+
+This will update the files under `lib/client/generated/my_oapp` which is used by `lib/client/myoapp.ts`, which you will also need to adapt to your updated program.
+
+For guidance, read the [Solana OApp Reference](https://docs.layerzero.network/v2/developers/solana/oapp/overview).

@@ -16,11 +16,11 @@
 
 ## Requirements
 
-- Rust `v1.75.0`
-- Anchor `v0.29`
-- Solana CLI `v1.17.31`
-- Docker
-- Node.js
+- Rust `1.84.1`
+- Anchor `0.31.1`
+- Solana CLI `2.2.20`
+- Docker `28.3.0`
+- Node.js `>=18.16.0`
 
 ## Setup
 
@@ -29,7 +29,7 @@ We recommend using `pnpm` as a package manager (but you can of course use a pack
 [Docker](https://docs.docker.com/get-started/get-docker/) is required to build using anchor. We highly recommend that you use the most up-to-date Docker version to avoid any issues with anchor
 builds.
 
-:warning: You need anchor version `0.29` and solana version `1.17.31` specifically to compile the build artifacts. Using higher Anchor and Solana versions can introduce unexpected issues during compilation. See the following issues in Anchor's repo: [1](https://github.com/coral-xyz/anchor/issues/3089), [2](https://github.com/coral-xyz/anchor/issues/2835). After compiling the correct build artifacts, you can change the Solana version to higher versions.
+Use Anchor `0.31.1` and Solana CLI `2.2.20` for building and deploying. These versions match the OFT Solana example and provide improved deployment UX.
 
 ### Install Rust
 
@@ -37,18 +37,16 @@ builds.
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ```
 
-### Install Solana
+### Install Solana 2.2.20
 
 ```bash
-sh -c "$(curl -sSfL https://release.anza.xyz/v1.17.31/install)"
+sh -c "$(curl -sSfL https://release.anza.xyz/v2.2.20/install)"
 ```
 
-### Install Anchor
-
-Install and use the correct version
+### Install Anchor 0.31.1
 
 ```bash
-cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 anchor-cli --locked
+cargo install --git https://github.com/solana-foundation/anchor --tag v0.31.1 anchor-cli --locked
 ```
 
 ### Get the code
@@ -198,16 +196,6 @@ npx hardhat lz:deploy --help
 
 #### Deploy the Solana OFT
 
-While for building, we must use Solana `v1.17.31`, for deploying, we will be using `v1.18.26` as it provides an improved program deployment experience (i.e. ability to attach priority fees and also exact-sized on-chain program length which prevents needing to provide 2x the rent as in `v1.17.31`).
-
-##### Temporarily switch to Solana `v1.18.26`
-
-First, we switch to Solana `v1.18.26` (remember to switch back to `v1.17.31` later)
-
-```bash
-sh -c "$(curl -sSfL https://release.anza.xyz/v1.18.26/install)"
-```
-
 ##### (Recommended) Deploying with a priority fee
 
 The `deploy` command will run with a priority fee. Read the section on ['Deploying Solana programs with a priority fee
@@ -223,13 +211,7 @@ solana program deploy --program-id target/deploy/oft-keypair.json target/verifia
 
 :warning: If the deployment is slow, it could be that the network is congested and you might need to increase the priority fee.
 
-##### Switch back to Solana `1.17.31`
-
-:warning: After deploying, make sure to switch back to v1.17.31 after deploying. If you need to rebuild artifacts, you must use Solana CLI version `1.17.31` and Anchor version `0.29.0`
-
-```bash
-sh -c "$(curl -sSfL https://release.anza.xyz/v1.17.31/install)"
-```
+<!-- No version switching needed; use Solana 2.2.20 consistently for build and deploy. -->
 
 #### Create the Solana OFT202 acounts
 

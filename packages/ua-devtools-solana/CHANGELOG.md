@@ -1,5 +1,28 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 8.0.4
+
+### Patch Changes
+
+- 90e4924: remove redundant init of send lib and receive lib PDAs
+
+## 8.0.3
+
+### Patch Changes
+
+- ca5a1f9: add support for Safe API keys
+- Updated dependencies [ca5a1f9]
+  - @layerzerolabs/protocol-devtools-solana@8.0.4
+  - @layerzerolabs/devtools-solana@3.0.2
+
+## 8.0.2
+
+### Patch Changes
+
+- a6fc1d6: check nonce account existence in setPeer call
+- Updated dependencies [d34cbbd]
+  - @layerzerolabs/devtools-solana@3.0.1
+
 ## 8.0.1
 
 ### Patch Changes

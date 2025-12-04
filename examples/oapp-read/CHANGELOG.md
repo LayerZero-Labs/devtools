@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-read-example
 
+## 0.3.2
+
+### Patch Changes
+
+- c44e657: update evm networks used
+
 ## 0.3.1
 
 ### Patch Changes

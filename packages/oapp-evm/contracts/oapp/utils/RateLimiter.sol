@@ -101,7 +101,6 @@ pragma solidity ^0.8.0;
  *                          [ --------------- Extended 60 Second Window --------------- ]
  */
 abstract contract RateLimiter {
-
     /**
      * @notice Rate Limit struct.
      * @param amountInFlight The amount in the current window.
@@ -110,10 +109,10 @@ abstract contract RateLimiter {
      * @param window Defines the duration of the rate limiting window.
      */
     struct RateLimit {
-        uint256 amountInFlight;
-        uint256 lastUpdated;
-        uint256 limit;
-        uint256 window;
+        uint192 amountInFlight;
+        uint64 lastUpdated;
+        uint192 limit;
+        uint64 window;
     }
 
     /**
@@ -124,8 +123,8 @@ abstract contract RateLimiter {
      */
     struct RateLimitConfig {
         uint32 dstEid;
-        uint256 limit;
-        uint256 window;
+        uint192 limit;
+        uint64 window;
     }
 
     /**
@@ -143,6 +142,12 @@ abstract contract RateLimiter {
     event RateLimitsChanged(RateLimitConfig[] rateLimitConfigs);
 
     /**
+     * @notice Emitted when _resetRateLimits occurs.
+     * @param eids The endpoint ids that were reset.
+     */
+    event RateLimitsReset(uint32[] eids);
+
+    /**
      * @notice Error that is thrown when an amount exceeds the rate_limit.
      */
     error RateLimitExceeded();
@@ -155,7 +160,7 @@ abstract contract RateLimiter {
      */
     function getAmountCanBeSent(
         uint32 _dstEid
-    ) external view virtual returns (uint256 currentAmountInFlight, uint256 amountCanBeSent) {
+    ) public view virtual returns (uint256 currentAmountInFlight, uint256 amountCanBeSent) {
         RateLimit memory rl = rateLimits[_dstEid];
         return _amountCanBeSent(rl.amountInFlight, rl.lastUpdated, rl.limit, rl.window);
     }
@@ -184,6 +189,20 @@ abstract contract RateLimiter {
     }
 
     /**
+     * @notice Resets the rate limits (sets amountInFlight to 0) for the given endpoint ids.
+     * @param _eids The endpoint ids to reset the rate limits for.
+     */
+    function _resetRateLimits(uint32[] memory _eids) internal virtual {
+        for (uint256 i = 0; i < _eids.length; i++) {
+            RateLimit storage rateLimit = rateLimits[_eids[i]];
+
+            rateLimit.amountInFlight = 0;
+            rateLimit.lastUpdated = uint64(block.timestamp);
+        }
+        emit RateLimitsReset(_eids);
+    }
+
+    /**
      * @notice Checks current amount in flight and amount that can be sent for a given rate limit window.
      * @param _amountInFlight The amount in the current window.
      * @param _lastUpdated Timestamp representing the last time the rate limit was checked or updated.
@@ -193,15 +212,15 @@ abstract contract RateLimiter {
      * @return amountCanBeSent The amount that can be sent.
      */
     function _amountCanBeSent(
-        uint256 _amountInFlight,
-        uint256 _lastUpdated,
-        uint256 _limit,
-        uint256 _window
+        uint192 _amountInFlight,
+        uint64 _lastUpdated,
+        uint192 _limit,
+        uint64 _window
     ) internal view virtual returns (uint256 currentAmountInFlight, uint256 amountCanBeSent) {
         uint256 timeSinceLastDeposit = block.timestamp - _lastUpdated;
         // @dev Presumes linear decay.
         uint256 decay = (_limit * timeSinceLastDeposit) / (_window > 0 ? _window : 1); // prevent division by zero
-        currentAmountInFlight = _amountInFlight <= decay ? 0 : _amountInFlight - decay;
+        currentAmountInFlight = uint192(_amountInFlight <= decay ? 0 : _amountInFlight - decay);
         // @dev In the event the _limit is lowered, and the 'in-flight' amount is higher than the _limit, set to 0.
         amountCanBeSent = _limit <= currentAmountInFlight ? 0 : _limit - currentAmountInFlight;
     }
@@ -226,8 +245,8 @@ abstract contract RateLimiter {
         if (_amount > amountCanBeSent) revert RateLimitExceeded();
 
         // @dev Update the storage to contain the new amount and current timestamp.
-        rl.amountInFlight = currentAmountInFlight + _amount;
-        rl.lastUpdated = block.timestamp;
+        rl.amountInFlight = uint192(currentAmountInFlight + _amount);
+        rl.lastUpdated = uint64(block.timestamp);
     }
 
     /**
@@ -239,6 +258,6 @@ abstract contract RateLimiter {
      */
     function _inflow(uint32 _srcEid, uint256 _amount) internal virtual {
         RateLimit storage rl = rateLimits[_srcEid];
-        rl.amountInFlight = _amount >= rl.amountInFlight ? 0 : rl.amountInFlight - _amount;
+        rl.amountInFlight = uint192(_amount >= rl.amountInFlight ? 0 : rl.amountInFlight - _amount);
     }
 }

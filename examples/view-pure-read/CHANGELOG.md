@@ -1,5 +1,11 @@
 # @layerzerolabs/view-pure-read-example
 
+## 0.0.5
+
+### Patch Changes
+
+- c44e657: update evm networks used
+
 ## 0.0.4
 
 ### Patch Changes

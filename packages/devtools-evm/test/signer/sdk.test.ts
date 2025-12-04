@@ -105,7 +105,16 @@ describe('signer/ethers', () => {
                                 signTransaction: jest.fn().mockResolvedValue({ data: { data: '0xsigned' } }),
                             } as unknown as Safe
 
-                            const omniSigner = new GnosisOmniSignerEVM(eid, signer, '', {}, undefined, apiKit, safe)
+                            const omniSigner = new GnosisOmniSignerEVM(
+                                eid,
+                                signer,
+                                '',
+                                { safeApiKey: '' },
+                                BigInt(1),
+                                undefined,
+                                apiKit,
+                                safe
+                            )
 
                             await expect(omniSigner.sign(transaction)).rejects.toThrow(
                                 /Signing transactions with safe is currently not supported, use signAndSend instead/
@@ -132,7 +141,16 @@ describe('signer/ethers', () => {
                                 getAddress: jest.fn().mockResolvedValue(safeAddress),
                                 signTransactionHash: jest.fn().mockResolvedValue({ data: 'signature' }),
                             } as unknown as Safe
-                            const omniSigner = new GnosisOmniSignerEVM(eid, signer, '', {}, undefined, undefined, safe)
+                            const omniSigner = new GnosisOmniSignerEVM(
+                                eid,
+                                signer,
+                                '',
+                                { safeApiKey: 'xyz' },
+                                BigInt(1),
+                                undefined,
+                                undefined,
+                                safe
+                            )
 
                             await expect(() => omniSigner.signAndSend(transaction)).rejects.toThrow(
                                 /Could not use signer/
@@ -167,7 +185,9 @@ describe('signer/ethers', () => {
                                 '',
                                 {
                                     safeAddress,
+                                    safeApiKey: '',
                                 },
+                                BigInt(1),
                                 undefined,
                                 apiKit,
                                 safe
@@ -198,7 +218,16 @@ describe('signer/ethers', () => {
                     fc.asyncProperty(evmAddressArbitrary, endpointArbitrary, async (safeAddress, eid) => {
                         const signer = {} as Signer
                         const safe = {} as unknown as Safe
-                        const omniSigner = new GnosisOmniSignerEVM(eid, signer, '', {}, undefined, undefined, safe)
+                        const omniSigner = new GnosisOmniSignerEVM(
+                            eid,
+                            signer,
+                            '',
+                            { safeApiKey: 'xyz' },
+                            BigInt(1),
+                            undefined,
+                            undefined,
+                            safe
+                        )
 
                         await expect(() => omniSigner.signAndSendBatch([])).rejects.toThrow(
                             /signAndSendBatch received 0 transactions/
@@ -222,7 +251,16 @@ describe('signer/ethers', () => {
                                 getAddress: jest.fn().mockResolvedValue(safeAddress),
                                 signTransactionHash: jest.fn().mockResolvedValue({ data: 'signature' }),
                             } as unknown as Safe
-                            const omniSigner = new GnosisOmniSignerEVM(eid, signer, '', {}, undefined, undefined, safe)
+                            const omniSigner = new GnosisOmniSignerEVM(
+                                eid,
+                                signer,
+                                '',
+                                { safeApiKey: 'xyz' },
+                                BigInt(1),
+                                undefined,
+                                undefined,
+                                safe
+                            )
 
                             await expect(() => omniSigner.signAndSendBatch(transactions)).rejects.toThrow(
                                 /Could not use signer/
@@ -259,7 +297,9 @@ describe('signer/ethers', () => {
                                 '',
                                 {
                                     safeAddress,
+                                    safeApiKey: '',
                                 },
+                                BigInt(1),
                                 undefined,
                                 apiKit,
                                 safe

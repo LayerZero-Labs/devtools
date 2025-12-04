@@ -18,6 +18,10 @@ interface Args {
 }
 
 // sets the update authority via Metaplex
+// Example (set new update authority):
+// pnpm hardhat lz:oft:solana:set-update-authority --eid <EID> --mint <MINT_ADDRESS> --new-update-authority <NEW_UPDATE_AUTHORITY>
+// Example (renounce update authority):
+// pnpm hardhat lz:oft:solana:set-update-authority --eid <EID> --mint <MINT_ADDRESS> --renounce-update-authority true
 task('lz:oft:solana:set-update-authority', 'Updates the metaplex update authority of the SPL Token')
     .addParam('eid', 'Solana mainnet (30168) or testnet (40168)', undefined, devtoolsTypes.eid)
     .addParam('mint', 'The Token mint public key', undefined, devtoolsTypes.string)
