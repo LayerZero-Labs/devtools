@@ -1,5 +1,24 @@
 # @layerzerolabs/lzapp-migration-example
 
+## 0.3.8
+
+### Patch Changes
+
+- d720011: oft-solana: require user to confirm max total token supply given a local decimals value
+- d720011: print max supply given solana local decimals
+- Updated dependencies [d720011]
+  - @layerzerolabs/devtools-solana@3.0.4
+  - @layerzerolabs/devtools@2.0.3
+
+## 0.3.7
+
+### Patch Changes
+
+- ccc14e0: fix default ALTs not used
+- Updated dependencies [06dc63b]
+  - @layerzerolabs/devtools-solana@3.0.3
+  - @layerzerolabs/devtools@2.0.2
+
 ## 0.3.6
 
 ### Patch Changes

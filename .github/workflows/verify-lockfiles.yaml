@@ -10,7 +10,7 @@ permissions:
 jobs:
   verify-example-lockfiles:
     name: Verify example lockfiles
-    if: github.actor != 'layerzero-bot'
+    if: github.event.pull_request.user.login != 'layerzero-bot'
     runs-on: ubuntu-latest
 
     steps:

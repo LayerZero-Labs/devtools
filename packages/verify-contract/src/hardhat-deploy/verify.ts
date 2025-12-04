@@ -70,7 +70,9 @@ export const verifyNonTarget = async (
         const rawDeployment = require(contractDeploymentPath)
         const deploymentParseResult = DeploymentSchema.safeParse(rawDeployment)
         if (!deploymentParseResult.success) {
-            logger.error(COLORS.error`No network configured for contract ${contractName} on network ${network}`)
+            logger.warn(
+                COLORS.error`Skipping deployment file ${deploymentPath} on network ${network} due to validation errors: ${JSON.stringify(deploymentParseResult.error.errors)}`
+            )
 
             return []
         }
@@ -106,6 +108,7 @@ export const verifyNonTarget = async (
         const submitProps: SubmitForVerificationProps = {
             apiUrl: networkConfig.apiUrl,
             apiKey: networkConfig.apiKey,
+            chainId: networkConfig.chainId,
             address,
             contractName: `${contractName}:${contractClassName}`,
             constructorArguments,
@@ -219,9 +222,11 @@ export const verifyTarget = async (
                 const rawDeployment = require(contractDeploymentPath)
                 const deploymentParseResult = DeploymentSchema.safeParse(rawDeployment)
                 if (!deploymentParseResult.success) {
-                    throw new Error(
-                        `Error parsing deployment file ${fileName} on network ${networkName}: ${deploymentParseResult.error}`
+                    logger.warn(
+                        `Skipping deployment file ${fileName} on network ${networkName} due to validation errors: ${JSON.stringify(deploymentParseResult.error.errors)}`
                     )
+
+                    return []
                 }
 
                 // At this moment we have a type-safe deployment available
@@ -257,6 +262,7 @@ export const verifyTarget = async (
                     const submitProps: SubmitForVerificationProps = {
                         apiUrl: networkConfig.apiUrl,
                         apiKey: networkConfig.apiKey,
+                        chainId: networkConfig.chainId,
                         address: deployment.address,
                         contractName: `${compilationTarget}:${contractName}`,
                         constructorArguments,

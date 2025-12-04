@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm
 
+## 3.0.1
+
+### Patch Changes
+
+- ca5a1f9: add support for Safe API keys
+
 ## 3.0.0
 
 ### Patch Changes

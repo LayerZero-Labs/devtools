@@ -24,16 +24,23 @@ const deploy: DeployFunction = async (hre) => {
 
     const { address: proxyAdminAddress } = await deployProxyAdmin({
         hre,
-        contractName,
-        deployer,
-        owner: deployer,
+        deployOptions: {
+            from: deployer,
+            args: [deployer], // owner
+            skipIfAlreadyDeployed: true,
+        },
+        deploymentName: contractName,
     })
 
     const { address: implementationAddress } = await deployImplementation({
         hre,
-        contractName,
-        deployer,
-        args: [endpointAddress],
+        deployOptions: {
+            from: deployer,
+            args: [endpointAddress], // constructor arguments
+            skipIfAlreadyDeployed: true,
+            contract: contractName,
+        },
+        deploymentName: contractName,
     })
 
     const initializeInterface = new hre.ethers.utils.Interface([
@@ -41,18 +48,19 @@ const deploy: DeployFunction = async (hre) => {
     ])
     const initializeData = initializeInterface.encodeFunctionData('initialize', ['MyOFT', 'MOFT', deployer])
 
-    await deployProxy({
+    const { address: proxyAddress } = await deployProxy({
         hre,
-        contractName,
-        deployer,
-        implementationAddress,
-        proxyAdminAddress,
-        initializeData,
+        deployOptions: {
+            from: deployer,
+            args: [implementationAddress, proxyAdminAddress, initializeData], // initialize arguments
+            skipIfAlreadyDeployed: true,
+        },
+        deploymentName: contractName,
     })
 
-    await saveCombinedDeployment({ hre, contractName })
+    await saveCombinedDeployment({ hre, deploymentName: contractName })
 }
 
-deploy.tags = [contractName]
+deploy.tags = ['new']
 
 export default deploy

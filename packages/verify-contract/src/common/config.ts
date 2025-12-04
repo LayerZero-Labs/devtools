@@ -1,6 +1,6 @@
-import { type Logger } from 'winston'
+import { type Logger } from '@layerzerolabs/io-devtools'
 import type { NetworkConfig, NetworkName } from './types'
-import { getDefaultScanApiUrl, tryGetScanBrowserUrlFromScanUrl } from './url'
+import { getDefaultScanApiUrl, getDefaultChainId, tryGetScanBrowserUrlFromScanUrl } from './url'
 import assert from 'assert'
 import { COLORS } from './logger'
 import chalk from 'chalk'
@@ -64,9 +64,24 @@ Please provide the API key:
   - As a SCAN_BROWSER_URL_${normalizeNetworkName(networkName)} environment variable`)
         }
 
+        // Chain ID can be specified explicitly or retrieved from defaults
+        // For Etherscan API v2, this is required
+        const chainId = networkConfig.chainId || getChainIdFromEnv(networkName) || getDefaultChainId(networkName)
+        if (!chainId) {
+            logger.debug(`Could not find chain ID for network ${chalk.bold(networkName)}
+
+  Chain ID is required for Etherscan API v2.
+
+  Please provide the chain ID:
+ 
+  - As a chainId config parameter in ${networkName} config
+  - As a SCAN_CHAIN_ID_${networkName} environment variable
+  - As a SCAN_CHAIN_ID_${normalizeNetworkName(networkName)} environment variable`)
+        }
+
         return {
             ...networksConfig,
-            [networkName]: { apiUrl, apiKey, browserUrl },
+            [networkName]: { apiUrl, apiKey, browserUrl, chainId },
         }
     }, {})
 }
@@ -82,5 +97,12 @@ const getScanBrowserUrlFromEnv = (networkName: NetworkName): string | undefined 
 const getScanApiKeyFromEnv = (networkName: NetworkName): string | undefined =>
     process.env[`SCAN_API_KEY_${networkName}`]?.trim() ||
     process.env[`SCAN_API_KEY_${normalizeNetworkName(networkName)}`]?.trim()
+
+const getChainIdFromEnv = (networkName: NetworkName): number | undefined => {
+    const chainIdStr =
+        process.env[`SCAN_CHAIN_ID_${networkName}`]?.trim() ||
+        process.env[`SCAN_CHAIN_ID_${normalizeNetworkName(networkName)}`]?.trim()
+    return chainIdStr ? parseInt(chainIdStr, 10) : undefined
+}
 
 const normalizeNetworkName = (networkName: NetworkName): string => networkName.toUpperCase().replaceAll('-', '_')
