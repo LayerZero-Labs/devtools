@@ -18,7 +18,7 @@ on:
 # We want the workflow to stop and yield to a new run if new code is pushed
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name != 'merge_group' }} # Don't cancel in-progress runs for merge_group events. Cancel for other events. Original value was 'true' but was updated to accommodate merge queue usage.
+  cancel-in-progress: true
 
 jobs:
   check:
