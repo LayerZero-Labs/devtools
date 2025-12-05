@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.12.10
+
+### Patch Changes
+
+- 7dbac78: update nodejs version
+
 ## 0.12.9
 
 ### Patch Changes
