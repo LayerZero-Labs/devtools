@@ -1,21 +1,15 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
-import { ERC20Upgradeable } from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import { IOFT, OFTCoreUpgradeable } from "./OFTCoreUpgradeable.sol";
 
 /**
  * @title OFT Contract
  * @dev OFT is an ERC-20 token that extends the functionality of the OFTCore contract.
+ * @dev ADAPTED FOR: No ERC20 inheritance - expects parent to provide ERC20 functionality
  */
-abstract contract OFTUpgradeable is OFTCoreUpgradeable, ERC20Upgradeable {
-    /**
-     * @dev Constructor for the OFT contract.
-     * @param _lzEndpoint The LayerZero endpoint address.
-     */
-    constructor(address _lzEndpoint) OFTCoreUpgradeable(decimals(), _lzEndpoint) {}
-
+abstract contract OFTUpgradeable is OFTCoreUpgradeable {
     /**
      * @dev Initializes the OFT with the provided name, symbol, and delegate.
      * @param _name The name of the OFT.
@@ -26,9 +20,10 @@ abstract contract OFTUpgradeable is OFTCoreUpgradeable, ERC20Upgradeable {
      * @dev Ownable is not initialized here on purpose. It should be initialized in the child contract to
      * accommodate the different version of Ownable.
      */
-    function __OFT_init(string memory _name, string memory _symbol, address _delegate) internal onlyInitializing {
-        __ERC20_init(_name, _symbol);
-        __OFTCore_init(_delegate);
+    /// @dev Initializes OFT with endpoint and delegate (ERC20 must be initialized by parent first)
+    function __OFT_init(address _lzEndpoint, address _delegate) internal onlyInitializing {
+        uint8 _decimals = decimals();
+        __OFTCore_init(_lzEndpoint, _delegate, _decimals);
     }
 
     function __OFT_init_unchained() internal onlyInitializing {}
@@ -39,6 +34,7 @@ abstract contract OFTUpgradeable is OFTCoreUpgradeable, ERC20Upgradeable {
      *
      * @dev In the case of OFT, address(this) and erc20 are the same contract.
      */
+    /// @dev Returns address of this OFT contract
     function token() public view returns (address) {
         return address(this);
     }
@@ -53,6 +49,15 @@ abstract contract OFTUpgradeable is OFTCoreUpgradeable, ERC20Upgradeable {
         return false;
     }
 
+    /// @dev Must be implemented by parent contract (e.g., SolmateERC20Upgradeable)
+    function decimals() public view virtual returns (uint8);
+
+    /// @dev Must be implemented by parent contract
+    function _mint(address to, uint256 amount) internal virtual;
+
+    /// @dev Must be implemented by parent contract
+    function _burn(address from, uint256 amount) internal virtual;
+    
     /**
      * @dev Burns tokens from the sender's specified balance.
      * @param _from The address to debit the tokens from.
