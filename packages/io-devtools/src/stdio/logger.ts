@@ -77,7 +77,7 @@ export const createLogger = (level: string = DEFAULT_LOG_LEVEL, logFormat: Forma
  * @returns {Logger}
  */
 export const createModuleLogger = (module: string, level: string = DEFAULT_LOG_LEVEL): Logger =>
-    createLogger(level, format.combine(prefix({ label: module }), format.cli()))
+    createLogger(level, format.combine(format.splat(), prefix({ label: module }), format.cli()))
 
 /**
  * Creates a logger for network-to-network interactions.
@@ -97,7 +97,10 @@ export const createModuleInteractionLogger = (
     destinationModule: string,
     level: string = DEFAULT_LOG_LEVEL
 ): Logger =>
-    createLogger(level, format.combine(prefix({ label: `${sourceModule} ➝ ${destinationModule}` }), format.cli()))
+    createLogger(
+        level,
+        format.combine(format.splat(), prefix({ label: `${sourceModule} ➝ ${destinationModule}` }), format.cli())
+    )
 
 export interface CreateWithAsyncLoggerOptions<TArgs extends unknown[], TReturnValue> {
     onStart?: (logger: Logger, args: TArgs) => unknown

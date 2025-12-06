@@ -19,6 +19,13 @@ export interface PrivateKeyArgs extends BaseArgs {
     privateKey?: string
 }
 
+export interface FordefiArgs extends BaseArgs {
+    fordefiApiUrl?: string
+    fordefiAccessToken?: string
+    fordefiVaultId?: string
+    fordefiChain?: string
+}
+
 export interface UserArgs extends BaseArgs {
     user: string
 }

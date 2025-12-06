@@ -2,7 +2,7 @@ import { createModuleLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtoo
 import inquirer from 'inquirer'
 
 import { getCoreSpotDeployment, writeUpdatedCoreSpotDeployment } from '@/io/parser'
-import { getHyperliquidWallet } from '@/signer'
+import { getHyperliquidSigner } from '@/signer'
 import { setRequestEvmContract, setFinalizeEvmContract } from '@/operations'
 import { LOGGER_MODULES } from '@/types/cli-constants'
 import { RequestEvmContractArgs, FinalizeEvmContractArgs } from '@/types'
@@ -13,13 +13,14 @@ export async function requestEvmContract(args: RequestEvmContractArgs): Promise<
     const logger = createModuleLogger(LOGGER_MODULES.REGISTER_TOKEN, args.logLevel)
     logger.verbose(JSON.stringify(args, null, 2))
 
-    const wallet = await getHyperliquidWallet(args.privateKey)
+    const signer = await getHyperliquidSigner(args.privateKey)
 
     const hyperAssetIndex = args.tokenIndex
     const network = args.network
     const isTestnet = network == 'testnet'
 
-    logger.info(`Found public key ${wallet.address} from .env file`)
+    const signerAddress = await signer.getAddress()
+    logger.info(`Found public key ${signerAddress} from .env file`)
     const coreSpotDeployment = getCoreSpotDeployment(hyperAssetIndex, isTestnet, logger)
     const txData = coreSpotDeployment.txData
 
@@ -59,7 +60,7 @@ export async function requestEvmContract(args: RequestEvmContractArgs): Promise<
     }
 
     logger.info(`Request EVM contract`)
-    await setRequestEvmContract(wallet, isTestnet, tokenAddress, txData.weiDiff, hyperAssetIndexInt, args.logLevel)
+    await setRequestEvmContract(signer, isTestnet, tokenAddress, txData.weiDiff, hyperAssetIndexInt, args.logLevel)
 }
 
 export async function finalizeEvmContract(args: FinalizeEvmContractArgs): Promise<void> {
@@ -67,13 +68,14 @@ export async function finalizeEvmContract(args: FinalizeEvmContractArgs): Promis
     const logger = createModuleLogger(LOGGER_MODULES.REGISTER_TOKEN, args.logLevel)
     logger.verbose(JSON.stringify(args, null, 2))
 
-    const wallet = await getHyperliquidWallet(args.privateKey)
+    const signer = await getHyperliquidSigner(args.privateKey)
 
     const hyperAssetIndex = args.tokenIndex
     const network = args.network
     const isTestnet = network == 'testnet'
 
-    logger.info(`Found public key ${wallet.address} from .env file`)
+    const signerAddress = await signer.getAddress()
+    logger.info(`Found public key ${signerAddress} from .env file`)
     const coreSpotDeployment = getCoreSpotDeployment(hyperAssetIndex, isTestnet, logger)
     const nativeSpot = coreSpotDeployment.coreSpot
     const txData = coreSpotDeployment.txData
@@ -129,7 +131,7 @@ export async function finalizeEvmContract(args: FinalizeEvmContractArgs): Promis
 
     logger.info(`Finalize EVM contract`)
     try {
-        await setFinalizeEvmContract(wallet, isTestnet, hyperAssetIndexInt, txData.nonce, args.logLevel)
+        await setFinalizeEvmContract(signer, isTestnet, hyperAssetIndexInt, txData.nonce, args.logLevel)
         writeUpdatedCoreSpotDeployment(
             hyperAssetIndex,
             isTestnet,

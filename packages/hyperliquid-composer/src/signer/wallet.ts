@@ -1,10 +1,10 @@
 import axios, { AxiosInstance } from 'axios'
-import { Wallet } from 'ethers'
 import inquirer from 'inquirer'
 
 import { Logger, createModuleInteractionLogger } from '@layerzerolabs/io-devtools'
 
 import { getTimestampMs, signL1Action } from '../signer'
+import type { IHyperliquidSigner } from './interfaces'
 import { HYPERLIQUID_URLS, ValueType } from '../types'
 
 export class HyperliquidClient {
@@ -27,19 +27,19 @@ export class HyperliquidClient {
         })
     }
 
-    async submitHyperliquidAction(endpoint: string, wallet: Wallet | null, action: ValueType) {
+    async submitHyperliquidAction(endpoint: string, signer: IHyperliquidSigner | null, action: ValueType) {
         let payload = action
 
         if (endpoint === '/exchange') {
-            if (!wallet) {
-                this.logger.error('Wallet is null')
+            if (!signer) {
+                this.logger.error('Signer is null')
                 process.exit(1)
             }
 
             const nonce = getTimestampMs()
 
             const signature = await signL1Action({
-                wallet,
+                signer,
                 action,
                 nonce,
                 isTestnet: this.isTestnet,
@@ -53,8 +53,9 @@ export class HyperliquidClient {
                 vaultAddress: null,
             }
 
+            const signerAddress = await signer.getAddress()
             this.logger.info(
-                `Transaction is sent from ${wallet.address} on network hypercore-${this.isTestnet ? 'testnet' : 'mainnet'}`
+                `Transaction is sent from ${signerAddress} on network hypercore-${this.isTestnet ? 'testnet' : 'mainnet'}`
             )
 
             if (this.skipPrompt) {

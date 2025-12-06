@@ -497,9 +497,9 @@ npx @layerzerolabs/hyperliquid-composer is-account-activated \
 ### Get Core Balances
 
 ```bash
-npx @layerzerolabs/hyperliquid-composer get-core-balances \ 
+npx @layerzerolabs/hyperliquid-composer get-core-balances \
     --user <0x> \
-    [--show-zero {false | true}] \ 
+    [--show-zero {false | true}] \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
 ```

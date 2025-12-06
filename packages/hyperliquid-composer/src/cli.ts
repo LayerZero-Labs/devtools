@@ -74,7 +74,9 @@ const normalizeNetwork = (network: string, wasDefaulted: boolean): { network: st
 }
 
 // Wrapper to normalize options before passing to command handlers
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const withNormalizedNetwork = <T extends (...args: any[]) => any>(fn: T): T => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return ((...args: any[]) => {
         if (args[0] && typeof args[0] === 'object' && 'network' in args[0]) {
             const originalNetwork = args[0].network

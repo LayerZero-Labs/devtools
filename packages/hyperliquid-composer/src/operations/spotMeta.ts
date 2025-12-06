@@ -1,6 +1,4 @@
-import { Wallet } from 'ethers'
-
-import { HyperliquidClient } from '../signer'
+import { HyperliquidClient, IHyperliquidSigner } from '../signer'
 import {
     BaseInfoRequest,
     SpotMeta,
@@ -12,13 +10,18 @@ import {
     SpotPairDeployAuctionStatus,
 } from '../types'
 
-export async function getSpotMeta(wallet: Wallet | null, isTestnet: boolean, logLevel: string, tokenIndex: string) {
+export async function getSpotMeta(
+    signer: IHyperliquidSigner | null,
+    isTestnet: boolean,
+    logLevel: string,
+    tokenIndex: string
+) {
     const action: BaseInfoRequest = {
         type: 'spotMeta',
     }
 
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    const response = await hyperliquidClient.submitHyperliquidAction('/info', wallet, action)
+    const response = await hyperliquidClient.submitHyperliquidAction('/info', signer, action)
     const tokens = (response as SpotMeta).tokens
     const token = tokens.find((token) => token.index === parseInt(tokenIndex))
     if (!token) {
@@ -28,7 +31,7 @@ export async function getSpotMeta(wallet: Wallet | null, isTestnet: boolean, log
 }
 
 export async function getHipTokenInfo(
-    wallet: Wallet | null,
+    signer: IHyperliquidSigner | null,
     isTestnet: boolean,
     logLevel: string,
     tokenAddress: string
@@ -39,7 +42,7 @@ export async function getHipTokenInfo(
     }
 
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    const response = await hyperliquidClient.submitHyperliquidAction('/info', wallet, action)
+    const response = await hyperliquidClient.submitHyperliquidAction('/info', signer, action)
     const token = response as SpotInfo
 
     return token
