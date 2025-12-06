@@ -10,10 +10,7 @@ import { Serializer, struct, u64 } from '@metaplex-foundation/umi/serializers'
 
 export type MessagingFee = { nativeFee: bigint; lzTokenFee: bigint }
 
-export type MessagingFeeArgs = {
-    nativeFee: number | bigint
-    lzTokenFee: number | bigint
-}
+export type MessagingFeeArgs = { nativeFee: number | bigint; lzTokenFee: number | bigint }
 
 export function getMessagingFeeSerializer(): Serializer<MessagingFeeArgs, MessagingFee> {
     return struct<MessagingFee>(

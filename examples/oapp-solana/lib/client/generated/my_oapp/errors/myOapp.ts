@@ -12,9 +12,9 @@ type ProgramErrorConstructor = new (program: Program, cause?: Error) => ProgramE
 const codeToErrorMap: Map<number, ProgramErrorConstructor> = new Map()
 const nameToErrorMap: Map<string, ProgramErrorConstructor> = new Map()
 
-/** InvalidMessageType */
-export class InvalidMessageTypeError extends ProgramError {
-    override readonly name: string = 'InvalidMessageType'
+/** InvalidLength:  */
+export class InvalidLengthError extends ProgramError {
+    override readonly name: string = 'InvalidLength'
 
     readonly code: number = 0x1770 // 6000
 
@@ -22,8 +22,34 @@ export class InvalidMessageTypeError extends ProgramError {
         super('', program, cause)
     }
 }
-codeToErrorMap.set(0x1770, InvalidMessageTypeError)
-nameToErrorMap.set('InvalidMessageType', InvalidMessageTypeError)
+codeToErrorMap.set(0x1770, InvalidLengthError)
+nameToErrorMap.set('InvalidLength', InvalidLengthError)
+
+/** BodyTooShort:  */
+export class BodyTooShortError extends ProgramError {
+    override readonly name: string = 'BodyTooShort'
+
+    readonly code: number = 0x1771 // 6001
+
+    constructor(program: Program, cause?: Error) {
+        super('', program, cause)
+    }
+}
+codeToErrorMap.set(0x1771, BodyTooShortError)
+nameToErrorMap.set('BodyTooShort', BodyTooShortError)
+
+/** InvalidUtf8:  */
+export class InvalidUtf8Error extends ProgramError {
+    override readonly name: string = 'InvalidUtf8'
+
+    readonly code: number = 0x1772 // 6002
+
+    constructor(program: Program, cause?: Error) {
+        super('', program, cause)
+    }
+}
+codeToErrorMap.set(0x1772, InvalidUtf8Error)
+nameToErrorMap.set('InvalidUtf8', InvalidUtf8Error)
 
 /**
  * Attempts to resolve a custom program error from the provided error code.
