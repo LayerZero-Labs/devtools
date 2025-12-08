@@ -128,3 +128,27 @@ jobs:
           severity: warning
         continue-on-error: true
 
+  # Final status check job for backwards compatibility with the old CodeQL workflow
+  CodeQL:
+    name: CodeQL
+    runs-on: ubuntu-latest
+    needs: [analyze, dockerfile, shellcheck]
+    if: always()
+    
+    steps:
+      - name: Check all jobs succeeded
+        run: |
+          if [ "${{ needs.analyze.result }}" != "success" ]; then
+            echo "CodeQL analysis failed"
+            exit 1
+          fi
+          if [ "${{ needs.dockerfile.result }}" != "success" ]; then
+            echo "Dockerfile lint failed"
+            exit 1
+          fi
+          if [ "${{ needs.shellcheck.result }}" != "success" ]; then
+            echo "ShellCheck lint failed"
+            exit 1
+          fi
+          echo "All security checks passed!"
+
