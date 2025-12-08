@@ -490,7 +490,8 @@ npx @layerzerolabs/hyperliquid-composer trading-fee \
 
 This step enables the token to be used as a quote asset for trading pairs. This allows other tokens to form trading pairs against your token (e.g., TOKEN/YOUR_TOKEN instead of only YOUR_TOKEN/USDC).
 
-> ⚠️ **Requirements**: 
+> ⚠️ **Requirements**:
+>
 > - Requires specific trading fee share value (see Step 6/7 above)
 > - Review all requirements at: [Permissionless Spot Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets)
 > - Contact the Hyperliquid team for the most up-to-date information
@@ -509,7 +510,8 @@ npx @layerzerolabs/hyperliquid-composer enable-quote-token \
 
 This step enables the token to be used as an aligned quote asset for trading pairs. Aligned quote tokens have special properties and requirements different from regular quote tokens.
 
-> ⚠️ **Requirements**: 
+> ⚠️ **Requirements**:
+>
 > - Review requirements at: [Aligned Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/aligned-quote-assets)
 > - Contact the Hyperliquid team for the most up-to-date information
 >
@@ -574,37 +576,37 @@ You can create your own custom scripts using the `HyperliquidClient` directly. T
 ### Example: Custom Action Script
 
 ```typescript
-import { HyperliquidClient } from '@layerzerolabs/hyperliquid-composer'
-import { Wallet } from 'ethers'
+import { HyperliquidClient } from "@layerzerolabs/hyperliquid-composer";
+import { Wallet } from "ethers";
 
 async function customAction() {
-    // Initialize wallet
-    const wallet = new Wallet(process.env.PRIVATE_KEY!)
-    
-    // Create client (testnet or mainnet)
-    const isTestnet = true
-    const logLevel = 'info'
-    const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    
-    // Define your action
-    const action = {
-        type: 'spotDeploy',
-        enableAlignedQuoteToken: {
-            token: 1234, // your token index
-        },
-    }
-    
-    // Submit the action
-    const response = await hyperliquidClient.submitHyperliquidAction(
-        '/exchange',
-        wallet,
-        action
-    )
-    
-    console.log('Response:', response)
+  // Initialize wallet
+  const wallet = new Wallet(process.env.PRIVATE_KEY!);
+
+  // Create client (testnet or mainnet)
+  const isTestnet = true;
+  const logLevel = "info";
+  const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel);
+
+  // Define your action
+  const action = {
+    type: "spotDeploy",
+    enableAlignedQuoteToken: {
+      token: 1234, // your token index
+    },
+  };
+
+  // Submit the action
+  const response = await hyperliquidClient.submitHyperliquidAction(
+    "/exchange",
+    wallet,
+    action,
+  );
+
+  console.log("Response:", response);
 }
 
-customAction()
+customAction();
 ```
 
 ### Available Action Types

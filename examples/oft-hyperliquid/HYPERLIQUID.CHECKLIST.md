@@ -149,10 +149,10 @@ Block switching is not present in the default oft deploy script.
 
 ### Step 2.8.5 : Enable aligned quote token capability (Optional)
 
-| Action                      | Performed by      | Actionable with                           | Required for |
-| --------------------------- | ----------------- | ----------------------------------------- | ------------ |
-| Enable Aligned Quote Token  | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
-| Blocked by                  | CoreSpot Deployer | Step 2.5                                  | none         |
+| Action                     | Performed by      | Actionable with                           | Required for |
+| -------------------------- | ----------------- | ----------------------------------------- | ------------ |
+| Enable Aligned Quote Token | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
+| Blocked by                 | CoreSpot Deployer | Step 2.5                                  | none         |
 
 - [ ] Review requirements at: [Aligned Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/aligned-quote-assets)
 - [ ] Enables the token to be used as an aligned quote asset for trading pairs
