@@ -22,6 +22,11 @@ on:
     branches:
       - main
       - develop
+  merge_group:
+    # Required for GitHub merge queue
+    branches:
+      - main
+      - develop
   schedule:
     # Run weekly security scans every Monday at midnight UTC
     - cron: '0 0 * * 1'
@@ -61,9 +66,10 @@ jobs:
           submodules: 'true'
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
+          build-mode: none
           # Use default queries plus security-extended for more coverage
           queries: security-extended
 
@@ -71,6 +77,60 @@ jobs:
       # No need to compile or install dependencies for static analysis
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
         with:
           category: "/language:${{ matrix.language }}"
+
+  dockerfile:
+    name: Dockerfile Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: analyze
+
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Hadolint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+          format: sarif
+          output-file: hadolint.sarif
+          no-fail: true
+
+      - name: Upload Hadolint results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: hadolint.sarif
+          category: "hadolint"
+
+  shellcheck:
+    name: Shell Script Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: analyze
+
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: '.'
+          format: gcc
+          severity: warning
+        continue-on-error: true
+
+      # Note: ShellCheck action doesn't natively support SARIF output
+      # Results will appear in workflow logs
