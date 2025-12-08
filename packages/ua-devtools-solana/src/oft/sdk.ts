@@ -298,11 +298,23 @@ export class OFT extends OmniSDK implements IOApp {
         this.logger.verbose(`Setting enforced options to ${printJson(enforcedOptions)}`)
 
         const optionsByEidAndMsgType = this.reduceEnforcedOptions(enforcedOptions)
-        const emptyOptions = Options.newOptions().toBytes()
         const ixs: WrappedInstruction[] = []
+
         for (const [eid, optionsByMsgType] of optionsByEidAndMsgType) {
-            const sendOption = optionsByMsgType.get(MSG_TYPE_SEND) ?? emptyOptions
-            const sendAndCallOption = optionsByMsgType.get(MSG_TYPE_SEND_AND_CALL) ?? emptyOptions
+            // Fetch current on-chain values to preserve options that aren't being updated
+            const currentSendOption = await this.getEnforcedOptions(eid, MSG_TYPE_SEND)
+            const currentSendAndCallOption = await this.getEnforcedOptions(eid, MSG_TYPE_SEND_AND_CALL)
+
+            // Use new value if provided, otherwise preserve current on-chain value
+            const sendOption =
+                optionsByMsgType.get(MSG_TYPE_SEND) ??
+                (currentSendOption ? Options.fromOptions(currentSendOption).toBytes() : Options.newOptions().toBytes())
+            const sendAndCallOption =
+                optionsByMsgType.get(MSG_TYPE_SEND_AND_CALL) ??
+                (currentSendAndCallOption
+                    ? Options.fromOptions(currentSendAndCallOption).toBytes()
+                    : Options.newOptions().toBytes())
+
             ixs.push(await this._setPeerEnforcedOptionsIx(sendOption, sendAndCallOption, eid))
         }
 
