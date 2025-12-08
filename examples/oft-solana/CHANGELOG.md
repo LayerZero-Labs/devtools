@@ -1,5 +1,19 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.12.10
+
+### Patch Changes
+
+- 7dbac78: update nodejs version
+
+## 0.12.9
+
+### Patch Changes
+
+- 9ec1a69: oft-solana example: add rate limit print and add support for token2022 metadata
+- d720011: oft-solana: require user to confirm max total token supply given a local decimals value
+- d720011: print max supply given solana local decimals
+
 ## 0.12.8
 
 ### Patch Changes
