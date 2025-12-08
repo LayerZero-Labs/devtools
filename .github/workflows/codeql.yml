@@ -2,7 +2,7 @@
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-'   `-`-'   `-`-'   `-`-'
 #
-#                       CodeQL Security Analysis
+#                       CodeQL
 #
 #  This workflow replaces the GitHub CodeQL extension to support fork PRs.
 #  The extension doesn't trigger on fork PRs due to security restrictions.
@@ -11,7 +11,7 @@
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-  .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-'   `-`-'   `-`-'
-name: CodeQL Security Analysis
+name: CodeQL
 
 on:
   push:
