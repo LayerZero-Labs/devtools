@@ -44,7 +44,7 @@
   "devDependencies": {
     "@layerzerolabs/devtools": "~2.0.3",
     "@layerzerolabs/io-devtools": "~0.3.0",
-    "@layerzerolabs/lz-definitions": "^3.0.75",
+    "@layerzerolabs/lz-definitions": "^3.0.148",
     "@layerzerolabs/test-devtools": "~0.4.6",
     "@layerzerolabs/test-devtools-solana": "~0.0.5",
     "@solana/web3.js": "~1.98.0",
@@ -68,7 +68,7 @@
   "peerDependencies": {
     "@layerzerolabs/devtools": "~2.0.3",
     "@layerzerolabs/io-devtools": "~0.3.0",
-    "@layerzerolabs/lz-definitions": "^3.0.75",
+    "@layerzerolabs/lz-definitions": "^3.0.148",
     "@solana/web3.js": "^1.95.8",
     "bn.js": "^5.2.0",
     "fp-ts": "^2.16.2",
