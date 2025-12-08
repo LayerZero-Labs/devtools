@@ -301,19 +301,14 @@ export class OFT extends OmniSDK implements IOApp {
         const ixs: WrappedInstruction[] = []
 
         for (const [eid, optionsByMsgType] of optionsByEidAndMsgType) {
-            // Fetch current on-chain values to preserve options that aren't being updated
-            const currentSendOption = await this.getEnforcedOptions(eid, MSG_TYPE_SEND)
-            const currentSendAndCallOption = await this.getEnforcedOptions(eid, MSG_TYPE_SEND_AND_CALL)
+            // Use new value if provided, otherwise fetch and preserve current on-chain value
+            const sendOption = optionsByMsgType.has(MSG_TYPE_SEND)
+                ? optionsByMsgType.get(MSG_TYPE_SEND)!
+                : Options.fromOptions(await this.getEnforcedOptions(eid, MSG_TYPE_SEND)).toBytes()
 
-            // Use new value if provided, otherwise preserve current on-chain value
-            const sendOption =
-                optionsByMsgType.get(MSG_TYPE_SEND) ??
-                (currentSendOption ? Options.fromOptions(currentSendOption).toBytes() : Options.newOptions().toBytes())
-            const sendAndCallOption =
-                optionsByMsgType.get(MSG_TYPE_SEND_AND_CALL) ??
-                (currentSendAndCallOption
-                    ? Options.fromOptions(currentSendAndCallOption).toBytes()
-                    : Options.newOptions().toBytes())
+            const sendAndCallOption = optionsByMsgType.has(MSG_TYPE_SEND_AND_CALL)
+                ? optionsByMsgType.get(MSG_TYPE_SEND_AND_CALL)!
+                : Options.fromOptions(await this.getEnforcedOptions(eid, MSG_TYPE_SEND_AND_CALL)).toBytes()
 
             ixs.push(await this._setPeerEnforcedOptionsIx(sendOption, sendAndCallOption, eid))
         }
