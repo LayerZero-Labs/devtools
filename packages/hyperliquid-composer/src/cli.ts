@@ -14,6 +14,7 @@ import {
     createSpotDeployment,
     registerTradingSpot,
     enableTokenQuoteAsset,
+    enableTokenAlignedQuoteAsset,
     tradingFee,
 
     // EVM-HyperCore Linking
@@ -197,6 +198,14 @@ optionGroups
             )
     )
     .action(withNormalizedNetwork(enableTokenQuoteAsset))
+
+optionGroups
+    .deployment(
+        program
+            .command(CLI_COMMANDS.ENABLE_ALIGNED_QUOTE_TOKEN)
+            .description('HIP-1 Deployment Optional. Enable token as aligned quote asset')
+    )
+    .action(withNormalizedNetwork(enableTokenAlignedQuoteAsset))
 
 // === EVM-HyperCore Linking ===
 optionGroups

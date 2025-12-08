@@ -21,6 +21,7 @@ const STRINGS = {
     // Optional HIP-1 Features
     TRADING_FEE: 'trading-fee',
     ENABLE_QUOTE_TOKEN: 'enable-quote-token',
+    ENABLE_ALIGNED_QUOTE_TOKEN: 'enable-aligned-quote-token',
 
     // EVM-HyperCore Linking
     REQUEST_EVM_CONTRACT: 'request-evm-contract',
@@ -75,6 +76,7 @@ export const CLI_COMMANDS = {
     // Optional HIP-1 Features
     TRADING_FEE: STRINGS.TRADING_FEE,
     ENABLE_QUOTE_TOKEN: STRINGS.ENABLE_QUOTE_TOKEN,
+    ENABLE_ALIGNED_QUOTE_TOKEN: STRINGS.ENABLE_ALIGNED_QUOTE_TOKEN,
 
     // EVM-HyperCore Linking
     REQUEST_EVM_CONTRACT: STRINGS.REQUEST_EVM_CONTRACT,
@@ -129,6 +131,7 @@ export const LOGGER_MODULES = {
     // Optional HIP-1 Features
     TRADING_FEE: STRINGS.TRADING_FEE,
     ENABLE_QUOTE_TOKEN: STRINGS.ENABLE_QUOTE_TOKEN,
+    ENABLE_ALIGNED_QUOTE_TOKEN: STRINGS.ENABLE_ALIGNED_QUOTE_TOKEN,
 
     // EVM-HyperCore Linking
     REQUEST_EVM_CONTRACT: STRINGS.REQUEST_EVM_CONTRACT,

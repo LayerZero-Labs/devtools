@@ -68,5 +68,6 @@ export interface RegisterTradingSpotArgs extends TokenIndexArgs, PrivateKeyArgs 
 export interface EnableTokenFreezePrivilegeArgs extends TokenIndexArgs, PrivateKeyArgs {}
 export interface RevokeTokenFreezePrivilegeArgs extends TokenIndexArgs, PrivateKeyArgs {}
 export interface EnableTokenQuoteAssetArgs extends TokenIndexArgs, PrivateKeyArgs {}
+export interface EnableTokenAlignedQuoteAssetArgs extends TokenIndexArgs, PrivateKeyArgs {}
 export interface RequestEvmContractArgs extends TokenIndexArgs, PrivateKeyArgs {}
 export interface FinalizeEvmContractArgs extends TokenIndexArgs, PrivateKeyArgs {}
