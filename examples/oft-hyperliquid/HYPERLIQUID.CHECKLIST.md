@@ -117,20 +117,7 @@ Block switching is not present in the default oft deploy script.
 - [ ] Make sure the asset bridge address on HyperCore has all the tokens minted in Step 2.3. Partial funding is not supported.
 - The final step to be executed after which the token will be listed on the spot order book.
 
-### Step 2.7 : Enable quote token capability (Optional)
-
-| Action             | Performed by      | Actionable with                           | Required for |
-| ------------------ | ----------------- | ----------------------------------------- | ------------ |
-| Enable Quote Token | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
-| Blocked by         | CoreSpot Deployer | Step 2.5                                  | none         |
-
-- [ ] **Review requirements first**: Check [Hyperliquid API requirements](https://t.me/hyperliquid_api/243) for eligibility criteria
-- [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-66-enablequotetoken-optional)
-- [ ] Enables the token to be used as a quote asset for trading pairs (e.g., OTHER_TOKEN/YOUR_TOKEN)
-- [ ] Can be executed after trading fee share is set
-- [ ] This can be run even after deployment and linking are complete
-
-### Step 2.8 : Set deployer fee share (Optional)
+### Step 2.7 : Set deployer fee share (Optional)
 
 | Action                 | Performed by      | Actionable with                           | Required for |
 | ---------------------- | ----------------- | ----------------------------------------- | ------------ |
@@ -138,12 +125,40 @@ Block switching is not present in the default oft deploy script.
 | Blocked by             | OFT Deployer      | Step 0                                    | none         |
 | Blocked by             | CoreSpot Deployer | Step 2.1                                  | none         |
 
-- [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#optional-setdeployertradingfeeshare)
+- [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-67-setdeployertradingfeeshare-optional)
 - [ ] Trading fee share is usually 100% (default value) - this allocates the trading fees to the token deployer instead of burning it.
 - [ ] Do not lose or burn your deployer address as it collects tokens.
 - [ ] Step can be re-run as long as the new fee% is lower than the current one.
+- [ ] **Important**: If you plan to enable quote token capability (Step 2.8), read the [Permissionless Spot Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets) documentation before setting this value as it requires a specific trading fee share.
 - Even though the default value is 100%, it is recommended that you set it
 - This can be run even after deployment and linking
+
+### Step 2.8 : Enable quote token capability (Optional)
+
+| Action             | Performed by      | Actionable with                           | Required for |
+| ------------------ | ----------------- | ----------------------------------------- | ------------ |
+| Enable Quote Token | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
+| Blocked by         | CoreSpot Deployer | Step 2.7                                  | none         |
+
+- [ ] **Review requirements first**: Read [Permissionless Spot Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets) for all requirements
+- [ ] Requires specific trading fee share value (see Step 2.7 above)
+- [ ] Follow the [guide](https://github.com/LayerZero-Labs/devtools/blob/main/examples/oft-hyperliquid/HYPERLIQUID.README.md#step-657-enablequotetoken-optional)
+- [ ] Enables the token to be used as a quote asset for trading pairs (e.g., OTHER_TOKEN/YOUR_TOKEN)
+- [ ] Can be executed after trading fee share is set
+- [ ] This can be run even after deployment and linking are complete
+
+### Step 2.8.5 : Enable aligned quote token capability (Optional)
+
+| Action                      | Performed by      | Actionable with                           | Required for |
+| --------------------------- | ----------------- | ----------------------------------------- | ------------ |
+| Enable Aligned Quote Token  | CoreSpot Deployer | `npx @layerzerolabs/hyperliquid-composer` | HyperCore    |
+| Blocked by                  | CoreSpot Deployer | Step 2.5                                  | none         |
+
+- [ ] Review requirements at: [Aligned Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/aligned-quote-assets)
+- [ ] Enables the token to be used as an aligned quote asset for trading pairs
+- [ ] Aligned quote tokens have special properties and requirements different from regular quote tokens
+- [ ] Can be executed after trading fee share is set
+- [ ] This can be run even after deployment and linking are complete
 
 ## Step 3.1 : Create a request to connect the HyperCoreSpot to HyperEVM OFT
 
