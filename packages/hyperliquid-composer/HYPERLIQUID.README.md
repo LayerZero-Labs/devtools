@@ -541,6 +541,50 @@ npx @layerzerolabs/hyperliquid-composer spot-auction-status \
 npx @layerzerolabs/hyperliquid-composer to-bridge --token-index <coreIndex>
 ```
 
+## Advanced: Creating Custom Scripts
+
+You can create your own custom scripts using the `HyperliquidClient` directly. This is useful for actions not covered by the CLI or for building custom automation.
+
+### Example: Custom Action Script
+
+```typescript
+import { HyperliquidClient } from '@layerzerolabs/hyperliquid-composer'
+import { Wallet } from 'ethers'
+
+async function customAction() {
+    // Initialize wallet
+    const wallet = new Wallet(process.env.PRIVATE_KEY!)
+    
+    // Create client (testnet or mainnet)
+    const isTestnet = true
+    const logLevel = 'info'
+    const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
+    
+    // Define your action
+    const action = {
+        type: 'spotDeploy',
+        enableAlignedQuoteToken: {
+            token: 1234, // your token index
+        },
+    }
+    
+    // Submit the action
+    const response = await hyperliquidClient.submitHyperliquidAction(
+        '/exchange',
+        wallet,
+        action
+    )
+    
+    console.log('Response:', response)
+}
+
+customAction()
+```
+
+### Available Action Types
+
+Refer to the [Hyperliquid API documentation](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api) for all available action types and their parameters. The SDK supports any valid HyperCore action through `submitHyperliquidAction`.
+
 ## Deploy and Connect your OFT Guide
 
 ### Make changes to the underlying OFT (if you want to)
