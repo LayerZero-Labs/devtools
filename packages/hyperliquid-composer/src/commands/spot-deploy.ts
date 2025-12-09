@@ -175,11 +175,11 @@ export async function enableTokenAlignedQuoteAsset(args: EnableTokenAlignedQuote
     setDefaultLogLevel(args.logLevel)
     const logger = createModuleLogger(LOGGER_MODULES.ENABLE_ALIGNED_QUOTE_TOKEN, args.logLevel)
 
-    const wallet = await getHyperliquidWallet(args.privateKey)
+    const signer = await getHyperliquidSigner(args.privateKey)
     const isTestnet = args.network === 'testnet'
     const tokenIndex: number = parseInt(args.tokenIndex)
 
     logger.info(`Enabling aligned quote token capability for token ${tokenIndex}`)
 
-    await enableAlignedQuoteToken(wallet, isTestnet, tokenIndex, args.logLevel)
+    await enableAlignedQuoteToken(signer, isTestnet, tokenIndex, args.logLevel)
 }

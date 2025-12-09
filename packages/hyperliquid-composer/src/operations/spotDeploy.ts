@@ -568,7 +568,7 @@ export async function enableQuoteToken(
 }
 
 export async function enableAlignedQuoteToken(
-    wallet: Wallet,
+    signer: IHyperliquidSigner,
     isTestnet: boolean,
     coreSpotTokenId: number,
     logLevel: string
@@ -598,7 +598,7 @@ export async function enableAlignedQuoteToken(
 
     logger.info('Enabling aligned quote token capability')
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, action)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, action)
 
     if (response.status === 'ok') {
         updateQuoteTokenStatus(coreSpotTokenId, isTestnet, true, logger)
