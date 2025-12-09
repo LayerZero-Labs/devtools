@@ -301,14 +301,20 @@ export class OFT extends OmniSDK implements IOApp {
         const ixs: WrappedInstruction[] = []
 
         for (const [eid, optionsByMsgType] of optionsByEidAndMsgType) {
-            // Use new value if provided, otherwise fetch and preserve current on-chain value
-            const sendOption = optionsByMsgType.has(MSG_TYPE_SEND)
-                ? optionsByMsgType.get(MSG_TYPE_SEND)!
-                : Options.fromOptions(await this.getEnforcedOptions(eid, MSG_TYPE_SEND)).toBytes()
+            // Helper to get option: from update map OR fetch from chain (safely)
+            const getOption = async (msgType: MsgType) => {
+                if (optionsByMsgType.has(msgType)) {
+                    return optionsByMsgType.get(msgType)!
+                }
+                const hex = await this.getEnforcedOptions(eid, msgType)
+                return hex && hex !== '0x' ? Options.fromOptions(hex).toBytes() : Options.newOptions().toBytes()
+            }
 
-            const sendAndCallOption = optionsByMsgType.has(MSG_TYPE_SEND_AND_CALL)
-                ? optionsByMsgType.get(MSG_TYPE_SEND_AND_CALL)!
-                : Options.fromOptions(await this.getEnforcedOptions(eid, MSG_TYPE_SEND_AND_CALL)).toBytes()
+            // Fetch both in parallel
+            const [sendOption, sendAndCallOption] = await Promise.all([
+                getOption(MSG_TYPE_SEND),
+                getOption(MSG_TYPE_SEND_AND_CALL),
+            ])
 
             ixs.push(await this._setPeerEnforcedOptionsIx(sendOption, sendAndCallOption, eid))
         }
