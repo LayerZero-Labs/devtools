@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-upgradeable-example
 
+## 0.3.9
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+
 ## 0.3.8
 
 ### Patch Changes

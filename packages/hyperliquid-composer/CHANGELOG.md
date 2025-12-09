@@ -1,5 +1,13 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 2.0.3
+
+### Patch Changes
+
+- afb4dd3: feat: fireblocks and fordefi mpc signers for hyperliquid sdk
+- Updated dependencies [a2851bf]
+  - @layerzerolabs/oapp-evm@0.4.1
+
 ## 2.0.2
 
 ### Patch Changes
