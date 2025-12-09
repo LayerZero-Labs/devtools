@@ -35,10 +35,6 @@ impl LzReceiveTypesV2<'_> {
         let peer_seeds = [PEER_SEED, store_key.as_ref(), &params.src_eid.to_be_bytes()];
         let (peer, _) = Pubkey::find_program_address(&peer_seeds, ctx.program_id);
 
-        // Event authority used for logging
-        let (event_authority_account, _) =
-            Pubkey::find_program_address(&[oapp::endpoint_cpi::EVENT_SEED], &ctx.program_id);
-
         let mut accounts = vec![
             // payer
             AccountMetaRef { pubkey: AddressLocator::Payer, is_writable: true },
