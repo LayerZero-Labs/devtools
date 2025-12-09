@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-solana-example",
-  "version": "0.12.9",
+  "version": "0.12.10",
   "private": true,
   "scripts": {
     "clean": "rm -rf target artifacts cache out .anchor",
@@ -106,7 +106,7 @@
     "typescript": "^5.4.4"
   },
   "engines": {
-    "node": ">=18.16.0"
+    "node": ">=20.19.5"
   },
   "pnpm": {
     "overrides": {
@@ -116,8 +116,8 @@
     }
   },
   "overrides": {
+    "@solana/web3.js": "^1.98.0",
     "ethers": "^5.7.2",
-    "hardhat-deploy": "^0.12.1",
-    "@solana/web3.js": "^1.98.0"
+    "hardhat-deploy": "^0.12.1"
   }
 }

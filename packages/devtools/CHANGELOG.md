@@ -1,5 +1,13 @@
 # @layerzerolabs/devtools
 
+## 2.0.4
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+- Updated dependencies [afb4dd3]
+  - @layerzerolabs/io-devtools@0.3.2
+
 ## 2.0.3
 
 ### Patch Changes

@@ -48,7 +48,7 @@
 - Anchor `0.31.1`
 - Solana CLI `2.2.20`
 - Docker `28.3.0`
-- Node.js `>=18.16.0`
+- Node.js `>=20.19.5`
 - `pnpm` (recommended) - or another package manager of your choice (npm, yarn)
 - `forge` (optional) - `>=0.2.0` for testing, and if not using Hardhat for compilation
 

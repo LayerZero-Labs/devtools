@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.6.4
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+
 ## 0.6.3
 
 ### Patch Changes

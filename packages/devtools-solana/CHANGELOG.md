@@ -1,5 +1,15 @@
 # @layerzerolabs/devtools-solana
 
+## 3.0.5
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+- Updated dependencies [a2851bf]
+- Updated dependencies [afb4dd3]
+  - @layerzerolabs/devtools@2.0.4
+  - @layerzerolabs/io-devtools@0.3.2
+
 ## 3.0.4
 
 ### Patch Changes

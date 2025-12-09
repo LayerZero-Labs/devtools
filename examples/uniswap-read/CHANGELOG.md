@@ -1,5 +1,11 @@
 # @layerzerolabs/uniswap-read-example
 
+## 0.2.12
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+
 ## 0.2.11
 
 ### Patch Changes

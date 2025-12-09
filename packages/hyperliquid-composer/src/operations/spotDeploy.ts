@@ -1,5 +1,4 @@
 import { createModuleLogger } from '@layerzerolabs/io-devtools'
-import { Wallet } from 'ethers'
 import inquirer from 'inquirer'
 
 import {
@@ -8,7 +7,7 @@ import {
     updateQuoteTokenStatus,
     updateUserFreezeStatus,
 } from '../io'
-import { HyperliquidClient } from '../signer'
+import { HyperliquidClient, IHyperliquidSigner } from '../signer'
 import { MAX_HYPERCORE_SUPPLY, QUOTE_TOKENS } from '../types'
 import { getSpotDeployState, getExistingQuoteTokens, getSpotPairDeployAuctionStatus } from './spotMeta'
 import type { SpotDeployAction, SpotDeployStates } from '../types'
@@ -16,7 +15,7 @@ import { RegisterHyperliquidity } from '@/types/spotDeploy'
 import { LOGGER_MODULES } from '@/types/cli-constants'
 
 export async function setTradingFeeShare(
-    wallet: Wallet,
+    signer: IHyperliquidSigner,
     isTestnet: boolean,
     coreSpotTokenId: number,
     share: string,
@@ -31,12 +30,12 @@ export async function setTradingFeeShare(
     }
 
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, action)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, action)
     return response
 }
 
 export async function setUserGenesis(
-    wallet: Wallet,
+    signer: IHyperliquidSigner,
     isTestnet: boolean,
     coreSpotTokenId: number,
     action: string,
@@ -99,7 +98,7 @@ export async function setUserGenesis(
         logger.info('Setting userAndWei and existingTokenAndWei')
         responseForUserGenesis = await hyperliquidClient.submitHyperliquidAction(
             '/exchange',
-            wallet,
+            signer,
             actionForUserGenesis
         )
     }
@@ -118,7 +117,7 @@ export async function setUserGenesis(
         logger.info('Setting blacklistUsers')
         responseForBlacklistUsers = await hyperliquidClient.submitHyperliquidAction(
             '/exchange',
-            wallet,
+            signer,
             actionForBlacklistUsers
         )
     }
@@ -126,7 +125,12 @@ export async function setUserGenesis(
     return { responseForUserGenesis, responseForBlacklistUsers }
 }
 
-export async function setGenesis(wallet: Wallet, isTestnet: boolean, coreSpotTokenId: number, logLevel: string) {
+export async function setGenesis(
+    signer: IHyperliquidSigner,
+    isTestnet: boolean,
+    coreSpotTokenId: number,
+    logLevel: string
+) {
     const logger = createModuleLogger(LOGGER_MODULES.SET_GENESIS, logLevel)
     const coreSpotDeployment = getCoreSpotDeployment(coreSpotTokenId, isTestnet, logger)
 
@@ -161,14 +165,20 @@ export async function setGenesis(wallet: Wallet, isTestnet: boolean, coreSpotTok
 
     logger.info('Setting genesis')
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, actionForGenesis)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, actionForGenesis)
     return response
 }
 
-export async function setNoHyperliquidity(wallet: Wallet, isTestnet: boolean, tokenIndex: number, logLevel: string) {
+export async function setNoHyperliquidity(
+    signer: IHyperliquidSigner,
+    isTestnet: boolean,
+    tokenIndex: number,
+    logLevel: string
+) {
     const logger = createModuleLogger(LOGGER_MODULES.SET_NO_HYPERLIQUIDITY, logLevel)
 
-    const deployStates = (await getSpotDeployState(wallet.address, isTestnet, logLevel)) as SpotDeployStates
+    const signerAddress = await signer.getAddress()
+    const deployStates = (await getSpotDeployState(signerAddress, isTestnet, logLevel)) as SpotDeployStates
 
     const state = deployStates.states.find((state) => state.token === tokenIndex)
     if (!state) {
@@ -223,11 +233,16 @@ export async function setNoHyperliquidity(wallet: Wallet, isTestnet: boolean, to
 
     logger.info('Registering hyperliquidity')
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, actionForNoHyperliquidity)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, actionForNoHyperliquidity)
     return response
 }
 
-export async function registerSpot(wallet: Wallet, isTestnet: boolean, coreSpotTokenId: number, logLevel: string) {
+export async function registerSpot(
+    signer: IHyperliquidSigner,
+    isTestnet: boolean,
+    coreSpotTokenId: number,
+    logLevel: string
+) {
     const logger = createModuleLogger(LOGGER_MODULES.REGISTER_TRADING_SPOT, logLevel)
 
     // Get existing quote tokens
@@ -384,12 +399,12 @@ export async function registerSpot(wallet: Wallet, isTestnet: boolean, coreSpotT
 
     logger.info(`Register trading spot against ${quoteTokenName}`)
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, actionForRegisterSpot)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, actionForRegisterSpot)
     return response
 }
 
 export async function enableFreezePrivilege(
-    wallet: Wallet,
+    signer: IHyperliquidSigner,
     isTestnet: boolean,
     coreSpotTokenId: number,
     logLevel: string
@@ -419,7 +434,7 @@ export async function enableFreezePrivilege(
 
     logger.info('Enabling freeze privilege')
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, action)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, action)
 
     if (response.status === 'ok') {
         updateFreezePrivilegeStatus(coreSpotTokenId, isTestnet, true, logger)
@@ -429,7 +444,7 @@ export async function enableFreezePrivilege(
 }
 
 export async function freezeUser(
-    wallet: Wallet,
+    signer: IHyperliquidSigner,
     isTestnet: boolean,
     coreSpotTokenId: number,
     userAddress: string,
@@ -463,7 +478,7 @@ export async function freezeUser(
 
     logger.info(`${freeze ? 'Freezing' : 'Unfreezing'} user ${userAddress}`)
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, action)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, action)
 
     if (response.status === 'ok') {
         updateUserFreezeStatus(coreSpotTokenId, isTestnet, userAddress, freeze, logger)
@@ -473,7 +488,7 @@ export async function freezeUser(
 }
 
 export async function revokeFreezePrivilege(
-    wallet: Wallet,
+    signer: IHyperliquidSigner,
     isTestnet: boolean,
     coreSpotTokenId: number,
     logLevel: string
@@ -503,7 +518,7 @@ export async function revokeFreezePrivilege(
 
     logger.info('Revoking freeze privilege (permanent)')
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, action)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, action)
 
     if (response.status === 'ok') {
         updateFreezePrivilegeStatus(coreSpotTokenId, isTestnet, false, logger)
@@ -512,7 +527,12 @@ export async function revokeFreezePrivilege(
     return response
 }
 
-export async function enableQuoteToken(wallet: Wallet, isTestnet: boolean, coreSpotTokenId: number, logLevel: string) {
+export async function enableQuoteToken(
+    signer: IHyperliquidSigner,
+    isTestnet: boolean,
+    coreSpotTokenId: number,
+    logLevel: string
+) {
     const logger = createModuleLogger(LOGGER_MODULES.ENABLE_QUOTE_TOKEN, logLevel)
 
     const { executeTx } = await inquirer.prompt([
@@ -538,7 +558,7 @@ export async function enableQuoteToken(wallet: Wallet, isTestnet: boolean, coreS
 
     logger.info('Enabling quote token capability')
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, action)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, action)
 
     if (response.status === 'ok') {
         updateQuoteTokenStatus(coreSpotTokenId, isTestnet, true, logger)

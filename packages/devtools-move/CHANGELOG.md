@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-move
 
+## 1.0.17
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+
 ## 1.0.16
 
 ### Patch Changes
