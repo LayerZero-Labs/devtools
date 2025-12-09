@@ -19,30 +19,7 @@ export function isOnCurveAddress(address: string): boolean {
     }
 }
 
-/**
- * Note: This was created before the existence of the Squads isVault endpoint was known.
- * Returns true if the provided address could be a Squads vault PDA.
- */
-export async function isPossibleSquadsVault(connection: Connection, address: string): Promise<boolean> {
-    const logger = createLogger()
-    try {
-        const pubkey = new PublicKey(address)
-        const accountInfo = await connection.getAccountInfo(pubkey)
-        const isOnCurve = isOnCurveAddress(address)
-        logger.debug(
-            `[isPossibleSquadsVault] address=${address} onCurve=${isOnCurve} hasAccount=${accountInfo != null}`
-        )
-        if (isOnCurve) {
-            // a Squads Vault address is always off-curve
-            return false
-        }
-
-        return accountInfo != null && accountInfo.owner.equals(SystemProgram.programId)
-    } catch (error) {
-        return false
-    }
-}
-
+// this only works on mainnet
 export async function isSquadsV4Vault(address: string): Promise<boolean> {
     const logger = createLogger()
     // https://docs.squads.so/main/development/api/vault-check
@@ -64,6 +41,18 @@ export async function isSquadsV4Vault(address: string): Promise<boolean> {
     }
 }
 
+/**
+ * Validates that an address is acceptable as a Solana admin (owner/delegate).
+ *
+ * Throws if:
+ * - Address is off-curve AND account exists AND account is owned by Squads Program
+ *   (This means it's a Squads Multisig account, not the vault address)
+ *
+ * Does NOT throw (valid) if:
+ * - Address is on-curve (regular Solana address)
+ * - Address is off-curve AND account exists AND account is owned by System Program (funded Squads Vault)
+ * - Address is off-curve AND account does not exist (possibly unfunded Squads Vault)
+ */
 export async function assertValidSolanaAdmin(connection: Connection, address: string): Promise<void> {
     const logger = createLogger()
     const pubkey = new PublicKey(address)
@@ -71,21 +60,42 @@ export async function assertValidSolanaAdmin(connection: Connection, address: st
     try {
         logger.debug(`[assertValidSolanaAdmin] start address=${address}`)
         const accountInfo = await connection.getAccountInfo(pubkey)
+        const isOnCurve = isOnCurveAddress(address)
 
-        if (accountInfo != null && accountInfo.owner.equals(SQUADS_PROGRAM_ID)) {
-            DebugLogger.printErrorAndFixSuggestion(KnownErrors.SOLANA_OWNER_OR_DELEGATE_CANNOT_BE_MULTISIG_ACCOUNT)
-            throw new Error(
-                `Invalid owner/delegate address ${address}. This is a Squads multisig account. Use the vault address instead.`
-            )
+        // if onCurve (regular address), always valid
+        if (isOnCurve) {
+            logger.debug(`[assertValidSolanaAdmin] address=${address} valid: on-curve (regular address)`)
+            return
+        } else {
+            // if offCurve
+            const accountExists = accountInfo != null
+            if (accountExists) {
+                // here it could either be a funded Squads Vault account or a Squads Multisig account
+                const ownedBySquadsProgram = accountInfo?.owner.equals(SQUADS_PROGRAM_ID)
+                const ownedBySystemProgram = accountInfo?.owner.equals(SystemProgram.programId)
+                if (ownedBySquadsProgram) {
+                    logger.debug(
+                        `[assertValidSolanaAdmin] address=${address} invalid: off-curve, account exists, owned by Squads Program (multisig account)`
+                    )
+                    DebugLogger.printErrorAndFixSuggestion(
+                        KnownErrors.SOLANA_OWNER_OR_DELEGATE_CANNOT_BE_MULTISIG_ACCOUNT
+                    )
+                    throw new Error(
+                        `Invalid owner/delegate address ${address}. This is a Squads multisig account. Use the vault address instead.`
+                    )
+                } else if (ownedBySystemProgram) {
+                    logger.debug(
+                        `[assertValidSolanaAdmin] address=${address} valid: off-curve, account exists, owned by System Program (funded Squads Vault)`
+                    )
+                    return
+                }
+            } else {
+                logger.debug(
+                    `[assertValidSolanaAdmin] address=${address} valid: off-curve, account does not exist (possibly unfunded Squads Vault)`
+                )
+                return
+            }
         }
-
-        if (!isOnCurveAddress(address) && !(await isPossibleSquadsVault(connection, address))) {
-            DebugLogger.printErrorAndFixSuggestion(KnownErrors.SOLANA_INVALID_OWNER_OR_DELEGATE)
-            throw new Error(
-                `Invalid owner/delegate address ${address}. Must be a valid on-curve address or a Squads Vault PDA.`
-            )
-        }
-        logger.debug(`[assertValidSolanaAdmin] address=${address} valid`)
     } catch (error) {
         if (error instanceof Error) {
             throw error
