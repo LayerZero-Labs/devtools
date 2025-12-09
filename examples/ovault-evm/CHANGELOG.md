@@ -1,5 +1,11 @@
 # @layerzerolabs/ovault-evm-example
 
+## 0.0.12
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+
 ## 0.0.11
 
 ### Patch Changes

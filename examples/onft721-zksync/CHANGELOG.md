@@ -1,5 +1,11 @@
 # @layerzerolabs/onft721-zksync-example
 
+## 1.0.10
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+
 ## 1.0.9
 
 ### Patch Changes
