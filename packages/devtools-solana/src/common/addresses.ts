@@ -1,4 +1,5 @@
 import { DebugLogger, KnownErrors, createModuleLogger } from '@layerzerolabs/io-devtools'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { Connection, PublicKey, SystemProgram } from '@solana/web3.js'
 import { PROGRAM_ID as SQUADS_PROGRAM_ID } from '@sqds/multisig'
 
@@ -19,9 +20,23 @@ export function isOnCurveAddress(address: string): boolean {
     }
 }
 
-// this only works on mainnet
-export async function isSquadsV4Vault(address: string): Promise<boolean> {
+/**
+ * Checks if an address is a Squads V4 vault using the Squads API.
+ * Only works on Solana mainnet (30168). Returns null for testnet (40168).
+ * Throws for any other EID.
+ */
+export async function isSquadsV4Vault(eid: EndpointId, address: string): Promise<boolean | null> {
     const logger = createLogger()
+
+    if (eid === EndpointId.SOLANA_V2_TESTNET) {
+        logger.debug(`[isSquadsV4Vault] eid=${eid} is testnet, returning null (API only works on mainnet)`)
+        return null
+    }
+
+    if (eid !== EndpointId.SOLANA_V2_MAINNET) {
+        throw new Error(`[isSquadsV4Vault] unsupported eid=${eid}, only Solana mainnet (30168) is supported`)
+    }
+
     // https://docs.squads.so/main/development/api/vault-check
     // Note that this endpoint is rate-limited to 25 requests per minute. It's fine if run on end-dev side but if run on a backend, it should be cached.
     const response = await fetch(
