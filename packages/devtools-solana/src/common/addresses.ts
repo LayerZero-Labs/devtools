@@ -1,7 +1,10 @@
 import { DebugLogger, KnownErrors, createModuleLogger } from '@layerzerolabs/io-devtools'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { Connection, PublicKey, SystemProgram } from '@solana/web3.js'
-import { PROGRAM_ID as SQUADS_PROGRAM_ID } from '@sqds/multisig'
+import { PROGRAM_ID as SQUADS_V4_PROGRAM_ID } from '@sqds/multisig'
+
+// Squads V3 program ID - legacy, not ideal but we allow it
+const SQUADS_V3_PROGRAM_ID = new PublicKey('SMPLecH534NA9acpos4G6x7uf3LWbCAwZQE9e8ZekMu')
 
 const createLogger = () => createModuleLogger('Solana addresses')
 
@@ -60,13 +63,14 @@ export async function isSquadsV4Vault(eid: EndpointId, address: string): Promise
  * Validates that an address is acceptable as a Solana admin (owner/delegate).
  *
  * Throws if:
- * - Address is off-curve AND account exists AND account is owned by Squads Program
- *   (This means it's a Squads Multisig account, not the vault address)
+ * - Address is off-curve AND account exists AND owned by Squads V4 Program (multisig account, not vault)
+ * - Address is off-curve AND account exists AND owned by unrecognized program
  *
  * Does NOT throw (valid) if:
  * - Address is on-curve (regular Solana address)
- * - Address is off-curve AND account exists AND account is owned by System Program (funded Squads Vault)
  * - Address is off-curve AND account does not exist (possibly unfunded Squads Vault)
+ * - Address is off-curve AND account exists AND owned by System Program (funded Squads Vault)
+ * - Address is off-curve AND account exists AND owned by Squads V3 Program (legacy, allowed with warning)
  */
 export async function assertValidSolanaAdmin(connection: Connection, address: string): Promise<void> {
     const logger = createLogger()
@@ -77,40 +81,60 @@ export async function assertValidSolanaAdmin(connection: Connection, address: st
         const accountInfo = await connection.getAccountInfo(pubkey)
         const isOnCurve = isOnCurveAddress(address)
 
-        // if onCurve (regular address), always valid
+        // On-curve (regular address) = always valid
         if (isOnCurve) {
             logger.debug(`[assertValidSolanaAdmin] address=${address} valid: on-curve (regular address)`)
             return
-        } else {
-            // if offCurve
-            const accountExists = accountInfo != null
-            if (accountExists) {
-                // here it could either be a funded Squads Vault account or a Squads Multisig account
-                const ownedBySquadsProgram = accountInfo?.owner.equals(SQUADS_PROGRAM_ID)
-                const ownedBySystemProgram = accountInfo?.owner.equals(SystemProgram.programId)
-                if (ownedBySquadsProgram) {
-                    logger.debug(
-                        `[assertValidSolanaAdmin] address=${address} invalid: off-curve, account exists, owned by Squads Program (multisig account)`
-                    )
-                    DebugLogger.printErrorAndFixSuggestion(
-                        KnownErrors.SOLANA_OWNER_OR_DELEGATE_CANNOT_BE_MULTISIG_ACCOUNT
-                    )
-                    throw new Error(
-                        `Invalid owner/delegate address ${address}. This is a Squads multisig account. Use the vault address instead.`
-                    )
-                } else if (ownedBySystemProgram) {
-                    logger.debug(
-                        `[assertValidSolanaAdmin] address=${address} valid: off-curve, account exists, owned by System Program (funded Squads Vault)`
-                    )
-                    return
-                }
-            } else {
-                logger.debug(
-                    `[assertValidSolanaAdmin] address=${address} valid: off-curve, account does not exist (possibly unfunded Squads Vault)`
-                )
-                return
-            }
         }
+
+        // From here: off-curve
+        const accountExists = accountInfo != null
+
+        // Off-curve + no account = possibly unfunded Squads Vault
+        if (!accountExists) {
+            logger.debug(
+                `[assertValidSolanaAdmin] address=${address} valid: off-curve, account does not exist (possibly unfunded Squads Vault)`
+            )
+            return
+        }
+
+        // From here: off-curve + account exists
+        const owner = accountInfo.owner
+
+        // Owned by Squads V4 Program = multisig account (invalid, should use vault address)
+        if (owner.equals(SQUADS_V4_PROGRAM_ID)) {
+            logger.debug(
+                `[assertValidSolanaAdmin] address=${address} invalid: off-curve, account exists, owned by Squads V4 Program (multisig account)`
+            )
+            DebugLogger.printErrorAndFixSuggestion(KnownErrors.SOLANA_OWNER_OR_DELEGATE_CANNOT_BE_MULTISIG_ACCOUNT)
+            throw new Error(
+                `Invalid owner/delegate address ${address}. This is a Squads multisig account. Use the vault address instead.`
+            )
+        }
+
+        // Owned by System Program = funded Squads Vault (valid)
+        if (owner.equals(SystemProgram.programId)) {
+            logger.debug(
+                `[assertValidSolanaAdmin] address=${address} valid: off-curve, account exists, owned by System Program (funded Squads Vault)`
+            )
+            return
+        }
+
+        // Owned by Squads V3 Program = legacy, not ideal but allowed
+        if (owner.equals(SQUADS_V3_PROGRAM_ID)) {
+            logger.warn(
+                `[assertValidSolanaAdmin] address=${address} valid: off-curve, account exists, owned by Squads V3 Program (legacy multisig - consider migrating to V4)`
+            )
+            return
+        }
+
+        // Owned by unrecognized program = invalid
+        logger.debug(
+            `[assertValidSolanaAdmin] address=${address} invalid: off-curve, account exists, owned by unrecognized program ${owner.toBase58()}`
+        )
+        throw new Error(
+            `Invalid owner/delegate address ${address}. Account is owned by unrecognized program ${owner.toBase58()}.`
+        )
     } catch (error) {
         if (error instanceof Error) {
             throw error
