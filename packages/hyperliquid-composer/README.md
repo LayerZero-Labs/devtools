@@ -33,7 +33,7 @@ npx @layerzerolabs/hyperliquid-composer -h
 ```bash
 npx @layerzerolabs/hyperliquid-composer set-block \
     --size {small | big} \
-    --network {testnet | mainnet} \ 
+    --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY \
     [--log-level {info | verbose}]
 ```
@@ -52,8 +52,8 @@ npx @layerzerolabs/hyperliquid-composer core-spot \
     [--log-level {info | verbose}]
 
 # Get existing metadata
-npx @layerzerolabs/hyperliquid-composer core-spot \ 
-    --action get \  
+npx @layerzerolabs/hyperliquid-composer core-spot \
+    --action get \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
@@ -79,10 +79,10 @@ npx @layerzerolabs/hyperliquid-composer enable-freeze-privilege \
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer user-genesis \
-    --token-index <coreIndex> \ 
+    --token-index <coreIndex> \
     [--action {* | userAndWei | existingTokenAndWei | blacklistUsers}] \
-    --network {testnet | mainnet} \ 
-    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --network {testnet | mainnet} \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -92,7 +92,7 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
 npx @layerzerolabs/hyperliquid-composer set-genesis \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
-    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -101,8 +101,8 @@ npx @layerzerolabs/hyperliquid-composer set-genesis \
 ```bash
 npx @layerzerolabs/hyperliquid-composer register-spot \
     --token-index <coreIndex> \
-    --network {testnet | mainnet} \ 
-    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --network {testnet | mainnet} \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -112,7 +112,7 @@ npx @layerzerolabs/hyperliquid-composer register-spot \
 npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
-    --private-key $PRIVATE_KEY_HYPERLIQUID \ 
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
 
@@ -238,9 +238,9 @@ npx @layerzerolabs/hyperliquid-composer is-account-activated \
 ### Get Core Balances
 
 ```bash
-npx @layerzerolabs/hyperliquid-composer get-core-balances \ 
+npx @layerzerolabs/hyperliquid-composer get-core-balances \
     --user <0x...> \
-    [--show-zero {false | true}] \ 
+    [--show-zero {false | true}] \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
 ```
