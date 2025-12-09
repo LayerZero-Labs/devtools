@@ -204,10 +204,6 @@ export class OFT extends OmniSDK implements IOApp {
             instructions.push(oft.initOAppNonce({ admin: delegate, oftStore }, eid, normalizedPeer)) // delegate
         }
 
-        instructions.push(
-            await this._createSetPeerAddressIx(normalizedPeer, eid) // admin but is this needed?  set twice...
-        )
-
         this.logger.debug(`Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32}`)
         return {
             ...(await this.createTransaction(this._umiToWeb3Tx(instructions))),
