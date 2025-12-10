@@ -294,11 +294,24 @@ export class OFT extends OmniSDK implements IOApp {
         this.logger.verbose(`Setting enforced options to ${printJson(enforcedOptions)}`)
 
         const optionsByEidAndMsgType = this.reduceEnforcedOptions(enforcedOptions)
-        const emptyOptions = Options.newOptions().toBytes()
         const ixs: WrappedInstruction[] = []
+
         for (const [eid, optionsByMsgType] of optionsByEidAndMsgType) {
-            const sendOption = optionsByMsgType.get(MSG_TYPE_SEND) ?? emptyOptions
-            const sendAndCallOption = optionsByMsgType.get(MSG_TYPE_SEND_AND_CALL) ?? emptyOptions
+            // Helper to get option: from update map OR fetch from chain (safely)
+            const getOption = async (msgType: MsgType) => {
+                if (optionsByMsgType.has(msgType)) {
+                    return optionsByMsgType.get(msgType)!
+                }
+                const hex = await this.getEnforcedOptions(eid, msgType)
+                return hex && hex !== '0x' ? Options.fromOptions(hex).toBytes() : Options.newOptions().toBytes()
+            }
+
+            // Fetch both in parallel
+            const [sendOption, sendAndCallOption] = await Promise.all([
+                getOption(MSG_TYPE_SEND),
+                getOption(MSG_TYPE_SEND_AND_CALL),
+            ])
+
             ixs.push(await this._setPeerEnforcedOptionsIx(sendOption, sendAndCallOption, eid))
         }
 
