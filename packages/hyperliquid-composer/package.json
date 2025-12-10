@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/hyperliquid-composer",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "LayerZero Labs reference EVM OmniChain Fungible Token (OFT) implementation for Hyperliquid",
   "keywords": [
     "LayerZero",
@@ -64,17 +64,17 @@
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
-    "@layerzerolabs/io-devtools": "^0.3.0",
+    "@layerzerolabs/io-devtools": "^0.3.2",
     "@layerzerolabs/lz-definitions": "^3.0.81",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
     "@layerzerolabs/lz-utilities": "^3.0.74",
-    "@layerzerolabs/oapp-evm": "^0.4.0",
-    "@layerzerolabs/oft-evm": "^4.0.0",
+    "@layerzerolabs/oapp-evm": "^0.4.1",
+    "@layerzerolabs/oft-evm": "^4.0.1",
     "@layerzerolabs/prettier-config-next": "^2.3.39",
     "@layerzerolabs/solhint-config": "^3.0.12",
     "@layerzerolabs/toolbox-foundry": "^0.1.12",
-    "@layerzerolabs/toolbox-hardhat": "^0.6.12",
+    "@layerzerolabs/toolbox-hardhat": "^0.6.13",
     "@msgpack/msgpack": "^3.0.0-beta2",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
@@ -94,7 +94,7 @@
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
-    "@layerzerolabs/oapp-evm": "^0.4.0",
+    "@layerzerolabs/oapp-evm": "^0.4.1",
     "@openzeppelin/contracts": "^4.8.1 || ^5.0.0",
     "@openzeppelin/contracts-upgradeable": "^4.8.1 || ^5.0.0"
   },

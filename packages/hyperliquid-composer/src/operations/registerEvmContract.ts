@@ -1,10 +1,8 @@
-import { Wallet } from 'ethers'
-
-import { HyperliquidClient } from '../signer'
+import { HyperliquidClient, IHyperliquidSigner } from '../signer'
 import { EvmSpotDeploy, FinalizeEvmContract } from '../types'
 
 export async function setRequestEvmContract(
-    wallet: Wallet,
+    signer: IHyperliquidSigner,
     isTestnet: boolean,
     evmSpotTokenAddress: string,
     evmExtraWeiDecimals: number,
@@ -24,7 +22,7 @@ export async function setRequestEvmContract(
 
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
     try {
-        const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, action)
+        const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, action)
         return response
     } catch (error) {
         throw new Error(`Error requesting EVM contract: ${error}`)
@@ -32,7 +30,7 @@ export async function setRequestEvmContract(
 }
 
 export async function setFinalizeEvmContract(
-    wallet: Wallet,
+    signer: IHyperliquidSigner,
     isTestnet: boolean,
     coreSpotTokenId: number,
     nonce: number,
@@ -50,7 +48,7 @@ export async function setFinalizeEvmContract(
 
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
 
-    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, action)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, action)
     if (response.status === 'err') {
         throw new Error(response.response)
     }

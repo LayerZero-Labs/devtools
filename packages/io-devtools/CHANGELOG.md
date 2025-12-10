@@ -1,5 +1,11 @@
 # @layerzerolabs/io-devtools
 
+## 0.3.2
+
+### Patch Changes
+
+- afb4dd3: format splat for printf like logging
+
 ## 0.3.1
 
 ### Patch Changes

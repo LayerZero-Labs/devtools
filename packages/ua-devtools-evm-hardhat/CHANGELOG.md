@@ -1,5 +1,21 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 9.0.1
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+- Updated dependencies [a2851bf]
+- Updated dependencies [afb4dd3]
+  - @layerzerolabs/protocol-devtools-evm@5.0.2
+  - @layerzerolabs/devtools-evm-hardhat@4.0.4
+  - @layerzerolabs/protocol-devtools@3.0.2
+  - @layerzerolabs/ua-devtools-evm@7.0.1
+  - @layerzerolabs/devtools-evm@3.0.2
+  - @layerzerolabs/ua-devtools@5.0.2
+  - @layerzerolabs/devtools@2.0.4
+  - @layerzerolabs/io-devtools@0.3.2
+
 ## 9.0.0
 
 ### Patch Changes

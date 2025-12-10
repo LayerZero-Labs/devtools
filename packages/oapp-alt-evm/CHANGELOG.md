@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-alt-evm
 
+## 0.0.5
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+
 ## 0.0.4
 
 ### Patch Changes
