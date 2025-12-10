@@ -18,7 +18,7 @@ export const ENDPOINTS = {
     EXCHANGE: '/exchange',
 }
 
-export const MAX_HYPERCORE_SUPPLY = 2 ** 64 - 1
+export const MAX_HYPERCORE_SUPPLY = BigInt(2) ** BigInt(64) - BigInt(1) // 18446744073709551615n
 
 /**
  * Standard quote tokens available on HyperLiquid Core, indexed by network.
