@@ -377,9 +377,22 @@ npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
     [--log-level {info | verbose}]
 ```
 
-### 6. Enable Quote Token Capability (Optional)
+### 6. Set Trading Fee Share (Optional)
 
-Enables your token to be used as a quote asset for trading pairs. **Requirements must be met** - see: [Hyperliquid API requirements](https://t.me/hyperliquid_api/243)
+Can be done at any time after deployment. **Note:** If you plan to enable quote token capability, read the [Permissionless Spot Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets) documentation before setting this value.
+
+```bash
+npx @layerzerolabs/hyperliquid-composer trading-fee \
+    --token-index <coreIndex> \
+    --share <[0%,100%]> \
+    --network {testnet | mainnet} \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
+    [--log-level {info | verbose}]
+```
+
+### 7. Enable Quote Token Capability (Optional)
+
+Enables your token to be used as a quote asset for trading pairs. **Dependency:** Requires specific trading fee share value (see Step 6 above). See: [Permissionless Spot Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets)
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer enable-quote-token \
@@ -389,14 +402,13 @@ npx @layerzerolabs/hyperliquid-composer enable-quote-token \
     [--log-level {info | verbose}]
 ```
 
-### 7. Set Trading Fee Share (Optional)
+### 8. Enable Aligned Quote Token Capability (Optional)
 
-Can be done at any time after deployment:
+Enables your token to be used as an aligned quote asset for trading pairs. Aligned quote tokens have special properties and requirements. See: [Aligned Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/aligned-quote-assets)
 
 ```bash
-npx @layerzerolabs/hyperliquid-composer trading-fee \
+npx @layerzerolabs/hyperliquid-composer enable-aligned-quote-token \
     --token-index <coreIndex> \
-    --share <[0%,100%]> \
     --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
@@ -528,6 +540,50 @@ npx @layerzerolabs/hyperliquid-composer spot-auction-status \
 ```bash
 npx @layerzerolabs/hyperliquid-composer to-bridge --token-index <coreIndex>
 ```
+
+## Advanced: Creating Custom Scripts
+
+You can create your own custom scripts using the `HyperliquidClient` directly. This is useful for actions not covered by the CLI or for building custom automation.
+
+### Example: Custom Action Script
+
+```typescript
+import { HyperliquidClient } from '@layerzerolabs/hyperliquid-composer'
+import { Wallet } from 'ethers'
+
+async function customAction() {
+    // Initialize wallet
+    const wallet = new Wallet(process.env.PRIVATE_KEY!)
+    
+    // Create client (testnet or mainnet)
+    const isTestnet = true
+    const logLevel = 'info'
+    const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
+    
+    // Define your action
+    const action = {
+        type: 'spotDeploy',
+        enableAlignedQuoteToken: {
+            token: 1234, // your token index
+        },
+    }
+    
+    // Submit the action
+    const response = await hyperliquidClient.submitHyperliquidAction(
+        '/exchange',
+        wallet,
+        action
+    )
+    
+    console.log('Response:', response)
+}
+
+customAction()
+```
+
+### Available Action Types
+
+Refer to the [Hyperliquid API documentation](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api) for all available action types and their parameters. The SDK supports any valid HyperCore action through `submitHyperliquidAction`.
 
 ## Deploy and Connect your OFT Guide
 
@@ -726,11 +782,33 @@ curl -X POST "https://api.hyperliquid.xyz/info" \
      -d '{ "type": "tokenDetails", "tokenId": "<YOUR_TOKEN_ID>"}'
 ```
 
-### Step 6/7 `enableQuoteToken` (Optional)
+### Step 6/7: `setDeployerTradingFeeShare` (Optional)
+
+This is the step where you set the trading fee share for the deployer. It can be in the range of `[0%,100%]`.
+
+A deployer fee share <https://hyperliquid.gitbook.io/hyperliquid-docs/trading/fees> is claimed per transaction on HyperCore. Half of the base rate (50%) is allocated as the deployer fee share. The deployer can choose to forgo this fee share by setting the share to `0%`. This causes the deployer's fee share part to be burnt. If it were to be set to `100%`, the deployer would receive the full fee share part of the fee. We recommend setting it to `100%`
+
+> ⚠️ Note: The trading fee can be reset as long as the new share is lower than the previous share.
+> ⚠️ Note: This step can also be run after the core spot is deployed.
+> ⚠️ **Important**: If you plan to enable quote token capability (Step 6.5/7), read the [Permissionless Spot Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets) documentation before setting this value as it requires a specific trading fee share.
+
+```bash
+npx @layerzerolabs/hyperliquid-composer trading-fee \
+    --token-index <coreIndex> \
+    --share <[0%,100%]> \
+    --network {testnet | mainnet} \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
+    [--log-level {info | verbose}]
+```
+
+### Step 6.5/7 `enableQuoteToken` (Optional)
 
 This step enables the token to be used as a quote asset for trading pairs. This allows other tokens to form trading pairs against your token (e.g., TOKEN/YOUR_TOKEN instead of only YOUR_TOKEN/USDC).
 
-> ⚠️ **Requirements**: There are specific requirements that must be met for this to be successful. Please review the requirements at: [Hyperliquid API requirements](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/aligned-quote-assets) and contact the Hyperliquid team for the most upto date information.
+> ⚠️ **Requirements**: 
+> - Requires specific trading fee share value (see Step 6/7 above)
+> - Review all requirements at: [Permissionless Spot Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets)
+> - Contact the Hyperliquid team for the most up-to-date information
 >
 > 📝 **Note**: This can be executed after the trading fee share is set and even after deployment and linking are complete.
 
@@ -742,19 +820,19 @@ npx @layerzerolabs/hyperliquid-composer enable-quote-token \
     [--log-level {info | verbose}]
 ```
 
-### Step 7/7: `setDeployerTradingFeeShare` (Optional)
+### Step 6.7/7 `enableAlignedQuoteToken` (Optional)
 
-This is the step where you set the trading fee share for the deployer. It can be in the range of `[0%,100%]`.
+This step enables the token to be used as an aligned quote asset for trading pairs. Aligned quote tokens have special properties and requirements different from regular quote tokens.
 
-A deployer fee share <https://hyperliquid.gitbook.io/hyperliquid-docs/trading/fees> is claimed per transaction on HyperCore. Half of the base rate (50%) is allocated as the deployer fee share. The deployer can choose to forgo this fee share by setting the share to `0%`. This causes the deployer's fee share part to be burnt. If it were to be set to `100%`, the deployer would receive the full fee share part of the fee. We recommend setting it to `100%`
-
-> ⚠️ Note: The trading fee can be reset as long as the new share is lower than the previous share.
-> ⚠️ Note: This step can also be run after the core spot is deployed.
+> ⚠️ **Requirements**: 
+> - Review requirements at: [Aligned Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/aligned-quote-assets)
+> - Contact the Hyperliquid team for the most up-to-date information
+>
+> 📝 **Note**: This can be executed after the trading fee share is set and even after deployment and linking are complete.
 
 ```bash
-npx @layerzerolabs/hyperliquid-composer trading-fee \
+npx @layerzerolabs/hyperliquid-composer enable-aligned-quote-token \
     --token-index <coreIndex> \
-    --share <[0%,100%]> \
     --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]

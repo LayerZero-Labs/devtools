@@ -539,7 +539,7 @@ export async function enableQuoteToken(
         {
             type: 'confirm',
             name: 'executeTx',
-            message: `This will enable token ${coreSpotTokenId} to be used as a quote asset in trading pairs. This can be done after trading fee share is set. \n There are several requirements for this to be successful - reference https://t.me/hyperliquid_api/243. Continue?`,
+            message: `This will enable token ${coreSpotTokenId} to be used as a quote asset in trading pairs. This can be done after trading fee share is set. \n There are several requirements for this to be successful - reference https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets. Continue?`,
             default: false,
         },
     ])
@@ -557,6 +557,46 @@ export async function enableQuoteToken(
     }
 
     logger.info('Enabling quote token capability')
+    const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, action)
+
+    if (response.status === 'ok') {
+        updateQuoteTokenStatus(coreSpotTokenId, isTestnet, true, logger)
+    }
+
+    return response
+}
+
+export async function enableAlignedQuoteToken(
+    signer: IHyperliquidSigner,
+    isTestnet: boolean,
+    coreSpotTokenId: number,
+    logLevel: string
+) {
+    const logger = createModuleLogger(LOGGER_MODULES.ENABLE_ALIGNED_QUOTE_TOKEN, logLevel)
+
+    const { executeTx } = await inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'executeTx',
+            message: `This will enable token ${coreSpotTokenId} to be used as an ALIGNED quote asset in trading pairs. Aligned quote tokens have special properties and requirements - reference https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/aligned-quote-assets. Continue?`,
+            default: false,
+        },
+    ])
+
+    if (!executeTx) {
+        logger.info('Transaction cancelled - quitting.')
+        process.exit(1)
+    }
+
+    const action: SpotDeployAction['action'] = {
+        type: 'spotDeploy',
+        enableAlignedQuoteToken: {
+            token: coreSpotTokenId,
+        },
+    }
+
+    logger.info('Enabling aligned quote token capability')
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
     const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, action)
 

@@ -12,6 +12,7 @@ import {
     freezeUser,
     revokeFreezePrivilege,
     enableQuoteToken,
+    enableAlignedQuoteToken,
 } from '@/operations'
 import { LOGGER_MODULES } from '@/types/cli-constants'
 import {
@@ -23,6 +24,7 @@ import {
     EnableTokenFreezePrivilegeArgs,
     RevokeTokenFreezePrivilegeArgs,
     EnableTokenQuoteAssetArgs,
+    EnableTokenAlignedQuoteAssetArgs,
     FreezeUserArgs,
 } from '@/types'
 
@@ -167,4 +169,17 @@ export async function enableTokenQuoteAsset(args: EnableTokenQuoteAssetArgs): Pr
     logger.info(`Enabling quote token capability for token ${tokenIndex}`)
 
     await enableQuoteToken(signer, isTestnet, tokenIndex, args.logLevel)
+}
+
+export async function enableTokenAlignedQuoteAsset(args: EnableTokenAlignedQuoteAssetArgs): Promise<void> {
+    setDefaultLogLevel(args.logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.ENABLE_ALIGNED_QUOTE_TOKEN, args.logLevel)
+
+    const signer = await getHyperliquidSigner(args.privateKey)
+    const isTestnet = args.network === 'testnet'
+    const tokenIndex: number = parseInt(args.tokenIndex)
+
+    logger.info(`Enabling aligned quote token capability for token ${tokenIndex}`)
+
+    await enableAlignedQuoteToken(signer, isTestnet, tokenIndex, args.logLevel)
 }
