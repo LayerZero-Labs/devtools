@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 1.0.9
+
+### Patch Changes
+
+- bfea443: alignedQuoteAsset support on core spot deployment + instructions on how to create a custom hyperliquid sdk action for sign + submit
+
 ## 1.0.8
 
 ### Patch Changes
