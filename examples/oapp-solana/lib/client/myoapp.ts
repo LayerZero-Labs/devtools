@@ -94,7 +94,7 @@ export class MyOApp {
         return accounts.safeFetchStore({ rpc }, count, { commitment })
     }
 
-    initStore(payer: Signer, admin: PublicKey): WrappedInstruction {
+    initStore(payer: Signer, admin: PublicKey, alt?: PublicKey): WrappedInstruction {
         const [oapp] = this.pda.oapp()
         const remainingAccounts = this.endpointSDK.getRegisterOappIxAccountMetaForCPI(payer.publicKey, oapp)
         return instructions
@@ -104,6 +104,7 @@ export class MyOApp {
                     payer,
                     store: oapp,
                     lzReceiveTypesAccounts: this.pda.lzReceiveTypesAccounts()[0],
+                    alt,
 
                     // args
                     admin: admin,
