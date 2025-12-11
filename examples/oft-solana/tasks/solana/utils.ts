@@ -1,7 +1,11 @@
+import { Umi, publicKey } from '@metaplex-foundation/umi'
+import { toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { Connection } from '@solana/web3.js'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
+import { EndpointPDADeriver, EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
+import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import {
     OAppOmniGraphHardhatSchema,
@@ -82,4 +86,29 @@ export function silenceSolana429(connection: Connection): void {
         // otherwise pass through
         return origWrite(chunk, ...args)
     }) as typeof process.stderr.write
+}
+
+/**
+ * Fetches the admin and delegate for a given OFT Store.
+ * @param umi - The Umi instance
+ * @param connection - The Solana connection
+ * @param oftStoreAddress - The OFT Store address as a string
+ * @returns An object containing the admin and delegate addresses
+ */
+export async function getOftAdminAndDelegate(
+    umi: Umi,
+    connection: Connection,
+    oftStoreAddress: string
+): Promise<{ admin: string; delegate: string | undefined }> {
+    const oftStore = publicKey(oftStoreAddress)
+
+    const oftStoreInfo = await oft.accounts.fetchOFTStore(umi, oftStore)
+    const admin = oftStoreInfo.admin.toString()
+
+    const epDeriver = new EndpointPDADeriver(EndpointProgram.PROGRAM_ID)
+    const [oAppRegistry] = epDeriver.oappRegistry(toWeb3JsPublicKey(oftStore))
+    const oAppRegistryInfo = await EndpointProgram.accounts.OAppRegistry.fromAccountAddress(connection, oAppRegistry)
+    const delegate = oAppRegistryInfo?.delegate?.toBase58()
+
+    return { admin, delegate }
 }

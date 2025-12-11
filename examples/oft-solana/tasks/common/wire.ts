@@ -16,8 +16,8 @@ import {
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
 
 import { createAptosSignerFactory } from '../aptos'
-import { getSolanaDeployment, useWeb3Js } from '../solana'
-import { findSolanaEndpointIdInGraph } from '../solana/utils'
+import { deriveConnection, getSolanaDeployment, useWeb3Js } from '../solana'
+import { findSolanaEndpointIdInGraph, getOftAdminAndDelegate } from '../solana/utils'
 
 import { publicKey as publicKeyType } from './types'
 import {
@@ -77,6 +77,24 @@ task(TASK_LZ_OAPP_WIRE)
 
         const solanaEid = await findSolanaEndpointIdInGraph(hre, args.oappConfig)
         const solanaDeployment = getSolanaDeployment(solanaEid)
+
+        // alert the user if the active address is not the delegate / admin
+        const { umi, connection } = await deriveConnection(solanaEid, true)
+        const { admin, delegate } = await getOftAdminAndDelegate(umi, connection, solanaDeployment.oftStore)
+
+        const userAccountStr = userAccount.toBase58()
+        if (userAccountStr !== admin) {
+            logger.warn(
+                `Your address (${userAccountStr}) is not the admin (${admin}). ` +
+                    `Use the correct keypair or supply --multisig-key if the admin is a Squads Vault.`
+            )
+        }
+        if (userAccountStr !== delegate) {
+            logger.warn(
+                `Your address (${userAccountStr}) is not the delegate (${delegate}). ` +
+                    `Use the correct keypair or supply --multisig-key if the delegate is a Squads Vault.`
+            )
+        }
 
         // Then we grab the programId from the args
         const programId = new PublicKey(solanaDeployment.programId)
