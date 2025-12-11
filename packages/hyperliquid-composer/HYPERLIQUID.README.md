@@ -438,6 +438,20 @@ npx @layerzerolabs/hyperliquid-composer finalize-evm-contract \
     [--log-level {info | verbose}]
 ```
 
+### 2a. Finalize EVM Contract Link (CoreWriter Method)
+
+Alternative method using direct CoreWriter interaction. This is useful if you prefer to use Foundry's `cast` command.
+
+```bash
+npx @layerzerolabs/hyperliquid-composer finalize-evm-contract-corewriter \
+    --token-index <coreIndex> \
+    --nonce <nonce> \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+```
+
+The command will output the calldata and a ready-to-use `cast send` command for finalizing the EVM contract link via the CoreWriter precompile at `0x3333333333333333333333333333333333333333`.
+
 ## Post-Launch Management
 
 ### Freeze/Unfreeze Users
@@ -871,6 +885,19 @@ npx @layerzerolabs/hyperliquid-composer finalize-evm-contract  \
     --log-level verbose \
     --private-key $PRIVATE_KEY_HYPERLIQUID
 ```
+
+**Alternative: Using CoreWriter directly with Foundry**
+
+If you prefer to use Foundry's `cast` command, you can generate the calldata and send the transaction directly:
+
+```bash
+npx @layerzerolabs/hyperliquid-composer finalize-evm-contract-corewriter \
+    --token-index <coreIndex> \
+    --nonce <deployment-nonce> \
+    --network {testnet | mainnet}
+```
+
+This will output the calldata and a ready-to-use `cast send` command that you can execute directly.
 
 ## Deploy the Composer
 
