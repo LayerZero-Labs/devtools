@@ -8,6 +8,7 @@ import { OAppCoreUpgradeable } from "./OAppCoreUpgradeable.sol";
 /**
  * @title OAppReceiver
  * @dev Abstract contract implementing the ILayerZeroReceiver interface and extending OAppCore for OApp receivers.
+ * @dev ADAPTED FOR: Storage-based endpoint (endpoint is now a function, not immutable variable)
  */
 abstract contract OAppReceiverUpgradeable is IOAppReceiver, OAppCoreUpgradeable {
     // Custom error message for when the caller is not the registered endpoint/
@@ -22,8 +23,9 @@ abstract contract OAppReceiverUpgradeable is IOAppReceiver, OAppCoreUpgradeable 
      * @dev Ownable is not initialized here on purpose. It should be initialized in the child contract to
      * accommodate the different version of Ownable.
      */
-    function __OAppReceiver_init(address _delegate) internal onlyInitializing {
-        __OAppCore_init(_delegate);
+    /// @dev Initializes OAppReceiver with endpoint and delegate
+    function __OAppReceiver_init(address _endpoint, address _delegate) internal onlyInitializing {
+        __OAppCore_init(_endpoint, _delegate);
     }
 
     function __OAppReceiver_init_unchained() internal onlyInitializing {}
@@ -111,7 +113,7 @@ abstract contract OAppReceiverUpgradeable is IOAppReceiver, OAppCoreUpgradeable 
         bytes calldata _extraData
     ) public payable virtual {
         // Ensures that only the endpoint can attempt to lzReceive() messages to this OApp.
-        if (address(endpoint) != msg.sender) revert OnlyEndpoint(msg.sender);
+        if (address(endpoint()) != msg.sender) revert OnlyEndpoint(msg.sender);
 
         // Ensure that the sender matches the expected peer for the source endpoint.
         if (_getPeerOrRevert(_origin.srcEid) != _origin.sender) revert OnlyPeer(_origin.srcEid, _origin.sender);

@@ -1,20 +1,21 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import { OAppUpgradeable, Origin } from "@layerzerolabs/oapp-evm-upgradeable/contracts/oapp/OAppUpgradeable.sol";
 import { OAppOptionsType3Upgradeable } from "@layerzerolabs/oapp-evm-upgradeable/contracts/oapp/libs/OAppOptionsType3Upgradeable.sol";
 import { IOAppMsgInspector } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppMsgInspector.sol";
 
 import { OAppPreCrimeSimulatorUpgradeable } from "@layerzerolabs/oapp-evm-upgradeable/contracts/precrime/OAppPreCrimeSimulatorUpgradeable.sol";
-
 import { IOFT, SendParam, OFTLimit, OFTReceipt, OFTFeeDetail, MessagingReceipt, MessagingFee } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { OFTMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTMsgCodec.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
+import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 
 /**
  * @title OFTCore
  * @dev Abstract contract for the OftChain (OFT) token.
+ * @dev ADAPTED FOR: Solmate ERC20 + AccessControl + Storage-based endpoint
  */
 abstract contract OFTCoreUpgradeable is
     IOFT,
@@ -25,7 +26,10 @@ abstract contract OFTCoreUpgradeable is
     using OFTMsgCodec for bytes;
     using OFTMsgCodec for bytes32;
 
+    /// @custom:storage-location erc7201:layerzerov2.storage.oftcore
     struct OFTCoreStorage {
+        // Storage-based decimal conversion rate for upgradeability
+        uint256 decimalConversionRate;
         // Address of an optional contract to inspect both 'message' and 'options'
         address msgInspector;
     }
@@ -47,7 +51,6 @@ abstract contract OFTCoreUpgradeable is
     //  you can only display 1.23 -> uint(123).
     //  @dev To preserve the dust that would otherwise be lost on that conversion,
     //  we need to unify a denomination that can be represented on ALL chains inside of the OFT mesh
-    uint256 public immutable decimalConversionRate;
 
     // @notice Msg types that are used to identify the various OFT operations.
     // @dev This can be extended in child contracts for non-default oft operations
@@ -63,14 +66,9 @@ abstract contract OFTCoreUpgradeable is
         }
     }
 
-    /**
-     * @dev Constructor.
-     * @param _localDecimals The decimals of the token on the local chain (this chain).
-     * @param _endpoint The address of the LayerZero endpoint.
-     */
-    constructor(uint8 _localDecimals, address _endpoint) OAppUpgradeable(_endpoint) {
-        if (_localDecimals < sharedDecimals()) revert InvalidLocalDecimals();
-        decimalConversionRate = 10 ** (_localDecimals - sharedDecimals());
+    /// @dev Gets decimal conversion rate from storage
+    function decimalConversionRate() public view returns (uint256) {
+        return _getOFTCoreStorage().decimalConversionRate;
     }
 
     /**
@@ -83,6 +81,13 @@ abstract contract OFTCoreUpgradeable is
      * @dev If a new feature is added to the OFT cross-chain msg encoding, the version will be incremented.
      * ie. localOFT version(x,1) CAN send messages to remoteOFT version(x,1)
      */
+    /// @dev Gets message inspector address
+    function msgInspector() public view returns (address) {
+        OFTCoreStorage storage $ = _getOFTCoreStorage();
+        return $.msgInspector;
+    }
+
+    /// @dev Returns OFT interface ID and version
     function oftVersion() external pure virtual returns (bytes4 interfaceId, uint64 version) {
         return (type(IOFT).interfaceId, 1);
     }
@@ -95,18 +100,19 @@ abstract contract OFTCoreUpgradeable is
      * @dev Ownable is not initialized here on purpose. It should be initialized in the child contract to
      * accommodate the different version of Ownable.
      */
-    function __OFTCore_init(address _delegate) internal onlyInitializing {
-        __OApp_init(_delegate);
+    /// @dev Initializes OFTCore with endpoint, delegate, and decimals
+    function __OFTCore_init(address _lzEndpoint, address _delegate, uint8 _localDecimals) internal onlyInitializing {
+        __OApp_init(_lzEndpoint, _delegate);
         __OAppPreCrimeSimulator_init();
         __OAppOptionsType3_init();
+
+        OFTCoreStorage storage $ = _getOFTCoreStorage();
+
+        if (_localDecimals < sharedDecimals()) revert InvalidLocalDecimals();
+        $.decimalConversionRate = 10 ** (_localDecimals - sharedDecimals());
     }
 
     function __OFTCore_init_unchained() internal onlyInitializing {}
-
-    function msgInspector() public view returns (address) {
-        OFTCoreStorage storage $ = _getOFTCoreStorage();
-        return $.msgInspector;
-    }
 
     /**
      * @dev Retrieves the shared decimals of the OFT.
@@ -129,7 +135,8 @@ abstract contract OFTCoreUpgradeable is
      * @dev This is an optional contract that can be used to inspect both 'message' and 'options'.
      * @dev Set it to address(0) to disable it, or set it to a contract address to enable it.
      */
-    function setMsgInspector(address _msgInspector) public virtual onlyOwner {
+    /// @dev Sets message inspector (access control must be added by parent)
+    function setMsgInspector(address _msgInspector) public virtual {
         OFTCoreStorage storage $ = _getOFTCoreStorage();
         $.msgInspector = _msgInspector;
         emit MsgInspectorSet(_msgInspector);
@@ -322,7 +329,7 @@ abstract contract OFTCoreUpgradeable is
             // @dev The off-chain executor will listen and process the msg based on the src-chain-callers compose options passed.
             // @dev The index is used when a OApp needs to compose multiple msgs on lzReceive.
             // For default OFT implementation there is only 1 compose msg per lzReceive, thus its always 0.
-            endpoint.sendCompose(toAddress, _guid, 0 /* the index of the composed message*/, composeMsg);
+            endpoint().sendCompose(toAddress, _guid, 0, /* the index of the composed message*/ composeMsg);
         }
 
         emit OFTReceived(_guid, _origin.srcEid, toAddress, amountReceivedLD);
@@ -372,8 +379,10 @@ abstract contract OFTCoreUpgradeable is
      * @dev Prevents the loss of dust when moving amounts between chains with different decimals.
      * @dev eg. uint(123) with a conversion rate of 100 becomes uint(100).
      */
+    /// @dev Removes dust using storage-based conversion rate
     function _removeDust(uint256 _amountLD) internal view virtual returns (uint256 amountLD) {
-        return (_amountLD / decimalConversionRate) * decimalConversionRate;
+        uint256 rate = decimalConversionRate();
+        return (_amountLD / rate) * rate;
     }
 
     /**
@@ -381,8 +390,9 @@ abstract contract OFTCoreUpgradeable is
      * @param _amountSD The amount in shared decimals.
      * @return amountLD The amount in local decimals.
      */
+    /// @dev Converts shared decimals to local decimals using storage-based rate
     function _toLD(uint64 _amountSD) internal view virtual returns (uint256 amountLD) {
-        return _amountSD * decimalConversionRate;
+        return _amountSD * decimalConversionRate();
     }
 
     /**
@@ -393,8 +403,10 @@ abstract contract OFTCoreUpgradeable is
      * @dev Reverts if the _amountLD in shared decimals overflows uint64.
      * @dev eg. uint(2**64 + 123) with a conversion rate of 1 wraps around 2**64 to uint(123).
      */
+    /// @dev Converts local decimals to shared decimals using storage-based rate
     function _toSD(uint256 _amountLD) internal view virtual returns (uint64 amountSD) {
-        uint256 _amountSD = _amountLD / decimalConversionRate;
+        uint256 rate = decimalConversionRate();
+        uint256 _amountSD = _amountLD / rate;
         if (_amountSD > type(uint64).max) revert AmountSDOverflowed(_amountSD);
         return uint64(_amountSD);
     }
