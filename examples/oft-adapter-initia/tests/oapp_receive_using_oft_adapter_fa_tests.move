@@ -3,6 +3,7 @@ module oft::oapp_receive_using_oft_adapter_fa_tests {
     use std::account::create_signer_for_test;
     use std::event::was_event_emitted;
     use std::fungible_asset::{Self, MintRef};
+    use std::option;
     use std::primary_fungible_store;
     use std::string::utf8;
 
@@ -38,7 +39,7 @@ module oft::oapp_receive_using_oft_adapter_fa_tests {
 
         // Generates a fungible asset with 8 decimals
         let (fa, _, mint_ref) = create_fa(b"My Test Token");
-        oft_adapter_fa::initialize(oft_admin, fa, 6);
+        oft_adapter_fa::initialize(oft_admin, fa, 6, option::none());
 
         oapp_core::set_peer(oft_admin, SRC_EID, from_bytes32(from_address(@1234)));
         oapp_core::set_peer(oft_admin, DST_EID, from_bytes32(from_address(@4321)));

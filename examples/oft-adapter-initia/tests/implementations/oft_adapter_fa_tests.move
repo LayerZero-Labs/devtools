@@ -54,6 +54,7 @@ module oft::oft_adapter_fa_tests {
             // Some of the tests expect that that shared decimals is 6. If this is changed, the tests will need to be
             // updated (specifically the values need to be adjusted for dust)
             6,
+            option::none(),
         );
 
         mint_ref

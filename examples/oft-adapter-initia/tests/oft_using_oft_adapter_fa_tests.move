@@ -44,7 +44,7 @@ module oft::oft_using_oft_adapter_fa_tests {
 
         // Generates a fungible asset with 8 decimals
         let (fa, _, mint_ref) = create_fa(b"My Test Token");
-        oft_adapter_fa::initialize(oft_admin, fa, 6);
+        oft_adapter_fa::initialize(oft_admin, fa, 6, option::none());
 
         let remote_oapp = from_address(@2000);
         set_peer(oft_admin, DST_EID, from_bytes32(remote_oapp));
