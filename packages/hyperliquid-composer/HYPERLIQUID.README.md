@@ -159,6 +159,65 @@ This creates the asset bridge precompile `0x2000...abcd` (where `abcd` is the `c
 >
 > ⚠️ **Setup Guidance**: CoreDecimals - EVMDecimals must be within [-2,18] is a requirement for the hyperliquid protocol
 
+## Quote Assets (Fee Tokens)
+
+A **quote asset** (or fee token) is a token that can be used as the quote currency in trading pairs on HyperCore. When a token becomes a quote asset, Hyperliquid automatically creates a `HYPE/QUOTE_ASSET` spot market. Thus every quote asset for a `HYPE` spot market is a quote asset.
+
+It is permissionless to deploy spot markets for OTHER tokens as well.
+
+### Requirements Overview
+
+**Mainnet:**
+- Follow the complete requirements outlined in [Hyperliquid's Permissionless Spot Quote Assets documentation](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets)
+- Requires specific trading fee share configuration
+- Additional technical and liquidity requirements apply
+- Contact the Hyperliquid team for the most up-to-date requirements
+
+**Testnet (lighter requirements):**
+The requirements are more relaxed to facilitate testing:
+1. **Stake 50 HYPE tokens** (refer to [Hyperliquid's Permissionless Spot Quote Assets documentation](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets) for more details)
+2. **Create active limit orders** on both sides of your token's order book:
+   - Place at least one BUY limit order
+   - Place at least one SELL limit order
+   - Orders must be active before executing the `enable-quote-token` command
+   - You can place these orders via the [Hyperliquid Explorer](https://app.hyperliquid.xyz/)
+   
+   Example order book requirement:
+   ```
+   Price      Size        Total
+   1.0015     1,000.00    1,000.00  <- Active SELL order
+   -------- Spread: 0.0025 (0.250%) --------
+   0.9990     1,000.00    1,000.00  <- Active BUY order
+   ```
+
+3. After executing `enable-quote-token`:
+   - A `HYPE/YOUR_ASSET` trading pair is automatically created
+   - You must then maintain order book requirements for the `HYPE/YOUR_ASSET` pair (not required for testnet)
+   - Follow Hyperliquid's documentation for maintaining the `HYPE/ASSET` order book
+
+### Checking Quote Asset Status
+
+To verify if a token is a quote asset:
+
+```bash
+# Check specific token
+npx @layerzerolabs/hyperliquid-composer is-quote-asset \
+    --token-index <coreIndex> \
+    --network {testnet | mainnet}
+
+# List all quote assets
+npx @layerzerolabs/hyperliquid-composer is-quote-asset \
+    --network {testnet | mainnet}
+```
+
+### Composer Requirements for Quote Assets
+
+If you're deploying a quote asset token (or plan to make it one):
+- **Use `MyHyperLiquidComposer_FeeToken`** - This composer variant provides automatic user activation using the token itself as the fee token
+- Regular composers (`MyHyperliquidComposer`, `FeeAbstraction`, `Recoverable`) will work but require users to have HYPE for gas fees
+
+The deployment scripts automatically check if your token is a quote asset and guide you to use the appropriate composer type.
+
 ## The Asset Bridge
 
 Transactions can be sent to the asset bridge address `0x2000...abcd` (where `abcd` is the `coreIndexId` of the HIP-1 in hex) to send tokens between HyperEVM and HyperCore. This bridge is formed after the token linking step, until then the bridge does not exist.
@@ -838,10 +897,10 @@ npx @layerzerolabs/hyperliquid-composer trading-fee \
 
 This step enables the token to be used as a quote asset for trading pairs. This allows other tokens to form trading pairs against your token (e.g., TOKEN/YOUR_TOKEN instead of only YOUR_TOKEN/USDC).
 
-> ⚠️ **Requirements**: 
-> - Requires specific trading fee share value (see Step 6/7 above)
-> - Review all requirements at: [Permissionless Spot Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets)
-> - Contact the Hyperliquid team for the most up-to-date information
+> ⚠️ **Important**: Review the complete [Quote Assets (Fee Tokens)](#quote-assets-fee-tokens) section above for detailed requirements, including:
+> - Mainnet: Complete technical and liquidity requirements
+> - Testnet: Simplified requirements (50 HYPE stake + active order book)
+> - Order book maintenance for `HYPE/YOUR_ASSET` pair after enablement
 >
 > 📝 **Note**: This can be executed after the trading fee share is set and even after deployment and linking are complete.
 
@@ -852,6 +911,17 @@ npx @layerzerolabs/hyperliquid-composer enable-quote-token \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
+
+**Prerequisites:**
+- Trading fee share must be set (see Step 6/7 above)
+- **Testnet**: 50 HYPE staked + active BUY and SELL limit orders on your token's order book
+- **Mainnet**: All requirements per [Hyperliquid's documentation](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets)
+
+**After Execution:**
+- A `HYPE/YOUR_ASSET` trading pair is automatically created
+- You must maintain order book requirements for the new `HYPE/ASSET` pair
+- Verify quote asset status with the `is-quote-asset` command
+
 
 ### Step 6.7/7 `enableAlignedQuoteToken` (Optional)
 
