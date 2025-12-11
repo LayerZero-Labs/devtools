@@ -179,6 +179,17 @@ npx @layerzerolabs/hyperliquid-composer finalize-evm-contract \
     [--log-level {info | verbose}]
 ```
 
+**Alternative: Using CoreWriter directly with Foundry**
+
+If you prefer to use Foundry's `cast` command, you can generate the calldata and send the transaction directly:
+
+```bash
+npx @layerzerolabs/hyperliquid-composer finalize-evm-contract-corewriter \
+    --token-index <coreIndex> \
+    --nonce <deployment-nonce> \
+    --network {testnet | mainnet}
+```
+
 ## Post-Launch Management
 
 ### Freeze/Unfreeze Users
