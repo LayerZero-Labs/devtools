@@ -319,18 +319,90 @@ contract HyperLiquidComposer is IHyperLiquidComposer {
 }
 ```
 
-### There are 2 extensions for Hyperliquid Composers
+### There are 3 extensions for Hyperliquid Composers
 
 #### Recovery Extension
 
-This gives you the ability to pull tokens our of the composer on hypercore and into the composer's address on hyperevm.
-The priviledged address can also send those tokens to itself on HyperEVM, giving you the ability to recover locked tokens.
+This gives you the ability to pull tokens out of the composer on HyperCore and into the composer's address on HyperEVM.
+The privileged address can also send those tokens to itself on HyperEVM, giving you the ability to recover locked tokens.
+
+**Use Case:** Useful for any token deployment where you want the ability to recover tokens that may become stuck in the composer contract.
+
+**Constructor Arguments:**
+- `oft`: OFT address
+- `coreIndex`: Core spot index
+- `weiDiff`: Decimal difference between EVM and Core
+- `recoveryAddress`: Address with recovery privileges
 
 #### FeeToken Extension
 
-This extension is for tokens that are a `FeeToken` - can be used to activate users on hypercore. Should a composer deployed with this extension notice that a user's address has not been activated then it would send across bridge across the whole amount of tokens to HyperCore and then send across `amt - activationFee` to the user. This consumes `activationFee` from the composer's address.
+This extension is for tokens that are a **quote asset** (fee token) - tokens that can be used to activate users on HyperCore. 
 
-Ex: User sends `1.5 USDT0` to an new address. The composer sends over `1.5 USDT0` to itself and then makes a core transfer of `0.5 USDT0`. The `1 USDT0` is consumed as Fee.
+**How it Works:**
+When the composer detects that a user's address has not been activated on HyperCore, it:
+1. Sends the full amount of tokens across the bridge to HyperCore
+2. Transfers `amt - activationFee` to the user
+The transfer automatically consumes `activationFee` from the composer's address to activate the user
+
+**Example:** User sends `1.5 USDT0` to a new address. The composer sends over `1.5 USDT0` to itself on HyperCore, then makes a core transfer of `0.5 USDT0` to the user. The `1.0 USDT0` activation fee is automatically consumed.
+
+**Requirements:**
+- Token **must be a quote asset** (see [Quote Assets section](#quote-assets-fee-tokens))
+- Deployment scripts automatically verify this requirement
+- If not a quote asset, deployment will fail with guidance to use alternative composers
+
+**Constructor Arguments:**
+- `oft`: OFT address
+- `coreIndex`: Core spot index
+- `weiDiff`: Decimal difference between EVM and Core
+
+On-chain deployments:
+USDT0 : [0x80123Ab57c9bc0C452d6c18F92A653a4ee2e7585](https://hyperevmscan.io/address/0x80123Ab57c9bc0C452d6c18F92A653a4ee2e7585)
+
+#### FeeAbstraction Extension
+
+This extension provides automatic user activation using a **different token** for fees, combined with price oracle integration for dynamic fee calculation.
+
+**How it Works:**
+1. Checks if a user's address is activated on HyperCore
+2. Uses the hyperliquid's spot pair oracle to convert between your token and the fee token value
+3. Can charge an overhead fee (set on deployment) in addition to the base activation cost
+4. If there is insufficient quote asset balance, the composer will revert the transaction and user gets tokens on HyperEVM
+
+**Key Features:**
+- **Price Oracle Integration**: Queries real-time prices via `spotId` (e.g., 107 for HYPE/USDC)
+- **Overhead Fee**: Configurable additional fee in cents (e.g., 100 = $1.00 overhead on top of $1.00 base activation)
+- **Recovery Capability**: Includes recovery address functionality for fee management
+- **Flexible Fee Token**: Can work with any token, not limited to quote assets
+
+**Example Configuration:**
+- SpotId: `107` (HYPE/USDC pair for price queries)
+- Activation Overhead Fee: `100` cents (adds $1.00 overhead)
+- Total User Fee: $2.00 (Base $1.00 + Overhead $1.00)
+
+**Use Case:** Ideal for non-quote-asset tokens where you want to provide seamless user activation without requiring users to hold quote assets.
+
+**Constructor Arguments:**
+- `oft`: OFT address
+- `coreIndex`: Core spot index
+- `weiDiff`: Decimal difference between EVM and Core
+- `spotId`: Spot pair ID for price queries (e.g., 107 for HYPE/USDC)
+- `activationOverheadFee`: Overhead fee in cents
+- `recoveryAddress`: Address with recovery privileges for fee management
+
+On-chain deployments:
+ENA : [0x5879d9821909A41cd3A382A990A4A5A6Ca77F2f0](https://hyperevmscan.io/address/0x5879d9821909A41cd3A382A990A4A5A6Ca77F2f0)
+
+### Choosing the Right Composer
+
+| Composer Type | Best For | Key Feature |
+|--------------|----------|-------------|
+| **Regular** | Standard tokens | Basic functionality, no extensions |
+| **Recoverable** | Any token | Token recovery capability |
+| **FeeToken** | **Quote assets only** | Automatic activation using your token |
+| **FeeAbstraction** | Non-quote assets | Automatic activation using oracle-priced fees |
+
+> ⚠️ **Important**: The deployment scripts automatically check if your token is a quote asset and guide you to use the appropriate composer type. See [Quote Assets (Fee Tokens)](#quote-assets-fee-tokens) for more details.
 
 ## LayerZero Transaction on HyperEVM
 
