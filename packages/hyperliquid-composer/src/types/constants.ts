@@ -18,6 +18,11 @@ export const ENDPOINTS = {
     EXCHANGE: '/exchange',
 }
 
+export const HYPE_INDEX = {
+    MAINNET: 150,
+    TESTNET: 1105,
+} as const
+
 export const MAX_HYPERCORE_SUPPLY = BigInt(2) ** BigInt(64) - BigInt(1) // 18446744073709551615n
 
 /**

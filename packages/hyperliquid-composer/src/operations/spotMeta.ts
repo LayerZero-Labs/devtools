@@ -9,6 +9,7 @@ import {
     SpotPairsWithMetadata,
     SpotPairDeployAuctionStatus,
 } from '../types'
+import { HYPE_INDEX } from '../types/constants'
 
 export async function getSpotMeta(
     signer: IHyperliquidSigner | null,
@@ -162,4 +163,61 @@ export async function getExistingQuoteTokens(
         .filter((token): token is number => token !== undefined)
 
     return [...new Set(quoteTokens)] // Remove duplicates
+}
+
+/**
+ * Checks if a token is a quote asset by looking at HYPE trading pairs.
+ * When any core spot is promoted to a quote asset (fee token), the Hyperliquid protocol
+ * automatically deploys a new spot market for HYPE/QUOTE_ASSET.
+ *
+ * @param isTestnet Whether to query testnet or mainnet
+ * @param tokenIndex The token index to check (optional - if not provided, returns all quote assets)
+ * @param logLevel Logging level for the client
+ * @returns Object containing isQuoteAsset boolean and tokenName string
+ */
+export async function isQuoteAsset(
+    isTestnet: boolean,
+    tokenIndex: number | null,
+    logLevel: string
+): Promise<{ isQuoteAsset: boolean; tokenName: string; allQuoteAssets?: Array<{ index: number; name: string }> }> {
+    // Get HYPE token index based on network
+    const hypeTokenIndex = isTestnet ? HYPE_INDEX.TESTNET : HYPE_INDEX.MAINNET
+
+    // Get all HYPE trading pairs with metadata
+    const { pairs, tokens } = await getSpotPairsWithMetadata(isTestnet, hypeTokenIndex, logLevel)
+
+    // Extract all quote assets paired with HYPE
+    const quoteAssets = pairs
+        .map((pair) => {
+            // Find the token that's NOT HYPE
+            const quoteTokenIndex = pair.tokens.find((token) => token !== hypeTokenIndex)
+            if (quoteTokenIndex === undefined) {
+                return null
+            }
+
+            // Find the token metadata
+            const tokenMetadata = tokens.find((token) => token.index === quoteTokenIndex)
+            return {
+                index: quoteTokenIndex,
+                name: tokenMetadata?.name || `Token-${quoteTokenIndex}`,
+            }
+        })
+        .filter((asset): asset is { index: number; name: string } => asset !== null)
+
+    // If no tokenIndex provided, return all quote assets
+    if (tokenIndex === null) {
+        return {
+            isQuoteAsset: false,
+            tokenName: '',
+            allQuoteAssets: quoteAssets,
+        }
+    }
+
+    // Check if the provided tokenIndex is in the list of quote assets
+    const matchedAsset = quoteAssets.find((asset) => asset.index === tokenIndex)
+
+    return {
+        isQuoteAsset: matchedAsset !== undefined,
+        tokenName: matchedAsset?.name || '',
+    }
 }
