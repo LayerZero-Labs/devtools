@@ -126,6 +126,7 @@ npx @layerzerolabs/hyperliquid-composer trading-fee \
 Enables your token to be used as a quote asset for trading pairs.
 
 > ⚠️ **Important**: Review the complete [Quote Assets (Fee Tokens)](https://github.com/LayerZero-Labs/devtools/tree/main/packages/hyperliquid-composer/HYPERLIQUID.README.md#quote-assets-fee-tokens) section in the main documentation for:
+>
 > - Mainnet requirements (technical and liquidity)
 > - Testnet requirements (50 HYPE stake + active order book)
 > - Order book maintenance for `HYPE/YOUR_ASSET` pair
@@ -532,6 +533,7 @@ npx @layerzerolabs/hyperliquid-composer trading-fee \
 This step enables the token to be used as a quote asset for trading pairs. This allows other tokens to form trading pairs against your token (e.g., TOKEN/YOUR_TOKEN instead of only YOUR_TOKEN/USDC).
 
 > ⚠️ **Important**: Review the complete [Quote Assets (Fee Tokens)](../../packages/hyperliquid-composer/HYPERLIQUID.README.md#quote-assets-fee-tokens) section in the main documentation for detailed requirements, including:
+>
 > - Mainnet: Complete technical and liquidity requirements
 > - Testnet: Simplified requirements (50 HYPE stake + active order book)
 > - Order book maintenance for `HYPE/YOUR_ASSET` pair after enablement
@@ -547,15 +549,16 @@ npx @layerzerolabs/hyperliquid-composer enable-quote-token \
 ```
 
 **Prerequisites:**
+
 - Trading fee share must be set (see Step 6/7 above)
 - **Testnet**: 50 HYPE staked + active BUY and SELL limit orders on your token's order book
 - **Mainnet**: All requirements per [Hyperliquid's documentation](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets)
 
 **After Execution:**
+
 - A `HYPE/YOUR_ASSET` trading pair is automatically created
 - You must maintain order book requirements for the new `HYPE/ASSET` pair
 - Verify quote asset status with the `is-quote-asset` command
-
 
 ### Step 6.7/7 `enableAlignedQuoteToken` (Optional)
 
