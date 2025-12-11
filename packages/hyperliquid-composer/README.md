@@ -285,6 +285,25 @@ npx @layerzerolabs/hyperliquid-composer spot-auction-status \
     [--log-level {info | verbose}]
 ```
 
+### Check if Token is Quote Asset
+
+Check if a specific token is a quote asset, or list all quote assets when no token index is provided. Quote assets are automatically paired with HYPE when promoted by the Hyperliquid protocol.
+
+```bash
+# List all quote assets
+npx @layerzerolabs/hyperliquid-composer is-quote-asset \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+
+# Check if specific token is a quote asset
+npx @layerzerolabs/hyperliquid-composer is-quote-asset \
+    --token-index <coreIndex> \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+```
+
+The command returns `yes` or `no` when checking a specific token, or lists all quote assets when no token index is provided.
+
 ## Utilities
 
 ### Convert Token Index to Bridge Address
