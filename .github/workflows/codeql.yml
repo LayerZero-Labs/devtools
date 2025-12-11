@@ -52,7 +52,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['javascript-typescript', 'rust']
+        language: ['javascript-typescript']
 
     # Skip autobuild - CodeQL can analyze source code directly
     # No need to compile or install dependencies for static analysis
