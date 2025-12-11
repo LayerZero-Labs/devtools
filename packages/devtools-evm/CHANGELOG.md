@@ -1,5 +1,21 @@
 # @layerzerolabs/devtools-evm
 
+## 3.0.2
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+- Updated dependencies [a2851bf]
+- Updated dependencies [afb4dd3]
+  - @layerzerolabs/devtools@2.0.4
+  - @layerzerolabs/io-devtools@0.3.2
+
+## 3.0.1
+
+### Patch Changes
+
+- ca5a1f9: add support for Safe API keys
+
 ## 3.0.0
 
 ### Patch Changes

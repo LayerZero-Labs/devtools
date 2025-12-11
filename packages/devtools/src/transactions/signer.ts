@@ -14,6 +14,7 @@ import { groupTransactionsByEid } from './utils'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import assert from 'assert'
 import type { OmniPoint } from '@/omnigraph'
+import { SignAndSend, SignAndSendResult } from './signerTypes'
 
 /**
  * Base class for all signers containing common functionality
@@ -48,25 +49,6 @@ export abstract class OmniSignerBase implements OmniSigner {
         )
     }
 }
-
-export type SignAndSendResult = [
-    // All the successful transactions
-    successful: OmniTransactionWithReceipt[],
-    // The failed transactions along with the errors
-    errors: OmniTransactionWithError[],
-    // All the transactions that have not been executed (including the failed ones)
-    pending: OmniTransaction[],
-]
-
-export type OnSignAndSendProgress = (
-    result: OmniTransactionWithReceipt,
-    results: OmniTransactionWithReceipt[]
-) => unknown
-
-export type SignAndSend = (
-    transactions: OmniTransaction[],
-    onProgress?: OnSignAndSendProgress
-) => Promise<SignAndSendResult>
 
 /**
  * Creates a sign & send utility for a list of transaction

@@ -1,5 +1,24 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 1.0.9
+
+### Patch Changes
+
+- bfea443: alignedQuoteAsset support on core spot deployment + instructions on how to create a custom hyperliquid sdk action for sign + submit
+
+## 1.0.8
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+- afb4dd3: feat: fireblocks and fordefi mpc signers for hyperliquid sdk
+
+## 1.0.7
+
+### Patch Changes
+
+- fe104a3: update layerzero config to use metadata
+
 ## 1.0.6
 
 ### Patch Changes

@@ -2,7 +2,13 @@ import { BaseExchangeRequest } from './base'
 import { RegisterHyperliquidity, SetDeployerTradingFeeShare } from './spotDeploy'
 import { RegisterSpot } from './spotDeploy'
 import { Genesis, UserGenesis } from './spotDeploy'
-import { EnableFreezePrivilege, FreezeUser, RevokeFreezePrivilege, EnableQuoteToken } from './spotDeploy'
+import {
+    EnableFreezePrivilege,
+    FreezeUser,
+    RevokeFreezePrivilege,
+    EnableQuoteToken,
+    EnableAlignedQuoteToken,
+} from './spotDeploy'
 
 export interface EvmUserModifyRequest extends BaseExchangeRequest {
     action: {
@@ -71,6 +77,10 @@ export interface SpotDeployAction extends BaseExchangeRequest {
         | {
               type: 'spotDeploy'
               enableQuoteToken: EnableQuoteToken
+          }
+        | {
+              type: 'spotDeploy'
+              enableAlignedQuoteToken: EnableAlignedQuoteToken
           }
 }
 

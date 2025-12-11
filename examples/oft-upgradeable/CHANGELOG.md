@@ -1,5 +1,17 @@
 # @layerzerolabs/oft-upgradeable-example
 
+## 0.3.9
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+
+## 0.3.8
+
+### Patch Changes
+
+- 7617b25: patch: make upgradeable deploy script similar to hardhat-deploy
+
 ## 0.3.7
 
 ### Patch Changes

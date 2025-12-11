@@ -1,5 +1,41 @@
 # @layerzerolabs/lzapp-migration-example
 
+## 0.3.9
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+- Updated dependencies [a2851bf]
+- Updated dependencies [afb4dd3]
+  - @layerzerolabs/ua-devtools-evm-hardhat@9.0.1
+  - @layerzerolabs/devtools-evm-hardhat@4.0.4
+  - @layerzerolabs/ua-devtools-solana@8.0.5
+  - @layerzerolabs/protocol-devtools@3.0.2
+  - @layerzerolabs/devtools-solana@3.0.5
+  - @layerzerolabs/ua-devtools-evm@7.0.1
+  - @layerzerolabs/ua-devtools@5.0.2
+  - @layerzerolabs/devtools@2.0.4
+  - @layerzerolabs/io-devtools@0.3.2
+
+## 0.3.8
+
+### Patch Changes
+
+- d720011: oft-solana: require user to confirm max total token supply given a local decimals value
+- d720011: print max supply given solana local decimals
+- Updated dependencies [d720011]
+  - @layerzerolabs/devtools-solana@3.0.4
+  - @layerzerolabs/devtools@2.0.3
+
+## 0.3.7
+
+### Patch Changes
+
+- ccc14e0: fix default ALTs not used
+- Updated dependencies [06dc63b]
+  - @layerzerolabs/devtools-solana@3.0.3
+  - @layerzerolabs/devtools@2.0.2
+
 ## 0.3.6
 
 ### Patch Changes

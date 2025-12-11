@@ -1,14 +1,20 @@
 import { encode } from '@msgpack/msgpack'
 import { ethers, Wallet } from 'ethers'
 import { keccak256 } from 'ethers/lib/utils'
-import { Wallet as ethersV6Wallet } from 'ethers-v6'
 
-import { loadEnv } from '@/io'
+import { loadEnv, loadFordefiConfig, loadFireblocksConfig } from '@/io'
 import { Hex } from '@layerzerolabs/lz-utilities'
+import { LogLevel, createModuleLogger } from '@layerzerolabs/io-devtools'
 
-import { isAbstractEthersV5Signer } from './utils'
+import { EthersSigner } from './ethers-signer'
+import { FordefiSigner } from './fordefi-signer'
+import { FireblocksSigner } from './fireblocks-signer'
+import type { IHyperliquidSigner, FordefiConfig, FireblocksConfig } from './interfaces'
 
 import type { ValueType } from '@/types'
+import { LOGGER_MODULES } from '@/types/cli-constants'
+
+const logger = createModuleLogger(LOGGER_MODULES.BASE_SIGNER, LogLevel.info)
 
 /**
  * Converts a hex string address to a Buffer.
@@ -60,7 +66,7 @@ export function computeL1ActionHash(action: ValueType, nonce: number, vaultAddre
  * @dev Signature generation depends on the order of the action keys.
  * @dev I just ripped off - https://github.com/hyperliquid-dex/hyperliquid-python-sdk/blob/master/hyperliquid/utils/signing.py#L152-L177
  *
- * @param args.wallet - Wallet to sign the action.
+ * @param args.signer - Signer to sign the action.
  * @param args.action - The action to be signed.
  * @param args.nonce - Unique request identifier (recommended current timestamp in ms).
  * @param args.isTestnet - Indicates if the action is for the testnet. Default is `false`.
@@ -69,13 +75,13 @@ export function computeL1ActionHash(action: ValueType, nonce: number, vaultAddre
  * @returns The signature components r, s, and v.
  */
 export async function signL1Action(args: {
-    wallet: Wallet
+    signer: IHyperliquidSigner
     action: ValueType
     nonce: number
     isTestnet?: boolean
     vaultAddress: Hex | null
 }): Promise<{ r: Hex; s: Hex; v: number }> {
-    const { wallet, action, nonce, isTestnet = false, vaultAddress } = args
+    const { signer, action, nonce, isTestnet = false, vaultAddress } = args
 
     const domain = {
         name: 'Exchange',
@@ -95,15 +101,15 @@ export async function signL1Action(args: {
         source: isTestnet ? 'b' : 'a',
         connectionId: actionHash,
     }
-    const signature = await abstractSignTypedData({ wallet, domain, types, message })
+    const signature = await abstractSignTypedData({ signer, domain, types, message })
     return splitSignature(signature)
 }
 
 /**
- * @dev Signs typed data with the provided wallet using EIP-712.
+ * @dev Signs typed data using the provided signer
  */
 async function abstractSignTypedData(args: {
-    wallet: Wallet
+    signer: IHyperliquidSigner
     domain: {
         name: string
         version: string
@@ -118,31 +124,20 @@ async function abstractSignTypedData(args: {
     }
     message: { [key: string]: unknown }
 }): Promise<Hex> {
-    const { wallet, domain, types, message } = args
+    const { signer, domain, types, message } = args
 
-    if (isAbstractEthersV5Signer(wallet)) {
-        /**
-         * @dev Note we need ethers-v6 to sign typed data - this is because ethers-v5 EIP-712 signing is not stable.
-         *
-         * @dev Experimental feature (this method name will change)
-         * @dev https://docs.ethers.org/v5/api/signer/#Signer-signTypedData
-         *
-         * @dev This does not have the warning and is stable.
-         * @dev https://docs.ethers.org/v6/api/providers/#Signer-signTypedData
-         */
-        const signerv6 = new ethersV6Wallet(wallet.privateKey)
-        const signature = await signerv6.signTypedData(domain, types, message)
+    // Sign using the signer interface (works for both Ethers and Fordefi)
+    const signature = await signer.signTypedData(domain, types, message)
 
-        const signedBy = await ethers.utils.verifyTypedData(domain, types, message, signature)
+    // Verify signature matches signer address
+    const signedBy = ethers.utils.verifyTypedData(domain, types, message, signature)
+    const signerAddress = await signer.getAddress()
 
-        if (signedBy !== wallet.address) {
-            throw new Error('Invalid signature')
-        }
-
-        return signature as Hex
-    } else {
-        throw new Error('Unsupported wallet for signing typed data')
+    if (signedBy.toLowerCase() !== signerAddress.toLowerCase()) {
+        throw new Error('Invalid signature: signed address does not match signer address')
     }
+
+    return signature as Hex
 }
 
 /** Splits a signature hexadecimal string into its components. */
@@ -157,17 +152,73 @@ export function getTimestampMs(): number {
     return Date.now()
 }
 
-export async function getHyperliquidWallet(privateKey?: string) {
+/**
+ * Get a Hyperliquid signer from environment variables or CLI args.
+ * Supports private key (Ethers), Fordefi, and Fireblocks signing.
+ *
+ * Priority:
+ * 1. Fordefi config (if provided via args or env)
+ * 2. Fireblocks config (if provided via args or env)
+ * 3. Private key (if provided via args or env)
+ *
+ * @param privateKey - Optional private key override
+ * @param fordefiConfig - Optional Fordefi configuration override
+ * @param fireblocksConfig - Optional Fireblocks configuration override
+ * @returns IHyperliquidSigner implementation
+ */
+export async function getHyperliquidSigner(
+    privateKey?: string,
+    fordefiConfig?: FordefiConfig,
+    fireblocksConfig?: FireblocksConfig
+): Promise<IHyperliquidSigner> {
+    // Try Fordefi first (from args or env)
+    const fordefiConfigResolved = fordefiConfig ?? loadFordefiConfig()
+    if (fordefiConfigResolved) {
+        logger.info('Using Fordefi signer for Hyperliquid actions')
+        return new FordefiSigner(fordefiConfigResolved)
+    }
+
+    // Try Fireblocks second (from args or env)
+    const fireblocksConfigResolved = fireblocksConfig ?? loadFireblocksConfig()
+    if (fireblocksConfigResolved) {
+        logger.info('Using Fireblocks signer for Hyperliquid actions')
+        return new FireblocksSigner(fireblocksConfigResolved)
+    }
+
+    // Fall back to private key
+    if (privateKey) {
+        return new EthersSigner(privateKey)
+    }
+
+    const env = loadEnv()
+    const envPrivateKey = env.PRIVATE_KEY_HYPERLIQUID
+    if (!envPrivateKey) {
+        logger.error(
+            'No signing method configured. Please set either:\n' +
+                '  - PRIVATE_KEY_HYPERLIQUID (for Ethers signing), or\n' +
+                '  - FORDEFI_ACCESS_TOKEN, FORDEFI_PRIVATE_KEY, FORDEFI_VAULT_ID, FORDEFI_CHAIN (for Fordefi signing), or\n' +
+                '  - FIREBLOCKS_API_KEY, FIREBLOCKS_SECRET_KEY, FIREBLOCKS_VAULT_ACCOUNT_ID (for Fireblocks signing)'
+        )
+        process.exit(1)
+    }
+
+    return new EthersSigner(envPrivateKey)
+}
+
+/**
+ * @deprecated Use getHyperliquidSigner instead. This is kept for backward compatibility.
+ */
+export async function getHyperliquidWallet(privateKey?: string): Promise<Wallet> {
     if (privateKey) {
         return new Wallet(privateKey)
-    } else {
-        const env = loadEnv()
-        const privateKey = env.PRIVATE_KEY_HYPERLIQUID
-        if (!privateKey) {
-            console.error('PRIVATE_KEY_HYPERLIQUID is not set in .env file')
-            process.exit(1)
-        }
-
-        return new Wallet(privateKey)
     }
+
+    const env = loadEnv()
+    const envPrivateKey = env.PRIVATE_KEY_HYPERLIQUID
+    if (!envPrivateKey) {
+        logger.error('PRIVATE_KEY_HYPERLIQUID is not set in .env file')
+        process.exit(1)
+    }
+
+    return new Wallet(envPrivateKey)
 }

@@ -19,6 +19,13 @@ export interface PrivateKeyArgs extends BaseArgs {
     privateKey?: string
 }
 
+export interface FordefiArgs extends BaseArgs {
+    fordefiApiUrl?: string
+    fordefiAccessToken?: string
+    fordefiVaultId?: string
+    fordefiChain?: string
+}
+
 export interface UserArgs extends BaseArgs {
     user: string
 }
@@ -61,5 +68,6 @@ export interface RegisterTradingSpotArgs extends TokenIndexArgs, PrivateKeyArgs 
 export interface EnableTokenFreezePrivilegeArgs extends TokenIndexArgs, PrivateKeyArgs {}
 export interface RevokeTokenFreezePrivilegeArgs extends TokenIndexArgs, PrivateKeyArgs {}
 export interface EnableTokenQuoteAssetArgs extends TokenIndexArgs, PrivateKeyArgs {}
+export interface EnableTokenAlignedQuoteAssetArgs extends TokenIndexArgs, PrivateKeyArgs {}
 export interface RequestEvmContractArgs extends TokenIndexArgs, PrivateKeyArgs {}
 export interface FinalizeEvmContractArgs extends TokenIndexArgs, PrivateKeyArgs {}

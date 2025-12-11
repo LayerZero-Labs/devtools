@@ -116,9 +116,10 @@ export async function sendSolana({
     }
 
     // 6️⃣ Lookup table addresses
-    const lookupTableAddresses = addressLookupTables
-        ? addressLookupTables.map((addr) => publicKey(addr))
-        : [(await getDefaultAddressLookupTable(connection, umi, srcEid)).lookupTableAddress]
+    const lookupTableAddresses =
+        addressLookupTables && addressLookupTables.length > 0
+            ? addressLookupTables.map((addr) => publicKey(addr))
+            : [(await getDefaultAddressLookupTable(connection, umi, srcEid)).lookupTableAddress]
 
     // 7️⃣ Quote (use our overridden `programId`)
     logger.info('Quoting the native gas cost for the send transaction...')

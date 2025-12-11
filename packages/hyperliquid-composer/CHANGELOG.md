@@ -1,5 +1,25 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 2.0.4
+
+### Patch Changes
+
+- bfea443: alignedQuoteAsset support on core spot deployment + instructions on how to create a custom hyperliquid sdk action for sign + submit
+
+## 2.0.3
+
+### Patch Changes
+
+- afb4dd3: feat: fireblocks and fordefi mpc signers for hyperliquid sdk
+- Updated dependencies [a2851bf]
+  - @layerzerolabs/oapp-evm@0.4.1
+
+## 2.0.2
+
+### Patch Changes
+
+- 06dc63b: quality of life improvements
+
 ## 2.0.1
 
 ### Patch Changes

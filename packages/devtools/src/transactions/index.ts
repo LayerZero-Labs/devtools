@@ -1,4 +1,5 @@
 export * from './format'
 export * from './signer'
+export * from './signerTypes'
 export * from './types'
 export * from './utils'

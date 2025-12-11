@@ -1,5 +1,37 @@
 # @layerzerolabs/devtools-solana
 
+## 3.0.5
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+- Updated dependencies [a2851bf]
+- Updated dependencies [afb4dd3]
+  - @layerzerolabs/devtools@2.0.4
+  - @layerzerolabs/io-devtools@0.3.2
+
+## 3.0.4
+
+### Patch Changes
+
+- d720011: print max supply given solana local decimals
+- Updated dependencies [d720011]
+  - @layerzerolabs/devtools@2.0.3
+
+## 3.0.3
+
+### Patch Changes
+
+- 06dc63b: quality of life improvements
+- Updated dependencies [06dc63b]
+  - @layerzerolabs/devtools@2.0.2
+
+## 3.0.2
+
+### Patch Changes
+
+- ca5a1f9: add support for Safe API keys
+
 ## 3.0.1
 
 ### Patch Changes

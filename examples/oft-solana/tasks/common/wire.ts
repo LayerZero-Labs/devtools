@@ -38,6 +38,7 @@ interface Args {
     isSolanaInitConfig: boolean // For internal use only. This helps us to control which code runs depdending on whether the task ran is wire or init-config
     oappConfig: string
     internalConfigurator?: OAppConfigurator
+    dryRun?: boolean
 }
 
 /**
@@ -122,7 +123,7 @@ task(TASK_LZ_OAPP_WIRE)
             'Configure OFT',
             async (subtaskArgs: SubtaskConfigureTaskArgs<OAppOmniGraph, IOApp>, _hre, runSuper) => {
                 // start of pre-wiring checks. we only do this when the current task is wire. if the current task is init-config, we shouldn't run this.
-                if (!args.isSolanaInitConfig) {
+                if (!args.isSolanaInitConfig && !args.dryRun) {
                     logger.verbose('Running pre-wiring checks...')
                     const { graph } = subtaskArgs
                     for (const connection of graph.connections) {
