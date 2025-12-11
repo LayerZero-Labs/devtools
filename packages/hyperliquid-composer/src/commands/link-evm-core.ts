@@ -5,8 +5,13 @@ import { getCoreSpotDeployment, writeUpdatedCoreSpotDeployment } from '@/io/pars
 import { getHyperliquidSigner } from '@/signer'
 import { setRequestEvmContract, setFinalizeEvmContract } from '@/operations'
 import { LOGGER_MODULES } from '@/types/cli-constants'
-import { RequestEvmContractArgs, FinalizeEvmContractArgs } from '@/types'
+import { RequestEvmContractArgs, FinalizeEvmContractArgs, FinalizeEvmContractCorewriterArgs } from '@/types'
+import { RPC_URLS } from '@/types/constants'
 import { ethers } from 'ethers'
+
+const COREWRITER_ADDRESS = '0x3333333333333333333333333333333333333333'
+const FINALIZE_EVM_CONTRACT_ACTION_TYPE_PREFIX = '0x01000008'
+const ACTION_TYPE_FINALIZE = 1
 
 export async function requestEvmContract(args: RequestEvmContractArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
@@ -144,4 +149,47 @@ export async function finalizeEvmContract(args: FinalizeEvmContractArgs): Promis
     } catch (error) {
         process.exit(1)
     }
+}
+
+/**
+ * Generates the calldata for finalizing an EVM contract link using the CoreWriter precompile
+ * This allows users to send the transaction using Foundry's cast command
+ */
+export async function finalizeEvmContractCorewriter(args: FinalizeEvmContractCorewriterArgs): Promise<void> {
+    setDefaultLogLevel(args.logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.FINALIZE_EVM_CONTRACT_COREWRITER, args.logLevel)
+    logger.verbose(JSON.stringify(args, null, 2))
+
+    const tokenIndex = parseInt(args.tokenIndex)
+    const nonce = parseInt(args.nonce)
+    const network = args.network
+    const isTestnet = network === 'testnet'
+
+    // Step 1: Encode the action parameters (tokenIndex, actionType, nonce)
+    const encodedParams = ethers.utils.defaultAbiCoder.encode(
+        ['uint64', 'uint8', 'uint64'],
+        [tokenIndex, ACTION_TYPE_FINALIZE, nonce]
+    )
+
+    // Step 2: Pack the action type prefix with the encoded parameters
+    const packedData = ethers.utils.solidityPack(
+        ['bytes', 'bytes'],
+        [FINALIZE_EVM_CONTRACT_ACTION_TYPE_PREFIX, encodedParams]
+    )
+
+    // Step 3: Create the calldata for sendRawAction(bytes)
+    const iface = new ethers.utils.Interface(['function sendRawAction(bytes)'])
+    const calldata = iface.encodeFunctionData('sendRawAction', [packedData])
+
+    const rpcUrl = isTestnet ? RPC_URLS.TESTNET : RPC_URLS.MAINNET
+
+    // Print full usage instructions
+    logger.info(`\n=== Finalize EVM Contract CoreWriter Calldata ===\n`)
+    logger.info(`Token Index: ${tokenIndex}`)
+    logger.info(`Nonce: ${nonce}`)
+    logger.info(`Calldata:\n${calldata}\n`)
+    logger.info(`Usage:\n`)
+    logger.info(
+        `cast send ${COREWRITER_ADDRESS} \\\n    ${calldata} \\\n    --rpc-url ${rpcUrl} \\\n    --private-key $EVM_TOKEN_DEPLOYER\n`
+    )
 }
