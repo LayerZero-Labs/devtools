@@ -131,7 +131,15 @@ npx @layerzerolabs/hyperliquid-composer trading-fee \
 
 ### 7. Enable Quote Token Capability (Optional)
 
-Enables your token to be used as a quote asset for trading pairs. **Dependency:** Requires specific trading fee share value (see Step 6 above). See: [Permissionless Spot Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets)
+Enables your token to be used as a quote asset for trading pairs.
+
+> ⚠️ **Important**: Review the complete [Quote Assets (Fee Tokens)](./HYPERLIQUID.README.md#quote-assets-fee-tokens) section for:
+> - Mainnet requirements (technical and liquidity)
+> - Testnet requirements (50 HYPE stake + active order book)
+> - Order book maintenance for `HYPE/YOUR_ASSET` pair
+> - Composer selection guidance (use `FeeToken` variant for quote assets)
+
+**Dependency:** Requires trading fee share configuration (see Step 6 above).
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer enable-quote-token \
