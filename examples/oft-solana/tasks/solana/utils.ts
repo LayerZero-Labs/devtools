@@ -1,6 +1,7 @@
 import { Umi, publicKey } from '@metaplex-foundation/umi'
 import { toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
-import { Connection } from '@solana/web3.js'
+import { Connection, PublicKey } from '@solana/web3.js'
+import * as multisig from '@sqds/multisig'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
@@ -111,4 +112,42 @@ export async function getOftAdminAndDelegate(
     const delegate = oAppRegistryInfo?.delegate?.toBase58()
 
     return { admin, delegate }
+}
+
+/**
+ * Derives the signing authority from the user account and optional multisig key,
+ * then checks if it matches the OFT's admin/delegate. Returns any warnings.
+ */
+export async function validateSigningAuthority(
+    umi: Umi,
+    connection: Connection,
+    oftStoreAddress: string,
+    userAccount: PublicKey,
+    multisigKey?: PublicKey
+): Promise<{ signingAuthority: string; warnings: string[] }> {
+    const { admin, delegate } = await getOftAdminAndDelegate(umi, connection, oftStoreAddress)
+
+    let signingAuthority: string
+    if (multisigKey) {
+        const [vaultPda] = multisig.getVaultPda({ multisigPda: multisigKey, index: 0 })
+        signingAuthority = vaultPda.toBase58()
+    } else {
+        signingAuthority = userAccount.toBase58()
+    }
+
+    const warnings: string[] = []
+    if (signingAuthority !== admin) {
+        warnings.push(
+            `Signing authority (${signingAuthority}) is not the admin (${admin}). ` +
+                `Use the correct keypair or supply the correct value for    --multisig-key if the admin is a Squads Vault.`
+        )
+    }
+    if (signingAuthority !== delegate) {
+        warnings.push(
+            `Signing authority (${signingAuthority}) is not the delegate (${delegate}). ` +
+                `Use the correct keypair or supply the correct value for --multisig-key if the delegate is a Squads Vault.`
+        )
+    }
+
+    return { signingAuthority, warnings }
 }

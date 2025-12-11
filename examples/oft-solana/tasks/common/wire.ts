@@ -17,7 +17,7 @@ import {
 
 import { createAptosSignerFactory } from '../aptos'
 import { deriveConnection, getSolanaDeployment, useWeb3Js } from '../solana'
-import { findSolanaEndpointIdInGraph, getOftAdminAndDelegate } from '../solana/utils'
+import { findSolanaEndpointIdInGraph, validateSigningAuthority } from '../solana/utils'
 
 import { publicKey as publicKeyType } from './types'
 import {
@@ -78,23 +78,16 @@ task(TASK_LZ_OAPP_WIRE)
         const solanaEid = await findSolanaEndpointIdInGraph(hre, args.oappConfig)
         const solanaDeployment = getSolanaDeployment(solanaEid)
 
-        // alert the user if the active address is not the delegate / admin
+        // alert the user if the signing authority is not the admin / delegate
         const { umi, connection } = await deriveConnection(solanaEid, true)
-        const { admin, delegate } = await getOftAdminAndDelegate(umi, connection, solanaDeployment.oftStore)
-
-        const userAccountStr = userAccount.toBase58()
-        if (userAccountStr !== admin) {
-            logger.warn(
-                `Your address (${userAccountStr}) is not the admin (${admin}). ` +
-                    `Use the correct keypair or supply --multisig-key if the admin is a Squads Vault.`
-            )
-        }
-        if (userAccountStr !== delegate) {
-            logger.warn(
-                `Your address (${userAccountStr}) is not the delegate (${delegate}). ` +
-                    `Use the correct keypair or supply --multisig-key if the delegate is a Squads Vault.`
-            )
-        }
+        const { warnings } = await validateSigningAuthority(
+            umi,
+            connection,
+            solanaDeployment.oftStore,
+            userAccount,
+            args.multisigKey
+        )
+        warnings.forEach((w) => logger.warn(w))
 
         // Then we grab the programId from the args
         const programId = new PublicKey(solanaDeployment.programId)
