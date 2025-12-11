@@ -33,6 +33,7 @@ export const MAX_HYPERCORE_SUPPLY = BigInt(2) ** BigInt(64) - BigInt(1) // 18446
 export const QUOTE_TOKENS = {
     MAINNET: [
         { tokenId: 0, name: 'USDC' },
+        { tokenId: 235, name: 'USDe' },
         { tokenId: 268, name: 'USDT0' },
         { tokenId: 360, name: 'USDH' },
     ],
