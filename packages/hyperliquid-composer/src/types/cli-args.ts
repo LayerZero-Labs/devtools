@@ -71,3 +71,6 @@ export interface EnableTokenQuoteAssetArgs extends TokenIndexArgs, PrivateKeyArg
 export interface EnableTokenAlignedQuoteAssetArgs extends TokenIndexArgs, PrivateKeyArgs {}
 export interface RequestEvmContractArgs extends TokenIndexArgs, PrivateKeyArgs {}
 export interface FinalizeEvmContractArgs extends TokenIndexArgs, PrivateKeyArgs {}
+export interface FinalizeEvmContractCorewriterArgs extends TokenIndexArgs {
+    nonce: string
+}

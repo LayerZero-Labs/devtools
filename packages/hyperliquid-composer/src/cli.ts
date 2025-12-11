@@ -20,6 +20,7 @@ import {
     // EVM-HyperCore Linking
     requestEvmContract,
     finalizeEvmContract,
+    finalizeEvmContractCorewriter,
 
     // Post-Launch Management
     freezeTokenUser,
@@ -222,6 +223,19 @@ optionGroups
         program.command(CLI_COMMANDS.FINALIZE_EVM_CONTRACT).description('Linking 2. Finalize the EVM contract linking')
     )
     .action(withNormalizedNetwork(finalizeEvmContract))
+
+optionGroups
+    .base(
+        program
+            .command(CLI_COMMANDS.FINALIZE_EVM_CONTRACT_COREWRITER)
+            .description(
+                'Linking 2a. Generate CoreWriter calldata for finalizing EVM contract link (for Foundry usage)'
+            )
+            .requiredOption(...commonOptions.tokenIndex())
+            .requiredOption('-n, --nonce <nonce>', 'EVM contract deployment nonce')
+            .option('--only-calldata', 'Only output calldata without usage instructions', false)
+    )
+    .action(withNormalizedNetwork(finalizeEvmContractCorewriter))
 
 // === Post-Launch Management ===
 optionGroups
