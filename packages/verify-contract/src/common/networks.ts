@@ -410,6 +410,13 @@ export const networks: Record<string, NetworkDefinition> = {
         aliases: ['sophon-sepolia-testnet', 'sophon-testnet'],
     },
 
+    // Stable
+    stable: {
+        chainId: 988,
+        apiUrl: ETHERSCAN_V2_URL,
+        aliases: ['stable-mainnet'],
+    },
+
     // Swellchain
     swellchain: {
         chainId: 1923,

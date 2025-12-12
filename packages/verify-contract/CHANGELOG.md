@@ -1,5 +1,17 @@
 # @layerzerolabs/verify-contract
 
+## 1.3.0
+
+### Minor Changes
+
+- 270a49d: Skip deployment files with missing required fields instead of throwing errors
+
+## 1.2.3
+
+### Patch Changes
+
+- 603fd7b: STABLE mainnet added to the networks
+
 ## 1.2.2
 
 ### Patch Changes

@@ -1,5 +1,32 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 8.0.6
+
+### Patch Changes
+
+- 1136e94: remove duplicate setPeer instruction
+- e9ad978: Refactor enforced option setter on Solana to keep existing value rather than reset to null
+
+## 8.0.5
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+- Updated dependencies [a2851bf]
+- Updated dependencies [afb4dd3]
+  - @layerzerolabs/protocol-devtools-solana@8.0.5
+  - @layerzerolabs/protocol-devtools@3.0.2
+  - @layerzerolabs/devtools-solana@3.0.5
+  - @layerzerolabs/ua-devtools@5.0.2
+  - @layerzerolabs/devtools@2.0.4
+  - @layerzerolabs/io-devtools@0.3.2
+
+## 8.0.4
+
+### Patch Changes
+
+- 90e4924: remove redundant init of send lib and receive lib PDAs
+
 ## 8.0.3
 
 ### Patch Changes

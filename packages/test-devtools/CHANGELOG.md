@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools
 
+## 0.4.7
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+
 ## 0.4.6
 
 ### Patch Changes

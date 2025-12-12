@@ -1,5 +1,11 @@
 # @layerzerolabs/onft-evm
 
+## 0.2.4
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+
 ## 0.2.3
 
 ### Patch Changes
