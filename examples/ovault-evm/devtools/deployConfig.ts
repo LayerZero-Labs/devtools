@@ -60,10 +60,11 @@ export const DEPLOYMENT_CONFIG: DeploymentConfig = {
     },
 
     // Asset OFT configuration (deployed on specified chains OR use existing address)
+    // NOTE: For native assets (ETH, HYPE), use 'MyAssetOFTNative' with 'MyOVaultComposerNative'
     assetOFT: {
-        contract: 'MyAssetOFT',
+        contract: 'MyAssetOFTERC20',
         metadata: {
-            name: 'MyAssetOFT',
+            name: 'MyAssetOFTERC20',
             symbol: 'ASSET',
         },
         deploymentEids: [_hubEid, ..._spokeEids],

@@ -194,10 +194,11 @@ export const DEPLOYMENT_CONFIG = {
   },
 
   // Asset OFT configuration (deployed on specified chains OR use existing address)
+  // NOTE: For native assets (ETH, HYPE), use 'MyAssetOFTNative' with 'MyOVaultComposerNative'
   asset: {
-    contract: "MyAssetOFT",
+    contract: "MyAssetOFTERC20",
     metadata: {
-      name: "MyAssetOFT",
+      name: "MyAssetOFTERC20",
       symbol: "ASSET",
     },
     deploymentEids: [_hubEid, ..._spokeEids],
@@ -280,7 +281,7 @@ Compile your contracts:
 pnpm compile`
 ```
 
-> **Testing Note**: If you're deploying the asset OFT from scratch for testing purposes, you'll need to mint an initial supply. Uncomment the `_mint` line in the `MyAssetOFT` constructor to provide initial liquidity. This ensures you have tokens to test deposit and cross-chain transfer functionality.
+> **Testing Note**: If you're deploying the asset OFT from scratch for testing purposes, you'll need to mint an initial supply. Uncomment the `_mint` line in the `MyAssetOFTERC20` constructor to provide initial liquidity. This ensures you have tokens to test deposit and cross-chain transfer functionality.
 >
 > **⚠️ Warning**: Do NOT mint share tokens directly in `MyShareOFT`. Share tokens must only be minted by the vault contract during deposits to maintain the correct share-to-asset ratio. Manually minting share tokens breaks the vault's accounting and can lead to incorrect redemption values. The mint line in `MyShareOFT` should only be uncommented for UI/integration testing, never in production.
 
@@ -325,17 +326,17 @@ import { OAppEnforcedOption } from "@layerzerolabs/toolbox-hardhat";
 
 const optimismContract: OmniPointHardhat = {
   eid: EndpointId.OPTSEP_V2_TESTNET.valueOf(),
-  contractName: "MyAssetOFT",
+  contractName: "MyAssetOFTERC20",
 };
 
 const arbitrumContract: OmniPointHardhat = {
   eid: EndpointId.ARBSEP_V2_TESTNET.valueOf(),
-  contractName: "MyAssetOFT",
+  contractName: "MyAssetOFTERC20",
 };
 
 const baseContract: OmniPointHardhat = {
   eid: EndpointId.BASESEP_V2_TESTNET.valueOf(),
-  contractName: "MyAssetOFT",
+  contractName: "MyAssetOFTERC20",
 };
 
 // Configure gas limits for message execution
