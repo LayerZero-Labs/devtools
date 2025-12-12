@@ -5,7 +5,7 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { OFT } from "@layerzerolabs/oft-evm/contracts/OFT.sol";
 
 /**
- * @title MyAssetOFT
+ * @title MyAssetOFTERC20
  * @notice ERC20 representation of the vault's asset token on a spoke chain for cross-chain functionality
  * @dev This contract represents the vault's underlying asset on spoke chains. It inherits from
  * LayerZero's OFT (Omnichain Fungible Token) to enable seamless cross-chain transfers of the
@@ -14,7 +14,7 @@ import { OFT } from "@layerzerolabs/oft-evm/contracts/OFT.sol";
  * The asset OFT acts as a bridgeable ERC20 representation of the vault's collateral asset, allowing
  * users to move their assets across supported chains while maintaining fungibility.
  */
-contract MyAssetOFT is OFT {
+contract MyAssetOFTERC20 is OFT {
     /**
      * @notice Constructs the Asset OFT contract
      * @dev Initializes the OFT with LayerZero endpoint and sets up ownership
