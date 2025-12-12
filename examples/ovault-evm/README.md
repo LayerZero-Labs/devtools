@@ -64,14 +64,14 @@ Use this composer when your vault's underlying asset is a standard **ERC20 token
 
 Use this composer when your vault's underlying asset is based on the **chain's native token** (e.g., ETH, HYPE):
 
-- Required for native token OFTs like `NativeOFTAdapter` or Stargate `NativePool`
+- Required for native token OFTs like `NativeOFTAdapter` or `StargatePoolNative`
 - Automatically wraps native tokens (ETH) into WETH before depositing to the vault
 - Necessary because ERC-4626 vaults only support ERC20 tokens
 - Transparent to end users - they send native tokens and receive shares
 
 > **Note**: This composer uses the WETH9 interface (`deposit()`/`withdraw()`) to convert between native and wrapped tokens. This works with standard implementations like ETH→WETH and HYPE→WHYPE. If your chain's wrapped native token uses a different interface, you must override the composer's `lzCompose()` function with the correct wrapping mechanism.
 
-> **Issuing Your Own Native Asset**: If you plan on issuing a bridged version of the chain's native asset yourself (i.e., not Stargate's `NativePool` or an already deployed `NativeOFTAdapter`), use a `NativeOFTAdapter` instead of a standard OFT. See the [native-oft-adapter example](https://github.com/LayerZero-Labs/devtools/tree/main/examples/native-oft-adapter) for details.
+> **Issuing Your Own Native Asset**: If you plan on issuing a bridged version of the chain's native asset yourself (i.e., not `StargatePoolNative` or an already deployed `NativeOFTAdapter`), use a `NativeOFTAdapter` instead of a standard OFT. See the [native-oft-adapter example](https://github.com/LayerZero-Labs/devtools/tree/main/examples/native-oft-adapter) for details.
 
 **Which Composer Should You Use?**
 
@@ -164,7 +164,7 @@ Configure your vault deployment in `devtools/deployConfig.ts`. This file control
 > **Important - Composer Selection**: Choose the correct composer type based on your asset:
 >
 > - Use `MyOVaultComposerERC20` for standard ERC20 asset OFTs
-> - Use `MyOVaultComposerNative` for native token OFTs (e.g., `NativeOFTAdapter`, Stargate `NativePool`)
+> - Use `MyOVaultComposerNative` for native token OFTs (e.g., `NativeOFTAdapter`, `StargatePoolNative`)
 >
 > See the [Composer Types](#composer-types) section for details.
 

@@ -9,7 +9,7 @@ import { NativeOFTAdapter } from "@layerzerolabs/oft-evm/contracts/NativeOFTAdap
  * @notice NativeOFTAdapter for issuing a bridged version of the chain's native asset (e.g., ETH, HYPE)
  *
  * @dev WARNING: Only use this if you plan on issuing a bridged version of the chain's native asset yourself.
- *      Most integrations should use existing native asset OFTs like Stargate's `NativePool`.
+ *      Most integrations should use existing native asset OFTs like `StargatePoolNative`.
  *
  * @dev WARNING: ONLY 1 NativeOFTAdapter should exist for a given global mesh, unless you make a
  *      non-default implementation, which needs to be done very carefully.

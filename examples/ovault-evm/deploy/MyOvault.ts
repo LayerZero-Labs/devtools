@@ -92,8 +92,23 @@ const deploy: DeployFunction = async (hre) => {
         // Fetch underlying ERC20 token address from the OFT using the IOFT artifact
         const IOFTArtifact = await hre.artifacts.readArtifact('IOFT')
         const oftContract = await hre.ethers.getContractAt(IOFTArtifact.abi, assetOFTAddress)
-        const assetTokenAddress = await oftContract.token()
-        console.log(`Underlying ERC20 token address found from OFT: ${assetTokenAddress}`)
+        const oftTokenAddress = await oftContract.token()
+
+        // Handle native token OFTs (NativeOFTAdapter, StargatePoolNative) where token() returns address(0)
+        let assetTokenAddress: string
+        if (oftTokenAddress === hre.ethers.constants.AddressZero) {
+            if (!DEPLOYMENT_CONFIG.vault.assetTokenAddress) {
+                throw new Error(
+                    `Native asset OFT detected (token() returns address(0)), but vault.assetTokenAddress is not configured. ` +
+                        `For native assets, you must set vault.assetTokenAddress to the WETH address on this chain.`
+                )
+            }
+            assetTokenAddress = DEPLOYMENT_CONFIG.vault.assetTokenAddress
+            console.log(`Native asset OFT detected - using configured WETH address: ${assetTokenAddress}`)
+        } else {
+            assetTokenAddress = oftTokenAddress
+            console.log(`Underlying ERC20 token address found from OFT: ${assetTokenAddress}`)
+        }
 
         // Get vault address (existing or deploy new)
         let vaultAddress: string

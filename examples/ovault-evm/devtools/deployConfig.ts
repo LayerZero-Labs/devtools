@@ -47,6 +47,9 @@ export const DEPLOYMENT_CONFIG: DeploymentConfig = {
         assetOFTAddress: undefined, // Set to '0xdef...' to use existing asset OFT
         // This must be the address of the ShareOFTAdapter
         shareOFTAdapterAddress: undefined, // Set to '0xghi...' to use existing ShareOFTAdapter
+        // Required for native token OFTs (NativeOFTAdapter, StargatePoolNative) where token() returns address(0)
+        // Set this to the WETH address on the hub chain (e.g., '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' for Ethereum mainnet)
+        assetTokenAddress: undefined,
     },
 
     // Share OFT configuration (only on spoke chains)

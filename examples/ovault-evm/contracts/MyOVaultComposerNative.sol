@@ -26,10 +26,10 @@ contract MyOVaultComposerNative is VaultComposerSyncNative {
     /**
      * @notice Creates a new cross-chain vault composer where the vault asset is the chain's native asset
      * @dev Initializes the composer with vault and OFT contracts for omnichain operations
-     * @dev Requires the asset OFT to be a NativePool or NativeOFTAdapter contract (OFT.token() returns address(0))
+     * @dev Requires the asset OFT to be a NativeOFTAdapter or StargatePoolNative contract (OFT.token() returns address(0))
      * @dev Requires the vault's underlying asset to be a WETH9-compatible wrapped native token
      * @param _vault The vault contract implementing ERC4626 for deposit/redeem operations (asset must be WETH)
-     * @param _assetOFT The NativePool or NativeOFTAdapter contract for cross-chain native asset transfers
+     * @param _assetOFT The NativeOFTAdapter or StargatePoolNative contract for cross-chain native asset transfers
      * @param _shareOFT The OFT contract for cross-chain share transfers
      */
     constructor(
