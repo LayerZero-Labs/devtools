@@ -51,6 +51,14 @@ export async function isSquadsV4Vault(address: string): Promise<boolean> {
 }
 
 export async function assertValidSolanaAdmin(connection: Connection, address: string): Promise<void> {
+    // Skip validation if environment variable is set
+    if (process.env.LZ_SKIP_SOLANA_ADMIN_VALIDATION) {
+        console.warn(
+            '\n\nWarning: LZ_SKIP_SOLANA_ADMIN_VALIDATION is set. Skipping Solana admin validation. Only use this is you are using a non-Squads Multisig.\n\n'
+        )
+        return
+    }
+
     const pubkey = new PublicKey(address)
 
     try {
