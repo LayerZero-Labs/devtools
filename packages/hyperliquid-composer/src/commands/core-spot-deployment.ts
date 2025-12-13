@@ -19,6 +19,38 @@ import { RPC_URLS } from '@/types'
 import { LOGGER_MODULES } from '@/types/cli-constants'
 
 import inquirer from 'inquirer'
+import type { Logger } from '@layerzerolabs/io-devtools'
+
+/**
+ * Helper function to fetch spot metadata and token info with error handling
+ * @param tokenIndex - The token index to fetch information for
+ * @param isTestnet - Whether to use testnet or mainnet
+ * @param logLevel - The log level to use
+ * @param logger - Logger instance for error reporting
+ * @returns Object containing coreSpot and coreSpotInfo, or exits on error
+ */
+async function fetchTokenMetadata(
+    tokenIndex: string,
+    isTestnet: boolean,
+    logLevel: string,
+    logger: Logger
+): Promise<{ coreSpot: CoreSpotMetaData; coreSpotInfo: SpotInfo }> {
+    let coreSpot: CoreSpotMetaData
+    let coreSpotInfo: SpotInfo
+
+    try {
+        coreSpot = await getSpotMeta(null, isTestnet, logLevel, tokenIndex)
+        coreSpotInfo = await getHipTokenInfo(null, isTestnet, logLevel, coreSpot.tokenId)
+    } catch (error) {
+        logger.error(
+            `Failed to fetch token information for token ${tokenIndex}. The token's deployment hasn't started yet.`
+        )
+        logger.error(`Error: ${error instanceof Error ? error.message : String(error)}`)
+        process.exit(1)
+    }
+
+    return { coreSpot, coreSpotInfo }
+}
 
 export async function coreSpotDeployment(args: CoreSpotDeploymentArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
@@ -148,10 +180,9 @@ export async function hipTokenInfo(args: TokenIndexArgs): Promise<void> {
 
     const tokenIndex = args.tokenIndex
     const network = args.network
-
     const isTestnet = network === 'testnet'
-    const coreSpot: CoreSpotMetaData = await getSpotMeta(null, isTestnet, args.logLevel, tokenIndex)
-    const coreSpotInfo: SpotInfo = await getHipTokenInfo(null, isTestnet, args.logLevel, coreSpot.tokenId)
+
+    const { coreSpotInfo } = await fetchTokenMetadata(tokenIndex, isTestnet, args.logLevel, logger)
 
     logger.info(JSON.stringify(coreSpotInfo, null, 2))
 }
@@ -162,21 +193,30 @@ export async function spotDeployState(args: SpotDeployStateArgs): Promise<void> 
 
     const tokenIndex = args.tokenIndex
     const network = args.network
-
     const isTestnet = network === 'testnet'
+
     let deployerAddress: string
     if (args.deployerAddress) {
         deployerAddress = args.deployerAddress
     } else {
-        const coreSpot: CoreSpotMetaData = await getSpotMeta(null, isTestnet, args.logLevel, tokenIndex)
-        const coreSpotInfo: SpotInfo = await getHipTokenInfo(null, isTestnet, args.logLevel, coreSpot.tokenId)
+        const { coreSpotInfo } = await fetchTokenMetadata(tokenIndex, isTestnet, args.logLevel, logger)
         deployerAddress = coreSpotInfo.deployer
         logger.info(
             `Using deployer address: ${deployerAddress} for token ${coreSpotInfo.name} with index ${tokenIndex}`
         )
     }
 
-    const deployState = (await getSpotDeployState(deployerAddress, isTestnet, args.logLevel)) as SpotDeployStates
+    let deployState: SpotDeployStates
+    try {
+        deployState = (await getSpotDeployState(deployerAddress, isTestnet, args.logLevel)) as SpotDeployStates
+    } catch (error) {
+        logger.error(
+            `Failed to fetch deployment state for token ${tokenIndex}. The token's deployment hasn't started yet.`
+        )
+        logger.error(`Error: ${error instanceof Error ? error.message : String(error)}`)
+        process.exit(1)
+    }
+
     logger.verbose(`All deployment states for ${deployerAddress}: ${JSON.stringify(deployState, null, 2)}`)
 
     // iterate through deployState and print out the one with the same "token" as tokenIndex
