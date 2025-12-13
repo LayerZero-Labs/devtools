@@ -14,12 +14,39 @@ function getFullPath(index: string, isTestnet: boolean): string {
 
 export function getCoreSpotDeployment(index: string | number, isTestnet: boolean, logger?: Logger): CoreSpotDeployment {
     const fullPath = getFullPath(index.toString(), isTestnet)
-    const nativeSpot = fs.readFileSync(fullPath, 'utf8')
-    if (!nativeSpot) {
-        const errMsg = `Native spot ${index} not found - make sure the native spot for the token ${index} is found at ${fullPath}`
+
+    // Check if file exists, if not provide helpful error message
+    if (!fs.existsSync(fullPath)) {
+        const deploymentDir = path.join(process.cwd(), 'deployments', `hypercore-${isTestnet ? 'testnet' : 'mainnet'}`)
+
+        // List available deployment files
+        let availableTokens: string[] = []
+        try {
+            if (fs.existsSync(deploymentDir)) {
+                const files = fs.readdirSync(deploymentDir)
+                availableTokens = files.filter((f) => f.endsWith('.json')).map((f) => f.replace('.json', ''))
+            }
+        } catch (e) {
+            // Ignore error when listing files
+        }
+
+        const network = isTestnet ? 'testnet' : 'mainnet'
+        let errMsg = `Core spot deployment file not found for token index ${index} on ${network}.\n`
+        errMsg += `Expected location: ${fullPath}\n`
+
+        if (availableTokens.length > 0) {
+            errMsg += `\nAvailable token indices on ${network}:\n`
+            errMsg += availableTokens.map((t) => `  - ${t}`).join('\n')
+        } else {
+            errMsg += `\nNo deployment files found in ${deploymentDir}`
+            errMsg += `\nYou need to run the core-spot deployment commands first.`
+        }
+
         logger?.error(errMsg)
         throw new Error(errMsg)
     }
+
+    const nativeSpot = fs.readFileSync(fullPath, 'utf8')
     return JSON.parse(nativeSpot) as CoreSpotDeployment
 }
 
