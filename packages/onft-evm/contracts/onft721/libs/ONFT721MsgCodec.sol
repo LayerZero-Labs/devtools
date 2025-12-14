@@ -9,6 +9,7 @@ pragma solidity ^0.8.22;
 library ONFT721MsgCodec {
     uint8 private constant SEND_TO_OFFSET = 32;
     uint8 private constant TOKEN_ID_OFFSET = 64;
+    uint8 private constant SENDER_OFFSET = 96;
 
     /**
      * @dev Encodes an ONFT721 LayerZero message payload.
@@ -62,7 +63,7 @@ library ONFT721MsgCodec {
      * @return The composed message.
      */
     function composeMsg(bytes calldata _msg) internal pure returns (bytes memory) {
-        return _msg[TOKEN_ID_OFFSET:];
+        return _msg[SENDER_OFFSET:];
     }
 
     /**
