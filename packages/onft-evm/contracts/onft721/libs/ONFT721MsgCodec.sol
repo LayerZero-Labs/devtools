@@ -63,6 +63,33 @@ library ONFT721MsgCodec {
      * @return The composed message.
      */
     function composeMsg(bytes calldata _msg) internal pure returns (bytes memory) {
+        return _msg[TOKEN_ID_OFFSET:];
+    }
+
+    /**
+     * @dev Decodes the sender of the composed message from the composed message.
+     * @param _msg The message.
+     * @return The sender address of the composed message in bytes32 format.
+     */
+    function composeMsgFrom(bytes calldata _msg) internal pure returns (bytes32) {
+        return _msg[TOKEN_ID_OFFSET:SENDER_OFFSET];
+    }
+
+    /**
+     * @dev Decodes the payload from the composed message.
+     * @param _msg The message.
+     * @return The composed message.
+     */
+    function composeMsgPayload(bytes calldata _msg) internal pure returns (bytes memory) {
+        return _msg[SENDER_OFFSET:];
+    }
+    
+    /**
+     * @dev Decodes the composed message.
+     * @param _msg The message.
+     * @return The composed message.
+     */
+    function composeMsg(bytes calldata _msg) internal pure returns (bytes memory) {
         return _msg[SENDER_OFFSET:];
     }
 
