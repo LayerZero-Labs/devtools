@@ -26,7 +26,7 @@ module oft::move_oft_adapter {
         assert_not_blocklisted,
         debit_view_with_possible_fee,
         fee_details_with_possible_fee,
-        redirect_to_admin_if_blocklisted, release_rate_limit_capacity, try_consume_rate_limit_capacity
+        redirect_to_admin_if_blocklisted, try_consume_rate_limit_capacity
     };
     use oft_common::oft_fee_detail::OftFeeDetail;
     use oft_common::oft_limit::{Self, OftLimit};
@@ -61,8 +61,8 @@ module oft::move_oft_adapter {
         // Default implementation does not make special use of LZ Receive Value sent; just deposit to the OFT address
         option::for_each(lz_receive_value, |fa| primary_fungible_store::deposit(@oft_admin, fa));
 
-        // Release rate limit capacity for the pathway (net inflow)
-        release_rate_limit_capacity(src_eid, amount_ld);
+        // Consume rate limit capacity for the pathway (net inflow), based on the amount received on this side
+        try_consume_rate_limit_capacity(30325, amount_ld);
 
         // unlock the amount from escrow
         let escrow_signer = &object::generate_signer_for_extending(&store().escrow_extend_ref);
