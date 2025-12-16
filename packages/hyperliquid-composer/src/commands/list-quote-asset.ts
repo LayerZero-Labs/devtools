@@ -2,19 +2,19 @@ import { createModuleLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtoo
 
 import { isQuoteAsset as isQuoteAssetOperation } from '@/operations'
 import { LOGGER_MODULES } from '@/types/cli-constants'
-import { IsQuoteAssetArgs } from '@/types'
+import { ListQuoteAssetArgs } from '@/types'
 
-export async function isQuoteAsset(args: IsQuoteAssetArgs): Promise<void> {
+export async function listQuoteAsset(args: ListQuoteAssetArgs): Promise<void> {
     setDefaultLogLevel(args.logLevel)
-    const logger = createModuleLogger(LOGGER_MODULES.IS_QUOTE_ASSET, args.logLevel)
+    const logger = createModuleLogger(LOGGER_MODULES.LIST_QUOTE_ASSET, args.logLevel)
 
-    const tokenIndex = args.tokenIndex ? parseInt(args.tokenIndex) : null
+    const filterTokenIndex = args.filterTokenIndex ? parseInt(args.filterTokenIndex) : null
     const isTestnet = args.network === 'testnet'
 
     try {
-        const result = await isQuoteAssetOperation(isTestnet, tokenIndex, args.logLevel)
+        const result = await isQuoteAssetOperation(isTestnet, filterTokenIndex, args.logLevel)
 
-        if (tokenIndex === null) {
+        if (filterTokenIndex === null) {
             // Print all quote assets
             logger.info(`\nAll Quote Assets on ${args.network}:\n`)
             if (result.allQuoteAssets && result.allQuoteAssets.length > 0) {
@@ -28,24 +28,15 @@ export async function isQuoteAsset(args: IsQuoteAssetArgs): Promise<void> {
         } else {
             // Check specific token
             if (result.isQuoteAsset) {
-                logger.info(`yes`)
-                logger.verbose(`Token ${tokenIndex} (${result.tokenName}) is a quote asset`)
+                logger.verbose(`Token ${filterTokenIndex} (${result.tokenName}) is a quote asset`)
+                logger.info('true\n')
             } else {
-                logger.info(`no`)
-                logger.verbose(`Token ${tokenIndex} is not a quote asset`)
+                logger.verbose(`Token ${filterTokenIndex} is not a quote asset`)
+                logger.info('false\n')
             }
         }
     } catch (error) {
         logger.error(`Failed to check quote asset status: ${error}`)
         process.exit(1)
     }
-}
-
-/**
- * SDK-facing function that only returns boolean
- * Used by other SDK functions that need to check quote asset status
- */
-export async function isQuoteAssetSdk(isTestnet: boolean, tokenIndex: number, logLevel: string): Promise<boolean> {
-    const result = await isQuoteAssetOperation(isTestnet, tokenIndex, logLevel)
-    return result.isQuoteAsset
 }

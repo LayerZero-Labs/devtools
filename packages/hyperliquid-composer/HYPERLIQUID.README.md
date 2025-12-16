@@ -201,12 +201,12 @@ To verify if a token is a quote asset:
 
 ```bash
 # Check specific token
-npx @layerzerolabs/hyperliquid-composer is-quote-asset \
-    --token-index <coreIndex> \
+npx @layerzerolabs/hyperliquid-composer list-quote-asset \
+    --filter-token-index <coreIndex> \
     --network {testnet | mainnet}
 
 # List all quote assets
-npx @layerzerolabs/hyperliquid-composer is-quote-asset \
+npx @layerzerolabs/hyperliquid-composer list-quote-asset \
     --network {testnet | mainnet}
 ```
 
@@ -685,13 +685,13 @@ Check if a specific token is a quote asset, or list all quote assets when no tok
 
 ```bash
 # List all quote assets
-npx @layerzerolabs/hyperliquid-composer is-quote-asset \
+npx @layerzerolabs/hyperliquid-composer list-quote-asset \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
 
 # Check if specific token is a quote asset
-npx @layerzerolabs/hyperliquid-composer is-quote-asset \
-    --token-index <coreIndex> \
+npx @layerzerolabs/hyperliquid-composer list-quote-asset \
+    --filter-token-index <coreIndex> \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
 ```
@@ -993,7 +993,7 @@ npx @layerzerolabs/hyperliquid-composer enable-quote-token \
 **After Execution:**
 - A `HYPE/YOUR_ASSET` trading pair is automatically created
 - You must maintain order book requirements for the new `HYPE/ASSET` pair
-- Verify quote asset status with the `is-quote-asset` command
+- Verify quote asset status with the `list-quote-asset` command
 
 
 ### Step 6.7/7 `enableAlignedQuoteToken` (Optional)

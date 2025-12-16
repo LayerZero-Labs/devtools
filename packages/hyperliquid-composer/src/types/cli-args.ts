@@ -61,8 +61,8 @@ export interface GetCoreBalancesArgs extends UserArgs {
     showZero: boolean
 }
 
-export interface IsQuoteAssetArgs extends BaseArgs {
-    tokenIndex?: string
+export interface ListQuoteAssetArgs extends BaseArgs {
+    filterTokenIndex?: string
 }
 
 // Simple command args - using concrete interfaces instead of empty extends

@@ -33,7 +33,7 @@ import {
     getCoreBalances,
     listSpotPairs,
     spotAuctionStatus,
-    isQuoteAsset,
+    listQuoteAsset,
 
     // Utilities
     intoAssetBridgeAddress,
@@ -317,19 +317,19 @@ optionGroups
 optionGroups
     .base(
         program
-            .command(CLI_COMMANDS.SPOT_AUCTION_STATUS)
-            .description('Show current spot pair deploy auction status and gas costs')
+            .command(CLI_COMMANDS.LIST_QUOTE_ASSET)
+            .description('List all quote assets (lists all if no token-index provided)')
+            .option('-idx, --filter-token-index <token-index>', 'Filter on token index')
     )
-    .action(withNormalizedNetwork(spotAuctionStatus))
+    .action(withNormalizedNetwork(listQuoteAsset))
 
 optionGroups
     .base(
         program
-            .command(CLI_COMMANDS.IS_QUOTE_ASSET)
-            .description('Check if a token is a quote asset (lists all if no token-index provided)')
-            .option(...commonOptions.tokenIndex())
+            .command(CLI_COMMANDS.SPOT_AUCTION_STATUS)
+            .description('Show current spot pair deploy auction status and gas costs')
     )
-    .action(withNormalizedNetwork(isQuoteAsset))
+    .action(withNormalizedNetwork(spotAuctionStatus))
 
 // === Utilities ===
 optionGroups

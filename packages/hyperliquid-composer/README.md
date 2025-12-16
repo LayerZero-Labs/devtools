@@ -299,13 +299,13 @@ Check if a specific token is a quote asset, or list all quote assets when no tok
 
 ```bash
 # List all quote assets
-npx @layerzerolabs/hyperliquid-composer is-quote-asset \
+npx @layerzerolabs/hyperliquid-composer list-quote-asset \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
 
 # Check if specific token is a quote asset
-npx @layerzerolabs/hyperliquid-composer is-quote-asset \
-    --token-index <coreIndex> \
+npx @layerzerolabs/hyperliquid-composer list-quote-asset \
+    --filter-token-index <coreIndex> \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
 ```

@@ -15,7 +15,7 @@ export * from './link-evm-core'
 export * from './account-state'
 export * from './list-spot-pairs'
 export * from './spot-auction-status'
-export * from './is-quote-asset'
+export * from './list-quote-asset'
 
 // === Utilities ===
 export * from './type-conversion'
