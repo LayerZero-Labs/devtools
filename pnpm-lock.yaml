@@ -5733,7 +5733,7 @@ importers:
         specifier: ~3.0.2
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-solana':
-        specifier: ~8.0.5
+        specifier: ~8.0.6
         version: link:../protocol-devtools-solana
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.7
