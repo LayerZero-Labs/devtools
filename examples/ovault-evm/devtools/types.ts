@@ -17,6 +17,7 @@ export interface VaultConfig {
     vaultAddress?: string // Optional pre-deployed vault address
     assetOFTAddress?: string // Optional pre-deployed asset OFT address
     shareOFTAdapterAddress?: string // Optional pre-deployed ShareOFTAdapter address
+    assetTokenAddress?: string // Optional: Required when asset OFT is native (token() returns address(0)), set to WETH address
 }
 
 export interface DeploymentConfig {
