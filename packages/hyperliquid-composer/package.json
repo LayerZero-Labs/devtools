@@ -14,7 +14,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LayerZero-Labs/devtools.git",
-    "directory": "packages/oft-hyperliquid-evm"
+    "directory": "packages/hyperliquid-composer"
   },
   "license": "MIT",
   "exports": {
@@ -33,7 +33,7 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "bin": {
-    "oft-hyperliquid-evm": "./cli.js"
+    "hyperliquid-composer": "./cli.js"
   },
   "files": [
     "artifacts/HyperLiquid*.sol",
