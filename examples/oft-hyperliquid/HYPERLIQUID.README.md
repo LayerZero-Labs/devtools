@@ -170,6 +170,8 @@ npx @layerzerolabs/hyperliquid-composer request-evm-contract \
 
 ### 2. Finalize EVM Contract Link
 
+#### Hypercore action method
+
 ```bash
 npx @layerzerolabs/hyperliquid-composer finalize-evm-contract \
     --token-index <coreIndex> \
@@ -178,7 +180,7 @@ npx @layerzerolabs/hyperliquid-composer finalize-evm-contract \
     [--log-level {info | verbose}]
 ```
 
-### 2a. Finalize EVM Contract Link (CoreWriter Method)
+#### CoreWriter Method
 
 Alternative method using direct CoreWriter interaction. This is useful if you prefer to use Foundry's `cast` command.
 
