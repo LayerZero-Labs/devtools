@@ -208,7 +208,7 @@ export async function spotDeployState(args: SpotDeployStateArgs): Promise<void> 
 
     let deployState: SpotDeployStates
     try {
-        deployState = (await getSpotDeployState(deployerAddress, isTestnet, args.logLevel)) as SpotDeployStates
+        deployState = await getSpotDeployState(deployerAddress, isTestnet, args.logLevel)
     } catch (error) {
         logger.error(
             `Failed to fetch deployment state for token ${tokenIndex}. The token's deployment hasn't started yet.`
