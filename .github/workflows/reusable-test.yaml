@@ -225,26 +225,54 @@ jobs:
           script: |
             const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             const prNumber = context.payload.pull_request?.number;
+            const header = "## 🚨 E2E Tests Failed";
+            const runEntry = `- [Action Run](${runUrl})`;
 
             if (prNumber) {
-              const comment = "## 🚨 E2E Tests Failed\n\n" +
-                "The E2E tests failed during CI. These tests validate real blockchain interactions and may fail due to:\n" +
-                "- Network connectivity issues\n" +
-                "- RPC rate limiting\n" +
-                "- External service downtime\n" +
-                "**Action Run:** " + runUrl + "\n\n" +
-                "This is **non-blocking** and does not prevent merging. Check the action logs above for detailed failure information.";
-
               try {
-                await github.rest.issues.createComment({
-                  issue_number: prNumber,
+                const { data: comments } = await github.rest.issues.listComments({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  body: comment
+                  issue_number: prNumber,
                 });
+
+                const botComment = comments.find(comment => 
+                  comment.user.type === 'Bot' && 
+                  comment.body.includes(header)
+                );
+
+                if (botComment) {
+                  let newBody = botComment.body;
+                  if (!newBody.includes("**Failed Runs:**")) {
+                    newBody += "\n\n**Failed Runs:**";
+                  }
+                  newBody += "\n" + runEntry;
+
+                  await github.rest.issues.updateComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    comment_id: botComment.id,
+                    body: newBody
+                  });
+                } else {
+                  const comment = header + "\n\n" +
+                    "The E2E tests failed during CI. These tests validate real blockchain interactions and may fail due to:\n" +
+                    "- Network connectivity issues\n" +
+                    "- RPC rate limiting\n" +
+                    "- External service downtime\n\n" +
+                    "**Failed Runs:**\n" +
+                    runEntry + "\n\n" +
+                    "This is **non-blocking** and does not prevent merging. Check the action logs above for detailed failure information.";
+
+                  await github.rest.issues.createComment({
+                    issue_number: prNumber,
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    body: comment
+                  });
+                }
               } catch (error) {
-                // Silently fail if we don't have permission to comment (e.g., on forks)
-                console.log('Could not post comment to PR:', error.message);
+                console.log('Error managing PR comments:', error.message);
               }
             }
 
