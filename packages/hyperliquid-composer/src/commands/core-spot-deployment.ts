@@ -43,7 +43,7 @@ async function fetchTokenMetadata(
         coreSpotInfo = await getHipTokenInfo(null, isTestnet, logLevel, coreSpot.tokenId)
     } catch (error) {
         logger.error(
-            `Failed to fetch token information for token ${tokenIndex}. The token's deployment hasn't started yet.`
+            `Failed to fetch token information for token ${tokenIndex}. The token's deployment may not have started.`
         )
         logger.error(`Error: ${error instanceof Error ? error.message : String(error)}`)
         process.exit(1)
