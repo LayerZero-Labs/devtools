@@ -295,7 +295,7 @@ npx @layerzerolabs/hyperliquid-composer spot-auction-status \
 
 ### Check if Token is Quote Asset
 
-Check if a specific token is a quote asset, or list all quote assets when no token index is provided. Quote assets are automatically paired with HYPE when promoted by the Hyperliquid protocol.
+Check if a specific token is a quote asset, or list all quote assets when no token index is provided.
 
 ```bash
 # List all quote assets
