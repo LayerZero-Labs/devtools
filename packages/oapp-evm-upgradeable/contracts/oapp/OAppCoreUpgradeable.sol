@@ -1,16 +1,21 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
-import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import { Initializable } from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import { IOAppCore, ILayerZeroEndpointV2 } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol";
 
 /**
  * @title OAppCore
  * @dev Abstract contract implementing the IOAppCore interface with basic OApp configurations.
+ * @notice Abstract contract implementing the IOAppCore interface with basic OApp configurations.
+ * @dev ADAPTED FOR: Storage-based endpoint + AccessControl (not Ownable)
  */
-abstract contract OAppCoreUpgradeable is IOAppCore, OwnableUpgradeable {
+abstract contract OAppCoreUpgradeable is IOAppCore, Initializable {
+    /// @custom:storage-location erc7201:layerzerov2.storage.oappcore
     struct OAppCoreStorage {
+        // Storage-based endpoint for upgradeability
+        ILayerZeroEndpointV2 endpoint;
         mapping(uint32 => bytes32) peers;
     }
 
@@ -24,15 +29,9 @@ abstract contract OAppCoreUpgradeable is IOAppCore, OwnableUpgradeable {
         }
     }
 
-    // The LayerZero endpoint associated with the given OApp
-    ILayerZeroEndpointV2 public immutable endpoint;
-
-    /**
-     * @dev Constructor to initialize the OAppCore with the provided endpoint and delegate.
-     * @param _endpoint The address of the LOCAL Layer Zero endpoint.
-     */
-    constructor(address _endpoint) {
-        endpoint = ILayerZeroEndpointV2(_endpoint);
+    /// @dev Gets endpoint from storage
+    function endpoint() public view returns (ILayerZeroEndpointV2) {
+        return _getOAppCoreStorage().endpoint;
     }
 
     /**
@@ -43,13 +42,17 @@ abstract contract OAppCoreUpgradeable is IOAppCore, OwnableUpgradeable {
      * @dev Ownable is not initialized here on purpose. It should be initialized in the child contract to
      * accommodate the different version of Ownable.
      */
-    function __OAppCore_init(address _delegate) internal onlyInitializing {
-        __OAppCore_init_unchained(_delegate);
+    /// @dev Initializes endpoint in storage and sets delegate
+    function __OAppCore_init(address _endpoint, address _delegate) internal onlyInitializing {
+        __OAppCore_init_unchained(_endpoint, _delegate);
     }
 
-    function __OAppCore_init_unchained(address _delegate) internal onlyInitializing {
+    function __OAppCore_init_unchained(address _endpoint, address _delegate) internal onlyInitializing {
         if (_delegate == address(0)) revert InvalidDelegate();
-        endpoint.setDelegate(_delegate);
+
+        OAppCoreStorage storage $ = _getOAppCoreStorage();
+        $.endpoint = ILayerZeroEndpointV2(_endpoint);
+        $.endpoint.setDelegate(_delegate);
     }
 
     /**
@@ -72,7 +75,8 @@ abstract contract OAppCoreUpgradeable is IOAppCore, OwnableUpgradeable {
      * @dev Set this to bytes32(0) to remove the peer address.
      * @dev Peer is a bytes32 to accommodate non-evm chains.
      */
-    function setPeer(uint32 _eid, bytes32 _peer) public virtual onlyOwner {
+    /// @dev Sets peer for endpoint (access control must be added by parent)
+    function setPeer(uint32 _eid, bytes32 _peer) public virtual {
         OAppCoreStorage storage $ = _getOAppCoreStorage();
         $.peers[_eid] = _peer;
         emit PeerSet(_eid, _peer);
@@ -98,7 +102,9 @@ abstract contract OAppCoreUpgradeable is IOAppCore, OwnableUpgradeable {
      * @dev Only the owner/admin of the OApp can call this function.
      * @dev Provides the ability for a delegate to set configs, on behalf of the OApp, directly on the Endpoint contract.
      */
-    function setDelegate(address _delegate) public onlyOwner {
-        endpoint.setDelegate(_delegate);
+    /// @dev Sets delegate on endpoint (access control must be added by parent)
+    function setDelegate(address _delegate) public virtual {
+        OAppCoreStorage storage $ = _getOAppCoreStorage();
+        $.endpoint.setDelegate(_delegate);
     }
 }
