@@ -5,7 +5,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { OmniAddress, OmniPoint, OmniTransaction, flattenTransactions } from '@layerzerolabs/devtools'
 import { createGetHreByEid } from '@layerzerolabs/devtools-evm-hardhat'
 import { createModuleLogger } from '@layerzerolabs/io-devtools'
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { EndpointId, endpointIdToVersion } from '@layerzerolabs/lz-definitions'
 import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import { LzAppOmniGraph, OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
@@ -149,6 +149,34 @@ export async function getEpv1ReceiveUlnConfig(
     } catch (error) {
         const moduleLogger = createModuleLogger('LzApp')
         moduleLogger.error(`Error fetching EPV1 ULN config: ${(error as Error).message}`)
+        return undefined
+    }
+}
+
+/**
+ * Get the Receive Executor address for EPV1 (EVM-based) OApp
+ * @param hre {HardhatRuntimeEnvironment} Hardhat runtime environment
+ * @param eid {EndpointId} Remote Endpoint ID
+ * @param address {OmniAddress} Address of the OApp
+ * @returns Executor address or undefined
+ */
+export async function getEpv1ReceiveExecutorConfig(
+    hre: HardhatRuntimeEnvironment,
+    eid: EndpointId,
+    address: OmniAddress
+): Promise<string | undefined> {
+    try {
+        const receiveUlnDeployment = await hre.deployments.get('ReceiveUln301')
+        const signer: Signer = hre.ethers.provider.getSigner()
+
+        const receiveUlnContract = new Contract(receiveUlnDeployment.address, receiveUlnDeployment.abi, signer)
+        const configBytes: string = await receiveUlnContract.getConfig(eid, address, CONFIG_TYPE_EXECUTOR)
+
+        const [executorAddress] = ethers.utils.defaultAbiCoder.decode(['address'], configBytes)
+        return executorAddress
+    } catch (error) {
+        const moduleLogger = createModuleLogger('LzApp')
+        moduleLogger.error(`Error fetching EPV1 receive executor config: ${(error as Error).message}`)
         return undefined
     }
 }
@@ -678,6 +706,33 @@ export async function setExecutorConfig(
 }
 
 /**
+ * Sets the Receive Executor Config on the LzApp contract and returns the transaction.
+ */
+export async function setReceiveExecutorConfig(
+    hre: HardhatRuntimeEnvironment,
+    lzApp: OmniPoint,
+    lzAppConfig: OAppEdgeConfig,
+    eid: EndpointId
+): Promise<OmniTransaction | undefined> {
+    const lzAppDeployment = await hre.deployments.get(lzApp.contractName || lzApp.address)
+    const lzAppContract = new Contract(lzAppDeployment.address, lzAppDeployment.abi, hre.ethers.provider.getSigner())
+    const receiveUlnIndex = await getLibraryIndex(hre, lzAppConfig.receiveLibraryConfig?.receiveLibrary!)
+    const encodedAddress = ethers.utils.defaultAbiCoder.encode(['address'], [lzAppConfig.receiveConfig?.executorConfig])
+
+    const data = lzAppContract.interface.encodeFunctionData('setConfig', [
+        receiveUlnIndex,
+        eid,
+        CONFIG_TYPE_EXECUTOR,
+        encodedAddress,
+    ])
+    return {
+        point: lzApp,
+        data,
+        description: `Set Receive Executor Config for Endpoint ID ${eid}`,
+    }
+}
+
+/**
  * Sets the ULN Config on the LzApp contract and returns the transaction.
  */
 export async function setUlnConfig(
@@ -848,7 +903,8 @@ export const configureLzAppGraph = async (
                         !typedConfig.receiveLibraryConfig?.receiveLibrary ||
                         !typedConfig.sendConfig?.executorConfig ||
                         !typedConfig.sendConfig?.ulnConfig ||
-                        !typedConfig.receiveConfig?.ulnConfig
+                        !typedConfig.receiveConfig?.ulnConfig ||
+                        (endpointIdToVersion(to.eid) === 'v1' && !typedConfig.receiveConfig?.executorConfig)
                     ) {
                         logger.error(`Missing configuration properties for connection from ${from.eid} to ${to.eid}`)
                         return []
@@ -926,6 +982,25 @@ export const configureLzAppGraph = async (
                             console.log(getExecutorConfig)
                             const executorTx = await setExecutorConfig(hreForEid, from, typedConfig, to.eid)
                             if (executorTx) transactions.push(executorTx)
+                        }
+
+                        if (endpointIdToVersion(to.eid) === 'v1') {
+                            const currentReceiveExecutor = await getEpv1ReceiveExecutorConfig(
+                                hreForEid,
+                                to.eid,
+                                LzApp.address
+                            )
+                            if (!currentReceiveExecutor) {
+                                throw new Error(`Failed to retrieve receive executor config for ${LzApp.address}`)
+                            }
+
+                            if (
+                                currentReceiveExecutor.toLowerCase() !==
+                                typedConfig.receiveConfig!.executorConfig!.toLowerCase()
+                            ) {
+                                const recvExecTx = await setReceiveExecutorConfig(hreForEid, from, typedConfig, to.eid)
+                                if (recvExecTx) transactions.push(recvExecTx)
+                            }
                         }
 
                         const getSendUlnConfig = await getEpv1SendUlnConfig(hreForEid, to.eid, LzApp.address)
