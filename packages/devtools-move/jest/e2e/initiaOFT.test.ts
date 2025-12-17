@@ -126,11 +126,4 @@ describe('InitiaOFT View Methods', () => {
             expect(typeof result).toBe('string')
         })
     })
-
-    // TODO: Remove this test after verifying CI reporting
-    describe('Intentional Failure', () => {
-        test('should fail to verify CI error reporting', () => {
-            expect(true).toBe(false)
-        })
-    })
 })
