@@ -159,6 +159,65 @@ This creates the asset bridge precompile `0x2000...abcd` (where `abcd` is the `c
 >
 > ⚠️ **Setup Guidance**: CoreDecimals - EVMDecimals must be within [-2,18] is a requirement for the hyperliquid protocol
 
+## Quote Assets (Fee Tokens)
+
+A **quote asset** (or fee token) is a token that can be used as the quote currency in trading pairs on HyperCore. When a token becomes a quote asset, Hyperliquid automatically creates a `HYPE/QUOTE_ASSET` spot market. Thus every quote asset for a `HYPE` spot market is a quote asset.
+
+It is permissionless to deploy spot markets for OTHER tokens as well.
+
+### Requirements Overview
+
+**Mainnet:**
+- Follow the complete requirements outlined in [Hyperliquid's Permissionless Spot Quote Assets documentation](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets)
+- Requires specific trading fee share configuration
+- Additional technical and liquidity requirements apply
+- Contact the Hyperliquid team for the most up-to-date requirements
+
+**Testnet (lighter requirements):**
+The requirements are more relaxed to facilitate testing:
+1. **Stake 50 HYPE tokens** (refer to [Hyperliquid's Permissionless Spot Quote Assets documentation](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets) for more details)
+2. **Create active limit orders** on both sides of your token's order book:
+   - Place at least one BUY limit order
+   - Place at least one SELL limit order
+   - Orders must be active before executing the `enable-quote-token` command
+   - You can place these orders via the [Hyperliquid Explorer](https://app.hyperliquid.xyz/)
+   
+   Example order book requirement:
+   ```
+   Price      Size        Total
+   1.0015     1,000.00    1,000.00  <- Active SELL order
+   -------- Spread: 0.0025 (0.250%) --------
+   0.9990     1,000.00    1,000.00  <- Active BUY order
+   ```
+
+3. After executing `enable-quote-token`:
+   - A `HYPE/YOUR_ASSET` trading pair is automatically created
+   - You must then maintain order book requirements for the `HYPE/YOUR_ASSET` pair (not required for testnet)
+   - Follow Hyperliquid's documentation for maintaining the `HYPE/ASSET` order book
+
+### Checking Quote Asset Status
+
+To verify if a token is a quote asset:
+
+```bash
+# Check specific token
+npx @layerzerolabs/hyperliquid-composer list-quote-asset \
+    --filter-token-index <coreIndex> \
+    --network {testnet | mainnet}
+
+# List all quote assets
+npx @layerzerolabs/hyperliquid-composer list-quote-asset \
+    --network {testnet | mainnet}
+```
+
+### Composer Requirements for Quote Assets
+
+If you're deploying a quote asset token (or plan to make it one):
+- **Use `MyHyperLiquidComposer_FeeToken`** - This composer variant provides automatic user activation using the token itself as the fee token
+- Regular composers (`MyHyperliquidComposer`, `FeeAbstraction`, `Recoverable`) will work but require users to have HYPE for gas fees
+
+The deployment scripts automatically check if your token is a quote asset and guide you to use the appropriate composer type.
+
 ## The Asset Bridge
 
 Transactions can be sent to the asset bridge address `0x2000...abcd` (where `abcd` is the `coreIndexId` of the HIP-1 in hex) to send tokens between HyperEVM and HyperCore. This bridge is formed after the token linking step, until then the bridge does not exist.
@@ -260,18 +319,90 @@ contract HyperLiquidComposer is IHyperLiquidComposer {
 }
 ```
 
-### There are 2 extensions for Hyperliquid Composers
+### There are 3 extensions for Hyperliquid Composers
 
 #### Recovery Extension
 
-This gives you the ability to pull tokens our of the composer on hypercore and into the composer's address on hyperevm.
-The priviledged address can also send those tokens to itself on HyperEVM, giving you the ability to recover locked tokens.
+This gives you the ability to pull tokens out of the composer on HyperCore and into the composer's address on HyperEVM.
+The privileged address can also send those tokens to itself on HyperEVM, giving you the ability to recover locked tokens.
+
+**Use Case:** Useful for any token deployment where you want the ability to recover tokens that may become stuck in the composer contract.
+
+**Constructor Arguments:**
+- `oft`: OFT address
+- `coreIndex`: Core spot index
+- `weiDiff`: Decimal difference between EVM and Core
+- `recoveryAddress`: Address with recovery privileges
 
 #### FeeToken Extension
 
-This extension is for tokens that are a `FeeToken` - can be used to activate users on hypercore. Should a composer deployed with this extension notice that a user's address has not been activated then it would send across bridge across the whole amount of tokens to HyperCore and then send across `amt - activationFee` to the user. This consumes `activationFee` from the composer's address.
+This extension is for tokens that are a **quote asset** (fee token) - tokens that can be used to activate users on HyperCore. 
 
-Ex: User sends `1.5 USDT0` to an new address. The composer sends over `1.5 USDT0` to itself and then makes a core transfer of `0.5 USDT0`. The `1 USDT0` is consumed as Fee.
+**How it Works:**
+When the composer detects that a user's address has not been activated on HyperCore, it:
+1. Sends the full amount of tokens across the bridge to HyperCore
+2. Transfers `amt - activationFee` to the user
+The transfer automatically consumes `activationFee` from the composer's address to activate the user
+
+**Example:** User sends `1.5 USDT0` to a new address. The composer sends over `1.5 USDT0` to itself on HyperCore, then makes a core transfer of `0.5 USDT0` to the user. The `1.0 USDT0` activation fee is automatically consumed.
+
+**Requirements:**
+- Token **must be a quote asset** (see [Quote Assets section](#quote-assets-fee-tokens))
+- Deployment scripts automatically verify this requirement
+- If not a quote asset, deployment will fail with guidance to use alternative composers
+
+**Constructor Arguments:**
+- `oft`: OFT address
+- `coreIndex`: Core spot index
+- `weiDiff`: Decimal difference between EVM and Core
+
+On-chain deployments:
+USDT0 : [0x80123Ab57c9bc0C452d6c18F92A653a4ee2e7585](https://hyperevmscan.io/address/0x80123Ab57c9bc0C452d6c18F92A653a4ee2e7585)
+
+#### FeeAbstraction Extension
+
+This extension provides automatic user activation using a **different token** for fees, combined with price oracle integration for dynamic fee calculation.
+
+**How it Works:**
+1. Checks if a user's address is activated on HyperCore
+2. Uses the hyperliquid's spot pair oracle to convert between your token and the fee token value
+3. Can charge an overhead fee (set on deployment) in addition to the base activation cost
+4. If there is insufficient quote asset balance, the composer will revert the transaction and user gets tokens on HyperEVM
+
+**Key Features:**
+- **Price Oracle Integration**: Queries real-time prices via `spotId` (e.g., 107 for HYPE/USDC)
+- **Overhead Fee**: Configurable additional fee in cents (e.g., 100 = $1.00 overhead on top of $1.00 base activation)
+- **Recovery Capability**: Includes recovery address functionality for fee management
+- **Flexible Fee Token**: Can work with any token, not limited to quote assets
+
+**Example Configuration:**
+- SpotId: `107` (HYPE/USDC pair for price queries)
+- Activation Overhead Fee: `100` cents (adds $1.00 overhead)
+- Total User Fee: $2.00 (Base $1.00 + Overhead $1.00)
+
+**Use Case:** Ideal for non-quote-asset tokens where you want to provide seamless user activation without requiring users to hold quote assets.
+
+**Constructor Arguments:**
+- `oft`: OFT address
+- `coreIndex`: Core spot index
+- `weiDiff`: Decimal difference between EVM and Core
+- `spotId`: Spot pair ID for price queries (e.g., 107 for HYPE/USDC)
+- `activationOverheadFee`: Overhead fee in cents
+- `recoveryAddress`: Address with recovery privileges for fee management
+
+On-chain deployments:
+ENA : [0x5879d9821909A41cd3A382A990A4A5A6Ca77F2f0](https://hyperevmscan.io/address/0x5879d9821909A41cd3A382A990A4A5A6Ca77F2f0)
+
+### Choosing the Right Composer
+
+| Composer Type | Best For | Key Feature |
+|--------------|----------|-------------|
+| **Regular** | Standard tokens | Basic functionality, no extensions |
+| **Recoverable** | Any token | Token recovery capability |
+| **FeeToken** | **Quote assets only** | Automatic activation using your token |
+| **FeeAbstraction** | Non-quote assets | Automatic activation using oracle-priced fees |
+
+> ⚠️ **Important**: The deployment scripts automatically check if your token is a quote asset and guide you to use the appropriate composer type. See [Quote Assets (Fee Tokens)](#quote-assets-fee-tokens) for more details.
 
 ## LayerZero Transaction on HyperEVM
 
@@ -430,6 +561,7 @@ npx @layerzerolabs/hyperliquid-composer request-evm-contract \
 
 ### 2. Finalize EVM Contract Link
 
+#### Hypercore action method
 ```bash
 npx @layerzerolabs/hyperliquid-composer finalize-evm-contract \
     --token-index <coreIndex> \
@@ -437,6 +569,20 @@ npx @layerzerolabs/hyperliquid-composer finalize-evm-contract \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
+
+#### CoreWriter Method
+
+Alternative method using direct CoreWriter interaction. This is useful if you prefer to use Foundry's `cast` command.
+
+```bash
+npx @layerzerolabs/hyperliquid-composer finalize-evm-contract-corewriter \
+    --token-index <coreIndex> \
+    --nonce <nonce> \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+```
+
+The command will output the calldata and a ready-to-use `cast send` command for finalizing the EVM contract link via the CoreWriter precompile at `0x3333333333333333333333333333333333333333`.
 
 ## Post-Launch Management
 
@@ -532,6 +678,25 @@ npx @layerzerolabs/hyperliquid-composer spot-auction-status \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
 ```
+
+### Check if Token is Quote Asset
+
+Check if a specific token is a quote asset, or list all quote assets when no token index is provided. Quote assets are automatically paired with HYPE when promoted by the Hyperliquid protocol.
+
+```bash
+# List all quote assets
+npx @layerzerolabs/hyperliquid-composer list-quote-asset \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+
+# Check if specific token is a quote asset
+npx @layerzerolabs/hyperliquid-composer list-quote-asset \
+    --filter-token-index <coreIndex> \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+```
+
+The command returns `yes` or `no` when checking a specific token, or lists all quote assets when no token index is provided.
 
 ## Utilities
 
@@ -805,10 +970,10 @@ npx @layerzerolabs/hyperliquid-composer trading-fee \
 
 This step enables the token to be used as a quote asset for trading pairs. This allows other tokens to form trading pairs against your token (e.g., TOKEN/YOUR_TOKEN instead of only YOUR_TOKEN/USDC).
 
-> ⚠️ **Requirements**: 
-> - Requires specific trading fee share value (see Step 6/7 above)
-> - Review all requirements at: [Permissionless Spot Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets)
-> - Contact the Hyperliquid team for the most up-to-date information
+> ⚠️ **Important**: Review the complete [Quote Assets (Fee Tokens)](#quote-assets-fee-tokens) section above for detailed requirements, including:
+> - Mainnet: Complete technical and liquidity requirements
+> - Testnet: Simplified requirements (50 HYPE stake + active order book)
+> - Order book maintenance for `HYPE/YOUR_ASSET` pair after enablement
 >
 > 📝 **Note**: This can be executed after the trading fee share is set and even after deployment and linking are complete.
 
@@ -819,6 +984,17 @@ npx @layerzerolabs/hyperliquid-composer enable-quote-token \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
+
+**Prerequisites:**
+- Trading fee share must be set (see Step 6/7 above)
+- **Testnet**: 50 HYPE staked + active BUY and SELL limit orders on your token's order book
+- **Mainnet**: All requirements per [Hyperliquid's documentation](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets)
+
+**After Execution:**
+- A `HYPE/YOUR_ASSET` trading pair is automatically created
+- You must maintain order book requirements for the new `HYPE/ASSET` pair
+- Verify quote asset status with the `list-quote-asset` command
+
 
 ### Step 6.7/7 `enableAlignedQuoteToken` (Optional)
 
@@ -871,6 +1047,19 @@ npx @layerzerolabs/hyperliquid-composer finalize-evm-contract  \
     --log-level verbose \
     --private-key $PRIVATE_KEY_HYPERLIQUID
 ```
+
+**Alternative: Using CoreWriter directly with Foundry**
+
+If you prefer to use Foundry's `cast` command, you can generate the calldata and send the transaction directly:
+
+```bash
+npx @layerzerolabs/hyperliquid-composer finalize-evm-contract-corewriter \
+    --token-index <coreIndex> \
+    --nonce <deployment-nonce> \
+    --network {testnet | mainnet}
+```
+
+This will output the calldata and a ready-to-use `cast send` command that you can execute directly.
 
 ## Deploy the Composer
 

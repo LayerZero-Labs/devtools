@@ -123,7 +123,16 @@ npx @layerzerolabs/hyperliquid-composer trading-fee \
 
 ### 7. Enable Quote Token Capability (Optional)
 
-Enables your token to be used as a quote asset for trading pairs. **Dependency:** Requires specific trading fee share value (see Step 6 above). See: [Permissionless Spot Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets)
+Enables your token to be used as a quote asset for trading pairs.
+
+> ⚠️ **Important**: Review the complete [Quote Assets (Fee Tokens)](https://github.com/LayerZero-Labs/devtools/tree/main/packages/hyperliquid-composer/HYPERLIQUID.README.md#quote-assets-fee-tokens) section in the main documentation for:
+>
+> - Mainnet requirements (technical and liquidity)
+> - Testnet requirements (50 HYPE stake + active order book)
+> - Order book maintenance for `HYPE/YOUR_ASSET` pair
+> - Composer selection guidance (use `FeeToken` variant for quote assets)
+
+**Dependency:** Requires trading fee share configuration (see Step 6 above).
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer enable-quote-token \
@@ -161,6 +170,8 @@ npx @layerzerolabs/hyperliquid-composer request-evm-contract \
 
 ### 2. Finalize EVM Contract Link
 
+#### Hypercore action method
+
 ```bash
 npx @layerzerolabs/hyperliquid-composer finalize-evm-contract \
     --token-index <coreIndex> \
@@ -168,6 +179,20 @@ npx @layerzerolabs/hyperliquid-composer finalize-evm-contract \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
+
+#### CoreWriter Method
+
+Alternative method using direct CoreWriter interaction. This is useful if you prefer to use Foundry's `cast` command.
+
+```bash
+npx @layerzerolabs/hyperliquid-composer finalize-evm-contract-corewriter \
+    --token-index <coreIndex> \
+    --nonce <nonce> \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+```
+
+The command will output the calldata and a ready-to-use `cast send` command for finalizing the EVM contract link via the CoreWriter precompile at `0x3333333333333333333333333333333333333333`.
 
 ## Post-Launch Management
 
@@ -263,6 +288,25 @@ npx @layerzerolabs/hyperliquid-composer spot-auction-status \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
 ```
+
+### Check if Token is Quote Asset
+
+Check if a specific token is a quote asset, or list all quote assets when no token index is provided. Quote assets are automatically paired with HYPE when promoted by the Hyperliquid protocol.
+
+```bash
+# List all quote assets
+npx @layerzerolabs/hyperliquid-composer list-quote-asset \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+
+# Check if specific token is a quote asset
+npx @layerzerolabs/hyperliquid-composer list-quote-asset \
+    --filter-token-index <coreIndex> \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+```
+
+The command returns `yes` or `no` when checking a specific token, or lists all quote assets when no token index is provided.
 
 ## Utilities
 
@@ -490,11 +534,11 @@ npx @layerzerolabs/hyperliquid-composer trading-fee \
 
 This step enables the token to be used as a quote asset for trading pairs. This allows other tokens to form trading pairs against your token (e.g., TOKEN/YOUR_TOKEN instead of only YOUR_TOKEN/USDC).
 
-> ⚠️ **Requirements**:
+> ⚠️ **Important**: Review the complete [Quote Assets (Fee Tokens)](../../packages/hyperliquid-composer/HYPERLIQUID.README.md#quote-assets-fee-tokens) section in the main documentation for detailed requirements, including:
 >
-> - Requires specific trading fee share value (see Step 6/7 above)
-> - Review all requirements at: [Permissionless Spot Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets)
-> - Contact the Hyperliquid team for the most up-to-date information
+> - Mainnet: Complete technical and liquidity requirements
+> - Testnet: Simplified requirements (50 HYPE stake + active order book)
+> - Order book maintenance for `HYPE/YOUR_ASSET` pair after enablement
 >
 > 📝 **Note**: This can be executed after the trading fee share is set and even after deployment and linking are complete.
 
@@ -505,6 +549,18 @@ npx @layerzerolabs/hyperliquid-composer enable-quote-token \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
+
+**Prerequisites:**
+
+- Trading fee share must be set (see Step 6/7 above)
+- **Testnet**: 50 HYPE staked + active BUY and SELL limit orders on your token's order book
+- **Mainnet**: All requirements per [Hyperliquid's documentation](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets)
+
+**After Execution:**
+
+- A `HYPE/YOUR_ASSET` trading pair is automatically created
+- You must maintain order book requirements for the new `HYPE/ASSET` pair
+- Verify quote asset status with the `list-quote-asset` command
 
 ### Step 6.7/7 `enableAlignedQuoteToken` (Optional)
 
@@ -558,6 +614,19 @@ npx @layerzerolabs/hyperliquid-composer finalize-evm-contract  \
     --log-level verbose \
     --private-key $PRIVATE_KEY_HYPERLIQUID
 ```
+
+**Alternative: Using CoreWriter directly with Foundry**
+
+If you prefer to use Foundry's `cast` command, you can generate the calldata and send the transaction directly:
+
+```bash
+npx @layerzerolabs/hyperliquid-composer finalize-evm-contract-corewriter \
+    --token-index <coreIndex> \
+    --nonce <deployment-nonce> \
+    --network {testnet | mainnet}
+```
+
+This will output the calldata and a ready-to-use `cast send` command that you can execute directly.
 
 ## Deploy the Composer
 

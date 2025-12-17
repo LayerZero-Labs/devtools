@@ -131,7 +131,15 @@ npx @layerzerolabs/hyperliquid-composer trading-fee \
 
 ### 7. Enable Quote Token Capability (Optional)
 
-Enables your token to be used as a quote asset for trading pairs. **Dependency:** Requires specific trading fee share value (see Step 6 above). See: [Permissionless Spot Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets)
+Enables your token to be used as a quote asset for trading pairs.
+
+> ⚠️ **Important**: Review the complete [Quote Assets (Fee Tokens)](./HYPERLIQUID.README.md#quote-assets-fee-tokens) section for:
+> - Mainnet requirements (technical and liquidity)
+> - Testnet requirements (50 HYPE stake + active order book)
+> - Order book maintenance for `HYPE/YOUR_ASSET` pair
+> - Composer selection guidance (use `FeeToken` variant for quote assets)
+
+**Dependency:** Requires trading fee share configuration (see Step 6 above).
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer enable-quote-token \
@@ -177,6 +185,17 @@ npx @layerzerolabs/hyperliquid-composer finalize-evm-contract \
     --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
+```
+
+**Alternative: Using CoreWriter directly with Foundry**
+
+If you prefer to use Foundry's `cast` command, you can generate the calldata and send the transaction directly:
+
+```bash
+npx @layerzerolabs/hyperliquid-composer finalize-evm-contract-corewriter \
+    --token-index <coreIndex> \
+    --nonce <deployment-nonce> \
+    --network {testnet | mainnet}
 ```
 
 ## Post-Launch Management
@@ -273,6 +292,25 @@ npx @layerzerolabs/hyperliquid-composer spot-auction-status \
     --network {testnet | mainnet} \
     [--log-level {info | verbose}]
 ```
+
+### Check if Token is Quote Asset
+
+Check if a specific token is a quote asset, or list all quote assets when no token index is provided.
+
+```bash
+# List all quote assets
+npx @layerzerolabs/hyperliquid-composer list-quote-asset \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+
+# Check if specific token is a quote asset
+npx @layerzerolabs/hyperliquid-composer list-quote-asset \
+    --filter-token-index <coreIndex> \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+```
+
+The command returns `yes` or `no` when checking a specific token, or lists all quote assets when no token index is provided.
 
 ## Utilities
 
