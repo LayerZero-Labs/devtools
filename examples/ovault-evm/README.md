@@ -16,6 +16,7 @@ Deploy **omnichain ERC-4626 vaults** that enable users to deposit assets from an
 
 - [Prerequisite Knowledge](#prerequisite-knowledge)
 - [Introduction](#introduction)
+- [Composer Types](#composer-types)
 - [Requirements](#requirements)
 - [Scaffold this Example](#scaffold-this-example)
 - [Helper Tasks](#helper-tasks)
@@ -44,6 +45,49 @@ OVault extends the ERC-4626 tokenized vault standard with LayerZero's omnichain 
 - **Spoke Chains**: Host Asset OFTs and Share OFTs that connect to the hub
 
 OVault makes it extremely easy to move assets and shares between any supported chains, while also enabling cross-chain vault operations. Users can deposit assets from any chain to receive shares on any destination chain, redeem shares from any chain to receive assets on any destination chain, or simply transfer these tokens between chains - all through a unified interface.
+
+**Stargate Integration**: OVault is fully compatible with Stargate OFTs (USDC, USDT, etc.) as vault assets, with automatic decimal handling and no configuration required.
+
+## Composer Types
+
+OVault supports two types of composers to handle different asset types:
+
+### MyOVaultComposerERC20
+
+Use this composer when your vault's underlying asset is a standard **ERC20 token**:
+
+- Works with any ERC20-based OFT (e.g., Stargate USDC, USDT0, WBTC)
+- Direct integration with ERC-4626 vaults
+- Standard approval and transfer flow
+
+### MyOVaultComposerNative
+
+Use this composer when your vault's underlying asset is based on the **chain's native token** (e.g., ETH, HYPE):
+
+- Required for native token OFTs like `NativeOFTAdapter` or `StargatePoolNative`
+- Automatically wraps native tokens (ETH) into WETH before depositing to the vault
+- Necessary because ERC-4626 vaults only support ERC20 tokens
+- Transparent to end users - they send native tokens and receive shares
+
+> **Note**: This composer uses the WETH9 interface (`deposit()`/`withdraw()`) to convert between native and wrapped tokens. This works with standard implementations like ETH→WETH and HYPE→WHYPE. If your chain's wrapped native token uses a different interface, you must override the composer's `lzCompose()` function with the correct wrapping mechanism.
+
+> **Issuing Your Own Native Asset**: If you plan on issuing a bridged version of the chain's native asset yourself (i.e., not `StargatePoolNative` or an already deployed `NativeOFTAdapter`), use a `NativeOFTAdapter` instead of a standard OFT. See the [native-oft-adapter example](https://github.com/LayerZero-Labs/devtools/tree/main/examples/native-oft-adapter) for details.
+
+**Which Composer Should You Use?**
+
+The composer type depends on your asset OFT's underlying token:
+
+- If `assetOFT.token()` returns an ERC20 address → use `MyOVaultComposerERC20`
+- If `assetOFT.token()` returns `address(0)` (native token) → use `MyOVaultComposerNative`
+
+**Customizing Token Initialization**
+
+The parent `VaultComposerSync` contract provides overridable functions for custom token patterns:
+
+- `_initializeAssetToken()`: Override for non-standard asset token configurations
+- `_initializeShareToken()`: Override for non-standard share token configurations
+
+This is useful when your vault or OFT contracts don't follow the default patterns (e.g., custom ERC4626 vaults that accept ETH directly).
 
 ## Requirements
 
@@ -117,6 +161,13 @@ Configure your vault deployment in `devtools/deployConfig.ts`. This file control
 
 > **Note**: If your asset is already an OFT, you do not need to deploy a separate mesh. The only requirement is that the asset OFT supports the hub chain you are deploying to.
 
+> **Important - Composer Selection**: Choose the correct composer type based on your asset:
+>
+> - Use `MyOVaultComposerERC20` for standard ERC20 asset OFTs
+> - Use `MyOVaultComposerNative` for native token OFTs (e.g., `NativeOFTAdapter`, `StargatePoolNative`)
+>
+> See the [Composer Types](#composer-types) section for details.
+
 ```typescript
 import { EndpointId } from "@layerzerolabs/lz-definitions";
 
@@ -134,7 +185,7 @@ export const DEPLOYMENT_CONFIG = {
     contracts: {
       vault: "MyERC4626",
       shareAdapter: "MyShareOFTAdapter",
-      composer: "MyOVaultComposer",
+      composer: "MyOVaultComposerERC20", // Use MyOVaultComposerNative for native token assets
     },
     // IF YOU HAVE EXISTING CONTRACTS, SET THE ADDRESSES HERE
     vaultAddress: undefined, // Set to '0x...' to use existing vault
@@ -143,10 +194,11 @@ export const DEPLOYMENT_CONFIG = {
   },
 
   // Asset OFT configuration (deployed on specified chains OR use existing address)
+  // NOTE: For native assets (ETH, HYPE), use 'MyAssetOFTNative' with 'MyOVaultComposerNative'
   asset: {
-    contract: "MyAssetOFT",
+    contract: "MyAssetOFTERC20",
     metadata: {
-      name: "MyAssetOFT",
+      name: "MyAssetOFTERC20",
       symbol: "ASSET",
     },
     deploymentEids: [_hubEid, ..._spokeEids],
@@ -229,7 +281,7 @@ Compile your contracts:
 pnpm compile`
 ```
 
-> **Testing Note**: If you're deploying the asset OFT from scratch for testing purposes, you'll need to mint an initial supply. Uncomment the `_mint` line in the `MyAssetOFT` constructor to provide initial liquidity. This ensures you have tokens to test deposit and cross-chain transfer functionality.
+> **Testing Note**: If you're deploying the asset OFT from scratch for testing purposes, you'll need to mint an initial supply. Uncomment the `_mint` line in the `MyAssetOFTERC20` constructor to provide initial liquidity. This ensures you have tokens to test deposit and cross-chain transfer functionality.
 >
 > **⚠️ Warning**: Do NOT mint share tokens directly in `MyShareOFT`. Share tokens must only be minted by the vault contract during deposits to maintain the correct share-to-asset ratio. Manually minting share tokens breaks the vault's accounting and can lead to incorrect redemption values. The mint line in `MyShareOFT` should only be uncommented for UI/integration testing, never in production.
 
@@ -274,17 +326,17 @@ import { OAppEnforcedOption } from "@layerzerolabs/toolbox-hardhat";
 
 const optimismContract: OmniPointHardhat = {
   eid: EndpointId.OPTSEP_V2_TESTNET.valueOf(),
-  contractName: "MyAssetOFT",
+  contractName: "MyAssetOFTERC20",
 };
 
 const arbitrumContract: OmniPointHardhat = {
   eid: EndpointId.ARBSEP_V2_TESTNET.valueOf(),
-  contractName: "MyAssetOFT",
+  contractName: "MyAssetOFTERC20",
 };
 
 const baseContract: OmniPointHardhat = {
   eid: EndpointId.BASESEP_V2_TESTNET.valueOf(),
-  contractName: "MyAssetOFT",
+  contractName: "MyAssetOFTERC20",
 };
 
 // Configure gas limits for message execution
@@ -649,6 +701,30 @@ npx hardhat lz:ovault:send \
 - `--lz-compose-gas`: Gas for lzCompose operation (auto-optimized by default)
 - `--lz-compose-value`: Value for lzCompose operation (in wei)
 - `--oft-address`: Override source OFT address
+
+**Using Stargate Assets:**
+
+The OVault system is fully compatible with Stargate OFTs (e.g., USDC.e) as the underlying vault asset. To use Stargate assets, specify the Stargate pool/OFT address using the `--oft-address` parameter:
+
+```bash
+# Example: Deposit Stargate USDC from Ethereum to receive shares on Base
+npx hardhat lz:ovault:send \
+  --src-eid 30101 \
+  --dst-eid 30184 \
+  --amount 100 \
+  --to 0xYourRecipientAddress \
+  --token-type asset \
+  --oft-address 0xc026395860Db2d07ee33e05fE50ed7bD583189C7  # Stargate USDC pool on Ethereum
+```
+
+**Key points for Stargate integration:**
+
+- The `--oft-address` must point to the Stargate pool/OFT address on the source chain
+- Decimals are automatically detected (e.g., 6 decimals for USDC vs 18 for ETH)
+- No LayerZero config files needed - addresses are read from the deployed composer
+- Works with any Stargate asset that implements the IOFT interface
+- Find Stargate contract addresses in the [LayerZero OFT Ecosystem Docs](https://docs.layerzero.network/v2/deployments/oft-ecosystem-stargate-assets?stages=mainnet&issuers=Stargate)
+- Automatic slippage protection (0.5% default) for stablecoin transfers
 
 **Gas Optimization:**
 

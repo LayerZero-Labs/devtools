@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ua-devtools-solana",
-  "version": "8.0.6",
+  "version": "8.0.7",
   "description": "Utilities for LayerZero Solana projects",
   "repository": {
     "type": "git",
@@ -47,7 +47,7 @@
     "@layerzerolabs/lz-v2-utilities": "^3.0.148",
     "@layerzerolabs/oft-v2-solana-sdk": "^3.0.59",
     "@layerzerolabs/protocol-devtools": "~3.0.2",
-    "@layerzerolabs/protocol-devtools-solana": "~8.0.5",
+    "@layerzerolabs/protocol-devtools-solana": "~8.0.6",
     "@layerzerolabs/test-devtools": "~0.4.7",
     "@layerzerolabs/test-devtools-solana": "~0.0.5",
     "@layerzerolabs/ua-devtools": "~5.0.2",
@@ -78,7 +78,7 @@
     "@layerzerolabs/lz-v2-utilities": "^3.0.148",
     "@layerzerolabs/oft-v2-solana-sdk": "^3.0.59",
     "@layerzerolabs/protocol-devtools": "^3.0.2",
-    "@layerzerolabs/protocol-devtools-solana": "~8.0.5",
+    "@layerzerolabs/protocol-devtools-solana": "~8.0.6",
     "@layerzerolabs/ua-devtools": "^5.0.2",
     "@solana/web3.js": "^1.95.8",
     "fp-ts": "^2.16.2",
