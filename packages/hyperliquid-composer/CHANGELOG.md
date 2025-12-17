@@ -1,5 +1,11 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 2.0.5
+
+### Patch Changes
+
+- bb2f4c3: sdk updates for quote asset improvement
+
 ## 2.0.4
 
 ### Patch Changes
