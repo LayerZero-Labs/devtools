@@ -230,7 +230,7 @@ jobs:
             const outcome = '${{ steps.test-e2e.outcome }}';
             const emoji = outcome === 'success' ? '✅' : '❌';
             const status = outcome === 'success' ? 'Passed' : 'Failed';
-            const timestamp = new Date().toISOString();
+            const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 16) + ' (UTC)';
             const runNumber = context.runNumber;
             const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             const prNumber = context.payload.pull_request?.number;
