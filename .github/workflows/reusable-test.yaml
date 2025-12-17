@@ -254,7 +254,7 @@ jobs:
                 if (botComment) {
                   // Extract existing entries
                   const bodyLines = botComment.body.split('\n');
-                  const runsStartIndex = bodyLines.findIndex(line => line.trim() === '**Test Runs:**');
+                  const runsStartIndex = bodyLines.findIndex(line => line.trim() === '**Test Runs (Newest First):**');
                   
                   let newBody;
                   if (runsStartIndex !== -1) {
@@ -264,7 +264,7 @@ jobs:
                     newBody = beforeRuns + '\n' + newEntry + '\n' + existingRuns;
                   } else {
                     // Shouldn't happen, but handle gracefully
-                    newBody = botComment.body + '\n\n**Test Runs:**\n' + newEntry;
+                    newBody = botComment.body + '\n\n**Test Runs (Newest First):**\n' + newEntry;
                   }
 
                   await github.rest.issues.updateComment({
@@ -277,7 +277,7 @@ jobs:
                   // Create new comment
                   const comment = header + "\n\n" +
                     "E2E tests are non-blocking and validate real blockchain interactions. Failures may occur due to network issues, RPC rate limits, or external service downtime.\n\n" +
-                    "**Test Runs:**\n" +
+                    "**Test Runs (Newest First):**\n" +
                     newEntry;
 
                   await github.rest.issues.createComment({
