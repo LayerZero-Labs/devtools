@@ -46,7 +46,7 @@ describe('InitiaOFT View Methods', () => {
             restClient = getConnection('initia', 'testnet') as RESTClient
 
             // Initialize with local config - using path relative to workspace root
-            const configPath = '../test.layerzero.config.ts'
+            const configPath = './jest/test.layerzero.config.ts'
             const context = await initializeTaskContext(configPath)
             oft = context.oft as InitiaOFT
             // Use the real REST client
