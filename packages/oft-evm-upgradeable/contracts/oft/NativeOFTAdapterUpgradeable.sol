@@ -45,7 +45,7 @@ abstract contract NativeOFTAdapterUpgradeable is OFTCoreUpgradeable {
      * @dev Returns the address of the native token
      * @return The address of the native token.
      */
-    function token() public pure returns (address) {
+    function token() public pure virtual returns (address) {
         return address(0);
     }
 
@@ -135,7 +135,7 @@ abstract contract NativeOFTAdapterUpgradeable is OFTCoreUpgradeable {
      * @param _nativeFee The native fee to be paid.
      * @return nativeFee The amount of native currency paid.
      */
-    function _payNative(uint256 _nativeFee) internal pure override returns (uint256 nativeFee) {
+    function _payNative(uint256 _nativeFee) internal pure virtual override returns (uint256 nativeFee) {
         return _nativeFee;
     }
 }
