@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.4.0
+
+### Minor Changes
+
+- e815cc3: Adding Flow blockchain to verify-contract networks list
+
 ## 1.3.0
 
 ### Minor Changes
