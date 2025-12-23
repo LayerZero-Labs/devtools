@@ -525,6 +525,18 @@ export const networks: Record<string, NetworkDefinition> = {
         aliases: ['flare-mainnet'],
     },
 
+    // Flow
+    flow: {
+        chainId: 747,
+        apiUrl: 'https://evm.flowscan.io/api',
+        aliases: ['flow-mainnet'],
+    },
+
+    'flow-testnet': {
+        chainId: 545,
+        apiUrl: 'https://evm-testnet.flowscan.io/api',
+    },
+
     // Gravity
     gravity: {
         chainId: 0,
