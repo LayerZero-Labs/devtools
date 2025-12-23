@@ -5,7 +5,11 @@ mod state;
 
 use anchor_lang::prelude::*;
 use instructions::*;
-use oapp::{endpoint::MessagingFee, endpoint_cpi::LzAccount, LzReceiveParams};
+use oapp::{
+    endpoint::MessagingFee,
+    LzReceiveParams,
+    lz_receive_types_v2::{LzReceiveTypesV2Accounts, LzReceiveTypesV2Result}
+};
 use solana_helper::program_id_from_env;
 use state::*;
 
@@ -57,12 +61,19 @@ pub mod my_oapp {
         LzReceive::apply(&mut ctx, &params)
     }
 
-    // handler that returns the list of accounts required to execute lz_receive
-    pub fn lz_receive_types(
-        ctx: Context<LzReceiveTypes>,
+    pub fn lz_receive_types_v2(
+        ctx: Context<LzReceiveTypesV2>,
         params: LzReceiveParams,
-    ) -> Result<Vec<LzAccount>> {
-        LzReceiveTypes::apply(&ctx, &params)
+    ) -> Result<LzReceiveTypesV2Result> {
+        LzReceiveTypesV2::apply(&ctx, &params)
+    }
+
+    // returns the version and the accounts required to execute lz_receive_types_v2
+    pub fn lz_receive_types_info(
+        ctx: Context<LzReceiveTypesInfo>,
+        params: LzReceiveParams,
+    ) -> Result<(u8, LzReceiveTypesV2Accounts)> {
+        LzReceiveTypesInfo::apply(&ctx, &params)
     }
 
 }

@@ -12,7 +12,13 @@ import { ResolvedAccount, ResolvedAccountsWithIndices, getAccountMetasAndSigners
 
 // Accounts.
 export type SendInstructionAccounts = {
+    /**
+     * Configuration for the destination chain. Holds the peer address and any
+     * enforced messaging options.
+     */
+
     peer: PublicKey | Pda
+    /** OApp Store PDA that signs the send instruction */
     store: PublicKey | Pda
     endpoint: PublicKey | Pda
 }
@@ -48,10 +54,7 @@ export function getSendInstructionDataSerializer(): Serializer<SendInstructionDa
             ],
             { description: 'SendInstructionData' }
         ),
-        (value) => ({
-            ...value,
-            discriminator: new Uint8Array([102, 251, 20, 187, 65, 75, 12, 69]),
-        })
+        (value) => ({ ...value, discriminator: new Uint8Array([102, 251, 20, 187, 65, 75, 12, 69]) })
     ) as Serializer<SendInstructionDataArgs, SendInstructionData>
 }
 
@@ -64,21 +67,13 @@ export function send(
     input: SendInstructionAccounts & SendInstructionArgs
 ): TransactionBuilder {
     // Program ID.
-    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
+    const programId = context.programs.getPublicKey('myOapp', '')
 
     // Accounts.
     const resolvedAccounts = {
         peer: { index: 0, isWritable: false as boolean, value: input.peer ?? null },
-        store: {
-            index: 1,
-            isWritable: false as boolean,
-            value: input.store ?? null,
-        },
-        endpoint: {
-            index: 2,
-            isWritable: false as boolean,
-            value: input.endpoint ?? null,
-        },
+        store: { index: 1, isWritable: false as boolean, value: input.store ?? null },
+        endpoint: { index: 2, isWritable: false as boolean, value: input.endpoint ?? null },
     } satisfies ResolvedAccountsWithIndices
 
     // Arguments.

@@ -14,7 +14,17 @@ async function generateTypeScriptSDK(): Promise<void> {
     // This is also acceptable as the client SDK requires the program ID to be provided at runtime.
     console.error('Generating TypeScript SDK to %s. IDL from %s', generatedSDKDir, anchorIdlPath)
     const kinobi = createFromRoot(rootNodeFromAnchor(anchorIdl as AnchorIdl))
-    void kinobi.accept(renderVisitor(generatedSDKDir))
+    void kinobi.accept(
+        renderVisitor(generatedSDKDir, {
+            prettierOptions: {
+                semi: false,
+                singleQuote: true,
+                tabWidth: 4,
+                printWidth: 120,
+                trailingComma: 'es5',
+            },
+        })
+    )
 }
 
 ;(async (): Promise<void> => {
