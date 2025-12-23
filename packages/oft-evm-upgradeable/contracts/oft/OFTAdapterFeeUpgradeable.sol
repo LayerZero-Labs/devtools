@@ -36,7 +36,7 @@ abstract contract OFTAdapterFeeUpgradeable is OFTAdapterUpgradeable, FeeUpgradea
         }
     }
 
-    function feeBalance() public view returns (uint256) {
+    function feeBalance() public view virtual returns (uint256) {
         OFTAdapterFeeStorage storage $ = _getOFTAdapterFeeStorage();
         return $.feeBalance;
     }
@@ -72,7 +72,7 @@ abstract contract OFTAdapterFeeUpgradeable is OFTAdapterUpgradeable, FeeUpgradea
      * @notice Withdraws accumulated fees to a specified address.
      * @param _to The address to which the fees will be withdrawn.
      */
-    function withdrawFees(address _to) external onlyOwner {
+    function withdrawFees(address _to) external virtual onlyOwner {
         // @dev doesn't allow owner to pull from the locked assets of the contract,
         // only from accumulated fees
         OFTAdapterFeeStorage storage $ = _getOFTAdapterFeeStorage();
