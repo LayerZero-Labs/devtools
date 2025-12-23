@@ -7,7 +7,7 @@ import { COLORS, RecordLogger, anonymizeValue, createRecordLogger } from '../com
 import { tryCreateScanContractUrl } from '../common/url'
 import { DeploymentSchema } from '../common/schema'
 import { extractSolcInputFromMetadata } from './schema'
-import { encodeContructorArguments, getContructorABIFromSource } from '../common/abi'
+import { encodeConstructorArguments, getConstructorABIFromSource } from '../common/abi'
 import type {
     VerificationArtifact,
     VerificationResult,
@@ -100,7 +100,10 @@ export const verifyNonTarget = async (
                   typeof contract.constructorArguments === 'string'
                   ? contract.constructorArguments
                   : // For decoded constructor arguments we'll need to try and encoded them using the contract source
-                    encodeContructorArguments(getContructorABIFromSource(source.content), contract.constructorArguments)
+                    encodeConstructorArguments(
+                        getConstructorABIFromSource(source.content),
+                        contract.constructorArguments
+                    )
 
         // Deployment metadata contains solcInput, just a bit rearranged
         const solcInput = extractSolcInputFromMetadata(deployment.metadata)
@@ -254,7 +257,26 @@ export const verifyTarget = async (
                     const licenseType = findLicenseType(source.content)
 
                     // Constructor arguments need to come ABI-encoded but without the 0x
-                    const constructorArguments = encodeContructorArguments(deployment.abi, deployment.args)
+                    // Try using deployment ABI first, but fall back to source-based extraction if there's a mismatch
+                    let constructorArguments: string | undefined
+                    try {
+                        constructorArguments = encodeConstructorArguments(deployment.abi, deployment.args)
+                    } catch (error) {
+                        // If encoding fails due to argument mismatch, try extracting constructor from source
+                        // This handles cases where the ABI is incomplete but source code has the full signature
+                        try {
+                            const sourceBasedAbi = getConstructorABIFromSource(source.content)
+                            constructorArguments = encodeConstructorArguments(sourceBasedAbi, deployment.args)
+                        } catch (sourceError) {
+                            // If both fail, log a warning and skip this contract
+                            logger.warn(
+                                `Skipping contract ${contractName} in ${fileName} on network ${networkName} due to constructor encoding error: ${error}. ` +
+                                    `Tried fallback to source-based extraction but that also failed: ${sourceError}`
+                            )
+
+                            return []
+                        }
+                    }
 
                     // Deployment metadata contains solcInput, just a bit rearranged
                     const solcInput = extractSolcInputFromMetadata(deployment.metadata)
