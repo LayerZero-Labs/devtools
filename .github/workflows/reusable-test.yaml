@@ -162,16 +162,6 @@ jobs:
       - name: Setup build cache
         uses: ./.github/workflows/actions/setup-build-cache
 
-      - name: E2E Test Notice
-        run: |
-          echo "::notice::🧪 E2E tests are non-blocking and run against live networks"
-          echo "::notice::These tests validate real blockchain interactions but may fail due to:"
-          echo "::notice::  - Network connectivity issues"
-          echo "::notice::  - RPC rate limiting"
-          echo "::notice::  - External service downtime"
-          echo "::notice::  - Gas price fluctuations"
-          echo "::notice::E2E test failures do NOT block the main CI pipeline"
-
       # There is a small bug in docker compose that will cause 401 if we don't pull the base image manually
       #
       # See more here https://github.com/docker/compose-cli/issues/1545
@@ -217,34 +207,74 @@ jobs:
         with:
           path: ./logs
 
-      # Post comment on E2E test failure
-      - name: Comment on E2E failure
-        if: steps.test-e2e.outcome == 'failure'
+      # Post comment on E2E test completion (success or failure)
+      - name: Comment on E2E results
+        if: always() && steps.test-e2e.outcome != 'skipped' && steps.test-e2e.outcome != 'cancelled'
         uses: actions/github-script@v7
         with:
           script: |
+            const outcome = '${{ steps.test-e2e.outcome }}';
+            const emoji = outcome === 'success' ? '✅' : '❌';
+            const status = outcome === 'success' ? 'Passed' : 'Failed';
+            const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 16) + ' (UTC)';
+            const runNumber = context.runNumber;
             const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             const prNumber = context.payload.pull_request?.number;
+            const header = "## 🧪 E2E Test Status";
+            
+            const newEntry = `- ${emoji} [Run #${runNumber}](${runUrl}) - ${status} - ${timestamp}`;
 
             if (prNumber) {
-              const comment = "## 🚨 E2E Tests Failed\n\n" +
-                "The E2E tests failed during CI. These tests validate real blockchain interactions and may fail due to:\n" +
-                "- Network connectivity issues\n" +
-                "- RPC rate limiting\n" +
-                "- External service downtime\n" +
-                "**Action Run:** " + runUrl + "\n\n" +
-                "This is **non-blocking** and does not prevent merging. Check the action logs above for detailed failure information.";
-
               try {
-                await github.rest.issues.createComment({
-                  issue_number: prNumber,
+                const { data: comments } = await github.rest.issues.listComments({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  body: comment
+                  issue_number: prNumber,
                 });
+
+                const botComment = comments.find(comment => 
+                  comment.user.type === 'Bot' && 
+                  comment.body.includes(header)
+                );
+
+                if (botComment) {
+                  // Extract existing entries
+                  const bodyLines = botComment.body.split('\n');
+                  const runsStartIndex = bodyLines.findIndex(line => line.trim() === '**Test Runs (Newest First):**');
+                  
+                  let newBody;
+                  if (runsStartIndex !== -1) {
+                    // Prepend new entry to existing runs (newest first)
+                    const beforeRuns = bodyLines.slice(0, runsStartIndex + 1).join('\n');
+                    const existingRuns = bodyLines.slice(runsStartIndex + 1).join('\n');
+                    newBody = beforeRuns + '\n' + newEntry + '\n' + existingRuns;
+                  } else {
+                    // Shouldn't happen, but handle gracefully
+                    newBody = botComment.body + '\n\n**Test Runs (Newest First):**\n' + newEntry;
+                  }
+
+                  await github.rest.issues.updateComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    comment_id: botComment.id,
+                    body: newBody
+                  });
+                } else {
+                  // Create new comment
+                  const comment = header + "\n\n" +
+                    "E2E tests are non-blocking and validate real blockchain interactions. Failures may occur due to network issues, RPC rate limits, or external service downtime.\n\n" +
+                    "**Test Runs (Newest First):**\n" +
+                    newEntry;
+
+                  await github.rest.issues.createComment({
+                    issue_number: prNumber,
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    body: comment
+                  });
+                }
               } catch (error) {
-                // Silently fail if we don't have permission to comment (e.g., on forks)
-                console.log('Could not post comment to PR:', error.message);
+                console.log('Error managing PR comments:', error.message);
               }
             }
 
