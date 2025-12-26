@@ -21,7 +21,8 @@
     "./artifacts/*.json": {
       "require": "./artifacts/*.json",
       "imports": "./artifacts/*.json"
-    }
+    },
+    "./contracts/*.sol": "./contracts/*.sol"
   },
   "files": [
     "artifacts/IONFT721.sol/IONFT721.json",
