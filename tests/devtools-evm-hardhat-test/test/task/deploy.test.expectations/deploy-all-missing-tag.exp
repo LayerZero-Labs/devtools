@@ -44,6 +44,6 @@ expect "Do you want to continue?"
 send -- "\r"
 
 expect "Deploying..."
-expect "No deploy scripts matched the given tag: MeNoExist"
+expect "No contracts were deployed"
 
 expect eof

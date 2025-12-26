@@ -268,13 +268,11 @@ const action: ActionType<TaskArgs> = async (
     )
 
     // If tags were specified but no contracts were deployed, warn the user
+    // This could happen if the tag doesn't match any deploy scripts, or if all matching contracts are already deployed
     if (selectedTags.length > 0 && totalDeployedContracts === 0 && errors.length === 0) {
         logger.warn(
-            `${printBoolean(false)} No deploy scripts matched the given ${pluralizeNoun(selectedTags.length, 'tag', 'tags')}: ${selectedTags.join(', ')}`
+            `${printBoolean(false)} No contracts were deployed. This could mean no deploy scripts matched the given ${pluralizeNoun(selectedTags.length, 'tag', 'tags')} (${selectedTags.join(', ')}), or the contracts are already deployed`
         )
-
-        // Mark the process as unsuccessful
-        process.exitCode = process.exitCode || 1
 
         return results
     }
