@@ -274,6 +274,9 @@ const action: ActionType<TaskArgs> = async (
             `${printBoolean(false)} No contracts were deployed. This could mean no deploy scripts matched the given ${pluralizeNoun(selectedTags.length, 'tag', 'tags')} (${selectedTags.join(', ')}), or the contracts are already deployed`
         )
 
+        // Mark the process as unsuccessful
+        process.exitCode = process.exitCode || 1
+
         return results
     }
 
