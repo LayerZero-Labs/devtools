@@ -261,6 +261,24 @@ const action: ActionType<TaskArgs> = async (
         error == null ? [] : [{ networkName, error }]
     )
 
+    // We count the total number of contracts that were deployed across all networks
+    const totalDeployedContracts = Object.values(results).reduce(
+        (acc, { contracts }) => acc + (contracts ? Object.keys(contracts).length : 0),
+        0
+    )
+
+    // If tags were specified but no contracts were deployed, warn the user
+    if (selectedTags.length > 0 && totalDeployedContracts === 0 && errors.length === 0) {
+        logger.warn(
+            `${printBoolean(false)} No deploy scripts matched the given ${pluralizeNoun(selectedTags.length, 'tag', 'tags')}: ${selectedTags.join(', ')}`
+        )
+
+        // Mark the process as unsuccessful
+        process.exitCode = process.exitCode || 1
+
+        return results
+    }
+
     // If nothing went wrong we just exit
     if (errors.length === 0) {
         return logger.info(`${printBoolean(true)} Your contracts are now deployed`), results
