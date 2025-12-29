@@ -16,8 +16,8 @@ import {
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
 
 import { createAptosSignerFactory } from '../aptos'
-import { getSolanaDeployment, useWeb3Js } from '../solana'
-import { findSolanaEndpointIdInGraph } from '../solana/utils'
+import { deriveConnection, getSolanaDeployment, useWeb3Js } from '../solana'
+import { findSolanaEndpointIdInGraph, validateSigningAuthority } from '../solana/utils'
 
 import { publicKey as publicKeyType } from './types'
 import {
@@ -77,6 +77,17 @@ task(TASK_LZ_OAPP_WIRE)
 
         const solanaEid = await findSolanaEndpointIdInGraph(hre, args.oappConfig)
         const solanaDeployment = getSolanaDeployment(solanaEid)
+
+        // alert the user if the signing authority is not the admin / delegate
+        const { umi, connection } = await deriveConnection(solanaEid, true)
+        const { warnings } = await validateSigningAuthority(
+            umi,
+            connection,
+            solanaDeployment.oftStore,
+            userAccount,
+            args.multisigKey
+        )
+        warnings.forEach((w) => logger.warn(w))
 
         // Then we grab the programId from the args
         const programId = new PublicKey(solanaDeployment.programId)
