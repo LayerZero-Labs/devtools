@@ -20,6 +20,7 @@ import {
     // EVM-HyperCore Linking
     requestEvmContract,
     finalizeEvmContract,
+    finalizeEvmContractCorewriter,
 
     // Post-Launch Management
     freezeTokenUser,
@@ -32,6 +33,7 @@ import {
     getCoreBalances,
     listSpotPairs,
     spotAuctionStatus,
+    listQuoteAsset,
 
     // Utilities
     intoAssetBridgeAddress,
@@ -223,6 +225,19 @@ optionGroups
     )
     .action(withNormalizedNetwork(finalizeEvmContract))
 
+optionGroups
+    .base(
+        program
+            .command(CLI_COMMANDS.FINALIZE_EVM_CONTRACT_COREWRITER)
+            .description(
+                'Linking 2a. Generate CoreWriter calldata for finalizing EVM contract link (for Foundry usage)'
+            )
+            .requiredOption(...commonOptions.tokenIndex())
+            .requiredOption('-n, --nonce <nonce>', 'EVM contract deployment nonce')
+            .option('--only-calldata', 'Only output calldata without usage instructions', false)
+    )
+    .action(withNormalizedNetwork(finalizeEvmContractCorewriter))
+
 // === Post-Launch Management ===
 optionGroups
     .deployment(
@@ -298,6 +313,15 @@ optionGroups
             .requiredOption(...commonOptions.tokenIndex())
     )
     .action(withNormalizedNetwork(listSpotPairs))
+
+optionGroups
+    .base(
+        program
+            .command(CLI_COMMANDS.LIST_QUOTE_ASSET)
+            .description('List all quote assets (lists all if no token-index provided)')
+            .option('-idx, --filter-token-index <token-index>', 'Filter on token index')
+    )
+    .action(withNormalizedNetwork(listQuoteAsset))
 
 optionGroups
     .base(

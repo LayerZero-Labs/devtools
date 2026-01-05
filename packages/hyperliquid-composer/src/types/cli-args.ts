@@ -61,6 +61,10 @@ export interface GetCoreBalancesArgs extends UserArgs {
     showZero: boolean
 }
 
+export interface ListQuoteAssetArgs extends BaseArgs {
+    filterTokenIndex?: string
+}
+
 // Simple command args - using concrete interfaces instead of empty extends
 export interface GenesisArgs extends TokenIndexArgs, PrivateKeyArgs {}
 export interface CreateSpotDeploymentArgs extends TokenIndexArgs, PrivateKeyArgs {}
@@ -71,3 +75,6 @@ export interface EnableTokenQuoteAssetArgs extends TokenIndexArgs, PrivateKeyArg
 export interface EnableTokenAlignedQuoteAssetArgs extends TokenIndexArgs, PrivateKeyArgs {}
 export interface RequestEvmContractArgs extends TokenIndexArgs, PrivateKeyArgs {}
 export interface FinalizeEvmContractArgs extends TokenIndexArgs, PrivateKeyArgs {}
+export interface FinalizeEvmContractCorewriterArgs extends TokenIndexArgs {
+    nonce: string
+}

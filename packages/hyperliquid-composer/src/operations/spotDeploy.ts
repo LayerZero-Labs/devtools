@@ -9,7 +9,7 @@ import {
 } from '../io'
 import { HyperliquidClient, IHyperliquidSigner } from '../signer'
 import { MAX_HYPERCORE_SUPPLY, QUOTE_TOKENS } from '../types'
-import { getSpotDeployState, getExistingQuoteTokens, getSpotPairDeployAuctionStatus } from './spotMeta'
+import { getSpotDeployState, getExistingQuoteTokens, getSpotPairDeployAuctionStatus, isQuoteAsset } from './spotMeta'
 import type { SpotDeployAction, SpotDeployStates } from '../types'
 import { RegisterHyperliquidity } from '@/types/spotDeploy'
 import { LOGGER_MODULES } from '@/types/cli-constants'
@@ -300,7 +300,7 @@ export async function registerSpot(
     const choices: Array<{ name: string; value: number }> = []
 
     // Add all network quote tokens that haven't been deployed yet
-    networkQuoteTokens.forEach((quoteToken) => {
+    networkQuoteTokens.forEach((quoteToken: { tokenId: number; name: string }) => {
         if (!existingQuoteTokens.includes(quoteToken.tokenId)) {
             choices.push({
                 name: `${quoteToken.name} (Token ${quoteToken.tokenId})`,
@@ -355,15 +355,32 @@ export async function registerSpot(
                 type: 'input',
                 name: 'customTokenId',
                 message: 'Enter the core spot token ID to use as quote token:',
-                validate: (input: string) => {
+                validate: async (input: string) => {
+                    // Allow user to quit
+                    if (input.toLowerCase() === 'q') {
+                        console.log('\nOperation cancelled by user.\n')
+                        process.exit(0)
+                    }
+
                     const num = parseInt(input)
                     if (isNaN(num) || num < 0) {
-                        return 'Please enter a valid positive number'
+                        return 'Please enter a valid positive number (or "q" as the token ID to quit)'
                     }
                     if (existingQuoteTokens.includes(num)) {
                         return `Token ${num} is already deployed as a quote token for this asset`
                     }
-                    return true
+
+                    // Check if the token is a quote asset
+                    try {
+                        const { isQuoteAsset: isQuote } = await isQuoteAsset(isTestnet, num, logLevel)
+                        if (!isQuote) {
+                            return `Token ${num} is not a recognized quote asset on the Hyperliquid protocol. Only quote assets (tokens paired with HYPE) can be used. Enter "q" as the token ID to quit.`
+                        }
+                        return true
+                    } catch (error) {
+                        // If check fails, don't allow
+                        return `Unable to verify if token ${num} is a quote asset. Enter "q" as the token ID to quit.`
+                    }
                 },
             },
         ])

@@ -1,5 +1,11 @@
 # @layerzerolabs/ovault-evm-example
 
+## 0.0.13
+
+### Patch Changes
+
+- d4900d2: Adds native OFT support (NativeOFTAdapter, StargatePoolNative) to OVault composer and send tasks.
+
 ## 0.0.12
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-evm-upgradeable
 
+## 4.0.2
+
+### Patch Changes
+
+- 3de3f5b: Add virtual keyword to overridable functions
+
 ## 4.0.1
 
 ### Patch Changes
