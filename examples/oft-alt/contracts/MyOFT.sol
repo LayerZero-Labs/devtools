@@ -15,4 +15,3 @@ contract MyOFT is OFT {
         address _delegate
     ) OFT(_name, _symbol, _lzEndpoint, _delegate) Ownable(_delegate) {}
 }
-

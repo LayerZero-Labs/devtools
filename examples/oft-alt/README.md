@@ -53,6 +53,7 @@ This example demonstrates the most common scenario for OFTAlt deployments:
 ```
 
 **This example includes both contracts:**
+
 - **`MyOFT.sol`** - Standard OFT for regular EVM chains with native gas fees (deployed on Arbitrum)
 - **`MyOFTAlt.sol`** - OFTAlt for chains with Alt Endpoints using ERC-20 fees (deployed on Tempo)
 
@@ -63,6 +64,7 @@ The `lz:oft:send` task automatically detects which endpoint type is being used a
 The **OFTAlt** (Omnichain Fungible Token Alt) is a variant of the standard OFT designed for blockchains that use [Alt Endpoints](https://docs.layerzero.network/v2/concepts/protocol/layerzero-endpoint-alt). Alt Endpoints are deployed on chains where transaction fees are paid in ERC-20 stablecoins rather than native tokens.
 
 Examples of chains using Alt Endpoints:
+
 - **Tempo**: A payments-focused blockchain where fees are paid in TIP-20 stablecoins
 
 The OFTAlt works identically to standard OFT in terms of token transfer mechanics—burning on the source chain and minting on the destination chain—but handles fee payment differently.
@@ -71,12 +73,12 @@ The OFTAlt works identically to standard OFT in terms of token transfer mechanic
 
 ## Key Differences from Standard OFT
 
-| Aspect | Standard OFT | OFTAlt |
-|--------|-------------|--------|
-| **Fee Payment** | `msg.value` (native ETH/AVAX/etc.) | ERC-20 `transferFrom` |
-| **Pre-requisite** | None | Approve Endpoint for fee spending |
-| **Cross-chain Logic** | Standard | Standard (no changes) |
-| **Endpoint Type** | EndpointV2 | EndpointV2Alt |
+| Aspect                | Standard OFT                       | OFTAlt                            |
+| --------------------- | ---------------------------------- | --------------------------------- |
+| **Fee Payment**       | `msg.value` (native ETH/AVAX/etc.) | ERC-20 `transferFrom`             |
+| **Pre-requisite**     | None                               | Approve Endpoint for fee spending |
+| **Cross-chain Logic** | Standard                           | Standard (no changes)             |
+| **Endpoint Type**     | EndpointV2                         | EndpointV2Alt                     |
 
 ### Fee Payment Flow
 
@@ -126,6 +128,7 @@ RPC_URL_TEMPO_TESTNET="https://rpc.testnet.tempo.xyz"
 ```
 
 Fund this deployer address/account with:
+
 - Native tokens for gas on standard EVM chains (e.g., ETH on Arbitrum Sepolia)
 - **ERC-20 fee tokens** (stablecoins) on Tempo testnet for LayerZero fees
 
@@ -263,7 +266,7 @@ pnpm test:hardhat
 
 ### Adding other chains
 
-If you're adding another EVM chain, first, add it to the `hardhat.config.ts`. 
+If you're adding another EVM chain, first, add it to the `hardhat.config.ts`.
 
 Then, modify `layerzero.config.ts` with the following changes:
 
@@ -341,15 +344,15 @@ Calls the configuration functions between your deployed OApp contracts on every 
 
 Running `lz:oapp:wire` will make the following function calls per pathway connection for a fully defined config file using your specified settings and your environment variables (Private Keys and RPCs):
 
-- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oapp/OAppCore.sol#L33-L46"><code>function setPeer(uint32 _eid, bytes32 _peer) public virtual onlyOwner {}</code></a>
+- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oapp/OAppCore.sol#L33-L46"><code>function setPeer(uint32 \_eid, bytes32 \_peer) public virtual onlyOwner {}</code></a>
 
-- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/protocol/contracts/MessageLibManager.sol#L304-L311"><code>function setConfig(address _oapp, address _lib, SetConfigParam[] calldata _params) external onlyRegistered(_lib) {}</code></a>
+- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/protocol/contracts/MessageLibManager.sol#L304-L311"><code>function setConfig(address \_oapp, address \_lib, SetConfigParam[] calldata \_params) external onlyRegistered(\_lib) {}</code></a>
 
-- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oapp/libs/OAppOptionsType3.sol#L18-L36"><code>function setEnforcedOptions(EnforcedOptionParam[] calldata _enforcedOptions) public virtual onlyOwner {}</code></a>
+- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oapp/libs/OAppOptionsType3.sol#L18-L36"><code>function setEnforcedOptions(EnforcedOptionParam[] calldata \_enforcedOptions) public virtual onlyOwner {}</code></a>
 
-- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/protocol/contracts/MessageLibManager.sol#L223-L238"><code>function setSendLibrary(address _oapp, uint32 _eid, address _newLib) external onlyRegisteredOrDefault(_newLib) isSendLib(_newLib) onlySupportedEid(_newLib, _eid) {}</code></a>
+- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/protocol/contracts/MessageLibManager.sol#L223-L238"><code>function setSendLibrary(address \_oapp, uint32 \_eid, address \_newLib) external onlyRegisteredOrDefault(\_newLib) isSendLib(\_newLib) onlySupportedEid(\_newLib, \_eid) {}</code></a>
 
-- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/protocol/contracts/MessageLibManager.sol#L223-L273"><code>function setReceiveLibrary(address _oapp, uint32 _eid, address _newLib, uint256 _gracePeriod) external onlyRegisteredOrDefault(_newLib) isReceiveLib(_newLib) onlySupportedEid(_newLib, _eid) {}</code></a>
+- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/protocol/contracts/MessageLibManager.sol#L223-L273"><code>function setReceiveLibrary(address \_oapp, uint32 \_eid, address \_newLib, uint256 \_gracePeriod) external onlyRegisteredOrDefault(\_newLib) isReceiveLib(\_newLib) onlySupportedEid(\_newLib, \_eid) {}</code></a>
 
 To use this task, run:
 
