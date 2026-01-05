@@ -133,8 +133,9 @@ export async function sendEvmAlt(
     const oft = await srcEidHre.ethers.getContractAt(oftArtifact.abi, wrapperAddress, signer)
 
     // Get destination OApp address for outboundNonce call
+    // Note: Do NOT pass oftAddress here - it's only meant to override the source OFT address
     const dstEidHre = await getHreByEid(dstEid)
-    const dstWrapperAddress = await getOAppAddressByEid(dstEid, oappConfig, dstEidHre, oftAddress)
+    const dstWrapperAddress = await getOAppAddressByEid(dstEid, oappConfig, dstEidHre)
 
     // We'll get the actual outbound nonce after the transaction is sent
     const dstWrapperBytes32 = addressToBytes32(dstWrapperAddress)
@@ -257,21 +258,23 @@ export async function sendEvmAlt(
     // Check whether there are extra options or enforced options. If not, warn the user.
     // Read on Message Options: https://docs.layerzero.network/v2/concepts/message-options
     if (isEmptyOptionsEvm(extraOptions)) {
+        let enforcedOptions: string | undefined
         try {
-            const enforcedOptions = composeMsg
+            enforcedOptions = composeMsg
                 ? await oft.enforcedOptions(dstEid, MSG_TYPE.SEND_AND_CALL)
                 : await oft.enforcedOptions(dstEid, MSG_TYPE.SEND)
-
-            if (isEmptyOptionsEvm(enforcedOptions)) {
-                const proceed = await promptToContinue(
-                    'No extra options were included and OFT has no set enforced options. Your quote / send will most likely fail. Continue?'
-                )
-                if (!proceed) {
-                    throw new Error('Aborted due to missing options')
-                }
-            }
         } catch (error) {
             logger.debug(`Failed to check enforced options: ${error}`)
+        }
+
+        // Prompt user outside the try-catch so abort errors propagate correctly
+        if (enforcedOptions === undefined || isEmptyOptionsEvm(enforcedOptions)) {
+            const proceed = await promptToContinue(
+                'No extra options were included and OFT has no set enforced options. Your quote / send will most likely fail. Continue?'
+            )
+            if (!proceed) {
+                throw new Error('Aborted due to missing options')
+            }
         }
     }
 
