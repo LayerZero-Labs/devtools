@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 1.0.10
+
+### Patch Changes
+
+- bb2f4c3: sdk updates for quote asset improvement
+
 ## 1.0.9
 
 ### Patch Changes

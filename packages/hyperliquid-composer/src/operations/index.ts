@@ -8,7 +8,7 @@ export * from './spotMeta'
 export * from './spotDeploy'
 
 // === EVM-HyperCore Linking ===
-export * from './registerEvmContract'
+export * from './linkEvmCore'
 
 // === Info & Queries ===
 export * from './infoMisc'

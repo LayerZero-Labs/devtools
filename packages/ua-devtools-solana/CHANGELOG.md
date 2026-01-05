@@ -1,5 +1,13 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 8.0.7
+
+### Patch Changes
+
+- c45bec8: shell linting
+- Updated dependencies [c45bec8]
+  - @layerzerolabs/protocol-devtools-solana@8.0.6
+
 ## 8.0.6
 
 ### Patch Changes
