@@ -1,183 +1,290 @@
 <p align="center">
   <a href="https://layerzero.network">
-    <img alt="LayerZero" style="width: 400px" src="https://docs.layerzero.network/img/LayerZero_Logo_White.svg"/>
+    <img alt="LayerZero" style="width: 400px" src="https://docs.layerzero.network/img/LayerZero_Logo_Black.svg"/>
   </a>
 </p>
 
 <p align="center">
-  <a href="https://layerzero.network" style="color: #a77dff">Homepage</a> | <a href="https://docs.layerzero.network/" style="color: #a77dff">Docs</a> | <a href="https://layerzero.network/developers" style="color: #a77dff">Developers</a>
+ <a href="https://docs.layerzero.network/" style="color: #a77dff">LayerZero Docs</a>
 </p>
 
-<h1 align="center">Omnichain Fungible Token (OFTAdapterAlt and OFTAlt) Example for Alt Endpoints</h1>
+<h1 align="center">Omnichain Fungible Token for Alt Endpoints (OFTAlt) Example</h1>
 
-# ⚠️ \*\* This code is currently under audit and should not yet be used in production, the readme might not be complete
+<p align="center">Template project for deploying cross-chain tokens (<a href="https://docs.layerzero.network/v2/concepts/applications/oft-standard">OFT</a>) powered by the LayerZero protocol, demonstrating how to connect chains with <a href="https://docs.layerzero.network/v2/concepts/protocol/layerzero-endpoint-alt">Alt Endpoints</a> (ERC-20 fee payment) to standard EVM chains (native gas fee payment).</p>
 
-<p align="center">
-  <a href="https://docs.layerzero.network/v2/developers/evm/oft/quickstart" style="color: #a77dff">Quickstart</a> | <a href="https://docs.layerzero.network/contracts/oapp-configuration" style="color: #a77dff">Configuration</a> | <a href="https://docs.layerzero.network/contracts/options" style="color: #a77dff">Message Execution Options</a> | <a href="https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts" style="color: #a77dff">Endpoint, MessageLib, & Executor Addresses</a> | <a
-href="https://docs.layerzero.network/v2/developers/evm/technical-reference/dvn-addresses" style="color: #a77dff">DVN Addresses</a>
-</p>
+## Table of Contents
 
-<p align="center">Template project for getting started with LayerZero's <code>OFTAlt</code> contract standard.</p>
+- [Primary Use Case](#primary-use-case)
+- [What is OFTAlt?](#what-is-oftalt)
+- [Key Differences from Standard OFT](#key-differences-from-standard-oft)
+- [Requirements](#requirements)
+- [Scaffold this example](#scaffold-this-example)
+- [Helper Tasks](#helper-tasks)
+- [Setup](#setup)
+- [Build](#build)
+  - [Compiling your contracts](#compiling-your-contracts)
+- [Deploy](#deploy)
+- [Enable Messaging](#enable-messaging)
+- [Sending OFTs](#sending-ofts)
+- [Next Steps](#next-steps)
+- [Appendix](#appendix)
+  - [Running Tests](#running-tests)
+  - [Adding other chains](#adding-other-chains)
+  - [Using Multisigs](#using-multisigs)
+  - [LayerZero Hardhat Helper Tasks](#layerzero-hardhat-helper-tasks)
+  - [Manual Configuration](#manual-configuration)
+  - [Contract Verification](#contract-verification)
+  - [Troubleshooting](#troubleshooting)
 
-<p align="left>
+## Primary Use Case
 
-- [So What is an Omnichain Fungible Token?](#so-what-is-an-omnichain-fungible-token)
-- [Available Helpers in this Repo](#layerzero-hardhat-helper-tasks)
+This example demonstrates the most common scenario for OFTAlt deployments:
 
-</p>
-
-## So what is an Omnichain Fungible Token?
-
-The Omnichain Fungible Token (OFTAlt) Standard is an ERC20 token that can be transferred across multiple blockchains without asset wrapping or middlechains.
-
-<img alt="LayerZero" style="" src="https://docs.layerzero.network/assets/images/oft_mechanism_light-922b88c364b5156e26edc6def94069f1.jpg#gh-light-mode-only"/>
-
-This standard works by combining the LayerZero OApp Contract Standard with the ERC20 [`_burn`](https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oft/OFT.sol#L80) method, to initiate omnichain send transfers on the source chain, sending a message via the LayerZero protocol, and delivering a function call to the destination contract to [`_mint`](https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oft/OFT.sol#L96) the same number of tokens burned, creating a unified supply across all networks connected.
-
-Read more about what you can do with OFTs by reading the [OFT Quickstart](https://docs.layerzero.network/v2/developers/evm/oft/quickstart) in the LayerZero Documentation.
-
-## LayerZero Hardhat Helper Tasks
-
-LayerZero Devtools provides several helper hardhat tasks to easily deploy, verify, configure, connect, and send OFTs cross-chain.
-
-<details>
-<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/deploying"><code>npx hardhat lz:deploy</code></a> </summary>
-
- <br>
-
-Deploys your contract to any of the available networks in your [`hardhat.config.ts`](./hardhat.config.ts) when given a deploy tag (by default contract name) and returns a list of available networks to select for the deployment. For specifics around all deployment options, please refer to the [Deploying Contracts](https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/deploying) section of the documentation. LayerZero's `lz:deploy` utilizes `hardhat-deploy`.
-
-```yml
-'arbitrum-sepolia': {
-    eid: EndpointId.ARBSEP_V2_TESTNET,
-    url: process.env.RPC_URL_ARBSEP_TESTNET,
-    accounts,
-},
-'base-sepolia': {
-    eid: EndpointId.BASESEP_V2_TESTNET,
-    url: process.env.RPC_URL_BASE_TESTNET,
-    accounts,
-},
+```
+┌─────────────────────────────────┐         ┌─────────────────────────────────┐
+│           Tempo                 │         │        Arbitrum Sepolia         │
+│    (Alt Endpoint Chain)         │◄───────►│   (Standard EVM Chain)          │
+│                                 │         │                                 │
+│  ┌───────────────────────────┐  │         │  ┌───────────────────────────┐  │
+│  │       MyOFTAlt            │  │         │  │        MyOFT              │  │
+│  │  (ERC-20 fee payment)     │  │         │  │  (Native gas payment)     │  │
+│  └───────────────────────────┘  │         │  └───────────────────────────┘  │
+└─────────────────────────────────┘         └─────────────────────────────────┘
 ```
 
-</details>
+**This example includes both contracts:**
+- **`MyOFT.sol`** - Standard OFT for regular EVM chains with native gas fees (deployed on Arbitrum)
+- **`MyOFTAlt.sol`** - OFTAlt for chains with Alt Endpoints using ERC-20 fees (deployed on Tempo)
 
-<details>
-<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/start"><code>npx hardhat lz:oapp:config:init --oapp-config YOUR_OAPP_CONFIG --contract-name CONTRACT_NAME</code></a> </summary>
+The `lz:oft:send` task automatically detects which endpoint type is being used and handles fee payment accordingly.
 
- <br>
+## What is OFTAlt?
 
-Initializes a `layerzero.config.ts` file for all available pathways between your hardhat networks with the current LayerZero default placeholder settings. This task can be incredibly useful for correctly formatting your config file.
+The **OFTAlt** (Omnichain Fungible Token Alt) is a variant of the standard OFT designed for blockchains that use [Alt Endpoints](https://docs.layerzero.network/v2/concepts/protocol/layerzero-endpoint-alt). Alt Endpoints are deployed on chains where transaction fees are paid in ERC-20 stablecoins rather than native tokens.
 
-You can run this task by providing the `contract-name` you want to set for the config and `file-name` you want to generate:
+Examples of chains using Alt Endpoints:
+- **Tempo**: A payments-focused blockchain where fees are paid in TIP-20 stablecoins
+
+The OFTAlt works identically to standard OFT in terms of token transfer mechanics—burning on the source chain and minting on the destination chain—but handles fee payment differently.
+
+<img alt="OFT Mechanism" src="https://docs.layerzero.network/assets/images/oft_mechanism_light-922b88c364b5156e26edc6def94069f1.jpg"/>
+
+## Key Differences from Standard OFT
+
+| Aspect | Standard OFT | OFTAlt |
+|--------|-------------|--------|
+| **Fee Payment** | `msg.value` (native ETH/AVAX/etc.) | ERC-20 `transferFrom` |
+| **Pre-requisite** | None | Approve Endpoint for fee spending |
+| **Cross-chain Logic** | Standard | Standard (no changes) |
+| **Endpoint Type** | EndpointV2 | EndpointV2Alt |
+
+### Fee Payment Flow
+
+1. **Discover the fee token**: Query `endpoint.nativeToken()` to get the stablecoin address
+2. **Quote fees**: Call `quoteSend()` - returns fees in the fee token denomination
+3. **Approve spending**: Before sending, approve the OFTAlt contract to spend fee tokens
+4. **Send with value: 0**: Call `send()` with `{value: 0}` - fees are pulled via `transferFrom`
+
+## Requirements
+
+- `Node.js` - `>=18.16.0`
+- `pnpm` (recommended) - or another package manager of your choice (npm, yarn)
+- `forge` (optional) - `>=0.2.0` for testing, and if not using Hardhat for compilation
+
+## Scaffold this example
+
+Create your local copy of this example:
 
 ```bash
-npx hardhat lz:oapp:config:init --contract-name CONTRACT_NAME --oapp-config FILE_NAME
+LZ_ENABLE_ALT_EXAMPLE=1 pnpm dlx create-lz-oapp@latest --example oft-alt
 ```
 
-This will create a `layerzero.config.ts` in your working directory populated with your contract name and connections for every pathway possible between your hardhat networks:
+Specify the directory, select `OFT Alt` and proceed with the installation.
 
-```yml
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+Note that `create-lz-oapp` will also automatically run the dependencies install step for you.
 
-const arbsepContract = {
-    eid: EndpointId.ARBSEP_V2_TESTNET,
-    contractName: 'MyOFT',
-}
-const sepoliaContract = {
-    eid: EndpointId.SEPOLIA_V2_TESTNET,
-    contractName: 'MyOFT',
-}
+## Helper Tasks
 
-export default {
-    contracts: [{ contract: arbsepContract }, { contract: sepoliaContract }],
-    connections: [
-        {
-            from: arbsepContract,
-            to: sepoliaContract,
-            config: {
-                sendLibrary: '0x4f7cd4DA19ABB31b0eC98b9066B9e857B1bf9C0E',
-                receiveLibraryConfig: { receiveLibrary: '0x75Db67CDab2824970131D5aa9CECfC9F69c69636', gracePeriod: 0 },
-                sendConfig: {
-                    executorConfig: { maxMessageSize: 10000, executor: '0x5Df3a1cEbBD9c8BA7F8dF51Fd632A9aef8308897' },
-                    ulnConfig: {
-                        confirmations: 1,
-                        requiredDVNs: ['0x53f488E93b4f1b60E8E83aa374dBe1780A1EE8a8'],
-                        optionalDVNs: [],
-                        optionalDVNThreshold: 0,
-                    },
-                },
-                // receiveConfig: {
-                //     ulnConfig: {
-                //         confirmations: 2,
-                //         requiredDVNs: ['0x53f488E93b4f1b60E8E83aa374dBe1780A1EE8a8'],
-                //         optionalDVNs: [],
-                //         optionalDVNThreshold: 0,
-                //     },
-                // },
-            },
-        },
-        {
-            from: sepoliaContract,
-            to: arbsepContract,
-            config: {
-                sendLibrary: '0xcc1ae8Cf5D3904Cef3360A9532B477529b177cCE',
-                receiveLibraryConfig: { receiveLibrary: '0xdAf00F5eE2158dD58E0d3857851c432E34A3A851', gracePeriod: 0 },
-                // sendConfig: {
-                //     executorConfig: { maxMessageSize: 10000, executor: '0x718B92b5CB0a5552039B593faF724D182A881eDA' },
-                //     ulnConfig: {
-                //         confirmations: 2,
-                //         requiredDVNs: ['0x8eebf8b423B73bFCa51a1Db4B7354AA0bFCA9193'],
-                //         optionalDVNs: [],
-                //         optionalDVNThreshold: 0,
-                //     },
-                // },
-                receiveConfig: {
-                    ulnConfig: {
-                        confirmations: 1,
-                        requiredDVNs: ['0x8eebf8b423B73bFCa51a1Db4B7354AA0bFCA9193'],
-                        optionalDVNs: [],
-                        optionalDVNThreshold: 0,
-                    },
-                },
-            },
-        },
-    ],
-}
-```
+Throughout this walkthrough, helper tasks will be used. For the full list of available helper tasks, refer to the [LayerZero Hardhat Helper Tasks section](#layerzero-hardhat-helper-tasks). All commands can be run at the project root.
 
-</details>
+## Setup
 
-<details>
-<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring"><code>npx hardhat lz:oapp:config:wire --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
-
- <br>
-
-Calls the configuration functions between your deployed OApp contracts on every chain based on the provided `layerzero.config.ts`.
-
-Running `lz:oapp:wire` will make the following function calls per pathway connection for a fully defined config file using your specified settings and your environment variables (Private Keys and RPCs):
-
-- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oapp/OAppCore.sol#L33-L46"><code>function setPeer(uint32 \_eid, bytes32 \_peer) public virtual onlyOwner {}</code></a>
-
-- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/protocol/contracts/MessageLibManager.sol#L304-L311"><code>function setConfig(address \_oapp, address \_lib, SetConfigParam[] calldata \_params) external onlyRegistered(\_lib) {}</code></a>
-
-- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oapp/libs/OAppOptionsType3.sol#L18-L36"><code>function setEnforcedOptions(EnforcedOptionParam[] calldata \_enforcedOptions) public virtual onlyOwner {}</code></a>
-
-- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/protocol/contracts/MessageLibManager.sol#L223-L238"><code>function setSendLibrary(address \_oapp, uint32 \_eid, address \_newLib) external onlyRegisteredOrDefault(\_newLib) isSendLib(\_newLib) onlySupportedEid(\_newLib, \_eid) {}</code></a>
-
-- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/protocol/contracts/MessageLibManager.sol#L223-L273"><code>function setReceiveLibrary(address \_oapp, uint32 \_eid, address \_newLib, uint256 \_gracePeriod) external onlyRegisteredOrDefault(\_newLib) isReceiveLib(\_newLib) onlySupportedEid(\_newLib, \_eid) {}</code></a>
-
-To use this task, run:
+Create a `.env` file in the project root and configure your deployer credentials:
 
 ```bash
-npx hardhat lz:oapp:wire --oapp-config YOUR_LAYERZERO_CONFIG_FILE
+# Authentication (choose one)
+MNEMONIC="test test test test test test test test test test test junk"
+# or...
+PRIVATE_KEY="0xabc...def"
+
+# RPC URLs
+# Standard EVM chains
+RPC_URL_ARB_SEPOLIA="https://arbitrum-sepolia.gateway.tenderly.co"
+
+# Alt Endpoint chains (ERC-20 fee payment)
+RPC_URL_TEMPO_TESTNET="https://rpc.testnet.tempo.xyz"
 ```
 
-Whenever you make changes to the configuration, run `lz:oapp:wire` again. The task will check your current configuration, and only apply NEW changes.
+Fund this deployer address/account with:
+- Native tokens for gas on standard EVM chains (e.g., ETH on Arbitrum Sepolia)
+- **ERC-20 fee tokens** (stablecoins) on Tempo testnet for LayerZero fees
 
-To use a Gnosis Safe multisig as the signer for these transactions, add the following to each network in your `hardhat.config.ts` and add the `--safe` flag to `lz:oapp:wire --safe`:
+## Build
 
-```yml
+### Compiling your contracts
+
+This project supports both `hardhat` and `forge` compilation. By default, the `compile` command will execute both:
+
+```bash
+pnpm compile
+```
+
+If you prefer one over the other, you can use the tooling-specific commands:
+
+```bash
+pnpm compile:forge
+pnpm compile:hardhat
+```
+
+## Deploy
+
+Deploy the appropriate contract type to each chain based on its endpoint type:
+
+### Deploy Standard OFT to Arbitrum Sepolia
+
+For chains with standard EndpointV2 (native gas fee payment):
+
+```bash
+pnpm hardhat lz:deploy --tags MyOFT
+```
+
+Select `arbitrum-sepolia` when prompted.
+
+### Deploy OFTAlt to Tempo Testnet
+
+For chains with EndpointV2Alt (ERC-20 fee payment):
+
+```bash
+pnpm hardhat lz:deploy --tags MyOFTAlt
+```
+
+Select `tempo-testnet` when prompted.
+
+### Adapter Variants
+
+For chains where you want to adapt an existing ERC-20 token instead of creating a new one:
+
+```bash
+# For Tempo (Alt Endpoint)
+pnpm hardhat lz:deploy --tags MyOFTAdapterAlt
+```
+
+## Enable Messaging
+
+The OFTAlt standard builds on top of the OApp standard, which enables generic message-passing between chains. After deploying the OFTAlt on the respective chains, you enable messaging by running the [wiring](https://docs.layerzero.network/v2/concepts/glossary#wire--wiring) task.
+
+> :information_source: This example uses the [Simple Config Generator](https://docs.layerzero.network/v2/tools/simple-config), which is recommended over manual configuration.
+
+Wire your deployed contracts:
+
+```bash
+pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts
+```
+
+The `layerzero.config.ts` file is organized into clear sections:
+
+- **SECTION 1**: Contract definitions (define your OFTAlt contracts per chain)
+- **SECTION 2**: Gas options (enforced options for destination execution)
+- **SECTION 3**: Pathway configuration (bidirectional connections between contracts)
+- **SECTION 4**: Export configuration
+
+Submit all the transactions to complete wiring. After all transactions confirm, your OApps are wired and can send messages to each other.
+
+## Sending OFTs
+
+With your OFTAlts wired, you can now send them cross-chain.
+
+### Sending from Tempo (Alt Endpoint) to Arbitrum
+
+When sending from Tempo (Alt Endpoint), the task automatically:
+
+1. Detects the Alt Endpoint via `endpoint.nativeToken()`
+2. Approves the OFTAlt contract for ERC-20 fee spending
+3. Sends with `{value: 0}` (fees pulled via `transferFrom`)
+
+```bash
+# Send from Tempo testnet to Arbitrum Sepolia
+pnpm hardhat lz:oft:send --src-eid <TEMPO_TESTNET_EID> --dst-eid 40231 --amount 1 --to <EVM_ADDRESS>
+```
+
+### Sending from Arbitrum (Standard Endpoint) to Tempo
+
+When sending from a standard EVM chain, the send works normally with native gas:
+
+```bash
+# Send from Arbitrum Sepolia to Tempo testnet
+pnpm hardhat lz:oft:send --src-eid 40231 --dst-eid <TEMPO_TESTNET_EID> --amount 1 --to <EVM_ADDRESS>
+```
+
+> :information_source: View the list of chains and their Endpoint IDs on the [Deployed Endpoints](https://docs.layerzero.network/v2/deployments/deployed-contracts) page.
+
+Upon a successful send, the script will provide you with the link to the message on LayerZero Scan.
+
+Once the message is delivered, you will be able to click on the destination transaction hash to verify that the OFT was sent.
+
+Congratulations, you have now sent an OFTAlt cross-chain!
+
+> If you run into any issues, refer to [Troubleshooting](#troubleshooting).
+
+## Next Steps
+
+Now that you've gone through a simplified walkthrough, here are what you can do next.
+
+- Read the [Alt Endpoint documentation](https://docs.layerzero.network/v2/concepts/protocol/layerzero-endpoint-alt)
+- Read on [DVNs / Security Stack](https://docs.layerzero.network/v2/concepts/modular-security/security-stack-dvns)
+- Read on [Message Execution Options](https://docs.layerzero.network/v2/concepts/technical-reference/options-reference)
+
+## Appendix
+
+### Running Tests
+
+Similar to the contract compilation, we support both `hardhat` and `forge` tests. By default, the `test` command will execute both:
+
+```bash
+pnpm test
+```
+
+If you prefer one over the other, you can use the tooling-specific commands:
+
+```bash
+pnpm test:forge
+pnpm test:hardhat
+```
+
+### Adding other chains
+
+If you're adding another EVM chain, first, add it to the `hardhat.config.ts`. 
+
+Then, modify `layerzero.config.ts` with the following changes:
+
+- Declare a new contract object (specifying the `eid` and `contractName`)
+- Decide whether to use an existing EVM enforced options variable or declare a new one
+- Create new entries in the `pathways` variable
+- Add the new contract into the `contracts` array in the export
+
+After applying the desired changes, make sure you re-run the wiring task:
+
+```bash
+pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts
+```
+
+### Using Multisigs
+
+The wiring task supports the usage of Safe Multisigs.
+
+To use a Safe multisig as the signer for these transactions, add the following to each network in your `hardhat.config.ts` and add the `--safe` flag to `lz:oapp:wire --safe`:
+
+```typescript
 // hardhat.config.ts
 
 networks: {
@@ -193,9 +300,69 @@ networks: {
 }
 ```
 
-</details>
+### LayerZero Hardhat Helper Tasks
+
+LayerZero Devtools provides several helper hardhat tasks to easily deploy, verify, configure, connect, and send OFTs cross-chain.
+
 <details>
-<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring#checking-pathway-config"><code>npx hardhat lz:oapp:config:get --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
+<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/deploying"><code>pnpm hardhat lz:deploy</code></a> </summary>
+
+ <br>
+
+Deploys your contract to any of the available networks in your [`hardhat.config.ts`](./hardhat.config.ts) when given a deploy tag (by default contract name) and returns a list of available networks to select for the deployment. For specifics around all deployment options, please refer to the [Deploying Contracts](https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/deploying) section of the documentation. LayerZero's `lz:deploy` utilizes `hardhat-deploy`.
+
+```typescript
+'arbitrum-sepolia': {
+    eid: EndpointId.ARBSEP_V2_TESTNET,
+    url: process.env.RPC_URL_ARBSEP_TESTNET,
+    accounts,
+},
+'base-sepolia': {
+    eid: EndpointId.BASESEP_V2_TESTNET,
+    url: process.env.RPC_URL_BASE_TESTNET,
+    accounts,
+},
+```
+
+More information about available CLI arguments can be found using the `--help` flag:
+
+```bash
+pnpm hardhat lz:deploy --help
+```
+
+</details>
+
+<details>
+<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring"><code>pnpm hardhat lz:oapp:wire --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
+
+ <br>
+
+Calls the configuration functions between your deployed OApp contracts on every chain based on the provided `layerzero.config.ts`.
+
+Running `lz:oapp:wire` will make the following function calls per pathway connection for a fully defined config file using your specified settings and your environment variables (Private Keys and RPCs):
+
+- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oapp/OAppCore.sol#L33-L46"><code>function setPeer(uint32 _eid, bytes32 _peer) public virtual onlyOwner {}</code></a>
+
+- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/protocol/contracts/MessageLibManager.sol#L304-L311"><code>function setConfig(address _oapp, address _lib, SetConfigParam[] calldata _params) external onlyRegistered(_lib) {}</code></a>
+
+- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oapp/libs/OAppOptionsType3.sol#L18-L36"><code>function setEnforcedOptions(EnforcedOptionParam[] calldata _enforcedOptions) public virtual onlyOwner {}</code></a>
+
+- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/protocol/contracts/MessageLibManager.sol#L223-L238"><code>function setSendLibrary(address _oapp, uint32 _eid, address _newLib) external onlyRegisteredOrDefault(_newLib) isSendLib(_newLib) onlySupportedEid(_newLib, _eid) {}</code></a>
+
+- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/protocol/contracts/MessageLibManager.sol#L223-L273"><code>function setReceiveLibrary(address _oapp, uint32 _eid, address _newLib, uint256 _gracePeriod) external onlyRegisteredOrDefault(_newLib) isReceiveLib(_newLib) onlySupportedEid(_newLib, _eid) {}</code></a>
+
+To use this task, run:
+
+```bash
+pnpm hardhat lz:oapp:wire --oapp-config YOUR_LAYERZERO_CONFIG_FILE
+```
+
+Whenever you make changes to the configuration, run `lz:oapp:wire` again. The task will check your current configuration, and only apply NEW changes.
+
+</details>
+
+<details>
+<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring#checking-pathway-config"><code>pnpm hardhat lz:oapp:config:get --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
 
  <br>
 
@@ -209,214 +376,35 @@ Returns your current OApp's configuration for each chain and pathway in 3 column
 
 If you do NOT explicitly set each configuration parameter, your OApp will fallback to the placeholder parameters in the default config.
 
-```bash
-┌────────────────────┬───────────────────────────────────────────────────────────────────────────────┬───────────────────────────────────────────────────────────────────────────────┬───────────────────────────────────────────────────────────────────────────────┐
-│                    │ Custom OApp Config                                                            │ Default OApp Config                                                           │ Active OApp Config                                                            │
-├────────────────────┼───────────────────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────┤
-│ localNetworkName   │ arbsep                                                                        │ arbsep                                                                        │ arbsep                                                                        │
-├────────────────────┼───────────────────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────┤
-│ remoteNetworkName  │ sepolia                                                                       │ sepolia                                                                       │ sepolia                                                                       │
-├────────────────────┼───────────────────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────┤
-│ sendLibrary        │ 0x4f7cd4DA19ABB31b0eC98b9066B9e857B1bf9C0E                                    │ 0x4f7cd4DA19ABB31b0eC98b9066B9e857B1bf9C0E                                    │ 0x4f7cd4DA19ABB31b0eC98b9066B9e857B1bf9C0E                                    │
-├────────────────────┼───────────────────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────┤
-│ receiveLibrary     │ 0x75Db67CDab2824970131D5aa9CECfC9F69c69636                                    │ 0x75Db67CDab2824970131D5aa9CECfC9F69c69636                                    │ 0x75Db67CDab2824970131D5aa9CECfC9F69c69636                                    │
-├────────────────────┼───────────────────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────┤
-│ sendUlnConfig      │ ┌──────────────────────┬────────────────────────────────────────────────────┐ │ ┌──────────────────────┬────────────────────────────────────────────────────┐ │ ┌──────────────────────┬────────────────────────────────────────────────────┐ │
-│                    │ │ confirmations        │ 1                                                  │ │ │ confirmations        │ 1                                                  │ │ │ confirmations        │ 1                                                  │ │
-│                    │ ├──────────────────────┼────────────────────────────────────────────────────┤ │ ├──────────────────────┼────────────────────────────────────────────────────┤ │ ├──────────────────────┼────────────────────────────────────────────────────┤ │
-│                    │ │ requiredDVNs         │ ┌───┬────────────────────────────────────────────┐ │ │ │ requiredDVNs         │ ┌───┬────────────────────────────────────────────┐ │ │ │ requiredDVNs         │ ┌───┬────────────────────────────────────────────┐ │ │
-│                    │ │                      │ │ 0 │ 0x53f488E93b4f1b60E8E83aa374dBe1780A1EE8a8 │ │ │ │                      │ │ 0 │ 0x53f488E93b4f1b60E8E83aa374dBe1780A1EE8a8 │ │ │ │                      │ │ 0 │ 0x53f488E93b4f1b60E8E83aa374dBe1780A1EE8a8 │ │ │
-│                    │ │                      │ └───┴────────────────────────────────────────────┘ │ │ │                      │ └───┴────────────────────────────────────────────┘ │ │ │                      │ └───┴────────────────────────────────────────────┘ │ │
-│                    │ │                      │                                                    │ │ │                      │                                                    │ │ │                      │                                                    │ │
-│                    │ ├──────────────────────┼────────────────────────────────────────────────────┤ │ ├──────────────────────┼────────────────────────────────────────────────────┤ │ ├──────────────────────┼────────────────────────────────────────────────────┤ │
-│                    │ │ optionalDVNs         │                                                    │ │ │ optionalDVNs         │                                                    │ │ │ optionalDVNs         │                                                    │ │
-│                    │ ├──────────────────────┼────────────────────────────────────────────────────┤ │ ├──────────────────────┼────────────────────────────────────────────────────┤ │ ├──────────────────────┼────────────────────────────────────────────────────┤ │
-│                    │ │ optionalDVNThreshold │ 0                                                  │ │ │ optionalDVNThreshold │ 0                                                  │ │ │ optionalDVNThreshold │ 0                                                  │ │
-│                    │ └──────────────────────┴────────────────────────────────────────────────────┘ │ └──────────────────────┴────────────────────────────────────────────────────┘ │ └──────────────────────┴────────────────────────────────────────────────────┘ │
-│                    │                                                                               │                                                                               │                                                                               │
-├────────────────────┼───────────────────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────┤
-│ sendExecutorConfig │ ┌────────────────┬────────────────────────────────────────────┐               │ ┌────────────────┬────────────────────────────────────────────┐               │ ┌────────────────┬────────────────────────────────────────────┐               │
-│                    │ │ executor       │ 0x5Df3a1cEbBD9c8BA7F8dF51Fd632A9aef8308897 │               │ │ executor       │ 0x5Df3a1cEbBD9c8BA7F8dF51Fd632A9aef8308897 │               │ │ executor       │ 0x5Df3a1cEbBD9c8BA7F8dF51Fd632A9aef8308897 │               │
-│                    │ ├────────────────┼────────────────────────────────────────────┤               │ ├────────────────┼────────────────────────────────────────────┤               │ ├────────────────┼────────────────────────────────────────────┤               │
-│                    │ │ maxMessageSize │ 10000                                      │               │ │ maxMessageSize │ 10000                                      │               │ │ maxMessageSize │ 10000                                      │               │
-│                    │ └────────────────┴────────────────────────────────────────────┘               │ └────────────────┴────────────────────────────────────────────┘               │ └────────────────┴────────────────────────────────────────────┘               │
-│                    │                                                                               │                                                                               │                                                                               │
-├────────────────────┼───────────────────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────┤
-│ receiveUlnConfig   │ ┌──────────────────────┬────────────────────────────────────────────────────┐ │ ┌──────────────────────┬────────────────────────────────────────────────────┐ │ ┌──────────────────────┬────────────────────────────────────────────────────┐ │
-│                    │ │ confirmations        │ 2                                                  │ │ │ confirmations        │ 2                                                  │ │ │ confirmations        │ 2                                                  │ │
-│                    │ ├──────────────────────┼────────────────────────────────────────────────────┤ │ ├──────────────────────┼────────────────────────────────────────────────────┤ │ ├──────────────────────┼────────────────────────────────────────────────────┤ │
-│                    │ │ requiredDVNs         │ ┌───┬────────────────────────────────────────────┐ │ │ │ requiredDVNs         │ ┌───┬────────────────────────────────────────────┐ │ │ │ requiredDVNs         │ ┌───┬────────────────────────────────────────────┐ │ │
-│                    │ │                      │ │ 0 │ 0x53f488E93b4f1b60E8E83aa374dBe1780A1EE8a8 │ │ │ │                      │ │ 0 │ 0x53f488E93b4f1b60E8E83aa374dBe1780A1EE8a8 │ │ │ │                      │ │ 0 │ 0x53f488E93b4f1b60E8E83aa374dBe1780A1EE8a8 │ │ │
-│                    │ │                      │ └───┴────────────────────────────────────────────┘ │ │ │                      │ └───┴────────────────────────────────────────────┘ │ │ │                      │ └───┴────────────────────────────────────────────┘ │ │
-│                    │ │                      │                                                    │ │ │                      │                                                    │ │ │                      │                                                    │ │
-│                    │ ├──────────────────────┼────────────────────────────────────────────────────┤ │ ├──────────────────────┼────────────────────────────────────────────────────┤ │ ├──────────────────────┼────────────────────────────────────────────────────┤ │
-│                    │ │ optionalDVNs         │                                                    │ │ │ optionalDVNs         │                                                    │ │ │ optionalDVNs         │                                                    │ │
-│                    │ ├──────────────────────┼────────────────────────────────────────────────────┤ │ ├──────────────────────┼────────────────────────────────────────────────────┤ │ ├──────────────────────┼────────────────────────────────────────────────────┤ │
-│                    │ │ optionalDVNThreshold │ 0                                                  │ │ │ optionalDVNThreshold │ 0                                                  │ │ │ optionalDVNThreshold │ 0                                                  │ │
-│                    │ └──────────────────────┴────────────────────────────────────────────────────┘ │ └──────────────────────┴────────────────────────────────────────────────────┘ │ └──────────────────────┴────────────────────────────────────────────────────┘ │
-│                    │                                                                               │                                                                               │                                                                               │
-└────────────────────┴───────────────────────────────────────────────────────────────────────────────┴───────────────────────────────────────────────────────────────────────────────┴───────────────────────────────────────────────────────────────────────────────┘
-```
-
 </details>
+
 <details>
-<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring#checking-pathway-executor"><code>npx hardhat lz:oapp:config:get:executor --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
+<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring#checking-pathway-executor"><code>pnpm hardhat lz:oapp:config:get:executor --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
 
  <br>
 
 Returns the LayerZero Executor config for each network in your `hardhat.config.ts`. You can use this method to see the max destination gas in wei (`nativeCap`) you can request in your [`execution options`](https://docs.layerzero.network/v2/developers/evm/gas-settings/options).
 
-```bash
-┌───────────────────┬────────────────────────────────────────────┐
-│ localNetworkName  │ mantle                                     │
-├───────────────────┼────────────────────────────────────────────┤
-│ remoteNetworkName │ polygon                                    │
-├───────────────────┼────────────────────────────────────────────┤
-│ executorDstConfig │ ┌────────────────┬───────────────────────┐ │
-│                   │ │ baseGas        │ 85000                 │ │
-│                   │ ├────────────────┼───────────────────────┤ │
-│                   │ │ multiplierBps  │ 12000                 │ │
-│                   │ ├────────────────┼───────────────────────┤ │
-│                   │ │ floorMarginUSD │ 5000000000000000000   │ │
-│                   │ ├────────────────┼───────────────────────┤ │
-│                   │ │ nativeCap      │ 681000000000000000000 │ │
-│                   │ └────────────────┴───────────────────────┘ │
-│                   │                                            │
-└───────────────────┴────────────────────────────────────────────┘
-```
-
 </details>
 
-## Developing Contracts
+### Manual Configuration
 
-#### Installing dependencies
+This section only applies if you would like to configure manually instead of using the Simple Config Generator.
 
-We recommend using `pnpm` as a package manager (but you can of course use a package manager of your choice):
-
-```bash
-pnpm install
-```
-
-#### Compiling your contracts
-
-This project supports both `hardhat` and `forge` compilation. By default, the `compile` command will execute both:
-
-```bash
-pnpm compile
-```
-
-If you prefer one over the other, you can use the tooling-specific commands:
-
-```bash
-pnpm compile:forge
-pnpm compile:hardhat
-```
-
-Or adjust the `package.json` to for example remove `forge` build:
-
-```diff
-- "compile": "$npm_execpath run compile:forge && $npm_execpath run compile:hardhat",
-- "compile:forge": "forge build",
-- "compile:hardhat": "hardhat compile",
-+ "compile": "hardhat compile"
-```
-
-#### Running tests
-
-Similarly to the contract compilation, we support both `hardhat` and `forge` tests. By default, the `test` command will execute both:
-
-```bash
-pnpm test
-```
-
-If you prefer one over the other, you can use the tooling-specific commands:
-
-```bash
-pnpm test:forge
-pnpm test:hardhat
-```
-
-Or adjust the `package.json` to for example remove `hardhat` tests:
-
-```diff
-- "test": "$npm_execpath test:forge && $npm_execpath test:hardhat",
-- "test:forge": "forge test",
-- "test:hardhat": "$npm_execpath hardhat test"
-+ "test": "forge test"
-```
-
-## Deploying Contracts
-
-Set up deployer wallet/account:
-
-- Rename `.env.example` -> `.env`
-- Choose your preferred means of setting up your deployer wallet/account:
-
-```
-MNEMONIC="test test test test test test test test test test test junk"
-or...
-PRIVATE_KEY="0xabc...def"
-```
-
-- Fund this address with the corresponding chain's native tokens you want to deploy to.
-
-To deploy your contracts to your desired blockchains, run the following command in your project's folder:
-
-```bash
-npx hardhat lz:deploy
-```
-
-More information about available CLI arguments can be found using the `--help` flag:
-
-```bash
-npx hardhat lz:deploy --help
-```
-
-By following these steps, you can focus more on creating innovative omnichain solutions and less on the complexities of cross-chain communication.
-
-<br></br>
-
-## Connecting Contracts
-
-### Ethereum Configurations
-
-Fill out your `layerzero.config.ts` with the contracts you want to connect. You can generate the default config file for your declared hardhat networks by running:
-
-```bash
-npx hardhat lz:oapp:config:init --contract-name [YOUR_CONTRACT_NAME] --oapp-config [CONFIG_NAME]
-```
-
-> [!NOTE]
-> You may need to change the contract name if you're deploying multiple OApp contracts on different chains (e.g., OFT and OFT Adapter).
-
-<br>
-
-```typescript
-const ethereumContract: OmniPointHardhat = {
-  eid: EndpointId.ETHEREUM_V2_MAINNET,
-  contractName: "MyOFTAdapter",
-};
-
-const arbitrumContract: OmniPointHardhat = {
-  eid: EndpointId.ARBITRUM_V2_MAINNET,
-  contractName: "MyOFT",
-};
-```
-
-Then define the pathway you want to create from and to each contract:
+Define the pathway you want to create from and to each contract:
 
 ```typescript
 connections: [
-  // ETH <--> ARB PATHWAY: START
+  // Chain A <--> Chain B PATHWAY: START
   {
-    from: ethereumContract,
-    to: arbitrumContract,
+    from: chainAContract,
+    to: chainBContract,
   },
   {
-    from: arbitrumContract,
-    to: ethereumContract,
+    from: chainBContract,
+    to: chainAContract,
   },
-  // ETH <--> ARB PATHWAY: END
+  // Chain A <--> Chain B PATHWAY: END
 ];
 ```
 
@@ -424,70 +412,35 @@ Finally, define the config settings for each direction of the pathway:
 
 ```typescript
 connections: [
-  // ETH <--> ARB PATHWAY: START
   {
-    from: ethereumContract,
-    to: arbitrumContract,
+    from: chainAContract,
+    to: chainBContract,
     config: {
-      sendLibrary: contractsConfig.ethereum.sendLib302,
+      sendLibrary: contractsConfig.chainA.sendLib302,
       receiveLibraryConfig: {
-        receiveLibrary: contractsConfig.ethereum.receiveLib302,
+        receiveLibrary: contractsConfig.chainA.receiveLib302,
         gracePeriod: BigInt(0),
       },
-      // Optional Receive Library Timeout for when the Old Receive Library Address will no longer be valid
-      receiveLibraryTimeoutConfig: {
-        lib: "0x0000000000000000000000000000000000000000",
-        expiry: BigInt(0),
-      },
-      // Optional Send Configuration
-      // @dev Controls how the `from` chain sends messages to the `to` chain.
       sendConfig: {
         executorConfig: {
           maxMessageSize: 10000,
-          // The configured Executor address
-          executor: contractsConfig.ethereum.executor,
+          executor: contractsConfig.chainA.executor,
         },
         ulnConfig: {
-          // The number of block confirmations to wait on Arbitrum Sepolia before emitting the message from the source chain.
           confirmations: BigInt(15),
-          // The address of the DVNs you will pay to verify a sent message on the source chain ).
-          // The destination tx will wait until ALL `requiredDVNs` verify the message.
-          requiredDVNs: [
-            contractsConfig.ethereum.horizenDVN, // Horizen
-            contractsConfig.ethereum.polyhedraDVN, // Polyhedra
-            contractsConfig.ethereum.animocaBlockdaemonDVN, // Animoca-Blockdaemon (only available on ETH <-> Arbitrum One)
-            contractsConfig.ethereum.lzDVN, // LayerZero Labs
-          ],
-          // The address of the DVNs you will pay to verify a sent message on the source chain ).
-          // The destination tx will wait until the configured threshold of `optionalDVNs` verify a message.
+          requiredDVNs: [contractsConfig.chainA.lzDVN],
           optionalDVNs: [],
-          // The number of `optionalDVNs` that need to successfully verify the message for it to be considered Verified.
           optionalDVNThreshold: 0,
         },
       },
-      // Optional Receive Configuration
-      // @dev Controls how the `from` chain receives messages from the `to` chain.
       receiveConfig: {
         ulnConfig: {
-          // The number of block confirmations to expect from the `to` chain.
           confirmations: BigInt(20),
-          // The address of the DVNs your `receiveConfig` expects to receive verifications from on the `from` chain ).
-          // The `from` chain's OApp will wait until the configured threshold of `requiredDVNs` verify the message.
-          requiredDVNs: [
-            contractsConfig.ethereum.lzDVN, // LayerZero Labs DVN
-            contractsConfig.ethereum.animocaBlockdaemonDVN, // Blockdaemon-Animoca
-            contractsConfig.ethereum.horizenDVN, // Horizen Labs
-            contractsConfig.ethereum.polyhedraDVN, // Polyhedra
-          ],
-          // The address of the `optionalDVNs` you expect to receive verifications from on the `from` chain ).
-          // The destination tx will wait until the configured threshold of `optionalDVNs` verify the message.
+          requiredDVNs: [contractsConfig.chainA.lzDVN],
           optionalDVNs: [],
-          // The number of `optionalDVNs` that need to successfully verify the message for it to be considered Verified.
           optionalDVNThreshold: 0,
         },
       },
-      // Optional Enforced Options Configuration
-      // @dev Controls how much gas to use on the `to` chain, which the user pays for on the source `from` chain.
       enforcedOptions: [
         {
           msgType: 1,
@@ -495,36 +448,49 @@ connections: [
           gas: 65000,
           value: 0,
         },
-        {
-          msgType: 2,
-          optionType: ExecutorOptionType.LZ_RECEIVE,
-          gas: 65000,
-          value: 0,
-        },
-        {
-          msgType: 2,
-          optionType: ExecutorOptionType.COMPOSE,
-          index: 0,
-          gas: 50000,
-          value: 0,
-        },
       ],
     },
   },
-  {
-    from: arbitrumContract,
-    to: ethereumContract,
-  },
-  // ETH <--> ARB PATHWAY: END
 ];
 ```
 
-To set these config settings, run:
+### Contract Verification
+
+You can verify EVM chain contracts using the LayerZero helper package:
 
 ```bash
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts
+pnpm dlx @layerzerolabs/verify-contract -n <NETWORK_NAME> -u <API_URL> -k <API_KEY> --contracts <CONTRACT_NAME>
 ```
 
+### Troubleshooting
+
+#### LZ_OnlyAltToken Error
+
+**Cause**: Sending `msg.value` to an Alt Endpoint.
+
+```solidity
+// ❌ Wrong - Alt endpoints don't accept native value
+oft.send{value: fee.nativeFee}(sendParam, fee, refund);
+
+// ✅ Correct - Fees are paid via ERC20 transferFrom
+oft.send{value: 0}(sendParam, fee, refund);
+```
+
+#### ERC20: insufficient allowance
+
+**Cause**: OFTAlt can't transfer stablecoins for fees.
+
+```solidity
+// Approve stablecoin spending before calling send()
+IERC20(feeToken).approve(address(oft), fee.nativeFee);
+```
+
+#### ERC20: transfer amount exceeds balance
+
+**Cause**: Insufficient stablecoin balance for fees. Acquire fee tokens for the Alt Endpoint chain.
+
+For additional troubleshooting, refer to [Debugging Messages](https://docs.layerzero.network/v2/developers/evm/troubleshooting/debugging-messages) or [Error Codes & Handling](https://docs.layerzero.network/v2/developers/evm/troubleshooting/error-messages).
+
 <p align="center">
-  Join our community on <a href="https://discord-layerzero.netlify.app/discord" style="color: #a77dff">Discord</a> | Follow us on <a href="https://twitter.com/LayerZero_Labs" style="color: #a77dff">Twitter</a>
+  Join our <a href="https://layerzero.network/community" style="color: #a77dff">community</a>! | Follow us on <a href="https://x.com/LayerZero_Labs" style="color: #a77dff">X (formerly Twitter)</a>
 </p>
