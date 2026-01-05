@@ -204,10 +204,6 @@ export class OFT extends OmniSDK implements IOApp {
             instructions.push(oft.initOAppNonce({ admin: delegate, oftStore }, eid, normalizedPeer)) // delegate
         }
 
-        instructions.push(
-            await this._createSetPeerAddressIx(normalizedPeer, eid) // admin but is this needed?  set twice...
-        )
-
         this.logger.debug(`Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32}`)
         return {
             ...(await this.createTransaction(this._umiToWeb3Tx(instructions))),
@@ -298,11 +294,24 @@ export class OFT extends OmniSDK implements IOApp {
         this.logger.verbose(`Setting enforced options to ${printJson(enforcedOptions)}`)
 
         const optionsByEidAndMsgType = this.reduceEnforcedOptions(enforcedOptions)
-        const emptyOptions = Options.newOptions().toBytes()
         const ixs: WrappedInstruction[] = []
+
         for (const [eid, optionsByMsgType] of optionsByEidAndMsgType) {
-            const sendOption = optionsByMsgType.get(MSG_TYPE_SEND) ?? emptyOptions
-            const sendAndCallOption = optionsByMsgType.get(MSG_TYPE_SEND_AND_CALL) ?? emptyOptions
+            // Helper to get option: from update map OR fetch from chain (safely)
+            const getOption = async (msgType: MsgType) => {
+                if (optionsByMsgType.has(msgType)) {
+                    return optionsByMsgType.get(msgType)!
+                }
+                const hex = await this.getEnforcedOptions(eid, msgType)
+                return hex && hex !== '0x' ? Options.fromOptions(hex).toBytes() : Options.newOptions().toBytes()
+            }
+
+            // Fetch both in parallel
+            const [sendOption, sendAndCallOption] = await Promise.all([
+                getOption(MSG_TYPE_SEND),
+                getOption(MSG_TYPE_SEND_AND_CALL),
+            ])
+
             ixs.push(await this._setPeerEnforcedOptionsIx(sendOption, sendAndCallOption, eid))
         }
 

@@ -7,6 +7,7 @@ import {
     CHAIN_IDS,
     EthersSigner,
     getCoreSpotDeployment,
+    isQuoteAsset,
     useBigBlock,
     useSmallBlock,
 } from '@layerzerolabs/hyperliquid-composer'
@@ -51,6 +52,30 @@ const deploy: DeployFunction = async (hre) => {
 
     // Validates and returns the native spot
     const hip1Token = getCoreSpotDeployment(coreSpotIndex, isTestnet)
+
+    // Check if the token is a quote asset - warn if it is
+    console.log(`\nChecking if token ${coreSpotIndex} is a quote asset...`)
+    const { isQuoteAsset: isQuote, tokenName } = await isQuoteAsset(isTestnet, parseInt(coreSpotIndex), loglevel)
+
+    if (isQuote) {
+        console.warn(`\n[WARNING] Token ${coreSpotIndex}${tokenName ? ` (${tokenName})` : ''} IS a quote asset!`)
+        console.warn(`For quote assets, you should use MyHyperLiquidComposer_FeeToken instead.`)
+        console.warn(`FeeToken composer provides automatic user activation using the token itself.\n`)
+
+        const { continueAnyway } = await inquirer.prompt([
+            {
+                type: 'confirm',
+                name: 'continueAnyway',
+                message: 'Do you want to continue with regular composer anyway?',
+                default: false,
+            },
+        ])
+
+        if (!continueAnyway) {
+            console.log('Deployment cancelled.')
+            process.exit(0)
+        }
+    }
 
     const { address: address_oft } = await hre.deployments.get(contractName_oft).catch(async () => {
         console.log(`Deployment file for ${contractName_oft}.json in deployments/${networkName} not found`)

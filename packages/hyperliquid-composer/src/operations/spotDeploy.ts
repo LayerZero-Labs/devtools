@@ -9,7 +9,7 @@ import {
 } from '../io'
 import { HyperliquidClient, IHyperliquidSigner } from '../signer'
 import { MAX_HYPERCORE_SUPPLY, QUOTE_TOKENS } from '../types'
-import { getSpotDeployState, getExistingQuoteTokens, getSpotPairDeployAuctionStatus } from './spotMeta'
+import { getSpotDeployState, getExistingQuoteTokens, getSpotPairDeployAuctionStatus, isQuoteAsset } from './spotMeta'
 import type { SpotDeployAction, SpotDeployStates } from '../types'
 import { RegisterHyperliquidity } from '@/types/spotDeploy'
 import { LOGGER_MODULES } from '@/types/cli-constants'
@@ -300,7 +300,7 @@ export async function registerSpot(
     const choices: Array<{ name: string; value: number }> = []
 
     // Add all network quote tokens that haven't been deployed yet
-    networkQuoteTokens.forEach((quoteToken) => {
+    networkQuoteTokens.forEach((quoteToken: { tokenId: number; name: string }) => {
         if (!existingQuoteTokens.includes(quoteToken.tokenId)) {
             choices.push({
                 name: `${quoteToken.name} (Token ${quoteToken.tokenId})`,
@@ -355,15 +355,32 @@ export async function registerSpot(
                 type: 'input',
                 name: 'customTokenId',
                 message: 'Enter the core spot token ID to use as quote token:',
-                validate: (input: string) => {
+                validate: async (input: string) => {
+                    // Allow user to quit
+                    if (input.toLowerCase() === 'q') {
+                        console.log('\nOperation cancelled by user.\n')
+                        process.exit(0)
+                    }
+
                     const num = parseInt(input)
                     if (isNaN(num) || num < 0) {
-                        return 'Please enter a valid positive number'
+                        return 'Please enter a valid positive number (or "q" as the token ID to quit)'
                     }
                     if (existingQuoteTokens.includes(num)) {
                         return `Token ${num} is already deployed as a quote token for this asset`
                     }
-                    return true
+
+                    // Check if the token is a quote asset
+                    try {
+                        const { isQuoteAsset: isQuote } = await isQuoteAsset(isTestnet, num, logLevel)
+                        if (!isQuote) {
+                            return `Token ${num} is not a recognized quote asset on the Hyperliquid protocol. Only quote assets (tokens paired with HYPE) can be used. Enter "q" as the token ID to quit.`
+                        }
+                        return true
+                    } catch (error) {
+                        // If check fails, don't allow
+                        return `Unable to verify if token ${num} is a quote asset. Enter "q" as the token ID to quit.`
+                    }
                 },
             },
         ])
@@ -539,7 +556,7 @@ export async function enableQuoteToken(
         {
             type: 'confirm',
             name: 'executeTx',
-            message: `This will enable token ${coreSpotTokenId} to be used as a quote asset in trading pairs. This can be done after trading fee share is set. \n There are several requirements for this to be successful - reference https://t.me/hyperliquid_api/243. Continue?`,
+            message: `This will enable token ${coreSpotTokenId} to be used as a quote asset in trading pairs. This can be done after trading fee share is set. \n There are several requirements for this to be successful - reference https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets. Continue?`,
             default: false,
         },
     ])
@@ -557,6 +574,46 @@ export async function enableQuoteToken(
     }
 
     logger.info('Enabling quote token capability')
+    const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, action)
+
+    if (response.status === 'ok') {
+        updateQuoteTokenStatus(coreSpotTokenId, isTestnet, true, logger)
+    }
+
+    return response
+}
+
+export async function enableAlignedQuoteToken(
+    signer: IHyperliquidSigner,
+    isTestnet: boolean,
+    coreSpotTokenId: number,
+    logLevel: string
+) {
+    const logger = createModuleLogger(LOGGER_MODULES.ENABLE_ALIGNED_QUOTE_TOKEN, logLevel)
+
+    const { executeTx } = await inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'executeTx',
+            message: `This will enable token ${coreSpotTokenId} to be used as an ALIGNED quote asset in trading pairs. Aligned quote tokens have special properties and requirements - reference https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/aligned-quote-assets. Continue?`,
+            default: false,
+        },
+    ])
+
+    if (!executeTx) {
+        logger.info('Transaction cancelled - quitting.')
+        process.exit(1)
+    }
+
+    const action: SpotDeployAction['action'] = {
+        type: 'spotDeploy',
+        enableAlignedQuoteToken: {
+            token: coreSpotTokenId,
+        },
+    }
+
+    logger.info('Enabling aligned quote token capability')
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
     const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, action)
 

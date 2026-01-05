@@ -1,5 +1,11 @@
 # @layerzerolabs/protocol-devtools-solana
 
+## 8.0.6
+
+### Patch Changes
+
+- c45bec8: shell linting
+
 ## 8.0.5
 
 ### Patch Changes

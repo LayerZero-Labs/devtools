@@ -24,7 +24,7 @@ abstract contract OFTFeeUpgradeable is OFTUpgradeable, FeeUpgradeable {
         }
     }
 
-    function feeBalance() public view returns (uint256) {
+    function feeBalance() public view virtual returns (uint256) {
         OFTFeeStorage storage $ = _getOFTFeeStorage();
         return $.feeBalance;
     }
@@ -121,7 +121,7 @@ abstract contract OFTFeeUpgradeable is OFTUpgradeable, FeeUpgradeable {
      * @notice Withdraws accumulated fees to a specified address.
      * @param _to The address to which the fees will be withdrawn.
      */
-    function withdrawFees(address _to) external onlyOwner {
+    function withdrawFees(address _to) external virtual onlyOwner {
         OFTFeeStorage storage $ = _getOFTFeeStorage();
         uint256 balance = $.feeBalance;
         if (balance == 0) revert NoFeesToWithdraw();
