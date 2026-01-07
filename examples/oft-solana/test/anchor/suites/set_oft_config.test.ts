@@ -1,14 +1,16 @@
-import { describe, it, before } from 'mocha'
-import { Context, generateSigner, PublicKey, sol, Umi } from '@metaplex-foundation/umi'
 import assert from 'assert'
-import { UMI } from '@layerzerolabs/lz-solana-sdk-v2'
 
+import { Context, PublicKey, Umi, generateSigner, sol } from '@metaplex-foundation/umi'
+import { before, describe, it } from 'mocha'
+
+import { UMI } from '@layerzerolabs/lz-solana-sdk-v2'
+import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
+
+import { endpoint } from '../constants'
 import { expectOftError } from '../helpers'
 import { getGlobalContext, getGlobalKeys, getGlobalUmi } from '../index.test'
 import { OftKeySets, TestContext } from '../types'
-import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
 import { sendAndConfirm } from '../utils'
-import { endpoint } from '../constants'
 
 const FEE_TOO_HIGH = 10000
 
@@ -24,7 +26,6 @@ describe('set_oft_config', function () {
         umi = getGlobalUmi()
         keys = getGlobalKeys()
     })
-
     ;(['native', 'adapter'] as const).forEach((keyLabel) => {
         describe(`${keyLabel} config`, () => {
             let programs: { oft: PublicKey; endpoint: PublicKey }

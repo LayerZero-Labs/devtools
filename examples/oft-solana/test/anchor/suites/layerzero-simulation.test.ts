@@ -1,15 +1,17 @@
-import { Context, generateSigner, sol, Umi } from '@metaplex-foundation/umi'
-import { getOrCreateAssociatedTokenAccount, TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { fetchToken } from '@metaplex-foundation/mpl-toolbox'
-import { fromWeb3JsPublicKey, toWeb3JsKeypair, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import assert from 'assert'
+
+import { fetchToken } from '@metaplex-foundation/mpl-toolbox'
+import { Context, Umi, generateSigner, sol } from '@metaplex-foundation/umi'
+import { fromWeb3JsPublicKey, toWeb3JsKeypair, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
+import { TOKEN_PROGRAM_ID, getOrCreateAssociatedTokenAccount } from '@solana/spl-token'
+
+import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { DST_EID, OFT_DECIMALS } from '../constants'
 import { quoteOft, quoteSend, send } from '../helpers'
-import { verifyAndReceive } from '../utils'
-import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
 import { getGlobalContext, getGlobalKeys, getGlobalUmi } from '../index.test'
 import { OftKeySets, TestContext } from '../types'
+import { verifyAndReceive } from '../utils'
 
 describe('LayerZero Simulation', function () {
     let umi: Umi | Context
@@ -21,7 +23,6 @@ describe('LayerZero Simulation', function () {
         umi = getGlobalUmi()
         keys = getGlobalKeys()
     })
-
     ;(['native', 'adapter'] as const).forEach((keyLabel) => {
         it(`simulates send and receive for ${keyLabel}`, async () => {
             const keySet = keys[keyLabel]
@@ -45,27 +46,13 @@ describe('LayerZero Simulation', function () {
                 TOKEN_PROGRAM_ID
             )
 
-            const quote = await quoteOft(
-                context,
-                keySet,
-                keySet.oappAdmin,
-                dest.publicKey,
-                DST_EID,
-                sendAmount
-            )
+            const quote = await quoteOft(context, keySet, keySet.oappAdmin, dest.publicKey, DST_EID, sendAmount)
             const amountSentLd = quote.oftReceipt.amountSentLd
             const amountReceivedLd = quote.oftReceipt.amountReceivedLd
             const oftFeeLd = amountSentLd - amountReceivedLd
             assert.ok(amountSentLd >= amountReceivedLd)
 
-            const fee = await quoteSend(
-                context,
-                keySet,
-                keySet.oappAdmin,
-                dest.publicKey,
-                DST_EID,
-                sendAmount
-            )
+            const fee = await quoteSend(context, keySet, keySet.oappAdmin, dest.publicKey, DST_EID, sendAmount)
 
             const beforeSourceBalance = await fetchToken(umi, keySet.oappAdminTokenAccount)
             const beforeEscrowBalance = await fetchToken(umi, keySet.escrow.publicKey)
@@ -135,7 +122,6 @@ describe('LayerZero Simulation', function () {
                 assert.strictEqual(afterReceiveEscrowBalance.amount, afterSendEscrowBalance.amount)
                 assert.strictEqual(afterReceiveStore.tvlLd, afterSendStore.tvlLd)
             }
-
         })
     })
 })

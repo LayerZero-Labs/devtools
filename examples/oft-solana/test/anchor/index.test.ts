@@ -1,3 +1,4 @@
+import './got-shim.cjs'
 import 'mocha'
 
 import { ChildProcess } from 'child_process'
@@ -7,18 +8,20 @@ import { env } from 'process'
 
 import {
     Context,
+    Program,
+    Umi,
     createNullContext,
     createSignerFromKeypair,
     generateSigner,
-    Program,
     sol,
-    Umi,
 } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { Connection } from '@solana/web3.js'
 import axios from 'axios'
 import { $, sleep } from 'zx'
-import { oft, OftPDA } from '@layerzerolabs/oft-v2-solana-sdk'
+
+import { OftPDA, oft } from '@layerzerolabs/oft-v2-solana-sdk'
+
 import { OFT_PROGRAM_ID } from './constants'
 import { createOftKeySets } from './helpers'
 import { OftKeySets, TestContext } from './types'
@@ -89,7 +92,7 @@ export function getGlobalKeys(): OftKeySets {
 }
 
 async function setupPrograms(): Promise<void> {
-    const programsDir = path.join(__dirname, '../target/programs')
+    const programsDir = path.join(__dirname, '../../target/programs')
     env.RUST_LOG = 'solana_runtime::message_processor=debug'
     await $`mkdir -p ${programsDir}`
 
@@ -114,7 +117,7 @@ async function setupPrograms(): Promise<void> {
 }
 
 async function startSolanaValidator(): Promise<ChildProcess> {
-    const programsDir = path.join(__dirname, '../target/programs')
+    const programsDir = path.join(__dirname, '../../target/programs')
 
     const args = [
         '--reset',
@@ -153,7 +156,7 @@ async function startSolanaValidator(): Promise<ChildProcess> {
 
         '--bpf-program',
         OFT_PROGRAM_ID,
-        `${__dirname}/../target/deploy/oft.so`,
+        `${__dirname}/../../target/deploy/oft.so`,
     ]
 
     console.log('Loading mainnet feature flags...')
@@ -163,7 +166,7 @@ async function startSolanaValidator(): Promise<ChildProcess> {
     })
 
     console.log('Starting solana-test-validator...')
-    const logFile = path.join(__dirname, '../target/solana-test-validator.log')
+    const logFile = path.join(__dirname, '../../target/solana-test-validator.log')
     const process = $.spawn('solana-test-validator', [...args], {
         stdio: ['ignore', fs.openSync(logFile, 'w'), fs.openSync(logFile, 'w')],
     })
@@ -197,7 +200,7 @@ interface CachedFeaturesData {
 }
 
 async function loadInactiveFeatures(): Promise<FeatureInfo[]> {
-    const featuresFile = path.join(__dirname, '../target/programs/features.json')
+    const featuresFile = path.join(__dirname, '../../target/programs/features.json')
 
     if (!fs.existsSync(featuresFile)) {
         console.log('Run: pnpm test:generate-features')

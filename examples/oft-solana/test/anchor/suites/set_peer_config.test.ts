@@ -1,14 +1,16 @@
-import { describe, it, before } from 'mocha'
-import { Context, generateSigner, Program, ProgramError, publicKeyBytes, sol, Umi } from '@metaplex-foundation/umi'
-import { Options } from '@layerzerolabs/lz-v2-utilities'
 import assert from 'assert'
 
-import { getGlobalContext, getGlobalKeys, getGlobalUmi } from '../index.test'
+import { Context, Program, ProgramError, Umi, generateSigner, publicKeyBytes, sol } from '@metaplex-foundation/umi'
+import { before, describe, it } from 'mocha'
+
+import { Options } from '@layerzerolabs/lz-v2-utilities'
+import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
+
 import { DST_EID, SRC_EID } from '../constants'
 import { expectOftError } from '../helpers'
-import { sendAndConfirm, setPeerConfig } from '../utils'
-import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
+import { getGlobalContext, getGlobalKeys, getGlobalUmi } from '../index.test'
 import { OftKeySets, TestContext } from '../types'
+import { sendAndConfirm, setPeerConfig } from '../utils'
 
 const enforcedOptions = Options.newOptions().addExecutorLzReceiveOption(200_000, 2_500_000).toBytes()
 
@@ -24,7 +26,6 @@ describe('set_peer_config', function () {
         umi = getGlobalUmi()
         keys = getGlobalKeys()
     })
-
     ;(['native', 'adapter'] as const).forEach((keyLabel) => {
         describe(`${keyLabel} peer config`, () => {
             it('rejects unauthorized peer updates', async () => {
@@ -113,8 +114,22 @@ describe('set_peer_config', function () {
                 const keySet = keys[keyLabel]
                 const peerAddr = publicKeyBytes(keySet.oftStore)
 
-                const dstPeer = await setPeerConfig(umi as Umi, keySet, context.pda, context.programRepo, peerAddr, DST_EID)
-                const srcPeer = await setPeerConfig(umi as Umi, keySet, context.pda, context.programRepo, peerAddr, SRC_EID)
+                const dstPeer = await setPeerConfig(
+                    umi as Umi,
+                    keySet,
+                    context.pda,
+                    context.programRepo,
+                    peerAddr,
+                    DST_EID
+                )
+                const srcPeer = await setPeerConfig(
+                    umi as Umi,
+                    keySet,
+                    context.pda,
+                    context.programRepo,
+                    peerAddr,
+                    SRC_EID
+                )
 
                 const [dstPeerAccount, srcPeerAccount] = await oft.accounts.fetchAllPeerConfig(umi, [dstPeer, srcPeer])
                 assert.strictEqual(dstPeerAccount.peerAddress.toString(), peerAddr.toString())

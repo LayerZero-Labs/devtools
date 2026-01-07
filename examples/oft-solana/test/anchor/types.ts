@@ -1,5 +1,3 @@
-import { UMI } from '@layerzerolabs/lz-solana-sdk-v2'
-import { OftPDA } from '@layerzerolabs/oft-v2-solana-sdk'
 import {
     AddressLookupTableInput,
     Context,
@@ -9,6 +7,9 @@ import {
     PublicKey,
 } from '@metaplex-foundation/umi'
 import { Connection } from '@solana/web3.js'
+
+import { UMI } from '@layerzerolabs/lz-solana-sdk-v2'
+import { OftPDA } from '@layerzerolabs/oft-v2-solana-sdk'
 
 export type PacketSentEvent = UMI.EndpointProgram.events.PacketSentEvent
 

@@ -1,10 +1,11 @@
 import { KeypairSigner, PublicKey, publicKeyBytes } from '@metaplex-foundation/umi'
+
+import { UMI } from '@layerzerolabs/lz-solana-sdk-v2'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
-import { UMI } from '@layerzerolabs/lz-solana-sdk-v2'
 
 import { endpoint } from '../constants'
-import { TestContext, OftKeys } from '../types'
+import { OftKeys, TestContext } from '../types'
 
 const DEFAULT_LZ_RECEIVE_OPTIONS = Options.newOptions().addExecutorLzReceiveOption(200000, 0)
 
@@ -15,7 +16,7 @@ export async function quoteSend(
     dest: PublicKey,
     dstEid: number,
     sendAmount: bigint,
-    minAmount: bigint = 0n,
+    minAmount = 0n,
     composeMessage?: Uint8Array,
     options: Uint8Array = DEFAULT_LZ_RECEIVE_OPTIONS.toBytes()
 ): Promise<UMI.EndpointProgram.types.MessagingFee> {
@@ -50,7 +51,7 @@ export async function quoteOft(
     dest: PublicKey,
     dstEid: number,
     sendAmount: bigint,
-    minAmount: bigint = 0n,
+    minAmount = 0n,
     composeMessage?: Uint8Array,
     options: Uint8Array = DEFAULT_LZ_RECEIVE_OPTIONS.toBytes()
 ): Promise<oft.types.QuoteOFTResult> {

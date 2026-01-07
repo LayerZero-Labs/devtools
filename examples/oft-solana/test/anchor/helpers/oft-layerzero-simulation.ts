@@ -1,14 +1,15 @@
 import { KeypairSigner, PublicKey, Umi, publicKeyBytes } from '@metaplex-foundation/umi'
 import { base58 } from '@metaplex-foundation/umi/serializers'
 import { fromWeb3JsPublicKey, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
-import { Options } from '@layerzerolabs/lz-v2-utilities'
-import { UMI } from '@layerzerolabs/lz-solana-sdk-v2'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
-import { endpoint, OFT_PROGRAM_ID } from '../constants'
-import { TestContext, OftKeys, PacketSentEvent } from '../types'
+import { UMI } from '@layerzerolabs/lz-solana-sdk-v2'
+import { Options } from '@layerzerolabs/lz-v2-utilities'
+import { OFT_DECIMALS, oft } from '@layerzerolabs/oft-v2-solana-sdk'
+
+import { OFT_PROGRAM_ID, endpoint } from '../constants'
+import { OftKeys, PacketSentEvent, TestContext } from '../types'
 import { sendAndConfirm } from '../utils'
-import { oft, OFT_DECIMALS } from '@layerzerolabs/oft-v2-solana-sdk'
 
 const SIMULATION_EXECUTION_OPTIONS = Options.newOptions().addExecutorLzReceiveOption(200000, 200000 * 5)
 const SIMULATION_COMPUTE_UNITS = 400000
@@ -47,7 +48,7 @@ export async function send(
     sendAmount: bigint,
     fee: UMI.EndpointProgram.types.MessagingFee,
     composeMsg?: Uint8Array,
-    minAmountLd: bigint = 0n
+    minAmountLd = 0n
 ): Promise<PacketSentEvent> {
     const { umi } = context
 

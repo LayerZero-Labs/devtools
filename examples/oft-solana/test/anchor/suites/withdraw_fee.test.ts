@@ -1,14 +1,16 @@
-import { describe, it, before } from 'mocha'
-import { Context, generateSigner, PublicKey, sol, Umi } from '@metaplex-foundation/umi'
-import { fetchToken } from '@metaplex-foundation/mpl-toolbox'
 import assert from 'assert'
 
-import { getGlobalContext, getGlobalKeys, getGlobalUmi } from '../index.test'
-import { expectOftError, quoteOft, quoteSend, send } from '../helpers'
-import { DST_EID, OFT_DECIMALS } from '../constants'
-import { sendAndConfirm } from '../utils'
+import { fetchToken } from '@metaplex-foundation/mpl-toolbox'
+import { Context, PublicKey, Umi, generateSigner, sol } from '@metaplex-foundation/umi'
+import { before, describe, it } from 'mocha'
+
 import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
+
+import { DST_EID, OFT_DECIMALS } from '../constants'
+import { expectOftError, quoteOft, quoteSend, send } from '../helpers'
+import { getGlobalContext, getGlobalKeys, getGlobalUmi } from '../index.test'
 import { OftKeySets, TestContext } from '../types'
+import { sendAndConfirm } from '../utils'
 
 const SEND_AMOUNT = BigInt(100 * 10 ** OFT_DECIMALS)
 
@@ -24,7 +26,6 @@ describe('withdraw_fee', function () {
         umi = getGlobalUmi()
         keys = getGlobalKeys()
     })
-
     ;(['native', 'adapter'] as const).forEach((keyLabel) => {
         describe(`${keyLabel} fee withdrawal`, () => {
             it('rejects unauthorized fee withdrawal', async () => {
