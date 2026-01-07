@@ -81,6 +81,52 @@ describe('set_oft_config', function () {
                 )
             })
 
+            it('sets minimum default fee bps', async () => {
+                const keySet = keys[keyLabel]
+
+                await sendAndConfirm(
+                    umi,
+                    oft.setOFTConfig(
+                        {
+                            admin: keySet.oappAdmin,
+                            oftStore: keySet.oftStore,
+                        },
+                        {
+                            __kind: 'DefaultFee',
+                            defaultFee: 0,
+                        },
+                        programs
+                    ),
+                    keySet.oappAdmin
+                )
+
+                const oftStoreAccount = await oft.accounts.fetchOFTStore(umi, keySet.oftStore)
+                assert.strictEqual(oftStoreAccount.defaultFeeBps, 0)
+            })
+
+            it('sets maximum default fee bps', async () => {
+                const keySet = keys[keyLabel]
+
+                await sendAndConfirm(
+                    umi,
+                    oft.setOFTConfig(
+                        {
+                            admin: keySet.oappAdmin,
+                            oftStore: keySet.oftStore,
+                        },
+                        {
+                            __kind: 'DefaultFee',
+                            defaultFee: 9999,
+                        },
+                        programs
+                    ),
+                    keySet.oappAdmin
+                )
+
+                const oftStoreAccount = await oft.accounts.fetchOFTStore(umi, keySet.oftStore)
+                assert.strictEqual(oftStoreAccount.defaultFeeBps, 9999)
+            })
+
             it('updates admin, delegate, and fee', async () => {
                 const keySet = keys[keyLabel]
 

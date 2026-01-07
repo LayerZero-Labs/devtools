@@ -13,7 +13,7 @@
     "lint:js": "eslint '**/*.{js,ts,json}' && prettier --check .",
     "lint:sol": "solhint 'contracts/**/*.sol'",
     "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat",
-    "test:anchor": "$npm_execpath run test:generate-features && OFT_ID=9UovNrJD8pQyBLheeHNayuG1wJSEAoxkmM14vw5gcsTT anchor build --no-idl && $npm_execpath exec ts-mocha -b -p ./tsconfig.json -t 10000000 tests/index.test.ts",
+    "test:anchor": "$npm_execpath run test:generate-features && OFT_ID=9UovNrJD8pQyBLheeHNayuG1wJSEAoxkmM14vw5gcsTT anchor build --no-idl && $npm_execpath exec ts-mocha -b -p ./tsconfig.json -t 10000000 --require tests/got-shim.cjs tests/index.test.ts",
     "test:forge": "forge test",
     "test:hardhat": "hardhat test",
     "test:scripts": "jest --config jest.config.ts --runInBand --testMatch \"**/*.script.test.ts\"",

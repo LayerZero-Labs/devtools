@@ -51,6 +51,55 @@ describe('withdraw_fee', function () {
                 )
             })
 
+            it('rejects withdrawal above available fees', async () => {
+                const { program } = context
+                const keySet = keys[keyLabel]
+                if (!keySet.oappAdminTokenAccount) {
+                    throw new Error('Missing admin token account for fee withdrawal')
+                }
+
+                const fee = await quoteSend(
+                    context,
+                    keySet,
+                    keySet.oappAdmin,
+                    keySet.oappAdmin.publicKey,
+                    DST_EID,
+                    SEND_AMOUNT
+                )
+
+                await send(
+                    context,
+                    keySet,
+                    keySet.oappAdmin,
+                    keySet.oappAdminTokenAccount,
+                    keySet.oappAdmin.publicKey,
+                    DST_EID,
+                    SEND_AMOUNT,
+                    fee
+                )
+
+                const oftStore = await oft.accounts.fetchOFTStore(umi, keySet.oftStore)
+                const escrowBalance = await fetchToken(umi, keySet.escrow.publicKey)
+                const availableFee = escrowBalance.amount - oftStore.tvlLd
+
+                const ix = oft.withdrawFee(
+                    {
+                        admin: keySet.oappAdmin,
+                        mint: keySet.mint.publicKey,
+                        escrow: keySet.escrow.publicKey,
+                        dest: keySet.oappAdminTokenAccount,
+                    },
+                    availableFee + 1n,
+                    { oft: context.program.publicKey }
+                )
+
+                await expectOftError(
+                    async () => sendAndConfirm(umi, ix, keySet.oappAdmin),
+                    oft.errors.InvalidFeeError,
+                    program
+                )
+            })
+
             it('withdraws available fees', async () => {
                 const keySet = keys[keyLabel]
                 if (!keySet.oappAdminTokenAccount) {

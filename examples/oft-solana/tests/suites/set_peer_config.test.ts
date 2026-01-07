@@ -1,5 +1,5 @@
 import { describe, it, before } from 'mocha'
-import { Context, generateSigner, publicKeyBytes, sol, Umi } from '@metaplex-foundation/umi'
+import { Context, generateSigner, Program, ProgramError, publicKeyBytes, sol, Umi } from '@metaplex-foundation/umi'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import assert from 'assert'
 
@@ -73,6 +73,38 @@ describe('set_peer_config', function () {
                 await expectOftError(
                     async () => sendAndConfirm(umi, ix, keySet.oappAdmin),
                     oft.errors.InvalidFeeError,
+                    program
+                )
+            })
+
+            it('rejects invalid enforced options', async () => {
+                const { program } = context
+                const keySet = keys[keyLabel]
+
+                const invalidOptions = Uint8Array.from([0, 1])
+                const ix = oft.setPeerConfig(
+                    {
+                        admin: keySet.oappAdmin,
+                        oftStore: keySet.oftStore,
+                    },
+                    {
+                        __kind: 'EnforcedOptions',
+                        remote: DST_EID,
+                        send: invalidOptions,
+                        sendAndCall: invalidOptions,
+                    },
+                    context.programRepo
+                )
+
+                await expectOftError(
+                    async () => sendAndConfirm(umi, ix, keySet.oappAdmin),
+                    class InvalidOptionsError extends ProgramError {
+                        override readonly name: string = 'InvalidOptions'
+                        readonly code: number = 0x1770 // 6000
+                        constructor(program: Program, cause?: Error) {
+                            super('InvalidOptions', program, cause)
+                        }
+                    },
                     program
                 )
             })
