@@ -1,5 +1,17 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 2.0.5
+
+### Patch Changes
+
+- bb2f4c3: sdk updates for quote asset improvement
+
+## 2.0.4
+
+### Patch Changes
+
+- bfea443: alignedQuoteAsset support on core spot deployment + instructions on how to create a custom hyperliquid sdk action for sign + submit
+
 ## 2.0.3
 
 ### Patch Changes

@@ -116,9 +116,30 @@ npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
     [--log-level {info | verbose}]
 ```
 
-### 6. Enable Quote Token Capability (Optional)
+### 6. Set Trading Fee Share (Optional)
 
-Enables your token to be used as a quote asset for trading pairs. **Requirements must be met** - see: [Hyperliquid API requirements](https://t.me/hyperliquid_api/243)
+Can be done at any time after deployment. **Note:** If you plan to enable quote token capability, read the [Permissionless Spot Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets) documentation before setting this value.
+
+```bash
+npx @layerzerolabs/hyperliquid-composer trading-fee \
+    --token-index <coreIndex> \
+    --share <[0%,100%]> \
+    --network {testnet | mainnet} \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
+    [--log-level {info | verbose}]
+```
+
+### 7. Enable Quote Token Capability (Optional)
+
+Enables your token to be used as a quote asset for trading pairs.
+
+> ⚠️ **Important**: Review the complete [Quote Assets (Fee Tokens)](./HYPERLIQUID.README.md#quote-assets-fee-tokens) section for:
+> - Mainnet requirements (technical and liquidity)
+> - Testnet requirements (50 HYPE stake + active order book)
+> - Order book maintenance for `HYPE/YOUR_ASSET` pair
+> - Composer selection guidance (use `FeeToken` variant for quote assets)
+
+**Dependency:** Requires trading fee share configuration (see Step 6 above).
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer enable-quote-token \
@@ -128,14 +149,13 @@ npx @layerzerolabs/hyperliquid-composer enable-quote-token \
     [--log-level {info | verbose}]
 ```
 
-### Optional: Set Trading Fee Share
+### 8. Enable Aligned Quote Token Capability (Optional)
 
-Can be done at any time after deployment:
+Enables your token to be used as an aligned quote asset for trading pairs. Aligned quote tokens have special properties and requirements. See: [Aligned Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/aligned-quote-assets)
 
 ```bash
-npx @layerzerolabs/hyperliquid-composer trading-fee \
+npx @layerzerolabs/hyperliquid-composer enable-aligned-quote-token \
     --token-index <coreIndex> \
-    --share <[0%,100%]> \
     --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
@@ -165,6 +185,17 @@ npx @layerzerolabs/hyperliquid-composer finalize-evm-contract \
     --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
+```
+
+**Alternative: Using CoreWriter directly with Foundry**
+
+If you prefer to use Foundry's `cast` command, you can generate the calldata and send the transaction directly:
+
+```bash
+npx @layerzerolabs/hyperliquid-composer finalize-evm-contract-corewriter \
+    --token-index <coreIndex> \
+    --nonce <deployment-nonce> \
+    --network {testnet | mainnet}
 ```
 
 ## Post-Launch Management
@@ -262,6 +293,25 @@ npx @layerzerolabs/hyperliquid-composer spot-auction-status \
     [--log-level {info | verbose}]
 ```
 
+### Check if Token is Quote Asset
+
+Check if a specific token is a quote asset, or list all quote assets when no token index is provided.
+
+```bash
+# List all quote assets
+npx @layerzerolabs/hyperliquid-composer list-quote-asset \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+
+# Check if specific token is a quote asset
+npx @layerzerolabs/hyperliquid-composer list-quote-asset \
+    --filter-token-index <coreIndex> \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+```
+
+The command returns `yes` or `no` when checking a specific token, or lists all quote assets when no token index is provided.
+
 ## Utilities
 
 ### Convert Token Index to Bridge Address
@@ -271,3 +321,49 @@ npx @layerzerolabs/hyperliquid-composer to-bridge \
     --token-index <coreIndex> \
     [--log-level {info | verbose}]
 ```
+
+## Advanced: Creating Custom Scripts
+
+You can create your own custom scripts using the `HyperliquidClient` directly. This is useful for actions not covered by the CLI or for building custom automation.
+
+### Example: Custom Action Script
+
+```typescript
+import { HyperliquidClient } from '@layerzerolabs/hyperliquid-composer'
+import { Wallet } from 'ethers'
+
+async function customAction() {
+    // Initialize wallet
+    const wallet = new Wallet(process.env.PRIVATE_KEY!)
+    
+    // Create client (testnet or mainnet)
+    const isTestnet = true
+    const logLevel = 'info'
+    const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
+    
+    // Define your action
+    const action = {
+        type: 'spotDeploy',
+        enableAlignedQuoteToken: {
+            token: 1234, // your token index
+        },
+    }
+    
+    // Submit the action
+    const response = await hyperliquidClient.submitHyperliquidAction(
+        '/exchange',
+        wallet,
+        action
+    )
+    
+    console.log('Response:', response)
+}
+
+customAction()
+```
+
+### Available Action Types
+
+Refer to the [Hyperliquid API documentation](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api) for all available action types and their parameters. The SDK supports any valid HyperCore action through `submitHyperliquidAction`.
+
+

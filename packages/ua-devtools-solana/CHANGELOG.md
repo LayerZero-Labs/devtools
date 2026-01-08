@@ -1,5 +1,20 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 8.0.7
+
+### Patch Changes
+
+- c45bec8: shell linting
+- Updated dependencies [c45bec8]
+  - @layerzerolabs/protocol-devtools-solana@8.0.6
+
+## 8.0.6
+
+### Patch Changes
+
+- 1136e94: remove duplicate setPeer instruction
+- e9ad978: Refactor enforced option setter on Solana to keep existing value rather than reset to null
+
 ## 8.0.5
 
 ### Patch Changes
