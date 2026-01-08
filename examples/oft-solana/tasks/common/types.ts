@@ -7,7 +7,11 @@ export const keyPair: CLIArgumentType<Keypair> = {
     parse(name: string, value: string) {
         return Keypair.fromSecretKey(decode(value))
     },
-    validate() {},
+    validate(name: string, value: unknown) {
+        if (!(value instanceof Keypair)) {
+            throw new Error(`${name} is not a valid Keypair`)
+        }
+    },
 }
 
 export const publicKey: CLIArgumentType<PublicKey> = {
@@ -15,7 +19,11 @@ export const publicKey: CLIArgumentType<PublicKey> = {
     parse(name: string, value: string) {
         return new PublicKey(value)
     },
-    validate() {},
+    validate(name: string, value: unknown) {
+        if (!(value instanceof PublicKey)) {
+            throw new Error(`${name} is not a valid PublicKey`)
+        }
+    },
 }
 
 export interface SendResult {

@@ -11,6 +11,7 @@ import {
     Uln302SetExecutorConfig,
     Uln302SetUlnConfig,
     Uln302UlnConfig,
+    Uln302UlnUserConfig,
     UlnReadSetUlnConfig,
     UlnReadUlnConfig,
     UlnReadUlnUserConfig,
@@ -262,7 +263,7 @@ export class AptosEndpointV2 implements IEndpointV2 {
         _oapp: OmniAddress,
         _uln: OmniAddress,
         _eid: EndpointId,
-        _config: any,
+        _config: Uln302UlnUserConfig,
         _type: Uln302ConfigType
     ) {
         return false

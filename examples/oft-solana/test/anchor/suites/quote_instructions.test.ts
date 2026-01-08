@@ -1,25 +1,22 @@
 import assert from 'assert'
 
-import { Context, Umi } from '@metaplex-foundation/umi'
 import { before, describe, it } from 'mocha'
 
 import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { DST_EID, OFT_DECIMALS } from '../constants'
 import { expectOftError, quoteOft, quoteSend } from '../helpers'
-import { getGlobalContext, getGlobalKeys, getGlobalUmi } from '../index.test'
+import { getGlobalContext, getGlobalKeys } from '../index.test'
 import { OftKeySets, TestContext } from '../types'
 
 describe('quote instructions', function () {
     this.timeout(300000)
 
     let context: TestContext
-    let umi: Umi | Context
     let keys: OftKeySets
 
     before(() => {
         context = getGlobalContext()
-        umi = getGlobalUmi()
         keys = getGlobalKeys()
     })
     ;(['native', 'adapter'] as const).forEach((keyLabel) => {
