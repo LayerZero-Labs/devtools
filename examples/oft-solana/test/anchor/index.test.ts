@@ -1,8 +1,8 @@
 import './got-shim.cjs'
 import 'mocha'
 
-import { ChildProcess } from 'child_process'
 import fs from 'fs'
+import { ChildProcess, type SpawnOptions, spawn } from 'node:child_process'
 import path from 'path'
 import { env } from 'process'
 
@@ -18,7 +18,6 @@ import {
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { Connection } from '@solana/web3.js'
 import axios from 'axios'
-import { $, sleep } from 'zx'
 
 import { OftPDA, oft } from '@layerzerolabs/oft-v2-solana-sdk'
 
@@ -33,6 +32,8 @@ const RPC = `http://localhost:${RPC_PORT}`
 let globalContext: TestContext
 let globalUmi: Umi | Context
 let solanaProcess: ChildProcess
+
+const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
 
 describe('OFT Solana Tests', function () {
     this.timeout(300000)
@@ -94,7 +95,7 @@ export function getGlobalKeys(): OftKeySets {
 async function setupPrograms(): Promise<void> {
     const programsDir = path.join(__dirname, '../../target/programs')
     env.RUST_LOG = 'solana_runtime::message_processor=debug'
-    await $`mkdir -p ${programsDir}`
+    fs.mkdirSync(programsDir, { recursive: true })
 
     const programs = [
         { name: 'endpoint', id: '76y77prsiCMvXMjuoZ5VRrhG5qYBrUMYTE5WgHqgjEn6' },
@@ -111,7 +112,9 @@ async function setupPrograms(): Promise<void> {
         const programPath = `${programsDir}/${program.name}.so`
         if (!fs.existsSync(programPath)) {
             console.log(`  Downloading ${program.name}...`)
-            await $({ verbose: true })`solana program dump ${program.id} ${programPath} -u devnet`
+            await runCommand('solana', ['program', 'dump', program.id, programPath, '-u', 'devnet'], {
+                stdio: 'inherit',
+            })
         }
     }
 }
@@ -167,7 +170,7 @@ async function startSolanaValidator(): Promise<ChildProcess> {
 
     console.log('Starting solana-test-validator...')
     const logFile = path.join(__dirname, '../../target/solana-test-validator.log')
-    const process = $.spawn('solana-test-validator', [...args], {
+    const validatorProcess = spawn('solana-test-validator', [...args], {
         stdio: ['ignore', fs.openSync(logFile, 'w'), fs.openSync(logFile, 'w')],
     })
 
@@ -182,7 +185,7 @@ async function startSolanaValidator(): Promise<ChildProcess> {
         }
     }
 
-    return process
+    return validatorProcess
 }
 
 interface FeatureInfo {
@@ -248,4 +251,19 @@ async function createGlobalTestContext(): Promise<TestContext> {
     await umi.rpc.airdrop(umi.payer.publicKey, sol(10000))
 
     return context
+}
+
+async function runCommand(command: string, args: string[], options?: SpawnOptions): Promise<void> {
+    await new Promise<void>((resolve, reject) => {
+        const child = spawn(command, args, { stdio: 'inherit', ...options })
+
+        child.on('error', reject)
+        child.on('close', (code) => {
+            if (code === 0) {
+                resolve()
+                return
+            }
+            reject(new Error(`Command failed: ${command} ${args.join(' ')} (exit ${code ?? 'unknown'})`))
+        })
+    })
 }

@@ -1,7 +1,7 @@
 import fs from 'fs'
+import { execFile } from 'node:child_process'
+import { promisify } from 'node:util'
 import path from 'path'
-
-import { $ } from 'zx'
 
 interface FeatureInfo {
     description: string
@@ -11,6 +11,18 @@ interface FeatureInfo {
 
 interface FeaturesResponse {
     features: FeatureInfo[]
+}
+
+const execFileAsync = promisify(execFile)
+
+async function fetchFeatures(rpc: string): Promise<FeaturesResponse> {
+    const { stdout } = await execFileAsync(
+        'solana',
+        ['feature', 'status', '-u', rpc, '--display-all', '--output', 'json-compact'],
+        { maxBuffer: 10 * 1024 * 1024 }
+    )
+
+    return JSON.parse(stdout.trim()) as FeaturesResponse
 }
 
 async function generateFeatures(): Promise<void> {
@@ -29,7 +41,7 @@ async function generateFeatures(): Promise<void> {
         for (const rpc of rpcEndpoints) {
             try {
                 console.log(`  Trying ${rpc}...`)
-                features = (await $`solana feature status -u ${rpc} --display-all --output json-compact`).json()
+                features = await fetchFeatures(rpc)
                 break
             } catch (error) {
                 lastError = error
