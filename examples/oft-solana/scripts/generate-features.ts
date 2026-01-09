@@ -37,11 +37,13 @@ async function generateFeatures(): Promise<void> {
 
         let features: FeaturesResponse | null = null
         let lastError: unknown = null
+        let successfulRpc: string | null = null
 
         for (const rpc of rpcEndpoints) {
             try {
                 console.log(`  Trying ${rpc}...`)
                 features = await fetchFeatures(rpc)
+                successfulRpc = rpc
                 break
             } catch (error) {
                 lastError = error
@@ -66,7 +68,7 @@ async function generateFeatures(): Promise<void> {
 
         const featuresData = {
             timestamp: new Date().toISOString(),
-            source: 'https://solana-rpc.publicnode.com',
+            source: successfulRpc,
             totalFeatures: features.features.length,
             inactiveFeatures,
             inactiveCount: inactiveFeatures.length,
