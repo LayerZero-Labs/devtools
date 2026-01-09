@@ -53,9 +53,13 @@ describe('OFT Solana Tests', function () {
     after(async function () {
         console.log('Cleaning up test environment...')
         globalUmi = createNullContext()
-        globalContext.umi = globalUmi
+        if (globalContext) {
+            globalContext.umi = globalUmi
+        }
         await sleep(2000)
-        solanaProcess.kill('SIGKILL')
+        if (solanaProcess) {
+            solanaProcess.kill('SIGKILL')
+        }
         console.log('Cleanup completed.')
     })
 
