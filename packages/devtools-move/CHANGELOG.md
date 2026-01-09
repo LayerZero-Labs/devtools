@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-move
 
+## 1.0.18
+
+### Patch Changes
+
+- f447c85: fix e2e test
+
 ## 1.0.17
 
 ### Patch Changes
