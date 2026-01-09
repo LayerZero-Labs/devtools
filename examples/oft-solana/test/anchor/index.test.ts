@@ -174,15 +174,22 @@ async function startSolanaValidator(): Promise<ChildProcess> {
         stdio: ['ignore', fs.openSync(logFile, 'w'), fs.openSync(logFile, 'w')],
     })
 
+    let validatorReady = false
     for (let i = 0; i < 60; i++) {
         try {
             await axios.post(RPC, { jsonrpc: '2.0', id: 1, method: 'getVersion' }, { timeout: 5000 })
             console.log('Solana test validator started.')
+            validatorReady = true
             break
         } catch (e) {
             await sleep(1000)
             console.log('Waiting for solana to start...')
         }
+    }
+
+    if (!validatorReady) {
+        validatorProcess.kill('SIGKILL')
+        throw new Error('Solana test validator failed to start within 60 seconds')
     }
 
     return validatorProcess
