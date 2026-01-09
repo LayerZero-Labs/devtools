@@ -54,7 +54,7 @@ const getNetworkName = (eid: EndpointId) => {
     if (hardhatUnsupportedEids.includes(eid)) {
         return `${chainName}-${env}`
     } else {
-        return getNetworkNameForEid(eid as any)
+        return getNetworkNameForEid(eid)
     }
 }
 

@@ -181,10 +181,11 @@ export const getOftStoreAddress = (eid: EndpointId): string | null => {
             return null
         }
         return oftStore
-    } catch (err: any) {
+    } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err)
         DebugLogger.printWarning(
             KnownWarnings.ERROR_LOADING_SOLANA_DEPLOYMENT,
-            `Could not load Solana deployment for ${endpointIdToNetwork(eid)} (eid ${eid}): ${err.message}`
+            `Could not load Solana deployment for ${endpointIdToNetwork(eid)} (eid ${eid}): ${message}`
         )
         return null
     }
