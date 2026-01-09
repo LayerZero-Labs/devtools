@@ -174,8 +174,9 @@ async function startSolanaValidator(): Promise<ChildProcess> {
 
     console.log('Starting solana-test-validator...')
     const logFile = path.join(__dirname, '../../target/solana-test-validator.log')
+    const logFd = fs.openSync(logFile, 'w')
     const validatorProcess = spawn('solana-test-validator', [...args], {
-        stdio: ['ignore', fs.openSync(logFile, 'w'), fs.openSync(logFile, 'w')],
+        stdio: ['ignore', logFd, logFd],
     })
 
     let validatorReady = false
