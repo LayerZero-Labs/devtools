@@ -20,7 +20,8 @@
     "./artifacts/*.json": {
       "require": "./artifacts/*.json",
       "imports": "./artifacts/*.json"
-    }
+    },
+    "./contracts/*.sol": "./contracts/*.sol"
   },
   "files": [
     "artifacts/**/*",
