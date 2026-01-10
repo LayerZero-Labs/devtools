@@ -13,15 +13,19 @@ import { LzReceiveParams, LzReceiveParamsArgs, getLzReceiveParamsSerializer } fr
 
 // Accounts.
 export type LzReceiveInstructionAccounts = {
+    /**
+     * OApp Store PDA.  This account represents the "address" of your OApp on
+     * Solana and can contain any state relevant to your application.
+     * Customize the fields in `Store` as needed.
+     */
+
     store: PublicKey | Pda
+    /** Peer config PDA for the sending chain. Ensures `params.sender` can only be the allowed peer from that remote chain. */
     peer: PublicKey | Pda
 }
 
 // Data.
-export type LzReceiveInstructionData = {
-    discriminator: Uint8Array
-    params: LzReceiveParams
-}
+export type LzReceiveInstructionData = { discriminator: Uint8Array; params: LzReceiveParams }
 
 export type LzReceiveInstructionDataArgs = { params: LzReceiveParamsArgs }
 
@@ -37,10 +41,7 @@ export function getLzReceiveInstructionDataSerializer(): Serializer<
             ],
             { description: 'LzReceiveInstructionData' }
         ),
-        (value) => ({
-            ...value,
-            discriminator: new Uint8Array([8, 179, 120, 109, 33, 118, 189, 80]),
-        })
+        (value) => ({ ...value, discriminator: new Uint8Array([8, 179, 120, 109, 33, 118, 189, 80]) })
     ) as Serializer<LzReceiveInstructionDataArgs, LzReceiveInstructionData>
 }
 
@@ -53,15 +54,11 @@ export function lzReceive(
     input: LzReceiveInstructionAccounts & LzReceiveInstructionArgs
 ): TransactionBuilder {
     // Program ID.
-    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
+    const programId = context.programs.getPublicKey('myOapp', '')
 
     // Accounts.
     const resolvedAccounts = {
-        store: {
-            index: 0,
-            isWritable: true as boolean,
-            value: input.store ?? null,
-        },
+        store: { index: 0, isWritable: true as boolean, value: input.store ?? null },
         peer: { index: 1, isWritable: false as boolean, value: input.peer ?? null },
     } satisfies ResolvedAccountsWithIndices
 

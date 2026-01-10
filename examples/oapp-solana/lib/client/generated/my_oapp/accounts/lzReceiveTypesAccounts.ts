@@ -25,17 +25,19 @@ import {
     mapSerializer,
     publicKey as publicKeySerializer,
     struct,
+    u8,
 } from '@metaplex-foundation/umi/serializers'
 
-/** LzReceiveTypesAccounts includes accounts that are used in the LzReceiveTypes instruction. */
 export type LzReceiveTypesAccounts = Account<LzReceiveTypesAccountsAccountData>
 
 export type LzReceiveTypesAccountsAccountData = {
     discriminator: Uint8Array
     store: PublicKey
+    alt: PublicKey
+    bump: number
 }
 
-export type LzReceiveTypesAccountsAccountDataArgs = { store: PublicKey }
+export type LzReceiveTypesAccountsAccountDataArgs = { store: PublicKey; alt: PublicKey; bump: number }
 
 export function getLzReceiveTypesAccountsAccountDataSerializer(): Serializer<
     LzReceiveTypesAccountsAccountDataArgs,
@@ -46,13 +48,12 @@ export function getLzReceiveTypesAccountsAccountDataSerializer(): Serializer<
             [
                 ['discriminator', bytes({ size: 8 })],
                 ['store', publicKeySerializer()],
+                ['alt', publicKeySerializer()],
+                ['bump', u8()],
             ],
             { description: 'LzReceiveTypesAccountsAccountData' }
         ),
-        (value) => ({
-            ...value,
-            discriminator: new Uint8Array([248, 87, 167, 117, 5, 251, 21, 126]),
-        })
+        (value) => ({ ...value, discriminator: new Uint8Array([248, 87, 167, 117, 5, 251, 21, 126]) })
     ) as Serializer<LzReceiveTypesAccountsAccountDataArgs, LzReceiveTypesAccountsAccountData>
 }
 
@@ -109,16 +110,18 @@ export async function safeFetchAllLzReceiveTypesAccounts(
 }
 
 export function getLzReceiveTypesAccountsGpaBuilder(context: Pick<Context, 'rpc' | 'programs'>) {
-    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
+    const programId = context.programs.getPublicKey('myOapp', '')
     return gpaBuilder(context, programId)
-        .registerFields<{ discriminator: Uint8Array; store: PublicKey }>({
+        .registerFields<{ discriminator: Uint8Array; store: PublicKey; alt: PublicKey; bump: number }>({
             discriminator: [0, bytes({ size: 8 })],
             store: [8, publicKeySerializer()],
+            alt: [40, publicKeySerializer()],
+            bump: [72, u8()],
         })
         .deserializeUsing<LzReceiveTypesAccounts>((account) => deserializeLzReceiveTypesAccounts(account))
         .whereField('discriminator', new Uint8Array([248, 87, 167, 117, 5, 251, 21, 126]))
 }
 
 export function getLzReceiveTypesAccountsSize(): number {
-    return 40
+    return 73
 }
