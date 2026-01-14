@@ -27,7 +27,7 @@ export const getExamples = (): Example[] => {
         },
         {
             id: 'oft',
-            label: 'OFT',
+            label: 'OFT - EVM only',
             repository,
             directory: 'examples/oft',
             ref,
@@ -151,7 +151,7 @@ export const getExamples = (): Example[] => {
             : []),
         {
             id: 'oft-solana',
-            label: 'OFT (Solana)',
+            label: 'OFT - EVM, Solana',
             repository,
             directory: 'examples/oft-solana',
             ref,
