@@ -26,6 +26,13 @@ export const getExamples = (): Example[] => {
             ref,
         },
         {
+            id: 'oft-solana',
+            label: 'OFT - EVM, Solana',
+            repository,
+            directory: 'examples/oft-solana',
+            ref,
+        },
+        {
             id: 'oft',
             label: 'OFT - EVM only',
             repository,
@@ -149,13 +156,6 @@ export const getExamples = (): Example[] => {
                   },
               ]
             : []),
-        {
-            id: 'oft-solana',
-            label: 'OFT - EVM, Solana',
-            repository,
-            directory: 'examples/oft-solana',
-            ref,
-        },
         ...(process.env.LZ_ENABLE_SOLANA_OAPP_EXAMPLE
             ? [
                   {
