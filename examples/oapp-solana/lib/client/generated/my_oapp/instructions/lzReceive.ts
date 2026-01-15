@@ -6,13 +6,14 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
-import { Context, Pda, PublicKey, TransactionBuilder, transactionBuilder } from '@metaplex-foundation/umi'
+import { Context, Pda, PublicKey, Signer, TransactionBuilder, transactionBuilder } from '@metaplex-foundation/umi'
 import { Serializer, bytes, mapSerializer, struct } from '@metaplex-foundation/umi/serializers'
 import { ResolvedAccount, ResolvedAccountsWithIndices, getAccountMetasAndSigners } from '../shared'
 import { LzReceiveParams, LzReceiveParamsArgs, getLzReceiveParamsSerializer } from '../types'
 
 // Accounts.
 export type LzReceiveInstructionAccounts = {
+    payer?: Signer
     /**
      * OApp Store PDA.  This account represents the "address" of your OApp on
      * Solana and can contain any state relevant to your application.
@@ -50,7 +51,7 @@ export type LzReceiveInstructionArgs = LzReceiveInstructionDataArgs
 
 // Instruction.
 export function lzReceive(
-    context: Pick<Context, 'programs'>,
+    context: Pick<Context, 'payer' | 'programs'>,
     input: LzReceiveInstructionAccounts & LzReceiveInstructionArgs
 ): TransactionBuilder {
     // Program ID.
@@ -58,12 +59,18 @@ export function lzReceive(
 
     // Accounts.
     const resolvedAccounts = {
-        store: { index: 0, isWritable: true as boolean, value: input.store ?? null },
-        peer: { index: 1, isWritable: false as boolean, value: input.peer ?? null },
+        payer: { index: 0, isWritable: true as boolean, value: input.payer ?? null },
+        store: { index: 1, isWritable: true as boolean, value: input.store ?? null },
+        peer: { index: 2, isWritable: false as boolean, value: input.peer ?? null },
     } satisfies ResolvedAccountsWithIndices
 
     // Arguments.
     const resolvedArgs: LzReceiveInstructionArgs = { ...input }
+
+    // Default values.
+    if (!resolvedAccounts.payer.value) {
+        resolvedAccounts.payer.value = context.payer
+    }
 
     // Accounts in order.
     const orderedAccounts: ResolvedAccount[] = Object.values(resolvedAccounts).sort((a, b) => a.index - b.index)
