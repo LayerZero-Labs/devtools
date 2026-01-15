@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 'use strict';
 
+// This script is used specifically in the `test:anchor` npm script to resolve
+// the OFT program ID and output it to stdout. The test/anchor/constants.ts file
+// has its own implementation since it needs the value at TypeScript import time.
+
 const fs = require('fs');
 
 const { Keypair } = require('@solana/web3.js');
