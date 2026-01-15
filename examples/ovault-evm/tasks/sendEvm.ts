@@ -81,40 +81,55 @@ export async function sendEvm(
     // now attach
     const oft = await srcEidHre.ethers.getContractAt(ioftArtifact.abi, wrapperAddress, signer)
 
-    // 3️⃣ fetch the underlying ERC-20
+    // 3️⃣ fetch the underlying ERC-20 (or detect native token)
     const underlying = await oft.token()
+    const isNativeToken = underlying === srcEidHre.ethers.constants.AddressZero
 
-    // 4️⃣ fetch decimals from the underlying token
-    const erc20 = await srcEidHre.ethers.getContractAt('ERC20', underlying, signer)
-    const decimals: number = await erc20.decimals()
+    // 4️⃣ fetch decimals from the underlying token (or use 18 for native)
+    let decimals: number
+    if (isNativeToken) {
+        // Native token (NativeOFTAdapter, StargatePoolNative) - use 18 decimals
+        decimals = 18
+        logger.info('Native token detected (token() returns address(0)), using 18 decimals')
+    } else {
+        const erc20 = await srcEidHre.ethers.getContractAt('ERC20', underlying, signer)
+        decimals = await erc20.decimals()
+    }
 
     // 5️⃣ normalize the user-supplied amount
     const amountUnits: BigNumber = parseUnits(amount, decimals)
 
     // 6️⃣ Check if approval is required (for OFT Adapters) and handle approval
-    try {
-        const approvalRequired = await oft.approvalRequired()
-        if (approvalRequired) {
-            logger.info('OFT Adapter detected - checking ERC20 allowance...')
+    // Skip for native tokens - they don't need ERC20 approval
+    if (!isNativeToken) {
+        try {
+            const approvalRequired = await oft.approvalRequired()
+            if (approvalRequired) {
+                logger.info('OFT Adapter detected - checking ERC20 allowance...')
 
-            // Check current allowance
-            const currentAllowance = await erc20.allowance(signer.address, wrapperAddress)
-            logger.info(`Current allowance: ${currentAllowance.toString()}`)
-            logger.info(`Required amount: ${amountUnits.toString()}`)
+                const erc20 = await srcEidHre.ethers.getContractAt('ERC20', underlying, signer)
 
-            if (currentAllowance.lt(amountUnits)) {
-                logger.info('Insufficient allowance - approving ERC20 tokens...')
-                const approveTx = await erc20.approve(wrapperAddress, amountUnits)
-                logger.info(`Approval transaction hash: ${approveTx.hash}`)
-                await approveTx.wait()
-                logger.info('ERC20 approval confirmed')
-            } else {
-                logger.info('Sufficient allowance already exists')
+                // Check current allowance
+                const currentAllowance = await erc20.allowance(signer.address, wrapperAddress)
+                logger.info(`Current allowance: ${currentAllowance.toString()}`)
+                logger.info(`Required amount: ${amountUnits.toString()}`)
+
+                if (currentAllowance.lt(amountUnits)) {
+                    logger.info('Insufficient allowance - approving ERC20 tokens...')
+                    const approveTx = await erc20.approve(wrapperAddress, amountUnits)
+                    logger.info(`Approval transaction hash: ${approveTx.hash}`)
+                    await approveTx.wait()
+                    logger.info('ERC20 approval confirmed')
+                } else {
+                    logger.info('Sufficient allowance already exists')
+                }
             }
+        } catch (error) {
+            // If approvalRequired() doesn't exist or fails, assume it's a regular OFT (not an adapter)
+            logger.info('No approval required (regular OFT detected)')
         }
-    } catch (error) {
-        // If approvalRequired() doesn't exist or fails, assume it's a regular OFT (not an adapter)
-        logger.info('No approval required (regular OFT detected)')
+    } else {
+        logger.info('Native token - no ERC20 approval required')
     }
 
     // 7️⃣ hex string → Uint8Array → zero-pad to 32 bytes
@@ -223,8 +238,18 @@ export async function sendEvm(
     logger.info('Sending the transaction...')
     let tx: ContractTransaction
     try {
+        // For native tokens (NativeOFTAdapter, StargatePoolNative), msg.value must include
+        // both the LayerZero fee AND the token amount being sent
+        const txValue = isNativeToken ? msgFee.nativeFee.add(amountUnits) : msgFee.nativeFee
+
+        if (isNativeToken) {
+            logger.info(
+                `Native token send: LZ fee ${msgFee.nativeFee.toString()} + amount ${amountUnits.toString()} = ${txValue.toString()} wei`
+            )
+        }
+
         tx = await oft.send(sendParam, msgFee, signer.address, {
-            value: msgFee.nativeFee,
+            value: txValue,
         })
     } catch (error) {
         DebugLogger.printErrorAndFixSuggestion(

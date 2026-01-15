@@ -417,6 +417,12 @@ export const networks: Record<string, NetworkDefinition> = {
         aliases: ['stable-mainnet'],
     },
 
+    'stable-testnet': {
+        chainId: 2201,
+        apiUrl: ETHERSCAN_V2_URL,
+        aliases: ['stable-testnet'],
+    },
+
     // Swellchain
     swellchain: {
         chainId: 1923,
@@ -484,6 +490,12 @@ export const networks: Record<string, NetworkDefinition> = {
     // Non-Etherscan Networks (custom explorers)
     // chainId is not used for these networks
 
+    // Codex
+    codex: {
+        chainId: 81224,
+        apiUrl: 'https://explorer.codex.xyz/',
+    },
+
     // Astar
     astar: {
         chainId: 0,
@@ -523,6 +535,18 @@ export const networks: Record<string, NetworkDefinition> = {
         chainId: 0,
         apiUrl: 'https://api.routescan.io/v2/network/mainnet/evm/14/etherscan',
         aliases: ['flare-mainnet'],
+    },
+
+    // Flow
+    flow: {
+        chainId: 747,
+        apiUrl: 'https://evm.flowscan.io/api',
+        aliases: ['flow-mainnet'],
+    },
+
+    'flow-testnet': {
+        chainId: 545,
+        apiUrl: 'https://evm-testnet.flowscan.io/api',
     },
 
     // Gravity

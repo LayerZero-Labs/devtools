@@ -2064,7 +2064,7 @@ importers:
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/hyperliquid-composer':
-        specifier: ^2.0.4
+        specifier: ^2.0.5
         version: link:../../packages/hyperliquid-composer
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
@@ -5730,7 +5730,7 @@ importers:
         specifier: ~3.0.2
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-solana':
-        specifier: ~8.0.5
+        specifier: ~8.0.6
         version: link:../protocol-devtools-solana
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.7
