@@ -50,9 +50,13 @@ export async function sendEvm(
         const { contracts } = typeof layerzeroConfig === 'function' ? await layerzeroConfig() : layerzeroConfig
         const wrapper = contracts.find((c) => c.contract.eid === srcEid)
         if (!wrapper) throw new Error(`No config for EID ${srcEid}`)
-        wrapperAddress = wrapper.contract.contractName
-            ? (await srcEidHre.deployments.get(wrapper.contract.contractName)).address
-            : wrapper.contract.address!
+        if (wrapper.contract.contractName) {
+            wrapperAddress = (await srcEidHre.deployments.get(wrapper.contract.contractName)).address
+        } else if (wrapper.contract.address) {
+            wrapperAddress = wrapper.contract.address
+        } else {
+            throw new Error(`No contract address found for EID ${srcEid}`)
+        }
     }
     // 2️⃣ load OFT ABI
     const oftArtifact = await srcEidHre.artifacts.readArtifact('OFT')
