@@ -561,7 +561,7 @@ async function ensureDvnAdmin(
     const data = Buffer.from(serializer.serialize(nextState))
 
     // Forked DVN config uses mainnet admins/vid/signers; reset so local config updates succeed.
-    const safeLamports = await connection.getMinimumBalanceForRentExemption(accountInfo.data.length)
+    const safeLamports = await connection.getMinimumBalanceForRentExemption(data.length)
     await callSurfnetRpc('surfnet_setAccount', [
         settingsPda.toString(),
         {
