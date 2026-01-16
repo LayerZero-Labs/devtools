@@ -51,10 +51,7 @@ export function getQuoteSendInstructionDataSerializer(): Serializer<
             ],
             { description: 'QuoteSendInstructionData' }
         ),
-        (value) => ({
-            ...value,
-            discriminator: new Uint8Array([207, 0, 49, 214, 160, 211, 76, 211]),
-        })
+        (value) => ({ ...value, discriminator: new Uint8Array([207, 0, 49, 214, 160, 211, 76, 211]) })
     ) as Serializer<QuoteSendInstructionDataArgs, QuoteSendInstructionData>
 }
 
@@ -67,21 +64,13 @@ export function quoteSend(
     input: QuoteSendInstructionAccounts & QuoteSendInstructionArgs
 ): TransactionBuilder {
     // Program ID.
-    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
+    const programId = context.programs.getPublicKey('myOapp', '')
 
     // Accounts.
     const resolvedAccounts = {
-        store: {
-            index: 0,
-            isWritable: false as boolean,
-            value: input.store ?? null,
-        },
+        store: { index: 0, isWritable: false as boolean, value: input.store ?? null },
         peer: { index: 1, isWritable: false as boolean, value: input.peer ?? null },
-        endpoint: {
-            index: 2,
-            isWritable: false as boolean,
-            value: input.endpoint ?? null,
-        },
+        endpoint: { index: 2, isWritable: false as boolean, value: input.endpoint ?? null },
     } satisfies ResolvedAccountsWithIndices
 
     // Arguments.
