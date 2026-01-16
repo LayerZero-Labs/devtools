@@ -2,4 +2,4 @@
 "create-lz-oapp": patch
 ---
 
-when printing Solana txn data, display in base58
+relabel example labels for OFT and OFT (Solana)
