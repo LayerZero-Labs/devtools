@@ -9,7 +9,7 @@ import {
     createGnosisSignerFactory,
     createSignerFactory,
 } from '@layerzerolabs/devtools-evm-hardhat'
-import { createWireFlow } from '@layerzerolabs/devtools'
+import { createWireFlow, formatOmniTransaction } from '@layerzerolabs/devtools'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import type { SignAndSendResult } from '@layerzerolabs/devtools'
 
@@ -110,7 +110,7 @@ const action: ActionType<TaskArgs> = async (
         signAndSend: ({ transactions }) => {
             if (outputFilename) {
                 logger.debug(`Writing transactions to ${outputFilename}`)
-                writeFileSync(outputFilename, JSON.stringify(transactions, null, 2))
+                writeFileSync(outputFilename, JSON.stringify(transactions.map(formatOmniTransaction), null, 2))
             }
             return hre.run(signAndSendSubtask, {
                 ci,
