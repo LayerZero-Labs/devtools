@@ -205,7 +205,7 @@ async function ensureConfirmationsReady(context: TestContext, packetBytes: Uint8
         }
         const [state] = serializer.deserialize(accountInfo.data)
         const data = Buffer.from(serializer.serialize({ ...state, value: some(1000n) }))
-        const safeLamports = await context.connection.getMinimumBalanceForRentExemption(accountInfo.data.length)
+        const safeLamports = await context.connection.getMinimumBalanceForRentExemption(data.length)
         await callSurfnetRpc('surfnet_setAccount', [
             confirmationsPda.toString(),
             {
