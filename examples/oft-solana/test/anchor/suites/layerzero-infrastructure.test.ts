@@ -76,9 +76,6 @@ describe('LayerZero Infrastructure Setup', function () {
             initInstructions.push(
                 endpoint.registerLibrary(endpointAdmin, {
                     messageLibProgram: uln.programId,
-                }),
-                endpoint.registerLibrary(endpointAdmin, {
-                    messageLibProgram: uln.programId,
                 })
             )
         }
