@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-solana-example
 
+## 0.2.0
+
+### Minor Changes
+
+- 6c95cd3: migrate oapp-solana to LzReceiveTypesV2
+
 ## 0.1.5
 
 ### Patch Changes
