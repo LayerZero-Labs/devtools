@@ -208,7 +208,7 @@ solana program deploy --program-id target/deploy/oft-keypair.json target/verifia
 ### Create the Solana OFT
 
 ```bash
-pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --only-oft-store true --amount 100000000000
+pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --only-oft-store --amount 100000000000
 ```
 
 The above command will create a Solana OFT which will have only the OFT Store as the Mint Authority and will also mint 100 OFT (given the default 9 decimals on Solana, this would be `100_000_000_000` in raw amount).
@@ -317,7 +317,7 @@ This section explains the three different options available for creating OFTs on
 - **Note**: Preferred option when you don't have an existing token
 
 ```bash
-pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --only-oft-store true --amount 100000000000
+pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --only-oft-store --amount 100000000000
 ```
 
 ### OFT Adapter
@@ -452,9 +452,8 @@ npx hardhat --help
   Comma-separated list of additional minters  
   _Default: undefined_
 
-- **`--only-oft-store`** (boolean)  
-  If you plan to have only the OFTStore and no additional minters. This is not reversible, and will result in losing the ability to mint new tokens by everything but the OFTStore.  
-  _Default: false_
+- **`--only-oft-store`** (flag)
+  If you plan to have only the OFTStore and no additional minters. This is not reversible, and will result in losing the ability to mint new tokens by everything but the OFTStore.
 
 - **`--freeze-authority`** (string)  
   The Freeze Authority address (only supported in onlyOftStore mode)  
@@ -476,13 +475,13 @@ The following parameters are only used for Mint-And-Burn Adapter (MABA) mode:
 
 :information_source: For **OFT**, the SPL token's Mint Authority is set to the **Mint Authority Multisig**, which always has the **OFT Store** as a signer. The multisig is fixed to needing 1 of N signatures.
 
-:information_source: You have the option to specify additional signers through the `--additional-minters` flag. If you choose not to, you must pass in `--only-oft-store true`, which means only the **OFT Store** will be a signer for the **Mint Authority Multisig**.
+:information_source: You have the option to specify additional signers through the `--additional-minters` flag. If you choose not to, you must pass in `--only-oft-store`, which means only the **OFT Store** will be a signer for the **Mint Authority Multisig**.
 
 :warning: If you choose to go with `--only-oft-store`, you will not be able to add in other signers/minters or update the Mint Authority, and the Freeze Authority will be immediately renounced. The token Mint Authority will be fixed Mint Authority Multisig address while the Freeze Authority will be set to None.
 
 ##### Important Notes
 
-:warning: Use `--additional-minters` flag to add a CSV of additional minter addresses to the Mint Authority Multisig. If you do not want to, you must specify `--only-oft-store true`.
+:warning: Use `--additional-minters` flag to add a CSV of additional minter addresses to the Mint Authority Multisig. If you do not want to, you must specify `--only-oft-store`.
 
 <details>
 <summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/deploying"><code>pnpm hardhat lz:oft:solana:debug --eid <SOLANA_EID></code></a> </summary>
@@ -512,7 +511,7 @@ const solanaContract: OmniPointHardhat = {
 
 This is only relevant for **OFT**. If you opted to include the `--amount` flag in the create step, that means you already have minted some Solana OFT and you can skip this section.
 
-:information_source: This is only possible if you specified your deployer address as part of the `--additional-minters` flag when creating the Solana OFT. If you had chosen `--only-oft-store true`, you will not be able to mint your OFT on Solana.
+:information_source: This is only possible if you specified your deployer address as part of the `--additional-minters` flag when creating the Solana OFT. If you had chosen `--only-oft-store`, you will not be able to mint your OFT on Solana.
 
 First, you need to create the Associated Token Account for your address.
 
