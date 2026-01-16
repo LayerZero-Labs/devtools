@@ -47,6 +47,7 @@
 - Rust `1.84.1`
 - Anchor `0.31.1`
 - Solana CLI `2.2.20`
+- Surfpool CLI (required for `pnpm test:anchor`)
 - Docker `28.3.0`
 - Node.js `>=20.19.5`
 - `pnpm` (recommended) - or another package manager of your choice (npm, yarn)
@@ -358,6 +359,24 @@ Before deploying, ensure the following:
 
 ```bash
 pnpm test
+```
+
+To run the Surfpool-backed Solana tests:
+
+```bash
+pnpm test:anchor
+```
+
+`pnpm test:anchor` starts a Surfnet forked from mainnet-beta by default. If mainnet-beta state blocks initialization (pre-existing PDAs), set a devnet upstream instead:
+
+```bash
+SURFPOOL_RPC_URL=https://api.devnet.solana.com pnpm test:anchor
+```
+
+To avoid upstream state entirely, deploy local LayerZero program binaries into Surfnet:
+
+```bash
+SURFPOOL_USE_LOCAL_PROGRAMS=1 pnpm test:anchor
 ```
 
 ### Adding other chains
