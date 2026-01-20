@@ -30,6 +30,6 @@ initConfigTask.setDescription('Initialize OFT accounts for Solana').setAction(as
         ...args,
         isSolanaInitConfig: true,
         internalConfigurator: initOFTAccounts,
-        noActionMessage: 'Pathway config already initialized, no action is necessary',
+        noActionMessage: 'Pathway config already initialized',
     })
 )
