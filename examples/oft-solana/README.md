@@ -543,8 +543,13 @@ Refer to the [Solana Troubleshooting page on the LayerZero Docs](https://docs.la
 For the Solana OFT program, the last change was via commit [6a07bb7](https://github.com/LayerZero-Labs/devtools/commit/6a07bb7e089349995ce4b30978512aff001cc131)
 
 The `6a07bb7` commit hash audited in the following 2 reports:
-  1. SolanaOFTandDevTools-Ottersec-24SEPT2024.pdf
+
+1. SolanaOFTandDevTools-Ottersec-24SEPT2024.pdf
+
+
     - https://github.com/LayerZero-Labs/Audits/blob/main/audits/SolanaOFTandDevTools-Ottersec-24SEPT2024.pdf
-  2. SolanaOFTandDevTools-Pashov-17SEPT2024.pdf
+
+2. SolanaOFTandDevTools-Pashov-17SEPT2024.pdf
+
+
     - https://github.com/LayerZero-Labs/Audits/blob/main/audits/SolanaOFTandDevTools-Pashov-17SEPT2024.pdf
-    
