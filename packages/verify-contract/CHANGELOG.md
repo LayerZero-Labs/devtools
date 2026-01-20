@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.5.0
+
+### Minor Changes
+
+- c1adc9c: Verify contract checks deployment ABI first, but fall back to source-based extraction if there's a mismatch
+
 ## 1.4.0
 
 ### Minor Changes

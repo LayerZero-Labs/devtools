@@ -6,22 +6,27 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
-import { Context, Pda, PublicKey, TransactionBuilder, transactionBuilder } from '@metaplex-foundation/umi'
+import { Context, Pda, PublicKey, Signer, TransactionBuilder, transactionBuilder } from '@metaplex-foundation/umi'
 import { Serializer, bytes, mapSerializer, struct } from '@metaplex-foundation/umi/serializers'
 import { ResolvedAccount, ResolvedAccountsWithIndices, getAccountMetasAndSigners } from '../shared'
 import { LzReceiveParams, LzReceiveParamsArgs, getLzReceiveParamsSerializer } from '../types'
 
 // Accounts.
 export type LzReceiveInstructionAccounts = {
+    payer?: Signer
+    /**
+     * OApp Store PDA.  This account represents the "address" of your OApp on
+     * Solana and can contain any state relevant to your application.
+     * Customize the fields in `Store` as needed.
+     */
+
     store: PublicKey | Pda
+    /** Peer config PDA for the sending chain. Ensures `params.sender` can only be the allowed peer from that remote chain. */
     peer: PublicKey | Pda
 }
 
 // Data.
-export type LzReceiveInstructionData = {
-    discriminator: Uint8Array
-    params: LzReceiveParams
-}
+export type LzReceiveInstructionData = { discriminator: Uint8Array; params: LzReceiveParams }
 
 export type LzReceiveInstructionDataArgs = { params: LzReceiveParamsArgs }
 
@@ -37,10 +42,7 @@ export function getLzReceiveInstructionDataSerializer(): Serializer<
             ],
             { description: 'LzReceiveInstructionData' }
         ),
-        (value) => ({
-            ...value,
-            discriminator: new Uint8Array([8, 179, 120, 109, 33, 118, 189, 80]),
-        })
+        (value) => ({ ...value, discriminator: new Uint8Array([8, 179, 120, 109, 33, 118, 189, 80]) })
     ) as Serializer<LzReceiveInstructionDataArgs, LzReceiveInstructionData>
 }
 
@@ -49,24 +51,26 @@ export type LzReceiveInstructionArgs = LzReceiveInstructionDataArgs
 
 // Instruction.
 export function lzReceive(
-    context: Pick<Context, 'programs'>,
+    context: Pick<Context, 'payer' | 'programs'>,
     input: LzReceiveInstructionAccounts & LzReceiveInstructionArgs
 ): TransactionBuilder {
     // Program ID.
-    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
+    const programId = context.programs.getPublicKey('myOapp', '')
 
     // Accounts.
     const resolvedAccounts = {
-        store: {
-            index: 0,
-            isWritable: true as boolean,
-            value: input.store ?? null,
-        },
-        peer: { index: 1, isWritable: false as boolean, value: input.peer ?? null },
+        payer: { index: 0, isWritable: true as boolean, value: input.payer ?? null },
+        store: { index: 1, isWritable: true as boolean, value: input.store ?? null },
+        peer: { index: 2, isWritable: false as boolean, value: input.peer ?? null },
     } satisfies ResolvedAccountsWithIndices
 
     // Arguments.
     const resolvedArgs: LzReceiveInstructionArgs = { ...input }
+
+    // Default values.
+    if (!resolvedAccounts.payer.value) {
+        resolvedAccounts.payer.value = context.payer
+    }
 
     // Accounts in order.
     const orderedAccounts: ResolvedAccount[] = Object.values(resolvedAccounts).sort((a, b) => a.index - b.index)
