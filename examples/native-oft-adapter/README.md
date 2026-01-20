@@ -95,7 +95,7 @@ To deploy your contracts to your desired blockchains, run the following command 
 npx hardhat lz:deploy
 ```
 
-> If you need initial tokens on testnet for the EVM OFT, open `contracts/MyOFT.sol` and uncomment `_mint(msg.sender, 100000 * (10 ** 18));` in the constructor. Ensure you remove this line for production.
+> **Note:** Native OFT Adapter uses native ETH (or chain's native token) on the source chain - no initial token minting is required. Simply ensure your deployer wallet has native tokens to send.
 
 More information about available CLI arguments can be found using the `--help` flag:
 
