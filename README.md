@@ -1,7 +1,7 @@
 <p align="center">
   <a href="https://layerzero.network#gh-dark-mode-only">
     <img alt="LayerZero" style="width: 50%" src="assets/logo-dark.svg#gh-dark-mode-only"/>
-  </a>  
+  </a>
   <a href="https://layerzero.network#gh-light-mode-only">
     <img alt="LayerZero" style="width: 50%" src="assets/logo-light.svg#gh-light-mode-only"/>
   </a>
@@ -14,20 +14,77 @@
 <h1 align="center">LayerZero Developer Utilities</h1>
 
 <p align="center">
-  <a href="/DEVELOPMENT.md" style="color: #a77dff">Development</a> | <a href="/CHEATSHEET.md" style="color: #a77dff">Cheatsheet</a> | <a href="/examples" style="color: #a77dff">Examples</a>
+  <a href="/WORKFLOW.md" style="color: #a77dff">Workflow Guide</a> | <a href="/DEBUGGING.md" style="color: #a77dff">Debugging</a> | <a href="/CHEATSHEET.md" style="color: #a77dff">Cheatsheet</a> | <a href="/examples" style="color: #a77dff">Examples</a>
 </p>
 
 ---
 
-**Please note** that this repository is in a **beta** state and backwards-incompatible changes might be introduced in future releases. While we strive to comply to [semver](https://semver.org/), we can not guarantee to avoid breaking changes in minor releases.
+## Quick Start (External Developers)
+
+The fastest way to start building with LayerZero:
+
+```bash
+# Create a new project from a template
+npx create-lz-oapp@latest
+
+# Follow the prompts to select:
+# - Example template (OFT, OApp, ONFT)
+# - Package manager
+# - Project name
+```
+
+Or clone an example directly:
+
+```bash
+git clone https://github.com/LayerZero-Labs/devtools.git
+cd devtools/examples/oft
+pnpm install
+cp .env.example .env
+# Edit .env with your credentials
+pnpm compile
+```
 
 ---
 
-## Introduction
+## Key Concepts
 
-Welcome to the **LayerZero Developer Tools Hub**. This repository houses everything related to the LayerZero Developer Experience, including application contract standards, CLI examples, packages, scripting tools, and more. It serves as a central hub for developers to build, test, deploy, and interact with LayerZero-based omnichain applications (OApps).
+Before diving in, understand these core concepts:
 
-Visit our <a href="https://docs.layerzero.network/" style="color: #a77dff">developer docs</a> to get started building omnichain applications.
+### Hardhat as Task Orchestration
+
+In this repository, Hardhat is used as a **task orchestration system**, not just a Solidity compiler. Most LayerZero operations are exposed as Hardhat tasks:
+
+```bash
+npx hardhat lz:deploy           # Deploy to ALL configured networks
+npx hardhat lz:oapp:wire        # Configure ALL pathways between contracts
+npx hardhat lz:oapp:config:get  # Read configuration from ALL chains
+```
+
+### The OmniGraph Configuration Model
+
+Your `layerzero.config.ts` defines an **OmniGraph** - a graph of contracts and their connections:
+
+```typescript
+export default async function() {
+    return {
+        contracts: [/* which contracts on which chains */],
+        connections: [/* pathways between contracts */],
+    }
+}
+```
+
+The config is **async** because it fetches live metadata (DVN addresses, etc.) at runtime.
+
+### Pathway Wiring
+
+A "pathway" is a bidirectional connection between two contracts. Wiring involves:
+- `setPeer()` - Tell each contract about its counterpart
+- `setConfig()` - Configure DVNs and executors
+- `setEnforcedOptions()` - Set minimum gas requirements
+
+See [WORKFLOW.md](./WORKFLOW.md) for detailed transaction breakdowns.
+
+---
 
 ## Repository Structure
 
@@ -37,34 +94,32 @@ The primary folders that smart contract developers will find most useful are:
 
 `packages/`: Includes a collection of NPM packages, libraries, and tools that facilitate interaction with LayerZero contracts. This includes deployment scripts, CLI tools, protocol devtools, and testing utilities.
 
-### Examples
+### Where to Start
 
-Here is a list of example projects available in the `examples/` directory:
+| Goal | Location |
+|------|----------|
+| Build a cross-chain token | `examples/oft/` |
+| Build custom messaging | `examples/oapp/` |
+| Wrap an existing ERC20 | `examples/oft-adapter/` |
+| Build cross-chain NFT | `examples/onft721/` |
+| Solana integration | `examples/oft-solana/` |
+| Aptos integration | `examples/oft-aptos-move/` |
 
-```
-$ ls examples
-mint-burn-oft-adapter  oapp                 oft                   oft-solana            omnicounter-solana    onft721-zksync
-native-oft-adapter     oapp-read            oft-adapter           oft-upgradeable       onft721               uniswap-read
-```
+### Key Packages
 
-### Packages
+| Package | Purpose |
+|---------|---------|
+| `toolbox-hardhat` | **Main entry point** - import this in your hardhat config |
+| `oft-evm` | OFT Solidity contracts |
+| `oapp-evm` | OApp Solidity contracts |
+| `devtools-evm-hardhat` | Deploy tasks, HRE utilities |
+| `ua-devtools-evm-hardhat` | OApp/OFT wiring tasks |
 
-Here is a list of packages available in the `packages/` directory:
+---
 
-```
-$ ls packages
-build-devtools            devtools-evm-hardhat      oft-evm                   protocol-devtools-solana  toolbox-hardhat
-build-lz-options          devtools-solana           oft-evm-upgradeable       test-devtools             ua-devtools
-create-lz-oapp            export-deployments        omnicounter-devtools      test-devtools-evm-foundry ua-devtools-evm
-decode-lz-options         io-devtools               omnicounter-devtools-evm  test-devtools-evm-hardhat ua-devtools-evm-hardhat
-devtools                  oapp-alt-evm              onft-evm                  test-devtools-solana      ua-devtools-solana
-devtools-cli              oapp-evm                  oapp-evm-upgradeable      test-devtools-ton         verify-contract
-devtools-evm              oapp-evm-upgradeable      protocol-devtools         toolbox-foundry
-```
+## Getting Started (SDK Contributors)
 
-## Getting Started
-
-To get started with the LayerZero Developer Tools, follow these steps:
+To get started with the LayerZero Developer Tools repository:
 
 1. Clone the Repository
 
@@ -90,6 +145,19 @@ pnpm build
 This will build all the packages and examples in the repository.
 
 Review the README for each individual `examples/` project to learn how to interact with and use each sample project.
+
+---
+
+## Documentation
+
+| Document | Purpose |
+|----------|---------|
+| [WORKFLOW.md](./WORKFLOW.md) | Complete deployment workflow and transaction model |
+| [DEBUGGING.md](./DEBUGGING.md) | Troubleshooting guide for common issues |
+| [CHEATSHEET.md](./CHEATSHEET.md) | Quick reference for commands and types |
+| [Official Docs](https://docs.layerzero.network/) | Full protocol documentation |
+
+---
 
 ## Contributing
 
@@ -139,7 +207,7 @@ Add or update unit tests to cover your changes.
 Ensure all tests pass:
 
 ```
-pnpm test
+pnpm test:local
 ```
 
 5. Commit Messages
@@ -171,13 +239,17 @@ Provide a clear and detailed description of your changes.
 If you encounter any issues or bugs with existing projects, please open an issue on GitHub under the **Issues** tab.
 Provide as much detail as possible, including steps to reproduce the issue.
 
+---
+
 ## Additional Resources
 
-- **Development Guide**: Check out our <a href="/DEVELOPMENT.md" style="color: #a77dff">Development</a> guide for more in-depth information on contributing to the repository.
+- **Workflow Guide**: Check out our [WORKFLOW.md](./WORKFLOW.md) for understanding the deployment process.
 
-- **Cheatsheet**: Our <a href="/CHEATSHEET.md" style="color: #a77dff">Cheatsheet</a> provides quick commands and tips.
+- **Debugging Guide**: Our [DEBUGGING.md](./DEBUGGING.md) helps troubleshoot common issues.
 
-- **Documentation**: Visit our <a href="https://docs.layerzero.network/" style="color: #a77dff">official documentation</a> for detailed guides and API references.
+- **Cheatsheet**: Our [CHEATSHEET.md](./CHEATSHEET.md) provides quick commands and tips.
+
+- **Documentation**: Visit our [official documentation](https://docs.layerzero.network/) for detailed guides and API references.
 
 By utilizing the resources in this repository, you can focus on creating innovative omnichain solutions without worrying about the complexities of cross-chain communication.
 
