@@ -14,8 +14,12 @@
 <h1 align="center">LayerZero Developer Utilities</h1>
 
 <p align="center">
-  <a href="/WORKFLOW.md" style="color: #a77dff">Workflow Guide</a> | <a href="/DEBUGGING.md" style="color: #a77dff">Debugging</a> | <a href="/CHEATSHEET.md" style="color: #a77dff">Cheatsheet</a> | <a href="/examples" style="color: #a77dff">Examples</a>
+  <a href="/DEVELOPMENT.md" style="color: #a77dff">Development</a> | <a href="/CHEATSHEET.md" style="color: #a77dff">Cheatsheet</a> | <a href="/examples" style="color: #a77dff">Examples</a>
 </p>
+
+---
+
+**Please note** that this repository is in a **beta** state and backwards-incompatible changes might be introduced in future releases. While we strive to comply to [semver](https://semver.org/), we can not guarantee to avoid breaking changes in minor releases.
 
 ---
 
