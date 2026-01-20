@@ -203,20 +203,23 @@ export async function setNoHyperliquidity(
         if (!state) {
             // Token is already deployed - check for pending spot pairs in spotMetaAndAssetCtxs
             logger.info(
-                `No in progress deployment state found for token ${tokenIndex}. Checking for pending spot pairs...`
+                `No in progress deployment state found for token ${tokenIndex}. Checking for pending spot pairs network-wide...`
             )
 
-            const pendingSpots = await getPendingSpotPairs(isTestnet, tokenIndex, logLevel)
+            const pendingSpots = await getPendingSpotPairs(isTestnet, logLevel)
 
             if (pendingSpots.length === 0) {
-                logger.error(
-                    `No pending spot pairs found for token ${tokenIndex}. The token is fully deployed with no pending pairs.`
-                )
+                logger.error(`No pending spot pairs found network-wide.`)
                 logger.info(`Tip: If you know the spot index, use --spot-index <id> to directly specify it.`)
                 process.exit(1)
             }
 
-            logger.info(`Found ${pendingSpots.length} pending spot pair(s):`)
+            logger.warn(
+                `WARNING: The API does not provide token composition for pending spots. ` +
+                    `The following are ALL pending spots network-wide, not filtered by token ${tokenIndex}.`
+            )
+            logger.warn(`Use --spot-index <id> to directly specify your spot if you know it from register-spot output.`)
+            logger.info(`Found ${pendingSpots.length} pending spot pair(s) network-wide:`)
             pendingSpots.forEach((spot) => {
                 logger.info(`  - ${spot.coin} (spot index: ${spot.spotIndex}, markPx: ${spot.markPx})`)
             })

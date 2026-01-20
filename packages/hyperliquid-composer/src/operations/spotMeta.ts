@@ -179,18 +179,16 @@ export async function getExistingQuoteTokens(
  * Gets pending spot pairs that exist in spotMetaAndAssetCtxs but NOT in the universe.
  * These are spots that have been registered via registerSpot but not yet finalized.
  *
- * Note: The Hyperliquid API does not provide token composition info for pending spots,
+ * IMPORTANT: The Hyperliquid API does not provide token composition info for pending spots,
  * so this function returns ALL pending spots network-wide, not filtered by token.
  * Users should use the --spot-index flag to directly specify which spot to finalize.
  *
  * @param isTestnet Whether to query testnet or mainnet
- * @param _tokenIndex Unused - API doesn't support filtering pending spots by token
  * @param logLevel Logging level for the client
- * @returns Array of pending spot indices and their details
+ * @returns Array of pending spot indices and their details (network-wide, not token-specific)
  */
 export async function getPendingSpotPairs(
     isTestnet: boolean,
-    _tokenIndex: number,
     logLevel: string
 ): Promise<Array<{ spotIndex: number; coin: string; markPx: string }>> {
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
