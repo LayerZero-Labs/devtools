@@ -546,10 +546,8 @@ The `6a07bb7` commit hash audited in the following 2 reports:
 
 1. SolanaOFTandDevTools-Ottersec-24SEPT2024.pdf
 
-
-    - https://github.com/LayerZero-Labs/Audits/blob/main/audits/SolanaOFTandDevTools-Ottersec-24SEPT2024.pdf
+   - https://github.com/LayerZero-Labs/Audits/blob/main/audits/SolanaOFTandDevTools-Ottersec-24SEPT2024.pdf
 
 2. SolanaOFTandDevTools-Pashov-17SEPT2024.pdf
 
-
-    - https://github.com/LayerZero-Labs/Audits/blob/main/audits/SolanaOFTandDevTools-Pashov-17SEPT2024.pdf
+   - https://github.com/LayerZero-Labs/Audits/blob/main/audits/SolanaOFTandDevTools-Pashov-17SEPT2024.pdf
