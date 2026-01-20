@@ -90,6 +90,8 @@ npx @layerzerolabs/hyperliquid-composer set-genesis \
 
 ### 4. Register Trading Spot
 
+Registers a trading pair between your token and a quote asset (USDC, HYPE, or custom quote token).
+
 ```bash
 npx @layerzerolabs/hyperliquid-composer register-spot \
     --token-index <coreIndex> \
@@ -98,14 +100,52 @@ npx @layerzerolabs/hyperliquid-composer register-spot \
     [--log-level {info | verbose}]
 ```
 
+On success, this command outputs the allocated **spot index** and the exact command to run for finalization:
+
+```
+============================================================
+SPOT REGISTRATION SUCCESSFUL
+============================================================
+Allocated Spot Index: 1421
+Base Token: 1502
+Quote Token: USDC (0)
+
+NEXT STEP: Finalize the spot pair with:
+  npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
+      --token-index 1502 \
+      --network testnet \
+      --spot-index 1421 \
+      --private-key $PRIVATE_KEY
+============================================================
+```
+
+**Note:** For additional spot pairs (beyond the first), this command participates in the spot pair deployment Dutch auction.
+
 ### 5. Create Spot Deployment
+
+Finalizes a spot pair by setting hyperliquidity parameters. Required after `register-spot` to make the trading pair live.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
+    [--spot-index <spotIndex>] \
     [--log-level {info | verbose}]
+```
+
+**Options:**
+
+- `--spot-index <id>`: Directly specify the spot index to finalize (recommended). Use the spot index from the `register-spot` output.
+
+**Example:**
+
+```bash
+npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
+    --token-index 1502 \
+    --network testnet \
+    --spot-index 1421 \
+    --private-key $PRIVATE_KEY
 ```
 
 ### 6. Set Trading Fee Share (Optional)
@@ -469,7 +509,7 @@ npx @layerzerolabs/hyperliquid-composer set-genesis \
 
 ### Step 4/7 `registerSpot`
 
-This is the step that registers the Core Spot on `HyperCore` and creates a base-quote pair. You can now choose between USDC, USDT0, or custom quote tokens.
+This is the step that registers the Core Spot on `HyperCore` and creates a base-quote pair. You can choose between USDC, USDT0, HYPE, or custom quote tokens.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer register-spot \
@@ -479,9 +519,32 @@ npx @layerzerolabs/hyperliquid-composer register-spot \
     [--log-level {info | verbose}]
 ```
 
+On success, this command outputs the allocated **spot index** and the exact command for finalization:
+
+```
+============================================================
+SPOT REGISTRATION SUCCESSFUL
+============================================================
+Allocated Spot Index: 1421
+Base Token: 1502
+Quote Token: USDC (0)
+
+NEXT STEP: Finalize the spot pair with:
+  npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
+      --token-index 1502 \
+      --network testnet \
+      --spot-index 1421 \
+      --private-key $PRIVATE_KEY
+============================================================
+```
+
+**Note:** For additional spot pairs (beyond the first), this command participates in the spot pair deployment Dutch auction.
+
 ### Step 5/7 `createSpotDeployment`
 
-This is the step that creates a spot deployment without hyperliquidity. This step is meant for tokens deployed with Hyperliquidity but is also required for tokens deployed without Hyperliquidity to be listed on Spot trading, as such the values for `startPx` and `orderSz` are not required as they are set by the market and the value set does not matter. The value for `nOrders` however MUST be 0 as we do not support Hyperliquidity - <https://github.com/hyperliquid-dex/hyperliquid-python-sdk/blob/master/examples/spot_deploy.py#L97-L104>
+This step finalizes a spot deployment by setting hyperliquidity parameters. Required after `register-spot` to make the trading pair live on HyperCore.
+
+For tokens deployed without Hyperliquidity, the values for `startPx` and `orderSz` are not significant as they are set by the market. The value for `nOrders` MUST be 0 as we do not support Hyperliquidity - <https://github.com/hyperliquid-dex/hyperliquid-python-sdk/blob/master/examples/spot_deploy.py#L97-L104>
 
 You will NOT be prompted for the following and instead the values will be set to 0:
 
@@ -497,7 +560,22 @@ npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
+    [--spot-index <spotIndex>] \
     [--log-level {info | verbose}]
+```
+
+**Options:**
+
+- `--spot-index <id>`: Directly specify the spot index to finalize. Use the spot index from `register-spot` output. This is the recommended approach.
+
+**Example:**
+
+```bash
+npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
+    --token-index 1502 \
+    --network testnet \
+    --spot-index 1421 \
+    --private-key $PRIVATE_KEY
 ```
 
 > ⚠️ Note: `spot-deploy-state` should fail after completing this step.
