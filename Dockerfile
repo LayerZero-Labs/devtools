@@ -246,19 +246,11 @@ ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 ENV CARGO_NET_GIT_FETCH_WITH_CLI=true
 ENV CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
 
-# Install AVM (Anchor Version Manager) first
-RUN cargo install --git https://github.com/solana-foundation/anchor --tag v${ANCHOR_VERSION} avm \
-    --profile release --locked
+# Install anchor-cli directly with cargo (simpler than AVM, supports --force)
+RUN cargo install --git https://github.com/solana-foundation/anchor --tag v${ANCHOR_VERSION} anchor-cli \
+    --profile release --locked --force
 
 ENV PATH="/root/.avm/bin:$PATH"
-
-# Install Anchor via AVM
-# --from-source is REQUIRED for ARM64 since no prebuilt aarch64-unknown-linux-gnu binaries exist
-# Available prebuilt binaries: x86_64-unknown-linux-gnu, x86_64-apple-darwin, aarch64-apple-darwin
-RUN avm install ${ANCHOR_VERSION} --from-source && \
-    avm use ${ANCHOR_VERSION}
-
-RUN avm --version
 RUN anchor --version
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
@@ -493,9 +485,8 @@ COPY --from=initia /root/.initia/lib /root/.initia/lib
 # Adding in the library path to ldconfig and updating the cache
 RUN echo "/root/.initia/lib" > /etc/ld.so.conf.d/initia.conf && ldconfig
 
-# Get Anchor tooling (via AVM)
-COPY --from=anchor /root/.cargo/bin/avm /root/.cargo/bin/avm
-COPY --from=anchor /root/.avm /root/.avm
+# Get Anchor tooling
+COPY --from=anchor /root/.cargo/bin/anchor /root/.cargo/bin/anchor
 
 # Copy solana cache (for platform-tools) and binaries
 COPY --from=solana /root/.cache/solana /root/.cache/solana
@@ -521,7 +512,6 @@ RUN corepack enable && \
 RUN node -v
 RUN pnpm --version
 RUN git --version
-RUN avm --version
 RUN anchor --version
 RUN aptos --version
 RUN initiad version
@@ -552,12 +542,11 @@ ENV NPM_CONFIG_TARGET_ARCH=auto
 WORKDIR /app
 
 # Only copy Solana tooling (no EVM, Aptos, TON, etc.)
-COPY --from=anchor /root/.cargo/bin/avm /root/.cargo/bin/avm
-COPY --from=anchor /root/.avm /root/.avm
+COPY --from=anchor /root/.cargo/bin/anchor /root/.cargo/bin/anchor
 COPY --from=solana /root/.cache/solana /root/.cache/solana
 COPY --from=solana /root/.solana/bin /root/.solana/bin
 
-ENV PATH="/root/.avm/bin:/root/.solana/bin:$PATH"
+ENV PATH="/root/.solana/bin:$PATH"
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
