@@ -4,22 +4,23 @@ import { ChainType, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
 import bs58 from 'bs58'
 
 /**
- * Helper to check if an endpoint ID is for Solana
- */
-const isSolanaEid = (eid: number): boolean => endpointIdToChainType(eid) === ChainType.SOLANA
-
-/**
  * Format transaction data for display.
  * Converts hex to base58 for Solana transactions.
  */
 const formatTransactionData = (data: string, eid: number): string => {
-    if (!isSolanaEid(eid)) {
-        return data
-    }
+    const chainType = endpointIdToChainType(eid)
 
-    // Convert hex string to base58 for Solana
+    switch (chainType) {
+        case ChainType.SOLANA:
+            return hexToBase58(data)
+        default:
+            return data // default to hex string
+    }
+}
+
+export const hexToBase58 = (hexString: string): string => {
     // Remove '0x' prefix if present
-    const hexData = data.startsWith('0x') ? data.slice(2) : data
+    const hexData = hexString.startsWith('0x') ? hexString.slice(2) : hexString
     const bytes = Uint8Array.from(Buffer.from(hexData, 'hex'))
     return bs58.encode(bytes)
 }
