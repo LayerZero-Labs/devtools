@@ -29,6 +29,6 @@ initConfigTask.setDescription('Initialize OApp accounts for Solana').setAction(a
         ...args,
         internalConfigurator: initOAppAccounts,
         isSolanaInitConfig: true,
-        noActionMessage: 'Pathway config already initialized, no action is necessary',
+        noActionMessage: 'Pathway config already initialized',
     })
 )
