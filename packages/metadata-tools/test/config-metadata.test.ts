@@ -609,6 +609,87 @@ describe('config-metadata', () => {
             expect(config[0]?.config?.sendLibrary).toBeDefined()
             expect(config[1]?.config?.sendLibrary).toBeDefined()
         })
+
+        it('should skip generating configs from specified EIDs using skipFromEids', async () => {
+            const avalancheContract = {
+                eid: 40106,
+                contractName: 'MyOFT',
+            }
+
+            const solanaContract = {
+                eid: 40168,
+                address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy',
+            }
+
+            const pathways: TwoWayConfig[] = [
+                [avalancheContract, solanaContract, [['LayerZero Labs'], []], [1, 1], [undefined, undefined]],
+            ]
+
+            // Skip configs originating from Solana (40168)
+            const config = await generateConnectionsConfig(pathways, {
+                skipFromEids: [40168],
+            })
+
+            // Should only generate 1 config (Avalanche -> Solana), not the reverse
+            expect(config).toHaveLength(1)
+            expect(config[0]?.from).toEqual(avalancheContract)
+            expect(config[0]?.to).toEqual(solanaContract)
+        })
+
+        it('should skip generating configs from multiple specified EIDs', async () => {
+            const avalancheContract = {
+                eid: 40106,
+                contractName: 'MyOFT',
+            }
+
+            const solanaContract = {
+                eid: 40168,
+                address: 'HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy',
+            }
+
+            const pathways: TwoWayConfig[] = [
+                [avalancheContract, solanaContract, [['LayerZero Labs'], []], [1, 1], [undefined, undefined]],
+            ]
+
+            // Skip configs originating from both chains
+            const config = await generateConnectionsConfig(pathways, {
+                skipFromEids: [40106, 40168],
+            })
+
+            // Should generate no configs
+            expect(config).toHaveLength(0)
+        })
+
+        it('should not lookup DVNs for skipped chains', async () => {
+            const avalancheContract = {
+                eid: 40106,
+                contractName: 'MyOFT',
+            }
+
+            // Use a chain that doesn't have DVNs in metadata
+            const dummyContract = {
+                eid: 49999,
+                contractName: 'MyOFT',
+            }
+
+            const mockFetchMetadata = async () => metadata
+
+            const pathways: TwoWayConfig[] = [
+                [avalancheContract, dummyContract, [['LayerZero Labs'], []], [1, 1], [undefined, undefined]],
+            ]
+
+            // Without skipFromEids, this would throw because dummy chain has no DVNs/executor
+            // With skipFromEids skipping the dummy chain, it should succeed
+            const config = await generateConnectionsConfig(pathways, {
+                fetchMetadata: mockFetchMetadata,
+                skipFromEids: [49999],
+            })
+
+            // Should only generate Avalanche -> Dummy config
+            expect(config).toHaveLength(1)
+            expect(config[0]?.from).toEqual(avalancheContract)
+            expect(config[0]?.to).toEqual(dummyContract)
+        })
     })
 
     describe('translatePathwayToConfig', () => {
