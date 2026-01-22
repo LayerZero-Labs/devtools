@@ -60,10 +60,7 @@ export default async function () {
     ])
 
     return {
-        contracts: [
-            { contract: arbitrumContract },
-            { contract: solanaContract, config: { delegate: '2XgGZG4oP29U3w5h4nTk1V2LFHL23zKDPJjs3psGzLKQ' } },
-        ],
+        contracts: [{ contract: arbitrumContract }, { contract: solanaContract }],
         connections,
     }
 }
