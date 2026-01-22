@@ -142,7 +142,7 @@ export async function validateSigningAuthority(
                 `Use the correct keypair or supply the correct value for    --multisig-key if the admin is a Squads Vault.`
         )
     }
-    if (signingAuthority !== delegate) {
+    if (delegate && signingAuthority !== delegate) {
         warnings.push(
             `Signing authority (${signingAuthority}) is not the delegate (${delegate}). ` +
                 `Use the correct keypair or supply the correct value for --multisig-key if the delegate is a Squads Vault.`
