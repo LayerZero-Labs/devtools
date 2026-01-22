@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oapp-solana-example",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -35,7 +35,7 @@
     "@coral-xyz/anchor": "^0.31.1",
     "@layerzerolabs/devtools": "~2.0.4",
     "@layerzerolabs/devtools-evm-hardhat": "^4.0.4",
-    "@layerzerolabs/devtools-solana": "~3.0.5",
+    "@layerzerolabs/devtools-solana": "~3.0.6",
     "@layerzerolabs/eslint-config-next": "~2.3.39",
     "@layerzerolabs/io-devtools": "~0.3.2",
     "@layerzerolabs/lz-definitions": "^3.0.86",
