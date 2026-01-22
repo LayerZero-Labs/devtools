@@ -95,10 +95,15 @@ export async function createSpotDeployment(args: CreateSpotDeploymentArgs): Prom
     const signer = await getHyperliquidSigner(args.privateKey)
     const isTestnet = args.network === 'testnet'
     const tokenIndex: number = parseInt(args.tokenIndex)
+    const spotIndex: number | undefined = args.spotIndex ? parseInt(args.spotIndex) : undefined
 
-    logger.info(`Setting no hyperliquidity for token ${tokenIndex}`)
+    if (spotIndex !== undefined) {
+        logger.info(`Finalizing spot ${spotIndex} for token ${tokenIndex}`)
+    } else {
+        logger.info(`Setting no hyperliquidity for token ${tokenIndex}`)
+    }
 
-    await setNoHyperliquidity(signer, isTestnet, tokenIndex, args.logLevel)
+    await setNoHyperliquidity(signer, isTestnet, tokenIndex, args.logLevel, spotIndex)
 }
 
 export async function registerTradingSpot(args: RegisterTradingSpotArgs): Promise<void> {
