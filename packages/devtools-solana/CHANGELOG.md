@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-solana
 
+## 3.0.7
+
+### Patch Changes
+
+- 1ddb661: introduce escape hatch for assertValidSolanaAdmin
+
 ## 3.0.6
 
 ### Patch Changes
