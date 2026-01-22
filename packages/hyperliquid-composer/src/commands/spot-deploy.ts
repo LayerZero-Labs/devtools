@@ -97,7 +97,7 @@ export async function createSpotDeployment(args: CreateSpotDeploymentArgs): Prom
     const tokenIndex: number = parseInt(args.tokenIndex)
     const spotIndex: number | undefined = args.spotIndex ? parseInt(args.spotIndex) : undefined
 
-    if (spotIndex) {
+    if (spotIndex !== undefined) {
         logger.info(`Finalizing spot ${spotIndex} for token ${tokenIndex}`)
     } else {
         logger.info(`Setting no hyperliquidity for token ${tokenIndex}`)
