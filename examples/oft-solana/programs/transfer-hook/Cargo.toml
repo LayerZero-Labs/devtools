@@ -1,0 +1,29 @@
+[package]
+name = "transfer-hook"
+version = "0.1.0"
+description = "Token-2022 Transfer Hook example for compliance validation"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "transfer_hook"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
+
+[dependencies]
+anchor-lang = { version = "0.31.1", features = ["init-if-needed"] }
+anchor-spl = "0.31.1"
+spl-transfer-hook-interface = "0.9"
+spl-tlv-account-resolution = "0.9"
+
+[lints.rust]
+# Suppress warnings from Anchor's internal cfg checks
+unexpected_cfgs = { level = "allow", check-cfg = [
+    "cfg(feature, values(\"custom-heap\", \"custom-panic\", \"anchor-debug\"))"
+] }
