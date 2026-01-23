@@ -1,0 +1,28 @@
+version: 2
+name: "lz-definitions update"
+updates:
+  - package-ecosystem: "npm"
+    # Monorepo: scan root plus all packages + examples
+    directories:
+      - "/"
+      - "/packages/*"
+      - "/examples/*"
+
+    # Closest to “immediately”: run on a frequent cron schedule
+    schedule:
+      interval: "cron"
+      cronjob: "0 */2 * * *"   # every 2 hours
+
+    # Keep at most one open Dependabot PR at a time
+    open-pull-requests-limit: 1
+
+    # Only update this single public package
+    allow:
+      - dependency-name: "@layerzerolabs/lz-definitions"
+        dependency-type: "direct"
+
+    # Grouping is redundant with the allow-list, but harmless and keeps naming consistent
+    groups:
+      lz-definitions:
+        patterns:
+          - "@layerzerolabs/lz-definitions"
