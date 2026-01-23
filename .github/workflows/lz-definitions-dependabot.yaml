@@ -2,13 +2,11 @@ version: 2
 name: "lz-definitions update"
 updates:
   - package-ecosystem: "npm"
-    # Monorepo: scan root plus all packages + examples
     directories:
       - "/"
       - "/packages/*"
       - "/examples/*"
 
-    # Closest to “immediately”: run on a frequent cron schedule
     schedule:
       interval: "cron"
       cronjob: "0 */2 * * *"   # every 2 hours
