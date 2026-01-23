@@ -8,7 +8,7 @@ updates:
 
     schedule:
       interval: "cron"
-      cronjob: "0 */2 * * *"   # every 2 hours
+      cronjob: "0 */12 * * *"   # every 12 hours
 
     # Keep at most one open Dependabot PR at a time
     open-pull-requests-limit: 1
