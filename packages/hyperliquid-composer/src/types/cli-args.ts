@@ -67,7 +67,9 @@ export interface ListQuoteAssetArgs extends BaseArgs {
 
 // Simple command args - using concrete interfaces instead of empty extends
 export interface GenesisArgs extends TokenIndexArgs, PrivateKeyArgs {}
-export interface CreateSpotDeploymentArgs extends TokenIndexArgs, PrivateKeyArgs {}
+export interface CreateSpotDeploymentArgs extends TokenIndexArgs, PrivateKeyArgs {
+    spotIndex?: string // Optional: directly specify spot index to finalize (skips discovery)
+}
 export interface RegisterTradingSpotArgs extends TokenIndexArgs, PrivateKeyArgs {}
 export interface EnableTokenFreezePrivilegeArgs extends TokenIndexArgs, PrivateKeyArgs {}
 export interface RevokeTokenFreezePrivilegeArgs extends TokenIndexArgs, PrivateKeyArgs {}

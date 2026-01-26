@@ -1,5 +1,11 @@
 # @layerzerolabs/metadata-tools
 
+## 3.0.3
+
+### Patch Changes
+
+- 01b911a: metadata-tools: support skipping of eids
+
 ## 3.0.2
 
 ### Patch Changes

@@ -73,6 +73,14 @@ export async function isSquadsV4Vault(eid: EndpointId, address: string): Promise
  * - Address is off-curve AND account exists AND owned by Squads V3 Program (legacy, allowed with warning)
  */
 export async function assertValidSolanaAdmin(connection: Connection, address: string): Promise<void> {
+    // Skip validation if environment variable is set
+    if (process.env.LZ_SKIP_SOLANA_ADMIN_VALIDATION) {
+        console.warn(
+            '\n\nWarning: LZ_SKIP_SOLANA_ADMIN_VALIDATION is set. Skipping Solana admin validation. Only use this is you are using a non-Squads Multisig.\n\n'
+        )
+        return
+    }
+
     const logger = createLogger()
     const pubkey = new PublicKey(address)
 
