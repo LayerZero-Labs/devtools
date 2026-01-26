@@ -1,10 +1,6 @@
-import fs from 'node:fs'
-import { createRequire } from 'node:module'
-import path from 'node:path'
-
 import { Contract } from 'starknet'
 
-import { createConnectionFactory } from '@layerzerolabs/devtools-starknet'
+import { createConnectionFactory, createRpcUrlFactory } from '@layerzerolabs/devtools-starknet'
 import { EndpointId, Stage, endpointIdToStage } from '@layerzerolabs/lz-definitions'
 
 import { SendResult } from '../common/types'
@@ -13,27 +9,21 @@ import { parseDecimalToUnits } from '../solana/utils'
 
 import { assertStarknetEid, getStarknetAccountFromEnv } from './utils'
 
-const hexToBytes = (value?: string) =>
-    value ? Uint8Array.from(Buffer.from(value.replace(/^0x/, ''), 'hex')) : new Uint8Array()
-
-const toCairoByteArray = (hex?: string) => {
-    const clean = (hex ?? '').replace(/^0x/, '')
-    if (!clean) {
-        return { data: [], pending_word: '0x0', pending_word_len: 0 }
+/**
+ * Convert hex string to a string for Cairo ByteArray.
+ * In starknet.js v8, ByteArray parameters accept plain strings.
+ *
+ * NOTE: This uses latin1 encoding which can be corrupted by starknet.js's
+ * UTF-8 re-encoding for bytes >= 128. For enforced options which typically
+ * contain 0x80-0xFF bytes, use hexToByteArrayCalldata() with raw calldata.
+ */
+const hexToString = (hex?: string): string => {
+    if (!hex || hex === '0x' || hex === '') {
+        return ''
     }
-    const bytes = Buffer.from(clean, 'hex')
-    const chunkSize = 31
-    const data: string[] = []
-    for (let offset = 0; offset + chunkSize <= bytes.length; offset += chunkSize) {
-        data.push(`0x${bytes.subarray(offset, offset + chunkSize).toString('hex')}`)
-    }
-    const remainder = bytes.length % chunkSize
-    const pendingBytes = remainder ? bytes.subarray(bytes.length - remainder) : Buffer.alloc(0)
-    return {
-        data,
-        pending_word: pendingBytes.length ? `0x${pendingBytes.toString('hex')}` : '0x0',
-        pending_word_len: pendingBytes.length,
-    }
+    const clean = hex.replace(/^0x/, '')
+    const buffer = Buffer.from(clean, 'hex')
+    return buffer.toString('latin1')
 }
 
 export interface StarknetArgs {
@@ -61,12 +51,12 @@ export async function sendStarknet({
 }: StarknetArgs): Promise<SendResult> {
     assertStarknetEid(srcEid)
 
-    const providerFactory = createConnectionFactory()
+    // Use createRpcUrlFactory() to read from environment variables (RPC_URL_STARKNET)
+    const providerFactory = createConnectionFactory(createRpcUrlFactory())
     const provider = await providerFactory(srcEid)
     const account = await getStarknetAccountFromEnv(srcEid)
 
-    const oftContract = await getOftMintBurnAdapterContract(oftAddress, provider)
-    oftContract.connect(account)
+    const oftContract = await getOftMintBurnAdapterContract(oftAddress, account)
 
     const amountUnits = parseDecimalToUnits(amount, tokenDecimals)
     const minAmountUnits = minAmount ? parseDecimalToUnits(minAmount, tokenDecimals) : amountUnits
@@ -76,9 +66,9 @@ export async function sendStarknet({
         to: { value: BigInt(to) },
         amount_ld: amountUnits,
         min_amount_ld: minAmountUnits,
-        extra_options: toCairoByteArray(extraOptions),
-        compose_msg: toCairoByteArray(composeMsg),
-        oft_cmd: toCairoByteArray(),
+        extra_options: hexToString(extraOptions),
+        compose_msg: hexToString(composeMsg),
+        oft_cmd: hexToString(),
     }
 
     const feeQuote = await oftContract.quote_send(sendParam, false)
@@ -103,35 +93,17 @@ export async function sendStarknet({
 }
 
 function getOftMintBurnAdapterAbi(): unknown {
-    const require = createRequire(import.meta.url)
-    const pkgRoot = path.dirname(require.resolve('@layerzerolabs/oft-mint-burn-starknet/package.json'))
-    const candidates = [
-        'dist/generated/abi/o-f-t-mint-burn-adapter.cjs',
-        'dist/generated/abi/o-f-t-mint-burn-adapter.js',
-        'contracts/oft_mint_burn/target/release/oft_mint_burn_OFTMintBurnAdapter.contract_class.json',
-        'contracts/oft_mint_burn/target/dev/oft_mint_burn_OFTMintBurnAdapter.contract_class.json',
-        'contracts/oft_mint_burn/target/release/oft_mint_burn_OFTMintBurnAdapter.compiled_contract_class.json',
-        'contracts/oft_mint_burn/target/dev/oft_mint_burn_OFTMintBurnAdapter.compiled_contract_class.json',
-    ]
-
-    for (const relPath of candidates) {
-        const fullPath = path.join(pkgRoot, relPath)
-        if (fs.existsSync(fullPath)) {
-            if (fullPath.endsWith('.js') || fullPath.endsWith('.cjs')) {
-                return require(fullPath)
-            }
-            const json = JSON.parse(fs.readFileSync(fullPath, 'utf8'))
-            return json.abi ?? json
-        }
+    // Load the ABI from the package's main export
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const pkg = require('@layerzerolabs/oft-mint-burn-starknet')
+    const abi = pkg.abi?.oFTMintBurnAdapter
+    if (!abi) {
+        throw new Error('Unable to locate OFTMintBurnAdapter ABI in @layerzerolabs/oft-mint-burn-starknet')
     }
-
-    throw new Error('Unable to locate OFTMintBurnAdapter ABI in @layerzerolabs/oft-mint-burn-starknet')
+    return abi
 }
 
-async function getOftMintBurnAdapterContract(
-    address: string,
-    provider: ReturnType<typeof createConnectionFactory> extends () => Promise<infer T> ? T : never
-) {
+async function getOftMintBurnAdapterContract(address: string, providerOrAccount: any) {
     const abi = getOftMintBurnAdapterAbi()
-    return new Contract({ abi: abi as any, address, providerOrAccount: provider as any })
+    return new Contract({ abi: abi as any, address, providerOrAccount })
 }

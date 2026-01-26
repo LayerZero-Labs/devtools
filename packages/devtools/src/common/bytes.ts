@@ -134,7 +134,6 @@ export const denormalizePeer = (bytes: Uint8Array | null | undefined, eid: Endpo
         case ChainType.APTOS:
         case ChainType.SUI:
         case ChainType.STARKNET:
-
             return toHex(toBytes32(bytes))
 
         case ChainType.EVM:
@@ -197,10 +196,18 @@ export const toHex = (bytes: Uint8Array): string => `0x${Buffer.from(bytes).toSt
 /**
  * Helper utility to convert a hex string (with or without leading `0x`) to `UInt8Array`
  *
+ * Note: Buffer.from(str, 'hex') silently truncates the last character if the string
+ * has odd length. We pad with a leading '0' to prevent data loss.
+ *
  * @param {string} hex
  * @returns {Uint8Array}
  */
-export const fromHex = (hex: string): Uint8Array => Uint8Array.from(Buffer.from(hex.replace(/^0x/, ''), 'hex'))
+export const fromHex = (hex: string): Uint8Array => {
+    const stripped = hex.replace(/^0x/, '')
+    // Pad with leading '0' if odd length to prevent Buffer.from truncation
+    const padded = stripped.length % 2 === 1 ? '0' + stripped : stripped
+    return Uint8Array.from(Buffer.from(padded, 'hex'))
+}
 
 /**
  * Helper utility that returns the leftmost bytes after removing the rightmost `length` bytes from a UInt8Array.

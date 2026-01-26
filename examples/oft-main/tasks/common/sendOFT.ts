@@ -116,7 +116,8 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
             if (!args.oftAddress) {
                 throw new Error('Starknet send requires oftAddress')
             }
-            const { sendStarknet } = await import('../starknet/sendStarknet')
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            const { sendStarknet } = require('../starknet/sendStarknet')
             result = await sendStarknet({
                 ...(args as StarknetArgs),
                 oftAddress: args.oftAddress,

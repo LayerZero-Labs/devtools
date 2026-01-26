@@ -56,8 +56,21 @@ const SUI_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
     },
 ]
 
+const STARKNET_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
+    {
+        msgType: 1,
+        optionType: ExecutorOptionType.LZ_RECEIVE,
+        gas: 500000, // Cairo steps for lzReceive execution on Starknet
+        value: 0,
+    },
+]
+
 type SuiDeployment = {
     oftPackageId: string
+}
+
+type StarknetDeployment = {
+    oftAddress: string
 }
 
 const loadJson = <T>(relativePath: string): T => {
@@ -69,10 +82,16 @@ const loadJson = <T>(relativePath: string): T => {
 }
 
 const suiDeployment = loadJson<SuiDeployment>('./sui/deploy.json')
+const starknetDeployment = loadJson<StarknetDeployment>('./starknet/deploy.json')
 
 const suiContract: OmniPointHardhat = {
     eid: EndpointId.SUI_V2_MAINNET,
     address: suiDeployment.oftPackageId,
+}
+
+const starknetContract: OmniPointHardhat = {
+    eid: EndpointId.STARKNET_V2_MAINNET,
+    address: starknetDeployment.oftAddress,
 }
 
 // Learn about Message Execution Options: https://docs.layerzero.network/v2/developers/solana/oft/overview#message-execution-options
@@ -88,12 +107,20 @@ export default async function () {
             [15, 15],
             [SUI_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
         ],
+        [
+            arbitrumContract,
+            starknetContract,
+            [['LayerZero Labs'], []],
+            [15, 15],
+            [STARKNET_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
+        ],
+        [suiContract, starknetContract, [[], []], [15, 15], [STARKNET_ENFORCED_OPTIONS, SUI_ENFORCED_OPTIONS]],
     ] as const
 
     const connections = await generateConnectionsConfig(pathways as any)
 
     return {
-        contracts: [{ contract: arbitrumContract }, { contract: suiContract }],
+        contracts: [{ contract: arbitrumContract }, { contract: suiContract }, { contract: starknetContract }],
         connections,
     }
 }

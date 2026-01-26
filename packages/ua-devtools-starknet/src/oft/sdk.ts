@@ -42,11 +42,58 @@ const toFixedBytes = (value: unknown, size: number): Buffer => {
 }
 
 /**
- * Convert hex string to a string for Cairo ByteArray.
- * In starknet.js v8, ByteArray parameters accept plain strings.
- * We convert hex bytes to latin1 encoding which preserves byte values.
+ * Convert hex string to flat calldata for Cairo ByteArray.
+ *
+ * IMPORTANT: We cannot use starknet.js's string-based ByteArray encoding
+ * because it re-encodes strings as UTF-8, corrupting bytes >= 128.
+ * For example, byte 0x80 becomes 0xc2 0x80 in UTF-8.
+ *
+ * Instead, we return the flat calldata representation that matches Cairo's
+ * ByteArray serialization format:
+ * [data_len, ...data_words, pending_word, pending_word_len]
+ *
+ * This is used with Calldata.compile() to bypass starknet.js's ByteArray handling.
  */
-const toCairoByteArray = (hex: string): string => {
+const hexToByteArrayCalldata = (hex: string): string[] => {
+    const clean = normalizeHex(hex || '')
+    if (!clean) {
+        return ['0', '0x0', '0']
+    }
+
+    const buffer = Buffer.from(clean, 'hex')
+    const calldata: string[] = []
+
+    // Each data chunk is 31 bytes
+    const chunkSize = 31
+    let offset = 0
+    const dataWords: string[] = []
+
+    // Process full 31-byte chunks
+    while (offset + chunkSize <= buffer.length) {
+        const chunk = buffer.subarray(offset, offset + chunkSize)
+        dataWords.push('0x' + chunk.toString('hex'))
+        offset += chunkSize
+    }
+
+    // Add data array: length followed by elements
+    calldata.push(dataWords.length.toString())
+    calldata.push(...dataWords)
+
+    // Remaining bytes go into pending_word
+    const remaining = buffer.subarray(offset)
+    const pendingWord = remaining.length > 0 ? '0x' + remaining.toString('hex') : '0x0'
+    calldata.push(pendingWord)
+    calldata.push(remaining.length.toString())
+
+    return calldata
+}
+
+/**
+ * Convert hex string to a string for Cairo ByteArray.
+ * This is kept for backward compatibility but should only be used
+ * for data that doesn't contain bytes >= 128.
+ */
+const _toCairoByteArray = (hex: string): string => {
     const clean = normalizeHex(hex || '')
     if (!clean) {
         return ''
@@ -204,15 +251,32 @@ export class OFT extends OmniSDK implements IOApp {
             this.logger.warn(`Contract at ${this.point.address} does not support setEnforcedOptions - skipping`)
             return this.createTransaction([])
         }
-        const params = _enforcedOptions.map(({ eid, option }) => ({
-            eid,
-            msg_type: option.msgType,
-            options: toCairoByteArray(option.options),
-        }))
-        const call = (oapp as any).populateTransaction[funcName](params)
+
+        // Build calldata manually to avoid UTF-8 corruption of ByteArray data
+        // The function signature is: set_enforced_options(params: Array<{eid: u32, msg_type: u8, options: ByteArray}>)
+        // Calldata format: [array_len, param1_eid, param1_msg_type, param1_options..., param2_eid, ...]
+        const calldata: string[] = []
+
+        // Array length
+        calldata.push(_enforcedOptions.length.toString())
+
+        // Each param: eid (u32), msg_type (u8), options (ByteArray)
+        for (const { eid, option } of _enforcedOptions) {
+            calldata.push(eid.toString())
+            calldata.push(option.msgType.toString())
+            // ByteArray is serialized as: [data_len, ...data_words, pending_word, pending_word_len]
+            calldata.push(...hexToByteArrayCalldata(option.options))
+        }
+
+        const call = {
+            contractAddress: this.point.address,
+            entrypoint: funcName,
+            calldata,
+        }
+
         return {
             ...this.createTransaction([call]),
-            description: `Setting enforced options for ${params.length} pathway(s)`,
+            description: `Setting enforced options for ${_enforcedOptions.length} pathway(s)`,
         }
     }
 
