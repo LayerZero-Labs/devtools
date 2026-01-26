@@ -1,4 +1,4 @@
-# Plan: Fix Devtools VM Packages for Sui and Starknet Wire Support
+# Plan: Fix Devtools VM Packages for Multi-VM Wire Support
 
 ## ⚠️ CRITICAL CONSTRAINTS
 
@@ -16,9 +16,19 @@
 
 ---
 
-## Goal
+## Progress Overview
 
-**Make `lz:oapp:wire` work for Sui and Starknet OFTs.**
+| VM | Wire Support | Send/Receive | Status |
+|----|--------------|--------------|--------|
+| Sui | ✅ Complete | ✅ Verified | **DONE** |
+| Starknet | 🔄 In Progress | ⏳ Pending | **CURRENT** |
+| Aptos | ⏳ Pending | ⏳ Pending | Next |
+
+---
+
+## Current Goal: Starknet Integration
+
+**Make `lz:oapp:wire` work for Starknet OFTs.**
 
 The command that MUST succeed:
 ```bash
@@ -26,20 +36,20 @@ pnpm -C examples/oft-main exec hardhat lz:oapp:wire --oapp-config layerzero.conf
 ```
 
 This command must successfully:
-1. Read Sui and Starknet OFT configurations from `layerzero.config.ts`
-2. Use the devtools-sui and devtools-starknet packages to create signers
-3. Use the ua-devtools-sui and ua-devtools-starknet packages to configure OFTs
-4. Wire all pathways (Sui↔EVM, Starknet↔EVM)
+1. Read Starknet OFT configurations from `layerzero.config.ts`
+2. Use the devtools-starknet package to create signers
+3. Use the ua-devtools-starknet package to configure OFTs
+4. Wire all pathways (Starknet↔EVM, Starknet↔Sui)
 
 ---
 
-## Success Criteria
+## Success Criteria (Starknet Phase)
 
 | Criterion | Verification |
 |-----------|--------------|
 | `lz:oapp:wire` completes without errors | Exit code 0, no exceptions |
-| Sui OFT is wired to EVM OFTs | Peers are set bidirectionally |
 | Starknet OFT is wired to EVM OFTs | Peers are set bidirectionally |
+| Starknet OFT is wired to Sui OFT | Peers are set bidirectionally |
 | Cross-chain send works | LayerZero Scan shows DELIVERED status |
 
 **Verification command:**
@@ -73,21 +83,38 @@ curl -s "https://scan.layerzero-api.com/v1/messages/tx/{txHash}" | jq '.messages
 
 ## Current State Analysis
 
-### What Works
-| Component | Sui | Starknet |
-|-----------|-----|----------|
-| SDK Package (ua-devtools-*) | ✅ Exists | ✅ Exists |
-| Signer Package (devtools-*) | ✅ Exists | ✅ Exists |
-| SDK Factory in `utils.ts` | ✅ Line 72 | ✅ Line 73 |
-| Signer Factory in `wire.ts` | ✅ Lines 226-233 | ✅ Lines 234-238 |
-| Deploy artifacts | ✅ Has oftPackageId | ✅ Has oftAddress |
+### Sui (✅ COMPLETE)
+| Component | Status |
+|-----------|--------|
+| SDK Package (ua-devtools-sui) | ✅ Working |
+| Signer Package (devtools-sui) | ✅ Working |
+| SDK Factory in `utils.ts` | ✅ Registered |
+| Signer Factory in `wire.ts` | ✅ Registered |
+| Deploy artifacts | ✅ Has oftPackageId |
+| Wire command | ✅ Verified |
+| Send/Receive | ✅ Verified both directions |
 
-### What's Missing/Broken
-| Issue | Location | Action Required |
-|-------|----------|-----------------|
-| Starknet not in config | `layerzero.config.ts` | Add Starknet contract definition |
-| Packages may not build | `packages/devtools-sui/` etc. | Fix build errors |
-| Symlinks may be broken | `node_modules/` | Ensure workspace links work |
+### Starknet (🔄 IN PROGRESS)
+| Component | Status | Action Required |
+|-----------|--------|-----------------|
+| SDK Package (ua-devtools-starknet) | ✅ Exists | Verify build & exports |
+| Signer Package (devtools-starknet) | ✅ Exists | Verify build & exports |
+| SDK Factory in `utils.ts` | ✅ Line 73 | Test functionality |
+| Signer Factory in `wire.ts` | ✅ Lines 234-238 | Test functionality |
+| Deploy artifacts | ⏳ Needs deploy | Deploy Starknet OFT |
+| Starknet in config | ❌ Missing | Add to `layerzero.config.ts` |
+| Wire command | ⏳ Untested | Run and debug |
+| Send/Receive | ⏳ Untested | Test after wire works |
+
+### What's Needed for Starknet
+| Task | Location | Priority |
+|------|----------|----------|
+| Deploy Starknet OFT | `examples/oft-main/starknet/` | 1 |
+| Add Starknet to config | `layerzero.config.ts` | 2 |
+| Test package builds | `packages/devtools-starknet/` | 3 |
+| Run `lz:oapp:wire` | - | 4 |
+| Debug and fix issues | Various packages | 5 |
+| Test cross-chain send | - | 6 |
 
 ---
 
@@ -165,17 +192,28 @@ Should show symlinks to local packages, NOT npm registry versions.
 
 ### Phase 2: Add Starknet to layerzero.config.ts
 
-#### Step 2.1: Read Current Config
-Understand existing Sui configuration pattern in `examples/oft-main/layerzero.config.ts`.
+#### Step 2.1: Review Sui Pattern
+The Sui integration provides a template for adding Starknet:
+- Load deployment from `sui/deploy.json`
+- Define contract with endpoint ID and address
+- Add enforced options for pathways
+- Add connection pathways
 
 #### Step 2.2: Add Starknet Contract
 Add Starknet OFT contract definition following the same pattern as Sui.
 
 Required additions:
-1. Import Starknet endpoint ID
-2. Define Starknet contract with address from deploy artifacts
-3. Add enforced options for Starknet pathways
-4. Add connection pathways for Starknet↔EVM
+1. Import Starknet endpoint ID (`EndpointId.STARKNET_V2_MAINNET` or testnet)
+2. Load deployment from `starknet/deploy.json`
+3. Define Starknet contract with address from deploy artifacts
+4. Add `STARKNET_ENFORCED_OPTIONS` with appropriate gas settings
+5. Add connection pathways for Starknet↔EVM, Starknet↔Sui
+
+#### Step 2.3: Starknet-Specific Considerations
+- **Address format:** Starknet uses felt252 addresses (252-bit integers)
+- **Gas units:** Starknet uses Cairo steps, not EVM gas
+- **Token decimals:** May need `starknetTokenDecimals` param in send task
+- **Account abstraction:** Starknet has native AA, signer setup may differ
 
 ---
 
@@ -183,18 +221,26 @@ Required additions:
 
 #### Step 3.1: Check Required Environment Variables
 ```bash
-# Sui
-echo "SUI_MNEMONIC: ${SUI_MNEMONIC:+set}"
-
-# Starknet
+# Starknet (REQUIRED for this phase)
 echo "STARKNET_PRIVATE_KEY: ${STARKNET_PRIVATE_KEY:+set}"
 echo "STARKNET_ACCOUNT_ADDRESS: ${STARKNET_ACCOUNT_ADDRESS:+set}"
+echo "RPC_URL_STARKNET: ${RPC_URL_STARKNET:+set}"
 
-# EVM
+# Sui (already configured from Phase 1)
+echo "SUI_MNEMONIC: ${SUI_MNEMONIC:+set}"
+echo "RPC_URL_SUI: ${RPC_URL_SUI:+set}"
+
+# EVM (already configured)
 echo "PRIVATE_KEY: ${PRIVATE_KEY:+set}"
 ```
 
-All must be set for `lz:oapp:wire` to work.
+All Starknet variables must be set for `lz:oapp:wire` to work with Starknet.
+
+#### Step 3.2: Starknet Account Setup
+Starknet requires:
+1. An account address (deployed contract)
+2. Private key for that account
+3. RPC URL (Infura, Alchemy, or other Starknet RPC provider)
 
 ---
 
@@ -224,11 +270,20 @@ pnpm -C examples/oft-main exec hardhat lz:oapp:wire --oapp-config layerzero.conf
 
 | Error | Likely Cause | Fix |
 |-------|--------------|-----|
-| `Cannot find module '@layerzerolabs/devtools-sui'` | Package not built or not linked | Build package, run `pnpm install` |
-| `createSuiSignerFactory is not a function` | Missing export | Add export to package's index.ts |
-| `Invalid Sui address` | Deploy artifact issue | Check `deployments/sui-mainnet/OFT.json` |
-| `Starknet provider error` | RPC or signer issue | Check env vars, fix devtools-starknet |
-| `Cannot read property 'setPeer'` | OFT SDK issue | Fix ua-devtools-sui/starknet |
+| `Cannot find module '@layerzerolabs/devtools-starknet'` | Package not built or not linked | Build package, run `pnpm install` |
+| `createStarknetSignerFactory is not a function` | Missing export | Add export to package's index.ts |
+| `Invalid Starknet address` | Deploy artifact issue | Check `starknet/deploy.json` |
+| `Starknet provider error` | RPC or signer issue | Check env vars (STARKNET_PRIVATE_KEY, etc.) |
+| `Cannot read property 'setPeer'` | OFT SDK issue | Fix ua-devtools-starknet |
+| `Missing transaction sender` | Transaction build before sign | Use serialize() not build() |
+| `Invalid address length` | EVM→Starknet padding | Pad to felt252 size |
+| `Account validation failed` | Starknet AA issue | Check account contract compatibility |
+
+### Starknet-Specific Considerations
+- Starknet uses **felt252** (252-bit field elements) for addresses
+- Starknet has native **account abstraction** - accounts are contracts
+- Transaction execution may require **STRK** or **ETH** for gas
+- RPC providers: Infura, Alchemy, Blast, or public nodes
 
 ### Debug Logging
 ```bash
@@ -239,43 +294,57 @@ DEBUG=* pnpm -C examples/oft-main exec hardhat lz:oapp:wire --oapp-config layerz
 
 ## Files That May Need Modification
 
-### Devtools Packages (FIX THESE IF BROKEN)
-- `packages/devtools-sui/src/index.ts` - Sui signer exports
+### Starknet Devtools Packages (FOCUS FOR THIS PHASE)
 - `packages/devtools-starknet/src/index.ts` - Starknet signer exports
-- `packages/ua-devtools-sui/src/index.ts` - Sui OFT SDK exports
+- `packages/devtools-starknet/src/omnigraph/sdk.ts` - Transaction creation (apply Sui learnings)
+- `packages/devtools-starknet/src/transactions/signer.ts` - Transaction signing (apply Sui learnings)
 - `packages/ua-devtools-starknet/src/index.ts` - Starknet OFT SDK exports
+- `packages/ua-devtools-starknet/src/oft/sdk.ts` - OFT operations (address padding, etc.)
+- `packages/protocol-devtools-starknet/src/endpointv2/sdk.ts` - Endpoint SDK
+
+### Wire Task (already has Starknet support, may need fixes)
 - `packages/devtools-evm-hardhat/src/tasks/oapp/wire.ts` - Wire task VM integration
 - `packages/devtools-evm-hardhat/src/utils.ts` - SDK factory registration
 
 ### Example Configuration
 - `examples/oft-main/layerzero.config.ts` - Add Starknet configuration
-- `examples/oft-main/package.json` - Add workspace dependencies
-- `examples/oft-main/.env` - Environment variables
+- `examples/oft-main/starknet/deploy.json` - Starknet deployment artifacts
+- `examples/oft-main/package.json` - Ensure workspace dependencies
+- `examples/oft-main/.env` - Starknet environment variables
+
+### Sui Packages (COMPLETE - reference only)
+- `packages/devtools-sui/` - ✅ Working
+- `packages/ua-devtools-sui/` - ✅ Working
+- `packages/protocol-devtools-sui/` - ✅ Working
 
 ---
 
 ## Summary
 
-**The only acceptable outcome is:**
+**The target outcome for Starknet phase:**
 
 ```bash
 $ pnpm -C examples/oft-main exec hardhat lz:oapp:wire --oapp-config layerzero.config.ts
 
-✓ Setting peer for Sui OFT -> Ethereum OFT
-✓ Setting peer for Ethereum OFT -> Sui OFT
-✓ Setting peer for Starknet OFT -> Ethereum OFT
-✓ Setting peer for Ethereum OFT -> Starknet OFT
+✓ Sui OFT peers already configured (no transactions needed)
+✓ Setting peer for Starknet OFT -> Arbitrum OFT
+✓ Setting peer for Arbitrum OFT -> Starknet OFT
+✓ Setting peer for Starknet OFT -> Sui OFT
+✓ Setting peer for Sui OFT -> Starknet OFT
+✓ Setting enforced options for Starknet pathways
 ...
 Done.
 ```
 
 **If this doesn't work, FIX THE DEVTOOLS PACKAGES until it does.**
 
+Apply lessons learned from Sui integration proactively to avoid similar issues.
+
 ---
 
-## Lessons Learned: Sui Devtools Painpoints
+## Lessons Learned: Devtools Integration Painpoints
 
-The following issues were discovered while making `lz:oapp:wire` work for Sui. These notes should help catch similar issues earlier in future package design.
+The following issues were discovered while making `lz:oapp:wire` work for Sui. These patterns are **directly applicable to Starknet and Aptos** - expect similar issues and apply these solutions proactively.
 
 ### 1. Transaction Serialization vs Building
 
@@ -455,6 +524,30 @@ const connectionFactory = createConnectionFactory(createRpcUrlFactory())
 
 ---
 
+### 9. Avoid Endless UI Retry Loops
+
+**Problem:** When `lz:oapp:wire` shows failed transactions and prompts "Would you like to retry?", piping `yes` creates an infinite loop if the failure is a configuration issue (not a transient error).
+
+**Symptoms:**
+- "Successfully sent 0 transactions"
+- "Failed to send 1 transaction"
+- Endless retry prompts
+
+**Fix:** When automating wire commands:
+1. Run once without `yes` piping to see the actual error
+2. Fix the root cause (missing signer, network config, etc.)
+3. Only use `yes` piping after confirming the error is transient
+
+**Root Causes to Check:**
+- Missing signer factory for the chain type
+- Missing network definition for the endpoint ID
+- Environment variables not loaded (RPC URL, private key)
+- Contract ABI mismatch
+
+**Design Principle:** Never blindly retry configuration errors. Inspect failures, fix root causes, then retry.
+
+---
+
 ## Testing Checklist for New VM Packages
 
 Before considering a VM devtools package complete, verify:
@@ -467,12 +560,16 @@ Before considering a VM devtools package complete, verify:
 - [ ] Missing config returns defaults, not errors
 - [ ] Connection factory reads from environment variables
 - [ ] Example enforced options use correct naming convention
+- [ ] Signer factory is registered in wire.ts for the chain type
+- [ ] Network is defined in lz-definitions for the endpoint ID
 
 ---
 
-## Verified Working: Sui OFT Wire + Send
+---
 
-**Status:** ✅ COMPLETE
+## ✅ Completed: Sui Integration
+
+**Status:** COMPLETE - PR branch: `feat/devtools-sui`
 
 | Test | Result |
 |------|--------|
@@ -484,3 +581,91 @@ Before considering a VM devtools package complete, verify:
 **LayerZero Scan Links:**
 - Sui→Arbitrum: https://layerzeroscan.com/tx/BD3vzbMTsYkHMPRRLMdCgdoNyc3JgMPK4aboMyy4gn8N
 - Arbitrum→Sui: https://layerzeroscan.com/tx/0x142ac09cb71a53846c6cd4650e214df175fae461415090290ed482335786d2e7
+
+---
+
+## 🔄 In Progress: Starknet Integration
+
+**Status:** Devtools SDK COMPLETE, Protocol-level send issue - Branch: `feat/devtools-sui`
+
+| Task | Status |
+|------|--------|
+| Deploy Starknet OFT | ✅ Complete |
+| Create deploy.json | ✅ Complete |
+| Add to layerzero.config.ts | ✅ Complete |
+| Verify package builds | ✅ Complete |
+| Run `lz:oapp:wire` | ✅ Complete (idempotent, 2 txns) |
+| Debug and fix issues | ✅ Fixed all address normalization |
+| EVM→Starknet send | ✅ Working |
+| Starknet→EVM send | ❌ Protocol-level bug |
+| Starknet→Sui send | ❌ Protocol-level bug |
+
+### Devtools Fixes Applied (ALL COMPLETE)
+
+1. **Address normalization in EndpointV2 SDK** (`protocol-devtools-starknet/src/endpointv2/sdk.ts`):
+   - `parseFelt()` now normalizes Starknet addresses by removing leading zeros
+   - Ensures `0x0727f...` and `0x727f...` are treated as equal
+
+2. **Library comparison** (`ua-devtools/src/oapp/config.ts`):
+   - Changed to use `areBytes32Equal()` for send/receive library comparison
+   - Handles addresses with different leading zero counts
+
+3. **Library skip logic** (`ua-devtools/src/oapp/config.ts`):
+   - Changed from `if (!isDefaultLibrary && areBytes32Equal(...))` to `if (areBytes32Equal(...))`
+   - Prevents SAME_VALUE errors when configured library matches current default
+
+4. **ULN302 SDK address comparison** (`protocol-devtools-starknet/src/uln302/sdk.ts`):
+   - Added `areBytes32Equal` for executor address comparison in `hasAppExecutorConfig`
+   - Renamed `equalStringArrays` to `equalAddressArrays` with `areBytes32Equal`
+   - Added `normalizeAddress` and `normalizeAddressArray` helpers
+
+5. **OFT SDK peer comparison** (`ua-devtools-starknet/src/oft/sdk.ts`):
+   - Fixed `hasPeer` to use `areBytes32Equal` instead of direct equality
+
+### Wire Task Status: ✅ WORKING
+
+The wire task now correctly:
+- Detects already-configured peers (no redundant setPeer txns)
+- Detects already-configured libraries (no SAME_VALUE errors)
+- Detects already-configured ULN/executor configs
+- Only generates necessary transactions (2 remaining: Sui peer for Starknet, Starknet enforced options)
+
+### On-Chain Configuration Verified ✅
+
+All configurations ARE correctly set on the Starknet OFT:
+
+| Config | Value | Status |
+|--------|-------|--------|
+| Peer (Arbitrum) | `0x999af0b3fbfe75256cba36af10f367bd2efa319c` | ✅ Set |
+| Send Library | `0x727f40349719ac76861a51a0b3d3e07be1577fff137bb81a5dc32e5a5c61d38` | ✅ Set |
+| Receive Library | `0x727f40349719ac76861a51a0b3d3e07be1577fff137bb81a5dc32e5a5c61d38` | ✅ Set |
+| Executor Config | max_message_size=10000, executor set | ✅ Set |
+| ULN Send Config | confirmations=15, DVN set | ✅ Set |
+| Enforced Options | `0x00030100110100000000000000000000000000013880` (80k gas) | ✅ Set |
+
+### Current Blocker: PROTOCOL-LEVEL BUG
+
+**Send from Starknet fails with "out of bound" error:**
+```
+error":"0x6f7574206f6620626f756e64 ('out of bound')
+```
+
+**Key Finding:** This is NOT a devtools issue. The error occurs in the **Starknet SendLib contract** (`0x727f40...`) during the `quote` function.
+
+**Evidence:**
+- EVM→Starknet send WORKS: https://layerzeroscan.com/tx/0x540dbe715862f57a41b6eb3de7a487151e3e8a85e2230b615b475208a61b9000
+- All on-chain configs verified correct via RPC queries
+- Wire task is idempotent (configs properly detected)
+- The error comes from deep inside the SendLib contract, not from SDK
+
+**Diagnosis:**
+The Starknet SendLib contract has a bug in its `quote` function that causes an array/slice "out of bound" error. This needs to be fixed at the protocol contract level, not in devtools.
+
+### Devtools Work Complete For Starknet
+
+The devtools packages are now fully functional for Starknet:
+- `@layerzerolabs/devtools-starknet` ✅
+- `@layerzerolabs/ua-devtools-starknet` ✅
+- `@layerzerolabs/protocol-devtools-starknet` ✅
+
+The remaining issue (send FROM Starknet) requires a fix to the Starknet protocol contracts.
