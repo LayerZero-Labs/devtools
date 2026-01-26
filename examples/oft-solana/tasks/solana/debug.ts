@@ -147,8 +147,9 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
 
         const tokenMetadata = await getSolanaTokenMetadata(umi, publicKey(oftStoreInfo.tokenMint), tokenProgramType)
 
-        const adminIsSquadsV4Vault = await isSquadsV4Vault(oftStoreInfo.admin)
-        const delegateIsSquadsV4Vault = await isSquadsV4Vault(oAppRegistryInfo?.delegate?.toBase58())
+        // Note: isSquadsV4Vault only works on mainnet
+        const adminIsSquadsV4Vault = await isSquadsV4Vault(eid as number, oftStoreInfo.admin)
+        const delegateIsSquadsV4Vault = await isSquadsV4Vault(eid as number, oAppRegistryInfo?.delegate?.toBase58())
 
         const printOftStore = async () => {
             DebugLogger.header('OFT Store Information')

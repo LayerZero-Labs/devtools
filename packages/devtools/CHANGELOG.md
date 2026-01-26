@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 2.0.5
+
+### Patch Changes
+
+- 8f83784: solana transaction data display as base58
+
 ## 2.0.4
 
 ### Patch Changes

@@ -966,7 +966,7 @@ importers:
         specifier: ^4.0.4
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/devtools-solana':
-        specifier: ~3.0.5
+        specifier: ~3.0.6
         version: link:../../packages/devtools-solana
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -2392,7 +2392,7 @@ importers:
         specifier: ^4.0.0
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/devtools-solana':
-        specifier: ~3.0.4
+        specifier: ~3.0.6
         version: link:../../packages/devtools-solana
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -5630,7 +5630,7 @@ importers:
         specifier: ^5.7.0
         version: 5.7.2
       '@layerzerolabs/devtools':
-        specifier: ~2.0.4
+        specifier: ~2.0.5
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
         specifier: ~3.0.2

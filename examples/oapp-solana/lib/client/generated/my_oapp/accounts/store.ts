@@ -39,12 +39,7 @@ export type StoreAccountData = {
     string: string
 }
 
-export type StoreAccountDataArgs = {
-    admin: PublicKey
-    bump: number
-    endpointProgram: PublicKey
-    string: string
-}
+export type StoreAccountDataArgs = { admin: PublicKey; bump: number; endpointProgram: PublicKey; string: string }
 
 export function getStoreAccountDataSerializer(): Serializer<StoreAccountDataArgs, StoreAccountData> {
     return mapSerializer<StoreAccountDataArgs, any, StoreAccountData>(
@@ -58,10 +53,7 @@ export function getStoreAccountDataSerializer(): Serializer<StoreAccountDataArgs
             ],
             { description: 'StoreAccountData' }
         ),
-        (value) => ({
-            ...value,
-            discriminator: new Uint8Array([130, 48, 247, 244, 182, 191, 30, 26]),
-        })
+        (value) => ({ ...value, discriminator: new Uint8Array([130, 48, 247, 244, 182, 191, 30, 26]) })
     ) as Serializer<StoreAccountDataArgs, StoreAccountData>
 }
 
@@ -118,7 +110,7 @@ export async function safeFetchAllStore(
 }
 
 export function getStoreGpaBuilder(context: Pick<Context, 'rpc' | 'programs'>) {
-    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
+    const programId = context.programs.getPublicKey('myOapp', '')
     return gpaBuilder(context, programId)
         .registerFields<{
             discriminator: Uint8Array
