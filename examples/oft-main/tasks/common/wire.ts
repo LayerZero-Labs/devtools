@@ -235,7 +235,15 @@ task(TASK_LZ_OAPP_WIRE)
                         if (endpointIdToChainType(eid) !== ChainType.STARKNET) {
                             throw new Error('Not a Starknet EID')
                         }
-                        return starknetSignerFactory(eid)
+                        try {
+                            logger.debug(`Creating Starknet signer for eid ${eid}`)
+                            const signer = await starknetSignerFactory(eid)
+                            logger.debug(`Successfully created Starknet signer for eid ${eid}`)
+                            return signer
+                        } catch (error) {
+                            logger.error(`Failed to create Starknet signer for eid ${eid}: ${error}`)
+                            throw error
+                        }
                     },
                     aptosSignerFactory,
                     ...(solanaSignerFactory ? [solanaSignerFactory] : []),

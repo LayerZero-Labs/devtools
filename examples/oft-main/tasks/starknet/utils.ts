@@ -1,7 +1,7 @@
 import { Account } from 'starknet'
 
 import { formatEid } from '@layerzerolabs/devtools'
-import { createConnectionFactory } from '@layerzerolabs/devtools-starknet'
+import { createConnectionFactory, createRpcUrlFactory } from '@layerzerolabs/devtools-starknet'
 import { ChainType, EndpointId, Stage, endpointIdToChainType, endpointIdToStage } from '@layerzerolabs/lz-definitions'
 
 export function assertStarknetEid(eid: EndpointId) {
@@ -23,6 +23,9 @@ export async function getStarknetAccountFromEnv(eid: EndpointId): Promise<Accoun
         throw new Error('STARKNET_ACCOUNT_ADDRESS and STARKNET_PRIVATE_KEY are required')
     }
 
-    const providerFactory = createConnectionFactory()
-    return new Account(await providerFactory(eid), address, privateKey)
+    // Use createRpcUrlFactory() to read from environment variables (RPC_URL_STARKNET)
+    const providerFactory = createConnectionFactory(createRpcUrlFactory())
+    const provider = await providerFactory(eid)
+    // starknet.js v8+ uses an options object for Account constructor
+    return new Account({ provider, address, signer: privateKey })
 }

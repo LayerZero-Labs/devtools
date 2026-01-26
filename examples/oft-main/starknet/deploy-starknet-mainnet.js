@@ -55,15 +55,6 @@ async function main() {
         throw new Error('ERC20 ABI not found or invalid in oft-mint-burn-starknet package');
     }
     console.log('ERC20 ABI entries:', ERC20_ABI.length);
-    const txDetails = {
-        tip: 0n,
-        resourceBounds: {
-            l1_gas: { max_amount: 80_000n, max_price_per_unit: 60_000_000_000_000n },
-            l2_gas: { max_amount: 1_000_000n, max_price_per_unit: 10_000_000_000n },
-            l1_data_gas: { max_amount: 80_000n, max_price_per_unit: 60_000_000_000_000n },
-        },
-    };
-
     const existing = loadExistingDeploy();
     let erc20Address = process.env.STARKNET_ERC20_ADDRESS || existing?.erc20Address;
     let oftAddress = process.env.STARKNET_OFT_ADDRESS || existing?.oftAddress;
@@ -78,13 +69,10 @@ async function main() {
             decimals: ERC20_DECIMALS,
             default_admin: ACCOUNT_ADDRESS,
         });
-        const erc20Deploy = await account.deploy(
-            {
-                classHash: ERC20_CLASS_HASH,
-                constructorCalldata: erc20ConstructorCalldata,
-            },
-            txDetails
-        );
+        const erc20Deploy = await account.deploy({
+            classHash: ERC20_CLASS_HASH,
+            constructorCalldata: erc20ConstructorCalldata,
+        });
         await provider.waitForTransaction(erc20Deploy.transaction_hash);
         erc20Address = Array.isArray(erc20Deploy.contract_address)
             ? erc20Deploy.contract_address[0]
@@ -100,20 +88,17 @@ async function main() {
 
     if (!oftAddress) {
         console.log('Deploying OFTMintBurnAdapter...');
-        const oftDeploy = await account.deploy(
-            {
-                classHash: OFT_CLASS_HASH,
-                constructorCalldata: [
-                    erc20Address,
-                    erc20Address,
-                    ENDPOINT_ADDRESS,
-                    ACCOUNT_ADDRESS,
-                    STRK_TOKEN_ADDRESS,
-                    SHARED_DECIMALS,
-                ],
-            },
-            txDetails
-        );
+        const oftDeploy = await account.deploy({
+            classHash: OFT_CLASS_HASH,
+            constructorCalldata: [
+                erc20Address,
+                erc20Address,
+                ENDPOINT_ADDRESS,
+                ACCOUNT_ADDRESS,
+                STRK_TOKEN_ADDRESS,
+                SHARED_DECIMALS,
+            ],
+        });
         await provider.waitForTransaction(oftDeploy.transaction_hash);
         oftAddress = Array.isArray(oftDeploy.contract_address)
             ? oftDeploy.contract_address[0]
@@ -134,12 +119,12 @@ async function main() {
 
     console.log('Granting MINTER_ROLE...');
     const grantMinter = erc20.populateTransaction.grant_role(minterRole, oftAddress);
-    const grantMinterTx = await account.execute([grantMinter], txDetails);
+    const grantMinterTx = await account.execute([grantMinter]);
     await provider.waitForTransaction(grantMinterTx.transaction_hash);
 
     console.log('Granting BURNER_ROLE...');
     const grantBurner = erc20.populateTransaction.grant_role(burnerRole, oftAddress);
-    const grantBurnerTx = await account.execute([grantBurner], txDetails);
+    const grantBurnerTx = await account.execute([grantBurner]);
     await provider.waitForTransaction(grantBurnerTx.transaction_hash);
 
     const out = {

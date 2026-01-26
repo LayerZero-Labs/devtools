@@ -30,6 +30,8 @@ deployments/
 # Sui build artifacts and deployment info
 sui/*/build/
 sui/deploy.json
+sui/**/oft_deploy.json
+sui/**/token_deploy.json
 
 # Starknet deployment info
 starknet/deploy.json
