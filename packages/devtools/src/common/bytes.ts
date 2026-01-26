@@ -100,6 +100,7 @@ export const normalizePeer = (address: OmniAddress | null | undefined, eid: Endp
             return bs58.decode(address)
 
         case ChainType.APTOS:
+        case ChainType.SUI:
         case ChainType.EVM:
             return toBytes32(fromHex(address))
 
@@ -130,6 +131,7 @@ export const denormalizePeer = (bytes: Uint8Array | null | undefined, eid: Endpo
             return bs58.encode(toBytes32(bytes))
 
         case ChainType.APTOS:
+        case ChainType.SUI:
             return toHex(toBytes32(bytes))
 
         case ChainType.EVM:
