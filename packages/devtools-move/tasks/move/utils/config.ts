@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { spawn } from 'child_process'
+import { createHash } from 'crypto'
 
 import { Account, Ed25519PrivateKey } from '@aptos-labs/ts-sdk'
 import YAML from 'yaml'
@@ -35,6 +36,16 @@ export function getOAppOwner(selectedContract: OAppOmniGraphHardhat['contracts']
         throw new Error(ownerNotSetMessage)
     }
     return selectedContract.config.owner
+}
+
+export function getOAppDelegate(selectedContract: OAppOmniGraphHardhat['contracts'][number]): string {
+    if (!selectedContract.config?.delegate) {
+        if (!selectedContract.config?.owner) {
+            throw new Error(ownerNotSetMessage)
+        }
+        return selectedContract.config.owner
+    }
+    return selectedContract.config.delegate
 }
 
 export const ownerNotSetMessage = `Owner is not set.
@@ -162,7 +173,8 @@ export async function getNamedAddresses(
     if (chain === 'movement' || chain === 'aptos') {
         named_addresses = `${moveTomlAdminName.replace('_admin', '')}=${oAppOwner},${moveTomlAdminName}=${oAppOwner}`
     } else if (chain === 'initia') {
-        named_addresses = `${moveTomlAdminName.replace('_admin', '')}=${oAppOwner},${moveTomlAdminName}=${oAppOwner}`
+        const oAppDeployer = await getInitiaDeployerAddress(oAppOwner)
+        named_addresses = `${moveTomlAdminName.replace('_admin', '')}=${oAppDeployer},${moveTomlAdminName}=${oAppOwner}`
     }
     const deploymentAddresses = await getDeploymentAddresses(chain, networkType)
     const allAddresses = named_addresses + ',' + deploymentAddresses
@@ -376,4 +388,146 @@ export function isVersionLessThanOrEqualTo(installed: string, required: string):
 
     // all parts are equal to the required version
     return true
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////// Initia Specific Helpers //////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+export function getInitiaRPCUrl() {
+    if (!process.env.INITIA_RPC_URL) {
+        throw new Error('INITIA_RPC_URL is not set.\n\nPlease set the INITIA_RPC_URL environment variable.')
+    }
+    return process.env.INITIA_RPC_URL
+}
+
+async function getInitiaDeployerAddress(hexAddr: string): Promise<string> {
+    const initiaCmd = 'initiad'
+    const initiaRPCUrl = getInitiaRPCUrl()
+    const initiaBech32Addr = await getInitiaBech32(initiaCmd, hexAddr)
+    const sequenceNumber = await getInitiaSequenceNumber(initiaCmd, initiaBech32Addr, initiaRPCUrl)
+    const deployCount = await getInitiaDeployCount(initiaCmd, initiaBech32Addr, initiaRPCUrl)
+
+    // create Buffer(address + 'initia_std::object_code_deployment' + sequenceNumber(u64) + deployCounter(u64) + 0xFE)
+    // and do sha256 hash, and return 0x hex string of first 32 bytes
+
+    const sequenceNumberBuffer = Buffer.alloc(8)
+    sequenceNumberBuffer.writeBigUInt64LE(sequenceNumber, 0)
+
+    const deployCounterBuffer = Buffer.alloc(8)
+    deployCounterBuffer.writeBigUInt64LE(deployCount, 0)
+
+    // return 32 bytes buffer from hex string, padding with leading zeros if necessary
+    function to32BytesBuffer(hex: string): Buffer {
+        const cleaned = hex.replace(/^0x/, '')
+        if (cleaned.length > 64) {
+            throw new Error('hex string is longer than 32 bytes')
+        }
+        const paddedHex = cleaned.padStart(64, '0')
+        return Buffer.from(paddedHex, 'hex')
+    }
+
+    const combinedBuffer = Buffer.concat([
+        to32BytesBuffer(hexAddr),
+        Buffer.from([0x22]),
+        Buffer.from('initia_std::object_code_deployment', 'utf8'),
+        sequenceNumberBuffer,
+        deployCounterBuffer,
+        Buffer.from([0xfe]),
+    ] as Uint8Array[])
+
+    const hash = createHash('sha3-256')
+        .update(combinedBuffer as Uint8Array)
+        .digest('hex')
+    const deployerAddress = '0x' + hash.slice(0, 64) // first 32 bytes in hex
+
+    return deployerAddress
+}
+
+async function getInitiaBech32(initiaCommand: string, hexAddr: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const childProcess = spawn(initiaCommand, ['keys', 'parse', hexAddr.replace(/^0x/, ''), '--output', 'json'])
+        let stdout = ''
+
+        childProcess.stdout?.on('data', (data) => {
+            stdout += data.toString()
+        })
+
+        childProcess.on('close', (code) => {
+            if (code === 0) {
+                const bech32Addrs = JSON.parse(stdout)
+                resolve(bech32Addrs.formats[0])
+            } else {
+                reject(new Error(`initiad keys parse exited with code ${code}`))
+            }
+        })
+
+        childProcess.on('error', reject)
+    })
+}
+
+async function getInitiaSequenceNumber(initiaCommand: string, bech32Addr: string, rpcUrl: string): Promise<bigint> {
+    return new Promise((resolve, reject) => {
+        const childProcess = spawn(initiaCommand, [
+            'query',
+            'auth',
+            'account-info',
+            bech32Addr,
+            '--node',
+            rpcUrl,
+            '--output',
+            'json',
+        ])
+        let stdout = ''
+
+        childProcess.stdout?.on('data', (data) => {
+            stdout += data.toString()
+        })
+
+        childProcess.on('close', (code) => {
+            if (code === 0) {
+                const accountInfo = JSON.parse(stdout)
+                resolve(BigInt(accountInfo.info.sequence) + BigInt(2))
+            } else {
+                reject(new Error(`initiad query auth account-info exited with code ${code}`))
+            }
+        })
+
+        childProcess.on('error', reject)
+    })
+}
+
+async function getInitiaDeployCount(initiaCommand: string, bech32Addr: string, rpcUrl: string): Promise<bigint> {
+    return new Promise((resolve, reject) => {
+        const childProcess = spawn(initiaCommand, [
+            'query',
+            'move',
+            'resource',
+            bech32Addr,
+            '0x1::object_code_deployment::DeploymentCounter',
+            '--node',
+            rpcUrl,
+            '--output',
+            'json',
+        ])
+        let stdout = ''
+
+        childProcess.stdout?.on('data', (data) => {
+            stdout += data.toString()
+        })
+
+        childProcess.on('close', (code) => {
+            if (code === 0) {
+                const res = JSON.parse(stdout)
+                const resource = JSON.parse(res.resource.move_resource)
+                resolve(BigInt(resource.data.count))
+            } else {
+                reject(new Error(`initiad query move resource exited with code ${code}`))
+            }
+        })
+
+        childProcess.on('error', () => {
+            resolve(BigInt(0))
+        })
+    })
 }
