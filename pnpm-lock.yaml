@@ -2386,7 +2386,7 @@ importers:
         specifier: ^5.7.0
         version: 5.8.0
       '@layerzerolabs/devtools':
-        specifier: workspace:^2.0.5
+        specifier: ~2.0.5
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-evm':
         specifier: ~3.0.0
@@ -2397,12 +2397,6 @@ importers:
       '@layerzerolabs/devtools-solana':
         specifier: ~3.0.6
         version: link:../../packages/devtools-solana
-      '@layerzerolabs/devtools-starknet':
-        specifier: ~0.1.0
-        version: link:../../packages/devtools-starknet
-      '@layerzerolabs/devtools-sui':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/devtools-sui
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
@@ -2434,7 +2428,7 @@ importers:
         specifier: ^3.0.86
         version: 3.0.148
       '@layerzerolabs/metadata-tools':
-        specifier: workspace:^3.0.2
+        specifier: ~3.0.2
         version: link:../../packages/metadata-tools
       '@layerzerolabs/oapp-evm':
         specifier: ^0.4.0
@@ -2460,12 +2454,6 @@ importers:
       '@layerzerolabs/protocol-devtools-solana':
         specifier: ^8.0.3
         version: link:../../packages/protocol-devtools-solana
-      '@layerzerolabs/protocol-devtools-starknet':
-        specifier: ~0.1.0
-        version: link:../../packages/protocol-devtools-starknet
-      '@layerzerolabs/protocol-devtools-sui':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/protocol-devtools-sui
       '@layerzerolabs/protocol-starknet-v2':
         specifier: ^0.2.19
         version: 0.2.19
@@ -2496,12 +2484,6 @@ importers:
       '@layerzerolabs/ua-devtools-solana':
         specifier: ~8.0.2
         version: link:../../packages/ua-devtools-solana
-      '@layerzerolabs/ua-devtools-starknet':
-        specifier: ~0.1.0
-        version: link:../../packages/ua-devtools-starknet
-      '@layerzerolabs/ua-devtools-sui':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/ua-devtools-sui
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^3.2.1
         version: 3.2.1(@metaplex-foundation/umi@0.9.2)
