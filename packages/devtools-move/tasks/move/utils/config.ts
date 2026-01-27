@@ -38,16 +38,6 @@ export function getOAppOwner(selectedContract: OAppOmniGraphHardhat['contracts']
     return selectedContract.config.owner
 }
 
-export function getOAppDelegate(selectedContract: OAppOmniGraphHardhat['contracts'][number]): string {
-    if (!selectedContract.config?.delegate) {
-        if (!selectedContract.config?.owner) {
-            throw new Error(ownerNotSetMessage)
-        }
-        return selectedContract.config.owner
-    }
-    return selectedContract.config.delegate
-}
-
 export const ownerNotSetMessage = `Owner is not set.
 In move.layerzero.config.ts, you must set the owner field in the contract config.
 
