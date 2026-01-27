@@ -35,12 +35,12 @@ npx hardhat lz:oft:send --src-eid <SRC> --dst-eid <DST> --amount 1 --to <ADDRESS
 
 ## Supported VMs
 
-| VM | Endpoint ID (Mainnet) | Endpoint ID (Testnet) | Status |
-|----|----------------------|----------------------|--------|
-| Arbitrum | 30110 | 40231 | ✅ |
-| Solana | 30168 | 40168 | ✅ |
-| Sui | 30280 | 40245 | ✅ |
-| Starknet | 30500 | 40253 | ✅ |
+| VM       | Endpoint ID (Mainnet) | Endpoint ID (Testnet) | Status |
+| -------- | --------------------- | --------------------- | ------ |
+| Arbitrum | 30110                 | 40231                 | ✅     |
+| Solana   | 30168                 | 40168                 | ✅     |
+| Sui      | 30280                 | 40245                 | ✅     |
+| Starknet | 30500                 | 40253                 | ✅     |
 
 ## Environment Setup
 
@@ -121,13 +121,14 @@ node starknet/deploy-starknet-mainnet.js
 Edit `layerzero.config.ts` to enable/disable VMs:
 
 ```typescript
-const INCLUDE_EVM = true
-const INCLUDE_SOLANA = false  // Set true after deploying
-const INCLUDE_SUI = true
-const INCLUDE_STARKNET = true
+const INCLUDE_EVM = true;
+const INCLUDE_SOLANA = false; // Set true after deploying
+const INCLUDE_SUI = true;
+const INCLUDE_STARKNET = true;
 ```
 
 The config automatically:
+
 - Loads deployment addresses from `./sui/deploy.json` and `./starknet/deploy.json`
 - Generates full mesh pathways between all enabled VMs
 - Sets appropriate enforced options for each destination chain
@@ -141,6 +142,7 @@ npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts
 ```
 
 This sets:
+
 - Peers (bidirectional address registration)
 - Send/Receive libraries
 - DVN and Executor configurations
@@ -194,44 +196,50 @@ npx hardhat lz:oft:send --src-eid 30168 --dst-eid 30110 --amount 1 --to <EVM_ADD
 
 ## Deployment Files
 
-| VM | Deployment File | Key Fields |
-|----|-----------------|------------|
-| EVM | `deployments/<network>/MyOFT.json` | Auto-loaded by hardhat-deploy |
-| Solana | `deployments/solana-mainnet/OFT.json` | `oftStore` |
-| Sui | `sui/deploy.json` | `oftPackageId` |
-| Starknet | `starknet/deploy.json` | `oftAddress` |
+| VM       | Deployment File                       | Key Fields                    |
+| -------- | ------------------------------------- | ----------------------------- |
+| EVM      | `deployments/<network>/MyOFT.json`    | Auto-loaded by hardhat-deploy |
+| Solana   | `deployments/solana-mainnet/OFT.json` | `oftStore`                    |
+| Sui      | `sui/deploy.json`                     | `oftPackageId`                |
+| Starknet | `starknet/deploy.json`                | `oftAddress`                  |
 
 ## Enforced Options
 
 Gas/compute limits for `lzReceive` on each destination:
 
-| Destination | Gas | Value | Notes |
-|-------------|-----|-------|-------|
-| EVM | 80,000 | 0 | Standard EVM gas |
-| Solana | 200,000 | 2,039,280 | CU limit + rent for token account |
-| Sui | 5,000 | 0 | Sui gas budget |
-| Starknet | 500,000 | 0 | Cairo steps |
+| Destination | Gas     | Value     | Notes                             |
+| ----------- | ------- | --------- | --------------------------------- |
+| EVM         | 80,000  | 0         | Standard EVM gas                  |
+| Solana      | 200,000 | 2,039,280 | CU limit + rent for token account |
+| Sui         | 5,000   | 0         | Sui gas budget                    |
+| Starknet    | 500,000 | 0         | Cairo steps                       |
 
 ## Troubleshooting
 
 ### "Missing required deployment file"
+
 Deploy on that VM first, or disable it in `layerzero.config.ts`.
 
 ### "Cannot find module '@layerzerolabs/devtools-sui'"
+
 ```bash
 pnpm install
 pnpm build
 ```
 
 ### "Insufficient balance" on Starknet send
+
 Ensure your Starknet account has:
+
 1. Tokens to send (check ERC20 balance)
 2. STRK for gas fees
 
 ### "LZ_OAPP_CORE_NOT_ENOUGH_NATIVE_ALLOWANCE" on Starknet
+
 The send task automatically approves STRK for fees. Ensure you have enough STRK in your account.
 
 ### Wire task shows "0 transactions needed"
+
 All pathways are already configured. Run with `--dry-run` to see current state.
 
 ## Architecture
