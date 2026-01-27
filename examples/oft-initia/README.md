@@ -316,6 +316,19 @@ pnpm run lz:sdk:evm:send-evm \
   --min-amount <your-min-amount>
 ```
 
+Sending Native Token via NativeAdaptor
+
+```bash
+pnpm run lz:sdk:evm:send-evm \
+  --oapp-config move.layerzero.config.ts \
+  --src-eid <your-src-eid> \
+  --dst-eid <your-dst-eid> \
+  --to <your-source-account-address> \
+  --amount <your-amount> \
+  --min-amount <your-min-amount> \
+  --native-token true
+```
+
 ## Multi-sig
 
 Multi-sig wallet creation and transaction execution on Initia can be done using the Initia multi-sig builder: https://multisig.testnet.initia.xyz/
