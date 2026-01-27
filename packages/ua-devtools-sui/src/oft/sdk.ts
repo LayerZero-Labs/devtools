@@ -65,18 +65,18 @@ export class OFT extends OmniSDK implements IOApp {
 
     async setPeer(_eid: EndpointId, _peer: OmniAddress | null | undefined): Promise<OmniTransaction> {
         const tx = new Transaction()
-        // Peer addresses must be 32 bytes (bytes32), so we need to pad EVM addresses (20 bytes) to 32 bytes
+        // Peer addresses must be 32 bytes (bytes32), so we need to pad shorter addresses to 32 bytes
         let peerBytes: Uint8Array
         if (_peer) {
             const rawBytes = fromHex(_peer)
             if (rawBytes.length === 32) {
                 peerBytes = rawBytes
-            } else if (rawBytes.length === 20) {
-                // Pad EVM address (20 bytes) to 32 bytes with leading zeros
+            } else if (rawBytes.length <= 32) {
+                // Pad shorter addresses (20-byte EVM, 31-byte Starknet, etc.) to 32 bytes with leading zeros
                 peerBytes = new Uint8Array(32)
                 peerBytes.set(rawBytes, 32 - rawBytes.length)
             } else {
-                throw new Error(`Invalid peer address length: ${rawBytes.length}. Expected 20 or 32 bytes.`)
+                throw new Error(`Invalid peer address length: ${rawBytes.length}. Expected 32 bytes or less.`)
             }
         } else {
             peerBytes = new Uint8Array(32)
