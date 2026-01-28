@@ -19,8 +19,8 @@ devDependencies:
     specifier: ~2.3.39
     version: 2.3.44(typescript@5.9.3)
   '@layerzerolabs/hyperliquid-composer':
-    specifier: ^2.0.5
-    version: 2.0.5(@layerzerolabs/lz-evm-messagelib-v2@3.0.142)(@layerzerolabs/lz-evm-protocol-v2@3.0.142)(@layerzerolabs/lz-evm-v1-0.7@3.0.142)(@layerzerolabs/oapp-evm@0.4.1)(@openzeppelin/contracts-upgradeable@5.4.0)(@openzeppelin/contracts@5.4.0)(@types/node@18.18.14)(typescript@5.9.3)
+    specifier: ^2.0.6
+    version: 2.0.6(@layerzerolabs/lz-evm-messagelib-v2@3.0.142)(@layerzerolabs/lz-evm-protocol-v2@3.0.142)(@layerzerolabs/lz-evm-v1-0.7@3.0.142)(@layerzerolabs/oapp-evm@0.4.1)(@openzeppelin/contracts-upgradeable@5.4.0)(@openzeppelin/contracts@5.4.0)(@types/node@18.18.14)(typescript@5.9.3)
   '@layerzerolabs/lz-definitions':
     specifier: ^3.0.59
     version: 3.0.142
@@ -1364,8 +1364,8 @@ packages:
       typescript: 5.9.3
     dev: true
 
-  /@layerzerolabs/hyperliquid-composer@2.0.5(@layerzerolabs/lz-evm-messagelib-v2@3.0.142)(@layerzerolabs/lz-evm-protocol-v2@3.0.142)(@layerzerolabs/lz-evm-v1-0.7@3.0.142)(@layerzerolabs/oapp-evm@0.4.1)(@openzeppelin/contracts-upgradeable@5.4.0)(@openzeppelin/contracts@5.4.0)(@types/node@18.18.14)(typescript@5.9.3):
-    resolution: {integrity: sha512-6hcJE2CPD0Km/0u/uw1zsdUM8VojpJav+hn/3iWD0E6JsRA3f3dkzTxYTIq02aFEXDkpGUCfPxHT1aKmRMLsZQ==}
+  /@layerzerolabs/hyperliquid-composer@2.0.6(@layerzerolabs/lz-evm-messagelib-v2@3.0.142)(@layerzerolabs/lz-evm-protocol-v2@3.0.142)(@layerzerolabs/lz-evm-v1-0.7@3.0.142)(@layerzerolabs/oapp-evm@0.4.1)(@openzeppelin/contracts-upgradeable@5.4.0)(@openzeppelin/contracts@5.4.0)(@types/node@18.18.14)(typescript@5.9.3):
+    resolution: {integrity: sha512-mELOIHnCx0Skd2g/BGaEN73TZ7LUTBLv20bCsJpRGx3SCNt0DjklAcJP+szhcRDBv84WgVAiyAwM2WtB+f24Bg==}
     hasBin: true
     peerDependencies:
       '@layerzerolabs/lz-evm-messagelib-v2': ^3.0.12
