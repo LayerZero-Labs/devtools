@@ -1,0 +1,44 @@
+.anchor
+node_modules
+.env
+coverage
+coverage.json
+target
+typechain
+typechain-types
+
+# Hardhat files
+cache
+artifacts
+
+# LayerZero specific files
+.layerzero
+
+# foundry test compilation files
+out
+
+# pnpm
+pnpm-error.log
+
+# Editor and OS files
+.DS_Store
+.idea
+
+# Deployment artifacts (user-specific, created during deploy)
+deployments/
+
+# Sui build artifacts and deployment info
+sui/*/build/
+sui/deploy.json
+sui/**/oft_deploy.json
+sui/**/token_deploy.json
+
+# Starknet deployment info
+starknet/deploy.json
+
+# Aptos deployment info
+aptos/deploy.json
+
+# Move build artifacts
+build/
+.aptos/

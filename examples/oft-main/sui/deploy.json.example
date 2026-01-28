@@ -1,0 +1,8 @@
+{
+  "oftPackageId": "0x<your-deployed-oft-package-id>",
+  "oappObjectId": "0x<your-oapp-object-id>",
+  "oftObjectId": "0x<your-oft-object-id>",
+  "tokenType": "0x<token-package-id>::<module>::<COIN_TYPE>",
+  "initTx": "<init-transaction-digest>",
+  "registerTx": "<register-transaction-digest>"
+}

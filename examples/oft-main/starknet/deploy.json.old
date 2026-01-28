@@ -1,0 +1,8 @@
+{
+  "erc20Address": "0x73145198de86bf4cb1522551ca7481f189bbbb920adc6cf77f23d4709a28f1a",
+  "oftAddress": "0x26198aa2113058eba7c7effe6eddcf9d64d74123416a6429c6cefc3cd6ca726",
+  "erc20DeployTx": "0x3d96b81e16fd71c58a0fb5a7cbd61ddb3739daf51621ad41608cf9959666818",
+  "oftDeployTx": "0x3995ea01b2127166ad3c62ddef5d9fb276bad99c227717a653b47750eb7cc77",
+  "grantMinterTx": "0x14bd8e82f8e4eab8a4ba391c6649aa1042d7eac7efae80ad50d008ff5422276",
+  "grantBurnerTx": "0x41a8e6f541f8ac0a58e6e1b2e607c0ebac04b9ac9d4b059882194b8c0e8bf86"
+}
