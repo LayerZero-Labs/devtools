@@ -39,7 +39,7 @@ export function basexToBytes32(address: string): string {
 function detectAndDecodeAddress(address: string): Uint8Array {
     const cleanAddress = address.trim()
     if (cleanAddress.length === 0) {
-        throw new Error('Empty address provided')
+        return new Uint8Array()
     }
     const isFormatMap: Record<AddressFormat, boolean> = {
         hex: isHex(cleanAddress),
