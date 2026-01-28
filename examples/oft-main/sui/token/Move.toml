@@ -1,0 +1,8 @@
+[package]
+name = "MyOFTToken"
+version = "0.0.1"
+edition = "2024.beta"
+license = "MIT"
+
+[addresses]
+myoft = "0x0"

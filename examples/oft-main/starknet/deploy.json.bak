@@ -1,0 +1,6 @@
+{
+  "erc20Address": "0x3882dbc85193279a21216ab5040be14f285ce80e0b4f54f78243ebc38dac778",
+  "oftAddress": "0x5e10925af15db70e24c1f2ad9339b9d8d4ad661e04865fd4c9a078b50cf7a63",
+  "grantMinterTx": "0x443000d7967642efb31d25a9c6acacbd1f98d78e6ae6d50a735410d152ed5b8",
+  "grantBurnerTx": "0x5dfcfc2110d558f93025f5e13f77d713b9ce6cdcabec4061a7d3df8a16ea711"
+}

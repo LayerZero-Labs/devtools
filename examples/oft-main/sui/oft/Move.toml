@@ -1,0 +1,16 @@
+[package]
+name = "OFT"
+version = "0.0.1"
+edition = "2024.beta"
+license = "MIT"
+
+[dependencies]
+OApp = { git = "https://github.com/LayerZero-Labs/LayerZero-v2.git", subdir = "packages/layerzero-v2/sui/contracts/oapps/oapp", rev = "main" }
+OFTCommon = { git = "https://github.com/LayerZero-Labs/LayerZero-v2.git", subdir = "packages/layerzero-v2/sui/contracts/oapps/oft/oft-common", rev = "main" }
+PtbMoveCall = { git = "https://github.com/LayerZero-Labs/LayerZero-v2.git", subdir = "packages/layerzero-v2/sui/contracts/ptb-builders/ptb-move-call", rev = "main" }
+
+[addresses]
+oft = "0x0"
+
+[dev-dependencies]
+SimpleMessageLib = { git = "https://github.com/LayerZero-Labs/LayerZero-v2.git", subdir = "packages/layerzero-v2/sui/contracts/message-libs/simple-message-lib", rev = "main" }
