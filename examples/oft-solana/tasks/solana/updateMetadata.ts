@@ -2,11 +2,17 @@ import {
     UpdateV1InstructionAccounts,
     UpdateV1InstructionArgs,
     fetchMetadataFromSeeds,
+    safeFetchMetadataFromSeeds,
     updateV1,
 } from '@metaplex-foundation/mpl-token-metadata'
 import { publicKey, transactionBuilder } from '@metaplex-foundation/umi'
 import { toWeb3JsTransaction } from '@metaplex-foundation/umi-web3js-adapters'
-import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID, createUpdateFieldInstruction } from '@solana/spl-token'
+import {
+    TOKEN_2022_PROGRAM_ID,
+    TOKEN_PROGRAM_ID,
+    createUpdateFieldInstruction,
+    getTokenMetadata,
+} from '@solana/spl-token'
 import { Keypair, PublicKey, SystemProgram, TransactionMessage, VersionedTransaction } from '@solana/web3.js'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
@@ -26,9 +32,9 @@ interface UpdateMetadataTaskArgs {
     vaultPda: string
 }
 
-// Auto-detects metadata type based on mint owner:
-// - TOKEN_PROGRAM_ID -> Metaplex metadata
-// - TOKEN_2022_PROGRAM_ID -> Token Extensions metadata
+// Auto-detects metadata type:
+// - SPL Token mints (TOKEN_PROGRAM_ID) -> always use Metaplex metadata
+// - Token-2022 mints -> probe for Metaplex metadata PDA first; if exists, use Metaplex; otherwise use Token Extensions
 //
 // Example:
 // pnpm hardhat lz:oft:solana:update-metadata --eid <EID> --mint <MINT_ADDRESS> --name <NEW_TOKEN_NAME>
@@ -49,7 +55,7 @@ task(
         async ({ eid, name, mint: mintStr, sellerFeeBasisPoints, symbol, uri, vaultPda }: UpdateMetadataTaskArgs) => {
             const isTestnet = eid == EndpointId.SOLANA_V2_TESTNET
 
-            const { connection } = await deriveConnection(eid)
+            const { umi, connection } = await deriveConnection(eid)
             const mintPubkey = new PublicKey(mintStr)
             const mintAccountInfo = await connection.getAccountInfo(mintPubkey)
 
@@ -59,18 +65,8 @@ task(
 
             const mintOwner = mintAccountInfo.owner.toBase58()
 
-            if (mintOwner === TOKEN_2022_PROGRAM_ID.toBase58()) {
-                console.log('Detected Token-2022 mint, using Token Extensions metadata')
-                await updateTokenExtensionsMetadata({
-                    eid,
-                    mintStr,
-                    name,
-                    symbol,
-                    uri,
-                    vaultPda,
-                    isTestnet,
-                })
-            } else if (mintOwner === TOKEN_PROGRAM_ID.toBase58()) {
+            if (mintOwner === TOKEN_PROGRAM_ID.toBase58()) {
+                // SPL Token mints always use Metaplex metadata
                 console.log('Detected SPL Token mint, using Metaplex metadata')
                 await updateMetaplexMetadata({
                     eid,
@@ -82,6 +78,35 @@ task(
                     vaultPda,
                     isTestnet,
                 })
+            } else if (mintOwner === TOKEN_2022_PROGRAM_ID.toBase58()) {
+                // Token-2022 mints could use either Metaplex or Token Extensions metadata
+                // Probe for Metaplex metadata PDA first
+                const metaplexMetadata = await safeFetchMetadataFromSeeds(umi, { mint: publicKey(mintStr) })
+
+                if (metaplexMetadata) {
+                    console.log('Detected Token-2022 mint with Metaplex metadata')
+                    await updateMetaplexMetadata({
+                        eid,
+                        mintStr,
+                        name,
+                        symbol,
+                        uri,
+                        sellerFeeBasisPoints,
+                        vaultPda,
+                        isTestnet,
+                    })
+                } else {
+                    console.log('Detected Token-2022 mint with Token Extensions metadata')
+                    await updateTokenExtensionsMetadata({
+                        eid,
+                        mintStr,
+                        name,
+                        symbol,
+                        uri,
+                        vaultPda,
+                        isTestnet,
+                    })
+                }
             } else {
                 throw new Error(`Unknown mint owner program: ${mintOwner}`)
             }
@@ -183,7 +208,23 @@ async function updateTokenExtensionsMetadata({
 
     const keypair = privateKeyStr ? Keypair.fromSecretKey(bs58.decode(privateKeyStr)) : undefined
     const mintPubkey = new PublicKey(mintStr)
-    const updateAuthority = vaultPda ? new PublicKey(vaultPda) : keypair!.publicKey
+    const expectedAuthority = vaultPda ? new PublicKey(vaultPda) : keypair!.publicKey
+
+    // Fetch Token Extensions metadata to verify update authority
+    const tokenMetadata = await getTokenMetadata(connection, mintPubkey, 'confirmed', TOKEN_2022_PROGRAM_ID)
+    if (!tokenMetadata) {
+        throw new Error(`Token Extensions metadata not found for mint: ${mintStr}`)
+    }
+
+    // Verify update authority
+    if (!tokenMetadata.updateAuthority) {
+        throw new Error('Metadata has no update authority set (metadata is immutable)')
+    }
+    if (tokenMetadata.updateAuthority.toBase58() !== expectedAuthority.toBase58()) {
+        throw new Error(
+            `Update authority mismatch. Expected: ${expectedAuthority.toBase58()}, Actual: ${tokenMetadata.updateAuthority.toBase58()}`
+        )
+    }
 
     // Get current mint account info to calculate rent difference
     const mintAccountInfo = await connection.getAccountInfo(mintPubkey)
@@ -196,16 +237,26 @@ async function updateTokenExtensionsMetadata({
 
     // Calculate additional bytes needed for new values and add rent if needed
     // Token Extensions metadata may need more space when updating to longer values
-    if (!vaultPda) {
-        // Estimate new total size: current size + length increases for each field
-        // Add a buffer of 100 bytes to be safe
-        const estimatedNewSize =
-            mintAccountInfo.data.length + (name?.length ?? 0) + (symbol?.length ?? 0) + (uri?.length ?? 0) + 100
-        const rentExemptLamports = await connection.getMinimumBalanceForRentExemption(estimatedNewSize)
-        const currentLamports = mintAccountInfo.lamports
-        const additionalLamports = rentExemptLamports - currentLamports
+    // Estimate new total size: current size + length increases for each field
+    // Add a buffer of 100 bytes to be safe
+    const estimatedNewSize =
+        mintAccountInfo.data.length + (name?.length ?? 0) + (symbol?.length ?? 0) + (uri?.length ?? 0) + 100
+    const rentExemptLamports = await connection.getMinimumBalanceForRentExemption(estimatedNewSize)
+    const currentLamports = mintAccountInfo.lamports
+    const additionalLamports = rentExemptLamports - currentLamports
 
-        if (additionalLamports > 0) {
+    if (additionalLamports > 0) {
+        if (vaultPda) {
+            // For multisig, include rent transfer from vault to mint
+            console.log(`Adding ${additionalLamports} lamports rent transfer from vault to mint`)
+            instructions.push(
+                SystemProgram.transfer({
+                    fromPubkey: new PublicKey(vaultPda),
+                    toPubkey: mintPubkey,
+                    lamports: additionalLamports,
+                })
+            )
+        } else {
             console.log(`Adding ${additionalLamports} lamports for additional rent`)
             instructions.push(
                 SystemProgram.transfer({
@@ -222,7 +273,7 @@ async function updateTokenExtensionsMetadata({
             createUpdateFieldInstruction({
                 programId: TOKEN_2022_PROGRAM_ID,
                 metadata: mintPubkey,
-                updateAuthority,
+                updateAuthority: expectedAuthority,
                 field: 'name',
                 value: name,
             })
@@ -234,7 +285,7 @@ async function updateTokenExtensionsMetadata({
             createUpdateFieldInstruction({
                 programId: TOKEN_2022_PROGRAM_ID,
                 metadata: mintPubkey,
-                updateAuthority,
+                updateAuthority: expectedAuthority,
                 field: 'symbol',
                 value: symbol,
             })
@@ -246,7 +297,7 @@ async function updateTokenExtensionsMetadata({
             createUpdateFieldInstruction({
                 programId: TOKEN_2022_PROGRAM_ID,
                 metadata: mintPubkey,
-                updateAuthority,
+                updateAuthority: expectedAuthority,
                 field: 'uri',
                 value: uri,
             })
@@ -260,7 +311,7 @@ async function updateTokenExtensionsMetadata({
     const { blockhash } = await connection.getLatestBlockhash()
 
     const message = new TransactionMessage({
-        payerKey: vaultPda ? updateAuthority : keypair!.publicKey,
+        payerKey: vaultPda ? expectedAuthority : keypair!.publicKey,
         recentBlockhash: blockhash,
         instructions,
     }).compileToV0Message()
