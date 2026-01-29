@@ -157,7 +157,6 @@ export const getSolanaDeployment = (
     const filePath = path.join(outputDir, 'OFT.json') // Note: if you have multiple deployments, change this filename to refer to the desired deployment file
 
     if (!existsSync(filePath)) {
-        DebugLogger.printWarning(KnownWarnings.SOLANA_DEPLOYMENT_NOT_FOUND)
         throw new Error(`Could not find Solana deployment file for eid ${eid} at: ${filePath}`)
     }
 
