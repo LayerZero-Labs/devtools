@@ -1,0 +1,24 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directories:
+      - "/"
+      - "/packages/*"
+      - "/examples/*"
+
+    schedule:
+      interval: "daily"
+
+    # Keep at most one open Dependabot PR at a time
+    open-pull-requests-limit: 1
+
+    # Only update this single public package
+    allow:
+      - dependency-name: "@layerzerolabs/lz-definitions"
+        dependency-type: "direct"
+
+    # Grouping is redundant with the allow-list, but harmless and keeps naming consistent
+    groups:
+      lz-definitions:
+        patterns:
+          - "@layerzerolabs/lz-definitions"
