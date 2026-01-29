@@ -94,11 +94,9 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
     .addParam('programId', 'The OFT Program id')
     .addParam('escrow', 'The OFT Escrow public key')
     .addParam('additionalMinters', 'Comma-separated list of additional minters', undefined, devtoolsTypes.csv, true)
-    .addOptionalParam(
+    .addFlag(
         'onlyOftStore',
-        'If you plan to have only the OFTStore and no additional minters.  This is not reversible, and will result in losing the ability to mint new tokens by everything but the OFTStore.',
-        false,
-        devtoolsTypes.boolean
+        'If you plan to have only the OFTStore and no additional minters.  This is not reversible, and will result in losing the ability to mint new tokens by everything but the OFTStore.'
     )
     .addParam(
         'tokenProgram',
@@ -123,9 +121,7 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
             const tokenProgram = publicKey(tokenProgramStr)
             if (!additionalMintersAsStrings) {
                 if (!onlyOftStore) {
-                    throw new Error(
-                        'If you want to proceed with only the OFTStore, please specify --only-oft-store true'
-                    )
+                    throw new Error('If you want to proceed with only the OFTStore, please specify --only-oft-store')
                 }
                 console.log(
                     'No additional minters specified.  This will result in only the OFTStore being able to mint new tokens.'
