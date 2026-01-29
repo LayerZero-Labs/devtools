@@ -324,7 +324,7 @@ async function updateTokenExtensionsMetadata({
     const transaction = new VersionedTransaction(message)
 
     if (vaultPda) {
-        const base58Tx = bs58.encode(transaction.message.serialize())
+        const base58Tx = bs58.encode(new Uint8Array(transaction.message.serialize()))
         console.log('==== Import the following base58 txn data into the Squads UI ====')
         console.log(base58Tx)
     } else {
