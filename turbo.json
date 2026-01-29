@@ -49,6 +49,8 @@
   "globalDependencies": ["tsconfig.json"],
   "globalEnv": ["NODE_ENV"],
   "globalPassThroughEnv": [
+    "TS_NODE_FILES",
+    "TS_NODE_PROJECT",
     "LZ_DEVTOOLS_ENABLE_DEPLOY_LOGGING",
     "LZ_DEVTOOLS_ENABLE_SOLANA_TESTS",
     "LZ_ENABLE_EXPERIMENTAL_BATCHED_SEND",
