@@ -96,6 +96,9 @@ task(
                         isTestnet,
                     })
                 } else {
+                    if (sellerFeeBasisPoints != undefined) {
+                        console.warn('sellerFeeBasisPoints is ignored for Token Extensions metadata')
+                    }
                     console.log('Detected Token-2022 mint with Token Extensions metadata')
                     await updateTokenExtensionsMetadata({
                         eid,
@@ -239,8 +242,10 @@ async function updateTokenExtensionsMetadata({
     // Token Extensions metadata may need more space when updating to longer values
     // Estimate new total size: current size + length increases for each field
     // Add a buffer of 100 bytes to be safe
-    const estimatedNewSize =
-        mintAccountInfo.data.length + (name?.length ?? 0) + (symbol?.length ?? 0) + (uri?.length ?? 0) + 100
+    const nameDelta = name ? Math.max(0, name.length - (tokenMetadata.name?.length ?? 0)) : 0
+    const symbolDelta = symbol ? Math.max(0, symbol.length - (tokenMetadata.symbol?.length ?? 0)) : 0
+    const uriDelta = uri ? Math.max(0, uri.length - (tokenMetadata.uri?.length ?? 0)) : 0
+    const estimatedNewSize = mintAccountInfo.data.length + nameDelta + symbolDelta + uriDelta + 100
     const rentExemptLamports = await connection.getMinimumBalanceForRentExemption(estimatedNewSize)
     const currentLamports = mintAccountInfo.lamports
     const additionalLamports = rentExemptLamports - currentLamports
