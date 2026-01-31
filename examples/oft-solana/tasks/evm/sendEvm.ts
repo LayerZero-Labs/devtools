@@ -7,11 +7,13 @@ import { makeBytes32 } from '@layerzerolabs/devtools'
 import { createGetHreByEid } from '@layerzerolabs/devtools-evm-hardhat'
 import { createLogger, promptToContinue } from '@layerzerolabs/io-devtools'
 import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
+import { Options } from '@layerzerolabs/lz-v2-utilities'
 
 import layerzeroConfig from '../../layerzero.config'
 import { SendResult } from '../common/types'
-import { DebugLogger, KnownErrors, MSG_TYPE, isEmptyOptionsEvm } from '../common/utils'
+import { DebugLogger, KnownErrors, MSG_TYPE, calculateGasAndValueShortfall, isEmptyOptionsEvm } from '../common/utils'
 import { getLayerZeroScanLink } from '../solana'
+
 const logger = createLogger()
 export interface EvmArgs {
     srcEid: number
@@ -22,9 +24,10 @@ export interface EvmArgs {
     extraOptions?: string
     composeMsg?: string
     oftAddress?: string
+    minimumLzReceiveValue?: number
 }
 export async function sendEvm(
-    { srcEid, dstEid, amount, to, minAmount, extraOptions, composeMsg, oftAddress }: EvmArgs,
+    { srcEid, dstEid, amount, to, minAmount, extraOptions, composeMsg, oftAddress, minimumLzReceiveValue }: EvmArgs,
     hre: HardhatRuntimeEnvironment
 ): Promise<SendResult> {
     if (endpointIdToChainType(srcEid) !== ChainType.EVM) {
@@ -41,6 +44,7 @@ export async function sendEvm(
         )
         throw error
     }
+
     const signer = await srcEidHre.ethers.getNamedSigner('deployer')
     // 1️⃣ resolve the OFT wrapper address
     let wrapperAddress: string
@@ -74,22 +78,14 @@ export async function sendEvm(
         // hex string → Uint8Array → zero-pad to 32 bytes
         toBytes = makeBytes32(to)
     }
-    // 6️⃣ build sendParam and dispatch
-    const sendParam = {
-        dstEid,
-        to: toBytes,
-        amountLD: amountUnits.toString(),
-        minAmountLD: minAmount ? parseUnits(minAmount, decimals).toString() : amountUnits.toString(),
-        extraOptions: extraOptions ? extraOptions.toString() : '0x',
-        composeMsg: composeMsg ? composeMsg.toString() : '0x',
-        oftCmd: '0x',
-    }
 
-    // Check whether there are extra options or enforced options. If not, warn the user.
+    let enforcedOptions = '0x'
+
+    // BOF: Check whether there are extra options or enforced options. If not, warn the user.
     // Read on Message Options: https://docs.layerzero.network/v2/concepts/message-options
-    if (!extraOptions) {
+    if (!extraOptions || extraOptions === '0x') {
         try {
-            const enforcedOptions = composeMsg
+            enforcedOptions = composeMsg
                 ? await oft.enforcedOptions(dstEid, MSG_TYPE.SEND_AND_CALL)
                 : await oft.enforcedOptions(dstEid, MSG_TYPE.SEND)
 
@@ -104,6 +100,30 @@ export async function sendEvm(
         } catch (error) {
             logger.debug(`Failed to check enforced options: ${error}`)
         }
+    }
+    // EOF: Check whether there are extra options or enforced options. If not, warn the user.
+
+    // BOF: evaluate whether options require additional value
+    const { gasShortfall, valueShortfall } = calculateGasAndValueShortfall(
+        enforcedOptions,
+        extraOptions,
+        minimumLzReceiveValue
+    )
+    if (valueShortfall > 0n) {
+        // if there's a value shortfall, we add the difference as extraOptions
+        extraOptions = Options.newOptions().addExecutorLzReceiveOption(gasShortfall, valueShortfall).toHex()
+    }
+    // EOF: evaluate whether options require additional value
+
+    // 6️⃣ build sendParam and dispatch
+    const sendParam = {
+        dstEid,
+        to: toBytes,
+        amountLD: amountUnits.toString(),
+        minAmountLD: minAmount ? parseUnits(minAmount, decimals).toString() : amountUnits.toString(),
+        extraOptions: extraOptions ? extraOptions.toString() : '0x',
+        composeMsg: composeMsg ? composeMsg.toString() : '0x',
+        oftCmd: '0x',
     }
 
     // 6️⃣ Quote (MessagingFee = { nativeFee, lzTokenFee })
