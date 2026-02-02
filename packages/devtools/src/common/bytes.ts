@@ -101,7 +101,7 @@ export const normalizePeer = (address: OmniAddress | null | undefined, eid: Endp
 
         case ChainType.APTOS:
         case ChainType.EVM:
-        case ChainType.STARKNET:
+            // case ChainType.STARKNET:
             return toBytes32(fromHex(address))
 
         case ChainType.TON:
@@ -131,7 +131,7 @@ export const denormalizePeer = (bytes: Uint8Array | null | undefined, eid: Endpo
             return bs58.encode(toBytes32(bytes))
 
         case ChainType.APTOS:
-        case ChainType.STARKNET:
+            // case ChainType.STARKNET:
             return toHex(toBytes32(bytes))
 
         case ChainType.EVM:

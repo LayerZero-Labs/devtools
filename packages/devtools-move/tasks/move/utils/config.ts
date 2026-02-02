@@ -487,7 +487,7 @@ async function getInitiaSequenceNumber(initiaCommand: string, bech32Addr: string
     })
 }
 
-async function getInitiaDeployCount(initiaCommand: string, bech32Addr: string, rpcUrl: string): Promise<bigint> {
+export async function getInitiaDeployCount(initiaCommand: string, bech32Addr: string, rpcUrl: string): Promise<bigint> {
     return new Promise((resolve, reject) => {
         const childProcess = spawn(initiaCommand, [
             'query',
@@ -501,9 +501,13 @@ async function getInitiaDeployCount(initiaCommand: string, bech32Addr: string, r
             'json',
         ])
         let stdout = ''
+        let stderr = ''
 
         childProcess.stdout?.on('data', (data) => {
             stdout += data.toString()
+        })
+        childProcess.stderr?.on('data', (data) => {
+            stderr += data.toString()
         })
 
         childProcess.on('close', (code) => {
@@ -512,12 +516,17 @@ async function getInitiaDeployCount(initiaCommand: string, bech32Addr: string, r
                 const resource = JSON.parse(res.resource.move_resource)
                 resolve(BigInt(resource.data.count))
             } else {
+                const output = `${stdout}\n${stderr}`.toLowerCase()
+                if (output.includes('not found')) {
+                    resolve(BigInt(0))
+                    return
+                }
                 reject(new Error(`initiad query move resource exited with code ${code}`))
             }
         })
 
-        childProcess.on('error', () => {
-            resolve(BigInt(0))
+        childProcess.on('error', (error) => {
+            reject(error)
         })
     })
 }
