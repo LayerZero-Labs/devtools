@@ -73,7 +73,7 @@ async function sendOFT(args: any): Promise<MessagingFee> {
     const to = ethers.utils.hexZeroPad(args.to, 32)
     const amount = args.amount
     const minAmount = args.min_amount
-    const sendingNativeToken = args.native_token ? true : false
+    const sendingNativeToken = args.native_token && args.native_token === 'true' ? true : false
 
     const privateKey = readPrivateKey(args)
     const omniContracts = await createEvmOmniContracts(args, privateKey)
