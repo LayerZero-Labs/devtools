@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 1.0.11
+
+### Patch Changes
+
+- e18564f: improved cli and docs on expansion spot market pairs
+
 ## 1.0.10
 
 ### Patch Changes
