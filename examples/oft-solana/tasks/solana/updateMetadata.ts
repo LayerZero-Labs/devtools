@@ -235,6 +235,11 @@ async function updateTokenExtensionsMetadata({
         throw new Error(`Mint account not found: ${mintStr}`)
     }
 
+    const hasFieldUpdates = Boolean(name || symbol || uri)
+    if (!hasFieldUpdates) {
+        throw new Error('At least one of --name, --symbol, or --uri must be provided')
+    }
+
     // Build instructions for each field that needs updating
     const instructions = []
 
@@ -307,10 +312,6 @@ async function updateTokenExtensionsMetadata({
                 value: uri,
             })
         )
-    }
-
-    if (instructions.length === 0) {
-        throw new Error('At least one of --name, --symbol, or --uri must be provided')
     }
 
     const { blockhash } = await connection.getLatestBlockhash()
