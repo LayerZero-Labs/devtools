@@ -170,6 +170,7 @@ optionGroups
         program
             .command(CLI_COMMANDS.CREATE_SPOT_DEPLOYMENT)
             .description('HIP-1 Deployment 4. Create spot deployment without hyperliquidity')
+            .option('-s, --spot-index <spot-index>', 'Directly specify spot index to finalize (skips discovery)')
     )
     .action(withNormalizedNetwork(createSpotDeployment))
 
