@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.5.1
+
+### Patch Changes
+
+- 78f8ad7: feat: verify-contract/config: adding redbelly config for verify-contract
+
 ## 1.5.0
 
 ### Minor Changes
