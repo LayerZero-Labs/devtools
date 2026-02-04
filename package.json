@@ -72,7 +72,8 @@
   },
   "pnpm": {
     "overrides": {
-      "@solana/web3.js": "^1.95.8"
+      "@solana/web3.js": "^1.95.8",
+      "typescript": "~5.5.3"
     }
   },
   "overrides": {
