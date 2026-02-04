@@ -16,7 +16,48 @@ notifications:
 
 ---
 
-## 2. Environment Setup
+## 2. Package Relationship Diagram
+
+```
+                    toolbox-hardhat
+                    (main entry point)
+                           │
+           ┌───────────────┼───────────────┐
+           │               │               │
+           ▼               ▼               ▼
+    ua-devtools-    devtools-evm-    protocol-devtools-
+    evm-hardhat       hardhat           evm
+           │               │               │
+           └───────┬───────┴───────┬───────┘
+                   │               │
+                   ▼               ▼
+             devtools-evm       devtools
+                               (core types)
+```
+
+**Key Packages:**
+- `toolbox-hardhat` - Main entry point, re-exports everything
+- `ua-devtools-evm-hardhat` - OApp/OFT wiring tasks
+- `devtools-evm-hardhat` - Deploy tasks, HRE utilities
+- `devtools` - Core types (OmniPoint, OmniGraph)
+
+---
+
+## 3. Directory-Specific AGENTS.md Files
+
+Codex will apply the most specific `AGENTS.md` under:
+
+| Directory | Contains |
+|-----------|----------|
+| `examples/AGENTS.md` | Example-specific guidelines, structure templates |
+| `packages/AGENTS.md` | Package-specific guidelines, naming conventions |
+| `tests/AGENTS.md` | Test-specific guidelines |
+| `examples/*/AGENTS.md` | Per-example build/test commands |
+| `packages/*/AGENTS.md` | Per-package build/test commands |
+
+---
+
+## 4. Environment Setup
 
 1. **Setup Script** (internet + proxy phase)
 
@@ -52,38 +93,36 @@ notifications:
      * `cache/metadata/dvns.json`: Contains DVN (Decentralized Verifier Network) records with contract addresses and endpoint IDs
      * `cache/metadata/defaultConfig.json`: Contains default cross-chain configuration settings between Endpoints
 
-   * Benefits:
-     * Setup captures latest metadata during internet access
-     * Code-mode runs fully offline using local JSON snapshots
-     * Provides reference data for metadata-tools package and LayerZero configurations
-
 ---
 
-## 3. Repo Structure Overview
+## 5. Repo Structure Overview
 
 ```
 /
 ├── examples/        ← standalone demo projects
-│   ├── oapp/       ← LayerZero OApp examples
-│   ├── oft/        ← OFT implementation examples
-│   └── onft/       ← ONFT implementation examples
-|   └── .../
+│   ├── oapp/        ← OApp example (start here for messaging)
+│   ├── oft/         ← OFT example (start here for tokens)
+│   ├── oft-adapter/ ← Wrap existing ERC20
+│   └── .../
 ├── packages/        ← reusable libraries & plugins
-│   ├── devtools/   ← core devtools package
-│   ├── oft-evm/        ← OFT implementations
-│   └── onft-evm/       ← ONFT implementations
-│   └── .../ 
+│   ├── toolbox-hardhat/      ← Main entry point
+│   ├── devtools/             ← Core types
+│   ├── devtools-evm-hardhat/ ← Deploy tasks
+│   ├── ua-devtools-evm-hardhat/ ← OApp/OFT tasks
+│   ├── oft-evm/              ← OFT contracts
+│   └── .../
 ├── tests/           ← integration & helper suites
-|    └── .../
-├── .gitignore
 ├── turbo.json       ← Turbo Pipeline config
 ├── package.json     ← monorepo root
+├── WORKFLOW.md      ← Deployment workflow guide
+├── DEBUGGING.md     ← Troubleshooting guide
+├── CHEATSHEET.md    ← Quick reference
 └── AGENTS.md        ← this file
 ```
 
 ---
 
-## 4. JS Tooling & Build
+## 6. JS Tooling & Build
 
 * **Package Manager**: pnpm v8.15.6 (via Corepack or `npm install -g pnpm@8.15.6`).
 * **Monorepo Runner**: Turbo (`turbo.json`).
@@ -101,7 +140,21 @@ notifications:
 
 ---
 
-## 5. Agent Workflow
+## 7. Common Hardhat Tasks
+
+| Task | Description | Package |
+|------|-------------|---------|
+| `lz:deploy` | Deploy contracts to all configured networks | devtools-evm-hardhat |
+| `lz:oapp:wire` | Wire OApp pathways (setPeer, setConfig) | ua-devtools-evm-hardhat |
+| `lz:oapp:config:get` | Get current on-chain configuration | ua-devtools-evm-hardhat |
+| `lz:oapp:config:get:default` | Get LayerZero default configuration | ua-devtools-evm-hardhat |
+| `lz:oapp:peers:get` | Get peer relationships | ua-devtools-evm-hardhat |
+| `lz:read:wire` | Wire OApp Read channels | ua-devtools-evm-hardhat |
+| `lz:errors:decode` | Decode LayerZero error messages | ua-devtools-evm-hardhat |
+
+---
+
+## 8. Agent Workflow
 
 1. **Initial Setup**
    * Run `pnpm install` to install dependencies
@@ -109,7 +162,7 @@ notifications:
 
 2. **Development Phase**
    * Make necessary code changes
-   * Follow platform-specific guidelines in respective CODEX.md files
+   * Follow platform-specific guidelines in respective AGENTS.md files
    * Ensure changes are properly documented
 
 3. **Pre-Submission Checks**
@@ -127,7 +180,19 @@ notifications:
 
 ---
 
-## 6. Versioning & Changesets
+## 9. Common Troubleshooting Patterns
+
+| Issue | Diagnostic | Solution |
+|-------|------------|----------|
+| "Peer not set" | `lz:oapp:peers:get` | Run `lz:oapp:wire` |
+| "InvalidNonce" | Check message lifecycle | Verify DVN verification |
+| Config mismatch | `lz:oapp:config:get` | Compare with expected config |
+| Build fails | `pnpm build --filter <pkg>` | Check dependencies |
+| Deploy fails | Check `.env` | Verify RPC URLs, credentials |
+
+---
+
+## 10. Versioning & Changesets
 
 After modifying any packages under `examples/`, `packages/`, or `tests/`:
 
@@ -139,7 +204,7 @@ Generates and stages a changeset for versioning & changelog.
 
 ---
 
-## 7. Commit & PR Guidelines
+## 11. Commit & PR Guidelines
 
 * **Commits**: semantic scope:
 
@@ -152,15 +217,3 @@ Generates and stages a changeset for versioning & changelog.
   2. What changed
   3. How to verify (build/test commands)
 * **Footer**: link to changeset, list breaking changes.
-
----
-
-## 8. Directory-Specific Overrides
-
-Codex will apply the most specific `AGENTS.md` under:
-
-* `examples/AGENTS.md`
-* `packages/AGENTS.md`
-* `tests/AGENTS.md`
-
-Each sub-directory's AGENTS.md provides platform-specific guidelines while maintaining consistency with this root configuration.
