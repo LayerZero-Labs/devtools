@@ -7,7 +7,7 @@ settings:
 overrides:
   '@solana/web3.js': ^1.95.8
   '@ton/ton': npm:@layerzerolabs/ton@15.2.0-rc.3
-  es5-ext: git://github.com/LayerZero-Labs/es5-ext
+  es5-ext: https://github.com/LayerZero-Labs/es5-ext
   ethers: ^5.7.2
   hardhat-deploy: ^0.12.1
   rustbn.js: ^0.3.0
@@ -28020,7 +28020,7 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
 
   git@github.com+LayerZero-Labs/es5-ext/7e360296a7e27176e240bc063b32f5ada55f9aa6:
-    resolution: {commit: 7e360296a7e27176e240bc063b32f5ada55f9aa6, repo: git@github.com:LayerZero-Labs/es5-ext.git, type: git}
+    resolution: {commit: 7e360296a7e27176e240bc063b32f5ada55f9aa6, repo: https://github.com/LayerZero-Labs/es5-ext.git, type: git}
     name: es5-ext
     version: 0.10.62
     engines: {node: '>=0.10'}
