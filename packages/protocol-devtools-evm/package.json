@@ -49,7 +49,7 @@
     "@layerzerolabs/devtools": "~2.0.4",
     "@layerzerolabs/devtools-evm": "~3.0.2",
     "@layerzerolabs/io-devtools": "~0.3.2",
-    "@layerzerolabs/lz-definitions": "^3.0.148",
+    "@layerzerolabs/lz-definitions": "^3.0.158",
     "@layerzerolabs/lz-evm-sdk-v2": "^3.0.148",
     "@layerzerolabs/protocol-devtools": "~3.0.2",
     "@layerzerolabs/test-devtools": "~0.4.7",
@@ -74,7 +74,7 @@
     "@layerzerolabs/devtools": "~2.0.4",
     "@layerzerolabs/devtools-evm": "~3.0.2",
     "@layerzerolabs/io-devtools": "~0.3.2",
-    "@layerzerolabs/lz-definitions": "^3.0.148",
+    "@layerzerolabs/lz-definitions": "^3.0.158",
     "@layerzerolabs/protocol-devtools": "~3.0.2",
     "zod": "^3.22.4"
   },

@@ -65,7 +65,7 @@
   },
   "devDependencies": {
     "@layerzerolabs/io-devtools": "^0.3.2",
-    "@layerzerolabs/lz-definitions": "^3.0.81",
+    "@layerzerolabs/lz-definitions": "^3.0.158",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
     "@layerzerolabs/lz-utilities": "^3.0.74",

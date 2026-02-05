@@ -39,7 +39,7 @@
   "resolutions": {
     "@solana/web3.js": "^1.95.8",
     "@ton/ton": "npm:@layerzerolabs/ton@15.2.0-rc.3",
-    "es5-ext": "git://github.com/LayerZero-Labs/es5-ext",
+    "es5-ext": "https://github.com/LayerZero-Labs/es5-ext",
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1",
     "rustbn.js": "^0.3.0"
@@ -72,7 +72,8 @@
   },
   "pnpm": {
     "overrides": {
-      "@solana/web3.js": "^1.95.8"
+      "@solana/web3.js": "^1.95.8",
+      "typescript": "~5.5.3"
     }
   },
   "overrides": {
