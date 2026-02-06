@@ -298,7 +298,7 @@ pnpm run lz:sdk:move:send-from-move-oft \
   --src-address <your-source-account-address> \
   --to-address <your-destination-account-address> \
   --gas-limit <your-gas-limit> \
-  --dst-eid <your-dst-eid>\
+  --dst-eid <your-dst-eid>
 ```
 
 ## Send from EVM
