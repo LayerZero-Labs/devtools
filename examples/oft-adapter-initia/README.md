@@ -92,7 +92,7 @@ pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --oapp-type of
 To build and deploy the contracts, run the following command:
 
 ```bash
-pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --move-deploy-script deploy-move/OFTInitParams.ts --oapp-type oft
+pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --move-deploy-script deploy-move/OFTAdapterInitParams.ts --oapp-type oft
 ```
 
 ## EVM Deployment
