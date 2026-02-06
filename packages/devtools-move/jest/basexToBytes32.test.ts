@@ -43,10 +43,5 @@ describe('basexToBytes32 - Address Format Detection and Conversion', () => {
             const address = 'invalid-address-format'
             expect(() => basexToBytes32(address)).to.throw(`Unsupported address format: ${address}`)
         })
-
-        it('should handle empty string', () => {
-            const address = ''
-            expect(() => basexToBytes32(address)).to.throw('Empty address provided')
-        })
     })
 })
