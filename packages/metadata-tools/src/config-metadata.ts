@@ -112,6 +112,23 @@ function isSolanaDeployment(deployment: { chainKey: string; executor?: { pda?: s
     return deployment.chainKey.startsWith('solana')
 }
 
+function isNonEvmDeployment(deployment: { chainKey: string }) {
+    return ['solana', 'sui', 'starknet', 'aptos', 'ton'].some((prefix) => deployment.chainKey.startsWith(prefix))
+}
+
+const maybeChecksumAddress = (address: string) => {
+    if (!address) {
+        return address
+    }
+    if (!address.startsWith('0x')) {
+        return address
+    }
+    if (address.length !== 42) {
+        return address
+    }
+    return getAddress(address)
+}
+
 function resolveExecutorForDeployment(
     customExecutor: string | undefined,
     deployment: { chainKey: string; executor?: { pda?: string; address?: string } },
@@ -167,8 +184,13 @@ function isBlocked(blockConfirmationsDefinition: BlockConfirmationsDefinition | 
     )
 }
 
-const getLibraryAddress = (deployment: any, metadataKey: string) =>
-    isSolanaDeployment(deployment) ? deployment[metadataKey].address : getAddress(deployment[metadataKey].address)
+const getLibraryAddress = (deployment: any, metadataKey: string) => {
+    const address = deployment[metadataKey].address
+    if (isNonEvmDeployment(deployment)) {
+        return address
+    }
+    return maybeChecksumAddress(address)
+}
 
 export async function translatePathwayToConfig(
     pathway: TwoWayConfig,
