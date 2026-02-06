@@ -11,6 +11,11 @@ export interface CreateWireFlowArgs<TOmniGraph extends OmniGraph> {
     logger?: Logger
     executeConfig: ConfigExecuteFlow<TOmniGraph>
     signAndSend: SignAndSendFlow
+    /**
+     * Custom message to display when no transactions are needed.
+     * Defaults to "The OApp is wired, no action is necessary"
+     */
+    noActionMessage?: string
 }
 
 export interface WireFlowArgs<TOmniGraph extends OmniGraph> {
@@ -25,6 +30,7 @@ export const createWireFlow =
         logger = createLogger(),
         executeConfig,
         signAndSend,
+        noActionMessage = 'The OApp is wired, no action is necessary',
     }: CreateWireFlowArgs<TOmniGraph>) =>
     async ({
         graph,
@@ -55,7 +61,7 @@ export const createWireFlow =
 
         // If there are no transactions that need to be executed, we'll just exit
         if (transactions.length === 0) {
-            logger.info(`The OApp is wired, no action is necessary`)
+            logger.info(noActionMessage)
 
             return [[], [], []]
         }
