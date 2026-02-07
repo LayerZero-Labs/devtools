@@ -7,7 +7,7 @@ import { deploymentFile } from '../shared/types'
 import path from 'path'
 import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 import { DeployTaskContext } from '../../sdk/baseTaskHelper'
-import { getAptosCLICommand, getInitiaRPCUrl } from './utils/config'
+import { getAptosCLICommand, checkInitiaCLIVersion, getInitiaRPCUrl } from './utils/config'
 let stdOut = ''
 let stdErr = ''
 
@@ -36,6 +36,7 @@ async function deployMovementContracts(
             `--named-addresses=${namedAddresses}`,
         ]
     } else if (chainName === 'initia') {
+        await checkInitiaCLIVersion()
         const userAccountName = getInitiaKeyName()
 
         cmd = 'initiad'

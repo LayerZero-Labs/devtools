@@ -384,6 +384,38 @@ export function isVersionLessThanOrEqualTo(installed: string, required: string):
 //////////////////////////////////// Initia Specific Helpers //////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+async function getInitiaVersion(): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const childProcess = spawn('initiad', ['version'])
+        let stdout = ''
+
+        childProcess.stdout?.on('data', (data) => {
+            stdout += data.toString()
+        })
+
+        childProcess.on('close', (code) => {
+            if (code === 0) {
+                const versionMatch = stdout.match(/v(\d+\.\d+\.\d+)/)
+                versionMatch ? resolve(versionMatch[1]) : reject(new Error(`Could not parse version`))
+            } else {
+                reject(new Error(`initiad version exited with code ${code}`))
+            }
+        })
+
+        childProcess.on('error', reject)
+    })
+}
+
+export async function checkInitiaCLIVersion(): Promise<void> {
+    const version = await getInitiaVersion()
+
+    if (isVersionGreaterOrEqualTo(version, '1.3.1')) {
+        console.log(`🚀 Initia CLI version ${version} is compatible.`)
+    } else {
+        throw new Error(`❌ Initia CLI version ${version} is not supported. Required: >= 1.3.1`)
+    }
+}
+
 export function getInitiaRPCUrl() {
     if (!process.env.INITIA_RPC_URL) {
         throw new Error('INITIA_RPC_URL is not set.\n\nPlease set the INITIA_RPC_URL environment variable.')
