@@ -53,7 +53,7 @@ contract HyperLiquidComposer is HyperLiquidCore, ReentrancyGuard, IHyperLiquidCo
     /**
      * @param _oft The OFT contract address associated with this composer
      * @param _coreIndexId The core index id of the HyperLiquid L1 contract
-     * @param _assetDecimalDiff The difference in decimals between the HyperEVM OFT deployment and HyperLiquid L1 HIP-1 listing
+     * @param _assetDecimalDiff The decimal difference: ERC20.decimals() - HIP1.weiDecimals() (must be in [-2, 18])
      */
     constructor(address _oft, uint64 _coreIndexId, int8 _assetDecimalDiff) {
         if (_oft == address(0)) revert InvalidOFTAddress();

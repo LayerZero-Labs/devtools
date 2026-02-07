@@ -17,8 +17,7 @@ contract MyHyperLiquidComposer is HyperLiquidComposer {
     ///
     /// @param _oft The address of the OFT
     /// @param _hlIndexId The HyperLiquid core spot's index value
-    /// @param _assetDecimalDiff The difference in decimals between the HyperEVM's ERC20 and the HyperLiquid HIP-1 token
-    ///                 (i.e. 18 decimals on evm and 6 on HyperLiquid would be 18 - 6 = 12)
+    /// @param _assetDecimalDiff The decimal difference: ERC20.decimals() - HIP1.weiDecimals() (must be in [-2, 18])
     constructor(
         address _oft,
         uint64 _hlIndexId,
