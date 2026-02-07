@@ -3,7 +3,7 @@ import { spawn } from 'child_process'
 import fs from 'fs'
 import path from 'path'
 import { DeployTaskContext } from '../../sdk/baseTaskHelper'
-import { getAptosCLICommand } from './utils/config'
+import { getAptosCLICommand, checkInitiaCLIVersion } from './utils/config'
 
 let stdErr = ''
 
@@ -70,6 +70,7 @@ async function getCLICmd(chain: string, stage: string) {
     if (chain === 'aptos' || chain === 'movement') {
         return await getAptosCLICommand(chain, stage)
     } else if (chain === 'initia') {
+        await checkInitiaCLIVersion()
         return 'initiad'
     } else {
         throw new Error(`Chain ${chain}-${stage} not supported for build.`)
