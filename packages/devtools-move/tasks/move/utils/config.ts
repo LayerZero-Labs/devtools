@@ -482,7 +482,7 @@ export async function getInitiaSequenceNumber(
             if (code === 0) {
                 const accountInfo = JSON.parse(stdout)
                 // NOTE: Sequence offset follows Initia object deployment behavior (per PR 1783).
-                resolve(BigInt(accountInfo.info.sequence) + BigInt(2))
+                resolve(BigInt(accountInfo.info.sequence ?? 0) + BigInt(2))
             } else {
                 reject(new Error(`initiad query auth account-info exited with code ${code}`))
             }
