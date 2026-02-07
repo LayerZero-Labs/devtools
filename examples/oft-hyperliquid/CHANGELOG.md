@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 1.0.12
+
+### Patch Changes
+
+- 91727cf: docs update and natspec
+
 ## 1.0.11
 
 ### Patch Changes
