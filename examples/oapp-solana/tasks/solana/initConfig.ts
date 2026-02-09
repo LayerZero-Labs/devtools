@@ -24,9 +24,11 @@ interface Args {
 // This task will use the `initOFTAccounts` configurator that initializes the Solana accounts
 const initConfigTask = wireLikeTask('lz:oapp:solana:init-config') as ConfigurableTaskDefinition
 
-// TODO: currently the message for 'already done' state is "OApp is already wired." which is misleading -> should be changed to "Pathway Config already initialized"
-initConfigTask
-    .setDescription('Initialize OApp accounts for Solana')
-    .setAction(async (args: Args, hre) =>
-        hre.run(TASK_LZ_OAPP_WIRE, { ...args, internalConfigurator: initOAppAccounts, isSolanaInitConfig: true })
-    )
+initConfigTask.setDescription('Initialize OApp accounts for Solana').setAction(async (args: Args, hre) =>
+    hre.run(TASK_LZ_OAPP_WIRE, {
+        ...args,
+        internalConfigurator: initOAppAccounts,
+        isSolanaInitConfig: true,
+        noActionMessage: 'Pathway config already initialized',
+    })
+)
