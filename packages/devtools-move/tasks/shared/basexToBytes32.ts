@@ -18,6 +18,10 @@ const BASE58_ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvw
  * basexToBytes32('1234abcd') // Raw hex without 0x (padded to 32 bytes)
  */
 export function basexToBytes32(address: string): string {
+    if (address.trim().length === 0) {
+        return '0x' + '00'.repeat(32)
+    }
+
     const bytes = detectAndDecodeAddress(address)
     const paddedBytes = ethers.utils.zeroPad(bytes, 32)
     return `0x${Buffer.from(paddedBytes).toString('hex')}`

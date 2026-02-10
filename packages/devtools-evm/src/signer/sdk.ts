@@ -138,11 +138,11 @@ export class GnosisOmniSignerEVM<
 
         const safeSdk = await this.safeSdkPromise
         const safeAddress = await safeSdk.getAddress()
-        const nonce = parseInt(await this.apiKit.getNextNonce(safeAddress), 10)
+        const nonce = await this.apiKit.getNextNonce(safeAddress)
 
         return safeSdk.createTransaction({
             safeTransactionData: transactions.map((transaction) => this.#serializeTransaction(transaction)),
-            options: { nonce },
+            options: { nonce: parseInt(nonce) },
             onlyCalls: true,
         })
     }

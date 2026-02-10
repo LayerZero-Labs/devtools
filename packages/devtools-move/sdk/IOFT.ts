@@ -35,7 +35,8 @@ export interface IOFT {
 
     initializeAdapterFAPayload(
         tokenMetadataAddress: string,
-        sharedDecimals: number
+        sharedDecimals: number,
+        localDecimals?: number
     ): TypedInputGenerateTransactionPayloadData
 
     createSetRateLimitTx(

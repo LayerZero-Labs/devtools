@@ -50,6 +50,13 @@ class EVMSendOperation implements INewOperation {
                 required: false,
             },
         },
+        {
+            name: '--native-token',
+            arg: {
+                help: 'The request is trying to send native token (true/false)',
+                required: false,
+            },
+        },
     ]
 
     async impl(args: any): Promise<void> {
@@ -66,6 +73,7 @@ async function sendOFT(args: any): Promise<MessagingFee> {
     const to = ethers.utils.hexZeroPad(args.to, 32)
     const amount = args.amount
     const minAmount = args.min_amount
+    const sendingNativeToken = args.native_token && args.native_token === 'true' ? true : false
 
     const privateKey = readPrivateKey(args)
     const omniContracts = await createEvmOmniContracts(args, privateKey)
@@ -101,8 +109,11 @@ async function sendOFT(args: any): Promise<MessagingFee> {
     console.log('\t🏦 Native fee:', fee.nativeFee.toString())
     console.log('\t🪙 LZ token fee:', fee.lzTokenFee.toString())
 
+    const value = sendingNativeToken ? BigInt(fee.nativeFee) + BigInt(amount) : BigInt(fee.nativeFee)
+    console.log('\n💸 Sending message with total value:', value)
+
     const tx = await oft.send(sendParam, fee, refundAddress, {
-        value: fee.nativeFee,
+        value: value,
     })
 
     console.log('\n📨 Transaction sent:')
