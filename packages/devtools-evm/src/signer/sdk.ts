@@ -81,7 +81,7 @@ export class GnosisOmniSignerEVM<
             ethers,
             signerOrProvider: signer,
         }),
-        protected readonly apiKit = new SafeApiKit({ txServiceUrl: safeUrl, ethAdapter }),
+        protected readonly apiKit = new SafeApiKit({ txServiceUrl: safeUrl, apiKey: safeConfig.safeApiKey, chainId }),
         protected readonly safeSdkPromise: Safe | Promise<Safe> = Safe.create({
             ethAdapter,
             safeAddress: safeConfig.safeAddress!,
@@ -142,7 +142,7 @@ export class GnosisOmniSignerEVM<
 
         return safeSdk.createTransaction({
             safeTransactionData: transactions.map((transaction) => this.#serializeTransaction(transaction)),
-            options: { nonce },
+            options: { nonce: parseInt(nonce) },
             onlyCalls: true,
         })
     }
