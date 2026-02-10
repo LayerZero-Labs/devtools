@@ -44,9 +44,11 @@ describe('basexToBytes32 - Address Format Detection and Conversion', () => {
             expect(() => basexToBytes32(address)).to.throw(`Unsupported address format: ${address}`)
         })
 
-        it('should handle empty string', () => {
+        it('should map empty string to zero bytes32', () => {
             const address = ''
-            expect(() => basexToBytes32(address)).to.throw('Empty address provided')
+            expect(basexToBytes32(address)).to.equal(
+                '0x0000000000000000000000000000000000000000000000000000000000000000'
+            )
         })
     })
 })
