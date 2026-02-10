@@ -11,6 +11,7 @@ import {
     WrappedInstruction,
     createNoopSigner,
     publicKeyBytes,
+    some,
 } from '@metaplex-foundation/umi'
 import {
     fromWeb3JsInstruction,
@@ -34,6 +35,7 @@ import { Options, PacketSerializer, PacketV1Codec } from '@layerzerolabs/lz-v2-u
 import { OftPDA, oft } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { DST_EID, DVN_SIGNERS, OFT_DECIMALS, SRC_EID, dvns, endpoint, executor, uln } from './constants'
+import { callSurfnetRpc } from './index.test'
 import { OftKeys, PacketSentEvent, TestContext } from './types'
 
 async function signWithECDSA(
@@ -167,7 +169,7 @@ export async function verifyByDvn(context: TestContext, packetSentEvent: PacketS
                     umi.payer,
                     {
                         vid: DST_EID % 30000,
-                        instruction: uln.verify(createNoopSigner(requiredDVN), { packetBytes, confirmations: 10 })
+                        instruction: uln.verify(createNoopSigner(requiredDVN), { packetBytes, confirmations: 1 })
                             .instruction,
                         expiration,
                     },
@@ -185,6 +187,38 @@ export async function verifyByDvn(context: TestContext, packetSentEvent: PacketS
     }
 }
 
+async function ensureConfirmationsReady(context: TestContext, packetBytes: Uint8Array): Promise<void> {
+    const packet = PacketV1Codec.fromBytes(packetBytes)
+    const payloadHashBytes = Uint8Array.from(Buffer.from(packet.payloadHash().slice(2), 'hex'))
+    const headerHashBytes = Uint8Array.from(Buffer.from(packet.headerHash().slice(2), 'hex'))
+    const serializer = UMI.UlnProgram.accounts.getConfirmationsAccountDataSerializer()
+    const receiverBytes = Buffer.from(packet.receiver().slice(2), 'hex')
+    const receiver = fromWeb3JsPublicKey(new web3.PublicKey(receiverBytes))
+    const receiveConfigState = await uln.getFinalReceiveConfigState(context.umi.rpc, receiver, packet.srcEid())
+    const dvnConfigs = receiveConfigState.requiredDvns.concat(receiveConfigState.optionalDvns)
+
+    for (const dvnConfig of dvnConfigs) {
+        const [confirmationsPda] = uln.pda.confirmations(headerHashBytes, payloadHashBytes, dvnConfig)
+        const accountInfo = await context.connection.getAccountInfo(toWeb3JsPublicKey(confirmationsPda))
+        if (!accountInfo) {
+            continue
+        }
+        const [state] = serializer.deserialize(accountInfo.data)
+        const data = Buffer.from(serializer.serialize({ ...state, value: some(1000n) }))
+        const safeLamports = await context.connection.getMinimumBalanceForRentExemption(data.length)
+        await callSurfnetRpc('surfnet_setAccount', [
+            confirmationsPda.toString(),
+            {
+                data: data.toString('hex'),
+                executable: accountInfo.executable,
+                lamports: safeLamports,
+                owner: accountInfo.owner.toBase58(),
+                rentEpoch: 0,
+            },
+        ])
+    }
+}
+
 export async function commitVerification(
     context: TestContext,
     sender: Uint8Array,
@@ -195,6 +229,8 @@ export async function commitVerification(
     const deserializedPacket = PacketV1Codec.fromBytes(packetSentEvent.encodedPacket)
     const { umi } = context
     const expiration = BigInt(Math.floor(new Date().getTime() / 1000 + 120))
+
+    await ensureConfirmationsReady(context, packetBytes)
 
     await new TransactionBuilder([
         endpoint.initVerify(umi.payer, {
