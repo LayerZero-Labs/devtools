@@ -78,14 +78,21 @@ export function parseDecimalToUnits(amount: string, decimals: number): bigint {
  */
 export function silenceSolana429(connection: Connection): void {
     const origWrite = process.stderr.write.bind(process.stderr)
-    process.stderr.write = ((chunk: any, ...args: any[]) => {
-        const str = Buffer.isBuffer(chunk) ? chunk.toString('utf8') : chunk
+    process.stderr.write = ((
+        chunk: string | Uint8Array,
+        encoding?: BufferEncoding | ((err?: Error) => void),
+        cb?: (err?: Error) => void
+    ) => {
+        const str = typeof chunk === 'string' ? chunk : Buffer.from(chunk).toString('utf8')
         if (typeof str === 'string' && str.includes('429 Too Many Requests')) {
             // swallow it
             return true
         }
         // otherwise pass through
-        return origWrite(chunk, ...args)
+        if (typeof encoding === 'function') {
+            return origWrite(chunk, encoding)
+        }
+        return origWrite(chunk, encoding, cb)
     }) as typeof process.stderr.write
 }
 
