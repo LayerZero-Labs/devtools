@@ -417,6 +417,12 @@ export const networks: Record<string, NetworkDefinition> = {
         aliases: ['stable-mainnet'],
     },
 
+    'stable-testnet': {
+        chainId: 2201,
+        apiUrl: ETHERSCAN_V2_URL,
+        aliases: ['stable-testnet'],
+    },
+
     // Swellchain
     swellchain: {
         chainId: 1923,
@@ -483,6 +489,12 @@ export const networks: Record<string, NetworkDefinition> = {
 
     // Non-Etherscan Networks (custom explorers)
     // chainId is not used for these networks
+
+    // Codex
+    codex: {
+        chainId: 81224,
+        apiUrl: 'https://explorer.codex.xyz/',
+    },
 
     // Astar
     astar: {
@@ -601,6 +613,13 @@ export const networks: Record<string, NetworkDefinition> = {
         chainId: 0,
         apiUrl: 'https://mainnet.explorer.rarichain.org/api',
         aliases: ['rarible-mainnet'],
+    },
+
+    // Redbelly
+    redbelly: {
+        chainId: 151,
+        apiUrl: 'https://api.routescan.io/v2/network/mainnet/evm/151/etherscan',
+        aliases: ['redbelly-mainnet'],
     },
 
     // X Chain

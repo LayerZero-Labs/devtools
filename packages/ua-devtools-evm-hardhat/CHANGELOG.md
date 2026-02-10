@@ -1,5 +1,13 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 9.0.2
+
+### Patch Changes
+
+- 8f83784: solana transaction data display as base58
+- Updated dependencies [8f83784]
+  - @layerzerolabs/devtools@2.0.5
+
 ## 9.0.1
 
 ### Patch Changes

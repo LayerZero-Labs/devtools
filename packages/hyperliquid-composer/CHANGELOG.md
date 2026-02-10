@@ -1,5 +1,17 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 2.0.7
+
+### Patch Changes
+
+- 91727cf: docs update and natspec
+
+## 2.0.6
+
+### Patch Changes
+
+- e18564f: improved cli and docs on expansion spot market pairs
+
 ## 2.0.5
 
 ### Patch Changes

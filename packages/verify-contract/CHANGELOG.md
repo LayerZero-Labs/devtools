@@ -1,5 +1,17 @@
 # @layerzerolabs/verify-contract
 
+## 1.5.1
+
+### Patch Changes
+
+- 78f8ad7: feat: verify-contract/config: adding redbelly config for verify-contract
+
+## 1.5.0
+
+### Minor Changes
+
+- c1adc9c: Verify contract checks deployment ABI first, but fall back to source-based extraction if there's a mismatch
+
 ## 1.4.0
 
 ### Minor Changes

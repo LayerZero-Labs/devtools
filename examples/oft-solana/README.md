@@ -58,7 +58,7 @@
 Create your local copy of this example:
 
 ```bash
-LZ_ENABLE_SOLANA_OFT_EXAMPLE=1 pnpm dlx create-lz-oapp@latest
+pnpm dlx create-lz-oapp@latest
 ```
 
 Specify the directory, select `OFT (Solana)` and proceed with the installation.

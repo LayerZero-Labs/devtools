@@ -87,7 +87,7 @@ const deploy: DeployFunction = async (hre) => {
             {
                 type: 'confirm',
                 name: 'continueAnyway',
-                message: 'Do you want to continue with FeeAbstraction anyway?',
+                message: 'Do you want to continue with PreFundedFeeAbstraction anyway?',
                 default: false,
             },
         ])
@@ -136,7 +136,7 @@ const deploy: DeployFunction = async (hre) => {
         console.log(`Deplying a contract uses big block which is mined at a transaction per minute.`)
     }
 
-    // Deploy the OFT composer with FeeAbstraction extension
+    // Deploy the OFT composer with PreFundedFeeAbstraction extension
     const { address: address_composer } = await deploy(contractName_composer, {
         from: deployer,
         args: [
@@ -152,7 +152,7 @@ const deploy: DeployFunction = async (hre) => {
     })
 
     console.log(
-        `Deployed HyperliquidComposer with FeeAbstraction: ${contractName_composer}, network: ${hre.network.name}, address: ${address_composer}`
+        `Deployed HyperliquidComposer with PreFundedFeeAbstraction: ${contractName_composer}, network: ${hre.network.name}, address: ${address_composer}`
     )
     console.log(`  - Spot ID: ${spotId}`)
     console.log(

@@ -2,9 +2,9 @@ use crate::*;
 
 #[account]
 pub struct Store {
-    pub admin: Pubkey, // This is required and should be consistent.
-    pub bump: u8, // This is required and should be consistent.
-    pub endpoint_program: Pubkey, // This is required and should be consistent.
+    pub admin: Pubkey,
+    pub bump: u8, // the bump of the store PDA
+    pub endpoint_program: Pubkey,
     pub string: String, // This is specific to this string-passing example.
     // You can add more fields as needed for your OApp implementation.
 }
@@ -17,7 +17,9 @@ impl Store {
 // The LzReceiveTypesAccounts PDA is used by the Executor as a prerequisite to calling `lz_receive`.
 #[account]
 pub struct LzReceiveTypesAccounts {
-    pub store: Pubkey, // This is required and should be consistent.
+    pub store: Pubkey, // Note: This is used as your OApp address.
+    pub alt: Pubkey, // Note: in this example, we store a single ALT. You can modify this to store a Vec of Pubkeys too.
+    pub bump: u8, // the bump of the lz_receive_types_accounts PDA
 }
 
 impl LzReceiveTypesAccounts {

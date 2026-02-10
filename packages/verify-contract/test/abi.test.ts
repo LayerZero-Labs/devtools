@@ -1,17 +1,17 @@
-import { encodeContructorArguments } from '@/common/abi'
+import { encodeConstructorArguments } from '@/common/abi'
 
 describe('abi', () => {
-    describe('encodeContructorArguments', () => {
+    describe('encodeConstructorArguments', () => {
         it('should return undefined if args are nullish', () => {
-            expect(encodeContructorArguments([], undefined)).toBeUndefined()
+            expect(encodeConstructorArguments([], undefined)).toBeUndefined()
         })
 
         it('should return undefined if args are empty', () => {
-            expect(encodeContructorArguments([], [])).toBeUndefined()
+            expect(encodeConstructorArguments([], [])).toBeUndefined()
         })
 
         it('should throw an error if there is no constructor fragment', () => {
-            expect(() => encodeContructorArguments([{}], [1])).toThrow('invalid fragment object')
+            expect(() => encodeConstructorArguments([{}], [1])).toThrow('invalid fragment object')
         })
 
         it.each([
@@ -50,7 +50,7 @@ describe('abi', () => {
                 ],
             ],
         ])('should return %s for arguments %j and ABI %j', (encoded, args, abi) => {
-            expect(encodeContructorArguments(abi, args)).toBe(encoded)
+            expect(encodeConstructorArguments(abi, args)).toBe(encoded)
         })
     })
 })

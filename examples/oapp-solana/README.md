@@ -299,6 +299,26 @@ npx hardhat --network arbitrum-sepolia lz:oapp:send --from-eid 40231 --dst-eid 4
 
 Congratulations, you have now successfully set up an EVM <> Solana OApp.
 
+### Viewing Sent Strings
+
+After sending cross-chain messages you can inspect the stored string on either side directly from the terminal:
+
+- Solana store account:
+
+  ```bash
+  npx hardhat lz:oapp:solana:debug --eid 40168 --action store
+  ```
+
+  Use the Solana endpoint ID that matches your environment (e.g., `40168` for Devnet, `30168` for Mainnet) and optionally pass `--store <STORE_PUBKEY>` if you need to override the derived PDA.
+
+- EVM contract storage:
+
+  ```bash
+  npx hardhat lz:oapp:evm:debug --network arbitrum-sepolia --contract-name MyOApp
+  ```
+
+  Switch `--network` to the EVM chain you deployed to and supply a different `--contract-name` if your deployment artifact uses another name. The task performs a read-only call to the `data()` getter and prints the latest received message.
+
 ### Running tests
 
 The `test` command will execute the hardhat and forge tests:

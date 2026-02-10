@@ -8,7 +8,8 @@
 
 export * from './initStore'
 export * from './lzReceive'
-export * from './lzReceiveTypes'
+export * from './lzReceiveTypesInfo'
+export * from './lzReceiveTypesV2'
 export * from './quoteSend'
 export * from './send'
 export * from './setPeerConfig'
