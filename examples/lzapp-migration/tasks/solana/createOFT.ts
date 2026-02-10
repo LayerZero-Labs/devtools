@@ -231,9 +231,11 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             const maxSupplyRaw = localDecimalsToMaxWholeTokens(decimals)
             const { full, compact } = formatTokenAmount(maxSupplyRaw)
             const maxSupplyStatement = `You have chosen ${decimals} local decimals. The maximum supply of your Solana OFT token will be ${full} (~${compact}).\n`
-            const confirmMaxSupply = await promptToContinue(maxSupplyStatement)
-            if (!confirmMaxSupply) {
-                return
+            if (!ci) {
+                const confirmMaxSupply = await promptToContinue(maxSupplyStatement)
+                if (!confirmMaxSupply) {
+                    return
+                }
             }
 
             let mintAuthorityPublicKey: PublicKey = toWeb3JsPublicKey(oftStorePda) // we default to the OFT Store as the Mint Authority when there are no additional minters
@@ -262,11 +264,13 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             let freezeAuthority: PublicKey | null = null
             if (freezeAuthorityStr && onlyOftStore) {
                 freezeAuthority = new PublicKey(freezeAuthorityStr) // will error if invalid
-                const continueFreezeAuthority = await promptToContinue(
-                    `Freeze Authority will be set to ${freezeAuthority.toBase58()}. Continue?`
-                )
-                if (!continueFreezeAuthority) {
-                    return
+                if (!ci) {
+                    const continueFreezeAuthority = await promptToContinue(
+                        `Freeze Authority will be set to ${freezeAuthority.toBase58()}. Continue?`
+                    )
+                    if (!continueFreezeAuthority) {
+                        return
+                    }
                 }
             } else {
                 // onlyOftStore mode: if freezeAuthority is not provided, we set it to null
