@@ -13,11 +13,12 @@ import {
     createUpdateFieldInstruction,
     getTokenMetadata,
 } from '@solana/spl-token'
-import { Keypair, PublicKey, SystemProgram, TransactionMessage, VersionedTransaction } from '@solana/web3.js'
+import { PublicKey, SystemProgram, TransactionMessage, VersionedTransaction } from '@solana/web3.js'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
 
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
+import { getSolanaKeypair } from '@layerzerolabs/devtools-solana'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 import { deriveConnection, getExplorerTxLink } from './index'
@@ -203,13 +204,7 @@ async function updateTokenExtensionsMetadata({
 }) {
     const { connection } = await deriveConnection(eid)
 
-    // Get the keypair from environment
-    const privateKeyStr = process.env.SOLANA_PRIVATE_KEY
-    if (!privateKeyStr && !vaultPda) {
-        throw new Error('SOLANA_PRIVATE_KEY environment variable is required for non-multisig transactions')
-    }
-
-    const keypair = privateKeyStr ? Keypair.fromSecretKey(bs58.decode(privateKeyStr)) : undefined
+    const keypair = vaultPda ? undefined : await getSolanaKeypair()
     const mintPubkey = new PublicKey(mintStr)
     const expectedAuthority = vaultPda ? new PublicKey(vaultPda) : keypair!.publicKey
 
