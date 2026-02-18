@@ -3,13 +3,13 @@ pragma solidity ^0.8.22;
 
 import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
 
-import { MessagingFee, MessagingReceipt, OFTReceipt } from "../contracts/OFTCore.sol";
-import { IOFT, SendParam, OFTLimit } from "../contracts/interfaces/IOFT.sol";
+import { MessagingFee, MessagingReceipt, OFTReceipt, OFTAltCore } from "../contracts/OFTAltCore.sol";
+import { IOFT, SendParam, OFTLimit } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
 import { TIP20TokenMock } from "./mocks/TIP20TokenMock.sol";
 import { TIP20OFTMock } from "./mocks/TIP20OFTMock.sol";
-import { ERC20Mock } from "./mocks/ERC20Mock.sol";
+import { ERC20Mock } from "@layerzerolabs/oft-evm/test/mocks/ERC20Mock.sol";
 
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 
@@ -39,7 +39,6 @@ contract TIP20OFTTest is TestHelperOz5 {
         _deal();
         super.setUp();
 
-        // EndpointV2Alt requires a native token per endpoint
         nativeTokenMock = new ERC20Mock("NativeFeeToken", "NAT");
         address[] memory nativeTokens = new address[](2);
         nativeTokens[0] = address(nativeTokenMock);
@@ -70,7 +69,6 @@ contract TIP20OFTTest is TestHelperOz5 {
         tokenA.mint(userA, initialBalance);
         tokenB.mint(userB, initialBalance);
 
-        // Native token for fees (user approves OFT to pay fee)
         nativeTokenMock.mint(userA, initialNativeBalance);
         nativeTokenMock.mint(userB, initialNativeBalance);
     }
@@ -121,7 +119,7 @@ contract TIP20OFTTest is TestHelperOz5 {
         assertEq(amountDebitedLD, amountToSendLD);
         assertEq(amountToCreditLD, amountToSendLD);
         assertEq(tokenA.balanceOf(userA), initialBalance - amountToSendLD);
-        assertEq(tokenA.balanceOf(address(oftA)), 0); // OFT burns after receiving
+        assertEq(tokenA.balanceOf(address(oftA)), 0);
     }
 
     function test_tip20_debit_revertsWithoutApproval() public {
@@ -205,7 +203,6 @@ contract TIP20OFTTest is TestHelperOz5 {
         assertEq(tokenA.balanceOf(userA), initialBalance - oftReceipt.amountSentLD);
         assertEq(msgReceipt.fee.nativeFee, fee.nativeFee);
 
-        // Deliver the packet to oftB (calls lzReceive and credits userB)
         verifyPackets(B_EID, addressToBytes32(address(oftB)));
 
         assertEq(tokenB.balanceOf(userB), initialBalance + oftReceipt.amountReceivedLD);
@@ -229,7 +226,7 @@ contract TIP20OFTTest is TestHelperOz5 {
         SendParam memory sendParam = SendParam(B_EID, addressToBytes32(userB), 1 ether, 1 ether, "", "", "");
         (OFTLimit memory oftLimit, , OFTReceipt memory oftReceipt) = oftA.quoteOFT(sendParam);
         assertEq(oftLimit.minAmountLD, 0);
-        assertEq(oftLimit.maxAmountLD, tokenA.totalSupply());
+        assertEq(oftLimit.maxAmountLD, type(uint64).max);
         assertEq(oftReceipt.amountSentLD, 1 ether);
         assertEq(oftReceipt.amountReceivedLD, 1 ether);
     }
