@@ -275,5 +275,52 @@ This package comes with several `hardhat` tasks to speed up your workflow. In or
 Wires the individual `OApp` contracts together, calling `setPeer`.
 
 ```bash
-pnpm hardhat lz:oapp:wire
+pnpm hardhat lz:oapp:wire --oapp-config layerzero.config.ts
 ```
+
+### Full Task Reference
+
+This package provides the following Hardhat tasks:
+
+#### Core Tasks
+
+| Task | Description |
+|------|-------------|
+| `lz:deploy` | Deploy contracts to all configured networks |
+| `lz:healthcheck:validate-rpcs` | Validate RPC endpoint connectivity |
+| `lz:export:deployments:typescript` | Export deployments as TypeScript |
+
+#### OApp Configuration Tasks
+
+| Task | Description |
+|------|-------------|
+| `lz:oapp:wire` | Wire OApp pathways (setPeer, setConfig, setEnforcedOptions) |
+| `lz:oapp:config:get` | Get current on-chain configuration |
+| `lz:oapp:config:get:default` | Get LayerZero default configuration |
+| `lz:oapp:config:get:executor` | Get executor configuration |
+| `lz:oapp:config:init` | Initialize a new layerzero.config.ts |
+| `lz:oapp:peers:get` | Get peer relationships |
+| `lz:oapp:enforced:opts:get` | Get enforced options |
+
+#### OApp Read Tasks
+
+| Task | Description |
+|------|-------------|
+| `lz:read:wire` | Wire OApp Read channels |
+| `lz:read:config:get` | Get OApp Read configuration |
+| `lz:read:config:get:channel` | Get read channel configuration |
+
+#### Utility Tasks
+
+| Task | Description |
+|------|-------------|
+| `lz:errors:decode` | Decode LayerZero error messages |
+| `lz:errors:list` | List all known LayerZero errors |
+| `lz:ownable:transfer:ownership` | Transfer contract ownership |
+
+## Related Documentation
+
+- [WORKFLOW.md](../../WORKFLOW.md) - Complete deployment workflow
+- [DEBUGGING.md](../../DEBUGGING.md) - Troubleshooting guide
+- [CHEATSHEET.md](../../CHEATSHEET.md) - Quick reference
+- [Official Documentation](https://docs.layerzero.network/)
