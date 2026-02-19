@@ -38,6 +38,15 @@ import { BlockedUln302 } from '@/uln302/blockedSdk'
 const CONFIG_TYPE_EXECUTOR = 1
 const CONFIG_TYPE_ULN = 2
 const CONFIG_TYPE_READ_LIB_CONFIG = 1
+const CONFIG_BATCH_SIZE = 10
+
+const chunkArray = <T>(array: T[], size: number): T[][] => {
+    const chunks: T[][] = []
+    for (let i = 0; i < array.length; i += size) {
+        chunks.push(array.slice(i, i + size))
+    }
+    return chunks
+}
 
 /**
  * EVM-specific SDK for EndpointV2 contracts
@@ -283,14 +292,15 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     async setConfig(oapp: OmniAddress, uln: OmniAddress, setConfigParam: SetConfigParam[]): Promise<OmniTransaction[]> {
         this.logger.debug(`Setting config for OApp ${oapp} to ULN ${uln} with config ${printJson(setConfigParam)}`)
 
-        const data = this.contract.contract.interface.encodeFunctionData('setConfig', [oapp, uln, setConfigParam])
+        const chunks = chunkArray(setConfigParam, CONFIG_BATCH_SIZE)
 
-        return [
-            {
+        return chunks.map((chunk) => {
+            const data = this.contract.contract.interface.encodeFunctionData('setConfig', [oapp, uln, chunk])
+            return {
                 ...this.createTransaction(data),
-                description: `Setting config for ULN ${uln} to ${printJson(setConfigParam)}`,
-            },
-        ]
+                description: `Setting config for ULN ${uln} to ${printJson(chunk)}`,
+            }
+        })
     }
 
     async setUlnConfig(
