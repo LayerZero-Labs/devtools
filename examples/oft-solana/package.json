@@ -13,7 +13,7 @@
     "lint:js": "eslint '**/*.{js,ts,json}' && prettier --check .",
     "lint:sol": "solhint 'contracts/**/*.sol'",
     "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat",
-    "test:anchor": "anchor test",
+    "test:anchor": "OFT_ID=$(node scripts/resolve-oft-id.js) anchor build --no-idl && $npm_execpath exec ts-mocha -b -p ./tsconfig.json -t 10000000 test/anchor/index.test.ts",
     "test:forge": "forge test",
     "test:hardhat": "hardhat test",
     "test:scripts": "jest --config jest.config.ts --runInBand --testMatch \"**/*.script.test.ts\""
@@ -69,6 +69,7 @@
     "@metaplex-foundation/umi-eddsa-web3js": "^0.9.2",
     "@metaplex-foundation/umi-public-keys": "^0.8.9",
     "@metaplex-foundation/umi-web3js-adapters": "^0.9.2",
+    "@noble/secp256k1": "^1.7.1",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@nomiclabs/hardhat-waffle": "^2.0.6",
@@ -86,6 +87,7 @@
     "@types/jest": "^29.5.12",
     "@types/mocha": "^10.0.6",
     "@types/node": "~18.18.14",
+    "axios": "^1.6.2",
     "bs58": "^6.0.0",
     "chai": "^4.4.1",
     "concurrently": "~9.1.0",
@@ -105,6 +107,7 @@
     "prettier": "^3.2.5",
     "solhint": "^4.1.1",
     "solidity-bytes-utils": "^0.8.2",
+    "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.4"
   },
