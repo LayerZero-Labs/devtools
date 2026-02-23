@@ -1,6 +1,6 @@
 ---
 "@layerzerolabs/oft-adapter-initia-example": patch
-"@layerzerolabs/devtools-move": patch
+"@layerzerolabs/devtools-move": major
 "@layerzerolabs/oft-initia-example": patch
 ---
 
