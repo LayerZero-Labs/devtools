@@ -9,6 +9,7 @@ import {
     createConfigureMultiple,
     createConfigureNodes,
     createConfigureEdges,
+    areBytes32Equal,
 } from '@layerzerolabs/devtools'
 import type { OAppConfigurator, OAppEnforcedOption, OAppEnforcedOptionParam, OAppFactory } from './types'
 import { createModuleLogger, createWithAsyncLogger, printBoolean } from '@layerzerolabs/io-devtools'
@@ -137,9 +138,13 @@ export const configureSendLibraries: OAppConfigurator = withOAppLogger(
                     )
                 }
 
-                if (!isDefaultLibrary && currentSendLibrary?.toLowerCase() === config.sendLibrary.toLowerCase()) {
+                // Skip if the current library already matches the configured library
+                // This handles both cases:
+                // 1. Non-default library that matches config
+                // 2. Default library that matches config (avoids SAME_VALUE errors)
+                if (areBytes32Equal(currentSendLibrary, config.sendLibrary)) {
                     logger.verbose(
-                        `Current sendLibrary is not default library and is already set to ${config.sendLibrary} for ${formatOmniVector({ from, to })}, skipping`
+                        `Current sendLibrary is already set to ${config.sendLibrary} for ${formatOmniVector({ from, to })}${isDefaultLibrary ? ' (default)' : ''}, skipping`
                     )
                     return []
                 }
@@ -212,9 +217,13 @@ export const configureReceiveLibraries: OAppConfigurator = withOAppLogger(
                     )
                 }
 
-                if (!isDefaultLibrary && currentReceiveLibrary === config.receiveLibraryConfig.receiveLibrary) {
+                // Skip if the current library already matches the configured library
+                // This handles both cases:
+                // 1. Non-default library that matches config
+                // 2. Default library that matches config (avoids SAME_VALUE errors)
+                if (areBytes32Equal(currentReceiveLibrary, config.receiveLibraryConfig.receiveLibrary)) {
                     logger.verbose(
-                        `Current recieveLibrary is not default and is already set to ${config.receiveLibraryConfig.receiveLibrary} for ${formatOmniVector({ from, to })}, skipping`
+                        `Current recieveLibrary is already set to ${config.receiveLibraryConfig.receiveLibrary} for ${formatOmniVector({ from, to })}${isDefaultLibrary ? ' (default)' : ''}, skipping`
                     )
                     return []
                 }
