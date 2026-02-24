@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.22;
+
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+import { OFT } from "@layerzerolabs/oft-evm/contracts/OFT.sol";
+
+/// @notice Standard OFT for regular EVM chains (uses native gas for fees).
+/// @dev This contract is deployed on chains with standard EndpointV2 (not Alt).
+/// It connects to OFTAlt contracts on chains with Alt Endpoints.
+contract MyOFT is OFT {
+    constructor(
+        string memory _name,
+        string memory _symbol,
+        address _lzEndpoint,
+        address _delegate
+    ) OFT(_name, _symbol, _lzEndpoint, _delegate) Ownable(_delegate) {}
+}

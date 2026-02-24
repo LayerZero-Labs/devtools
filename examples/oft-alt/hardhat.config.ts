@@ -14,6 +14,7 @@ import { HardhatUserConfig, HttpNetworkAccountsUserConfig } from 'hardhat/types'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 import './type-extensions'
+import './tasks/index'
 
 // Set your preferred authentication method
 //
@@ -54,16 +55,24 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
+        // ========== STANDARD EVM CHAINS ==========
+        // These chains use standard EndpointV2 with native gas fee payment.
+        // Deploy MyOFT (standard OFT) on these chains.
         'arbitrum-sepolia': {
             eid: EndpointId.ARBSEP_V2_TESTNET,
             url: process.env.RPC_URL_ARB_SEPOLIA || 'https://arbitrum-sepolia.gateway.tenderly.co',
             accounts,
         },
-        'base-sepolia': {
-            eid: EndpointId.BASESEP_V2_TESTNET,
-            url: process.env.RPC_URL_BASE_SEPOLIA || 'https://base-sepolia.gateway.tenderly.co',
+
+        // ========== ALT ENDPOINT CHAINS ==========
+        // Chains with Alt Endpoints use ERC-20 tokens for fee payment instead of native gas.
+        // Deploy MyOFTAlt on these chains.
+        'tempo-testnet': {
+            eid: EndpointId.TEMPO_V2_TESTNET,
+            url: process.env.RPC_URL_TEMPO_TESTNET || 'https://rpc.testnet.tempo.xyz',
             accounts,
         },
+
         hardhat: {
             // Need this for testing because TestHelperOz5.sol is exceeding the compiled contract size limit
             allowUnlimitedContractSize: true,
