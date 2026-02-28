@@ -95,6 +95,7 @@ const config: OAppOmniGraphHardhat = {
                 // Optional Receive Configuration
                 // @dev Controls how the `from` chain receives messages from the `to` chain.
                 receiveConfig: {
+                    executorConfig: '0x718B92b5CB0a5552039B593faF724D182A881eDA',
                     ulnConfig: {
                         // The number of block confirmations to expect from the `to` chain.
                         confirmations: BigInt(15),
