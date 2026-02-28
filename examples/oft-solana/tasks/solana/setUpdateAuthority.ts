@@ -15,6 +15,7 @@ interface Args {
     newUpdateAuthority?: string
     renounceUpdateAuthority?: boolean
     eid: EndpointId
+    ci: boolean
 }
 
 // sets the update authority via Metaplex
@@ -27,8 +28,15 @@ task('lz:oft:solana:set-update-authority', 'Updates the metaplex update authorit
     .addParam('mint', 'The Token mint public key', undefined, devtoolsTypes.string)
     .addOptionalParam('newUpdateAuthority', 'The new update authority', undefined, devtoolsTypes.string)
     .addOptionalParam('renounceUpdateAuthority', 'Renounce update authority', false, devtoolsTypes.boolean)
+    .addFlag('ci', 'Continue without confirmation')
     .setAction(
-        async ({ eid, mint: mintStr, newUpdateAuthority: newUpdateAuthorityStr, renounceUpdateAuthority }: Args) => {
+        async ({
+            eid,
+            mint: mintStr,
+            newUpdateAuthority: newUpdateAuthorityStr,
+            renounceUpdateAuthority,
+            ci,
+        }: Args) => {
             // if not renouncing, must provide new update authority
             if (!renounceUpdateAuthority && !newUpdateAuthorityStr) {
                 throw new Error(
@@ -73,7 +81,7 @@ task('lz:oft:solana:set-update-authority', 'Updates the metaplex update authorit
             console.log(`\nCurrent update authority: ${initialMetadata.updateAuthority}\n`)
             console.log(`\nNew update authority: ${updateAuthority.toString()}\n`)
 
-            if (renounceUpdateAuthority) {
+            if (renounceUpdateAuthority && !ci) {
                 const doContinue = await promptToContinue(
                     'You have chosen `--renounce-update-authority true`. This means that the Update Authority will be immediately renounced. This is irreversible.  Continue?'
                 )

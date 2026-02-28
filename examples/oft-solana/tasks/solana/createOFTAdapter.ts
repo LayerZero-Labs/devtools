@@ -42,6 +42,11 @@ interface CreateOFTAdapterTaskArgs {
     tokenProgram: string
 
     computeUnitPriceScaleFactor: number
+
+    /**
+     * Whether to continue without confirmation.
+     */
+    ci: boolean
 }
 
 // Define a Hardhat task for creating OFTAdapter on Solana
@@ -51,6 +56,7 @@ task('lz:oft-adapter:solana:create', 'Creates new OFT Adapter (OFT Store PDA)')
     .addParam('eid', 'Solana mainnet (30168) or testnet (40168)', undefined, devtoolsTypes.eid)
     .addParam('tokenProgram', 'The Token Program public key', TOKEN_PROGRAM_ID.toBase58(), devtoolsTypes.string, true)
     .addParam('computeUnitPriceScaleFactor', 'The compute unit price scale factor', 4, devtoolsTypes.float, true)
+    .addFlag('ci', 'Continue without confirmation')
     .setAction(
         async ({
             eid,
@@ -58,6 +64,7 @@ task('lz:oft-adapter:solana:create', 'Creates new OFT Adapter (OFT Store PDA)')
             programId: programIdStr,
             tokenProgram: tokenProgramStr,
             computeUnitPriceScaleFactor,
+            ci,
         }: CreateOFTAdapterTaskArgs) => {
             const { connection, umi, umiWalletKeyPair, umiWalletSigner } = await deriveConnection(eid)
             const { programId, lockBox, escrowPK, oftStorePda, eddsa } = deriveKeys(programIdStr)
@@ -71,9 +78,11 @@ task('lz:oft-adapter:solana:create', 'Creates new OFT Adapter (OFT Store PDA)')
             const maxSupplyRaw = localDecimalsToMaxWholeTokens(mintDecimals)
             const { full, compact } = formatTokenAmount(maxSupplyRaw)
             const maxSupplyStatement = `The underlying token has ${mintDecimals} local decimals. Its maximum supply is ${full} (~${compact}).\n`
-            const confirmMaxSupply = await promptToContinue(maxSupplyStatement)
-            if (!confirmMaxSupply) {
-                return
+            if (!ci) {
+                const confirmMaxSupply = await promptToContinue(maxSupplyStatement)
+                if (!confirmMaxSupply) {
+                    return
+                }
             }
 
             const mintAuthority = mintPDA.mintAuthority
