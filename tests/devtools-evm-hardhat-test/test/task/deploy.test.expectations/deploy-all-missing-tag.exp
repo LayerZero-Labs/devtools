@@ -40,10 +40,11 @@ send -- "\r"
 
 expect "Will deploy 3 networks: britney, tango, vengaboys"
 expect "Will use deploy scripts tagged with MeNoExist"
+expect "do not match any deploy scripts"
 expect "Do you want to continue?"
 send -- "\r"
 
 expect "Deploying..."
-expect "Your contracts are now deployed"
+expect "No contracts were deployed"
 
 expect eof

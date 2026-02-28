@@ -25,9 +25,11 @@ interface Args {
 // This task will use the `initOFTAccounts` configurator that initializes the Solana accounts
 const initConfigTask = wireLikeTask('lz:oft:solana:init-config') as ConfigurableTaskDefinition
 
-// This task will use the `initOFTAccounts` configurator that initializes the Solana accounts
-initConfigTask
-    .setDescription('Initialize OFT accounts for Solana')
-    .setAction(async (args: Args, hre) =>
-        hre.run(TASK_LZ_OAPP_WIRE, { ...args, isSolanaInitConfig: true, internalConfigurator: initOFTAccounts })
-    )
+initConfigTask.setDescription('Initialize OFT accounts for Solana').setAction(async (args: Args, hre) =>
+    hre.run(TASK_LZ_OAPP_WIRE, {
+        ...args,
+        isSolanaInitConfig: true,
+        internalConfigurator: initOFTAccounts,
+        noActionMessage: 'Pathway config already initialized',
+    })
+)
