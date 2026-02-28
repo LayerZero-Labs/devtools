@@ -352,6 +352,37 @@ Before deploying, ensure the following:
 - (recommended) you have profiled the gas usage of `lzReceive` on your destination chains
 <!-- TODO: mention https://docs.layerzero.network/v2/developers/evm/technical-reference/integration-checklist#set-security-and-executor-configurations after it has been updated to reference the CLI -->
 
+## Transfer Hook Example
+
+This example also includes a **Token-2022 Transfer Hook** program that demonstrates how to add custom transfer validation logic to your OFT.
+
+### What is a Transfer Hook?
+
+Token-2022's [Transfer Hook extension](https://spl.solana.com/token-2022/extensions#transfer-hook) allows you to execute custom validation logic on every token transfer. Use cases include:
+
+- **Compliance**: Enforce allowlist/blocklist for regulated tokens
+- **Transfer restrictions**: Time-locks, vesting schedules, daily limits
+- **Royalties**: Ensure royalty payments on NFT transfers
+
+### Getting Started with Transfer Hook
+
+The Transfer Hook program is located in [`programs/transfer-hook/`](./programs/transfer-hook/). See the [Transfer Hook README](./programs/transfer-hook/README.md) for:
+
+- Architecture overview and how it integrates with Token-2022
+- Step-by-step usage instructions
+- Example code for extending the hook with your own logic
+- Integration patterns with OFT
+
+### Building and Testing the Transfer Hook
+
+```bash
+# Build
+anchor build -p transfer-hook
+
+# Test
+pnpm run test:anchor
+```
+
 ## Appendix
 
 ### Running tests
