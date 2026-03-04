@@ -146,10 +146,10 @@ export function calculateGasAndValueShortfall(
     // There's no Typescript function for combining options, so we'll decode both enforcedOptions and extraOptions to get their values
     const enforcedOptionsValue = Options.fromOptions(enforcedOptions).decodeExecutorLzReceiveOption()?.value ?? 0n
     const extraOptionsGas = extraOptions
-        ? Options.fromOptions(extraOptions).decodeExecutorLzReceiveOption()?.gas ?? 0n
+        ? (Options.fromOptions(extraOptions).decodeExecutorLzReceiveOption()?.gas ?? 0n)
         : 0n
     const extraOptionsValue = extraOptions
-        ? Options.fromOptions(extraOptions).decodeExecutorLzReceiveOption()?.value ?? 0n
+        ? (Options.fromOptions(extraOptions).decodeExecutorLzReceiveOption()?.value ?? 0n)
         : 0n
     const totalOptionsValue = enforcedOptionsValue + extraOptionsValue
 
