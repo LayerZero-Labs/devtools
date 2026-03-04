@@ -212,6 +212,7 @@ async function startSurfnet(): Promise<ChildProcess> {
     const surfnetProcess = spawn('surfpool', [...args], {
         stdio: ['ignore', logFd, logFd],
     })
+    fs.closeSync(logFd)
 
     let surfnetReady = false
     for (let i = 0; i < 60; i++) {

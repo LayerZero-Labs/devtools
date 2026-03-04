@@ -10,13 +10,17 @@ export async function expectOftError<T extends ProgramError>(
     program: Program,
     customMessage?: string
 ): Promise<void> {
+    let caught: unknown
     try {
         await operation()
-        assert.fail(`Expected ${expectedErrorClass.name} to be thrown, but operation succeeded`)
     } catch (error: unknown) {
-        const errorMessage = customMessage || `Expected ${expectedErrorClass.name}`
-        assertOftError(error, expectedErrorClass, program, errorMessage)
+        caught = error
     }
+    if (caught === undefined) {
+        assert.fail(`Expected ${expectedErrorClass.name} to be thrown, but operation succeeded`)
+    }
+    const errorMessage = customMessage || `Expected ${expectedErrorClass.name}`
+    assertOftError(caught, expectedErrorClass, program, errorMessage)
 }
 
 export function assertOftError<T extends ProgramError>(
@@ -46,6 +50,7 @@ function isOftError<T extends ProgramError>(
 
     if (
         typeof error === 'object' &&
+        error !== null &&
         'message' in error &&
         typeof error.message === 'string' &&
         error.message.startsWith('Simulate Fail:')
@@ -56,7 +61,9 @@ function isOftError<T extends ProgramError>(
 
     if (
         typeof error !== 'object' ||
+        error === null ||
         !('transactionError' in error) ||
+        error.transactionError == null ||
         typeof error.transactionError !== 'object' ||
         !('logs' in error.transactionError)
     ) {
