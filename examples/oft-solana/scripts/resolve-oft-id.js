@@ -15,7 +15,11 @@ const fallbackId = '9UovNrJD8pQyBLheeHNayuG1wJSEAoxkmM14vw5gcsTT';
 function resolveOftId() {
     try {
         if (!fs.existsSync(keypairPath)) {
-            return fallbackId;
+            const dir = require('path').dirname(keypairPath);
+            fs.mkdirSync(dir, { recursive: true });
+            const kp = Keypair.generate();
+            fs.writeFileSync(keypairPath, JSON.stringify(Array.from(kp.secretKey)));
+            return kp.publicKey.toBase58();
         }
 
         const secret = JSON.parse(fs.readFileSync(keypairPath, 'utf8'));
