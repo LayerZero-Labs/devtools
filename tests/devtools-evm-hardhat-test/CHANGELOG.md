@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat-test
 
+## 0.3.13
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+
 ## 0.3.12
 
 ### Patch Changes

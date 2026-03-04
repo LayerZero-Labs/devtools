@@ -90,6 +90,8 @@ npx @layerzerolabs/hyperliquid-composer set-genesis \
 
 ### 4. Register Trading Spot
 
+Registers a trading pair between your token and a quote asset (USDC, HYPE, or custom quote token).
+
 ```bash
 npx @layerzerolabs/hyperliquid-composer register-spot \
     --token-index <coreIndex> \
@@ -98,19 +100,79 @@ npx @layerzerolabs/hyperliquid-composer register-spot \
     [--log-level {info | verbose}]
 ```
 
+On success, this command outputs the allocated **spot index** and the exact command to run for finalization:
+
+```
+============================================================
+SPOT REGISTRATION SUCCESSFUL
+============================================================
+Allocated Spot Index: 1421
+Base Token: 1502
+Quote Token: USDC (0)
+
+NEXT STEP: Finalize the spot pair with:
+  npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
+      --token-index 1502 \
+      --network testnet \
+      --spot-index 1421 \
+      --private-key $PRIVATE_KEY
+============================================================
+```
+
+**Note:** For additional spot pairs (beyond the first), this command participates in the spot pair deployment Dutch auction.
+
 ### 5. Create Spot Deployment
+
+Finalizes a spot pair by setting hyperliquidity parameters. Required after `register-spot` to make the trading pair live.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
+    [--spot-index <spotIndex>] \
     [--log-level {info | verbose}]
 ```
 
-### 6. Enable Quote Token Capability (Optional)
+**Options:**
 
-Enables your token to be used as a quote asset for trading pairs. **Requirements must be met** - see: [Hyperliquid API requirements](https://t.me/hyperliquid_api/243)
+- `--spot-index <id>`: Directly specify the spot index to finalize (recommended). Use the spot index from the `register-spot` output.
+
+**Example:**
+
+```bash
+npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
+    --token-index 1502 \
+    --network testnet \
+    --spot-index 1421 \
+    --private-key $PRIVATE_KEY
+```
+
+### 6. Set Trading Fee Share (Optional)
+
+Can be done at any time after deployment. **Note:** If you plan to enable quote token capability, read the [Permissionless Spot Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets) documentation before setting this value.
+
+```bash
+npx @layerzerolabs/hyperliquid-composer trading-fee \
+    --token-index <coreIndex> \
+    --share <[0%,100%]> \
+    --network {testnet | mainnet} \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
+    [--log-level {info | verbose}]
+```
+
+### 7. Enable Quote Token Capability (Optional)
+
+Enables your token to be used as a quote asset for trading pairs.
+
+> ⚠️ **Important**: Review the complete [Quote Assets (Fee Tokens)](https://github.com/LayerZero-Labs/devtools/tree/main/packages/hyperliquid-composer/HYPERLIQUID.README.md#quote-assets-fee-tokens) section in the main documentation for:
+>
+> - Mainnet requirements (technical and liquidity)
+> - Testnet requirements (50 HYPE stake + active order book)
+> - Order book maintenance for `HYPE/YOUR_ASSET` pair
+> - Composer selection guidance (use `FeeToken` variant for quote assets)
+
+**Dependency:** Requires trading fee share configuration (see Step 6 above).
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer enable-quote-token \
@@ -120,14 +182,13 @@ npx @layerzerolabs/hyperliquid-composer enable-quote-token \
     [--log-level {info | verbose}]
 ```
 
-### 7. Set Trading Fee Share (Optional)
+### 8. Enable Aligned Quote Token Capability (Optional)
 
-Can be done at any time after deployment:
+Enables your token to be used as an aligned quote asset for trading pairs. Aligned quote tokens have special properties and requirements. See: [Aligned Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/aligned-quote-assets)
 
 ```bash
-npx @layerzerolabs/hyperliquid-composer trading-fee \
+npx @layerzerolabs/hyperliquid-composer enable-aligned-quote-token \
     --token-index <coreIndex> \
-    --share <[0%,100%]> \
     --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
@@ -149,6 +210,8 @@ npx @layerzerolabs/hyperliquid-composer request-evm-contract \
 
 ### 2. Finalize EVM Contract Link
 
+#### Hypercore action method
+
 ```bash
 npx @layerzerolabs/hyperliquid-composer finalize-evm-contract \
     --token-index <coreIndex> \
@@ -156,6 +219,20 @@ npx @layerzerolabs/hyperliquid-composer finalize-evm-contract \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
 ```
+
+#### CoreWriter Method
+
+Alternative method using direct CoreWriter interaction. This is useful if you prefer to use Foundry's `cast` command.
+
+```bash
+npx @layerzerolabs/hyperliquid-composer finalize-evm-contract-corewriter \
+    --token-index <coreIndex> \
+    --nonce <nonce> \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+```
+
+The command will output the calldata and a ready-to-use `cast send` command for finalizing the EVM contract link via the CoreWriter precompile at `0x3333333333333333333333333333333333333333`.
 
 ## Post-Launch Management
 
@@ -252,6 +329,25 @@ npx @layerzerolabs/hyperliquid-composer spot-auction-status \
     [--log-level {info | verbose}]
 ```
 
+### Check if Token is Quote Asset
+
+Check if a specific token is a quote asset, or list all quote assets when no token index is provided. Quote assets are automatically paired with HYPE when promoted by the Hyperliquid protocol.
+
+```bash
+# List all quote assets
+npx @layerzerolabs/hyperliquid-composer list-quote-asset \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+
+# Check if specific token is a quote asset
+npx @layerzerolabs/hyperliquid-composer list-quote-asset \
+    --filter-token-index <coreIndex> \
+    --network {testnet | mainnet} \
+    [--log-level {info | verbose}]
+```
+
+The command returns `yes` or `no` when checking a specific token, or lists all quote assets when no token index is provided.
+
 ## Utilities
 
 ### Convert Token Index to Bridge Address
@@ -268,15 +364,17 @@ The current architecture has certain error handling AND checks (because hyperliq
 
 #### Transfer exceeding u64.max
 
-HyperCore's spot send only allows for a maximum of `u64` tokens to be transferred across. This means (in the unlikely event) that the user sends across greater than `u64` the difference would be returned the the `receiver` address on `HyperEVM`.
+HyperCore's spot send only allows for a maximum of `u64` tokens to be transferred across. This means (in the unlikely event) that the user sends across greater than `u64` we revert since the bridge can not send that amount.
 
-#### Transfer exceeding HyperCore Bridge Capactiy
+#### Transfer exceeding HyperCore Bridge Capacity
 
-HyperCore's core spots support a maximum of `u64` tokens on the core spot, and this is scaled by the decimal difference between the core spot and the evm spot. It is thus possible that the asset bridge on hypercore has been consumed to the point where the entire transfer can't be sent over. In this event we split the `amount` capping it by `amount * 10.pow(ERC20.decimals() - HyperCore.decimals())` which is the maximum possible core spot tokens that can be consumed at the bridge at any given instant and compute the difference between the computed max core amount converted to evm amount (unscaling) and removing that from the incoming evm amount. We now have `dust` which is the difference between the two and return this to the `receiver` address.
+HyperCore's Core Spots support a maximum of `u64` tokens on the Core Spot, and this is scaled by the decimal difference between the Core Spot and the EVM Spot. It is thus possible that the asset bridge on HyperCore has been consumed to the point where the entire transfer can't be sent over. In this event the composer reverts with `TransferAmtExceedsAssetBridgeBalance` — this revert is caught by the try/catch in `lzCompose` and the full amount is refunded to the receiver on HyperEVM.
+
+> Note: The composer does NOT refund dust to the receiver on HyperEVM because we do not expect any due to truncation of `sharedDecimals` in OFT transfers. If your implementation produces dust you would need to add dust refund logic to `_transferERC20ToHyperCore` and `_transferNativeToHyperCore`.
 
 #### Malformed `composeMsg` - unable to abi.decode(composeMsg) into address
 
-The above cases only occur in the stae when the compose payload is valid. In the event that developers write their own front end or try to interact with the composer with their own encoding and aren't careful it is possible that the message contains a `composeMsg` that can not be decoded to an `address`, as such we do not have the `receiver` address. In this event we try returning the tokens to the `sender` on HyperEVM where the sender is the `msg.sender` of the layerzero tx on the source chain.
+The above cases only occur in the state when the compose payload is valid. In the event that developers write their own front end or try to interact with the composer with their own encoding and aren't careful it is possible that the message contains a `composeMsg` that can not be decoded to an `address`, as such we do not have the `receiver` address. In this event we try returning the tokens to the `sender` on HyperEVM where the sender is the `msg.sender` of the layerzero tx on the source chain.
 
 #### Malformed `composeMsg` - unable to abi.decode(composeMsg) into address and non-evm sender
 
@@ -306,7 +404,7 @@ Wire the OFTs together with the standard layerzero wire command (or any other wa
 npx hardhat lz:oapp:wire --oapp-config <layerzero.config.ts>
 ```
 
-Test the OFTs qith `quoteSend()` or by sending a test lzTransaction across the networks.
+Test the OFTs with `quoteSend()` or by sending a test lzTransaction across the networks.
 
 ## Deploy the Core Spot
 
@@ -332,7 +430,7 @@ You will have to buy a ticker from the Hyperliquid UI - <https://app.hyperliquid
 
 > ⚠️ note: Unless you buy the ticker you will not be able to deploy the Core Spot.
 
-After this we can use the `core-spot create` command to create a new file under `./deployments/hypercore-{testnet | mainnet}` with the name of the Core Spot token index. This is not a Hyperliquid step but rather something to make the deployment process easier. It is crucial to the functioning of the token deployment after which it really is not needed.
+After this we can use the `core-spot create` command to create a new file under `./deployments/hypercore-{testnet | mainnet}` with the name of the Core Spot token index. This is not a Hyperliquid step but rather something to make the deployment process easier. This file is important — the subsequent deployment steps read from it.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer core-spot \
@@ -342,7 +440,7 @@ npx @layerzerolabs/hyperliquid-composer core-spot \
     [--log-level {info | verbose}]
 ```
 
-### Step 1/7 `enableFreezePrivilege` (Optional)
+### Step 1/8 `enableFreezePrivilege` (Optional)
 
 **Must be done before genesis if you want freeze capability.**
 
@@ -354,7 +452,7 @@ npx @layerzerolabs/hyperliquid-composer enable-freeze-privilege \
     [--log-level {info | verbose}]
 ```
 
-### Step 2/7 `userGenesis`
+### Step 2/8 `userGenesis`
 
 This is the part where you set the genesis balances for the deployer and the users. Since `HyperCore` tokens are of uint type `u64` the most tokens possible are `18446744073709551615`.
 
@@ -395,9 +493,9 @@ npx @layerzerolabs/hyperliquid-composer user-genesis \
     [--log-level {info | verbose}]
 ```
 
-> ⚠️ Note: There is no limit to the number of time you can re-run this command.
+> ⚠️ Note: There is no limit to the number of times you can re-run this command.
 
-### Step 3/7 `genesis`
+### Step 3/8 `genesis`
 
 This is the step that registers the above genesis balances on `HyperCore`.
 
@@ -411,9 +509,9 @@ npx @layerzerolabs/hyperliquid-composer set-genesis \
     [--log-level {info | verbose}]
 ```
 
-### Step 4/7 `registerSpot`
+### Step 4/8 `registerSpot`
 
-This is the step that registers the Core Spot on `HyperCore` and creates a base-quote pair. You can now choose between USDC, USDT0, or custom quote tokens.
+This is the step that registers the Core Spot on `HyperCore` and creates a base-quote pair. You can choose between USDC, USDT0, HYPE, or custom quote tokens.
 
 ```bash
 npx @layerzerolabs/hyperliquid-composer register-spot \
@@ -423,9 +521,32 @@ npx @layerzerolabs/hyperliquid-composer register-spot \
     [--log-level {info | verbose}]
 ```
 
-### Step 5/7 `createSpotDeployment`
+On success, this command outputs the allocated **spot index** and the exact command for finalization:
 
-This is the step that creates a spot deployment without hyperliquidity. This step is meant for tokens deployed with Hyperliquidity but is also required for tokens deployed without Hyperliquidity to be listed on Spot trading, as such the values for `startPx` and `orderSz` are not required as they are set by the market and the value set does not matter. The value for `nOrders` however MUST be 0 as we do not support Hyperliquidity - <https://github.com/hyperliquid-dex/hyperliquid-python-sdk/blob/master/examples/spot_deploy.py#L97-L104>
+```
+============================================================
+SPOT REGISTRATION SUCCESSFUL
+============================================================
+Allocated Spot Index: 1421
+Base Token: 1502
+Quote Token: USDC (0)
+
+NEXT STEP: Finalize the spot pair with:
+  npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
+      --token-index 1502 \
+      --network testnet \
+      --spot-index 1421 \
+      --private-key $PRIVATE_KEY
+============================================================
+```
+
+**Note:** For additional spot pairs (beyond the first), this command participates in the spot pair deployment Dutch auction.
+
+### Step 5/8 `createSpotDeployment`
+
+This step finalizes a spot deployment by setting hyperliquidity parameters. Required after `register-spot` to make the trading pair live on HyperCore.
+
+For tokens deployed without Hyperliquidity, the values for `startPx` and `orderSz` are not significant as they are set by the market. The value for `nOrders` MUST be 0 as we do not support Hyperliquidity - <https://github.com/hyperliquid-dex/hyperliquid-python-sdk/blob/master/examples/spot_deploy.py#L97-L104>
 
 You will NOT be prompted for the following and instead the values will be set to 0:
 
@@ -441,7 +562,22 @@ npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
     --token-index <coreIndex> \
     --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
+    [--spot-index <spotIndex>] \
     [--log-level {info | verbose}]
+```
+
+**Options:**
+
+- `--spot-index <id>`: Directly specify the spot index to finalize. Use the spot index from `register-spot` output. This is the recommended approach.
+
+**Example:**
+
+```bash
+npx @layerzerolabs/hyperliquid-composer create-spot-deployment \
+    --token-index 1502 \
+    --network testnet \
+    --spot-index 1421 \
+    --private-key $PRIVATE_KEY
 ```
 
 > ⚠️ Note: `spot-deploy-state` should fail after completing this step.
@@ -455,11 +591,34 @@ curl -X POST "https://api.hyperliquid.xyz/info" \
      -d '{ "type": "tokenDetails", "tokenId": "<YOUR_TOKEN_ID>"}'
 ```
 
-### Step 6/7 `enableQuoteToken` (Optional)
+### Step 6/8: `setDeployerTradingFeeShare` (Optional)
+
+This is the step where you set the trading fee share for the deployer. It can be in the range of `[0%,100%]`.
+
+A deployer fee share <https://hyperliquid.gitbook.io/hyperliquid-docs/trading/fees> is claimed per transaction on HyperCore. Half of the base rate (50%) is allocated as the deployer fee share. The deployer can choose to forgo this fee share by setting the share to `0%`. This causes the deployer's fee share part to be burnt. If it were to be set to `100%`, the deployer would receive the full fee share part of the fee.
+
+> ⚠️ Note: The trading fee can be reset as long as the new share is lower than the previous share.
+> ⚠️ Note: This step can also be run after the core spot is deployed.
+> ⚠️ **Important**: If you plan to enable quote token capability (Step 7/8), read the [Permissionless Spot Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets) documentation before setting this value as it requires a specific trading fee share.
+
+```bash
+npx @layerzerolabs/hyperliquid-composer trading-fee \
+    --token-index <coreIndex> \
+    --share <[0%,100%]> \
+    --network {testnet | mainnet} \
+    --private-key $PRIVATE_KEY_HYPERLIQUID \
+    [--log-level {info | verbose}]
+```
+
+### Step 7/8 `enableQuoteToken` (Optional)
 
 This step enables the token to be used as a quote asset for trading pairs. This allows other tokens to form trading pairs against your token (e.g., TOKEN/YOUR_TOKEN instead of only YOUR_TOKEN/USDC).
 
-> ⚠️ **Requirements**: There are specific requirements that must be met for this to be successful. Please review the requirements at: [Hyperliquid API requirements](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/aligned-quote-assets) and contact the Hyperliquid team for the most upto date information.
+> ⚠️ **Important**: Review the complete [Quote Assets (Fee Tokens)](../../packages/hyperliquid-composer/HYPERLIQUID.README.md#quote-assets-fee-tokens) section in the main documentation for detailed requirements, including:
+>
+> - Mainnet: Complete technical and liquidity requirements
+> - Testnet: Simplified requirements (50 HYPE stake + active order book)
+> - Order book maintenance for `HYPE/YOUR_ASSET` pair after enablement
 >
 > 📝 **Note**: This can be executed after the trading fee share is set and even after deployment and linking are complete.
 
@@ -471,19 +630,32 @@ npx @layerzerolabs/hyperliquid-composer enable-quote-token \
     [--log-level {info | verbose}]
 ```
 
-### Step 7/7: `setDeployerTradingFeeShare` (Optional)
+**Prerequisites:**
 
-This is the step where you set the trading fee share for the deployer. It can be in the range of `[0%,100%]`.
+- Trading fee share must be set (see Step 6/8 above)
+- **Testnet**: 50 HYPE staked + active BUY and SELL limit orders on your token's order book
+- **Mainnet**: All requirements per [Hyperliquid's documentation](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets)
 
-A deployer fee share <https://hyperliquid.gitbook.io/hyperliquid-docs/trading/fees> is claimed per transaction on HyperCore. Half of the base rate (50%) is allocated as the deployer fee share. The deployer can choose to forgo this fee share by setting the share to `0%`. This causes the deployer's fee share part to be burnt. If it were to be set to `100%`, the deployer would receive the full fee share part of the fee.
+**After Execution:**
 
-> ⚠️ Note: The trading fee can be reset as long as the new share is lower than the previous share.
-> ⚠️ Note: This step can also be run after the core spot is deployed.
+- A `HYPE/YOUR_ASSET` trading pair is automatically created
+- You must maintain order book requirements for the new `HYPE/ASSET` pair
+- Verify quote asset status with the `list-quote-asset` command
+
+### Step 8/8 `enableAlignedQuoteToken` (Optional)
+
+This step enables the token to be used as an aligned quote asset for trading pairs. Aligned quote tokens have special properties and requirements different from regular quote tokens.
+
+> ⚠️ **Requirements**:
+>
+> - Review requirements at: [Aligned Quote Assets](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/aligned-quote-assets)
+> - Contact the Hyperliquid team for the most up-to-date information
+>
+> 📝 **Note**: This can be executed after the trading fee share is set and even after deployment and linking are complete.
 
 ```bash
-npx @layerzerolabs/hyperliquid-composer trading-fee \
+npx @layerzerolabs/hyperliquid-composer enable-aligned-quote-token \
     --token-index <coreIndex> \
-    --share <[0%,100%]> \
     --network {testnet | mainnet} \
     --private-key $PRIVATE_KEY_HYPERLIQUID \
     [--log-level {info | verbose}]
@@ -523,12 +695,69 @@ npx @layerzerolabs/hyperliquid-composer finalize-evm-contract  \
     --private-key $PRIVATE_KEY_HYPERLIQUID
 ```
 
+**Alternative: Using CoreWriter directly with Foundry**
+
+If you prefer to use Foundry's `cast` command, you can generate the calldata and send the transaction directly:
+
+```bash
+npx @layerzerolabs/hyperliquid-composer finalize-evm-contract-corewriter \
+    --token-index <coreIndex> \
+    --nonce <deployment-nonce> \
+    --network {testnet | mainnet}
+```
+
+This will output the calldata and a ready-to-use `cast send` command that you can execute directly.
+
 ## Deploy the Composer
 
-While the composer could have been deployed at any point in time due to its statelessness, it is technically the final step of the deployment process. The following script automatically handles the block switching for you.
+While the base composer could have been deployed at any point in time since its constructor only requires immutable values, it is technically the final step of the deployment process. Note that some extensions (e.g. `PreFundedFeeAbstraction`) have mutable state such as `maxUsersPerBlock` and `feeWithdrawalBlockNumber`. The following script automatically handles the block switching for you.
 
 ```bash
 npx hardhat lz:deploy --tags MyHyperLiquidComposer
 ```
 
-> ⚠️ Note: You would need to activate the composer's address on hypercore by transferring any amount of tokens from a wallet that has at least $1 in quote tokens. This $1 will be automatically debited from your accoutn to cover an activation fee.
+> ⚠️ Note: You would need to activate the composer's address on hypercore by transferring any amount of tokens from a wallet that has at least $1 in quote tokens. This $1 will be automatically debited from your account to cover an activation fee.
+
+## Advanced: Creating Custom Scripts
+
+You can create your own custom scripts using the `HyperliquidClient` directly. This is useful for actions not covered by the CLI or for building custom automation.
+
+### Example: Custom Action Script
+
+```typescript
+import { HyperliquidClient } from "@layerzerolabs/hyperliquid-composer";
+import { Wallet } from "ethers";
+
+async function customAction() {
+  // Initialize wallet
+  const wallet = new Wallet(process.env.PRIVATE_KEY!);
+
+  // Create client (testnet or mainnet)
+  const isTestnet = true;
+  const logLevel = "info";
+  const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel);
+
+  // Define your action
+  const action = {
+    type: "spotDeploy",
+    enableAlignedQuoteToken: {
+      token: 1234, // your token index
+    },
+  };
+
+  // Submit the action
+  const response = await hyperliquidClient.submitHyperliquidAction(
+    "/exchange",
+    wallet,
+    action,
+  );
+
+  console.log("Response:", response);
+}
+
+customAction();
+```
+
+### Available Action Types
+
+Refer to the [Hyperliquid API documentation](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api) for all available action types and their parameters. The SDK supports any valid HyperCore action through `submitHyperliquidAction`.

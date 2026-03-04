@@ -172,7 +172,8 @@ const getLibraryAddress = (deployment: any, metadataKey: string) =>
 
 export async function translatePathwayToConfig(
     pathway: TwoWayConfig,
-    metadata: IMetadata
+    metadata: IMetadata,
+    skipFromEids: Set<number> = new Set()
 ): Promise<OmniEdgeHardhat<OAppEdgeConfig | undefined>[]> {
     const configs: OmniEdgeHardhat<OAppEdgeConfig | undefined>[] = []
 
@@ -183,6 +184,15 @@ export async function translatePathwayToConfig(
     const [enforcedOptionsAToB, enforcedOptionsBToA] = pathway[4]
     const customExecutor = pathway[5]
 
+    // Determine which directions to generate based on skipFromEids
+    const generateAToB = !skipFromEids.has(AContract.eid)
+    const generateBToA = !skipFromEids.has(BContract.eid)
+
+    // If both directions are skipped, nothing to do
+    if (!generateAToB && !generateBToA) {
+        return configs
+    }
+
     const optionalDVNs = optionalDVNConfig[0]
     const optionalDVNThreshold = optionalDVNConfig[1] || 0
 
@@ -190,21 +200,32 @@ export async function translatePathwayToConfig(
         throw new Error(`Optional DVN threshold is greater than the number of optional DVNs.`)
     }
 
-    const ALZDeployment = getEndpointIdDeployment(AContract.eid, metadata)
-    const BLZDeployment = getEndpointIdDeployment(BContract.eid, metadata)
-
-    const AExecutor = resolveExecutorForDeployment(customExecutor, ALZDeployment, metadata, AContract.eid)
-
-    const ARequiredDVNs = DVNsToAddresses(requiredDVNs, ALZDeployment.chainKey, metadata)
-    const BRequiredDVNs = DVNsToAddresses(requiredDVNs, BLZDeployment.chainKey, metadata)
     const requiredDVNCount = requiredDVNs.length > 0 ? requiredDVNs.length : NIL_DVN_COUNT
 
-    let AOptionalDVNs: string[] = []
-    let BOptionalDVNs: string[] = []
+    // Only look up deployment/DVNs/executor for chains we're generating configs for
+    const ALZDeployment = generateAToB ? getEndpointIdDeployment(AContract.eid, metadata) : undefined
+    const BLZDeployment = generateBToA ? getEndpointIdDeployment(BContract.eid, metadata) : undefined
 
-    if (optionalDVNs) {
-        AOptionalDVNs = DVNsToAddresses(optionalDVNs, ALZDeployment.chainKey, metadata)
-        BOptionalDVNs = DVNsToAddresses(optionalDVNs, BLZDeployment.chainKey, metadata)
+    // A chain lookups (only needed for A→B config)
+    let ARequiredDVNs: string[] = []
+    let AOptionalDVNs: string[] = []
+    let AExecutor: string | undefined
+    if (generateAToB && ALZDeployment) {
+        AExecutor = resolveExecutorForDeployment(customExecutor, ALZDeployment, metadata, AContract.eid)
+        ARequiredDVNs = DVNsToAddresses(requiredDVNs, ALZDeployment.chainKey, metadata)
+        if (optionalDVNs) {
+            AOptionalDVNs = DVNsToAddresses(optionalDVNs, ALZDeployment.chainKey, metadata)
+        }
+    }
+
+    // B chain lookups (only needed for B→A config)
+    let BRequiredDVNs: string[] = []
+    let BOptionalDVNs: string[] = []
+    if (generateBToA && BLZDeployment) {
+        BRequiredDVNs = DVNsToAddresses(requiredDVNs, BLZDeployment.chainKey, metadata)
+        if (optionalDVNs) {
+            BOptionalDVNs = DVNsToAddresses(optionalDVNs, BLZDeployment.chainKey, metadata)
+        }
     }
 
     const AToBConfirmations: BlockConfirmationsType = ['bigint', 'number'].includes(typeof AToBConfirmationsDefinition)
@@ -216,105 +237,118 @@ export async function translatePathwayToConfig(
         ? BToAConfirmationsDefinition
         : BToAConfirmationsDefinition?.[0]
 
-    const blockSendAToB = isBlocked(AToBConfirmationsDefinition, true)
-    const blockReceiveAToB = isBlocked(AToBConfirmationsDefinition, false)
-    const blockSendBToA = isBlocked(BToAConfirmationsDefinition, true)
-    const blockReceiveBToA = isBlocked(BToAConfirmationsDefinition, false)
+    // Generate A→B config if not skipped
+    if (generateAToB && ALZDeployment && AExecutor) {
+        const blockSendAToB = isBlocked(AToBConfirmationsDefinition, true)
+        const blockReceiveBToA = isBlocked(BToAConfirmationsDefinition, false)
 
-    const sendLibraryAToBMetadataKey = resolveLibraryMetadataKey(true, blockSendAToB, ALZDeployment)
-    const receiveLibraryAToBMetadataKey = resolveLibraryMetadataKey(false, blockReceiveAToB, BLZDeployment)
-    const sendLibraryBToAMetadataKey = resolveLibraryMetadataKey(true, blockSendBToA, BLZDeployment)
-    const receiveLibraryBToAMetadataKey = resolveLibraryMetadataKey(false, blockReceiveBToA, ALZDeployment)
+        const sendLibraryAToBMetadataKey = resolveLibraryMetadataKey(true, blockSendAToB, ALZDeployment)
+        const receiveLibraryBToAMetadataKey = resolveLibraryMetadataKey(false, blockReceiveBToA, ALZDeployment)
 
-    assertHasKey(ALZDeployment, sendLibraryAToBMetadataKey, AContract.eid)
-    assertHasKey(BLZDeployment, receiveLibraryAToBMetadataKey, BContract.eid)
-    assertHasKey(BLZDeployment, sendLibraryBToAMetadataKey, BContract.eid)
-    assertHasKey(ALZDeployment, receiveLibraryBToAMetadataKey, AContract.eid)
+        assertHasKey(ALZDeployment, sendLibraryAToBMetadataKey, AContract.eid)
+        assertHasKey(ALZDeployment, receiveLibraryBToAMetadataKey, AContract.eid)
 
-    const sendLibraryAToB = getLibraryAddress(ALZDeployment, sendLibraryAToBMetadataKey)
-    const receiveLibraryAToB = getLibraryAddress(BLZDeployment, receiveLibraryAToBMetadataKey)
-    const sendLibraryBToA = getLibraryAddress(BLZDeployment, sendLibraryBToAMetadataKey)
-    const receiveLibraryBToA = getLibraryAddress(ALZDeployment, receiveLibraryBToAMetadataKey)
+        const sendLibraryAToB = getLibraryAddress(ALZDeployment, sendLibraryAToBMetadataKey)
+        const receiveLibraryBToA = getLibraryAddress(ALZDeployment, receiveLibraryBToAMetadataKey)
 
-    const AToBConfig: OmniEdgeHardhat<OAppEdgeConfig> = {
-        from: AContract,
-        to: BContract,
-        config: {
-            sendLibrary: sendLibraryAToB,
-            receiveLibraryConfig: {
-                receiveLibrary: receiveLibraryBToA,
-                gracePeriod: BigInt(0),
-            },
-            sendConfig: {
-                executorConfig: {
-                    maxMessageSize: 10000,
-                    executor: AExecutor,
+        const AToBConfig: OmniEdgeHardhat<OAppEdgeConfig> = {
+            from: AContract,
+            to: BContract,
+            config: {
+                sendLibrary: sendLibraryAToB,
+                receiveLibraryConfig: {
+                    receiveLibrary: receiveLibraryBToA,
+                    gracePeriod: BigInt(0),
                 },
+                sendConfig: {
+                    executorConfig: {
+                        maxMessageSize: 10000,
+                        executor: AExecutor,
+                    },
+                    ulnConfig: {
+                        confirmations: BigInt(AToBConfirmations),
+                        requiredDVNs: ARequiredDVNs,
+                        requiredDVNCount,
+                        optionalDVNs: AOptionalDVNs,
+                        optionalDVNThreshold,
+                    },
+                },
+                enforcedOptions: enforcedOptionsAToB,
+            },
+        }
+
+        if (BToAConfirmations) {
+            AToBConfig.config.receiveConfig = {
                 ulnConfig: {
-                    confirmations: BigInt(AToBConfirmations),
+                    confirmations: BigInt(BToAConfirmations),
                     requiredDVNs: ARequiredDVNs,
                     requiredDVNCount,
                     optionalDVNs: AOptionalDVNs,
                     optionalDVNThreshold,
                 },
-            },
-            enforcedOptions: enforcedOptionsAToB,
-        },
+            }
+        }
+
+        configs.push(AToBConfig)
     }
 
-    const BToAConfig: OmniEdgeHardhat<OAppEdgeConfig> = {
-        from: BContract,
-        to: AContract,
-        config: {
-            sendLibrary: sendLibraryBToA,
-            receiveLibraryConfig: {
-                receiveLibrary: receiveLibraryAToB,
-                gracePeriod: BigInt(0),
+    // Generate B→A config if not skipped
+    if (generateBToA && BLZDeployment) {
+        const blockReceiveAToB = isBlocked(AToBConfirmationsDefinition, false)
+        const blockSendBToA = isBlocked(BToAConfirmationsDefinition, true)
+
+        const receiveLibraryAToBMetadataKey = resolveLibraryMetadataKey(false, blockReceiveAToB, BLZDeployment)
+        const sendLibraryBToAMetadataKey = resolveLibraryMetadataKey(true, blockSendBToA, BLZDeployment)
+
+        assertHasKey(BLZDeployment, receiveLibraryAToBMetadataKey, BContract.eid)
+        assertHasKey(BLZDeployment, sendLibraryBToAMetadataKey, BContract.eid)
+
+        const receiveLibraryAToB = getLibraryAddress(BLZDeployment, receiveLibraryAToBMetadataKey)
+        const sendLibraryBToA = getLibraryAddress(BLZDeployment, sendLibraryBToAMetadataKey)
+
+        const BToAConfig: OmniEdgeHardhat<OAppEdgeConfig> = {
+            from: BContract,
+            to: AContract,
+            config: {
+                sendLibrary: sendLibraryBToA,
+                receiveLibraryConfig: {
+                    receiveLibrary: receiveLibraryAToB,
+                    gracePeriod: BigInt(0),
+                },
+                receiveConfig: {
+                    ulnConfig: {
+                        confirmations: BigInt(AToBConfirmations),
+                        requiredDVNs: BRequiredDVNs,
+                        requiredDVNCount,
+                        optionalDVNs: BOptionalDVNs,
+                        optionalDVNThreshold,
+                    },
+                },
             },
-            receiveConfig: {
+        }
+
+        if (BToAConfirmations) {
+            const BExecutor = resolveExecutorForDeployment(customExecutor, BLZDeployment, metadata, BContract.eid)
+
+            BToAConfig.config.enforcedOptions = enforcedOptionsBToA
+
+            BToAConfig.config.sendConfig = {
+                executorConfig: {
+                    maxMessageSize: 10000,
+                    executor: BExecutor,
+                },
                 ulnConfig: {
-                    confirmations: BigInt(AToBConfirmations),
+                    confirmations: BigInt(BToAConfirmations),
                     requiredDVNs: BRequiredDVNs,
                     requiredDVNCount,
                     optionalDVNs: BOptionalDVNs,
                     optionalDVNThreshold,
                 },
-            },
-        },
-    }
-
-    if (BToAConfirmations) {
-        const BExecutor = resolveExecutorForDeployment(customExecutor, BLZDeployment, metadata, BContract.eid)
-
-        AToBConfig.config.receiveConfig = {
-            ulnConfig: {
-                confirmations: BigInt(BToAConfirmations),
-                requiredDVNs: ARequiredDVNs,
-                requiredDVNCount,
-                optionalDVNs: AOptionalDVNs,
-                optionalDVNThreshold,
-            },
+            }
         }
 
-        BToAConfig.config.enforcedOptions = enforcedOptionsBToA
-
-        BToAConfig.config.sendConfig = {
-            executorConfig: {
-                maxMessageSize: 10000,
-                executor: BExecutor,
-            },
-            ulnConfig: {
-                confirmations: BigInt(BToAConfirmations),
-                requiredDVNs: BRequiredDVNs,
-                requiredDVNCount,
-                optionalDVNs: BOptionalDVNs,
-                optionalDVNThreshold,
-            },
-        }
+        configs.push(BToAConfig)
     }
-
-    configs.push(AToBConfig)
-    configs.push(BToAConfig)
 
     return configs
 }
@@ -329,14 +363,21 @@ export async function generateConnectionsConfig(
     pathways: TwoWayConfig[],
     params?: {
         fetchMetadata?: () => Promise<IMetadata>
+        /**
+         * Skip generating connection configs that originate FROM these endpoint IDs.
+         * This allows filtering out directions before DVN/executor lookups occur,
+         * which is useful when some chains don't have DVNs in the metadata.
+         */
+        skipFromEids?: number[]
     }
 ) {
     const fetchMetadata = params?.fetchMetadata || defaultFetchMetadata
+    const skipFromEids = new Set(params?.skipFromEids ?? [])
     const metadata = await fetchMetadata()
     const connections: OmniEdgeHardhat<OAppEdgeConfig | undefined>[] = []
 
     for (const pathway of pathways) {
-        connections.push(...(await translatePathwayToConfig(pathway, metadata)))
+        connections.push(...(await translatePathwayToConfig(pathway, metadata, skipFromEids)))
     }
 
     return connections

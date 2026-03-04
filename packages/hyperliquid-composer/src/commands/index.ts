@@ -9,12 +9,13 @@ export * from './core-spot-deployment'
 export * from './spot-deploy'
 
 // === EVM-HyperCore Linking ===
-export * from './register-token'
+export * from './link-evm-core'
 
 // === Info & Queries ===
 export * from './account-state'
 export * from './list-spot-pairs'
 export * from './spot-auction-status'
+export * from './list-quote-asset'
 
 // === Utilities ===
 export * from './type-conversion'

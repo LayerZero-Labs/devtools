@@ -103,7 +103,7 @@ abstract contract OFTCoreUpgradeable is
 
     function __OFTCore_init_unchained() internal onlyInitializing {}
 
-    function msgInspector() public view returns (address) {
+    function msgInspector() public view virtual returns (address) {
         OFTCoreStorage storage $ = _getOFTCoreStorage();
         return $.msgInspector;
     }

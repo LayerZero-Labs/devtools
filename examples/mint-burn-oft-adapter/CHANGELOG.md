@@ -1,5 +1,11 @@
 # @layerzerolabs/mint-burn-oft-adapter-example
 
+## 0.1.6
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+
 ## 0.1.5
 
 ### Patch Changes

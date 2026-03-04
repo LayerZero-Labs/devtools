@@ -1,5 +1,11 @@
 # @layerzerolabs/view-pure-read-example
 
+## 0.0.6
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+
 ## 0.0.5
 
 ### Patch Changes

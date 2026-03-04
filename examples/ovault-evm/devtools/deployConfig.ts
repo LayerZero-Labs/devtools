@@ -37,7 +37,7 @@ export const DEPLOYMENT_CONFIG: DeploymentConfig = {
         contracts: {
             vault: 'MyERC4626',
             shareAdapter: 'MyShareOFTAdapter',
-            composer: 'MyOVaultComposer',
+            composer: 'MyOVaultComposerERC20',
         },
         // IF YOU HAVE EXISTING CONTRACTS, SET THE ADDRESSES HERE
         // This will skip deployment and use your existing hubEid contract deployments instead
@@ -47,6 +47,9 @@ export const DEPLOYMENT_CONFIG: DeploymentConfig = {
         assetOFTAddress: undefined, // Set to '0xdef...' to use existing asset OFT
         // This must be the address of the ShareOFTAdapter
         shareOFTAdapterAddress: undefined, // Set to '0xghi...' to use existing ShareOFTAdapter
+        // Required for native token OFTs (NativeOFTAdapter, StargatePoolNative) where token() returns address(0)
+        // Set this to the WETH address on the hub chain (e.g., '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' for Ethereum mainnet)
+        assetTokenAddress: undefined,
     },
 
     // Share OFT configuration (only on spoke chains)
@@ -60,10 +63,11 @@ export const DEPLOYMENT_CONFIG: DeploymentConfig = {
     },
 
     // Asset OFT configuration (deployed on specified chains OR use existing address)
+    // NOTE: For native assets (ETH, HYPE), use 'MyAssetOFTNative' with 'MyOVaultComposerNative'
     assetOFT: {
-        contract: 'MyAssetOFT',
+        contract: 'MyAssetOFTERC20',
         metadata: {
-            name: 'MyAssetOFT',
+            name: 'MyAssetOFTERC20',
             symbol: 'ASSET',
         },
         deploymentEids: [_hubEid, ..._spokeEids],

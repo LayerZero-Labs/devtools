@@ -12,6 +12,7 @@ name: Check code submission
 
 on:
   pull_request:
+  merge_group:
   workflow_dispatch:
 
 # We want the workflow to stop and yield to a new run if new code is pushed

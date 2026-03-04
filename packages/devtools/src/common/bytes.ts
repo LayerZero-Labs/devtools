@@ -60,7 +60,7 @@ export const isZero = (value: PossiblyBytes | PossiblyBigInt | null | undefined)
  * @returns {string | undefined}
  */
 export const ignoreZero = <T extends PossiblyBytes | PossiblyBigInt>(value?: T | null | undefined): T | undefined =>
-    isZero(value) ? undefined : value ?? undefined
+    isZero(value) ? undefined : (value ?? undefined)
 
 /**
  * Helper function to be used when sorting of addresses is necessary.
@@ -101,6 +101,7 @@ export const normalizePeer = (address: OmniAddress | null | undefined, eid: Endp
 
         case ChainType.APTOS:
         case ChainType.EVM:
+        case ChainType.STARKNET:
             return toBytes32(fromHex(address))
 
         case ChainType.TON:
@@ -130,6 +131,7 @@ export const denormalizePeer = (bytes: Uint8Array | null | undefined, eid: Endpo
             return bs58.encode(toBytes32(bytes))
 
         case ChainType.APTOS:
+        case ChainType.STARKNET:
             return toHex(toBytes32(bytes))
 
         case ChainType.EVM:

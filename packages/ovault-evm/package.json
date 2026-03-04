@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ovault-evm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "LayerZero Labs reference EVM OVault + composer implementation",
   "keywords": [
     "LayerZero",
@@ -49,19 +49,19 @@
     "test:forge": "forge test"
   },
   "dependencies": {
-    "@layerzerolabs/lz-definitions": "^3.0.75",
-    "@layerzerolabs/lz-v2-utilities": "^3.0.75",
+    "@layerzerolabs/lz-definitions": "^3.0.148",
+    "@layerzerolabs/lz-v2-utilities": "^3.0.148",
     "@layerzerolabs/scan-client-v2": "^0.0.1",
     "redaxios": "^0.5.1",
     "viem": "^2.33.1"
   },
   "devDependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.75",
-    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.75",
-    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.75",
-    "@layerzerolabs/oapp-evm": "^0.4.0",
-    "@layerzerolabs/oft-evm": "^4.0.0",
-    "@layerzerolabs/test-devtools-evm-foundry": "~8.0.0",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.148",
+    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.148",
+    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.148",
+    "@layerzerolabs/oapp-evm": "^0.4.1",
+    "@layerzerolabs/oft-evm": "^4.0.1",
+    "@layerzerolabs/test-devtools-evm-foundry": "~8.0.1",
     "@layerzerolabs/toolbox-foundry": "^0.1.12",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
@@ -75,10 +75,10 @@
     "typescript": "^5.4.4"
   },
   "peerDependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.75",
-    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.75",
-    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.75",
-    "@layerzerolabs/oapp-evm": "^0.4.0",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.148",
+    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.148",
+    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.148",
+    "@layerzerolabs/oapp-evm": "^0.4.1",
     "@openzeppelin/contracts": "^4.8.1 || ^5.0.0",
     "@openzeppelin/contracts-upgradeable": "^4.8.1 || ^5.0.0"
   },

@@ -1,5 +1,42 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 1.0.13
+
+### Patch Changes
+
+- 306ee69: rename FeeAbstraction to PreFundedFeeAbstraction in docs
+
+## 1.0.12
+
+### Patch Changes
+
+- 91727cf: docs update and natspec
+
+## 1.0.11
+
+### Patch Changes
+
+- e18564f: improved cli and docs on expansion spot market pairs
+
+## 1.0.10
+
+### Patch Changes
+
+- bb2f4c3: sdk updates for quote asset improvement
+
+## 1.0.9
+
+### Patch Changes
+
+- bfea443: alignedQuoteAsset support on core spot deployment + instructions on how to create a custom hyperliquid sdk action for sign + submit
+
+## 1.0.8
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+- afb4dd3: feat: fireblocks and fordefi mpc signers for hyperliquid sdk
+
 ## 1.0.7
 
 ### Patch Changes

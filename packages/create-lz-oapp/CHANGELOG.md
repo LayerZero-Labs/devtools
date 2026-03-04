@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.8.3
+
+### Patch Changes
+
+- 36c2cb8: relabel example labels for OFT and OFT (Solana)
+
 ## 0.8.2
 
 ### Patch Changes

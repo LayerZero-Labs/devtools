@@ -31,11 +31,7 @@ export type PeerConfigAccountData = {
     bump: number
 }
 
-export type PeerConfigAccountDataArgs = {
-    peerAddress: Uint8Array
-    enforcedOptions: EnforcedOptionsArgs
-    bump: number
-}
+export type PeerConfigAccountDataArgs = { peerAddress: Uint8Array; enforcedOptions: EnforcedOptionsArgs; bump: number }
 
 export function getPeerConfigAccountDataSerializer(): Serializer<PeerConfigAccountDataArgs, PeerConfigAccountData> {
     return mapSerializer<PeerConfigAccountDataArgs, any, PeerConfigAccountData>(
@@ -48,10 +44,7 @@ export function getPeerConfigAccountDataSerializer(): Serializer<PeerConfigAccou
             ],
             { description: 'PeerConfigAccountData' }
         ),
-        (value) => ({
-            ...value,
-            discriminator: new Uint8Array([181, 157, 86, 198, 33, 193, 94, 203]),
-        })
+        (value) => ({ ...value, discriminator: new Uint8Array([181, 157, 86, 198, 33, 193, 94, 203]) })
     ) as Serializer<PeerConfigAccountDataArgs, PeerConfigAccountData>
 }
 
@@ -108,7 +101,7 @@ export async function safeFetchAllPeerConfig(
 }
 
 export function getPeerConfigGpaBuilder(context: Pick<Context, 'rpc' | 'programs'>) {
-    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
+    const programId = context.programs.getPublicKey('myOapp', '')
     return gpaBuilder(context, programId)
         .registerFields<{
             discriminator: Uint8Array

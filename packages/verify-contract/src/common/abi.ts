@@ -12,7 +12,7 @@ import { TypeName, type FunctionDefinition } from '@solidity-parser/parser/dist/
  * @param args Constructor arguments
  * @returns
  */
-export const encodeContructorArguments = (abi: JsonFragment[], args: unknown[] | undefined): string | undefined => {
+export const encodeConstructorArguments = (abi: JsonFragment[], args: unknown[] | undefined): string | undefined => {
     if (args == null || args.length === 0) {
         return undefined
     }
@@ -24,7 +24,7 @@ export const encodeContructorArguments = (abi: JsonFragment[], args: unknown[] |
     return encodedConstructorArguments.slice(2)
 }
 
-export const getContructorABIFromSource = (source: string): MinimalAbi => {
+export const getConstructorABIFromSource = (source: string): MinimalAbi => {
     try {
         // First we'll parse the source code and get the AST
         const ast = parser.parse(source)

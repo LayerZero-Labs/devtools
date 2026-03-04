@@ -1,10 +1,8 @@
-import path from 'path'
-
 import { parseUnits } from 'ethers/lib/utils'
 import { task, types } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
-import { OmniPointHardhat, createGetHreByEid } from '@layerzerolabs/devtools-evm-hardhat'
+import { createGetHreByEid } from '@layerzerolabs/devtools-evm-hardhat'
 import { createLogger } from '@layerzerolabs/io-devtools'
 import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { Options, addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
@@ -117,12 +115,22 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
             const ierc4626Artifact = await hubHre.artifacts.readArtifact('IERC4626')
             const vault = await hubHre.ethers.getContractAt(ierc4626Artifact.abi, vaultAddress, hubSigner)
 
-            // Convert amounts to proper units
-            const inputAmountUnits = parseUnits(args.amount, 18)
+            // Convert amounts to proper units - fetch decimals dynamically
+            const assetAddress = await vault.asset()
+            const erc20DecimalsAbi = ['function decimals() view returns (uint8)']
+            const assetToken = new hubHre.ethers.Contract(assetAddress, erc20DecimalsAbi, hubSigner)
+            const assetDecimals = await assetToken.decimals()
+            const shareToken = new hubHre.ethers.Contract(vaultAddress, erc20DecimalsAbi, hubSigner)
+            const shareDecimals = await shareToken.decimals()
+
+            const inputDecimals = args.tokenType === 'asset' ? assetDecimals : shareDecimals
+            const outputDecimals = args.tokenType === 'asset' ? shareDecimals : assetDecimals
+
+            const inputAmountUnits = parseUnits(args.amount, inputDecimals)
             let minAmountOut = inputAmountUnits // Default to input amount
 
             if (args.minAmount) {
-                minAmountOut = parseUnits(args.minAmount, 18)
+                minAmountOut = parseUnits(args.minAmount, outputDecimals)
             }
 
             let txHash: string
@@ -148,7 +156,9 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
                 // Preview the deposit to show expected output
                 try {
                     const previewedShares = await vault.previewDeposit(inputAmountUnits)
-                    logger.info(`Expected output: ${(parseInt(previewedShares.toString()) / 1e18).toFixed(6)} shares`)
+                    logger.info(
+                        `Expected output: ${(parseInt(previewedShares.toString()) / 10 ** shareDecimals).toFixed(6)} shares`
+                    )
 
                     // Check if we need to handle slippage
                     if (previewedShares.lt(minAmountOut)) {
@@ -173,7 +183,9 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
                 // Preview the redemption to show expected output
                 try {
                     const previewedAssets = await vault.previewRedeem(inputAmountUnits)
-                    logger.info(`Expected output: ${(parseInt(previewedAssets.toString()) / 1e18).toFixed(6)} assets`)
+                    logger.info(
+                        `Expected output: ${(parseInt(previewedAssets.toString()) / 10 ** assetDecimals).toFixed(6)} assets`
+                    )
 
                     // Check if we need to handle slippage
                     if (previewedAssets.lt(minAmountOut)) {
@@ -283,7 +295,7 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
             args.lzComposeGas ||
             (args.dstEid === hubEid
                 ? 175000 // Lower gas for local transfer only
-                : 395000) // Higher gas for cross-chain messaging
+                : 395000) // Higher gas for cross-chain messaging (vault-dependent, may need to be increased for complex vault operations)
 
         if (!args.lzComposeGas) {
             logger.info(`Using ${args.dstEid === hubEid ? 'local transfer' : 'cross-chain'} gas limit: ${lzComposeGas}`)
@@ -313,7 +325,25 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
         const vault = await hubHre.ethers.getContractAt(ierc4626Artifact.abi, vaultAddress, hubSigner)
 
         // Convert input amount to proper units and preview vault operation
-        const inputAmountUnits = parseUnits(args.amount, 18) // Assuming 18 decimals
+        // Fetch decimals dynamically from the contracts
+        const assetAddress = await vault.asset()
+
+        // Use minimal ABI with just decimals() function for reliable decimal fetching
+        const erc20DecimalsAbi = ['function decimals() view returns (uint8)']
+        const assetToken = new hubHre.ethers.Contract(assetAddress, erc20DecimalsAbi, hubSigner)
+        const assetDecimals = await assetToken.decimals()
+
+        // Fetch share decimals from vault (shares are ERC20-compliant)
+        const shareToken = new hubHre.ethers.Contract(vaultAddress, erc20DecimalsAbi, hubSigner)
+        const shareDecimals = await shareToken.decimals()
+
+        // Use correct decimals based on input token type
+        const inputDecimals = args.tokenType === 'asset' ? assetDecimals : shareDecimals
+        const outputDecimals = args.tokenType === 'asset' ? shareDecimals : assetDecimals
+
+        const inputAmountUnits = parseUnits(args.amount, inputDecimals)
+        console.log('assetDecimals:', assetDecimals, 'shareDecimals:', shareDecimals, 'inputDecimals:', inputDecimals)
+        console.log('inputAmountUnits', inputAmountUnits.toString())
         let expectedOutputAmount: string
         let minAmountOut: string
 
@@ -323,7 +353,7 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
                 const previewedShares = await vault.previewDeposit(inputAmountUnits)
                 expectedOutputAmount = previewedShares.toString()
                 logger.info(
-                    `Vault preview: ${args.amount} ${args.tokenType} → ${(parseInt(expectedOutputAmount) / 1e18).toFixed(6)} ${outputType}`
+                    `Vault preview: ${args.amount} ${args.tokenType} → ${(parseInt(expectedOutputAmount) / 10 ** shareDecimals).toFixed(6)} ${outputType}`
                 )
             } catch (error) {
                 logger.warn(`Vault preview failed, using 1:1 estimate`)
@@ -335,7 +365,7 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
                 const previewedAssets = await vault.previewRedeem(inputAmountUnits)
                 expectedOutputAmount = previewedAssets.toString()
                 logger.info(
-                    `Vault preview: ${args.amount} ${args.tokenType} → ${(parseInt(expectedOutputAmount) / 1e18).toFixed(6)} ${outputType}`
+                    `Vault preview: ${args.amount} ${args.tokenType} → ${(parseInt(expectedOutputAmount) / 10 ** assetDecimals).toFixed(6)} ${outputType}`
                 )
             } catch (error) {
                 logger.warn(`Vault preview failed, using 1:1 estimate`)
@@ -344,10 +374,18 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
         }
 
         // Calculate min amount with slippage protection
+        // Use output token decimals (shares for deposit, assets for redeem)
         if (args.minAmount) {
-            minAmountOut = parseUnits(args.minAmount, 18).toString()
+            minAmountOut = parseUnits(args.minAmount, outputDecimals).toString()
+            console.log('minAmountOut', minAmountOut)
         } else {
-            minAmountOut = expectedOutputAmount
+            // Apply 0.5% slippage tolerance using BigNumber math to avoid precision loss
+            const slippageBps = 50 // 50 basis points = 0.5%
+            minAmountOut = hubHre.ethers.BigNumber.from(expectedOutputAmount)
+                .mul(10000 - slippageBps)
+                .div(10000)
+                .toString()
+            console.log('minAmountOut with 0.5% slippage:', minAmountOut)
         }
 
         // Create the SendParam for second hop (hub → destination) - used for both quoting and composeMsg
@@ -366,31 +404,23 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
         let lzComposeValue = args.lzComposeValue || '0'
 
         if (!args.lzComposeValue && args.dstEid !== hubEid) {
-            // Determine which OFT to quote (opposite of what we're sending)
-            const outputTokenConfig =
-                args.tokenType === 'asset'
-                    ? args.shareOappConfig || 'layerzero.share.config.ts' // Asset input → Share output
-                    : args.assetOappConfig || 'layerzero.asset.config.ts' // Share input → Asset output
+            // Get the output OFT address directly from the composer contract
+            // This works for any asset (including Stargate) without needing config files
+            const composerArtifact = await hubHre.artifacts.readArtifact('IVaultComposerSync')
+            const composerContract = await hubHre.ethers.getContractAt(composerArtifact.abi, composerAddress, hubSigner)
 
-            const outputLayerZeroConfig = (await import(path.resolve('./', outputTokenConfig))).default
-            const { contracts: outputContracts } =
-                typeof outputLayerZeroConfig === 'function' ? await outputLayerZeroConfig() : outputLayerZeroConfig
-
-            // Find the output OFT on hub chain
-            const hubOutputContract = outputContracts.find(
-                (c: { contract: OmniPointHardhat }) => c.contract.eid === hubEid
-            )
-            if (!hubOutputContract) {
-                throw new Error(`No output OFT config found for hub EID ${hubEid} in ${outputTokenConfig}`)
+            let outputOFTAddress: string
+            if (args.tokenType === 'asset') {
+                // Asset input → Share output
+                outputOFTAddress = await composerContract.SHARE_OFT()
+                logger.info(`Using SHARE_OFT from composer: ${outputOFTAddress}`)
+            } else {
+                // Share input → Asset output
+                outputOFTAddress = await composerContract.ASSET_OFT()
+                logger.info(`Using ASSET_OFT from composer: ${outputOFTAddress}`)
             }
 
-            // Get the output OFT address from hub chain deployments
-            const outputOFTAddress = hubOutputContract.contract.contractName
-                ? (await hubHre.deployments.get(hubOutputContract.contract.contractName)).address
-                : hubOutputContract.contract.address || ''
-
-            // IMPORTANT: Use hub chain RPC/signer for quoting the second hop
-            const hubSigner = (await hubHre.ethers.getSigners())[0]
+            // Quote the second hop using hub chain RPC
             const ioftArtifact = await hubHre.artifacts.readArtifact('IOFT')
             const outputOFT = await hubHre.ethers.getContractAt(ioftArtifact.abi, outputOFTAddress, hubSigner)
 
@@ -403,6 +433,10 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
                 )
             } catch (error) {
                 logger.warn(`Quote failed, using default: 0.025 ETH`)
+                logger.warn(`Quote error details: ${error instanceof Error ? error.message : String(error)}`)
+                if (error && typeof error === 'object' && 'data' in error) {
+                    logger.warn(`Error data: ${JSON.stringify((error as any).data)}`)
+                }
                 lzComposeValue = '25000000000000000' // 0.025 ETH default
             }
         }
@@ -439,14 +473,23 @@ task('lz:ovault:send', 'Sends assets or shares through OVaultComposer with autom
             ? [args.lzReceiveGas.toString(), args.lzReceiveValue || '0']
             : undefined
 
+        // Calculate minAmount for first hop with 0.5% slippage for stablecoin transfers
+        // This is the minimum amount expected to arrive at the hub after the first bridge
+        const slippageBps = 50 // 50 basis points = 0.5%
+        const firstHopMinAmount =
+            args.minAmount || (parseFloat(args.amount) * (1 - slippageBps / 10000)).toFixed(inputDecimals)
+
+        logger.info(`First hop min amount (with ${(slippageBps / 100).toFixed(2)}% slippage): ${firstHopMinAmount}`)
+
         // Call the existing sendEvm function with proper parameters
+        console.log('extraLzComposeOptions', extraLzComposeOptions)
         const evmArgs: EvmArgs = {
             srcEid: args.srcEid,
             dstEid: hubEid, // Send to HUB first
             amount: args.amount,
             to: composerAddress, // Send to composer
             oappConfig: configPath,
-            minAmount: args.minAmount,
+            minAmount: firstHopMinAmount, // Apply slippage to first hop
             extraLzReceiveOptions: extraLzReceiveOptions, // Optional lzReceive options
             extraLzComposeOptions: extraLzComposeOptions,
             extraNativeDropOptions: undefined,

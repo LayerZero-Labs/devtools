@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-adapter-example
 
+## 0.5.6
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+
 ## 0.5.5
 
 ### Patch Changes

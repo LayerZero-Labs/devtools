@@ -6,8 +6,11 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
+export * from './accountMetaRef'
+export * from './addressLocator'
 export * from './enforcedOptions'
-export * from './lzAccount'
+export * from './instruction'
 export * from './lzReceiveParams'
+export * from './lzReceiveTypesV2Result'
 export * from './messagingFee'
 export * from './peerConfigParam'

@@ -1,5 +1,14 @@
 # @layerzerolabs/omnicounter-devtools
 
+## 5.0.1
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+- Updated dependencies [a2851bf]
+  - @layerzerolabs/protocol-devtools@3.0.2
+  - @layerzerolabs/devtools@2.0.4
+
 ## 5.0.0
 
 ### Patch Changes

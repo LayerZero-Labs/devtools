@@ -194,7 +194,7 @@ teardown() {
 @test "should work with pnpm & oft solana example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft-solana"
 
-    LZ_ENABLE_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
+    npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test

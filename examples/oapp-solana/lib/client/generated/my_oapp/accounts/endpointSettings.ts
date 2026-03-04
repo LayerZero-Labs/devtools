@@ -64,10 +64,7 @@ export function getEndpointSettingsAccountDataSerializer(): Serializer<
             ],
             { description: 'EndpointSettingsAccountData' }
         ),
-        (value) => ({
-            ...value,
-            discriminator: new Uint8Array([221, 232, 73, 56, 10, 66, 72, 14]),
-        })
+        (value) => ({ ...value, discriminator: new Uint8Array([221, 232, 73, 56, 10, 66, 72, 14]) })
     ) as Serializer<EndpointSettingsAccountDataArgs, EndpointSettingsAccountData>
 }
 
@@ -124,7 +121,7 @@ export async function safeFetchAllEndpointSettings(
 }
 
 export function getEndpointSettingsGpaBuilder(context: Pick<Context, 'rpc' | 'programs'>) {
-    const programId = context.programs.getPublicKey('myOapp', 'HFyiETGKEUS9tr87K1HXmVJHkqQRtw8wShRNTMkKKxay')
+    const programId = context.programs.getPublicKey('myOapp', '')
     return gpaBuilder(context, programId)
         .registerFields<{
             discriminator: Uint8Array

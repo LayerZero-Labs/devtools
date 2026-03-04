@@ -26,8 +26,15 @@ export const getExamples = (): Example[] => {
             ref,
         },
         {
+            id: 'oft-solana',
+            label: 'OFT - EVM, Solana',
+            repository,
+            directory: 'examples/oft-solana',
+            ref,
+        },
+        {
             id: 'oft',
-            label: 'OFT',
+            label: 'OFT - EVM only',
             repository,
             directory: 'examples/oft',
             ref,
@@ -145,18 +152,6 @@ export const getExamples = (): Example[] => {
                       label: 'lzRead UniswapV3 Quote',
                       repository,
                       directory: 'examples/uniswap-read',
-                      ref,
-                  },
-              ]
-            : []),
-        // The Solana OFT example is feature flagged for the time being
-        ...(process.env.LZ_ENABLE_SOLANA_OFT_EXAMPLE
-            ? [
-                  {
-                      id: 'oft-solana',
-                      label: 'OFT (Solana)',
-                      repository,
-                      directory: 'examples/oft-solana',
                       ref,
                   },
               ]

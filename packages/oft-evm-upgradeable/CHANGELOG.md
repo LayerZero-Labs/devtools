@@ -1,5 +1,19 @@
 # @layerzerolabs/oft-evm-upgradeable
 
+## 4.0.2
+
+### Patch Changes
+
+- 3de3f5b: Add virtual keyword to overridable functions
+
+## 4.0.1
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+- Updated dependencies [a2851bf]
+  - @layerzerolabs/oapp-evm@0.4.1
+
 ## 4.0.0
 
 ### Patch Changes

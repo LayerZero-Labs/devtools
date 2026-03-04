@@ -8,11 +8,14 @@ import {
     getAccountLenForMint,
     unpackMint,
 } from '@solana/spl-token'
-import { AccountInfo, Connection } from '@solana/web3.js'
+import { AccountInfo, Connection, PublicKey as Web3JsPublicKey } from '@solana/web3.js'
+import * as multisig from '@sqds/multisig'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { createLogger } from '@layerzerolabs/io-devtools'
 import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
+import { EndpointPDADeriver, EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
+import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import {
     OAppOmniGraphHardhatSchema,
@@ -179,7 +182,6 @@ export async function getMinimumValueForSendToSolana(args: {
     // Stale RPC data issue: The ATA might have been created at t=0, but the RPC will only pick it up at t=X but a send was initiated at t < x.
     const { ata, ataExists, tokenType } = await checkAssociatedTokenAccountExists({
         owner: recipient,
-        connection,
         mint,
         mintAccountInfo,
         umi,
@@ -212,4 +214,67 @@ async function getMinimumRentForToken2022TokenAccount(args: {
     const tokenAccountSize = getAccountLenForMint(mintAccount)
     const rentExemptLamports = await connection.getMinimumBalanceForRentExemption(tokenAccountSize)
     return rentExemptLamports
+}
+
+/**
+ * Fetches the admin and delegate for a given OFT Store.
+ * @param umi - The Umi instance
+ * @param connection - The Solana connection
+ * @param oftStoreAddress - The OFT Store address as a string
+ * @returns An object containing the admin and delegate addresses
+ */
+export async function getOftAdminAndDelegate(
+    umi: Umi,
+    connection: Connection,
+    oftStoreAddress: string
+): Promise<{ admin: string; delegate: string | undefined }> {
+    const oftStore = publicKey(oftStoreAddress)
+
+    const oftStoreInfo = await oft.accounts.fetchOFTStore(umi, oftStore)
+    const admin = oftStoreInfo.admin.toString()
+
+    const epDeriver = new EndpointPDADeriver(EndpointProgram.PROGRAM_ID)
+    const [oAppRegistry] = epDeriver.oappRegistry(toWeb3JsPublicKey(oftStore))
+    const oAppRegistryInfo = await EndpointProgram.accounts.OAppRegistry.fromAccountAddress(connection, oAppRegistry)
+    const delegate = oAppRegistryInfo?.delegate?.toBase58()
+
+    return { admin, delegate }
+}
+
+/**
+ * Derives the signing authority from the user account and optional multisig key,
+ * then checks if it matches the OFT's admin/delegate. Returns any warnings.
+ */
+export async function validateSigningAuthority(
+    umi: Umi,
+    connection: Connection,
+    oftStoreAddress: string,
+    userAccount: Web3JsPublicKey,
+    multisigKey?: Web3JsPublicKey
+): Promise<{ signingAuthority: string; warnings: string[] }> {
+    const { admin, delegate } = await getOftAdminAndDelegate(umi, connection, oftStoreAddress)
+
+    let signingAuthority: string
+    if (multisigKey) {
+        const [vaultPda] = multisig.getVaultPda({ multisigPda: multisigKey, index: 0 })
+        signingAuthority = vaultPda.toBase58()
+    } else {
+        signingAuthority = userAccount.toBase58()
+    }
+
+    const warnings: string[] = []
+    if (signingAuthority !== admin) {
+        warnings.push(
+            `Signing authority (${signingAuthority}) is not the admin (${admin}). ` +
+                `Use the correct keypair or supply the correct value for    --multisig-key if the admin is a Squads Vault.`
+        )
+    }
+    if (delegate && signingAuthority !== delegate) {
+        warnings.push(
+            `Signing authority (${signingAuthority}) is not the delegate (${delegate}). ` +
+                `Use the correct keypair or supply the correct value for --multisig-key if the delegate is a Squads Vault.`
+        )
+    }
+
+    return { signingAuthority, warnings }
 }

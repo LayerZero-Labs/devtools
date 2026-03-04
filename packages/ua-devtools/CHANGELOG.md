@@ -1,5 +1,16 @@
 # @layerzerolabs/ua-devtools
 
+## 5.0.2
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+- Updated dependencies [a2851bf]
+- Updated dependencies [afb4dd3]
+  - @layerzerolabs/protocol-devtools@3.0.2
+  - @layerzerolabs/devtools@2.0.4
+  - @layerzerolabs/io-devtools@0.3.2
+
 ## 5.0.1
 
 ### Patch Changes

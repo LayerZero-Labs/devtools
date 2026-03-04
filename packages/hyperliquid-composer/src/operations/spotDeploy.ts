@@ -1,5 +1,4 @@
 import { createModuleLogger } from '@layerzerolabs/io-devtools'
-import { Wallet } from 'ethers'
 import inquirer from 'inquirer'
 
 import {
@@ -8,15 +7,21 @@ import {
     updateQuoteTokenStatus,
     updateUserFreezeStatus,
 } from '../io'
-import { HyperliquidClient } from '../signer'
+import { HyperliquidClient, IHyperliquidSigner } from '../signer'
 import { MAX_HYPERCORE_SUPPLY, QUOTE_TOKENS } from '../types'
-import { getSpotDeployState, getExistingQuoteTokens, getSpotPairDeployAuctionStatus } from './spotMeta'
+import {
+    getSpotDeployState,
+    getExistingQuoteTokens,
+    getSpotPairDeployAuctionStatus,
+    isQuoteAsset,
+    getPendingSpotPairs,
+} from './spotMeta'
 import type { SpotDeployAction, SpotDeployStates } from '../types'
 import { RegisterHyperliquidity } from '@/types/spotDeploy'
 import { LOGGER_MODULES } from '@/types/cli-constants'
 
 export async function setTradingFeeShare(
-    wallet: Wallet,
+    signer: IHyperliquidSigner,
     isTestnet: boolean,
     coreSpotTokenId: number,
     share: string,
@@ -31,12 +36,12 @@ export async function setTradingFeeShare(
     }
 
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, action)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, action)
     return response
 }
 
 export async function setUserGenesis(
-    wallet: Wallet,
+    signer: IHyperliquidSigner,
     isTestnet: boolean,
     coreSpotTokenId: number,
     action: string,
@@ -99,7 +104,7 @@ export async function setUserGenesis(
         logger.info('Setting userAndWei and existingTokenAndWei')
         responseForUserGenesis = await hyperliquidClient.submitHyperliquidAction(
             '/exchange',
-            wallet,
+            signer,
             actionForUserGenesis
         )
     }
@@ -118,7 +123,7 @@ export async function setUserGenesis(
         logger.info('Setting blacklistUsers')
         responseForBlacklistUsers = await hyperliquidClient.submitHyperliquidAction(
             '/exchange',
-            wallet,
+            signer,
             actionForBlacklistUsers
         )
     }
@@ -126,7 +131,12 @@ export async function setUserGenesis(
     return { responseForUserGenesis, responseForBlacklistUsers }
 }
 
-export async function setGenesis(wallet: Wallet, isTestnet: boolean, coreSpotTokenId: number, logLevel: string) {
+export async function setGenesis(
+    signer: IHyperliquidSigner,
+    isTestnet: boolean,
+    coreSpotTokenId: number,
+    logLevel: string
+) {
     const logger = createModuleLogger(LOGGER_MODULES.SET_GENESIS, logLevel)
     const coreSpotDeployment = getCoreSpotDeployment(coreSpotTokenId, isTestnet, logger)
 
@@ -161,56 +171,103 @@ export async function setGenesis(wallet: Wallet, isTestnet: boolean, coreSpotTok
 
     logger.info('Setting genesis')
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, actionForGenesis)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, actionForGenesis)
     return response
 }
 
-export async function setNoHyperliquidity(wallet: Wallet, isTestnet: boolean, tokenIndex: number, logLevel: string) {
+export async function setNoHyperliquidity(
+    signer: IHyperliquidSigner,
+    isTestnet: boolean,
+    tokenIndex: number,
+    logLevel: string,
+    directSpotIndex?: number
+) {
     const logger = createModuleLogger(LOGGER_MODULES.SET_NO_HYPERLIQUIDITY, logLevel)
 
-    const deployStates = (await getSpotDeployState(wallet.address, isTestnet, logLevel)) as SpotDeployStates
+    let finalSpotId: number
 
-    const state = deployStates.states.find((state) => state.token === tokenIndex)
-    if (!state) {
-        logger.error(
-            `No in progress deployment state found for token ${tokenIndex}. This means your token is deployed.`
+    // If spot index is directly provided, skip all discovery
+    if (directSpotIndex !== undefined) {
+        logger.info(`Using directly provided spot index: ${directSpotIndex}`)
+        finalSpotId = directSpotIndex
+    } else {
+        // Discovery mode - find available spot ids
+        const signerAddress = await signer.getAddress()
+        const deployStates = (await getSpotDeployState(signerAddress, isTestnet, logLevel)) as SpotDeployStates
+
+        const state = deployStates.states.find((state) => state.token === tokenIndex)
+
+        let spotIds: number[] = []
+        let isPendingSpotMode = false
+
+        if (!state) {
+            // Token is already deployed - check for pending spot pairs in spotMetaAndAssetCtxs
+            logger.info(
+                `No in progress deployment state found for token ${tokenIndex}. Checking for pending spot pairs network-wide...`
+            )
+
+            const pendingSpots = await getPendingSpotPairs(isTestnet, logLevel)
+
+            if (pendingSpots.length === 0) {
+                logger.error(`No pending spot pairs found network-wide.`)
+                logger.info(`Tip: If you know the spot index, use --spot-index <id> to directly specify it.`)
+                process.exit(1)
+            }
+
+            logger.warn(
+                `WARNING: The API does not provide token composition for pending spots. ` +
+                    `The following are ALL pending spots network-wide, not filtered by token ${tokenIndex}.`
+            )
+            logger.warn(`Use --spot-index <id> to directly specify your spot if you know it from register-spot output.`)
+            logger.info(`Found ${pendingSpots.length} pending spot pair(s) network-wide:`)
+            pendingSpots.forEach((spot) => {
+                logger.info(`  - ${spot.coin} (spot index: ${spot.spotIndex}, markPx: ${spot.markPx})`)
+            })
+
+            spotIds = pendingSpots.map((spot) => spot.spotIndex)
+            isPendingSpotMode = true
+        } else {
+            spotIds = state.spots
+        }
+
+        logger.info(
+            `For information on valid input values, refer to: https://hyperliquid.gitbook.io/hyperliquid-docs/hyperliquid-improvement-proposals-hips/frontend-checks#hyperliquidity`
         )
-        process.exit(1)
-    }
+        logger.info(`Available spot ids: ${spotIds.join(', ')}`)
 
-    const spotIds = state.spots
+        const { spotId } = await inquirer.prompt([
+            {
+                type: 'input',
+                name: 'spotId',
+                message: isPendingSpotMode
+                    ? `Enter the pending spot id to finalize:`
+                    : `Enter the spot id that you would like to create a spot deployment for.`,
+            },
+        ])
 
-    logger.info(
-        `For information on valid input values, refer to: https://hyperliquid.gitbook.io/hyperliquid-docs/hyperliquid-improvement-proposals-hips/frontend-checks#hyperliquidity`
-    )
-    logger.info(`Available spot ids: ${spotIds}`)
-    const { spotId } = await inquirer.prompt([
-        {
-            type: 'input',
-            name: 'spotId',
-            message: `Enter the spot id that you would like to create a spot deployment for.`,
-        },
-    ])
+        if (!spotIds.includes(parseInt(spotId))) {
+            logger.error(`Invalid spot id: ${spotId}. Available: ${spotIds.join(', ')}`)
+            process.exit(1)
+        }
 
-    if (!spotIds.includes(parseInt(spotId))) {
-        logger.error(`Invalid spot id: ${spotId}`)
-        process.exit(1)
+        finalSpotId = parseInt(spotId)
     }
 
     logger.info(
-        'The following values will be set: startPx as 1, orderSz as 0, and nOrders as 0. This is because the pricing is determined by the market as we do not support hyperliquidity, which is what these values are used for.'
+        'The following values will be set: startPx, orderSz as 0, and nOrders as 0. This is because the pricing is determined by the market as we do not support hyperliquidity.'
     )
 
     const { startPxApprox } = await inquirer.prompt([
         {
             type: 'input',
             name: 'startPxApprox',
-            message: `Enter the start price of the token in the same order as what you expect it to be in. This is because market makers can't change the price to outside of 95% the current.`,
+            message: `Enter the start price of the token (approximate order of magnitude). Market makers can't change price outside of 95% of this.`,
+            default: '1.0',
         },
     ])
 
     const registerHyperliquidity: RegisterHyperliquidity = {
-        spot: parseInt(spotId),
+        spot: finalSpotId,
         startPx: startPxApprox.toString(),
         orderSz: '0',
         nOrders: 0,
@@ -221,13 +278,18 @@ export async function setNoHyperliquidity(wallet: Wallet, isTestnet: boolean, to
         registerHyperliquidity: registerHyperliquidity,
     }
 
-    logger.info('Registering hyperliquidity')
+    logger.info(`Finalizing spot pair ${finalSpotId} with registerHyperliquidity (no hyperliquidity)`)
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, actionForNoHyperliquidity)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, actionForNoHyperliquidity)
     return response
 }
 
-export async function registerSpot(wallet: Wallet, isTestnet: boolean, coreSpotTokenId: number, logLevel: string) {
+export async function registerSpot(
+    signer: IHyperliquidSigner,
+    isTestnet: boolean,
+    coreSpotTokenId: number,
+    logLevel: string
+) {
     const logger = createModuleLogger(LOGGER_MODULES.REGISTER_TRADING_SPOT, logLevel)
 
     // Get existing quote tokens
@@ -285,7 +347,7 @@ export async function registerSpot(wallet: Wallet, isTestnet: boolean, coreSpotT
     const choices: Array<{ name: string; value: number }> = []
 
     // Add all network quote tokens that haven't been deployed yet
-    networkQuoteTokens.forEach((quoteToken) => {
+    networkQuoteTokens.forEach((quoteToken: { tokenId: number; name: string }) => {
         if (!existingQuoteTokens.includes(quoteToken.tokenId)) {
             choices.push({
                 name: `${quoteToken.name} (Token ${quoteToken.tokenId})`,
@@ -340,15 +402,32 @@ export async function registerSpot(wallet: Wallet, isTestnet: boolean, coreSpotT
                 type: 'input',
                 name: 'customTokenId',
                 message: 'Enter the core spot token ID to use as quote token:',
-                validate: (input: string) => {
+                validate: async (input: string) => {
+                    // Allow user to quit
+                    if (input.toLowerCase() === 'q') {
+                        console.log('\nOperation cancelled by user.\n')
+                        process.exit(0)
+                    }
+
                     const num = parseInt(input)
                     if (isNaN(num) || num < 0) {
-                        return 'Please enter a valid positive number'
+                        return 'Please enter a valid positive number (or "q" as the token ID to quit)'
                     }
                     if (existingQuoteTokens.includes(num)) {
                         return `Token ${num} is already deployed as a quote token for this asset`
                     }
-                    return true
+
+                    // Check if the token is a quote asset
+                    try {
+                        const { isQuoteAsset: isQuote } = await isQuoteAsset(isTestnet, num, logLevel)
+                        if (!isQuote) {
+                            return `Token ${num} is not a recognized quote asset on the Hyperliquid protocol. Only quote assets (tokens paired with HYPE) can be used. Enter "q" as the token ID to quit.`
+                        }
+                        return true
+                    } catch (error) {
+                        // If check fails, don't allow
+                        return `Unable to verify if token ${num} is a quote asset. Enter "q" as the token ID to quit.`
+                    }
                 },
             },
         ])
@@ -384,12 +463,76 @@ export async function registerSpot(wallet: Wallet, isTestnet: boolean, coreSpotT
 
     logger.info(`Register trading spot against ${quoteTokenName}`)
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, actionForRegisterSpot)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, actionForRegisterSpot)
+
+    // Parse and display the allocated spot index
+    if (response.status === 'ok' && response.response?.data?.spot !== undefined) {
+        const spotIndex = response.response.data.spot
+        logger.info('')
+        logger.info('='.repeat(60))
+        logger.info('SPOT REGISTRATION SUCCESSFUL')
+        logger.info('='.repeat(60))
+        logger.info(`Allocated Spot Index: ${spotIndex}`)
+        logger.info(`Base Token: ${coreSpotTokenId}`)
+        logger.info(`Quote Token: ${quoteTokenName} (${quoteTokenId})`)
+        logger.info('')
+        logger.info('NEXT STEP: Finalize the spot pair with:')
+        logger.info(`  npx @layerzerolabs/hyperliquid-composer create-spot-deployment \\`)
+        logger.info(`      --token-index ${coreSpotTokenId} \\`)
+        logger.info(`      --network ${isTestnet ? 'testnet' : 'mainnet'} \\`)
+        logger.info(`      --spot-index ${spotIndex} \\`)
+        logger.info(`      --private-key $PRIVATE_KEY`)
+        logger.info('='.repeat(60))
+    } else if (response.status === 'ok') {
+        // Response ok but no spot data - try to extract from statuses
+        const statuses = response.response?.statuses
+        let foundSpot = false
+        if (statuses && Array.isArray(statuses)) {
+            for (const status of statuses) {
+                if (status.spot !== undefined) {
+                    const spotIndex = status.spot
+                    logger.info('')
+                    logger.info('='.repeat(60))
+                    logger.info('SPOT REGISTRATION SUCCESSFUL')
+                    logger.info('='.repeat(60))
+                    logger.info(`Allocated Spot Index: ${spotIndex}`)
+                    logger.info('')
+                    logger.info('NEXT STEP: Finalize the spot pair with:')
+                    logger.info(`  npx @layerzerolabs/hyperliquid-composer create-spot-deployment \\`)
+                    logger.info(`      --token-index ${coreSpotTokenId} \\`)
+                    logger.info(`      --network ${isTestnet ? 'testnet' : 'mainnet'} \\`)
+                    logger.info(`      --spot-index ${spotIndex} \\`)
+                    logger.info(`      --private-key $PRIVATE_KEY`)
+                    logger.info('='.repeat(60))
+                    foundSpot = true
+                    break
+                }
+            }
+        }
+        if (!foundSpot) {
+            // Fallback: transaction succeeded but spot index not found in response
+            logger.info('')
+            logger.info('='.repeat(60))
+            logger.info('SPOT REGISTRATION SUCCESSFUL')
+            logger.info('='.repeat(60))
+            logger.info('Note: Could not extract spot index from response.')
+            logger.info('Check the transaction on the explorer to find the allocated spot index.')
+            logger.info('')
+            logger.info('Once you have the spot index, finalize with:')
+            logger.info(`  npx @layerzerolabs/hyperliquid-composer create-spot-deployment \\`)
+            logger.info(`      --token-index ${coreSpotTokenId} \\`)
+            logger.info(`      --network ${isTestnet ? 'testnet' : 'mainnet'} \\`)
+            logger.info(`      --spot-index <SPOT_INDEX> \\`)
+            logger.info(`      --private-key $PRIVATE_KEY`)
+            logger.info('='.repeat(60))
+        }
+    }
+
     return response
 }
 
 export async function enableFreezePrivilege(
-    wallet: Wallet,
+    signer: IHyperliquidSigner,
     isTestnet: boolean,
     coreSpotTokenId: number,
     logLevel: string
@@ -419,7 +562,7 @@ export async function enableFreezePrivilege(
 
     logger.info('Enabling freeze privilege')
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, action)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, action)
 
     if (response.status === 'ok') {
         updateFreezePrivilegeStatus(coreSpotTokenId, isTestnet, true, logger)
@@ -429,7 +572,7 @@ export async function enableFreezePrivilege(
 }
 
 export async function freezeUser(
-    wallet: Wallet,
+    signer: IHyperliquidSigner,
     isTestnet: boolean,
     coreSpotTokenId: number,
     userAddress: string,
@@ -463,7 +606,7 @@ export async function freezeUser(
 
     logger.info(`${freeze ? 'Freezing' : 'Unfreezing'} user ${userAddress}`)
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, action)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, action)
 
     if (response.status === 'ok') {
         updateUserFreezeStatus(coreSpotTokenId, isTestnet, userAddress, freeze, logger)
@@ -473,7 +616,7 @@ export async function freezeUser(
 }
 
 export async function revokeFreezePrivilege(
-    wallet: Wallet,
+    signer: IHyperliquidSigner,
     isTestnet: boolean,
     coreSpotTokenId: number,
     logLevel: string
@@ -503,7 +646,7 @@ export async function revokeFreezePrivilege(
 
     logger.info('Revoking freeze privilege (permanent)')
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, action)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, action)
 
     if (response.status === 'ok') {
         updateFreezePrivilegeStatus(coreSpotTokenId, isTestnet, false, logger)
@@ -512,14 +655,19 @@ export async function revokeFreezePrivilege(
     return response
 }
 
-export async function enableQuoteToken(wallet: Wallet, isTestnet: boolean, coreSpotTokenId: number, logLevel: string) {
+export async function enableQuoteToken(
+    signer: IHyperliquidSigner,
+    isTestnet: boolean,
+    coreSpotTokenId: number,
+    logLevel: string
+) {
     const logger = createModuleLogger(LOGGER_MODULES.ENABLE_QUOTE_TOKEN, logLevel)
 
     const { executeTx } = await inquirer.prompt([
         {
             type: 'confirm',
             name: 'executeTx',
-            message: `This will enable token ${coreSpotTokenId} to be used as a quote asset in trading pairs. This can be done after trading fee share is set. \n There are several requirements for this to be successful - reference https://t.me/hyperliquid_api/243. Continue?`,
+            message: `This will enable token ${coreSpotTokenId} to be used as a quote asset in trading pairs. This can be done after trading fee share is set. \n There are several requirements for this to be successful - reference https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/permissionless-spot-quote-assets. Continue?`,
             default: false,
         },
     ])
@@ -538,7 +686,47 @@ export async function enableQuoteToken(wallet: Wallet, isTestnet: boolean, coreS
 
     logger.info('Enabling quote token capability')
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
-    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, action)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, action)
+
+    if (response.status === 'ok') {
+        updateQuoteTokenStatus(coreSpotTokenId, isTestnet, true, logger)
+    }
+
+    return response
+}
+
+export async function enableAlignedQuoteToken(
+    signer: IHyperliquidSigner,
+    isTestnet: boolean,
+    coreSpotTokenId: number,
+    logLevel: string
+) {
+    const logger = createModuleLogger(LOGGER_MODULES.ENABLE_ALIGNED_QUOTE_TOKEN, logLevel)
+
+    const { executeTx } = await inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'executeTx',
+            message: `This will enable token ${coreSpotTokenId} to be used as an ALIGNED quote asset in trading pairs. Aligned quote tokens have special properties and requirements - reference https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/aligned-quote-assets. Continue?`,
+            default: false,
+        },
+    ])
+
+    if (!executeTx) {
+        logger.info('Transaction cancelled - quitting.')
+        process.exit(1)
+    }
+
+    const action: SpotDeployAction['action'] = {
+        type: 'spotDeploy',
+        enableAlignedQuoteToken: {
+            token: coreSpotTokenId,
+        },
+    }
+
+    logger.info('Enabling aligned quote token capability')
+    const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', signer, action)
 
     if (response.status === 'ok') {
         updateQuoteTokenStatus(coreSpotTokenId, isTestnet, true, logger)

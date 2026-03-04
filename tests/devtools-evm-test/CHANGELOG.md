@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-test
 
+## 0.3.7
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+
 ## 0.3.6
 
 ### Patch Changes

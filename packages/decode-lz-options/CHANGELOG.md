@@ -1,5 +1,11 @@
 # decode-lz-options
 
+## 0.1.3
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+
 ## 0.1.2
 
 ### Patch Changes

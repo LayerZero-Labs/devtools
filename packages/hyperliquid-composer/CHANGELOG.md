@@ -1,5 +1,43 @@
 # @layerzerolabs/hyperliquid-composer
 
+## 2.0.8
+
+### Patch Changes
+
+- 306ee69: rename FeeAbstraction to PreFundedFeeAbstraction in docs
+
+## 2.0.7
+
+### Patch Changes
+
+- 91727cf: docs update and natspec
+
+## 2.0.6
+
+### Patch Changes
+
+- e18564f: improved cli and docs on expansion spot market pairs
+
+## 2.0.5
+
+### Patch Changes
+
+- bb2f4c3: sdk updates for quote asset improvement
+
+## 2.0.4
+
+### Patch Changes
+
+- bfea443: alignedQuoteAsset support on core spot deployment + instructions on how to create a custom hyperliquid sdk action for sign + submit
+
+## 2.0.3
+
+### Patch Changes
+
+- afb4dd3: feat: fireblocks and fordefi mpc signers for hyperliquid sdk
+- Updated dependencies [a2851bf]
+  - @layerzerolabs/oapp-evm@0.4.1
+
 ## 2.0.2
 
 ### Patch Changes

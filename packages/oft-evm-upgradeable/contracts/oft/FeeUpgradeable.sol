@@ -39,7 +39,7 @@ abstract contract FeeUpgradeable is IFee, Initializable, OwnableUpgradeable {
     /**
      * @dev Sets the default fee basis points (BPS) for all destinations.
      */
-    function setDefaultFeeBps(uint16 _feeBps) external onlyOwner {
+    function setDefaultFeeBps(uint16 _feeBps) external virtual onlyOwner {
         if (_feeBps > BPS_DENOMINATOR) revert IFee.InvalidBps();
         FeeStorage storage $ = _getFeeStorage();
         $.defaultFeeBps = _feeBps;
@@ -49,7 +49,7 @@ abstract contract FeeUpgradeable is IFee, Initializable, OwnableUpgradeable {
     /**
      * @dev Sets the fee basis points (BPS) for a specific destination LayerZero EndpointV2 ID.
      */
-    function setFeeBps(uint32 _dstEid, uint16 _feeBps, bool _enabled) external onlyOwner {
+    function setFeeBps(uint32 _dstEid, uint16 _feeBps, bool _enabled) external virtual onlyOwner {
         if (_feeBps > BPS_DENOMINATOR) revert IFee.InvalidBps();
         FeeStorage storage $ = _getFeeStorage();
         $.feeBps[_dstEid] = FeeConfig(_feeBps, _enabled);
@@ -65,7 +65,7 @@ abstract contract FeeUpgradeable is IFee, Initializable, OwnableUpgradeable {
         return bps == 0 ? 0 : (_amount * bps) / BPS_DENOMINATOR;
     }
 
-    function _getFeeBps(uint32 _dstEid) internal view returns (uint16) {
+    function _getFeeBps(uint32 _dstEid) internal view virtual returns (uint16) {
         FeeStorage storage $ = _getFeeStorage();
         FeeConfig memory config = $.feeBps[_dstEid];
         return config.enabled ? config.feeBps : $.defaultFeeBps;

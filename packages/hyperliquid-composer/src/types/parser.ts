@@ -79,7 +79,7 @@ export interface DeployState {
     }
     fullName: string | null
     spots: number[]
-    maxSupply: number
+    maxSupply: string
     hyperliquidityGenesisBalance: string
     totalGenesisBalanceWei: string
     userGenesisBalances: [string, string][]

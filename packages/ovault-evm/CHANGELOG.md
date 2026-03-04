@@ -1,5 +1,13 @@
 # @layerzerolabs/ovault-evm
 
+## 1.0.1
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+- Updated dependencies [a2851bf]
+  - @layerzerolabs/oapp-evm@0.4.1
+
 ## 1.0.0
 
 ### Patch Changes

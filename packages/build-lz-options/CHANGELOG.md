@@ -1,5 +1,11 @@
 # build-lz-options
 
+## 0.3.3
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+
 ## 0.3.2
 
 ### Patch Changes

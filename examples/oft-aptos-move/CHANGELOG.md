@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-aptos-move-example
 
+## 1.0.11
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+
 ## 1.0.10
 
 ### Patch Changes

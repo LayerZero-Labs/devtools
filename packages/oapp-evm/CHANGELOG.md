@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-evm
 
+## 0.4.1
+
+### Patch Changes
+
+- a2851bf: bump versions of monorepo packages
+
 ## 0.4.0
 
 ### Minor Changes

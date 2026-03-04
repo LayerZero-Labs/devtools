@@ -94,3 +94,12 @@ export interface RevokeFreezePrivilege {
 export interface EnableQuoteToken {
     token: number
 }
+
+/**
+ * Enables a token to be used as an aligned quote asset in trading pairs.
+ * Aligned quote tokens have special properties and requirements.
+ * @param token - The token index
+ */
+export interface EnableAlignedQuoteToken {
+    token: number
+}
