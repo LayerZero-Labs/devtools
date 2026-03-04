@@ -3,7 +3,7 @@ import assert from 'assert'
 import { mplToolbox } from '@metaplex-foundation/mpl-toolbox'
 import { createSignerFromKeypair, publicKey, signerIdentity } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
-import { fromWeb3JsKeypair, toWeb3JsKeypair, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
+import { fromWeb3JsKeypair, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { Keypair, PublicKey, sendAndConfirmTransaction } from '@solana/web3.js'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
@@ -47,7 +47,6 @@ task(
         const connection = await connectionFactory(taskArgs.eid)
         const umi = createUmi(connection.rpcEndpoint).use(mplToolbox())
         const umiWalletSigner = createSignerFromKeypair(umi, umiKeypair)
-        const web3WalletKeyPair = toWeb3JsKeypair(umiKeypair)
         umi.use(signerIdentity(umiWalletSigner))
 
         const solanaSdkFactory = createOFTFactory(

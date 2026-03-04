@@ -1,4 +1,4 @@
-import { OmniAddress, OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
+import { Bytes, OmniAddress, OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
 import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
 import { IOApp, OAppEnforcedOptionParam } from '@layerzerolabs/ua-devtools'
 
@@ -49,8 +49,8 @@ export function createAptosOAppFactory() {
             async isDelegate(): Promise<boolean> {
                 return false
             },
-            async getEnforcedOptions(): Promise<any> {
-                return {}
+            async getEnforcedOptions(_eid: EndpointId, _msgType: number): Promise<Bytes> {
+                return '0x'
             },
             async setEnforcedOptions(enforcedOptions: OAppEnforcedOptionParam[]): Promise<OmniTransaction> {
                 return createStubTransaction(`setEnforcedOptions(${enforcedOptions.length} options)`)
