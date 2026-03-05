@@ -7,7 +7,7 @@ import { deploymentFile } from '../shared/types'
 import path from 'path'
 import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 import { DeployTaskContext } from '../../sdk/baseTaskHelper'
-import { getAptosCLICommand, checkInitiaCLIVersion } from './utils/config'
+import { getAptosCLICommand, checkInitiaCLIVersion, getInitiaRPCUrl } from './utils/config'
 let stdOut = ''
 let stdErr = ''
 
@@ -36,7 +36,7 @@ async function deployMovementContracts(
             `--named-addresses=${namedAddresses}`,
         ]
     } else if (chainName === 'initia') {
-        checkInitiaCLIVersion()
+        await checkInitiaCLIVersion()
         const userAccountName = getInitiaKeyName()
 
         cmd = 'initiad'
@@ -104,13 +104,6 @@ function getInitiaKeyName() {
         throw new Error('INITIA_KEY_NAME is not set.\n\nPlease set the INITIA_KEY_NAME environment variable.')
     }
     return process.env.INITIA_KEY_NAME
-}
-
-function getInitiaRPCUrl() {
-    if (!process.env.INITIA_RPC_URL) {
-        throw new Error('INITIA_RPC_URL is not set.\n\nPlease set the INITIA_RPC_URL environment variable.')
-    }
-    return process.env.INITIA_RPC_URL
 }
 
 function getInitiaChainId() {

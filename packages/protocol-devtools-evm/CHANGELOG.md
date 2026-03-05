@@ -1,5 +1,11 @@
 # @layerzerolabs/protocol-devtools-evm
 
+## 5.0.3
+
+### Patch Changes
+
+- e5db325: Chunk setConfig into batches of 10 to avoid calldata/gas limits on L2s
+
 ## 5.0.2
 
 ### Patch Changes
