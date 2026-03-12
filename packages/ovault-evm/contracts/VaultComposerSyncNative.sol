@@ -86,6 +86,31 @@ contract VaultComposerSyncNative is VaultComposerSync, IVaultComposerSyncNative 
     }
 
     /**
+     * @dev Unwrap WETH and transfer native ETH directly to recipient on the same chain
+     * @dev Overrides base _sendLocal which would incorrectly transfer WETH (ERC20) instead of native ETH
+     * @dev The base VaultComposerSync._sendLocal does `IERC20(ASSET_ERC20).safeTransfer(recipient, amount)`
+     *      which transfers WETH. For the native variant, the vault redeems WETH but the recipient
+     *      expects native ETH, so we must call WETH.withdraw() first.
+     * @param _oft The OFT contract address to determine asset vs share path
+     * @param _sendParam The parameters for the send operation
+     */
+    function _sendLocal(
+        address _oft,
+        SendParam memory _sendParam,
+        address _refundAddress,
+        uint256 _msgValue
+    ) internal override virtual {
+        if (_oft == ASSET_OFT) {
+            /// @dev Vault redeems WETH; unwrap to native ETH before delivering to recipient
+            IWETH(ASSET_ERC20).withdraw(_sendParam.amountLD);
+            (bool success, ) = payable(address(uint160(uint256(_sendParam.to)))).call{ value: _sendParam.amountLD }("");
+            if (!success) revert NativeTransferFailed();
+        } else {
+            super._sendLocal(_oft, _sendParam, _refundAddress, _msgValue);
+        }
+    }
+
+    /**
      * @dev Unwrap WETH when sending to Stargate PoolNative and send via OFT
      * @dev Overriden to unwrap WETH when sending to Stargate PoolNative
      * @param _oft The OFT contract address to use for sending
