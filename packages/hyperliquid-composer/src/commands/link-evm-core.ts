@@ -1,7 +1,12 @@
 import { createModuleLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 import inquirer from 'inquirer'
 
-import { getCoreSpotDeployment, writeUpdatedCoreSpotDeployment } from '@/io/parser'
+import {
+    getCoreSpotDeployment,
+    getERC20abi,
+    writeNativeSpotConnected,
+    writeUpdatedCoreSpotDeployment,
+} from '@/io/parser'
 import { getHyperliquidSigner } from '@/signer'
 import { setRequestEvmContract, setFinalizeEvmContract } from '@/operations'
 import { LOGGER_MODULES } from '@/types/cli-constants'
@@ -48,13 +53,49 @@ export async function requestEvmContract(args: RequestEvmContractArgs): Promise<
 
     logger.verbose(`txData: \n ${JSON.stringify(txData, null, 2)}`)
 
+    const rpcUrl = isTestnet ? RPC_URLS.TESTNET : RPC_URLS.MAINNET
+    try {
+        const provider = new ethers.providers.JsonRpcProvider({ url: rpcUrl, skipFetchSetup: true })
+        const tokenAbi = await getERC20abi()
+        const tokenContract = new ethers.Contract(tokenAddress, tokenAbi, provider)
+        const onChainDecimals = Number(await tokenContract.decimals())
+        const weiDecimals = coreSpotDeployment.coreSpot.weiDecimals
+        const expectedWeiDiff = onChainDecimals - weiDecimals
+
+        if (txData.weiDiff !== expectedWeiDiff) {
+            logger.warn(`WARNING: txData.weiDiff (${txData.weiDiff}) does not match on-chain calculation`)
+            logger.warn(`  ERC20 decimals (on-chain): ${onChainDecimals}`)
+            logger.warn(`  HyperCore weiDecimals: ${weiDecimals}`)
+            logger.warn(`  Expected evmExtraWeiDecimals: ${expectedWeiDiff}`)
+            logger.warn(`  Stored evmExtraWeiDecimals:   ${txData.weiDiff}`)
+
+            const { useCorrectValue } = await inquirer.prompt([
+                {
+                    type: 'confirm',
+                    name: 'useCorrectValue',
+                    message: `Use on-chain derived value (${expectedWeiDiff}) instead of stored value (${txData.weiDiff})?`,
+                    default: true,
+                },
+            ])
+
+            if (useCorrectValue) {
+                txData.weiDiff = expectedWeiDiff
+                writeNativeSpotConnected(hyperAssetIndex, isTestnet, txData.connected, txData.weiDiff, logger)
+                logger.info(`Updated weiDiff to ${expectedWeiDiff} in deployment file`)
+            }
+        }
+    } catch (error) {
+        logger.warn(`Failed to fetch on-chain decimals: ${error instanceof Error ? error.message : error}`)
+        logger.warn(`Proceeding with stored txData.weiDiff (${txData.weiDiff}) without on-chain validation`)
+    }
+
     const hyperAssetIndexInt = parseInt(hyperAssetIndex)
 
     const { executeTx } = await inquirer.prompt([
         {
             type: 'confirm',
             name: 'executeTx',
-            message: `Trying to populate a request to connect HyperCore-EVM ${hyperAssetIndex} to ${tokenAddress}. This should be sent by the Spot Deployer and before finalizeEvmContract is executed. Do you want to execute the transaction?`,
+            message: `Connect HyperCore-EVM ${hyperAssetIndex} to ${tokenAddress} with evmExtraWeiDecimals=${txData.weiDiff}. This value is IRREVERSIBLE after finalization. Continue?`,
             default: false,
         },
     ])
