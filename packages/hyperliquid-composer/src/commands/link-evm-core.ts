@@ -54,34 +54,39 @@ export async function requestEvmContract(args: RequestEvmContractArgs): Promise<
     logger.verbose(`txData: \n ${JSON.stringify(txData, null, 2)}`)
 
     const rpcUrl = isTestnet ? RPC_URLS.TESTNET : RPC_URLS.MAINNET
-    const provider = new ethers.providers.JsonRpcProvider({ url: rpcUrl, skipFetchSetup: true })
-    const tokenAbi = await getERC20abi()
-    const tokenContract = new ethers.Contract(tokenAddress, tokenAbi, provider)
-    const onChainDecimals: number = await tokenContract.decimals()
-    const weiDecimals = coreSpotDeployment.coreSpot.weiDecimals
-    const expectedWeiDiff = onChainDecimals - weiDecimals
+    try {
+        const provider = new ethers.providers.JsonRpcProvider({ url: rpcUrl, skipFetchSetup: true })
+        const tokenAbi = await getERC20abi()
+        const tokenContract = new ethers.Contract(tokenAddress, tokenAbi, provider)
+        const onChainDecimals = Number(await tokenContract.decimals())
+        const weiDecimals = coreSpotDeployment.coreSpot.weiDecimals
+        const expectedWeiDiff = onChainDecimals - weiDecimals
 
-    if (txData.weiDiff !== expectedWeiDiff) {
-        logger.warn(`WARNING: txData.weiDiff (${txData.weiDiff}) does not match on-chain calculation`)
-        logger.warn(`  ERC20 decimals (on-chain): ${onChainDecimals}`)
-        logger.warn(`  HyperCore weiDecimals: ${weiDecimals}`)
-        logger.warn(`  Expected evmExtraWeiDecimals: ${expectedWeiDiff}`)
-        logger.warn(`  Stored evmExtraWeiDecimals:   ${txData.weiDiff}`)
+        if (txData.weiDiff !== expectedWeiDiff) {
+            logger.warn(`WARNING: txData.weiDiff (${txData.weiDiff}) does not match on-chain calculation`)
+            logger.warn(`  ERC20 decimals (on-chain): ${onChainDecimals}`)
+            logger.warn(`  HyperCore weiDecimals: ${weiDecimals}`)
+            logger.warn(`  Expected evmExtraWeiDecimals: ${expectedWeiDiff}`)
+            logger.warn(`  Stored evmExtraWeiDecimals:   ${txData.weiDiff}`)
 
-        const { useCorrectValue } = await inquirer.prompt([
-            {
-                type: 'confirm',
-                name: 'useCorrectValue',
-                message: `Use on-chain derived value (${expectedWeiDiff}) instead of stored value (${txData.weiDiff})?`,
-                default: true,
-            },
-        ])
+            const { useCorrectValue } = await inquirer.prompt([
+                {
+                    type: 'confirm',
+                    name: 'useCorrectValue',
+                    message: `Use on-chain derived value (${expectedWeiDiff}) instead of stored value (${txData.weiDiff})?`,
+                    default: true,
+                },
+            ])
 
-        if (useCorrectValue) {
-            txData.weiDiff = expectedWeiDiff
-            writeNativeSpotConnected(hyperAssetIndex, isTestnet, txData.connected, txData.weiDiff, logger)
-            logger.info(`Updated weiDiff to ${expectedWeiDiff} in deployment file`)
+            if (useCorrectValue) {
+                txData.weiDiff = expectedWeiDiff
+                writeNativeSpotConnected(hyperAssetIndex, isTestnet, txData.connected, txData.weiDiff, logger)
+                logger.info(`Updated weiDiff to ${expectedWeiDiff} in deployment file`)
+            }
         }
+    } catch (error) {
+        logger.warn(`Failed to fetch on-chain decimals: ${error instanceof Error ? error.message : error}`)
+        logger.warn(`Proceeding with stored txData.weiDiff (${txData.weiDiff}) without on-chain validation`)
     }
 
     const hyperAssetIndexInt = parseInt(hyperAssetIndex)
