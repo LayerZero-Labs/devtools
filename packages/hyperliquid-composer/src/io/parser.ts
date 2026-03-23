@@ -78,9 +78,16 @@ export function writeUpdatedCoreSpotDeployment(
     const fullPath = getFullPath(index.toString(), isTestnet)
 
     const spot = getCoreSpotDeployment(index, isTestnet, logger)
+
+    if (txData.weiDiff == null) {
+        throw new Error(
+            'weiDiff is not set in txData. Run core-spot-deployment create first to calculate the correct value.'
+        )
+    }
+
     spot.coreSpot.evmContract = {
         address: tokenAddress,
-        evm_extra_wei_decimals: txData.weiDiff ?? 0,
+        evm_extra_wei_decimals: txData.weiDiff,
     }
     spot.coreSpot.fullName = tokenFullName
     spot.txData.txHash = txData.txHash
