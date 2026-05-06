@@ -1,3 +1,6 @@
+> [!WARNING]
+> **Production OApps must use at least 2 DVNs.** This example's `move.layerzero.config.ts` ships a single-DVN default for clarity. Before deploying to mainnet, add a non-LayerZero-Labs DVN to every `requiredDVNs` array. See the [Production DVN Configuration](https://docs.layerzero.network/v2/deployments/dvn-addresses) reference and the [migration guide for existing 1-of-1 OApps](https://docs.layerzero.network/v2/get-started/migrating-from-single-dvn).
+
 # OFT Aptos Move Example
 
 ## Setup and Installation

@@ -36,7 +36,9 @@ const pathways: TwoWayConfig[] = [
     [
         hyperevmContract, // Chain A contract
         arbitrumContract, // Chain B contract
-        [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
+        // Replace <SECONDARY_DVN> with a non-LayerZero-Labs DVN provider for this pathway.
+        // See https://docs.layerzero.network/v2/deployments/dvn-addresses for available providers.
+        [['LayerZero Labs', '<SECONDARY_DVN>'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
         [1, 20], // [A to B confirmations, B to A confirmations]
         [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain B enforcedOptions, Chain A enforcedOptions
     ],

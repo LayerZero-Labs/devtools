@@ -1,3 +1,6 @@
+> [!WARNING]
+> **Production OApps must use at least 2 DVNs.** This example's `layerzero.config.ts` ships a single-DVN default for clarity. Before deploying to mainnet, replace `<SECONDARY_DVN>` with a non-LayerZero-Labs DVN provider. See the [Production DVN Configuration](https://docs.layerzero.network/v2/deployments/dvn-addresses) reference and the [migration guide for existing 1-of-1 OApps](https://docs.layerzero.network/v2/get-started/migrating-from-single-dvn).
+
 <p align="center">
   <a href="https://layerzero.network">
     <img alt="LayerZero" style="max-width: 500px" src="https://d3a2dpnnrypp5h.cloudfront.net/bridge-app/lz.png"/>

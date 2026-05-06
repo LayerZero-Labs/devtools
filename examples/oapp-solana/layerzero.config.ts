@@ -43,7 +43,9 @@ const pathways: TwoWayConfig[] = [
     [
         arbitrumContract, // Arbitrum contract
         solanaContract, // Solana contract
-        [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
+        // Replace <SECONDARY_DVN> with a non-LayerZero-Labs DVN provider for this pathway.
+        // See https://docs.layerzero.network/v2/deployments/dvn-addresses for available providers.
+        [['LayerZero Labs', '<SECONDARY_DVN>'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
         [20, 32], // [Arbitrum to Solana outbound confirmations, Solana to Arbitrum outbound confirmations]
         [SOLANA_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Arbitrum to Solana enforcedOptions, Solana to Arbitrum enforcedOptions
     ],
