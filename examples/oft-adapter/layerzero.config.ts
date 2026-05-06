@@ -51,8 +51,10 @@ const pathways: TwoWayConfig[] = [
     [
         baseContract, // Chain A contract
         arbitrumContract, // Chain B contract
-        [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
-        [1, 1], // [A to B confirmations, B to A confirmations]
+        // Replace <SECONDARY_DVN> with a non-LayerZero-Labs DVN provider for this pathway.
+        // See https://docs.layerzero.network/v2/deployments/dvn-addresses for available providers.
+        [['LayerZero Labs', '<SECONDARY_DVN>'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
+        [1, 1], // [A to B confirmations, B to A confirmations] — production typically uses 15+
         [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain B enforcedOptions, Chain A enforcedOptions
     ],
 ]

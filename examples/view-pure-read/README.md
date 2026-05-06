@@ -1,3 +1,6 @@
+> [!WARNING]
+> **Production read OApps must use at least 2 DVNs.** This example's `layerzero.config.ts` ships a single-DVN read channel for clarity. Before deploying to mainnet, add a non-LayerZero-Labs DVN to the `requiredDVNs` array to avoid single-point-of-trust state queries. See the [Production DVN Configuration](https://docs.layerzero.network/v2/deployments/dvn-addresses) reference and the [migration guide for existing 1-of-1 OApps](https://docs.layerzero.network/v2/get-started/migrating-from-single-dvn).
+
 <p align="center">
   <a href="https://layerzero.network">
     <img alt="LayerZero" style="width: 400px" src="https://docs.layerzero.network/img/LayerZero_Logo_White.svg"/>

@@ -53,7 +53,9 @@ export default async function () {
         [
             arbitrumContract, // Chain A contract
             solanaContract, // Chain B contract
-            [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
+            // Replace <SECONDARY_DVN> with a non-LayerZero-Labs DVN provider for this pathway.
+            // See https://docs.layerzero.network/v2/deployments/dvn-addresses for available providers.
+            [['LayerZero Labs', '<SECONDARY_DVN>'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
             [15, 32], // [A to B confirmations, B to A confirmations]
             [SOLANA_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain B enforcedOptions, Chain A enforcedOptions
         ],

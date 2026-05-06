@@ -3,6 +3,12 @@ import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
 
 import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
+// TODO: This example uses a single LayerZero Labs DVN in `requiredDVNs` for clarity.
+// Production OApps must use at least 2 DVNs. Before mainnet, add a non-LayerZero-Labs
+// DVN to each `requiredDVNs` array below. See:
+//   - DVN providers:    https://docs.layerzero.network/v2/deployments/dvn-addresses
+//   - Migration guide:  https://docs.layerzero.network/v2/get-started/migrating-from-single-dvn
+
 // Note:  Do not use address for EVM OmniPointHardhat contracts.  Contracts are loaded using hardhat-deploy.
 const sepoliaContract: OmniPointHardhat = {
     eid: EndpointId.SEPOLIA_TESTNET, /// EndpointV1

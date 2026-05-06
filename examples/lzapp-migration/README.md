@@ -1,3 +1,6 @@
+> [!WARNING]
+> **Production OApps must use at least 2 DVNs.** Both `lzapp.config.ts` and `layerzero.config.ts` ship a single-DVN default for clarity. Before deploying to mainnet, add a non-LayerZero-Labs DVN to every `requiredDVNs` array. See the [Production DVN Configuration](https://docs.layerzero.network/v2/deployments/dvn-addresses) reference and the [migration guide for existing 1-of-1 OApps](https://docs.layerzero.network/v2/get-started/migrating-from-single-dvn).
+
 <p align="center">
   <a href="https://layerzero.network">
     <img alt="LayerZero" style="width: 400px" src="https://docs.layerzero.network/img/LayerZero_Logo_White.svg"/>

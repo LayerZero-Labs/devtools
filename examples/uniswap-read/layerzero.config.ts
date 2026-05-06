@@ -2,6 +2,12 @@ import { ChannelId, EndpointId } from '@layerzerolabs/lz-definitions'
 
 import type { OAppReadOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
+// TODO: This example uses a single LayerZero Labs DVN on the read channel for clarity.
+// Production read OApps must use at least 2 DVNs to avoid single-point-of-trust state queries.
+// Before mainnet, add a non-LayerZero-Labs DVN to `requiredDVNs` below. See:
+//   - DVN providers:    https://docs.layerzero.network/v2/deployments/dvn-addresses
+//   - Migration guide:  https://docs.layerzero.network/v2/get-started/migrating-from-single-dvn
+
 const arbitrumContract: OmniPointHardhat = {
     eid: EndpointId.ARBITRUM_V2_MAINNET,
     contractName: 'UniswapV3QuoteDemo',
