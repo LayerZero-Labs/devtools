@@ -122,6 +122,7 @@ export const getDefaultUlnConfig = (dvnAddress: string): Uln302UlnConfig => {
         requiredDVNs: [dvnAddress],
         requiredDVNCount: 1,
         optionalDVNs: [],
+        optionalDVNCount: 0,
         optionalDVNThreshold: 0,
     }
 }
@@ -136,7 +137,9 @@ export const getDefaultUlnReadConfig = (dvnAddress: string, executorAddress: str
     return {
         executor: executorAddress,
         requiredDVNs: [dvnAddress],
+        requiredDVNCount: 1,
         optionalDVNs: [],
+        optionalDVNCount: 0,
         optionalDVNThreshold: 0,
     }
 }

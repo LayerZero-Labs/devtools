@@ -1,5 +1,5 @@
 import type { IUlnRead, UlnReadUlnConfig, UlnReadUlnUserConfig } from '@layerzerolabs/protocol-devtools'
-import { UlnReadUlnConfigSchema } from '@layerzerolabs/protocol-devtools'
+import { NIL_DVN_COUNT, UlnReadUlnConfigSchema } from '@layerzerolabs/protocol-devtools'
 import {
     OmniAddress,
     type OmniTransaction,
@@ -15,9 +15,6 @@ import { Contract } from '@ethersproject/contracts'
 // Although this SDK is not specific to SendUln302, it uses the SendUln302 ABI
 // because it contains all the necessary method fragments
 import { abi } from '@layerzerolabs/lz-evm-sdk-v2/artifacts/contracts/uln/readlib/ReadLib1002.sol/ReadLib1002.json'
-
-// A value used to indicate that no DVNs are required. It has to be used instead of 0, because 0 falls back to default value.
-const NIL_DVN_COUNT = (1 << 8) - 1 // type(uint8).max = 255
 
 export class UlnRead extends OmniSDK implements IUlnRead {
     constructor(provider: Provider, point: OmniPoint) {

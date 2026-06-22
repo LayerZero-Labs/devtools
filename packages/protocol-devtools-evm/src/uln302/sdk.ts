@@ -1,10 +1,12 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type {
-    IUln302,
-    Uln302ConfigType,
-    Uln302ExecutorConfig,
-    Uln302UlnConfig,
-    Uln302UlnUserConfig,
+import {
+    type IUln302,
+    type Uln302ConfigType,
+    type Uln302ExecutorConfig,
+    type Uln302UlnConfig,
+    type Uln302UlnUserConfig,
+    NIL_CONFIRMATIONS,
+    NIL_DVN_COUNT,
 } from '@layerzerolabs/protocol-devtools'
 import {
     OmniAddress,
@@ -23,11 +25,6 @@ import { Contract } from '@ethersproject/contracts'
 // Although this SDK is not specific to SendUln302, it uses the SendUln302 ABI
 // because it contains all the necessary method fragments
 import { abi } from '@layerzerolabs/lz-evm-sdk-v2/artifacts/contracts/uln/uln302/SendUln302.sol/SendUln302.json'
-
-// A value used to indicate that no DVNs are required. It has to be used instead of 0, because 0 falls back to default value.
-const NIL_DVN_COUNT = (1 << 8) - 1 // type(uint8).max = 255
-// A value used to indicate that no confirmations are required. It has to be used instead of 0, because 0 falls back to default value.
-const NIL_CONFIRMATIONS = (BigInt(1) << BigInt(64)) - BigInt(1) // type(uint64).max
 
 export class Uln302 extends OmniSDK implements IUln302 {
     constructor(provider: Provider, point: OmniPoint) {

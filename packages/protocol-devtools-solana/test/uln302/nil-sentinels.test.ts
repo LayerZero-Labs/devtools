@@ -2,6 +2,7 @@ import { Connection } from '@solana/web3.js'
 import { PublicKey } from '@solana/web3.js'
 import { MainnetV2EndpointId } from '@layerzerolabs/lz-definitions'
 import { Uln302 } from '@/uln302'
+import { Uln302ConfigType } from '@layerzerolabs/protocol-devtools'
 import type { Uln302UlnConfig, Uln302UlnUserConfig } from '@layerzerolabs/protocol-devtools'
 
 const NIL_DVN_COUNT = 255
@@ -72,6 +73,64 @@ describe('uln302/nil-sentinels (solana)', () => {
             expect(normalized.confirmations).toBe(BigInt(0))
             expect(normalized.requiredDVNCount).toBe(0)
             expect(normalized.optionalDVNCount).toBe(0)
+        })
+    })
+
+    describe('hasAppUlnConfig idempotency', () => {
+        const read = (over: Partial<Uln302UlnConfig>): Uln302UlnConfig => ({
+            confirmations: BigInt(0),
+            optionalDVNThreshold: 0,
+            requiredDVNs: [DVN],
+            requiredDVNCount: 1,
+            optionalDVNs: [],
+            optionalDVNCount: 0,
+            ...over,
+        })
+
+        let spy: jest.SpyInstance
+
+        beforeEach(() => {
+            spy = jest.spyOn(Uln302.prototype, 'getAppUlnConfig')
+        })
+
+        afterEach(() => {
+            spy.mockRestore()
+        })
+
+        const hasConfig = async (current: Uln302UlnConfig, desired: Uln302UlnUserConfig) => {
+            spy.mockResolvedValue(current)
+            return ulnSdk.hasAppUlnConfig(
+                MainnetV2EndpointId.SOLANA_V2_MAINNET,
+                new PublicKey(DVN).toBase58(),
+                desired,
+                Uln302ConfigType.Send
+            )
+        }
+
+        it('treats an omitted confirmations as matching a never-set chain value', async () => {
+            await expect(hasConfig(read({}), { requiredDVNs: [DVN] })).resolves.toBe(true)
+        })
+
+        it('treats an explicit zero confirmations as DIFFERENT from a never-set chain value', async () => {
+            await expect(hasConfig(read({}), { requiredDVNs: [DVN], confirmations: BigInt(0) })).resolves.toBe(false)
+        })
+
+        it('treats an explicit zero confirmations as matching a chain that stored the NIL sentinel', async () => {
+            await expect(
+                hasConfig(read({ confirmations: NIL_CONFIRMATIONS }), { requiredDVNs: [DVN], confirmations: BigInt(0) })
+            ).resolves.toBe(true)
+        })
+
+        it('treats an explicitly-empty optionalDVNs as matching a chain that stored NIL', async () => {
+            await expect(
+                hasConfig(read({ optionalDVNCount: NIL_DVN_COUNT }), { requiredDVNs: [DVN], optionalDVNs: [] })
+            ).resolves.toBe(true)
+        })
+
+        it('treats an explicitly-empty optionalDVNs as DIFFERENT from a chain with optionalDVNCount 0', async () => {
+            await expect(
+                hasConfig(read({ optionalDVNCount: 0 }), { requiredDVNs: [DVN], optionalDVNs: [] })
+            ).resolves.toBe(false)
         })
     })
 })

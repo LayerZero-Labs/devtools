@@ -100,7 +100,9 @@ export async function getEpv1SendUlnConfig(
         const ulnConfig: Uln302UlnConfig = {
             confirmations: ulnConfigRaw.confirmations.toNumber(),
             requiredDVNs: ulnConfigRaw.requiredDVNs,
+            requiredDVNCount: ulnConfigRaw.requiredDVNCount,
             optionalDVNs: ulnConfigRaw.optionalDVNs,
+            optionalDVNCount: ulnConfigRaw.optionalDVNCount,
             optionalDVNThreshold: ulnConfigRaw.optionalDVNThreshold,
         }
 
@@ -141,7 +143,9 @@ export async function getEpv1ReceiveUlnConfig(
         const ulnConfig: Uln302UlnConfig = {
             confirmations: ulnConfigRaw.confirmations.toNumber(),
             requiredDVNs: ulnConfigRaw.requiredDVNs,
+            requiredDVNCount: ulnConfigRaw.requiredDVNCount,
             optionalDVNs: ulnConfigRaw.optionalDVNs,
+            optionalDVNCount: ulnConfigRaw.optionalDVNCount,
             optionalDVNThreshold: ulnConfigRaw.optionalDVNThreshold,
         }
 
@@ -330,7 +334,9 @@ export async function getEpv1DefaultSendConfig(
         const emptyUlnConfig: Uln302UlnConfig = {
             confirmations: BigInt(0),
             requiredDVNs: [zeroAddress],
+            requiredDVNCount: 0,
             optionalDVNs: [],
+            optionalDVNCount: 0,
             optionalDVNThreshold: 0,
         }
 
@@ -348,7 +354,9 @@ export async function getEpv1DefaultSendConfig(
         const ulnConfig: Uln302UlnConfig = {
             confirmations: ulnConfigRaw.confirmations.toNumber(),
             requiredDVNs: ulnConfigRaw.requiredDVNs,
+            requiredDVNCount: ulnConfigRaw.requiredDVNCount,
             optionalDVNs: ulnConfigRaw.optionalDVNs,
+            optionalDVNCount: ulnConfigRaw.optionalDVNCount,
             optionalDVNThreshold: ulnConfigRaw.optionalDVNThreshold,
         }
 
@@ -386,7 +394,9 @@ export async function getEpv1DefaultReceiveConfig(
         const emptyUlnConfig: Uln302UlnConfig = {
             confirmations: BigInt(0),
             requiredDVNs: [zeroAddress],
+            requiredDVNCount: 0,
             optionalDVNs: [],
+            optionalDVNCount: 0,
             optionalDVNThreshold: 0,
         }
 
@@ -404,7 +414,9 @@ export async function getEpv1DefaultReceiveConfig(
         const ulnConfig: Uln302UlnConfig = {
             confirmations: ulnConfigRaw.confirmations.toNumber(),
             requiredDVNs: ulnConfigRaw.requiredDVNs,
+            requiredDVNCount: ulnConfigRaw.requiredDVNCount,
             optionalDVNs: ulnConfigRaw.optionalDVNs,
+            optionalDVNCount: ulnConfigRaw.optionalDVNCount,
             optionalDVNThreshold: ulnConfigRaw.optionalDVNThreshold,
         }
 

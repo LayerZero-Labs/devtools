@@ -1,6 +1,8 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import {
     IUln302,
+    NIL_CONFIRMATIONS,
+    NIL_DVN_COUNT,
     Uln302ConfigType,
     Uln302ExecutorConfig,
     Uln302UlnConfig,
@@ -309,11 +311,6 @@ interface SerializedUln302UlnConfig extends Uln302UlnConfig {
  * even though it totally matches the `Uln302ExecutorConfig` type
  */
 type SerializedUln302ExecutorConfig = Uln302ExecutorConfig
-
-// A value used to indicate that no DVNs are required. It has to be used instead of 0, because 0 falls back to default value.
-const NIL_DVN_COUNT = 255 // type(uint8).max
-// A value used to indicate that no confirmations are required. It has to be used instead of 0, because 0 falls back to default value.
-const NIL_CONFIRMATIONS = (BigInt(1) << BigInt(64)) - BigInt(1) // type(uint64).max
 
 const serializeDVNs = (dvns: OmniAddress[]) =>
     dvns

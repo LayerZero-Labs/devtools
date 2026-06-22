@@ -24,7 +24,14 @@ library-wide DEFAULT config continues to serialize literal values (it rejects NI
 sentinels on-chain). On Solana, `confirmations` is now encoded as a `BN` so the
 `u64` NIL sentinel survives without precision loss.
 
-MIGRATION: if you wrote `confirmations: 0` or `optionalDVNs: []` expecting the
-config to inherit the protocol default, OMIT the field instead. An explicit empty
-value now pins literal zero/none — for `confirmations` this means zero block
-confirmations, which is security-relevant.
+MIGRATION:
+
+- If you wrote `confirmations: 0` or `optionalDVNs: []` expecting the config to
+  inherit the protocol default, OMIT the field instead. An explicit empty value now
+  pins literal zero/none — for `confirmations` this means zero block confirmations,
+  which is security-relevant. Re-wiring an existing OApp whose config used these
+  empty values will now emit a `setConfig` that flips it from inherit to pinned.
+- The read types `Uln302UlnConfig` (gains `optionalDVNCount`) and `UlnReadUlnConfig`
+  (gains `requiredDVNCount` and `optionalDVNCount`) have new required fields. Any code
+  that hand-constructs one of these (e.g. mocking an SDK read) must supply the new
+  fields.
