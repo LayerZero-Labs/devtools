@@ -47,13 +47,13 @@ describe('NIL_DVN_COUNT consistency across SDKs', () => {
             const serialized302 = (uln302Sdk as any).serializeUlnConfig(uln302Config)
             const serializedRead = (ulnReadSdk as any).serializeUlnConfig(ulnReadConfig)
 
-            // Both should use NIL_DVN_COUNT
+            // Both should use NIL_DVN_COUNT for the explicitly-empty required DVNs
             expect(serialized302.requiredDVNCount).toBe(NIL_DVN_COUNT)
             expect(serializedRead.requiredDVNCount).toBe(NIL_DVN_COUNT)
 
-            // Optional DVN count should still be 0
-            expect(serialized302.optionalDVNCount).toBe(0)
-            expect(serializedRead.optionalDVNCount).toBe(0)
+            // And both should use NIL_DVN_COUNT for the explicitly-empty optional DVNs
+            expect(serialized302.optionalDVNCount).toBe(NIL_DVN_COUNT)
+            expect(serializedRead.optionalDVNCount).toBe(NIL_DVN_COUNT)
         })
 
         it('should handle non-empty arrays consistently', () => {

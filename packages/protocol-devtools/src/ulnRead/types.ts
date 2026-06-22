@@ -54,7 +54,9 @@ export interface UlnReadUlnConfig {
     executor: string
     optionalDVNThreshold: number
     requiredDVNs: string[]
+    requiredDVNCount: number
     optionalDVNs: string[]
+    optionalDVNCount: number
 }
 
 /**

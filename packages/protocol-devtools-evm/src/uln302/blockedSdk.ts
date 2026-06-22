@@ -28,6 +28,7 @@ export class BlockedUln302 extends Uln302 {
             optionalDVNs: [],
             optionalDVNThreshold: 0,
             requiredDVNCount: 255, // type(uint8).max indicates blocked
+            optionalDVNCount: 0,
         }
     }
 
@@ -67,6 +68,7 @@ export class BlockedUln302 extends Uln302 {
             optionalDVNs: [],
             optionalDVNThreshold: 0,
             requiredDVNCount: 255, // type(uint8).max indicates blocked
+            optionalDVNCount: 0,
         }
     }
 

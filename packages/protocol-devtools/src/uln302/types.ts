@@ -121,6 +121,7 @@ export interface Uln302UlnConfig {
     requiredDVNs: string[]
     requiredDVNCount: number
     optionalDVNs: string[]
+    optionalDVNCount: number
 }
 
 /**
