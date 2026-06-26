@@ -493,10 +493,10 @@ function encodeUlnConfig(config: Uln302UlnConfig): string {
         ],
         [
             [
-                config.confirmations,
+                config.confirmations ?? 0,
                 (config.requiredDVNs || []).length,
                 (config.optionalDVNs || []).length,
-                config.optionalDVNThreshold,
+                config.optionalDVNThreshold ?? 0,
                 config.requiredDVNs || [],
                 config.optionalDVNs || [],
             ],
