@@ -6,6 +6,11 @@
 
 Treat explicitly-empty ULN302 config values as NIL sentinels instead of defaults
 
+This lets a team pin a literal "none"/"zero" so their security configuration is exactly
+what their config file says, rather than silently inheriting a default that LayerZero
+controls. Being able to opt out of defaults is the point: a pinned config cannot change
+underneath a team when a default is updated.
+
 When serializing an OApp ULN302 / Read config, `requiredDVNs` and `optionalDVNs` now
 behave identically — omitted, explicitly-empty, and concrete each map to a distinct
 on-chain meaning:

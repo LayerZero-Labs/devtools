@@ -12,6 +12,10 @@ to the chain default. This is deliberate: the metadata config is the primary way
 is consumed, and an empty optional-DVN set should be visible in the file rather than
 silently inheriting the default.
 
-Required DVNs are unaffected. Re-wiring an existing pathway that relied on the old inherit
-behavior will emit a `setConfig` pinning no optional DVNs; the effective security is
-unchanged, since optional DVNs with a threshold of 0 add no required verification.
+Re-wiring a pathway that previously inherited the on-chain default will now pin its
+optional-DVN set explicitly. If that default carried optional DVNs (a non-zero threshold),
+pinning an empty set drops them — this is intended. The goal is that a team's verification
+config is exactly what their config file says, not something that can change underneath them
+when a LayerZero-controlled default is updated. An empty optional-DVN set means "no optional
+DVNs"; teams that want an optional quorum should list those DVNs explicitly. Required DVNs
+are unaffected by this change.
