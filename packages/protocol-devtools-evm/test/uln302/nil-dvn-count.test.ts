@@ -48,10 +48,9 @@ describe('uln302/nil-dvn-count', () => {
             expect(serialized.optionalDVNCount).toBe(1)
         })
 
-        it('should handle requiredDVNCount override correctly', () => {
+        it('should inherit the default (count 0) when requiredDVNs is omitted', () => {
             const config: Uln302UlnUserConfig = {
-                requiredDVNs: [],
-                requiredDVNCount: 100, // Explicit override
+                // requiredDVNs omitted → inherit the on-chain default, exactly like optionalDVNs
                 optionalDVNs: [],
                 optionalDVNThreshold: 0,
                 confirmations: BigInt(0),
@@ -60,7 +59,7 @@ describe('uln302/nil-dvn-count', () => {
             // Use reflection to access the protected method
             const serialized = (ulnSdk as any).serializeUlnConfig(config)
 
-            expect(serialized.requiredDVNCount).toBe(100) // Should use the override
+            expect(serialized.requiredDVNCount).toBe(0)
         })
     })
 })

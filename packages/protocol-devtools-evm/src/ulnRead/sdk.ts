@@ -1,10 +1,5 @@
 import type { IUlnRead, UlnReadUlnConfig, UlnReadUlnUserConfig } from '@layerzerolabs/protocol-devtools'
-import {
-    NIL_DVN_COUNT,
-    UlnReadUlnConfigSchema,
-    resolveOptionalDVNCount,
-    resolveRequiredDVNCount,
-} from '@layerzerolabs/protocol-devtools'
+import { NIL_DVN_COUNT, UlnReadUlnConfigSchema, resolveDVNCount } from '@layerzerolabs/protocol-devtools'
 import {
     OmniAddress,
     type OmniTransaction,
@@ -126,13 +121,7 @@ export class UlnRead extends OmniSDK implements IUlnRead {
      * @returns {SerializedUlnReadUlnConfig}
      */
     protected serializeUlnConfig(
-        {
-            requiredDVNs,
-            requiredDVNCount,
-            optionalDVNs,
-            optionalDVNThreshold = 0,
-            executor = makeZeroAddress(),
-        }: UlnReadUlnUserConfig,
+        { requiredDVNs, optionalDVNs, optionalDVNThreshold = 0, executor = makeZeroAddress() }: UlnReadUlnUserConfig,
         /**
          * Whether to encode explicitly-empty fields as NIL sentinels. `true` for an OApp
          * config (explicit `[]` pins "no DVNs"), `false` for the library-wide DEFAULT config
@@ -140,8 +129,8 @@ export class UlnRead extends OmniSDK implements IUlnRead {
          */
         useNilSentinels = true
     ): SerializedUlnReadUlnConfig {
-        const resolvedRequiredDVNCount = resolveRequiredDVNCount(requiredDVNs, requiredDVNCount, useNilSentinels)
-        const resolvedOptionalDVNCount = resolveOptionalDVNCount(optionalDVNs, useNilSentinels)
+        const resolvedRequiredDVNCount = resolveDVNCount(requiredDVNs, useNilSentinels)
+        const resolvedOptionalDVNCount = resolveDVNCount(optionalDVNs, useNilSentinels)
 
         const hasConcreteOptionalDVNs = resolvedOptionalDVNCount !== 0 && resolvedOptionalDVNCount !== NIL_DVN_COUNT
 
@@ -150,7 +139,7 @@ export class UlnRead extends OmniSDK implements IUlnRead {
             requiredDVNCount: resolvedRequiredDVNCount,
             optionalDVNCount: resolvedOptionalDVNCount,
             optionalDVNThreshold: hasConcreteOptionalDVNs ? optionalDVNThreshold : 0,
-            requiredDVNs: requiredDVNs.map(addChecksum).sort(compareBytes32Ascending),
+            requiredDVNs: (requiredDVNs ?? []).map(addChecksum).sort(compareBytes32Ascending),
             optionalDVNs: (optionalDVNs ?? []).map(addChecksum).sort(compareBytes32Ascending),
         }
     }

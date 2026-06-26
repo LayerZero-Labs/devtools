@@ -96,7 +96,7 @@ describe('NIL_DVN_COUNT consistency across SDKs', () => {
     })
 
     describe('Edge cases', () => {
-        it('should distinguish between empty array (255) and explicit zero override', () => {
+        it('should distinguish between empty array (255) and omitted (inherit, 0)', () => {
             const uln302Sdk = new Uln302(provider, {
                 eid: MainnetV2EndpointId.ETHEREUM_V2_MAINNET,
                 address: makeZeroAddress(),
@@ -112,16 +112,14 @@ describe('NIL_DVN_COUNT consistency across SDKs', () => {
             const serializedEmpty = (uln302Sdk as any).serializeUlnConfig(emptyConfig)
             expect(serializedEmpty.requiredDVNCount).toBe(NIL_DVN_COUNT)
 
-            // But explicit 0 override should be honored
-            const explicitZeroConfig: Uln302UlnUserConfig = {
-                requiredDVNs: [],
-                requiredDVNCount: 0, // Explicit override to use chain defaults
+            // But omitting requiredDVNs inherits the chain default (count 0)
+            const inheritConfig: Uln302UlnUserConfig = {
                 optionalDVNs: [],
                 optionalDVNThreshold: 0,
                 confirmations: BigInt(0),
             }
-            const serializedZero = (uln302Sdk as any).serializeUlnConfig(explicitZeroConfig)
-            expect(serializedZero.requiredDVNCount).toBe(0)
+            const serializedInherit = (uln302Sdk as any).serializeUlnConfig(inheritConfig)
+            expect(serializedInherit.requiredDVNCount).toBe(0)
         })
     })
 })

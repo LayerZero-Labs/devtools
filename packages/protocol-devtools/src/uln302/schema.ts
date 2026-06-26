@@ -18,8 +18,7 @@ export const Uln302UlnConfigSchema = z.object({
 
 export const Uln302UlnUserConfigSchema = z.object({
     confirmations: UIntBigIntSchema.optional(),
-    requiredDVNs: z.array(AddressSchema),
-    requiredDVNCount: UIntNumberSchema.optional(),
+    requiredDVNs: z.array(AddressSchema).optional(),
     optionalDVNs: z.array(AddressSchema).optional(),
     optionalDVNThreshold: UIntNumberSchema.optional(),
 }) satisfies z.ZodSchema<Uln302UlnUserConfig, z.ZodTypeDef, unknown>

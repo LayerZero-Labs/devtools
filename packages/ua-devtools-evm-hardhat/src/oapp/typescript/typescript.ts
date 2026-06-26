@@ -45,7 +45,6 @@ import {
     RECEIVE_LIBRARY,
     RECEIVE_LIBRARY_CONFIG,
     REQUIRED_DVNS,
-    REQUIRED_DVN_COUNT,
     SEND_CONFIG,
     SEND_LIBRARY,
     TO,
@@ -313,27 +312,23 @@ export const creatUlnConfig = ({
         )
     }
 
-    // requiredDVNs is mandatory on the config, so we always emit the array (empty for both the
-    // inherit and pin-none cases). To disambiguate them we mirror the sibling fields:
-    //   - count 0 (inherit) → also emit `requiredDVNCount: 0`, which the serializer honors as an
-    //     explicit override so it does NOT derive the NIL sentinel from the empty array.
-    //   - NIL (pin none) → emit just the empty array, which serializes back to NIL.
-    //   - concrete → emit the array; the count is derived from its length.
-    properties.push(
-        factory.createPropertyAssignment(
-            factory.createIdentifier(REQUIRED_DVNS),
-            factory.createArrayLiteralExpression(
-                requiredDVNCount === NIL_DVN_COUNT
-                    ? []
-                    : requiredDVNs.filter((dvn) => dvn != null).map((dvn) => factory.createStringLiteral(dvn))
-            )
-        )
-    )
-    if (requiredDVNCount === 0) {
+    // requiredDVNs: count 0 means "inherit the default" so we omit the field; the NIL sentinel
+    // means "pinned to none", emitted as `[]` so it serializes back to NIL. Only a concrete set
+    // of required DVNs carries the array. (Mirrors the optionalDVNs handling below.)
+    if (requiredDVNCount === NIL_DVN_COUNT) {
         properties.push(
             factory.createPropertyAssignment(
-                factory.createIdentifier(REQUIRED_DVN_COUNT),
-                factory.createNumericLiteral(0)
+                factory.createIdentifier(REQUIRED_DVNS),
+                factory.createArrayLiteralExpression([])
+            )
+        )
+    } else if (requiredDVNCount !== 0) {
+        properties.push(
+            factory.createPropertyAssignment(
+                factory.createIdentifier(REQUIRED_DVNS),
+                factory.createArrayLiteralExpression(
+                    requiredDVNs.filter((dvn) => dvn != null).map((dvn) => factory.createStringLiteral(dvn))
+                )
             )
         )
     }

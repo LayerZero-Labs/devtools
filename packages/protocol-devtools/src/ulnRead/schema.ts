@@ -13,8 +13,7 @@ export const UlnReadUlnConfigSchema = z.object({
 
 export const UlnReadUlnUserConfigSchema = z.object({
     executor: AddressSchema.optional(),
-    requiredDVNs: z.array(AddressSchema),
-    requiredDVNCount: UIntNumberSchema.optional(),
+    requiredDVNs: z.array(AddressSchema).optional(),
     optionalDVNs: z.array(AddressSchema).optional(),
     optionalDVNThreshold: UIntNumberSchema.optional(),
 }) satisfies z.ZodSchema<UlnReadUlnUserConfig, z.ZodTypeDef, unknown>

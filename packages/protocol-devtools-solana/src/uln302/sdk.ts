@@ -7,8 +7,7 @@ import {
     Uln302UlnConfig,
     Uln302UlnUserConfig,
     resolveConfirmations,
-    resolveOptionalDVNCount,
-    resolveRequiredDVNCount,
+    resolveDVNCount,
 } from '@layerzerolabs/protocol-devtools'
 import {
     OmniAddress,
@@ -208,7 +207,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
      * @returns {SerializedUln302UlnConfig}
      */
     protected serializeUlnConfig(
-        { confirmations, requiredDVNs, requiredDVNCount, optionalDVNs, optionalDVNThreshold = 0 }: Uln302UlnUserConfig,
+        { confirmations, requiredDVNs, optionalDVNs, optionalDVNThreshold = 0 }: Uln302UlnUserConfig,
         /**
          * Whether to encode explicitly-empty fields as NIL sentinels.
          *
@@ -220,8 +219,8 @@ export class Uln302 extends OmniSDK implements IUln302 {
          */
         useNilSentinels = true
     ): SerializedUln302UlnConfig {
-        const resolvedRequiredDVNCount = resolveRequiredDVNCount(requiredDVNs, requiredDVNCount, useNilSentinels)
-        const resolvedOptionalDVNCount = resolveOptionalDVNCount(optionalDVNs, useNilSentinels)
+        const resolvedRequiredDVNCount = resolveDVNCount(requiredDVNs, useNilSentinels)
+        const resolvedOptionalDVNCount = resolveDVNCount(optionalDVNs, useNilSentinels)
 
         // The threshold must be 0 unless there are concrete optional DVNs.
         const hasConcreteOptionalDVNs = resolvedOptionalDVNCount !== 0 && resolvedOptionalDVNCount !== NIL_DVN_COUNT
@@ -229,7 +228,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
         return {
             confirmations: resolveConfirmations(confirmations, useNilSentinels),
             optionalDVNThreshold: hasConcreteOptionalDVNs ? optionalDVNThreshold : 0,
-            requiredDVNs: serializeDVNs(requiredDVNs),
+            requiredDVNs: serializeDVNs(requiredDVNs ?? []),
             optionalDVNs: serializeDVNs(optionalDVNs ?? []),
             requiredDVNCount: resolvedRequiredDVNCount,
             optionalDVNCount: resolvedOptionalDVNCount,

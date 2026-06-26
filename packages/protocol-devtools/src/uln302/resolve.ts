@@ -12,27 +12,13 @@ import { NIL_CONFIRMATIONS, NIL_DVN_COUNT } from './constants'
  */
 
 /**
- * `requiredDVNs` is mandatory on the user config, so an empty array is the only "none" signal.
- * An explicit `requiredDVNCount` override always wins (e.g. `0` forces the inherit case);
- * otherwise the count is the array length, or the NIL sentinel for an empty array under
- * `useNilSentinels`.
+ * Resolves a DVN count from a user-config DVN array. Both `requiredDVNs` and `optionalDVNs`
+ * are optional, so we distinguish omitted (`undefined` → inherit the on-chain default, count
+ * `0`) from explicitly empty (`[]` → pin "no DVNs" via the NIL sentinel under `useNilSentinels`).
+ * A concrete array resolves to its length.
  */
-export const resolveRequiredDVNCount = (
-    requiredDVNs: readonly string[],
-    requiredDVNCount: number | undefined,
-    useNilSentinels: boolean
-): number => requiredDVNCount ?? (requiredDVNs.length > 0 ? requiredDVNs.length : useNilSentinels ? NIL_DVN_COUNT : 0)
-
-/**
- * `optionalDVNs` is optional, so we distinguish omitted (`undefined` → inherit the on-chain
- * default, count `0`) from explicitly empty (`[]` → pin "no optional DVNs" via the NIL sentinel
- * under `useNilSentinels`).
- */
-export const resolveOptionalDVNCount = (
-    optionalDVNs: readonly string[] | null | undefined,
-    useNilSentinels: boolean
-): number =>
-    optionalDVNs == null ? 0 : optionalDVNs.length > 0 ? optionalDVNs.length : useNilSentinels ? NIL_DVN_COUNT : 0
+export const resolveDVNCount = (dvns: readonly string[] | null | undefined, useNilSentinels: boolean): number =>
+    dvns == null ? 0 : dvns.length > 0 ? dvns.length : useNilSentinels ? NIL_DVN_COUNT : 0
 
 /**
  * An omitted `confirmations` inherits the on-chain default (`0`); an explicit `0n` pins "zero
