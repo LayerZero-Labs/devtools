@@ -1,4 +1,5 @@
 export * from './config'
 export * from './constants'
+export * from './resolve'
 export * from './schema'
 export * from './types'

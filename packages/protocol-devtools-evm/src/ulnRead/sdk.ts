@@ -1,5 +1,10 @@
 import type { IUlnRead, UlnReadUlnConfig, UlnReadUlnUserConfig } from '@layerzerolabs/protocol-devtools'
-import { NIL_DVN_COUNT, UlnReadUlnConfigSchema } from '@layerzerolabs/protocol-devtools'
+import {
+    NIL_DVN_COUNT,
+    UlnReadUlnConfigSchema,
+    resolveOptionalDVNCount,
+    resolveRequiredDVNCount,
+} from '@layerzerolabs/protocol-devtools'
 import {
     OmniAddress,
     type OmniTransaction,
@@ -135,21 +140,8 @@ export class UlnRead extends OmniSDK implements IUlnRead {
          */
         useNilSentinels = true
     ): SerializedUlnReadUlnConfig {
-        // requiredDVNs is mandatory on the user config, so the only signal is empty vs non-empty.
-        // An explicit count override always wins (e.g. `0` to force the inherit case).
-        const resolvedRequiredDVNCount =
-            requiredDVNCount ?? (requiredDVNs.length > 0 ? requiredDVNs.length : useNilSentinels ? NIL_DVN_COUNT : 0)
-
-        // optionalDVNs is optional, so we distinguish omitted (undefined → inherit default)
-        // from explicitly empty (`[]` → pin "no optional DVNs" via NIL).
-        const resolvedOptionalDVNCount =
-            optionalDVNs == null
-                ? 0
-                : optionalDVNs.length > 0
-                  ? optionalDVNs.length
-                  : useNilSentinels
-                    ? NIL_DVN_COUNT
-                    : 0
+        const resolvedRequiredDVNCount = resolveRequiredDVNCount(requiredDVNs, requiredDVNCount, useNilSentinels)
+        const resolvedOptionalDVNCount = resolveOptionalDVNCount(optionalDVNs, useNilSentinels)
 
         const hasConcreteOptionalDVNs = resolvedOptionalDVNCount !== 0 && resolvedOptionalDVNCount !== NIL_DVN_COUNT
 
