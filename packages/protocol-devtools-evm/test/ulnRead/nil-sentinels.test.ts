@@ -32,6 +32,27 @@ describe('ulnRead/nil-sentinels', () => {
         })
     })
 
+    describe('serializeUlnConfig requiredDVNs', () => {
+        const serialize = (config: UlnReadUlnUserConfig, useNilSentinels?: boolean) =>
+            (ulnSdk as any).serializeUlnConfig(config, useNilSentinels)
+
+        it('maps an explicitly-empty requiredDVNs to NIL_DVN_COUNT (pin "no required DVNs")', () => {
+            expect(serialize({ requiredDVNs: [] }).requiredDVNCount).toBe(NIL_DVN_COUNT)
+        })
+
+        it('honors a requiredDVNCount: 0 override (inherit the on-chain default)', () => {
+            expect(serialize({ requiredDVNs: [], requiredDVNCount: 0 }).requiredDVNCount).toBe(0)
+        })
+
+        it('derives the count from a concrete requiredDVNs array', () => {
+            expect(serialize({ requiredDVNs: [DVN] }).requiredDVNCount).toBe(1)
+        })
+
+        it('keeps an explicitly-empty requiredDVNs literal (count 0) for the DEFAULT config', () => {
+            expect(serialize({ requiredDVNs: [] }, false).requiredDVNCount).toBe(0)
+        })
+    })
+
     describe('hasAppUlnConfig idempotency', () => {
         const read = (over: Partial<UlnReadUlnConfig>): UlnReadUlnConfig => ({
             executor: makeZeroAddress(),
@@ -72,6 +93,26 @@ describe('ulnRead/nil-sentinels', () => {
             await expect(
                 hasConfig(read({ optionalDVNCount: 0 }), { requiredDVNs: [DVN], optionalDVNs: [] })
             ).resolves.toBe(false)
+        })
+
+        it('treats an inherited requiredDVNs (count 0 + override) as matching a chain with requiredDVNCount 0', async () => {
+            await expect(
+                hasConfig(read({ requiredDVNs: [], requiredDVNCount: 0 }), { requiredDVNs: [], requiredDVNCount: 0 })
+            ).resolves.toBe(true)
+        })
+
+        it('treats an explicitly-empty requiredDVNs as matching a chain that stored NIL', async () => {
+            await expect(
+                hasConfig(read({ requiredDVNs: [], requiredDVNCount: NIL_DVN_COUNT }), { requiredDVNs: [] })
+            ).resolves.toBe(true)
+        })
+
+        it('does NOT flip an inherited requiredDVNs (chain count 0) to pinned-none', async () => {
+            // Regression: the desired config inherits (override 0), so wiring must NOT emit a
+            // setConfig that pins requiredDVNCount to NIL.
+            await expect(
+                hasConfig(read({ requiredDVNs: [], requiredDVNCount: 0 }), { requiredDVNs: [], requiredDVNCount: 0 })
+            ).resolves.toBe(true)
         })
     })
 })

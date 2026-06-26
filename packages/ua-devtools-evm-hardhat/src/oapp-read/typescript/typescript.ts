@@ -1,7 +1,7 @@
 import { ExportAssignment, factory, Identifier, NodeArray, PropertyAssignment, Statement } from 'typescript'
 import { OmniAddress } from '@layerzerolabs/devtools'
 import { getReadConfig } from '@/utils/taskHelpers'
-import { UlnReadUlnConfig } from '@layerzerolabs/protocol-devtools'
+import { NIL_DVN_COUNT, UlnReadUlnConfig } from '@layerzerolabs/protocol-devtools'
 import {
     CONFIG,
     CONNECTIONS,
@@ -11,6 +11,7 @@ import {
     FROM,
     OPTIONAL_DVN_THRESHOLD,
     OPTIONAL_DVNS,
+    REQUIRED_DVN_COUNT,
     REQUIRED_DVNS,
     TO,
     ULN_CONFIG,
@@ -154,19 +155,52 @@ export const createReadLibraryConfig = (defaultReadLibrary: string): PropertyAss
 export const createReadUlnConfig = ({
     executor,
     requiredDVNs,
+    requiredDVNCount,
     optionalDVNs,
+    optionalDVNCount,
     optionalDVNThreshold,
 }: UlnReadUlnConfig): PropertyAssignment => {
-    return factory.createPropertyAssignment(
-        factory.createIdentifier(ULN_CONFIG),
-        factory.createObjectLiteralExpression([
-            factory.createPropertyAssignment(factory.createIdentifier(EXECUTOR), factory.createStringLiteral(executor)),
+    const properties: PropertyAssignment[] = [
+        factory.createPropertyAssignment(factory.createIdentifier(EXECUTOR), factory.createStringLiteral(executor)),
+    ]
+
+    // requiredDVNs is mandatory on the config, so we always emit the array (empty for both the
+    // inherit and pin-none cases). To disambiguate them we mirror the uln302 generator:
+    //   - count 0 (inherit) → also emit `requiredDVNCount: 0`, which the serializer honors as an
+    //     explicit override so it does NOT derive the NIL sentinel from the empty array.
+    //   - NIL (pin none) → emit just the empty array, which serializes back to NIL.
+    //   - concrete → emit the array; the count is derived from its length.
+    properties.push(
+        factory.createPropertyAssignment(
+            factory.createIdentifier(REQUIRED_DVNS),
+            factory.createArrayLiteralExpression(
+                requiredDVNCount === NIL_DVN_COUNT
+                    ? []
+                    : requiredDVNs.filter((dvn) => dvn != null).map((dvn) => factory.createStringLiteral(dvn))
+            )
+        )
+    )
+    if (requiredDVNCount === 0) {
+        properties.push(
             factory.createPropertyAssignment(
-                factory.createIdentifier(REQUIRED_DVNS),
-                factory.createArrayLiteralExpression(
-                    requiredDVNs.filter((dvn) => dvn != null).map((dvn) => factory.createStringLiteral(dvn))
-                )
-            ),
+                factory.createIdentifier(REQUIRED_DVN_COUNT),
+                factory.createNumericLiteral(0)
+            )
+        )
+    }
+
+    // optionalDVNs: count 0 means "inherit the default" so we omit the field; the NIL sentinel
+    // means "pinned to none", emitted as `[]` so it serializes back to NIL. Only a concrete set
+    // of optional DVNs carries the array and its threshold.
+    if (optionalDVNCount === NIL_DVN_COUNT) {
+        properties.push(
+            factory.createPropertyAssignment(
+                factory.createIdentifier(OPTIONAL_DVNS),
+                factory.createArrayLiteralExpression([])
+            )
+        )
+    } else if (optionalDVNCount !== 0) {
+        properties.push(
             factory.createPropertyAssignment(
                 factory.createIdentifier(OPTIONAL_DVNS),
                 factory.createArrayLiteralExpression(
@@ -176,8 +210,13 @@ export const createReadUlnConfig = ({
             factory.createPropertyAssignment(
                 factory.createIdentifier(OPTIONAL_DVN_THRESHOLD),
                 factory.createNumericLiteral(optionalDVNThreshold)
-            ),
-        ])
+            )
+        )
+    }
+
+    return factory.createPropertyAssignment(
+        factory.createIdentifier(ULN_CONFIG),
+        factory.createObjectLiteralExpression(properties)
     )
 }
 

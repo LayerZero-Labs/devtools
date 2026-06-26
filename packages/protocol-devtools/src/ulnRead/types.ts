@@ -67,6 +67,15 @@ export interface UlnReadUlnUserConfig {
     executor?: string
     optionalDVNThreshold?: number
     requiredDVNs: string[]
+    /**
+     * Explicit override for the required DVN count.
+     *
+     * `requiredDVNs` is mandatory, so an empty array is ambiguous between "inherit the
+     * on-chain default" and "pin no required DVNs". Setting this to `0` forces the inherit
+     * case (the serializer will NOT derive the NIL sentinel from the empty array); leaving
+     * it omitted lets the count be derived from the array.
+     */
+    requiredDVNCount?: number
     optionalDVNs?: string[]
 }
 

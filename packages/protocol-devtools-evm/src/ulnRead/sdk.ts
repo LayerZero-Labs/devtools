@@ -121,7 +121,13 @@ export class UlnRead extends OmniSDK implements IUlnRead {
      * @returns {SerializedUlnReadUlnConfig}
      */
     protected serializeUlnConfig(
-        { requiredDVNs, optionalDVNs, optionalDVNThreshold = 0, executor = makeZeroAddress() }: UlnReadUlnUserConfig,
+        {
+            requiredDVNs,
+            requiredDVNCount,
+            optionalDVNs,
+            optionalDVNThreshold = 0,
+            executor = makeZeroAddress(),
+        }: UlnReadUlnUserConfig,
         /**
          * Whether to encode explicitly-empty fields as NIL sentinels. `true` for an OApp
          * config (explicit `[]` pins "no DVNs"), `false` for the library-wide DEFAULT config
@@ -129,6 +135,11 @@ export class UlnRead extends OmniSDK implements IUlnRead {
          */
         useNilSentinels = true
     ): SerializedUlnReadUlnConfig {
+        // requiredDVNs is mandatory on the user config, so the only signal is empty vs non-empty.
+        // An explicit count override always wins (e.g. `0` to force the inherit case).
+        const resolvedRequiredDVNCount =
+            requiredDVNCount ?? (requiredDVNs.length > 0 ? requiredDVNs.length : useNilSentinels ? NIL_DVN_COUNT : 0)
+
         // optionalDVNs is optional, so we distinguish omitted (undefined → inherit default)
         // from explicitly empty (`[]` → pin "no optional DVNs" via NIL).
         const resolvedOptionalDVNCount =
@@ -144,7 +155,7 @@ export class UlnRead extends OmniSDK implements IUlnRead {
 
         return {
             executor,
-            requiredDVNCount: requiredDVNs.length > 0 ? requiredDVNs.length : useNilSentinels ? NIL_DVN_COUNT : 0,
+            requiredDVNCount: resolvedRequiredDVNCount,
             optionalDVNCount: resolvedOptionalDVNCount,
             optionalDVNThreshold: hasConcreteOptionalDVNs ? optionalDVNThreshold : 0,
             requiredDVNs: requiredDVNs.map(addChecksum).sort(compareBytes32Ascending),

@@ -16,13 +16,21 @@ inherits the on-chain default:
 - Omitting a field (leaving it `undefined`) continues to inherit the on-chain
   default.
 
+The same treatment applies to the Read library (`UlnRead`): `optionalDVNs: []`
+pins `NIL_DVN_COUNT` and an empty `requiredDVNs` pins `NIL_DVN_COUNT` unless the
+inherit case is forced (see below).
+
 To support this, `Uln302UlnConfig`/`UlnReadUlnConfig` now carry `optionalDVNCount`
 (and `UlnReadUlnConfig` also carries `requiredDVNCount`) so the stored sentinel
-round-trips through the configuration diff. The on-chain read path no longer
-re-applies the empty→NIL mapping, keeping `hasAppUlnConfig` idempotent. The
-library-wide DEFAULT config continues to serialize literal values (it rejects NIL
-sentinels on-chain). On Solana, `confirmations` is now encoded as a `BN` so the
-`u64` NIL sentinel survives without precision loss.
+round-trips through the configuration diff. Because `requiredDVNs` is mandatory on
+the user config, an empty array is ambiguous between inherit and pin-none, so both
+`Uln302UlnUserConfig` and `UlnReadUlnUserConfig` gain an optional `requiredDVNCount`
+override: set it to `0` to force inherit (the serializer then keeps `0` instead of
+deriving the NIL sentinel from the empty array). The on-chain read path no longer
+re-applies the empty→NIL mapping, keeping `hasAppUlnConfig` idempotent on both the
+ULN302 and Read paths. The library-wide DEFAULT config continues to serialize
+literal values (it rejects NIL sentinels on-chain). On Solana, `confirmations` is
+now encoded as a `BN` so the `u64` NIL sentinel survives without precision loss.
 
 MIGRATION:
 
@@ -35,3 +43,6 @@ MIGRATION:
   (gains `requiredDVNCount` and `optionalDVNCount`) have new required fields. Any code
   that hand-constructs one of these (e.g. mocking an SDK read) must supply the new
   fields.
+- For a Read config that inherits its required DVNs, emit `requiredDVNCount: 0`
+  alongside the empty `requiredDVNs: []` (the config generator now does this), or the
+  empty array will be read as pin-none and flip the config on the next wire.
