@@ -48,8 +48,10 @@ describe('uln302/nil-sentinels (solana)', () => {
             expect(serialize({ requiredDVNs: [DVN] }).optionalDVNCount).toBe(0)
         })
 
-        it('maps an explicitly-empty optionalDVNs to NIL_DVN_COUNT (pin "no optional DVNs")', () => {
-            expect(serialize({ requiredDVNs: [DVN], optionalDVNs: [] }).optionalDVNCount).toBe(NIL_DVN_COUNT)
+        it('maps an explicitly-empty optionalDVNs to NIL_DVN_COUNT and clamps the threshold to 0', () => {
+            const serialized = serialize({ requiredDVNs: [DVN], optionalDVNs: [], optionalDVNThreshold: 1 })
+            expect(serialized.optionalDVNCount).toBe(NIL_DVN_COUNT)
+            expect(serialized.optionalDVNThreshold).toBe(0)
         })
 
         it('uses the array length for a non-empty optionalDVNs', () => {

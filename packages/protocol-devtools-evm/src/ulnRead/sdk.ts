@@ -1,5 +1,10 @@
 import type { IUlnRead, UlnReadUlnConfig, UlnReadUlnUserConfig } from '@layerzerolabs/protocol-devtools'
-import { NIL_DVN_COUNT, UlnReadUlnConfigSchema, resolveDVNCount } from '@layerzerolabs/protocol-devtools'
+import {
+    UlnReadUlnConfigSchema,
+    assertValidDefaultConfig,
+    resolveDVNCount,
+    resolveOptionalDVNThreshold,
+} from '@layerzerolabs/protocol-devtools'
 import {
     OmniAddress,
     type OmniTransaction,
@@ -131,19 +136,12 @@ export class UlnRead extends OmniSDK implements IUlnRead {
     ): SerializedUlnReadUlnConfig {
         const resolvedRequiredDVNCount = resolveDVNCount(requiredDVNs, useNilSentinels)
         const resolvedOptionalDVNCount = resolveDVNCount(optionalDVNs, useNilSentinels)
+        const optionalDVNThresholdResolved = resolveOptionalDVNThreshold(optionalDVNThreshold, resolvedOptionalDVNCount)
 
-        const hasConcreteOptionalDVNs = resolvedOptionalDVNCount !== 0 && resolvedOptionalDVNCount !== NIL_DVN_COUNT
-        const optionalDVNThresholdResolved = hasConcreteOptionalDVNs ? optionalDVNThreshold : 0
-
-        // The library-wide DEFAULT config (the only `useNilSentinels=false` caller) must resolve to
-        // at least one DVN or the contract reverts (`_assertAtLeastOneDVN`: requiredDVNCount 0 AND
-        // optionalDVNThreshold 0). Mirror that against the RESOLVED values so an optional-only
-        // default is allowed — but only with concrete optional DVNs, since a threshold without them
-        // is clamped to 0 above. Catch it here instead of via an opaque on-chain revert.
-        if (!useNilSentinels && resolvedRequiredDVNCount === 0 && optionalDVNThresholdResolved === 0) {
-            throw new Error(
-                'Default ULN config must specify at least one DVN (a required DVN, or optional DVNs with a threshold)'
-            )
+        // The library-wide DEFAULT config is the only `useNilSentinels=false` caller; validate it
+        // against the contract's invariants (the OApp path must never throw on a config diff).
+        if (!useNilSentinels) {
+            assertValidDefaultConfig(resolvedRequiredDVNCount, resolvedOptionalDVNCount, optionalDVNThresholdResolved)
         }
 
         return {

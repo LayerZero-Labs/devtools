@@ -1,13 +1,13 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import {
     IUln302,
-    NIL_DVN_COUNT,
     Uln302ConfigType,
     Uln302ExecutorConfig,
     Uln302UlnConfig,
     Uln302UlnUserConfig,
     resolveConfirmations,
     resolveDVNCount,
+    resolveOptionalDVNThreshold,
 } from '@layerzerolabs/protocol-devtools'
 import {
     OmniAddress,
@@ -221,13 +221,11 @@ export class Uln302 extends OmniSDK implements IUln302 {
     ): SerializedUln302UlnConfig {
         const resolvedRequiredDVNCount = resolveDVNCount(requiredDVNs, useNilSentinels)
         const resolvedOptionalDVNCount = resolveDVNCount(optionalDVNs, useNilSentinels)
-
-        // The threshold must be 0 unless there are concrete optional DVNs.
-        const hasConcreteOptionalDVNs = resolvedOptionalDVNCount !== 0 && resolvedOptionalDVNCount !== NIL_DVN_COUNT
+        const optionalDVNThresholdResolved = resolveOptionalDVNThreshold(optionalDVNThreshold, resolvedOptionalDVNCount)
 
         return {
             confirmations: resolveConfirmations(confirmations, useNilSentinels),
-            optionalDVNThreshold: hasConcreteOptionalDVNs ? optionalDVNThreshold : 0,
+            optionalDVNThreshold: optionalDVNThresholdResolved,
             requiredDVNs: serializeDVNs(requiredDVNs ?? []),
             optionalDVNs: serializeDVNs(optionalDVNs ?? []),
             requiredDVNCount: resolvedRequiredDVNCount,

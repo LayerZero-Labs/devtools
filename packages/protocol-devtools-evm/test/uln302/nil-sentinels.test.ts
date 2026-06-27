@@ -58,6 +58,12 @@ describe('uln302/nil-sentinels', () => {
                 'at least one DVN'
             )
         })
+
+        it('rejects a DEFAULT config whose optional threshold exceeds the optional DVN count', () => {
+            expect(() => serialize({ requiredDVNs: [], optionalDVNs: [DVN], optionalDVNThreshold: 2 }, false)).toThrow(
+                'cannot exceed the number of optional DVNs'
+            )
+        })
     })
 
     describe('serializeUlnConfig optionalDVNs', () => {
