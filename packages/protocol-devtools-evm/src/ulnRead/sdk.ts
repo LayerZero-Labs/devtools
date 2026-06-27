@@ -129,6 +129,13 @@ export class UlnRead extends OmniSDK implements IUlnRead {
          */
         useNilSentinels = true
     ): SerializedUlnReadUlnConfig {
+        // The library-wide DEFAULT config (the only `useNilSentinels=false` caller) must pin at
+        // least one required DVN — the contract reverts on a zero required count there. Catch it
+        // here with a clear message instead of an opaque on-chain revert.
+        if (!useNilSentinels && !requiredDVNs?.length) {
+            throw new Error('Default ULN config must specify at least one required DVN')
+        }
+
         const resolvedRequiredDVNCount = resolveDVNCount(requiredDVNs, useNilSentinels)
         const resolvedOptionalDVNCount = resolveDVNCount(optionalDVNs, useNilSentinels)
 

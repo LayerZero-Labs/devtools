@@ -48,8 +48,8 @@ describe('ulnRead/nil-sentinels', () => {
             expect(serialize({ requiredDVNs: [DVN] }).requiredDVNCount).toBe(1)
         })
 
-        it('keeps an explicitly-empty requiredDVNs literal (count 0) for the DEFAULT config', () => {
-            expect(serialize({ requiredDVNs: [] }, false).requiredDVNCount).toBe(0)
+        it('rejects an empty requiredDVNs on the DEFAULT config (the contract needs at least one)', () => {
+            expect(() => serialize({ requiredDVNs: [] }, false)).toThrow('at least one required DVN')
         })
     })
 

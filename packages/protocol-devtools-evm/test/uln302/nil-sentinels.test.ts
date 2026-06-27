@@ -36,6 +36,10 @@ describe('uln302/nil-sentinels', () => {
         it('keeps an explicit zero literal for the DEFAULT config (no NIL mapping)', () => {
             expect(serialize({ requiredDVNs: [DVN], confirmations: BigInt(0) }, false).confirmations).toBe(BigInt(0))
         })
+
+        it('rejects an empty requiredDVNs on the DEFAULT config (the contract needs at least one)', () => {
+            expect(() => serialize({ requiredDVNs: [] }, false)).toThrow('at least one required DVN')
+        })
     })
 
     describe('serializeUlnConfig optionalDVNs', () => {
