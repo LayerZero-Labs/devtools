@@ -53,6 +53,10 @@ export function buildConfig(
     if (!ulnConfig.optionalDVNs) {
         ulnConfig.optionalDVNs = []
     }
+    // requiredDVNs is optional on the user config; default it the same way as optionalDVNs above
+    if (!ulnConfig.requiredDVNs) {
+        ulnConfig.requiredDVNs = []
+    }
     const _optionalDVNs = returnChecksums(ulnConfig.optionalDVNs)
     const _requiredDVNs = returnChecksums(ulnConfig.requiredDVNs)
 
