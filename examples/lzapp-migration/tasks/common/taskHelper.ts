@@ -483,7 +483,15 @@ function encodeExecutorConfig(config: Uln302ExecutorConfig): string {
 
 /**
  * Encodes the UlnConfig into ABI-encoded bytes.
- * @param config Uln302UlnConfig object
+ *
+ * The DVN counts are derived from the array lengths rather than read from the config's
+ * `requiredDVNCount`/`optionalDVNCount`. That is only valid because the callers here feed
+ * RESOLVED configs (read via `getConfig` -> `getUlnConfig`, which collapses any stored NIL
+ * sentinel to 0 before returning). Uln301 inherits `UlnBase`, so its stored config CAN hold a
+ * NIL sentinel — if this were ever pointed at a raw/stored config (`getAppUlnConfig`), the
+ * length derivation would silently drop that sentinel. Keep it on the resolved-config path.
+ *
+ * @param config Uln302UlnConfig object (resolved, not raw/stored)
  * @returns ABI-encoded string
  */
 function encodeUlnConfig(config: Uln302UlnConfig): string {
