@@ -129,23 +129,28 @@ export class UlnRead extends OmniSDK implements IUlnRead {
          */
         useNilSentinels = true
     ): SerializedUlnReadUlnConfig {
-        // The library-wide DEFAULT config (the only `useNilSentinels=false` caller) must pin at
-        // least one required DVN — the contract reverts on a zero required count there. Catch it
-        // here with a clear message instead of an opaque on-chain revert.
-        if (!useNilSentinels && !requiredDVNs?.length) {
-            throw new Error('Default ULN config must specify at least one required DVN')
-        }
-
         const resolvedRequiredDVNCount = resolveDVNCount(requiredDVNs, useNilSentinels)
         const resolvedOptionalDVNCount = resolveDVNCount(optionalDVNs, useNilSentinels)
 
         const hasConcreteOptionalDVNs = resolvedOptionalDVNCount !== 0 && resolvedOptionalDVNCount !== NIL_DVN_COUNT
+        const optionalDVNThresholdResolved = hasConcreteOptionalDVNs ? optionalDVNThreshold : 0
+
+        // The library-wide DEFAULT config (the only `useNilSentinels=false` caller) must resolve to
+        // at least one DVN or the contract reverts (`_assertAtLeastOneDVN`: requiredDVNCount 0 AND
+        // optionalDVNThreshold 0). Mirror that against the RESOLVED values so an optional-only
+        // default is allowed — but only with concrete optional DVNs, since a threshold without them
+        // is clamped to 0 above. Catch it here instead of via an opaque on-chain revert.
+        if (!useNilSentinels && resolvedRequiredDVNCount === 0 && optionalDVNThresholdResolved === 0) {
+            throw new Error(
+                'Default ULN config must specify at least one DVN (a required DVN, or optional DVNs with a threshold)'
+            )
+        }
 
         return {
             executor,
             requiredDVNCount: resolvedRequiredDVNCount,
             optionalDVNCount: resolvedOptionalDVNCount,
-            optionalDVNThreshold: hasConcreteOptionalDVNs ? optionalDVNThreshold : 0,
+            optionalDVNThreshold: optionalDVNThresholdResolved,
             requiredDVNs: (requiredDVNs ?? []).map(addChecksum).sort(compareBytes32Ascending),
             optionalDVNs: (optionalDVNs ?? []).map(addChecksum).sort(compareBytes32Ascending),
         }

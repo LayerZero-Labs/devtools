@@ -6,6 +6,7 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 
 const NIL_DVN_COUNT = 255
 const DVN = '0x0000000000000000000000000000000000000001'
+const OTHER_DVN = '0x0000000000000000000000000000000000000002'
 
 describe('ulnRead/nil-sentinels', () => {
     let provider: Provider, ulnSdk: UlnRead
@@ -23,8 +24,10 @@ describe('ulnRead/nil-sentinels', () => {
             expect(serialize({ requiredDVNs: [DVN] }).optionalDVNCount).toBe(0)
         })
 
-        it('maps an explicitly-empty optionalDVNs to NIL_DVN_COUNT (pin "no optional DVNs")', () => {
-            expect(serialize({ requiredDVNs: [DVN], optionalDVNs: [] }).optionalDVNCount).toBe(NIL_DVN_COUNT)
+        it('maps an explicitly-empty optionalDVNs to NIL_DVN_COUNT and clamps the threshold to 0', () => {
+            const serialized = serialize({ requiredDVNs: [DVN], optionalDVNs: [], optionalDVNThreshold: 1 })
+            expect(serialized.optionalDVNCount).toBe(NIL_DVN_COUNT)
+            expect(serialized.optionalDVNThreshold).toBe(0)
         })
 
         it('keeps an explicitly-empty optionalDVNs literal (count 0) for the DEFAULT config', () => {
@@ -48,8 +51,25 @@ describe('ulnRead/nil-sentinels', () => {
             expect(serialize({ requiredDVNs: [DVN] }).requiredDVNCount).toBe(1)
         })
 
-        it('rejects an empty requiredDVNs on the DEFAULT config (the contract needs at least one)', () => {
-            expect(() => serialize({ requiredDVNs: [] }, false)).toThrow('at least one required DVN')
+        it('rejects a DEFAULT config with no required DVNs and no optional threshold', () => {
+            expect(() => serialize({ requiredDVNs: [] }, false)).toThrow('at least one DVN')
+        })
+
+        it('allows an optional-only DEFAULT config (no required DVNs, optional quorum)', () => {
+            const serialized = serialize(
+                { requiredDVNs: [], optionalDVNs: [DVN, OTHER_DVN], optionalDVNThreshold: 1 },
+                false
+            )
+            expect(serialized.requiredDVNCount).toBe(0)
+            expect(serialized.optionalDVNCount).toBe(2)
+            expect(serialized.optionalDVNThreshold).toBe(1)
+        })
+
+        it('rejects a DEFAULT config whose only quorum is a threshold with no optional DVNs', () => {
+            // a threshold without concrete optional DVNs is clamped to 0, so it is not a real quorum
+            expect(() => serialize({ requiredDVNs: [], optionalDVNs: [], optionalDVNThreshold: 1 }, false)).toThrow(
+                'at least one DVN'
+            )
         })
     })
 

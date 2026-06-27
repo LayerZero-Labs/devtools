@@ -8,6 +8,7 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 const NIL_DVN_COUNT = 255
 const NIL_CONFIRMATIONS = (BigInt(1) << BigInt(64)) - BigInt(1)
 const DVN = '0x0000000000000000000000000000000000000001'
+const OTHER_DVN = '0x0000000000000000000000000000000000000002'
 
 describe('uln302/nil-sentinels', () => {
     let provider: Provider, ulnSdk: Uln302
@@ -37,8 +38,25 @@ describe('uln302/nil-sentinels', () => {
             expect(serialize({ requiredDVNs: [DVN], confirmations: BigInt(0) }, false).confirmations).toBe(BigInt(0))
         })
 
-        it('rejects an empty requiredDVNs on the DEFAULT config (the contract needs at least one)', () => {
-            expect(() => serialize({ requiredDVNs: [] }, false)).toThrow('at least one required DVN')
+        it('rejects a DEFAULT config with no required DVNs and no optional threshold', () => {
+            expect(() => serialize({ requiredDVNs: [] }, false)).toThrow('at least one DVN')
+        })
+
+        it('allows an optional-only DEFAULT config (no required DVNs, optional quorum)', () => {
+            const serialized = serialize(
+                { requiredDVNs: [], optionalDVNs: [DVN, OTHER_DVN], optionalDVNThreshold: 1 },
+                false
+            )
+            expect(serialized.requiredDVNCount).toBe(0)
+            expect(serialized.optionalDVNCount).toBe(2)
+            expect(serialized.optionalDVNThreshold).toBe(1)
+        })
+
+        it('rejects a DEFAULT config whose only quorum is a threshold with no optional DVNs', () => {
+            // a threshold without concrete optional DVNs is clamped to 0, so it is not a real quorum
+            expect(() => serialize({ requiredDVNs: [], optionalDVNs: [], optionalDVNThreshold: 1 }, false)).toThrow(
+                'at least one DVN'
+            )
         })
     })
 
@@ -49,8 +67,10 @@ describe('uln302/nil-sentinels', () => {
             expect(serialized.optionalDVNThreshold).toBe(0)
         })
 
-        it('maps an explicitly-empty optionalDVNs to NIL_DVN_COUNT (pin "no optional DVNs")', () => {
-            const serialized = serialize({ requiredDVNs: [DVN], optionalDVNs: [] })
+        it('maps an explicitly-empty optionalDVNs to NIL_DVN_COUNT and clamps the threshold to 0', () => {
+            // threshold 1 with no concrete optional DVNs must clamp to 0 (the contract rejects a
+            // non-zero threshold without optional DVNs)
+            const serialized = serialize({ requiredDVNs: [DVN], optionalDVNs: [], optionalDVNThreshold: 1 })
             expect(serialized.optionalDVNCount).toBe(NIL_DVN_COUNT)
             expect(serialized.optionalDVNThreshold).toBe(0)
         })
