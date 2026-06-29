@@ -61,6 +61,20 @@ describe('uln302/nil-sentinels (solana)', () => {
         })
     })
 
+    describe('serializeUlnConfig requiredDVNs', () => {
+        it('maps omitted requiredDVNs to count 0 (inherit the on-chain default)', () => {
+            expect(serialize({}).requiredDVNCount).toBe(0)
+        })
+
+        it('maps an explicitly-empty requiredDVNs to NIL_DVN_COUNT (pin "no required DVNs")', () => {
+            expect(serialize({ requiredDVNs: [] }).requiredDVNCount).toBe(NIL_DVN_COUNT)
+        })
+
+        it('derives the count from a concrete requiredDVNs array', () => {
+            expect(serialize({ requiredDVNs: [DVN] }).requiredDVNCount).toBe(1)
+        })
+    })
+
     describe('normalizeUlnConfig (on-chain read passthrough)', () => {
         it('preserves a never-set read (zeros stay zeros, NOT remapped to NIL)', () => {
             const read: Uln302UlnConfig = {
