@@ -53,6 +53,10 @@ export default async function () {
         [
             arbitrumContract, // Chain A contract
             solanaContract, // Chain B contract
+            // DVN config: [ requiredDVN[], [ optionalDVN[], optionalDVNThreshold ] ]
+            //   - requiredDVNs: every listed DVN must verify each message — set these explicitly.
+            //   - optionalDVNs: an empty array pins "no optional DVNs"; it does NOT inherit the
+            //     on-chain default. For an optional quorum, pass [[...DVNs], threshold].
             [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
             [15, 32], // [A to B confirmations, B to A confirmations]
             [SOLANA_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain B enforcedOptions, Chain A enforcedOptions
