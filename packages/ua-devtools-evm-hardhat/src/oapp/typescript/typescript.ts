@@ -17,7 +17,13 @@ import {
     getEidForNetworkName,
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
-import { Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
+import {
+    NIL_CONFIRMATIONS,
+    Timeout,
+    Uln302ExecutorConfig,
+    Uln302UlnConfig,
+    dvnsFromCount,
+} from '@layerzerolabs/protocol-devtools'
 import {
     CONFIG,
     CONFIRMATIONS,
@@ -283,31 +289,61 @@ export const creatExecutorConfig = ({ maxMessageSize, executor }: Uln302Executor
 export const creatUlnConfig = ({
     confirmations,
     requiredDVNs,
+    requiredDVNCount,
     optionalDVNs,
+    optionalDVNCount,
     optionalDVNThreshold,
 }: Uln302UlnConfig): ObjectLiteralExpression => {
-    return factory.createObjectLiteralExpression([
-        factory.createPropertyAssignment(
-            factory.createIdentifier(CONFIRMATIONS),
-            factory.createBigIntLiteral(confirmations.toString())
-        ),
-        factory.createPropertyAssignment(
-            factory.createIdentifier(REQUIRED_DVNS),
-            factory.createArrayLiteralExpression(
-                requiredDVNs.filter((dvn) => dvn != null).map((dvn) => factory.createStringLiteral(dvn))
+    const properties: PropertyAssignment[] = []
+
+    // confirmations: a chain value of 0 means "inherit the default", so we omit the field
+    // (re-applying an omitted field inherits). The NIL sentinel means "pinned to zero", which
+    // we emit as `0n` so it serializes back to NIL. Any other value is emitted literally.
+    if (confirmations === NIL_CONFIRMATIONS) {
+        properties.push(
+            factory.createPropertyAssignment(factory.createIdentifier(CONFIRMATIONS), factory.createBigIntLiteral('0'))
+        )
+    } else if (confirmations !== BigInt(0)) {
+        properties.push(
+            factory.createPropertyAssignment(
+                factory.createIdentifier(CONFIRMATIONS),
+                factory.createBigIntLiteral(confirmations.toString())
             )
-        ),
-        factory.createPropertyAssignment(
-            factory.createIdentifier(OPTIONAL_DVNS),
-            factory.createArrayLiteralExpression(
-                optionalDVNs.filter((dvn) => dvn != null).map((dvn) => factory.createStringLiteral(dvn))
+        )
+    }
+
+    // requiredDVNs / optionalDVNs: dvnsFromCount returns the array to emit, or undefined to OMIT
+    // the field (inherit the default). An empty array pins "no DVNs" (NIL); a concrete array pins
+    // those DVNs. Only a concrete optional set carries the threshold.
+    const requiredDVNsToEmit = dvnsFromCount(requiredDVNCount, requiredDVNs)
+    if (requiredDVNsToEmit !== undefined) {
+        properties.push(
+            factory.createPropertyAssignment(
+                factory.createIdentifier(REQUIRED_DVNS),
+                factory.createArrayLiteralExpression(requiredDVNsToEmit.map((dvn) => factory.createStringLiteral(dvn)))
             )
-        ),
-        factory.createPropertyAssignment(
-            factory.createIdentifier(OPTIONAL_DVN_THRESHOLD),
-            factory.createNumericLiteral(optionalDVNThreshold)
-        ),
-    ])
+        )
+    }
+
+    const optionalDVNsToEmit = dvnsFromCount(optionalDVNCount, optionalDVNs)
+    if (optionalDVNsToEmit !== undefined) {
+        properties.push(
+            factory.createPropertyAssignment(
+                factory.createIdentifier(OPTIONAL_DVNS),
+                factory.createArrayLiteralExpression(optionalDVNsToEmit.map((dvn) => factory.createStringLiteral(dvn)))
+            )
+        )
+        if (optionalDVNsToEmit.length > 0) {
+            properties.push(
+                factory.createPropertyAssignment(
+                    factory.createIdentifier(OPTIONAL_DVN_THRESHOLD),
+                    factory.createNumericLiteral(optionalDVNThreshold)
+                )
+            )
+        }
+    }
+
+    return factory.createObjectLiteralExpression(properties)
 }
 
 /**

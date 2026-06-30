@@ -1,10 +1,14 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type {
-    IUln302,
-    Uln302ConfigType,
-    Uln302ExecutorConfig,
-    Uln302UlnConfig,
-    Uln302UlnUserConfig,
+import {
+    type IUln302,
+    type Uln302ConfigType,
+    type Uln302ExecutorConfig,
+    type Uln302UlnConfig,
+    type Uln302UlnUserConfig,
+    assertValidDefaultConfig,
+    resolveConfirmations,
+    resolveDVNCount,
+    resolveOptionalDVNThreshold,
 } from '@layerzerolabs/protocol-devtools'
 import {
     OmniAddress,
@@ -23,9 +27,6 @@ import { Contract } from '@ethersproject/contracts'
 // Although this SDK is not specific to SendUln302, it uses the SendUln302 ABI
 // because it contains all the necessary method fragments
 import { abi } from '@layerzerolabs/lz-evm-sdk-v2/artifacts/contracts/uln/uln302/SendUln302.sol/SendUln302.json'
-
-// A value used to indicate that no DVNs are required. It has to be used instead of 0, because 0 falls back to default value.
-const NIL_DVN_COUNT = (1 << 8) - 1 // type(uint8).max = 255
 
 export class Uln302 extends OmniSDK implements IUln302 {
     constructor(provider: Provider, point: OmniPoint) {
@@ -55,6 +56,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
             requiredDVNs: config.requiredDVNs,
             requiredDVNCount: config.requiredDVNCount,
             optionalDVNs: config.optionalDVNs,
+            optionalDVNCount: config.optionalDVNCount,
             optionalDVNThreshold: config.optionalDVNThreshold ?? 0,
         }
         return Uln302UlnConfigSchema.parse(parsed)
@@ -86,6 +88,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
             requiredDVNs: config.requiredDVNs,
             requiredDVNCount: config.requiredDVNCount,
             optionalDVNs: config.optionalDVNs,
+            optionalDVNCount: config.optionalDVNCount,
             optionalDVNThreshold: config.optionalDVNThreshold ?? 0,
         }
         return Uln302UlnConfigSchema.parse(parsed)
@@ -105,7 +108,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
         )
 
         const currentConfig = await this.getAppUlnConfig(eid, oapp, type)
-        const currentSerializedConfig = this.serializeUlnConfig(currentConfig)
+        const currentSerializedConfig = this.normalizeUlnConfig(currentConfig)
         const serializedConfig = this.serializeUlnConfig(config)
 
         this.logger.debug(`Current ULN ${type} config: ${printJson(currentSerializedConfig)}`)
@@ -210,6 +213,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
             requiredDVNs: rtnConfig.requiredDVNs,
             requiredDVNCount: rtnConfig.requiredDVNCount,
             optionalDVNs: rtnConfig.optionalDVNs,
+            optionalDVNCount: rtnConfig.optionalDVNCount,
             optionalDVNThreshold: rtnConfig.optionalDVNThreshold ?? 0,
         }
         return Uln302UlnConfigSchema.parse(parsed)
@@ -223,7 +227,9 @@ export class Uln302 extends OmniSDK implements IUln302 {
     }
 
     async setDefaultUlnConfig(eid: EndpointId, config: Uln302UlnUserConfig): Promise<OmniTransaction> {
-        const serializedConfig = this.serializeUlnConfig(config)
+        // The library-wide DEFAULT config stores literal values and rejects NIL sentinels,
+        // so we serialize without the empty → NIL mapping.
+        const serializedConfig = this.serializeUlnConfig(config, false)
         const data = this.contract.contract.interface.encodeFunctionData('setDefaultUlnConfigs', [
             [
                 {
@@ -249,20 +255,69 @@ export class Uln302 extends OmniSDK implements IUln302 {
      * @param {Uln302UlnUserConfig} config
      * @returns {SerializedUln302UlnConfig}
      */
-    protected serializeUlnConfig({
-        confirmations = BigInt(0),
+    protected serializeUlnConfig(
+        { confirmations, requiredDVNs, optionalDVNs, optionalDVNThreshold = 0 }: Uln302UlnUserConfig,
+        /**
+         * Whether to encode explicitly-empty fields as NIL sentinels.
+         *
+         * For an OApp config this must be `true`: an omitted field inherits the
+         * on-chain default (stored as `0`), whereas an explicitly-empty field
+         * (`confirmations: 0n`, `requiredDVNs: []`, `optionalDVNs: []`) pins the
+         * literal zero/none via a NIL sentinel.
+         *
+         * For the library-wide DEFAULT config this must be `false`: the contract
+         * rejects NIL sentinels there (see `setDefaultUlnConfigs`), so empty/zero
+         * values must stay literal.
+         */
+        useNilSentinels = true
+    ): SerializedUln302UlnConfig {
+        const resolvedRequiredDVNCount = resolveDVNCount(requiredDVNs, useNilSentinels)
+        const resolvedOptionalDVNCount = resolveDVNCount(optionalDVNs, useNilSentinels)
+        const resolvedOptionalDVNThreshold = resolveOptionalDVNThreshold(optionalDVNThreshold, resolvedOptionalDVNCount)
+
+        // The library-wide DEFAULT config is the only `useNilSentinels=false` caller; validate it
+        // against the contract's invariants (the OApp path must never throw on a config diff).
+        if (!useNilSentinels) {
+            assertValidDefaultConfig(resolvedRequiredDVNCount, resolvedOptionalDVNCount, resolvedOptionalDVNThreshold)
+        }
+
+        return {
+            confirmations: resolveConfirmations(confirmations, useNilSentinels),
+            optionalDVNThreshold: resolvedOptionalDVNThreshold,
+            requiredDVNs: (requiredDVNs ?? []).map(addChecksum).sort(compareBytes32Ascending),
+            optionalDVNs: (optionalDVNs ?? []).map(addChecksum).sort(compareBytes32Ascending),
+            requiredDVNCount: resolvedRequiredDVNCount,
+            optionalDVNCount: resolvedOptionalDVNCount,
+        }
+    }
+
+    /**
+     * Normalizes a ULN config read from the chain into the same shape `serializeUlnConfig`
+     * produces, WITHOUT applying the empty → NIL mapping.
+     *
+     * The on-chain struct already carries resolved values — `0`/empty means "inherit
+     * default", a NIL sentinel means "explicitly none". Re-applying the user-config NIL
+     * mapping here would rewrite a stored `0` into NIL and break the idempotency of
+     * `hasAppUlnConfig` (an omitted user field would never match a never-set chain value).
+     *
+     * @param {Uln302UlnConfig} config
+     * @returns {SerializedUln302UlnConfig}
+     */
+    protected normalizeUlnConfig({
+        confirmations,
         requiredDVNs,
-        requiredDVNCount = requiredDVNs.length > 0 ? requiredDVNs.length : NIL_DVN_COUNT,
-        optionalDVNs = [],
-        optionalDVNThreshold = 0,
-    }: Uln302UlnUserConfig): SerializedUln302UlnConfig {
+        requiredDVNCount,
+        optionalDVNs,
+        optionalDVNCount,
+        optionalDVNThreshold,
+    }: Uln302UlnConfig): SerializedUln302UlnConfig {
         return {
             confirmations,
             optionalDVNThreshold,
             requiredDVNs: requiredDVNs.map(addChecksum).sort(compareBytes32Ascending),
             optionalDVNs: optionalDVNs.map(addChecksum).sort(compareBytes32Ascending),
             requiredDVNCount,
-            optionalDVNCount: optionalDVNs.length,
+            optionalDVNCount,
         }
     }
 

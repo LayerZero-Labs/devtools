@@ -10,7 +10,6 @@ exports[`config-metadata generateConnectionsConfig should allow for call without
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -29,7 +28,6 @@ exports[`config-metadata generateConnectionsConfig should allow for call without
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -54,7 +52,6 @@ exports[`config-metadata generateConnectionsConfig should allow for call without
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
           ],
@@ -73,7 +70,6 @@ exports[`config-metadata generateConnectionsConfig should allow for call without
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
           ],
@@ -103,7 +99,6 @@ exports[`config-metadata generateConnectionsConfig should allow for custom DVNs 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -122,7 +117,6 @@ exports[`config-metadata generateConnectionsConfig should allow for custom DVNs 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -147,7 +141,6 @@ exports[`config-metadata generateConnectionsConfig should allow for custom DVNs 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "29EKzmCscUg8mf4f5uskwMqvu2SXM8hKF1gWi1cCBoKT",
           ],
@@ -166,7 +159,6 @@ exports[`config-metadata generateConnectionsConfig should allow for custom DVNs 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "29EKzmCscUg8mf4f5uskwMqvu2SXM8hKF1gWi1cCBoKT",
           ],
@@ -196,7 +188,6 @@ exports[`config-metadata generateConnectionsConfig should generate the connectio
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -215,7 +206,6 @@ exports[`config-metadata generateConnectionsConfig should generate the connectio
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -240,7 +230,6 @@ exports[`config-metadata generateConnectionsConfig should generate the connectio
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
           ],
@@ -259,7 +248,6 @@ exports[`config-metadata generateConnectionsConfig should generate the connectio
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
           ],
@@ -289,7 +277,6 @@ exports[`config-metadata generateConnectionsConfig supports NIL_CONFIRMATIONS 1`
           "confirmations": 18446744073709551615n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 255,
           "requiredDVNs": [],
         },
       },
@@ -306,7 +293,6 @@ exports[`config-metadata generateConnectionsConfig supports NIL_CONFIRMATIONS 1`
           "confirmations": 18446744073709551615n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 255,
           "requiredDVNs": [],
         },
       },
@@ -329,7 +315,6 @@ exports[`config-metadata generateConnectionsConfig supports NIL_CONFIRMATIONS 1`
           "confirmations": 18446744073709551615n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 255,
           "requiredDVNs": [],
         },
       },
@@ -346,7 +331,6 @@ exports[`config-metadata generateConnectionsConfig supports NIL_CONFIRMATIONS 1`
           "confirmations": 18446744073709551615n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 255,
           "requiredDVNs": [],
         },
       },
@@ -374,7 +358,6 @@ exports[`config-metadata generateConnectionsConfig supports passing no required 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 255,
           "requiredDVNs": [],
         },
       },
@@ -391,7 +374,6 @@ exports[`config-metadata generateConnectionsConfig supports passing no required 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 255,
           "requiredDVNs": [],
         },
       },
@@ -414,7 +396,6 @@ exports[`config-metadata generateConnectionsConfig supports passing no required 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 255,
           "requiredDVNs": [],
         },
       },
@@ -431,7 +412,6 @@ exports[`config-metadata generateConnectionsConfig supports passing no required 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 255,
           "requiredDVNs": [],
         },
       },
@@ -459,7 +439,6 @@ exports[`config-metadata generateConnectionsConfig supports using block send and
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -478,7 +457,6 @@ exports[`config-metadata generateConnectionsConfig supports using block send and
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -503,7 +481,6 @@ exports[`config-metadata generateConnectionsConfig supports using block send and
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x55c175dd5b039331db251424538169d8495c18d1",
           ],
@@ -522,7 +499,6 @@ exports[`config-metadata generateConnectionsConfig supports using block send and
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x55c175dd5b039331db251424538169d8495c18d1",
           ],
@@ -552,7 +528,6 @@ exports[`config-metadata generateConnectionsConfig supports using block send and
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -571,7 +546,6 @@ exports[`config-metadata generateConnectionsConfig supports using block send and
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -596,7 +570,6 @@ exports[`config-metadata generateConnectionsConfig supports using block send and
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x55c175dd5b039331db251424538169d8495c18d1",
           ],
@@ -615,7 +588,6 @@ exports[`config-metadata generateConnectionsConfig supports using block send and
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x55c175dd5b039331db251424538169d8495c18d1",
           ],
@@ -648,7 +620,6 @@ exports[`config-metadata generateConnectionsConfig uses NIL_DVN_COUNT when no re
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
             "0xdbec329a5e6d7fb0113eb0a098750d2afd61e9ae",
           ],
-          "requiredDVNCount": 255,
           "requiredDVNs": [],
         },
       },
@@ -668,7 +639,6 @@ exports[`config-metadata generateConnectionsConfig uses NIL_DVN_COUNT when no re
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
             "0xdbec329a5e6d7fb0113eb0a098750d2afd61e9ae",
           ],
-          "requiredDVNCount": 255,
           "requiredDVNs": [],
         },
       },
@@ -694,7 +664,6 @@ exports[`config-metadata generateConnectionsConfig uses NIL_DVN_COUNT when no re
             "29EKzmCscUg8mf4f5uskwMqvu2SXM8hKF1gWi1cCBoKT",
             "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
           ],
-          "requiredDVNCount": 255,
           "requiredDVNs": [],
         },
       },
@@ -714,7 +683,6 @@ exports[`config-metadata generateConnectionsConfig uses NIL_DVN_COUNT when no re
             "29EKzmCscUg8mf4f5uskwMqvu2SXM8hKF1gWi1cCBoKT",
             "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
           ],
-          "requiredDVNCount": 255,
           "requiredDVNs": [],
         },
       },
@@ -742,7 +710,6 @@ exports[`config-metadata translatePathwayToConfig should be able to translate a 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -761,7 +728,6 @@ exports[`config-metadata translatePathwayToConfig should be able to translate a 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
           ],
@@ -786,7 +752,6 @@ exports[`config-metadata translatePathwayToConfig should be able to translate a 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
           ],
@@ -805,7 +770,6 @@ exports[`config-metadata translatePathwayToConfig should be able to translate a 
           "confirmations": 1n,
           "optionalDVNThreshold": 0,
           "optionalDVNs": [],
-          "requiredDVNCount": 1,
           "requiredDVNs": [
             "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
           ],

@@ -10,11 +10,15 @@ export const Uln302UlnConfigInputSchema: z.ZodSchema<Uln302UlnConfig, z.ZodTypeD
         requiredDvns: z.array(PublicKeyBase58Schema),
         requiredDvnCount: UIntNumberSchema,
         optionalDvns: z.array(PublicKeyBase58Schema),
+        optionalDvnCount: UIntNumberSchema,
     })
-    .transform(({ confirmations, optionalDvnThreshold, requiredDvns, optionalDvns, requiredDvnCount }) => ({
-        confirmations,
-        optionalDVNThreshold: optionalDvnThreshold,
-        requiredDVNs: requiredDvns,
-        requiredDVNCount: requiredDvnCount,
-        optionalDVNs: optionalDvns,
-    }))
+    .transform(
+        ({ confirmations, optionalDvnThreshold, requiredDvns, optionalDvns, requiredDvnCount, optionalDvnCount }) => ({
+            confirmations,
+            optionalDVNThreshold: optionalDvnThreshold,
+            requiredDVNs: requiredDvns,
+            requiredDVNCount: requiredDvnCount,
+            optionalDVNs: optionalDvns,
+            optionalDVNCount: optionalDvnCount,
+        })
+    )

@@ -1,5 +1,10 @@
 import type { IUlnRead, UlnReadUlnConfig, UlnReadUlnUserConfig } from '@layerzerolabs/protocol-devtools'
-import { UlnReadUlnConfigSchema } from '@layerzerolabs/protocol-devtools'
+import {
+    UlnReadUlnConfigSchema,
+    assertValidDefaultConfig,
+    resolveDVNCount,
+    resolveOptionalDVNThreshold,
+} from '@layerzerolabs/protocol-devtools'
 import {
     OmniAddress,
     type OmniTransaction,
@@ -15,9 +20,6 @@ import { Contract } from '@ethersproject/contracts'
 // Although this SDK is not specific to SendUln302, it uses the SendUln302 ABI
 // because it contains all the necessary method fragments
 import { abi } from '@layerzerolabs/lz-evm-sdk-v2/artifacts/contracts/uln/readlib/ReadLib1002.sol/ReadLib1002.json'
-
-// A value used to indicate that no DVNs are required. It has to be used instead of 0, because 0 falls back to default value.
-const NIL_DVN_COUNT = (1 << 8) - 1 // type(uint8).max = 255
 
 export class UlnRead extends OmniSDK implements IUlnRead {
     constructor(provider: Provider, point: OmniPoint) {
@@ -70,7 +72,7 @@ export class UlnRead extends OmniSDK implements IUlnRead {
         this.logger.verbose(`Checking whether ULN read configs for channelId ${channelId} and OApp ${oapp} match`)
 
         const currentConfig = await this.getAppUlnConfig(channelId, oapp)
-        const currentSerializedConfig = this.serializeUlnConfig(currentConfig)
+        const currentSerializedConfig = this.normalizeUlnConfig(currentConfig)
         const serializedConfig = this.serializeUlnConfig(config)
 
         this.logger.debug(`Current ULN read config: ${printJson(currentSerializedConfig)}`)
@@ -95,7 +97,9 @@ export class UlnRead extends OmniSDK implements IUlnRead {
     }
 
     async setDefaultUlnConfig(channelId: number, config: UlnReadUlnUserConfig): Promise<OmniTransaction> {
-        const serializedConfig = this.serializeUlnConfig(config)
+        // The library-wide DEFAULT config stores literal values and rejects NIL sentinels,
+        // so we serialize without the empty → NIL mapping.
+        const serializedConfig = this.serializeUlnConfig(config, false)
         const data = this.contract.contract.interface.encodeFunctionData('setDefaultReadLibConfigs', [
             [
                 {
@@ -121,16 +125,57 @@ export class UlnRead extends OmniSDK implements IUlnRead {
      * @param {UlnReadUlnUserConfig} config
      * @returns {SerializedUlnReadUlnConfig}
      */
-    protected serializeUlnConfig({
-        requiredDVNs,
-        optionalDVNs = [],
-        optionalDVNThreshold = 0,
-        executor = makeZeroAddress(),
-    }: UlnReadUlnUserConfig): SerializedUlnReadUlnConfig {
+    protected serializeUlnConfig(
+        { requiredDVNs, optionalDVNs, optionalDVNThreshold = 0, executor = makeZeroAddress() }: UlnReadUlnUserConfig,
+        /**
+         * Whether to encode explicitly-empty fields as NIL sentinels. `true` for an OApp
+         * config (explicit `[]` pins "no DVNs"), `false` for the library-wide DEFAULT config
+         * (which rejects NIL sentinels on-chain).
+         */
+        useNilSentinels = true
+    ): SerializedUlnReadUlnConfig {
+        const resolvedRequiredDVNCount = resolveDVNCount(requiredDVNs, useNilSentinels)
+        const resolvedOptionalDVNCount = resolveDVNCount(optionalDVNs, useNilSentinels)
+        const resolvedOptionalDVNThreshold = resolveOptionalDVNThreshold(optionalDVNThreshold, resolvedOptionalDVNCount)
+
+        // The library-wide DEFAULT config is the only `useNilSentinels=false` caller; validate it
+        // against the contract's invariants (the OApp path must never throw on a config diff).
+        if (!useNilSentinels) {
+            assertValidDefaultConfig(resolvedRequiredDVNCount, resolvedOptionalDVNCount, resolvedOptionalDVNThreshold)
+        }
+
         return {
             executor,
-            requiredDVNCount: requiredDVNs.length > 0 ? requiredDVNs.length : NIL_DVN_COUNT,
-            optionalDVNCount: optionalDVNs.length,
+            requiredDVNCount: resolvedRequiredDVNCount,
+            optionalDVNCount: resolvedOptionalDVNCount,
+            optionalDVNThreshold: resolvedOptionalDVNThreshold,
+            requiredDVNs: (requiredDVNs ?? []).map(addChecksum).sort(compareBytes32Ascending),
+            optionalDVNs: (optionalDVNs ?? []).map(addChecksum).sort(compareBytes32Ascending),
+        }
+    }
+
+    /**
+     * Normalizes a ULN read config read from the chain into the same shape
+     * `serializeUlnConfig` produces, WITHOUT applying the empty → NIL mapping.
+     *
+     * Re-applying the user-config NIL mapping to an on-chain read would rewrite a stored
+     * `0` (inherit default) into NIL and break the idempotency of `hasAppUlnConfig`.
+     *
+     * @param {UlnReadUlnConfig} config
+     * @returns {SerializedUlnReadUlnConfig}
+     */
+    protected normalizeUlnConfig({
+        executor,
+        requiredDVNs,
+        requiredDVNCount,
+        optionalDVNs,
+        optionalDVNCount,
+        optionalDVNThreshold,
+    }: UlnReadUlnConfig): SerializedUlnReadUlnConfig {
+        return {
+            executor,
+            requiredDVNCount,
+            optionalDVNCount,
             optionalDVNThreshold,
             requiredDVNs: requiredDVNs.map(addChecksum).sort(compareBytes32Ascending),
             optionalDVNs: optionalDVNs.map(addChecksum).sort(compareBytes32Ascending),

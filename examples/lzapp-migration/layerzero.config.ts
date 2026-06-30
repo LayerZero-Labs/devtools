@@ -42,16 +42,16 @@ const config: OAppOmniGraphHardhat = {
                     ulnConfig: {
                         confirmations: BigInt(15),
                         requiredDVNs: ['0x8eebf8b423b73bfca51a1db4b7354aa0bfca9193'], // LayerZero Labs DVN
-                        optionalDVNs: [],
-                        optionalDVNThreshold: 0,
+                        // optionalDVNs omitted → inherit the default. To pin "no optional DVNs"
+                        // explicitly, set `optionalDVNs: []` (it now serializes to the NIL sentinel).
                     },
                 },
                 receiveConfig: {
                     ulnConfig: {
                         confirmations: BigInt(32),
                         requiredDVNs: ['0x8eebf8b423b73bfca51a1db4b7354aa0bfca9193'],
-                        optionalDVNs: [],
-                        optionalDVNThreshold: 0,
+                        // optionalDVNs omitted → inherit the default. To pin "no optional DVNs"
+                        // explicitly, set `optionalDVNs: []` (it now serializes to the NIL sentinel).
                     },
                 },
             },
@@ -85,11 +85,9 @@ const config: OAppOmniGraphHardhat = {
                         requiredDVNs: [
                             '4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb', // LayerZero
                         ],
-                        // The address of the DVNs you will pay to verify a sent message on the source chain ).
-                        // The destination tx will wait until the configured threshold of `optionalDVNs` verify a message.
-                        optionalDVNs: [],
-                        // The number of `optionalDVNs` that need to successfully verify the message for it to be considered Verified.
-                        optionalDVNThreshold: 0,
+                        // optionalDVNs omitted → inherit the default. To pin "no optional DVNs"
+                        // explicitly, set `optionalDVNs: []` (it now serializes to the NIL sentinel),
+                        // with `optionalDVNThreshold: 0`.
                     },
                 },
                 // Optional Receive Configuration
@@ -103,11 +101,9 @@ const config: OAppOmniGraphHardhat = {
                         requiredDVNs: [
                             '4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb', // LayerZero
                         ],
-                        // The address of the DVNs you will pay to verify a sent message on the source chain ).
-                        // The destination tx will wait until the configured threshold of `optionalDVNs` verify a message.
-                        optionalDVNs: [],
-                        // The number of `optionalDVNs` that need to successfully verify the message for it to be considered Verified.
-                        optionalDVNThreshold: 0,
+                        // optionalDVNs omitted → inherit the default. To pin "no optional DVNs"
+                        // explicitly, set `optionalDVNs: []` (it now serializes to the NIL sentinel),
+                        // with `optionalDVNThreshold: 0`.
                     },
                 },
                 enforcedOptions: [

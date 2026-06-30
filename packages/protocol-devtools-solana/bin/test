@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
 if [ -z "${LZ_DEVTOOLS_ENABLE_SOLANA_TESTS}" ]; then
-    echo 'Solana tests can be enabled by setting LZ_DEVTOOLS_ENABLE_SOLANA_TESTS environment variable to a non-empty value'
+    # The endpointv2 SDK suite reads live mainnet state and needs a Solana RPC / local node, so it
+    # stays gated behind LZ_DEVTOOLS_ENABLE_SOLANA_TESTS. The pure unit suites (serializer / schema
+    # transforms, with mocked reads) need no validator, so they run unconditionally and cover the
+    # Solana logic in CI.
+    jest --ci --testPathIgnorePatterns '/node_modules/' 'endpointv2/sdk\.test\.ts' "$@"
 else
     jest --ci "$@"
 fi

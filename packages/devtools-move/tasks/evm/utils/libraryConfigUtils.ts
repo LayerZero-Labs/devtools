@@ -53,6 +53,15 @@ export function buildConfig(
     if (!ulnConfig.optionalDVNs) {
         ulnConfig.optionalDVNs = []
     }
+    // requiredDVNs is optional on the shared user-config type, but the encoder below maps an
+    // empty required set to the NIL sentinel (pin "no required DVNs") and has no way to express
+    // "inherit the default" (count 0). Reject an omitted requiredDVNs loudly rather than silently
+    // pinning the least-secure shape; callers must pass the DVNs explicitly, or [] to pin none.
+    if (!ulnConfig.requiredDVNs) {
+        throw new Error(
+            'requiredDVNs must be specified for the Move config path; it cannot inherit the on-chain default. Pass the required DVNs explicitly, or [] to pin "no required DVNs".'
+        )
+    }
     const _optionalDVNs = returnChecksums(ulnConfig.optionalDVNs)
     const _requiredDVNs = returnChecksums(ulnConfig.requiredDVNs)
 

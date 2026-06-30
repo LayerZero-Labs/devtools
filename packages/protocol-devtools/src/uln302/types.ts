@@ -121,6 +121,7 @@ export interface Uln302UlnConfig {
     requiredDVNs: string[]
     requiredDVNCount: number
     optionalDVNs: string[]
+    optionalDVNCount: number
 }
 
 /**
@@ -130,8 +131,11 @@ export interface Uln302UlnConfig {
 export interface Uln302UlnUserConfig {
     confirmations?: bigint
     optionalDVNThreshold?: number
-    requiredDVNs: string[]
-    requiredDVNCount?: number
+    /**
+     * Omitted → inherit the on-chain default; `[]` → pin "no required DVNs" via the NIL
+     * sentinel; a concrete array pins those DVNs. Mirrors {@link optionalDVNs}.
+     */
+    requiredDVNs?: string[]
     optionalDVNs?: string[]
 }
 

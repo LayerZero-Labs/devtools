@@ -40,16 +40,16 @@ const config: OAppOmniGraphHardhat = {
                     ulnConfig: {
                         confirmations: BigInt(1),
                         requiredDVNs: ['0x53f488e93b4f1b60e8e83aa374dbe1780a1ee8a8'], // LayerZero Labs DVN for Arbitrum Sepolia
-                        optionalDVNs: [],
-                        optionalDVNThreshold: 0,
+                        // optionalDVNs omitted → inherit the default. Set `optionalDVNs: []` to
+                        // pin "no optional DVNs" (it now serializes to the NIL sentinel).
                     },
                 },
                 receiveConfig: {
                     ulnConfig: {
                         confirmations: BigInt(1),
                         requiredDVNs: ['0x53f488e93b4f1b60e8e83aa374dbe1780a1ee8a8'], // LayerZero Labs DVN for Arbitrum Sepolia
-                        optionalDVNs: [],
-                        optionalDVNThreshold: 0,
+                        // optionalDVNs omitted → inherit the default. Set `optionalDVNs: []` to
+                        // pin "no optional DVNs" (it now serializes to the NIL sentinel).
                     },
                 },
             },
@@ -71,16 +71,16 @@ const config: OAppOmniGraphHardhat = {
                     ulnConfig: {
                         confirmations: BigInt(1),
                         requiredDVNs: ['0x8eebf8b423b73bfca51a1db4b7354aa0bfca9193'], // LayerZero Labs DVN on Ethereum Sepolia
-                        optionalDVNs: [],
-                        optionalDVNThreshold: 0,
+                        // optionalDVNs omitted → inherit the default. Set `optionalDVNs: []` to
+                        // pin "no optional DVNs" (it now serializes to the NIL sentinel).
                     },
                 },
                 receiveConfig: {
                     ulnConfig: {
                         confirmations: BigInt(1),
                         requiredDVNs: ['0x8eebf8b423b73bfca51a1db4b7354aa0bfca9193'], // LayerZero Labs DVN on Ethereum Sepolia
-                        optionalDVNs: [],
-                        optionalDVNThreshold: 0,
+                        // optionalDVNs omitted → inherit the default. Set `optionalDVNs: []` to
+                        // pin "no optional DVNs" (it now serializes to the NIL sentinel).
                     },
                 },
             },
