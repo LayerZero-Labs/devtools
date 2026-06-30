@@ -262,7 +262,9 @@ describe('endpointv2/sdk', () => {
                     '4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb',
                     'GPjyWr8vCotGuFubDpTxDxy9Vj1ZeEN4F2dwRmFiaGab',
                 ],
+                requiredDVNCount: 2,
                 optionalDVNs: [],
+                optionalDVNCount: 0,
             })
         })
     })
@@ -289,7 +291,8 @@ describe('endpointv2/sdk', () => {
                             '4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb',
                             'GPjyWr8vCotGuFubDpTxDxy9Vj1ZeEN4F2dwRmFiaGab',
                         ],
-                        optionalDVNs: [],
+                        // optionalDVNs omitted → inherit the on-chain default (which has none),
+                        // an explicit `[]` would now pin NIL and NOT match the default.
                     },
                     Uln302ConfigType.Send
                 )
@@ -308,7 +311,7 @@ describe('endpointv2/sdk', () => {
                             'GPjyWr8vCotGuFubDpTxDxy9Vj1ZeEN4F2dwRmFiaGab',
                             '4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb',
                         ],
-                        optionalDVNs: [],
+                        // optionalDVNs omitted → inherit the on-chain default (see above).
                     },
                     Uln302ConfigType.Send
                 )

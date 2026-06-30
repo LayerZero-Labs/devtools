@@ -28,7 +28,9 @@ describe('ulnRead/nil-dvn-count', () => {
             const serialized = (ulnSdk as any).serializeUlnConfig(config)
 
             expect(serialized.requiredDVNCount).toBe(NIL_DVN_COUNT)
-            expect(serialized.optionalDVNCount).toBe(0) // Optional DVNs should still use array length
+            // An explicitly-empty optionalDVNs array pins "no optional DVNs" via NIL,
+            // exactly like requiredDVNs (omit the field to inherit the default instead).
+            expect(serialized.optionalDVNCount).toBe(NIL_DVN_COUNT)
         })
 
         it('should use actual array length when requiredDVNs is not empty', () => {

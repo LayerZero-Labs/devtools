@@ -1,7 +1,7 @@
 import { ExportAssignment, factory, Identifier, NodeArray, PropertyAssignment, Statement } from 'typescript'
 import { OmniAddress } from '@layerzerolabs/devtools'
 import { getReadConfig } from '@/utils/taskHelpers'
-import { UlnReadUlnConfig } from '@layerzerolabs/protocol-devtools'
+import { UlnReadUlnConfig, dvnsFromCount } from '@layerzerolabs/protocol-devtools'
 import {
     CONFIG,
     CONNECTIONS,
@@ -154,30 +154,49 @@ export const createReadLibraryConfig = (defaultReadLibrary: string): PropertyAss
 export const createReadUlnConfig = ({
     executor,
     requiredDVNs,
+    requiredDVNCount,
     optionalDVNs,
+    optionalDVNCount,
     optionalDVNThreshold,
 }: UlnReadUlnConfig): PropertyAssignment => {
-    return factory.createPropertyAssignment(
-        factory.createIdentifier(ULN_CONFIG),
-        factory.createObjectLiteralExpression([
-            factory.createPropertyAssignment(factory.createIdentifier(EXECUTOR), factory.createStringLiteral(executor)),
+    const properties: PropertyAssignment[] = [
+        factory.createPropertyAssignment(factory.createIdentifier(EXECUTOR), factory.createStringLiteral(executor)),
+    ]
+
+    // requiredDVNs / optionalDVNs: dvnsFromCount returns the array to emit, or undefined to OMIT
+    // the field (inherit the default). An empty array pins "no DVNs" (NIL); a concrete array pins
+    // those DVNs. Only a concrete optional set carries the threshold.
+    const requiredDVNsToEmit = dvnsFromCount(requiredDVNCount, requiredDVNs)
+    if (requiredDVNsToEmit !== undefined) {
+        properties.push(
             factory.createPropertyAssignment(
                 factory.createIdentifier(REQUIRED_DVNS),
-                factory.createArrayLiteralExpression(
-                    requiredDVNs.filter((dvn) => dvn != null).map((dvn) => factory.createStringLiteral(dvn))
-                )
-            ),
+                factory.createArrayLiteralExpression(requiredDVNsToEmit.map((dvn) => factory.createStringLiteral(dvn)))
+            )
+        )
+    }
+
+    const optionalDVNsToEmit = dvnsFromCount(optionalDVNCount, optionalDVNs)
+    if (optionalDVNsToEmit !== undefined) {
+        properties.push(
             factory.createPropertyAssignment(
                 factory.createIdentifier(OPTIONAL_DVNS),
-                factory.createArrayLiteralExpression(
-                    optionalDVNs.filter((dvn) => dvn != null).map((dvn) => factory.createStringLiteral(dvn))
+                factory.createArrayLiteralExpression(optionalDVNsToEmit.map((dvn) => factory.createStringLiteral(dvn)))
+            )
+        )
+        if (optionalDVNsToEmit.length > 0) {
+            properties.push(
+                factory.createPropertyAssignment(
+                    factory.createIdentifier(OPTIONAL_DVN_THRESHOLD),
+                    factory.createNumericLiteral(optionalDVNThreshold)
                 )
-            ),
-            factory.createPropertyAssignment(
-                factory.createIdentifier(OPTIONAL_DVN_THRESHOLD),
-                factory.createNumericLiteral(optionalDVNThreshold)
-            ),
-        ])
+            )
+        }
+    }
+
+    return factory.createPropertyAssignment(
+        factory.createIdentifier(ULN_CONFIG),
+        factory.createObjectLiteralExpression(properties)
     )
 }
 

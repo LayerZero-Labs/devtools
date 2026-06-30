@@ -54,7 +54,9 @@ export interface UlnReadUlnConfig {
     executor: string
     optionalDVNThreshold: number
     requiredDVNs: string[]
+    requiredDVNCount: number
     optionalDVNs: string[]
+    optionalDVNCount: number
 }
 
 /**
@@ -64,7 +66,11 @@ export interface UlnReadUlnConfig {
 export interface UlnReadUlnUserConfig {
     executor?: string
     optionalDVNThreshold?: number
-    requiredDVNs: string[]
+    /**
+     * Omitted → inherit the on-chain default; `[]` → pin "no required DVNs" via the NIL
+     * sentinel; a concrete array pins those DVNs. Mirrors {@link optionalDVNs}.
+     */
+    requiredDVNs?: string[]
     optionalDVNs?: string[]
 }
 

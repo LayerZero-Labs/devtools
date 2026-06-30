@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-adapter-initia-example
 
+## 0.1.4
+
+### Patch Changes
+
+- 128b697: update initia.js version and object creation seed derivation
+
 ## 0.1.3
 
 ### Patch Changes

@@ -229,7 +229,7 @@ npx @layerzerolabs/hyperliquid-composer list-quote-asset \
 If you're deploying a quote asset token (or plan to make it one):
 
 - **Use `MyHyperLiquidComposer_FeeToken`** - This composer variant provides automatic user activation using the token itself as the fee token
-- Regular composers (`MyHyperliquidComposer`, `FeeAbstraction`, `Recoverable`) will work but require users to have HYPE for gas fees
+- Regular composers (`MyHyperliquidComposer`, `PreFundedFeeAbstraction`, `Recoverable`) will work but require users to have HYPE for gas fees
 
 The deployment scripts automatically check if your token is a quote asset and guide you to use the appropriate composer type.
 
@@ -396,7 +396,7 @@ When the composer detects that a user's address has not been activated on HyperC
 On-chain deployments:
 USDT0 : [0x80123Ab57c9bc0C452d6c18F92A653a4ee2e7585](https://hyperevmscan.io/address/0x80123Ab57c9bc0C452d6c18F92A653a4ee2e7585)
 
-#### FeeAbstraction Extension
+#### PreFundedFeeAbstraction Extension
 
 This extension provides automatic user activation using a **different token** for fees, combined with price oracle integration for dynamic fee calculation.
 
@@ -438,12 +438,12 @@ ENA : [0x5879d9821909A41cd3A382A990A4A5A6Ca77F2f0](https://hyperevmscan.io/addre
 
 ### Choosing the Right Composer
 
-| Composer Type      | Best For              | Key Feature                                   |
-| ------------------ | --------------------- | --------------------------------------------- |
-| **Regular**        | Standard tokens       | Basic functionality, no extensions            |
-| **Recoverable**    | Any token             | Token recovery capability                     |
-| **FeeToken**       | **Quote assets only** | Automatic activation using your token         |
-| **FeeAbstraction** | Non-quote assets      | Automatic activation using oracle-priced fees |
+| Composer Type               | Best For              | Key Feature                                   |
+| --------------------------- | --------------------- | --------------------------------------------- |
+| **Regular**                 | Standard tokens       | Basic functionality, no extensions            |
+| **Recoverable**             | Any token             | Token recovery capability                     |
+| **FeeToken**                | **Quote assets only** | Automatic activation using your token         |
+| **PreFundedFeeAbstraction** | Non-quote assets      | Automatic activation using oracle-priced fees |
 
 > ⚠️ **Important**: The deployment scripts automatically check if your token is a quote asset and guide you to use the appropriate composer type. See [Quote Assets (Fee Tokens)](#quote-assets-fee-tokens) for more details.
 

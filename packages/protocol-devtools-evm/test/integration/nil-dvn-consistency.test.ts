@@ -47,13 +47,13 @@ describe('NIL_DVN_COUNT consistency across SDKs', () => {
             const serialized302 = (uln302Sdk as any).serializeUlnConfig(uln302Config)
             const serializedRead = (ulnReadSdk as any).serializeUlnConfig(ulnReadConfig)
 
-            // Both should use NIL_DVN_COUNT
+            // Both should use NIL_DVN_COUNT for the explicitly-empty required DVNs
             expect(serialized302.requiredDVNCount).toBe(NIL_DVN_COUNT)
             expect(serializedRead.requiredDVNCount).toBe(NIL_DVN_COUNT)
 
-            // Optional DVN count should still be 0
-            expect(serialized302.optionalDVNCount).toBe(0)
-            expect(serializedRead.optionalDVNCount).toBe(0)
+            // And both should use NIL_DVN_COUNT for the explicitly-empty optional DVNs
+            expect(serialized302.optionalDVNCount).toBe(NIL_DVN_COUNT)
+            expect(serializedRead.optionalDVNCount).toBe(NIL_DVN_COUNT)
         })
 
         it('should handle non-empty arrays consistently', () => {
@@ -96,7 +96,7 @@ describe('NIL_DVN_COUNT consistency across SDKs', () => {
     })
 
     describe('Edge cases', () => {
-        it('should distinguish between empty array (255) and explicit zero override', () => {
+        it('should distinguish between empty array (255) and omitted (inherit, 0)', () => {
             const uln302Sdk = new Uln302(provider, {
                 eid: MainnetV2EndpointId.ETHEREUM_V2_MAINNET,
                 address: makeZeroAddress(),
@@ -112,16 +112,14 @@ describe('NIL_DVN_COUNT consistency across SDKs', () => {
             const serializedEmpty = (uln302Sdk as any).serializeUlnConfig(emptyConfig)
             expect(serializedEmpty.requiredDVNCount).toBe(NIL_DVN_COUNT)
 
-            // But explicit 0 override should be honored
-            const explicitZeroConfig: Uln302UlnUserConfig = {
-                requiredDVNs: [],
-                requiredDVNCount: 0, // Explicit override to use chain defaults
+            // But omitting requiredDVNs inherits the chain default (count 0)
+            const inheritConfig: Uln302UlnUserConfig = {
                 optionalDVNs: [],
                 optionalDVNThreshold: 0,
                 confirmations: BigInt(0),
             }
-            const serializedZero = (uln302Sdk as any).serializeUlnConfig(explicitZeroConfig)
-            expect(serializedZero.requiredDVNCount).toBe(0)
+            const serializedInherit = (uln302Sdk as any).serializeUlnConfig(inheritConfig)
+            expect(serializedInherit.requiredDVNCount).toBe(0)
         })
     })
 })

@@ -60,12 +60,14 @@ export async function setReceiveConfig(
         address: receiveLibrary,
     })
 
-    // Configure ULN with SimpleDVNMock using V2 interface
+    // Configure ULN with SimpleDVNMock using V2 interface.
+    // optionalDVNs: [] explicitly pins "no optional DVNs" (NIL sentinel) for a deterministic mock
+    // — it does NOT inherit the on-chain default. The threshold is clamped to 0 with no optional
+    // DVNs, so it is omitted.
     const ulnConfig = uln302.encodeUlnConfig({
         confirmations: BigInt(1),
         requiredDVNs: [dvnAddress],
         optionalDVNs: [],
-        optionalDVNThreshold: 0,
     })
 
     const setConfigParams: SetConfigParam[] = [

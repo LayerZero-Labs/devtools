@@ -10,7 +10,6 @@ import {
     MSG_LIB_BLOCK_SEND_AND_RECEIVE,
     MSG_LIB_BLOCK_SEND_ONLY,
     NIL_CONFIRMATIONS,
-    NIL_DVN_COUNT,
 } from '@/constants'
 
 import fujiMetadata from './data/fuji.json'
@@ -305,13 +304,15 @@ describe('config-metadata', () => {
             const config = await generateConnectionsConfig(pathways)
             expect(config).toMatchSnapshot()
 
-            expect(config[0]?.config?.sendConfig?.ulnConfig?.requiredDVNCount).toBe(NIL_DVN_COUNT)
+            // An empty requiredDVNs array pins "no required DVNs" via the NIL sentinel at
+            // serialize time (the count is no longer carried on the user config).
+            expect(config[0]?.config?.sendConfig?.ulnConfig?.requiredDVNs).toEqual([])
             expect(config[0]?.config?.sendConfig?.ulnConfig?.optionalDVNThreshold).toBe(1)
-            expect(config[0]?.config?.receiveConfig?.ulnConfig?.requiredDVNCount).toBe(NIL_DVN_COUNT)
+            expect(config[0]?.config?.receiveConfig?.ulnConfig?.requiredDVNs).toEqual([])
             expect(config[0]?.config?.receiveConfig?.ulnConfig?.optionalDVNThreshold).toBe(1)
-            expect(config[1]?.config?.sendConfig?.ulnConfig?.requiredDVNCount).toBe(NIL_DVN_COUNT)
+            expect(config[1]?.config?.sendConfig?.ulnConfig?.requiredDVNs).toEqual([])
             expect(config[1]?.config?.sendConfig?.ulnConfig?.optionalDVNThreshold).toBe(1)
-            expect(config[1]?.config?.receiveConfig?.ulnConfig?.requiredDVNCount).toBe(NIL_DVN_COUNT)
+            expect(config[1]?.config?.receiveConfig?.ulnConfig?.requiredDVNs).toEqual([])
             expect(config[1]?.config?.receiveConfig?.ulnConfig?.optionalDVNThreshold).toBe(1)
         })
 

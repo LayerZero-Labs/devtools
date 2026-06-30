@@ -27,7 +27,7 @@ jobs:
 
       - name: Assert changed files
         id: files
-        uses: tj-actions/changed-files@v44
+        uses: tj-actions/changed-files@v46.0.1
         with:
           files: |
             **/package.json

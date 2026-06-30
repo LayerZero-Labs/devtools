@@ -13,12 +13,12 @@ export const Uln302UlnConfigSchema = z.object({
     requiredDVNCount: UIntNumberSchema,
     optionalDVNs: z.array(AddressSchema),
     optionalDVNThreshold: UIntNumberSchema,
+    optionalDVNCount: UIntNumberSchema,
 }) satisfies z.ZodSchema<Uln302UlnConfig, z.ZodTypeDef, unknown>
 
 export const Uln302UlnUserConfigSchema = z.object({
     confirmations: UIntBigIntSchema.optional(),
-    requiredDVNs: z.array(AddressSchema),
-    requiredDVNCount: UIntNumberSchema.optional(),
+    requiredDVNs: z.array(AddressSchema).optional(),
     optionalDVNs: z.array(AddressSchema).optional(),
     optionalDVNThreshold: UIntNumberSchema.optional(),
 }) satisfies z.ZodSchema<Uln302UlnUserConfig, z.ZodTypeDef, unknown>

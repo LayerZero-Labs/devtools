@@ -38,6 +38,7 @@ describe('uln302/sdk', () => {
                 confirmations: BigInt(100),
                 optionalDVNThreshold: 1,
                 optionalDVNs: [AddressZero, AddressZero],
+                optionalDVNCount: 2,
                 requiredDVNs: [AddressZero],
                 requiredDVNCount: 1,
             }
@@ -57,6 +58,7 @@ describe('uln302/sdk', () => {
                         confirmations: BigInt(100),
                         optionalDVNThreshold: 0,
                         optionalDVNs: dvns,
+                        optionalDVNCount: dvns.length,
                         requiredDVNs: dvns,
                         requiredDVNCount: dvns.length,
                     }
@@ -85,6 +87,7 @@ describe('uln302/sdk', () => {
                         confirmations: BigInt(100),
                         optionalDVNThreshold: 0,
                         optionalDVNs: dvns,
+                        optionalDVNCount: dvns.length,
                         requiredDVNs: dvns,
                         requiredDVNCount: dvns.length,
                     }
@@ -135,6 +138,7 @@ describe('uln302/sdk', () => {
                         confirmations: BigInt(0),
                         optionalDVNThreshold: 0,
                         optionalDVNs: [],
+                        optionalDVNCount: 0,
                         requiredDVNCount: dvns.length,
                     }
 
@@ -170,9 +174,13 @@ describe('uln302/sdk', () => {
     describe('hasAppUlnConfig()', () => {
         const ulnConfigArbitrary = dvnsArbitrary.chain((dvns) =>
             fc.record<Uln302UlnConfig>({
-                confirmations: fc.bigInt(),
+                // Bounded away from 0 (which an explicit user value maps to NIL) and from the
+                // NIL_CONFIRMATIONS sentinel, so an on-chain read round-trips identically through
+                // normalizeUlnConfig and serializeUlnConfig.
+                confirmations: fc.bigInt({ min: BigInt(1), max: BigInt(1_000_000) }),
                 optionalDVNThreshold: fc.integer({ min: 0, max: dvns.length }),
                 optionalDVNs: fc.constant(dvns),
+                optionalDVNCount: fc.constant(dvns.length),
                 requiredDVNs: fc.constant(dvns),
                 requiredDVNCount: fc.constant(dvns.length),
             })
@@ -247,6 +255,7 @@ describe('uln302/sdk', () => {
                     const ulnConfig: Uln302UlnConfig = {
                         requiredDVNs: dvns,
                         optionalDVNs: [],
+                        optionalDVNCount: 0,
                         optionalDVNThreshold: 0,
                         confirmations: BigInt(0),
                         requiredDVNCount: dvns.length,

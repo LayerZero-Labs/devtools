@@ -1,5 +1,20 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 10.0.0
+
+### Patch Changes
+
+- 6afd57b: Generate ULN configs (both the ULN302 send/receive and the Read library generators) that
+  round-trip the new NIL-sentinel semantics: a field inheriting the on-chain default is
+  OMITTED (for both `requiredDVNs` and `optionalDVNs`, which now behave identically) rather
+  than emitted as an explicit empty value that would pin zero/none on re-apply. Pinned-none
+  configs continue to emit `[]`/`0n`.
+- Updated dependencies [6afd57b]
+  - @layerzerolabs/protocol-devtools@4.0.0
+  - @layerzerolabs/protocol-devtools-evm@6.0.0
+  - @layerzerolabs/ua-devtools@6.0.0
+  - @layerzerolabs/ua-devtools-evm@8.0.0
+
 ## 9.0.2
 
 ### Patch Changes

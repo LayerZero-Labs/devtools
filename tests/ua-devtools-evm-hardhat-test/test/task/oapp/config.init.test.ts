@@ -236,10 +236,46 @@ function buildDefaultConfig(defaultConfig: Record<string, Record<string, unknown
         `sendLibrary: "${defaultConfig.defaultSendLibrary}", ` +
         `receiveLibraryConfig: { receiveLibrary: "${defaultConfig.defaultReceiveLibrary}", gracePeriod: 0 }, ` +
         `sendConfig: { executorConfig: { maxMessageSize: ${defaultConfig.sendExecutorConfig?.maxMessageSize}, executor: "${defaultConfig.sendExecutorConfig?.executor}" }, ` +
-        `ulnConfig: { confirmations: ${defaultConfig.sendUlnConfig?.confirmations}, requiredDVNs: ${handleDvns(defaultConfig.sendUlnConfig?.requiredDVNs as string[])}, optionalDVNs: ${handleDvns(defaultConfig.sendUlnConfig?.optionalDVNs as string[])}, optionalDVNThreshold: ${defaultConfig.sendUlnConfig?.optionalDVNThreshold ?? 0} } }, ` +
-        `receiveConfig: { ulnConfig: { confirmations: ${defaultConfig.receiveUlnConfig?.confirmations}, requiredDVNs: ${handleDvns(defaultConfig.receiveUlnConfig?.requiredDVNs as string[])}, optionalDVNs: ${handleDvns(defaultConfig.receiveUlnConfig?.optionalDVNs as string[])}, optionalDVNThreshold: ${defaultConfig.receiveUlnConfig?.optionalDVNThreshold ?? 0} } }` +
+        `ulnConfig: ${buildUlnConfigBody(defaultConfig.sendUlnConfig)} }, ` +
+        `receiveConfig: { ulnConfig: ${buildUlnConfigBody(defaultConfig.receiveUlnConfig)} }` +
         ` }`
     )
+}
+
+/**
+ * Builds the `ulnConfig: { ... }` body to match the config generator, which OMITS a field that
+ * inherits the on-chain default: confirmations `0`, an empty `requiredDVNs`, and an empty
+ * `optionalDVNs` (and its threshold) are left out rather than emitted. Only the fields the
+ * generator actually emits appear here.
+ *
+ * NOTE: this keys off array length / a zero confirmations, whereas the generator keys off the
+ * count fields and NIL sentinels. The two agree only for raw on-chain DEFAULT configs, where
+ * `count === array.length` and no NIL sentinel can be stored. An OApp config carrying a sentinel
+ * (e.g. an explicitly-empty `[]` → NIL) would diverge — this helper is for default configs only.
+ *
+ * @param {Record<string, unknown> | undefined} ulnConfig
+ * @return {string} string representing the ulnConfig object
+ */
+function buildUlnConfigBody(ulnConfig: Record<string, unknown> | undefined): string {
+    const parts: string[] = []
+
+    const confirmations = ulnConfig?.confirmations
+    if (confirmations != null && String(confirmations) !== '0') {
+        parts.push(`confirmations: ${confirmations}`)
+    }
+
+    const requiredDVNs = (ulnConfig?.requiredDVNs as string[] | undefined) ?? []
+    if (requiredDVNs.length > 0) {
+        parts.push(`requiredDVNs: ${handleDvns(requiredDVNs)}`)
+    }
+
+    const optionalDVNs = (ulnConfig?.optionalDVNs as string[] | undefined) ?? []
+    if (optionalDVNs.length > 0) {
+        parts.push(`optionalDVNs: ${handleDvns(optionalDVNs)}`)
+        parts.push(`optionalDVNThreshold: ${ulnConfig?.optionalDVNThreshold ?? 0}`)
+    }
+
+    return `{ ${parts.join(', ')} }`
 }
 
 /**

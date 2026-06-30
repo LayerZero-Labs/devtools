@@ -11,7 +11,6 @@ import {
     MSG_LIB_BLOCK_RECEIVE_ONLY,
     MSG_LIB_BLOCK_SEND_AND_RECEIVE,
     MSG_LIB_BLOCK_SEND_ONLY,
-    NIL_DVN_COUNT,
 } from './constants'
 import { getAddress } from '@ethersproject/address'
 
@@ -200,8 +199,6 @@ export async function translatePathwayToConfig(
         throw new Error(`Optional DVN threshold is greater than the number of optional DVNs.`)
     }
 
-    const requiredDVNCount = requiredDVNs.length > 0 ? requiredDVNs.length : NIL_DVN_COUNT
-
     // Only look up deployment/DVNs/executor for chains we're generating configs for
     const ALZDeployment = generateAToB ? getEndpointIdDeployment(AContract.eid, metadata) : undefined
     const BLZDeployment = generateBToA ? getEndpointIdDeployment(BContract.eid, metadata) : undefined
@@ -268,7 +265,6 @@ export async function translatePathwayToConfig(
                     ulnConfig: {
                         confirmations: BigInt(AToBConfirmations),
                         requiredDVNs: ARequiredDVNs,
-                        requiredDVNCount,
                         optionalDVNs: AOptionalDVNs,
                         optionalDVNThreshold,
                     },
@@ -282,7 +278,6 @@ export async function translatePathwayToConfig(
                 ulnConfig: {
                     confirmations: BigInt(BToAConfirmations),
                     requiredDVNs: ARequiredDVNs,
-                    requiredDVNCount,
                     optionalDVNs: AOptionalDVNs,
                     optionalDVNThreshold,
                 },
@@ -319,7 +314,6 @@ export async function translatePathwayToConfig(
                     ulnConfig: {
                         confirmations: BigInt(AToBConfirmations),
                         requiredDVNs: BRequiredDVNs,
-                        requiredDVNCount,
                         optionalDVNs: BOptionalDVNs,
                         optionalDVNThreshold,
                     },
@@ -340,7 +334,6 @@ export async function translatePathwayToConfig(
                 ulnConfig: {
                     confirmations: BigInt(BToAConfirmations),
                     requiredDVNs: BRequiredDVNs,
-                    requiredDVNCount,
                     optionalDVNs: BOptionalDVNs,
                     optionalDVNThreshold,
                 },

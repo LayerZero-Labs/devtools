@@ -27,7 +27,9 @@ describe('ulnRead/sdk', () => {
                 executor: AddressZero,
                 optionalDVNThreshold: 1,
                 optionalDVNs: [AddressZero, AddressZero],
+                optionalDVNCount: 2,
                 requiredDVNs: [AddressZero],
+                requiredDVNCount: 1,
             }
             const ulnConfigEncoded = ulnSdk.encodeUlnConfig(ulnConfig)
             expect(ulnConfigEncoded).toMatchSnapshot()
@@ -45,7 +47,9 @@ describe('ulnRead/sdk', () => {
                         executor: AddressZero,
                         optionalDVNThreshold: 0,
                         optionalDVNs: dvns,
+                        optionalDVNCount: dvns.length,
                         requiredDVNs: dvns,
+                        requiredDVNCount: dvns.length,
                     }
 
                     const ulnConfigSorted: UlnReadUlnConfig = {
@@ -72,7 +76,9 @@ describe('ulnRead/sdk', () => {
                         executor: AddressZero,
                         optionalDVNThreshold: 0,
                         optionalDVNs: dvns,
+                        optionalDVNCount: dvns.length,
                         requiredDVNs: dvns,
+                        requiredDVNCount: dvns.length,
                     }
 
                     const ulnConfigSorted: UlnReadUlnConfig = {
@@ -118,9 +124,11 @@ describe('ulnRead/sdk', () => {
                     }
                     const ulnConfig: UlnReadUlnConfig = {
                         requiredDVNs: dvns,
+                        requiredDVNCount: dvns.length,
                         executor: AddressZero,
                         optionalDVNThreshold: 0,
                         optionalDVNs: [],
+                        optionalDVNCount: 0,
                     }
 
                     // Let's check that both the sorted and the unsorted config produce the same transaction
@@ -158,7 +166,9 @@ describe('ulnRead/sdk', () => {
                 executor: evmAddressArbitrary,
                 optionalDVNThreshold: fc.integer({ min: 0, max: dvns.length }),
                 optionalDVNs: fc.constant(dvns),
+                optionalDVNCount: fc.constant(dvns.length),
                 requiredDVNs: fc.constant(dvns),
+                requiredDVNCount: fc.constant(dvns.length),
             })
         )
 
@@ -224,7 +234,9 @@ describe('ulnRead/sdk', () => {
                         }
                         const ulnConfig: UlnReadUlnConfig = {
                             requiredDVNs: dvns,
+                            requiredDVNCount: dvns.length,
                             optionalDVNs: [],
+                            optionalDVNCount: 0,
                             optionalDVNThreshold: 0,
                             executor: AddressZero,
                         }
