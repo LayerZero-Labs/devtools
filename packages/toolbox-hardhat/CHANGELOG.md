@@ -1,5 +1,17 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.6.14
+
+### Patch Changes
+
+- Updated dependencies [6afd57b]
+- Updated dependencies [6afd57b]
+  - @layerzerolabs/ua-devtools-evm-hardhat@10.0.0
+  - @layerzerolabs/protocol-devtools@4.0.0
+  - @layerzerolabs/protocol-devtools-evm@6.0.0
+  - @layerzerolabs/ua-devtools@6.0.0
+  - @layerzerolabs/ua-devtools-evm@8.0.0
+
 ## 0.6.13
 
 ### Patch Changes

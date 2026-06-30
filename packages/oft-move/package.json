@@ -34,7 +34,7 @@
   "devDependencies": {
     "@aptos-labs/ts-sdk": "^1.33.1",
     "@layerzerolabs/devtools-extensible-cli": "^0.0.7",
-    "@layerzerolabs/devtools-move": "^1.0.17",
+    "@layerzerolabs/devtools-move": "^2.0.0",
     "@layerzerolabs/io-devtools": "^0.3.2",
     "@layerzerolabs/lz-definitions": "^3.0.148",
     "@layerzerolabs/lz-v2-utilities": "^3.0.148",
