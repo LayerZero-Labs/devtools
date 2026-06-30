@@ -242,12 +242,37 @@ function buildDefaultReadConfig(defaultConfig: Record<string, Record<string, Rec
     let readChannelConfigs = ''
 
     for (const [channelId, config] of Object.entries(defaultConfig)) {
-        readChannelConfigs += `{ channelId: ${channelId}, readLibrary: "${config.defaultReadLibrary}", ulnConfig: { executor: "${config.readUlnConfig?.executor}", requiredDVNs: ${handleDvns(config.readUlnConfig?.requiredDVNs as string[])}, optionalDVNs: ${handleDvns(config.readUlnConfig?.optionalDVNs as string[])}, optionalDVNThreshold: ${config.readUlnConfig?.optionalDVNThreshold ?? 0} } }, `
+        readChannelConfigs += `{ channelId: ${channelId}, readLibrary: "${config.defaultReadLibrary}", ulnConfig: ${buildReadUlnConfigBody(config.readUlnConfig)} }, `
     }
 
     readChannelConfigs = readChannelConfigs.substring(0, readChannelConfigs.length - 2)
 
     return `{ readChannelConfigs: [` + readChannelConfigs + `] }`
+}
+
+/**
+ * Builds the read `ulnConfig: { ... }` body to match the config generator, which always emits
+ * `executor` but OMITS an empty `requiredDVNs` and an empty `optionalDVNs` (and its threshold)
+ * — those inherit the on-chain default rather than being emitted.
+ *
+ * @param {Record<string, unknown> | undefined} ulnConfig
+ * @return {string} string representing the read ulnConfig object
+ */
+function buildReadUlnConfigBody(ulnConfig: Record<string, unknown> | undefined): string {
+    const parts: string[] = [`executor: "${ulnConfig?.executor}"`]
+
+    const requiredDVNs = (ulnConfig?.requiredDVNs as string[] | undefined) ?? []
+    if (requiredDVNs.length > 0) {
+        parts.push(`requiredDVNs: ${handleDvns(requiredDVNs)}`)
+    }
+
+    const optionalDVNs = (ulnConfig?.optionalDVNs as string[] | undefined) ?? []
+    if (optionalDVNs.length > 0) {
+        parts.push(`optionalDVNs: ${handleDvns(optionalDVNs)}`)
+        parts.push(`optionalDVNThreshold: ${ulnConfig?.optionalDVNThreshold ?? 0}`)
+    }
+
+    return `{ ${parts.join(', ')} }`
 }
 
 /**
