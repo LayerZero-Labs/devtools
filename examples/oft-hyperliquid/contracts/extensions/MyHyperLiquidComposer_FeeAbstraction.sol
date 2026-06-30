@@ -15,7 +15,7 @@ import { PreFundedFeeAbstraction } from "@layerzerolabs/hyperliquid-composer/con
 contract MyHyperLiquidComposer_FeeAbstraction is PreFundedFeeAbstraction {
     /// @param _oft The OFT address
     /// @param _hlIndexId The HyperLiquid core spot index
-    /// @param _assetDecimalDiff EVM - HyperLiquid decimal difference
+    /// @param _assetDecimalDiff The decimal difference: ERC20.decimals() - HIP1.weiDecimals() (must be in [-2, 18])
     /// @param _spotId The spot pair ID (e.g., 107 for HYPE/USDC)
     /// @param _activationOverheadFee Overhead fee in cents on top of $1 base
     /// @param _recoveryAddress Address for fee recovery

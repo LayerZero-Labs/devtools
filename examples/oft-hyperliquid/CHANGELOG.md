@@ -1,5 +1,23 @@
 # @layerzerolabs/oft-hyperliquid-example
 
+## 1.0.13
+
+### Patch Changes
+
+- 306ee69: rename FeeAbstraction to PreFundedFeeAbstraction in docs
+
+## 1.0.12
+
+### Patch Changes
+
+- 91727cf: docs update and natspec
+
+## 1.0.11
+
+### Patch Changes
+
+- e18564f: improved cli and docs on expansion spot market pairs
+
 ## 1.0.10
 
 ### Patch Changes

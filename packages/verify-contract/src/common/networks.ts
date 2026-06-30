@@ -615,6 +615,13 @@ export const networks: Record<string, NetworkDefinition> = {
         aliases: ['rarible-mainnet'],
     },
 
+    // Redbelly
+    redbelly: {
+        chainId: 151,
+        apiUrl: 'https://api.routescan.io/v2/network/mainnet/evm/151/etherscan',
+        aliases: ['redbelly-mainnet'],
+    },
+
     // X Chain
     xchain: {
         chainId: 0,
