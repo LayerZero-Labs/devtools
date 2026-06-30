@@ -255,6 +255,11 @@ function buildDefaultReadConfig(defaultConfig: Record<string, Record<string, Rec
  * `executor` but OMITS an empty `requiredDVNs` and an empty `optionalDVNs` (and its threshold)
  * — those inherit the on-chain default rather than being emitted.
  *
+ * NOTE: this keys off array length, whereas the generator keys off the count fields and NIL
+ * sentinels. The two agree only for raw on-chain DEFAULT configs, where `count === array.length`
+ * and no NIL sentinel can be stored. An OApp config carrying a sentinel would diverge — this
+ * helper is for default configs only.
+ *
  * @param {Record<string, unknown> | undefined} ulnConfig
  * @return {string} string representing the read ulnConfig object
  */

@@ -248,6 +248,11 @@ function buildDefaultConfig(defaultConfig: Record<string, Record<string, unknown
  * `optionalDVNs` (and its threshold) are left out rather than emitted. Only the fields the
  * generator actually emits appear here.
  *
+ * NOTE: this keys off array length / a zero confirmations, whereas the generator keys off the
+ * count fields and NIL sentinels. The two agree only for raw on-chain DEFAULT configs, where
+ * `count === array.length` and no NIL sentinel can be stored. An OApp config carrying a sentinel
+ * (e.g. an explicitly-empty `[]` → NIL) would diverge — this helper is for default configs only.
+ *
  * @param {Record<string, unknown> | undefined} ulnConfig
  * @return {string} string representing the ulnConfig object
  */
