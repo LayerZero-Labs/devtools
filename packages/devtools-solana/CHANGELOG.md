@@ -1,5 +1,13 @@
 # @layerzerolabs/devtools-solana
 
+## 3.1.0
+
+### Minor Changes
+
+- 6afd57b: Add `bigIntToBN` helper (and `Bignum` type) for converting a `bigint` to the `BN` type
+  the Solana program instruction builders expect, preserving full precision for `u64`
+  values that overflow a JS number.
+
 ## 3.0.7
 
 ### Patch Changes

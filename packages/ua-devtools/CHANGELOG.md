@@ -1,5 +1,12 @@
 # @layerzerolabs/ua-devtools
 
+## 6.0.0
+
+### Patch Changes
+
+- Updated dependencies [6afd57b]
+  - @layerzerolabs/protocol-devtools@4.0.0
+
 ## 5.0.2
 
 ### Patch Changes
