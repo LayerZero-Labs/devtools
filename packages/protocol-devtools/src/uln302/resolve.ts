@@ -1,7 +1,5 @@
-import { NIL_CONFIRMATIONS, NIL_DVN_COUNT } from './constants'
-
 /**
- * Resolution of the empty → NIL-sentinel mapping shared by every ULN serializer
+ * @file Resolution of the empty → NIL-sentinel mapping shared by every ULN serializer
  * (ULN302 send/receive and the Read library, across EVM and Solana). The only genuine
  * per-chain variation is how the DVN arrays themselves are encoded, so the count/confirmations
  * resolution lives here to keep the three serializers in lock-step.
@@ -11,14 +9,23 @@ import { NIL_CONFIRMATIONS, NIL_DVN_COUNT } from './constants'
  * NIL sentinels on-chain, so empty/zero values stay literal).
  */
 
+import { NIL_CONFIRMATIONS, NIL_DVN_COUNT } from './constants'
+
 /**
  * Resolves a DVN count from a user-config DVN array. Both `requiredDVNs` and `optionalDVNs`
  * are optional, so we distinguish omitted (`undefined` → inherit the on-chain default, count
  * `0`) from explicitly empty (`[]` → pin "no DVNs" via the NIL sentinel under `useNilSentinels`).
  * A concrete array resolves to its length.
  */
-export const resolveDVNCount = (dvns: readonly string[] | null | undefined, useNilSentinels: boolean): number =>
-    dvns == null ? 0 : dvns.length > 0 ? dvns.length : useNilSentinels ? NIL_DVN_COUNT : 0
+export const resolveDVNCount = (dvns: readonly string[] | null | undefined, useNilSentinels: boolean): number => {
+    if (dvns == null) {
+        return 0
+    }
+    if (dvns.length > 0) {
+        return dvns.length
+    }
+    return useNilSentinels ? NIL_DVN_COUNT : 0
+}
 
 /**
  * Inverse of {@link resolveDVNCount} for config generators: given an on-chain DVN count and the
@@ -42,12 +49,15 @@ export const dvnsFromCount = (count: number, dvns: readonly string[]): string[] 
  * An omitted `confirmations` inherits the on-chain default (`0`); an explicit `0n` pins "zero
  * confirmations" via the NIL sentinel under `useNilSentinels`; any other value is literal.
  */
-export const resolveConfirmations = (confirmations: bigint | undefined, useNilSentinels: boolean): bigint =>
-    confirmations == null
-        ? BigInt(0)
-        : confirmations === BigInt(0) && useNilSentinels
-          ? NIL_CONFIRMATIONS
-          : confirmations
+export const resolveConfirmations = (confirmations: bigint | undefined, useNilSentinels: boolean): bigint => {
+    if (confirmations == null) {
+        return BigInt(0)
+    }
+    if (confirmations === BigInt(0) && useNilSentinels) {
+        return NIL_CONFIRMATIONS
+    }
+    return confirmations
+}
 
 /**
  * Resolves (clamps) the optional DVN threshold against the resolved optional DVN count. The

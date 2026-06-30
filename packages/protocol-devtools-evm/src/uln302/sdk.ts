@@ -273,17 +273,17 @@ export class Uln302 extends OmniSDK implements IUln302 {
     ): SerializedUln302UlnConfig {
         const resolvedRequiredDVNCount = resolveDVNCount(requiredDVNs, useNilSentinels)
         const resolvedOptionalDVNCount = resolveDVNCount(optionalDVNs, useNilSentinels)
-        const optionalDVNThresholdResolved = resolveOptionalDVNThreshold(optionalDVNThreshold, resolvedOptionalDVNCount)
+        const resolvedOptionalDVNThreshold = resolveOptionalDVNThreshold(optionalDVNThreshold, resolvedOptionalDVNCount)
 
         // The library-wide DEFAULT config is the only `useNilSentinels=false` caller; validate it
         // against the contract's invariants (the OApp path must never throw on a config diff).
         if (!useNilSentinels) {
-            assertValidDefaultConfig(resolvedRequiredDVNCount, resolvedOptionalDVNCount, optionalDVNThresholdResolved)
+            assertValidDefaultConfig(resolvedRequiredDVNCount, resolvedOptionalDVNCount, resolvedOptionalDVNThreshold)
         }
 
         return {
             confirmations: resolveConfirmations(confirmations, useNilSentinels),
-            optionalDVNThreshold: optionalDVNThresholdResolved,
+            optionalDVNThreshold: resolvedOptionalDVNThreshold,
             requiredDVNs: (requiredDVNs ?? []).map(addChecksum).sort(compareBytes32Ascending),
             optionalDVNs: (optionalDVNs ?? []).map(addChecksum).sort(compareBytes32Ascending),
             requiredDVNCount: resolvedRequiredDVNCount,

@@ -26,7 +26,7 @@ export const SetConfigSchema = z.union([
                 // confirmations is a u64 on-chain; a NIL sentinel (type(uint64).max) overflows a
                 // JS number, so it must be passed as a BN to avoid precision loss. The cast keeps
                 // the exported schema type nameable via lz-solana-sdk-v2 (a direct dependency)
-                // rather than leaking bn.js's types.
+                // rather than leaking bn.js's types (otherwise tsc emits TS2742 on the schema).
                 confirmations: bigIntToBN(confirmations) as UlnConfig['confirmations'],
                 optionalDvnCount: optionalDVNCount,
                 requiredDvnCount: requiredDVNCount,

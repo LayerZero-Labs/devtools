@@ -221,11 +221,11 @@ export class Uln302 extends OmniSDK implements IUln302 {
     ): SerializedUln302UlnConfig {
         const resolvedRequiredDVNCount = resolveDVNCount(requiredDVNs, useNilSentinels)
         const resolvedOptionalDVNCount = resolveDVNCount(optionalDVNs, useNilSentinels)
-        const optionalDVNThresholdResolved = resolveOptionalDVNThreshold(optionalDVNThreshold, resolvedOptionalDVNCount)
+        const resolvedOptionalDVNThreshold = resolveOptionalDVNThreshold(optionalDVNThreshold, resolvedOptionalDVNCount)
 
         return {
             confirmations: resolveConfirmations(confirmations, useNilSentinels),
-            optionalDVNThreshold: optionalDVNThresholdResolved,
+            optionalDVNThreshold: resolvedOptionalDVNThreshold,
             requiredDVNs: serializeDVNs(requiredDVNs ?? []),
             optionalDVNs: serializeDVNs(optionalDVNs ?? []),
             requiredDVNCount: resolvedRequiredDVNCount,

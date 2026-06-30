@@ -136,19 +136,19 @@ export class UlnRead extends OmniSDK implements IUlnRead {
     ): SerializedUlnReadUlnConfig {
         const resolvedRequiredDVNCount = resolveDVNCount(requiredDVNs, useNilSentinels)
         const resolvedOptionalDVNCount = resolveDVNCount(optionalDVNs, useNilSentinels)
-        const optionalDVNThresholdResolved = resolveOptionalDVNThreshold(optionalDVNThreshold, resolvedOptionalDVNCount)
+        const resolvedOptionalDVNThreshold = resolveOptionalDVNThreshold(optionalDVNThreshold, resolvedOptionalDVNCount)
 
         // The library-wide DEFAULT config is the only `useNilSentinels=false` caller; validate it
         // against the contract's invariants (the OApp path must never throw on a config diff).
         if (!useNilSentinels) {
-            assertValidDefaultConfig(resolvedRequiredDVNCount, resolvedOptionalDVNCount, optionalDVNThresholdResolved)
+            assertValidDefaultConfig(resolvedRequiredDVNCount, resolvedOptionalDVNCount, resolvedOptionalDVNThreshold)
         }
 
         return {
             executor,
             requiredDVNCount: resolvedRequiredDVNCount,
             optionalDVNCount: resolvedOptionalDVNCount,
-            optionalDVNThreshold: optionalDVNThresholdResolved,
+            optionalDVNThreshold: resolvedOptionalDVNThreshold,
             requiredDVNs: (requiredDVNs ?? []).map(addChecksum).sort(compareBytes32Ascending),
             optionalDVNs: (optionalDVNs ?? []).map(addChecksum).sort(compareBytes32Ascending),
         }
