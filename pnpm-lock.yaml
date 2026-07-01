@@ -5213,9 +5213,6 @@ importers:
       '@layerzerolabs/lz-evm-protocol-v2':
         specifier: ^3.0.148
         version: 3.0.148(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-v1-0.7':
-        specifier: ^3.0.148
-        version: 3.0.148(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
       '@layerzerolabs/toolbox-foundry':
         specifier: ^0.1.12
         version: link:../toolbox-foundry

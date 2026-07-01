@@ -2,8 +2,6 @@
 
 pragma solidity ^0.8.20;
 
-import { ILayerZeroUltraLightNodeV2 } from "@layerzerolabs/lz-evm-v1-0.7/contracts/interfaces/ILayerZeroUltraLightNodeV2.sol";
-
 import { WorkerMock as Worker } from "./WorkerMock.sol";
 
 import { MultiSigMock as MultiSig } from "./MultiSigMock.sol";
@@ -11,6 +9,11 @@ import { ReadLib1002Mock as ReadLib1002 } from "./ReadLib1002Mock.sol";
 import { IDVN } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVN.sol";
 import { IDVNFeeLib } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVNFeeLib.sol";
 import { IReceiveUlnE2 } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IReceiveUlnE2.sol";
+
+interface ILayerZeroUltraLightNodeV2 {
+    function withdrawNative(address payable _to, uint _amount) external;
+    function updateHash(uint16 _srcChainId, bytes32 _lookupHash, uint _confirmations, bytes32 _blockData) external;
+}
 
 struct ExecuteParam {
     uint32 vid;
