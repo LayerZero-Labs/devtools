@@ -7,6 +7,7 @@ interface IVaultComposerSyncNative {
     error AssetOFTTokenNotNative(); // 0xd61c4b4a
     error AmountExceedsMsgValue(); // 0x0f971d59
     error ETHTransferNotFromAsset(); // 0x02cadbeb
+    error NativeTransferFailed(); // 0x26b2aba5
 
     /**
      * @notice Deposits Native token (ETH) from the caller into the vault and sends them to the recipient
