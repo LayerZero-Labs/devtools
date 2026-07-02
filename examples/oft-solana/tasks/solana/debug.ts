@@ -391,10 +391,14 @@ function printOAppReceiveConfigs(
             // Print each property in the object
             DebugLogger.keyValue(`${oAppReceiveConfigIndexesToKeys[i]}`, '', 2)
             for (const [propKey, propVal] of Object.entries(item)) {
-                const valueDisplay =
-                    (propKey === 'requiredDVNs' || propKey === 'optionalDVNs') && Array.isArray(propVal)
-                        ? formatDvnAddresses(propVal as string[], metadata, chainKey)
-                        : String(propVal)
+                let valueDisplay: string
+                if ((propKey === 'requiredDVNs' || propKey === 'optionalDVNs') && Array.isArray(propVal)) {
+                    valueDisplay = formatDvnAddresses(propVal as string[], metadata, chainKey)
+                } else if (propKey === 'confirmations' && String(propVal) === '0') {
+                    valueDisplay = '0 (Use Pathway Defaults)'
+                } else {
+                    valueDisplay = String(propVal)
+                }
                 DebugLogger.keyValue(`${propKey}`, valueDisplay, 3)
             }
         } else {
@@ -427,10 +431,14 @@ function printOAppSendConfigs(
         if (typeof item === 'object' && item !== null) {
             DebugLogger.keyValue(`${sendOappConfigIndexesToKeys[i]}`, '', 2)
             for (const [propKey, propVal] of Object.entries(item)) {
-                const valueDisplay =
-                    (propKey === 'requiredDVNs' || propKey === 'optionalDVNs') && Array.isArray(propVal)
-                        ? formatDvnAddresses(propVal as string[], metadata, chainKey)
-                        : String(propVal)
+                let valueDisplay: string
+                if ((propKey === 'requiredDVNs' || propKey === 'optionalDVNs') && Array.isArray(propVal)) {
+                    valueDisplay = formatDvnAddresses(propVal as string[], metadata, chainKey)
+                } else if (propKey === 'confirmations' && String(propVal) === '0') {
+                    valueDisplay = '0 (Use Pathway Defaults)'
+                } else {
+                    valueDisplay = String(propVal)
+                }
                 DebugLogger.keyValue(`${propKey}`, valueDisplay, 3)
             }
         } else {
