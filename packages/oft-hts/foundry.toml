@@ -1,0 +1,26 @@
+[profile.default]
+solc = '0.8.22'
+verbosity = 3
+src = "contracts"
+test = "test"
+out = "artifacts"
+cache_path = "cache"
+optimizer = true
+optimizer_runs = 20_000
+
+libs = [
+    # - forge-std
+    # - ds-test
+    'node_modules',
+]
+
+remappings = [
+    # Due to a misconfiguration of solidity-bytes-utils, an outdated version
+    # of forge-std is being dragged in
+    #
+    # To remedy this, we'll remap the ds-test and forge-std imports to our own versions
+    '@layerzerolabs/=node_modules/@layerzerolabs/',
+]
+
+[fuzz]
+runs = 1000
