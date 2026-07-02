@@ -45,6 +45,7 @@ const config: OAppOmniGraphHardhat = {
                     },
                 },
                 receiveConfig: {
+                    executorConfig: '0x718B92b5CB0a5552039B593faF724D182A881eDA',
                     ulnConfig: {
                         confirmations: BigInt(1),
                         requiredDVNs: ['0x53f488e93b4f1b60e8e83aa374dbe1780a1ee8a8'], // LayerZero Labs DVN for Arbitrum Sepolia
