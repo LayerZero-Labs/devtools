@@ -1,10 +1,3 @@
-// Force ts-node to use CommonJS mode
-// This must be set before any imports
-process.env.TS_NODE_COMPILER_OPTIONS = JSON.stringify({
-    module: 'commonjs',
-    esModuleInterop: true,
-})
-
 // Get the environment configuration from .env file
 //
 // To make use of automatic environment setup:

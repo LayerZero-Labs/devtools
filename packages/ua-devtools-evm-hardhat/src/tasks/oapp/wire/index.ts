@@ -58,6 +58,11 @@ interface TaskArgs {
      * Exclude connections that originate from the specified EndpointIds.
      */
     skipConnectionsFromEids?: string[]
+    /**
+     * Custom message to display when no transactions are needed.
+     * Defaults to "The OApp is wired, no action is necessary"
+     */
+    noActionMessage?: string
 }
 
 const action: ActionType<TaskArgs> = async (
@@ -74,6 +79,7 @@ const action: ActionType<TaskArgs> = async (
         signAndSendSubtask = SUBTASK_LZ_SIGN_AND_SEND,
         outputFilename,
         skipConnectionsFromEids,
+        noActionMessage,
     },
     hre
 ): Promise<SignAndSendResult> => {
@@ -105,6 +111,7 @@ const action: ActionType<TaskArgs> = async (
     // Then create the wire flow
     const wireFlow = createWireFlow({
         logger,
+        noActionMessage,
         // We use hardhat subtasks to provide the option to override certain behaviors on a more granular level
         executeConfig: ({ graph }) => hre.run(configureSubtask, { graph } satisfies SubtaskConfigureTaskArgs),
         signAndSend: ({ transactions }) => {

@@ -122,6 +122,10 @@ Currently, this document will only detail the structure for the READMEs of the e
        - Goal: Resolve errors and setup issues
        - Contents: Link to general troubleshooting + local fixes
 
+    16.7. **Audits** _(include only if audits exist)_
+       - Goal: Link to audit reports for transparency
+       - Contents: Commit hash audited + links to audit report PDFs
+
 Any sections that don't appear in the above list should be considered for removal. Before removing, ask the user for confirmation.
 
 

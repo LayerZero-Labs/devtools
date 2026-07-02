@@ -1,5 +1,5 @@
 import { task } from 'hardhat/config'
-import type { ActionType } from 'hardhat/types'
+import type { ActionType, HardhatRuntimeEnvironment } from 'hardhat/types'
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names'
 import { TASK_LZ_DEPLOY } from '@/constants/tasks'
 import {
@@ -17,11 +17,57 @@ import { formatEid } from '@layerzerolabs/devtools'
 import { getEidsByNetworkName, getHreByNetworkName } from '@/runtime'
 import { types } from '@/cli'
 import { promptForText } from '@layerzerolabs/io-devtools'
-import { Deployment } from 'hardhat-deploy/dist/types'
+import { Deployment, DeployFunction } from 'hardhat-deploy/dist/types'
 import { assertDefinedNetworks, assertHardhatDeploy } from '@/internal/assertions'
 import { splitCommaSeparated } from '@layerzerolabs/devtools'
 import { isDeepEqual } from '@layerzerolabs/devtools'
 import { Stage, endpointIdToStage } from '@layerzerolabs/lz-definitions'
+import { readdirSync, statSync } from 'fs'
+import { join, extname } from 'path'
+
+/**
+ * Get all available tags from deploy scripts in the given deploy paths.
+ * Uses require() with ts-node/esm loader to handle TypeScript files.
+ */
+const getAvailableTagsFromDeployScripts = async (hre: HardhatRuntimeEnvironment): Promise<Set<string>> => {
+    const tags = new Set<string>()
+    const deployPaths = hre.config.paths.deploy
+
+    for (const deployPath of deployPaths) {
+        try {
+            const files = readdirSync(deployPath)
+            for (const file of files) {
+                const filePath = join(deployPath, file)
+                // Skip directories and non-script files
+                if (statSync(filePath).isDirectory()) {
+                    continue
+                }
+                const ext = extname(file)
+                if (!['.js', '.ts'].includes(ext)) {
+                    continue
+                }
+
+                try {
+                    // Use require which works with ts-node/register in hardhat context
+                    // eslint-disable-next-line @typescript-eslint/no-var-requires
+                    const deployScript = require(filePath)
+                    const deployFunc: DeployFunction = deployScript.default ?? deployScript
+                    if (deployFunc?.tags) {
+                        for (const tag of deployFunc.tags) {
+                            tags.add(tag)
+                        }
+                    }
+                } catch {
+                    // Skip files that can't be imported
+                }
+            }
+        } catch {
+            // Skip paths that don't exist
+        }
+    }
+
+    return tags
+}
 
 interface TaskArgs {
     networks?: string[]
@@ -166,6 +212,16 @@ const action: ActionType<TaskArgs> = async (
         logger.warn(`Will use all deployment scripts`)
     } else {
         logger.info(`Will use deploy scripts tagged with ${selectedTags.join(', ')}`)
+
+        // Check if selected tags match any available deploy script tags
+        const availableTags = await getAvailableTagsFromDeployScripts(hre)
+        const unmatchedTags = selectedTags.filter((tag) => !availableTags.has(tag))
+
+        if (unmatchedTags.length > 0) {
+            logger.warn(
+                `The following tags do not match any deploy scripts: ${unmatchedTags.join(', ')}. Available tags: ${[...availableTags].join(', ') || 'none'}`
+            )
+        }
     }
 
     // Now we confirm with the user that they want to continue
@@ -261,8 +317,23 @@ const action: ActionType<TaskArgs> = async (
         error == null ? [] : [{ networkName, error }]
     )
 
-    // If nothing went wrong we just exit
+    // We check whether any contracts were actually deployed
+    const totalContractsDeployed = Object.values(results).reduce(
+        (sum, { contracts }) => sum + Object.keys(contracts ?? {}).length,
+        0
+    )
+
+    // If nothing went wrong we check if any contracts were deployed
     if (errors.length === 0) {
+        if (totalContractsDeployed === 0) {
+            return (
+                logger.warn(
+                    `${printBoolean(false)} No contracts were deployed. This could mean the deploy script tags don't match any scripts, or all contracts were already deployed.`
+                ),
+                results
+            )
+        }
+
         return logger.info(`${printBoolean(true)} Your contracts are now deployed`), results
     }
 
