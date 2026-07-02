@@ -4,6 +4,7 @@ node_modules
 coverage
 coverage.json
 target
+test-ledger
 typechain
 typechain-types
 

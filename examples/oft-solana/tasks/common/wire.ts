@@ -163,7 +163,7 @@ task(TASK_LZ_OAPP_WIRE)
 
                                 try {
                                     // Use the SDK to check if configs exist
-                                    const [sendConfig, receiveConfig] = await getSolanaUlnConfigPDAs(
+                                    const [_sendConfig, _receiveConfig] = await getSolanaUlnConfigPDAs(
                                         connection.vector.to.eid,
                                         await connectionFactory(connection.vector.from.eid),
                                         new PublicKey(connection.config.sendLibrary),
