@@ -143,11 +143,9 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
     .addParam('symbol', 'Token Symbol', 'MOFT', devtoolsTypes.string)
     .addParam('tokenMetadataIsMutable', 'Token metadata is mutable', true, devtoolsTypes.boolean)
     .addParam('additionalMinters', 'Comma-separated list of additional minters', undefined, devtoolsTypes.csv, true)
-    .addOptionalParam(
+    .addFlag(
         'onlyOftStore',
-        'If you plan to have only the OFTStore and no additional minters.  This is not reversible, and will result in losing the ability to mint new tokens by everything but the OFTStore.',
-        false,
-        devtoolsTypes.boolean
+        'If you plan to have only the OFTStore and no additional minters.  This is not reversible, and will result in losing the ability to mint new tokens by everything but the OFTStore.'
     )
     .addParam(
         'tokenProgram',
@@ -205,13 +203,13 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             if (!additionalMintersAsStrings) {
                 if (!onlyOftStore) {
                     throw new Error(
-                        'If you want to proceed with only the OFT Store having the ability to mint, please specify --only-oft-store true. Note that this also means the Freeze Authority will be immediately renounced, unless --freeze-authority is specified.'
+                        'If you want to proceed with only the OFT Store having the ability to mint, please specify --only-oft-store. Note that this also means the Freeze Authority will be immediately renounced, unless --freeze-authority is specified.'
                     )
                 }
             }
 
             if (freezeAuthorityStr && !onlyOftStore) {
-                throw new Error('`--freeze-authority` is only supported in `--only-oft-store true` mode')
+                throw new Error('`--freeze-authority` is only supported in `--only-oft-store` mode')
             }
 
             if (onlyOftStore && additionalMintersAsStrings && additionalMintersAsStrings?.length > 0) {
@@ -222,7 +220,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
 
             if (onlyOftStore && !ci) {
                 const continueWithOnlyOftStore = await promptToContinue(
-                    `You have chosen \`--only-oft-store true\`. This means that only the OFT Store will be able to mint new tokens${freezeAuthorityStr ? '' : ' and that the Freeze Authority will be immediately renounced'}.  Continue?`
+                    `You have chosen \`--only-oft-store\`. This means that only the OFT Store will be able to mint new tokens${freezeAuthorityStr ? '' : ' and that the Freeze Authority will be immediately renounced'}.  Continue?`
                 )
                 if (!continueWithOnlyOftStore) {
                     return
@@ -234,9 +232,11 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             const maxSupplyRaw = localDecimalsToMaxWholeTokens(decimals)
             const { full, compact } = formatTokenAmount(maxSupplyRaw)
             const maxSupplyStatement = `You have chosen ${decimals} local decimals. The maximum supply of your Solana OFT token will be ${full} (~${compact}).\n`
-            const confirmMaxSupply = await promptToContinue(maxSupplyStatement)
-            if (!confirmMaxSupply) {
-                return
+            if (!ci) {
+                const confirmMaxSupply = await promptToContinue(maxSupplyStatement)
+                if (!confirmMaxSupply) {
+                    return
+                }
             }
 
             let mintAuthorityPublicKey: PublicKey = toWeb3JsPublicKey(oftStorePda) // we default to the OFT Store as the Mint Authority when there are no additional minters
@@ -265,11 +265,13 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             let freezeAuthority: PublicKey | null = null
             if (freezeAuthorityStr && onlyOftStore) {
                 freezeAuthority = new PublicKey(freezeAuthorityStr) // will error if invalid
-                const continueFreezeAuthority = await promptToContinue(
-                    `Freeze Authority will be set to ${freezeAuthority.toBase58()}. Continue?`
-                )
-                if (!continueFreezeAuthority) {
-                    return
+                if (!ci) {
+                    const continueFreezeAuthority = await promptToContinue(
+                        `Freeze Authority will be set to ${freezeAuthority.toBase58()}. Continue?`
+                    )
+                    if (!continueFreezeAuthority) {
+                        return
+                    }
                 }
             } else {
                 // onlyOftStore mode: if freezeAuthority is not provided, we set it to null

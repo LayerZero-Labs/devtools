@@ -217,7 +217,7 @@ solana program deploy --program-id target/deploy/oft-keypair.json target/verifia
 
 :information_source: For **OFT** and **OFT Mint-and-Burn Adapter**, the SPL token's Mint Authority is set to the **Mint Authority Multisig**, which always has the **OFT Store** as a signer. The multisig is fixed to needing 1 of N signatures.
 
-:information_source: For **OFT** and **OFT Mint-And-Burn Adapter**, you have the option to specify additional signers through the `--additional-minters` flag. If you choose not to, you must pass in `--only-oft-store true`, which means only the **OFT Store** will be a signer for the \_Mint Authority Multisig\*.
+:information_source: For **OFT** and **OFT Mint-And-Burn Adapter**, you have the option to specify additional signers through the `--additional-minters` flag. If you choose not to, you must pass in `--only-oft-store`, which means only the **OFT Store** will be a signer for the \_Mint Authority Multisig\*.
 
 :warning: If you choose to go with `--only-oft-store`, you will not be able to add in other signers/minters or update the Mint Authority, and the Freeze Authority will be immediately renounced. The token Mint Authority will be fixed Mint Authority Multisig address while the Freeze Authority will be set to None.
 
@@ -227,7 +227,7 @@ solana program deploy --program-id target/deploy/oft-keypair.json target/verifia
 pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID>
 ```
 
-:warning: Use `--additional-minters` flag to add a CSV of additional minter addresses to the Mint Authority Multisig. If you do not want to, you must specify `--only-oft-store true`.
+:warning: Use `--additional-minters` flag to add a CSV of additional minter addresses to the Mint Authority Multisig. If you do not want to, you must specify `--only-oft-store`.
 
 :information_source: You can also specify `--amount <AMOUNT>` to have the OFT minted to your deployer address upon token creation.
 
