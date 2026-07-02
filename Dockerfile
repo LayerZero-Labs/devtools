@@ -107,12 +107,12 @@ RUN apt-get install --yes \
     rm -rf /var/lib/apt/lists/*
 
 ### Setup rust
-# Install rust and set the default toolchain to 1.84.1
-# https://github.com/anza-xyz/agave/blob/v2.2.20/rust-toolchain.toml
-ARG RUST_TOOLCHAIN_VERSION=1.84.1
+# Install rust and set the default toolchain to 1.86.0
+# https://github.com/anza-xyz/agave/blob/v2.3.0/rust-toolchain.toml
+ARG RUST_TOOLCHAIN_VERSION=1.86.0
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
     | sh -s -- -y --profile minimal --default-toolchain ${RUST_TOOLCHAIN_VERSION}
-RUN rustup toolchain install 1.84.1
+RUN rustup toolchain install 1.86.0
 RUN rustc --version
 
 ### Setup go
@@ -236,9 +236,9 @@ FROM machine AS anchor
 
 WORKDIR /app/anchor
 
-ENV RUST_TOOLCHAIN_VERSION_ANCHOR=1.84.1
+ENV RUST_TOOLCHAIN_VERSION_ANCHOR=1.86.0
 RUN rustup default ${RUST_TOOLCHAIN_VERSION_ANCHOR}
-ARG ANCHOR_VERSION=0.31.1
+ARG ANCHOR_VERSION=0.32.1
 
 # Configure cargo for faster builds
 ARG CARGO_BUILD_JOBS=default
@@ -246,9 +246,9 @@ ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 ENV CARGO_NET_GIT_FETCH_WITH_CLI=true
 ENV CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
 
-# Install anchor-cli with optimizations
+# Install anchor-cli directly with cargo (simpler than AVM, supports --force)
 RUN cargo install --git https://github.com/solana-foundation/anchor --tag v${ANCHOR_VERSION} anchor-cli \
-    --profile release --locked
+    --profile release --locked --force
 
 ENV PATH="/root/.avm/bin:$PATH"
 RUN anchor --version
@@ -266,8 +266,8 @@ FROM machine AS solana
 
 WORKDIR /app/solana
 
-ENV RUST_TOOLCHAIN_VERSION_SOLANA=1.84.1
-ARG SOLANA_VERSION=2.2.20
+ENV RUST_TOOLCHAIN_VERSION_SOLANA=1.86.0
+ARG SOLANA_VERSION=2.3.0
 
 RUN rustup default ${RUST_TOOLCHAIN_VERSION_SOLANA}
 
@@ -485,7 +485,7 @@ COPY --from=initia /root/.initia/lib /root/.initia/lib
 # Adding in the library path to ldconfig and updating the cache
 RUN echo "/root/.initia/lib" > /etc/ld.so.conf.d/initia.conf && ldconfig
 
-# Get solana tooling
+# Get Anchor tooling
 COPY --from=anchor /root/.cargo/bin/anchor /root/.cargo/bin/anchor
 
 # Copy solana cache (for platform-tools) and binaries
