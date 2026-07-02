@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import { ILayerZeroUltraLightNodeV2 } from "@layerzerolabs/lz-evm-v1-0.7/contracts/interfaces/ILayerZeroUltraLightNodeV2.sol";
+// import { ILayerZeroUltraLightNodeV2 } from "@layerzerolabs/lz-evm-v1-0.7/contracts/interfaces/ILayerZeroUltraLightNodeV2.sol";
 
 import { WorkerMock as Worker } from "./WorkerMock.sol";
 
@@ -225,12 +225,12 @@ contract DVNMock is Worker, MultiSig, IDVN {
     /// @param _lib message lib address
     /// @param _to address to withdraw to
     /// @param _amount amount to withdraw
-    function withdrawFeeFromUlnV2(address _lib, address payable _to, uint256 _amount) external onlyRole(ADMIN_ROLE) {
-        if (!hasRole(MESSAGE_LIB_ROLE, _lib)) {
-            revert Worker_OnlyMessageLib();
-        }
-        ILayerZeroUltraLightNodeV2(_lib).withdrawNative(_to, _amount);
-    }
+    // function withdrawFeeFromUlnV2(address _lib, address payable _to, uint256 _amount) external onlyRole(ADMIN_ROLE) {
+    //     if (!hasRole(MESSAGE_LIB_ROLE, _lib)) {
+    //         revert Worker_OnlyMessageLib();
+    //     }
+    //     ILayerZeroUltraLightNodeV2(_lib).withdrawNative(_to, _amount);
+    // }
 
     // ========================= OnlyMessageLib =========================
 
@@ -388,7 +388,7 @@ contract DVNMock is Worker, MultiSig, IDVN {
         // never check for these selectors to save gas
         return
             _functionSig != IReceiveUlnE2.verify.selector && // 0x0223536e, replaying won't change the state
-            _functionSig != ReadLib1002.verify.selector && // 0xab750e75, replaying won't change the state
-            _functionSig != ILayerZeroUltraLightNodeV2.updateHash.selector; // 0x704316e5, replaying will be revert at uln
+            _functionSig != ReadLib1002.verify.selector; // && // 0xab750e75, replaying won't change the state
+            //_functionSig != ILayerZeroUltraLightNodeV2.updateHash.selector; // 0x704316e5, replaying will be revert at uln
     }
 }
