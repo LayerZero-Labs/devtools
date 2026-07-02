@@ -46,9 +46,10 @@ const config: HardhatUserConfig = {
     solidity: {
         compilers: [
             {
-                version: '0.8.22',
+                version: '0.8.24',
                 eraVersion: '1.0.0', //optional. Compile contracts with EraVM compiler
                 settings: {
+                    evmVersion: 'cancun',
                     optimizer: {
                         enabled: true,
                         runs: 200,

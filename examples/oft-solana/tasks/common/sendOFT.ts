@@ -1,10 +1,13 @@
+import { publicKey } from '@metaplex-foundation/umi'
 import { task, types } from 'hardhat/config'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { ChainType, endpointIdToChainType, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 
 import { EvmArgs, sendEvm } from '../evm/sendEvm'
+import { deriveConnection, getSolanaDeployment } from '../solana'
 import { SolanaArgs, sendSolana } from '../solana/sendSolana'
+import { getMinimumValueForSendToSolana } from '../solana/utils'
 
 import { SendResult } from './types'
 import { DebugLogger, KnownOutputs, KnownWarnings, getBlockExplorerLink } from './utils'
@@ -22,10 +25,14 @@ interface MasterArgs {
     composeMsg?: string
     /** EVM: 20-byte hex; Solana: base58 PDA of the store */
     oftAddress?: string
+    /** EVM: 20-byte hex; Solana: base58 PDA of the store (currently only relevant for sends to Solana) */
+    dstOftAddress?: string
     /** Solana only: override the OFT program ID (base58) */
     oftProgramId?: string
     tokenProgram?: string
     computeUnitPriceScaleFactor?: number
+    /** Solana only (so far): minimum value needed successful lzReceive on the destination chain */
+    minimumLzReceiveValue?: number
     addressLookupTables?: string
 }
 
@@ -53,6 +60,12 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
         undefined,
         types.string
     )
+    .addOptionalParam(
+        'dstOftAddress',
+        'Override the destination local deployment OFT address (20-byte hex for EVM, base58 PDA for Solana)',
+        undefined,
+        types.string
+    )
     .addOptionalParam('oftProgramId', 'Solana only: override the OFT program ID (base58)', undefined, types.string)
     .addOptionalParam('tokenProgram', 'Solana Token Program pubkey', undefined, types.string)
     .addOptionalParam('computeUnitPriceScaleFactor', 'Solana compute unit price scale factor', 4, types.float)
@@ -63,7 +76,8 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
         types.string
     )
     .setAction(async (args: MasterArgs, hre: HardhatRuntimeEnvironment) => {
-        const chainType = endpointIdToChainType(args.srcEid)
+        const srcChainType = endpointIdToChainType(args.srcEid)
+        const dstChainType = endpointIdToChainType(args.dstEid)
         let result: SendResult
 
         if (args.oftAddress || args.oftProgramId) {
@@ -73,16 +87,31 @@ task('lz:oft:send', 'Sends OFT tokens cross‐chain from any supported chain')
             )
         }
 
-        // route to the correct function based on the chain type
-        if (chainType === ChainType.EVM) {
+        let minimumLzReceiveValue = 0
+        // If sending to Solana, compute minimum value needed for ATA creation
+        if (dstChainType === ChainType.SOLANA) {
+            const solanaDeployment = getSolanaDeployment(args.dstEid)
+            const { connection, umi } = await deriveConnection(args.dstEid)
+            // determines the absolute minimum value needed for an OFT send to Solana (based on ATA creation status)
+            minimumLzReceiveValue = await getMinimumValueForSendToSolana({
+                recipient: publicKey(args.to),
+                mint: publicKey(args.dstOftAddress || solanaDeployment.mint),
+                umi,
+                connection,
+            })
+            args.minimumLzReceiveValue = minimumLzReceiveValue
+        }
+
+        // route to the correct send function based on the source chain type
+        if (srcChainType === ChainType.EVM) {
             result = await sendEvm(args as EvmArgs, hre)
-        } else if (chainType === ChainType.SOLANA) {
+        } else if (srcChainType === ChainType.SOLANA) {
             result = await sendSolana({
                 ...args,
                 addressLookupTables: args.addressLookupTables ? args.addressLookupTables.split(',') : [],
             } as SolanaArgs)
         } else {
-            throw new Error(`The chain type ${chainType} is not implemented in sendOFT for this example`)
+            throw new Error(`The chain type ${srcChainType} is not implemented in sendOFT for this example`)
         }
 
         DebugLogger.printLayerZeroOutput(
