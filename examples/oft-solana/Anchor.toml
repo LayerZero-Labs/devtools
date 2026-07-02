@@ -8,6 +8,7 @@ skip-lint = false
 
 [programs.localnet]
 oft = "G2BYTnfGCMQAErMZkTBCFSapKevzf6QCjizjXi8hFEtJ"
+transfer_hook = "Hook111111111111111111111111111111111111111"
 
 [registry]
 url = "https://api.apr.dev"
