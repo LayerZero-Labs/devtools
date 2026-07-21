@@ -11,6 +11,8 @@ import {
     configureOApp,
     configureOAppDelegates,
     configureCallerBpsCap,
+    configureReceiveLibraries,
+    configureSendLibraries,
     IOApp,
     OAppFactory,
     OAppOmniGraph,
@@ -446,7 +448,7 @@ describe('oapp/config', () => {
                     ],
                 }
 
-                expect(await configureOApp(graph, oappSdkFactory)).toEqual([])
+                expect(await configureSendLibraries(graph, oappSdkFactory)).toEqual([])
             })
         })
 
@@ -660,7 +662,7 @@ describe('oapp/config', () => {
                     ],
                 }
 
-                expect(await configureOApp(graph, oappSdkFactory)).toEqual([])
+                expect(await configureReceiveLibraries(graph, oappSdkFactory)).toEqual([])
             })
         })
 

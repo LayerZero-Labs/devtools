@@ -6,7 +6,13 @@ import {
     OmniContractFactoryHardhat,
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { createOAppReadFactory } from '@layerzerolabs/ua-devtools-evm'
-import { configureOAppRead, IOAppRead, OAppReadFactory, OAppReadOmniGraph } from '@layerzerolabs/ua-devtools'
+import {
+    configureOAppRead,
+    configureReadLibraries,
+    IOAppRead,
+    OAppReadFactory,
+    OAppReadOmniGraph,
+} from '@layerzerolabs/ua-devtools'
 import { OmniContract, omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import {
     setupDefaultEndpointV2,
@@ -439,7 +445,7 @@ describe('oapp-read/config', () => {
                     connections: [],
                 }
 
-                expect(await configureOAppRead(graph, oappSdkFactory)).toEqual([])
+                expect(await configureReadLibraries(graph, oappSdkFactory)).toEqual([])
             })
         })
 
