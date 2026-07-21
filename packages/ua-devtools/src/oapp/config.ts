@@ -1,5 +1,6 @@
 import {
     type Bytes,
+    areBytes32Equal,
     formatOmniVector,
     isDeepEqual,
     type OmniAddress,
@@ -137,7 +138,9 @@ export const configureSendLibraries: OAppConfigurator = withOAppLogger(
                     )
                 }
 
-                if (!isDefaultLibrary && currentSendLibrary?.toLowerCase() === config.sendLibrary.toLowerCase()) {
+                // Keep !isDefaultLibrary so we still "lock" a matching resolved default into OApp storage.
+                // Use areBytes32Equal so checksum / padding mismatches do not re-propose and hit LZ_SameValue.
+                if (!isDefaultLibrary && areBytes32Equal(currentSendLibrary, config.sendLibrary)) {
                     logger.verbose(
                         `Current sendLibrary is not default library and is already set to ${config.sendLibrary} for ${formatOmniVector({ from, to })}, skipping`
                     )
@@ -212,7 +215,12 @@ export const configureReceiveLibraries: OAppConfigurator = withOAppLogger(
                     )
                 }
 
-                if (!isDefaultLibrary && currentReceiveLibrary === config.receiveLibraryConfig.receiveLibrary) {
+                // Keep !isDefaultLibrary so we still "lock" a matching resolved default into OApp storage.
+                // Use areBytes32Equal so checksum / padding mismatches do not re-propose and hit LZ_SameValue.
+                if (
+                    !isDefaultLibrary &&
+                    areBytes32Equal(currentReceiveLibrary, config.receiveLibraryConfig.receiveLibrary)
+                ) {
                     logger.verbose(
                         `Current recieveLibrary is not default and is already set to ${config.receiveLibraryConfig.receiveLibrary} for ${formatOmniVector({ from, to })}, skipping`
                     )

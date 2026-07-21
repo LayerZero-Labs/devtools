@@ -392,6 +392,57 @@ describe('oapp-read/config', () => {
             })
         })
 
+        describe('configureReadLibraries address equality idempotency', () => {
+            it('should skip when already pinned even if config uses lowercase addresses', async () => {
+                const ethReadLibrary = await getLibraryAddress(ethReadLib_Opt2)
+                const avaxReadLibrary = await getLibraryAddress(avaxReadLib_Opt2)
+                const [registerErrors] = await signAndSend([
+                    await ethEndpointV2Sdk.registerLibrary(ethReadLibrary),
+                    await avaxEndpointV2Sdk.registerLibrary(avaxReadLibrary),
+                ])
+                expect(registerErrors).toEqual([])
+
+                const channelId = ChannelId.READ_CHANNEL_1.valueOf()
+                const [setErrors] = await signAndSend([
+                    await ethEndpointV2Sdk.setSendLibrary(ethPoint.address, channelId, ethReadLibrary),
+                    await ethEndpointV2Sdk.setReceiveLibrary(ethPoint.address, channelId, ethReadLibrary, BigInt(0)),
+                    await avaxEndpointV2Sdk.setSendLibrary(avaxPoint.address, channelId, avaxReadLibrary),
+                    await avaxEndpointV2Sdk.setReceiveLibrary(avaxPoint.address, channelId, avaxReadLibrary, BigInt(0)),
+                ])
+                expect(setErrors).toEqual([])
+
+                const graph: OAppReadOmniGraph = {
+                    contracts: [
+                        {
+                            point: ethPoint,
+                            config: {
+                                readChannelConfigs: [
+                                    {
+                                        channelId: ChannelId.READ_CHANNEL_1,
+                                        readLibrary: ethReadLibrary.toLowerCase(),
+                                    },
+                                ],
+                            },
+                        },
+                        {
+                            point: avaxPoint,
+                            config: {
+                                readChannelConfigs: [
+                                    {
+                                        channelId: ChannelId.READ_CHANNEL_1,
+                                        readLibrary: avaxReadLibrary.toLowerCase(),
+                                    },
+                                ],
+                            },
+                        },
+                    ],
+                    connections: [],
+                }
+
+                expect(await configureOAppRead(graph, oappSdkFactory)).toEqual([])
+            })
+        })
+
         describe('configureConfig configureReadConfig', () => {
             beforeEach(async () => {
                 // Before we configure the OApp, we'll set some peers

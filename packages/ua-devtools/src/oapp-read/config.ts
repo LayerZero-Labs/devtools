@@ -1,5 +1,6 @@
 import {
     type Bytes,
+    areBytes32Equal,
     type OmniTransaction,
     formatOmniPoint,
     createConfigureMultiple,
@@ -106,7 +107,9 @@ export const configureReadLibraries: OAppReadConfigurator = withOAppReadLogger(
                     const isDefaultSendLibrary = await endpointSdk.isDefaultSendLibrary(point.address, channelId)
                     const currentSendLibrary = await endpointSdk.getSendLibrary(point.address, channelId)
 
-                    if (!isDefaultSendLibrary && currentSendLibrary === readLibrary) {
+                    // Keep !isDefault* so we still lock a matching resolved default into OApp storage.
+                    // Use areBytes32Equal so checksum / padding mismatches do not re-propose and hit LZ_SameValue.
+                    if (!isDefaultSendLibrary && areBytes32Equal(currentSendLibrary, readLibrary)) {
                         logger.verbose(
                             `Current sendlibrary of channelId ${channelId} is already set to ${readLibrary} for ${label}, skipping`
                         )
@@ -120,7 +123,7 @@ export const configureReadLibraries: OAppReadConfigurator = withOAppReadLogger(
                         channelId
                     )
 
-                    if (!isDefaultReceiveLibrary && currentReceiveLibrary === readLibrary) {
+                    if (!isDefaultReceiveLibrary && areBytes32Equal(currentReceiveLibrary, readLibrary)) {
                         logger.verbose(
                             `Current receiveLibrary of channelId ${channelId} is already set to ${readLibrary} for ${label}, skipping`
                         )
