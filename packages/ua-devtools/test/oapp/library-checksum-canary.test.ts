@@ -1,6 +1,6 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { getAddress } from '@ethersproject/address'
-import { areBytes32Equal } from '@layerzerolabs/devtools'
+import { areBytes32Equal, makeBytes32 } from '@layerzerolabs/devtools'
 import { configureReceiveLibraries, configureSendLibraries } from '@/oapp/config'
 import type { OAppOmniGraph } from '@/oapp/types'
 
@@ -9,7 +9,8 @@ import type { OAppOmniGraph } from '@/oapp/types'
  *
  * On main (pre-fix), receive used strict `===`, so a checksummed on-chain
  * address vs lowercase config incorrectly proposed setReceiveLibrary → LZ_SameValue.
- * Send used toLowerCase(), so lowercase alone is not a send-path canary on main.
+ * Send used toLowerCase(), so lowercase alone is not a send-path canary on main —
+ * the padded-vs-bare send case below is the discriminating send lock.
  *
  * Bare areBytes32Equal also throws on Solana base58 (hexZeroPad). Skip compares
  * must go through normalizePeer(local eid) first.
@@ -105,6 +106,42 @@ describe('library checksum canary', () => {
                     vector: { from, to },
                     config: {
                         sendLibrary: libraryLower,
+                    },
+                },
+            ],
+        }
+
+        const txs = await configureSendLibraries(graph, sdkFactory as never)
+
+        expect(txs).toEqual([])
+        expect(setSendLibrary).not.toHaveBeenCalled()
+    })
+
+    it('configureSendLibraries skips when already pinned despite padded vs bare address', async () => {
+        // Main's toLowerCase() compare fails here (padded !== bare); HEAD must skip.
+        const libraryPadded = makeBytes32(libraryChecksummed)
+        expect(libraryPadded.toLowerCase() === libraryChecksummed.toLowerCase()).toBe(false)
+
+        const setSendLibrary = jest.fn(async () => ({
+            point: from,
+            data: '0xdead',
+        }))
+
+        const sdkFactory = jest.fn(async () => ({
+            getEndpointSDK: async () => ({
+                isDefaultSendLibrary: async () => false,
+                getSendLibrary: async () => libraryPadded,
+                setSendLibrary,
+            }),
+        }))
+
+        const graph: OAppOmniGraph = {
+            contracts: [{ point: from }, { point: to }],
+            connections: [
+                {
+                    vector: { from, to },
+                    config: {
+                        sendLibrary: libraryChecksummed,
                     },
                 },
             ],
