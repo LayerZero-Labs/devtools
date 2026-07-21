@@ -11,6 +11,8 @@ import {
     configureOApp,
     configureOAppDelegates,
     configureCallerBpsCap,
+    configureReceiveLibraries,
+    configureSendLibraries,
     IOApp,
     OAppFactory,
     OAppOmniGraph,
@@ -416,6 +418,40 @@ describe('oapp/config', () => {
             })
         })
 
+        describe('configureSendLibraries address equality idempotency', () => {
+            it('should skip when already pinned even if config uses lowercase addresses', async () => {
+                const ethSendLibrary = await getLibraryAddress(ethSendUln2_Opt2)
+                const avaxSendLibrary = await getLibraryAddress(avaxSendUln2_Opt2)
+                const [registerErrors] = await signAndSend([
+                    await ethEndpointV2Sdk.registerLibrary(ethSendLibrary),
+                    await avaxEndpointV2Sdk.registerLibrary(avaxSendLibrary),
+                ])
+                expect(registerErrors).toEqual([])
+
+                const [setErrors] = await signAndSend([
+                    await ethEndpointV2Sdk.setSendLibrary(ethPoint.address, avaxPoint.eid, ethSendLibrary),
+                    await avaxEndpointV2Sdk.setSendLibrary(avaxPoint.address, ethPoint.eid, avaxSendLibrary),
+                ])
+                expect(setErrors).toEqual([])
+
+                const graph: OAppOmniGraph = {
+                    contracts: [{ point: ethPoint }, { point: avaxPoint }],
+                    connections: [
+                        {
+                            vector: { from: ethPoint, to: avaxPoint },
+                            config: { sendLibrary: ethSendLibrary.toLowerCase() },
+                        },
+                        {
+                            vector: { from: avaxPoint, to: ethPoint },
+                            config: { sendLibrary: avaxSendLibrary.toLowerCase() },
+                        },
+                    ],
+                }
+
+                expect(await configureSendLibraries(graph, oappSdkFactory)).toEqual([])
+            })
+        })
+
         describe('configureReceiveLibraries lock defaults', () => {
             let ethReceiveLibrary: string, avaxReceiveLibrary: string, graph: OAppOmniGraph
             beforeEach(async () => {
@@ -573,6 +609,60 @@ describe('oapp/config', () => {
                 const transactionsAgain = await configureOApp(graph, oappSdkFactory)
                 // eslint-disable-next-line jest/no-standalone-expect
                 expect(transactionsAgain).toEqual([])
+            })
+        })
+
+        describe('configureReceiveLibraries address equality idempotency', () => {
+            it('should skip when already pinned even if config uses lowercase addresses', async () => {
+                const ethReceiveLibrary = await getLibraryAddress(ethReceiveUln2_Opt2)
+                const avaxReceiveLibrary = await getLibraryAddress(avaxReceiveUln2_Opt2)
+                const [registerErrors] = await signAndSend([
+                    await ethEndpointV2Sdk.registerLibrary(ethReceiveLibrary),
+                    await avaxEndpointV2Sdk.registerLibrary(avaxReceiveLibrary),
+                ])
+                expect(registerErrors).toEqual([])
+
+                const [setErrors] = await signAndSend([
+                    await ethEndpointV2Sdk.setReceiveLibrary(
+                        ethPoint.address,
+                        avaxPoint.eid,
+                        ethReceiveLibrary,
+                        BigInt(0)
+                    ),
+                    await avaxEndpointV2Sdk.setReceiveLibrary(
+                        avaxPoint.address,
+                        ethPoint.eid,
+                        avaxReceiveLibrary,
+                        BigInt(0)
+                    ),
+                ])
+                expect(setErrors).toEqual([])
+
+                const graph: OAppOmniGraph = {
+                    contracts: [{ point: ethPoint }, { point: avaxPoint }],
+                    connections: [
+                        {
+                            vector: { from: ethPoint, to: avaxPoint },
+                            config: {
+                                receiveLibraryConfig: {
+                                    receiveLibrary: ethReceiveLibrary.toLowerCase(),
+                                    gracePeriod: BigInt(0),
+                                },
+                            },
+                        },
+                        {
+                            vector: { from: avaxPoint, to: ethPoint },
+                            config: {
+                                receiveLibraryConfig: {
+                                    receiveLibrary: avaxReceiveLibrary.toLowerCase(),
+                                    gracePeriod: BigInt(0),
+                                },
+                            },
+                        },
+                    ],
+                }
+
+                expect(await configureReceiveLibraries(graph, oappSdkFactory)).toEqual([])
             })
         })
 

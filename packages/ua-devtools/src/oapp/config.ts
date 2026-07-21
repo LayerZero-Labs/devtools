@@ -1,5 +1,6 @@
 import {
     type Bytes,
+    areBytes32Equal,
     formatOmniVector,
     isDeepEqual,
     type OmniAddress,
@@ -9,6 +10,7 @@ import {
     createConfigureMultiple,
     createConfigureNodes,
     createConfigureEdges,
+    normalizePeer,
 } from '@layerzerolabs/devtools'
 import type { OAppConfigurator, OAppEnforcedOption, OAppEnforcedOptionParam, OAppFactory } from './types'
 import { createModuleLogger, createWithAsyncLogger, printBoolean } from '@layerzerolabs/io-devtools'
@@ -137,7 +139,15 @@ export const configureSendLibraries: OAppConfigurator = withOAppLogger(
                     )
                 }
 
-                if (!isDefaultLibrary && currentSendLibrary?.toLowerCase() === config.sendLibrary.toLowerCase()) {
+                // Keep !isDefaultLibrary so we still "lock" a matching resolved default into OApp storage.
+                // Compare via normalizePeer(local eid) so EVM checksum/padding and Solana base58 both work.
+                if (
+                    !isDefaultLibrary &&
+                    areBytes32Equal(
+                        normalizePeer(currentSendLibrary, from.eid),
+                        normalizePeer(config.sendLibrary, from.eid)
+                    )
+                ) {
                     logger.verbose(
                         `Current sendLibrary is not default library and is already set to ${config.sendLibrary} for ${formatOmniVector({ from, to })}, skipping`
                     )
@@ -212,7 +222,15 @@ export const configureReceiveLibraries: OAppConfigurator = withOAppLogger(
                     )
                 }
 
-                if (!isDefaultLibrary && currentReceiveLibrary === config.receiveLibraryConfig.receiveLibrary) {
+                // Keep !isDefaultLibrary so we still "lock" a matching resolved default into OApp storage.
+                // Compare via normalizePeer(local eid) so EVM checksum/padding and Solana base58 both work.
+                if (
+                    !isDefaultLibrary &&
+                    areBytes32Equal(
+                        normalizePeer(currentReceiveLibrary, from.eid),
+                        normalizePeer(config.receiveLibraryConfig.receiveLibrary, from.eid)
+                    )
+                ) {
                     logger.verbose(
                         `Current recieveLibrary is not default and is already set to ${config.receiveLibraryConfig.receiveLibrary} for ${formatOmniVector({ from, to })}, skipping`
                     )

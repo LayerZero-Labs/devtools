@@ -6,7 +6,13 @@ import {
     OmniContractFactoryHardhat,
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { createOAppReadFactory } from '@layerzerolabs/ua-devtools-evm'
-import { configureOAppRead, IOAppRead, OAppReadFactory, OAppReadOmniGraph } from '@layerzerolabs/ua-devtools'
+import {
+    configureOAppRead,
+    configureReadLibraries,
+    IOAppRead,
+    OAppReadFactory,
+    OAppReadOmniGraph,
+} from '@layerzerolabs/ua-devtools'
 import { OmniContract, omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import {
     setupDefaultEndpointV2,
@@ -389,6 +395,57 @@ describe('oapp-read/config', () => {
                 const transactionsAgain = await configureOAppRead(graph, oappSdkFactory)
                 // eslint-disable-next-line jest/no-standalone-expect
                 expect(transactionsAgain).toEqual([])
+            })
+        })
+
+        describe('configureReadLibraries address equality idempotency', () => {
+            it('should skip when already pinned even if config uses lowercase addresses', async () => {
+                const ethReadLibrary = await getLibraryAddress(ethReadLib_Opt2)
+                const avaxReadLibrary = await getLibraryAddress(avaxReadLib_Opt2)
+                const [registerErrors] = await signAndSend([
+                    await ethEndpointV2Sdk.registerLibrary(ethReadLibrary),
+                    await avaxEndpointV2Sdk.registerLibrary(avaxReadLibrary),
+                ])
+                expect(registerErrors).toEqual([])
+
+                const channelId = ChannelId.READ_CHANNEL_1.valueOf()
+                const [setErrors] = await signAndSend([
+                    await ethEndpointV2Sdk.setSendLibrary(ethPoint.address, channelId, ethReadLibrary),
+                    await ethEndpointV2Sdk.setReceiveLibrary(ethPoint.address, channelId, ethReadLibrary, BigInt(0)),
+                    await avaxEndpointV2Sdk.setSendLibrary(avaxPoint.address, channelId, avaxReadLibrary),
+                    await avaxEndpointV2Sdk.setReceiveLibrary(avaxPoint.address, channelId, avaxReadLibrary, BigInt(0)),
+                ])
+                expect(setErrors).toEqual([])
+
+                const graph: OAppReadOmniGraph = {
+                    contracts: [
+                        {
+                            point: ethPoint,
+                            config: {
+                                readChannelConfigs: [
+                                    {
+                                        channelId: ChannelId.READ_CHANNEL_1,
+                                        readLibrary: ethReadLibrary.toLowerCase(),
+                                    },
+                                ],
+                            },
+                        },
+                        {
+                            point: avaxPoint,
+                            config: {
+                                readChannelConfigs: [
+                                    {
+                                        channelId: ChannelId.READ_CHANNEL_1,
+                                        readLibrary: avaxReadLibrary.toLowerCase(),
+                                    },
+                                ],
+                            },
+                        },
+                    ],
+                    connections: [],
+                }
+
+                expect(await configureReadLibraries(graph, oappSdkFactory)).toEqual([])
             })
         })
 
