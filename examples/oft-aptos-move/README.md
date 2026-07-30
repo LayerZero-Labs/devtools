@@ -281,7 +281,7 @@ When deploying an OFT, the underlying token address is different from the object
 
 ### Removing the Unverified flag from your Fungible Asset
 
-In order to remove the `Unverified` flag on your underlying fungible asset you have to make a verifcation request to the chain.
+In order to remove the `Unverified` flag on your underlying fungible asset you have to make a verification request to the chain.
 
 - Movement chain: https://github.com/movement-network/movement-tokens
 - Aptos chain: https://github.com/PanoraExchange/Aptos-Tokens
