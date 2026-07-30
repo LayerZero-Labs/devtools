@@ -100,7 +100,7 @@ Then run `source .env` in order for your values to be mapped.
 >
 > ```
 > # [dependencies.AptosFramework]
-> # git = "https://github.com/movementlabsxyz/aptos-core.git"
+> # git = "https://github.com/movement-network/aptos-core.git"
 > # rev = "movement-cli-v3.5.0"
 > # subdir = "aptos-move/framework/aptos-framework"
 > ```

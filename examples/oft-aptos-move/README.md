@@ -102,7 +102,7 @@ Then run `source .env` in order for your values to be mapped.
 >
 > ```
 > # [dependencies.AptosFramework]
-> # git = "https://github.com/movementlabsxyz/aptos-core.git"
+> # git = "https://github.com/movement-network/aptos-core.git"
 > # rev = "movement-cli-v3.5.0"
 > # subdir = "aptos-move/framework/aptos-framework"
 > ```
@@ -281,9 +281,9 @@ When deploying an OFT, the underlying token address is different from the object
 
 ### Removing the Unverified flag from your Fungible Asset
 
-In order to remove the `Unverified` flag on your underlying fungible asset you have to make a verifcation request to the chain.
+In order to remove the `Unverified` flag on your underlying fungible asset you have to make a verification request to the chain.
 
-- Movement chain: https://github.com/movementlabsxyz/movement-tokens
+- Movement chain: https://github.com/movement-network/movement-tokens
 - Aptos chain: https://github.com/PanoraExchange/Aptos-Tokens
 
 ### Transferring Ownership of your Move OApp (OFT)
