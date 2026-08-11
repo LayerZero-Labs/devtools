@@ -55,7 +55,7 @@ export async function sendEvm(
     } catch (error) {
         DebugLogger.printErrorAndFixSuggestion(
             KnownErrors.ERROR_GETTING_HRE,
-            `For network: ${endpointIdToNetwork(srcEid)}, OFT: ${oftAddress}`
+            `For network: ${endpointIdToNetwork(srcEid)}${oftAddress ? `, OFT: ${oftAddress}` : ''}`
         )
         throw error
     }
@@ -216,7 +216,7 @@ export async function sendEvm(
     } catch (error) {
         DebugLogger.printErrorAndFixSuggestion(
             KnownErrors.ERROR_QUOTING_NATIVE_GAS_COST,
-            `For network: ${endpointIdToNetwork(srcEid)}, OFT: ${oftAddress}`
+            `For network: ${endpointIdToNetwork(srcEid)}${oftAddress ? `, OFT: ${oftAddress}` : ''}`
         )
         throw error
     }
@@ -229,7 +229,7 @@ export async function sendEvm(
     } catch (error) {
         DebugLogger.printErrorAndFixSuggestion(
             KnownErrors.ERROR_SENDING_TRANSACTION,
-            `For network: ${endpointIdToNetwork(srcEid)}, OFT: ${oftAddress}`
+            `For network: ${endpointIdToNetwork(srcEid)}${oftAddress ? `, OFT: ${oftAddress}` : ''}`
         )
         throw error
     }
