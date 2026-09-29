@@ -1,0 +1,48 @@
+{
+  "name": "@layerzerolabs/oapp-ai-oracle-example",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Procedural Proof — AI Oracle as epistemic governance infrastructure on LayerZero V2",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf artifacts cache",
+    "compile": "$npm_execpath run compile:hardhat",
+    "compile:hardhat": "hardhat compile",
+    "lint": "$npm_execpath run lint:sol",
+    "lint:sol": "solhint 'contracts/**/*.sol'",
+    "test": "hardhat test"
+  },
+  "resolutions": {
+    "ethers": "^5.7.2",
+    "hardhat-deploy": "^0.12.1"
+  },
+  "devDependencies": {
+    "@layerzerolabs/lz-definitions": "^3.0.148",
+    "@layerzerolabs/lz-v2-utilities": "^3.0.148",
+    "@layerzerolabs/oapp-evm": "^0.4.1",
+    "@layerzerolabs/toolbox-hardhat": "~0.6.14",
+    "@nomicfoundation/hardhat-ethers": "^3.0.5",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@openzeppelin/contracts": "^5.0.2",
+    "dotenv": "^16.4.1",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.22.10",
+    "hardhat-deploy": "^0.12.1",
+    "solhint": "^4.1.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.4"
+  },
+  "engines": {
+    "node": ">=18.16.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "ethers": "^5.7.2",
+      "hardhat-deploy": "^0.12.1"
+    }
+  },
+  "overrides": {
+    "ethers": "^5.7.2",
+    "hardhat-deploy": "^0.12.1"
+  }
+}

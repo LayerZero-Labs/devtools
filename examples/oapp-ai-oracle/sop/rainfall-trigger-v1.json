@@ -1,0 +1,54 @@
+{
+  "sop_id": "rainfall-trigger-v1",
+  "version": "1.0.0",
+  "description": "Determine if 24-hour cumulative rainfall exceeds threshold for on-chain trigger",
+  "trigger_condition": "24h cumulative rainfall > threshold_mm",
+  "parameters": {
+    "threshold_mm": 100,
+    "location": "Surat Thani, Thailand",
+    "min_sources": 2,
+    "max_source_divergence_pct": 20,
+    "time_window_hours": 24
+  },
+  "steps": [
+    {
+      "step": 1,
+      "action": "Fetch rainfall data from ≥2 independent meteorological sources",
+      "allowed_sources": [
+        "openweathermap.org",
+        "weather.gov",
+        "hko.gov.hk",
+        "tmd.go.th"
+      ],
+      "evidence_required": ["source_url", "raw_response", "timestamp"]
+    },
+    {
+      "step": 2,
+      "action": "Calculate 24h cumulative rainfall from each source",
+      "evidence_required": ["per_source_value_mm", "computation_method"]
+    },
+    {
+      "step": 3,
+      "action": "Check source divergence: |max - min| / avg < max_source_divergence_pct",
+      "evidence_required": ["divergence_pct", "pass_or_fail"]
+    },
+    {
+      "step": 4,
+      "action": "If divergence check PASSES: compute average. If FAILS: abort (NO_TRIGGER)",
+      "evidence_required": ["average_mm_or_abort_reason"]
+    },
+    {
+      "step": 5,
+      "action": "Compare average to threshold_mm. If avg > threshold → TRIGGER. Else → NO_TRIGGER",
+      "evidence_required": ["comparison", "final_conclusion"]
+    }
+  ],
+  "verification_checklist": [
+    "All sources are in allowed_sources list",
+    "Timestamps are within acceptable window (not stale)",
+    "Number of sources >= min_sources",
+    "Divergence calculation is correct",
+    "Threshold comparison is correct",
+    "Conclusion matches the computation"
+  ]
+}
