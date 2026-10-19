@@ -118,7 +118,7 @@ abstract contract OFTCoreUpgradeable is
      * For tokens exceeding this totalSupply(), they will need to override the sharedDecimals function with something smaller.
      * ie. 4 sharedDecimals would be 1,844,674,407,370,955.1615
      */
-    function sharedDecimals() public pure virtual returns (uint8) {
+    function sharedDecimals() public view virtual returns (uint8) {
         return 6;
     }
 
