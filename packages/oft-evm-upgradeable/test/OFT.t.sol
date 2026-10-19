@@ -555,4 +555,10 @@ contract OFTTest is TestHelperOz5 {
         vm.expectRevert(abi.encodeWithSelector(IOAppMsgInspector.InspectionFailed.selector, message, extraOptions));
         (message, ) = aOFT.buildMsgAndOptions(sendParam, amountToCreditLD);
     }
+
+    function test_shared_decimals_view() public view {
+        assertEq(aOFT.sharedDecimals(), 6);
+        assertEq(bOFT.sharedDecimals(), 6);
+        assertEq(cOFTAdapter.sharedDecimals(), 6);
+    }
 }
